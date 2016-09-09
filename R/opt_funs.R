@@ -1,43 +1,40 @@
 initial_layout_optimizer <- function(par, distances, disjoint, contained) {
-  x_d <- combn(par[1:(length(par) / 2)], 2, function(x) x[1] - x[2])
-  y_d <- combn(par[(1 + length(par) / 2):length(par)], 2, function(x) x[1] - x[2])
-  d <- x_d ^ 2 + y_d ^ 2
-
-  loss <- (d - distances ^ 2) ^ 2
-  loss[(d >= distances ^ 2) & disjoint] <- 0
-  loss[(d <= distances ^ 2) & contained] <- 0
-
-  sum(loss)
+  pars <- matrix(par, ncol = 2)
+  x    <- pars[, 1]
+  y    <- pars[, 2]
+  d    <- as.vector(dist(cbind(x, y)) ^ 2)
+  ind <- !(((d >= distances ^ 2) & disjoint) | (d <= distances ^ 2 & contained))
+  sum((d[ind] - distances[ind] ^ 2) ^ 2)
 }
 
 initial_layout_gradient <- function(par, distances, disjoint, contained) {
-  x <- par[1:(length(par) / 2)]
-  y <- par[(1 + length(par) / 2):length(par)]
+  pars <- matrix(par, ncol = 2)
+  x    <- pars[, 1]
+  y    <- pars[, 2]
 
-  x_d <- combn(x, 2, function(x) x[1] - x[2])
-  y_d <- combn(y, 2, function(x) x[1] - x[2])
+  x_d <- utils::combn(x, 2, function(x) x[1] - x[2])
+  y_d <- utils::combn(y, 2, function(x) x[1] - x[2])
 
   d <- x_d ^ 2 + y_d ^ 2
 
-  grad_x <-
-    ifelse((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained),
-           0, 4 * (d - distances ^ 2) * (x_d))
-  grad_y <-
-    ifelse((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained),
-           0, 4 * (d - distances ^ 2) * (y_d))
+  i1 <- !((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained))
+
+  grad_x <- grad_y <- double(length(i1))
+  grad_x[i1] <- 4 * (d[i1] - distances[i1] ^ 2) * (x_d[i1])
+  grad_y[i1] <- 4 * (d[i1] - distances[i1] ^ 2) * (y_d[i1])
 
   grad_x <- rbind(grad_x, -grad_x)
   grad_y <- rbind(grad_y, -grad_y)
 
-  ind <- combn(length(x), 2)
+  i2 <- utils::combn(length(x), 2)
 
   c(vapply(seq_along(x),
            function(x) {
-             sum(grad_x[ind == x])
+             sum(grad_x[i2 == x])
            }, FUN.VALUE = double(1)),
     vapply(seq_along(y),
            function(y) {
-             sum(grad_y[ind == y])
+             sum(grad_y[i2 == y])
            }, FUN.VALUE = double(1))
   )
 }
@@ -49,7 +46,7 @@ opt_disc_intersection <- function(x, r1, r2, overlap) {
 
 # Optimization function for disc_disc intersection
 separate_two_discs <- function(r1, r2, overlap) {
-  fit <- optimize(
+  fit <- stats::optimize(
     opt_disc_intersection,
     interval = c(abs(r1 - r2), sum(r1, r2)),
     r1 = r1,
@@ -60,20 +57,23 @@ separate_two_discs <- function(r1, r2, overlap) {
 }
 
 # Fine tune the initial layout
-final_layout_optimizer <- function(par, r, all_areas, oneset_areas,
+final_layout_optimizer <- function(par, all_areas, oneset_areas, setnames,
                                    twoset_areas, twoset_names) {
-  x <- par[1:(length(par) / 2)]
-  y <- par[(1 + length(par) / 2):length(par)]
-  x_c <- combn(x, 2)
-  y_c <- combn(y, 2)
+  pars <- matrix(par, ncol = 3)
+  x <- pars[, 1]
+  y <- pars[, 2]
+  r <- pars[, 3]
+
+  x_c <- utils::combn(x, 2)
+  y_c <- utils::combn(y, 2)
 
   curr_areas <- all_areas
   curr_areas[] <- 0
   curr_oneset_areas <- r ^ 2 * pi
 
-  r_combos <- combn(r, 2)
-  x_d      <- combn(x, 2, function(x) (x[1] - x[2]))
-  y_d      <- combn(y, 2, function(y) (y[1] - y[2]))
+  r_combos <- utils::combn(r, 2)
+  x_d      <- utils::combn(x, 2, function(x) (x[1] - x[2]))
+  y_d      <- utils::combn(y, 2, function(y) (y[1] - y[2]))
   d        <- sqrt(x_d ^ 2 + y_d ^ 2)
 
   r1 <- r_combos[1, ]
@@ -92,8 +92,7 @@ final_layout_optimizer <- function(par, r, all_areas, oneset_areas,
                                                          r2 = r2[intersecting])
 
   # Find all points at which circles intersect
-
-  if (any(intersecting) & length(setnames) > 2) {
+  if (any(intersecting) & length(oneset_areas) > 2) {
     d   <- d[intersecting]
     r1  <- r1[intersecting]
     r2  <- r2[intersecting]
@@ -112,13 +111,12 @@ final_layout_optimizer <- function(par, r, all_areas, oneset_areas,
                (l / d) * (y_d) + (h / d) * (x_d) + y_c)
     on_circles <- c(on_circles, on_circles)
 
-    temp_sets <- mapply(find_sets_containing_points,
-                        x = x, y = y, r = r,
+    temp_sets <- mapply(find_sets_containing_points, x = x, y = y, r = r,
                         MoreArgs = list(x_int = x_int, y_int = y_int))
 
     curr_threeplus_areas <- vector("list", length = length(setnames))
     for (i in 3:length(setnames)) {
-      ind <- combn(length(setnames), i)
+      ind <- utils::combn(length(setnames), i)
       colnames(ind) <-
         apply(ind, 2, function(x) paste(setnames[x], collapse = "&"))
       curr_threeplus_areas[[i]] <-
@@ -131,7 +129,8 @@ final_layout_optimizer <- function(par, r, all_areas, oneset_areas,
                   find_threeplus_areas(x = x_int[int_sets],
                                        y = y_int[int_sets],
                                        these_circles = on_circles[int_sets],
-                                       radiuses = r)
+                                       radiuses = r,
+                                       setnames = setnames)
                 } else {
                   0
                 }
