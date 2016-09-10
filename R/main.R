@@ -1,16 +1,24 @@
-vennr <- function(venn_string) {
+#' Euler diagrams
+#'
+#' @param sets
+#' @return A list object of class 'vennr'.
+#' @examples
+#'
+#' @export
+
+eulerr <- function(sets) {
   # Collect names of all strings
-  all_names <- lapply(strsplit(names(venn_string), split = "&", fixed = T), sort)
-  names(venn_string) <- vapply(all_names, paste, collapse = "&", FUN.VALUE = character(1))
+  all_names <- lapply(strsplit(names(sets), split = "&", fixed = T), sort)
+  names(sets) <- vapply(all_names, paste, collapse = "&", FUN.VALUE = character(1))
 
   # Reformat names and order them alphabetically
   all_areas <- vector("list", length = sum(lengths(all_names) == 1))
-  for (i in lengths(all_names)) all_areas[[i]] <- venn_string[lengths(all_names) == i]
+  for (i in lengths(all_names)) all_areas[[i]] <- sets[lengths(all_names) == i]
 
-  setnames <- sort(names(all_areas[[1]]))
+  oneset_names <- sort(names(all_areas[[1]]))
 
   for (i in seq_along(all_areas)) {
-    cand_names <- combn(setnames, i, paste, collapse = "&")
+    cand_names <- utils::combn(oneset_names, i, paste, collapse = "&")
     cand_names <- cand_names[!cand_names %in% names(all_areas[[i]])]
     cand_values <- double(length(cand_names))
     names(cand_values) <- cand_names
@@ -48,8 +56,8 @@ vennr <- function(venn_string) {
                       }, FUN.VALUE = logical(1))
 
   # Compute an initial layout
-  initial_layout <- optim(
-    par = runif(length(oneset_areas) * 2, 0, min(radiuses)),
+  initial_layout <- stats::optim(
+    par = stats::runif(length(oneset_areas) * 2, 0, min(radiuses)),
     fn = initial_layout_optimizer,
     gr = initial_layout_gradient,
     distances = twoset_distances,
@@ -60,27 +68,43 @@ vennr <- function(venn_string) {
     method = c("L-BFGS-B")
   )
 
-  final_layout <- optim(
-    par = initial_layout$par,
+  final_layout <- stats::optim(
+    par = c(initial_layout$par, radiuses),
     fn = final_layout_optimizer,
-    r = radiuses,
     all_areas = all_areas,
-    oneset_areas = oneset_areas,
-    twoset_areas = twoset_areas,
+    oneset_names = oneset_names,
     twoset_names = twoset_names,
-    lower = rep(0, times = length(oneset_areas) * 2),
-    upper = rep(sum(radiuses) * 2 - min(radiuses) *  2, times = length(oneset_areas) * 2),
-    method = c("L-BFGS-B")
+    method = c("BFGS")
   )
 
-  fpar <- final_layout$par
+  # final_layout <- nlminb(
+  #   start = c(initial_layout$par, radiuses),
+  #   objective = final_layout_optimizer,
+  #   all_areas = all_areas,
+  #   oneset_names = oneset_names,
+  #   lower = rep(0, times = length(oneset_areas) * 3),
+  #   upper = c(rep(sum(radiuses) * 2 - min(radiuses) *  2, times = length(oneset_areas) * 2), max(radiuses) * 2),
+  #   twoset_names = twoset_names
+  # )
+
+  fpar <- matrix(final_layout$par, ncol = 3)
+  x <- fpar[, 1]
+  y <- fpar[, 2]
+  r <- fpar[, 3]
+  names(x) <- names(y) <- names(r) <- oneset_names
 
   structure(
     list(
-      x = fpar[1:(length(fpar) / 2)],
-      y = fpar[(1 + length(fpar) / 2):length(fpar)],
-      r = radiuses,
+      x = x,
+      y = y,
+      r = r,
       TSSE = final_layout$value
     ),
-    class = c("vennr", "list"))
+    class = c("eulerr", "list"))
+}
+
+# Utils -----------------------------------------------------------------
+
+is_equal <- function(x, y, tol = .Machine$double.eps ^ 0.5) {
+  abs(x - y) < tol
 }

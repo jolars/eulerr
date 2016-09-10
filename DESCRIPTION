@@ -1,0 +1,24 @@
+Package: eulerr
+Title: Area-Proportional Euler Diagrams
+Version: 0.0.0.9000
+Authors@R: person("Johan", "Larsson", email = "johan.larsson@outlook.com",
+                  role = c("aut", "cre"))
+Description: If possible, generates exactly area-proportional Euler diagrams,
+    or otherwise approximately proportional diagrams using numeric optimization.
+    A Euler diagram is a generalization of a Venn diagram, relaxing the
+    criterion that all interactions need to be represented.
+License: GPL-3
+Imports:
+    RColorBrewer
+Depends:
+    R (>= 3.3.1)
+Enconding: UTF-8
+LazyData: true
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+URL: http://github.com/jolars/eulerr
+BugReports: http://github.com/jolars/eulerr/issues
+RoxygenNote: 5.0.1
