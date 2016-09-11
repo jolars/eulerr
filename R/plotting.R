@@ -1,8 +1,14 @@
 #' Plot Euler diagrams
 #'
-#' @param eulerr
-#' @return Plots a eulerr diagram using Base R graphics.
+#' Generic plotting for euler diagrams created with eulerr.
+#'
+#' @param eulerr euler diagram specifications of type \code{'eulerr'}
+#' @param pal Palette from RColorBrewer.
+#' @param alpha Alpha for the colors to be plotted
+#' @return Plots euler diagram using Base R graphics.
 #' @examples
+#' fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
+#' plot(fit, pal = "Set2", alpha = .3)
 #'
 #' @export
 
@@ -11,9 +17,11 @@ plot.eulerr <- function(eulerr, pal = "Accent", alpha = .4, ...) {
   y <- eulerr[["Circles"]][, 2]
   r <- eulerr[["Circles"]][, 3]
 
+  n <- ifelse(length(x) < 3, 3, length(x))
+
   pal <- grDevices::adjustcolor(RColorBrewer::brewer.pal(length(x), pal),
                                 alpha.f = alpha)
-  u <- seq(0, 2 * pi, length = 200)
+  u <- seq(0, 2 * pi, length = 500)
 
   plot(
     NULL,
@@ -41,30 +49,3 @@ plot.eulerr <- function(eulerr, pal = "Accent", alpha = .4, ...) {
     )
   }
 }
-
-# # Draw the diagram
-# library(lattice)
-# library(RColorBrewer)
-#
-# colrs <- brewer.pal(nrow(circles), "Accent")
-#
-# # Custom panel function to create circles
-# panel.venn <- function (x, y, radius, groups = NULL, ...) {
-#   grid::grid.circle(x, y, r = radius, default.units = "native",
-#                     gp = grid::gpar(fill = colrs, col = "transparent", lex = 0,
-#                                     lwd = 0, alpha = .6), ...)
-# }
-#
-# xyplot(y ~ x, data = circles, radius = circles$r, aspect = "iso", scales = list(draw = F),
-#        xlab = NULL, ylab = NULL,
-#        prepanel = function(x, y, radius, ...) {
-#          # Return new limits
-#          list(xlim =  range(c(x + radius, x - radius)),
-#               ylim =  range(c(y + radius, y - radius)))
-#        },
-#        panel = function(x, y, radius, ...) {
-#          panel.venn(x, y, radius)
-#          panel.text(x, y, rownames(circles))
-#        }
-# )
-#
