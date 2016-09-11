@@ -3,10 +3,7 @@ initial_layout_optimizer <- function(par, distances, disjoint, contained, id) {
   x    <- pars[, 1]
   y    <- pars[, 2]
 
-  x_d  <- outer(x, x, "-")
-  y_d  <- outer(y, y, "-")
-  d    <- x_d ^ 2 + y_d ^ 2
-  d    <- d[lower.tri(d)]
+  d <- as.vector(dist(cbind(x, y)) ^ 2)
 
   ind  <- !(((d >= distances ^ 2) & disjoint) | (d <= distances ^ 2 & contained))
 
