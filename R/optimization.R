@@ -2,9 +2,12 @@ initial_layout_optimizer <- function(par, distances, disjoint, contained, id) {
   pars <- matrix(par, ncol = 2)
   x    <- pars[, 1]
   y    <- pars[, 2]
-  x_d  <- utils::combn(x, 2, function(x) x[1] - x[2])
-  y_d  <- utils::combn(y, 2, function(x) x[1] - x[2])
+
+  x_d  <- outer(x, x, "-")
+  y_d  <- outer(y, y, "-")
   d    <- x_d ^ 2 + y_d ^ 2
+  d    <- d[lower.tri(d)]
+
   ind  <- !(((d >= distances ^ 2) & disjoint) | (d <= distances ^ 2 & contained))
 
   sum((d[ind] - distances[ind] ^ 2) ^ 2)
@@ -14,8 +17,10 @@ initial_layout_gradient <- function(par, distances, disjoint, contained, id) {
   pars <- matrix(par, ncol = 2)
   x    <- pars[, 1]
   y    <- pars[, 2]
-  x_d  <- utils::combn(x, 2, function(x) x[1] - x[2])
-  y_d  <- utils::combn(y, 2, function(x) x[1] - x[2])
+  x_d  <- outer(x, x, "-")
+  x_d  <- - x_d[lower.tri(x_d)]
+  y_d  <- outer(y, y, "-")
+  y_d  <- - y_d[lower.tri(y_d)]
   d    <- x_d ^ 2 + y_d ^ 2
   i1   <- !((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained))
   grad_x <- grad_y <- double(length(i1))
