@@ -6,13 +6,22 @@
 \usage{
 \method{plot}{eulerr}(eulerr, pal = "Accent", alpha = 0.4, ...)
 }
+\arguments{
+\item{eulerr}{euler diagram specifications of type \code{'eulerr'}}
+
+\item{pal}{Palette from RColorBrewer.}
+
+\item{alpha}{Alpha for the colors to be plotted}
+}
 \value{
-Plots a eulerr diagram using Base R graphics.
+Plots euler diagram using Base R graphics.
 }
 \description{
-Plot Euler diagrams
+Generic plotting of euler diagrams created with eulerr using base R graphics.
 }
 \examples{
+fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
+plot(fit, pal = "Set2", alpha = .3)
 
 }
 
