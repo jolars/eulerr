@@ -56,7 +56,8 @@ eulerr <- function(sets) {
     contained = contained,
     id = id,
     lower =  rep(0, times = length(areas[[1]]) * 3),
-    upper = c(rep(sum(radiuses) * 2 - min(radiuses) *  2, times = length(areas[[1]]) * 2), max(radiuses) * 2),
+    upper = c(rep(sum(radiuses) * 2 - min(radiuses) *  2,
+                  times = length(areas[[1]]) * 2), max(radiuses) * 2),
     method = c("L-BFGS-B")
   )
 
@@ -66,16 +67,12 @@ eulerr <- function(sets) {
     areas = areas,
     names = names,
     id = id,
-    method = c("BFGS")
+    method = c("Nelder-Mead")
   )
 
   fpar <- matrix(final_layout$par,
                  ncol = 3,
                  dimnames = list(names[[1]], c("x", "y", "r")))
-#
-#   fpar <- matrix(c(initial_layout$par, radiuses),
-#                  ncol = 3,
-#                  dimnames = list(names[[1]], c("x", "y", "r")))
 
   fit <- structure(
     list(
