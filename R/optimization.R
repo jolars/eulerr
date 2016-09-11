@@ -14,11 +14,9 @@ initial_layout_gradient <- function(par, distances, disjoint, contained, id) {
   pars <- matrix(par, ncol = 2)
   x    <- pars[, 1]
   y    <- pars[, 2]
-  x_d  <- outer(x, x, "-")
-  x_d  <- - x_d[lower.tri(x_d)]
-  y_d  <- outer(y, y, "-")
-  y_d  <- - y_d[lower.tri(y_d)]
-  d    <- x_d ^ 2 + y_d ^ 2
+  x_d  <- x[id[[2]][1, ]] - x[id[[2]][2, ]]
+  y_d  <- y[id[[2]][1, ]] - y[id[[2]][2, ]]
+  d    <- as.vector(dist(cbind(x, y)) ^ 2)
   i1   <- !((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained))
   grad_x <- grad_y <- double(length(i1))
   grad_x[i1] <- 4 * (d[i1] - distances[i1] ^ 2) * (x_d[i1])
