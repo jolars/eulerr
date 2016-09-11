@@ -4,7 +4,7 @@
 \alias{plot.eulerr}
 \title{Plot Euler diagrams}
 \usage{
-\method{plot}{eulerr}(eulerr, pal = "Accent", alpha = 80, ...)
+\method{plot}{eulerr}(eulerr, pal = "Accent", alpha = 0.4, ...)
 }
 \value{
 Plots a eulerr diagram using Base R graphics.
