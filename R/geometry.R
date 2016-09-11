@@ -6,10 +6,10 @@ intersect_two_discs <- function(d, r1, r2) {
 }
 
 # Compute the area of a polygon
-find_polygon_area <- function (x, y) {
+find_polygon_area <- function(x, y) {
   j <- n <- length(x)
   area <- double(n)
-  for (i in 1:n) {
+  for (i in seq_along(x)) {
     area[i] <- (x[j] + x[i]) * (y[j] - y[i])
     j <- i
   }
@@ -17,24 +17,24 @@ find_polygon_area <- function (x, y) {
 }
 
 # Compute the overlap of three or more circles
-find_threeplus_areas <- function(x, y, radiuses, circles, oneset_names) {
+find_threeplus_areas <- function(x, y, radiuses, circles, names, pars) {
   # Sort points clockwise from center
-  i1 <- atan2(x - mean(x), y - mean(y))
-  x <- x[order(i1)]
-  y <- y[order(i1)]
-  circles <- circles[order(i1)]
+  i1 <- order(atan2(x - mean(x), y - mean(y)))
+  x <- x[i1]
+  y <- y[i1]
+  circles <- circles[, i1]
 
   j <- n <- length(x)
   arc_areas <- double(n)
 
   for (i in 1:n) {
-    c_1 <- unlist(strsplit(circles[i], fixed = T, split = "&"))
-    c_2 <- unlist(strsplit(circles[j], fixed = T, split = "&"))
+    c_1 <- circles[, i]
+    c_2 <- circles[, j]
 
-    i2 <- ifelse(n > 2, c_1[c_1 %in% c_2], c_1[i])
+    i2 <- c_1[c_1 %in% c_2]
 
     d <- sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2)
-    r <- radiuses[oneset_names == i2]
+    r <- radiuses[i2]
 
     # Find angle from center to segment
     u <- 2 * asin(d / (2 * r))
@@ -48,7 +48,5 @@ find_threeplus_areas <- function(x, y, radiuses, circles, oneset_names) {
 }
 
 find_sets_containing_points <- function (x_int, y_int, x, y, r) {
-  L <- (x_int - x) ^ 2 + (y_int - y) ^ 2
-  R <- r ^ 2
-  is_equal(L, R) | L < R
+  (x_int - x) ^ 2 + (y_int - y) ^ 2 < r ^ 2
 }

@@ -7,9 +7,9 @@
 #' @export
 
 plot.eulerr <- function(eulerr, pal = "Accent", alpha = 80, ...) {
-  x <- eulerr$x
-  y <- eulerr$y
-  r <- eulerr$r
+  x <- eulerr[["Circles"]][, 1]
+  y <- eulerr[["Circles"]][, 2]
+  r <- eulerr[["Circles"]][, 3]
 
   pal <- vapply(RColorBrewer::brewer.pal(length(x), pal),
                 function (x) paste0(x, alpha), FUN.VALUE = character(1))
