@@ -6,14 +6,13 @@
 #'
 #' @export
 
-plot.eulerr <- function(eulerr, pal = "Accent", alpha = 80, ...) {
+plot.eulerr <- function(eulerr, pal = "Accent", alpha = .4, ...) {
   x <- eulerr[["Circles"]][, 1]
   y <- eulerr[["Circles"]][, 2]
   r <- eulerr[["Circles"]][, 3]
 
-  pal <- vapply(RColorBrewer::brewer.pal(length(x), pal),
-                function (x) paste0(x, alpha), FUN.VALUE = character(1))
-
+  pal <- grDevices::adjustcolor(RColorBrewer::brewer.pal(length(x), pal),
+                                alpha.f = alpha)
   u <- seq(0, 2 * pi, length = 200)
 
   plot(
