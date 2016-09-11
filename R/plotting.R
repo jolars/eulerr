@@ -1,6 +1,6 @@
 #' Plot Euler diagrams
 #'
-#' Generic plotting for euler diagrams created with eulerr.
+#' Generic plotting of euler diagrams created with eulerr using base R graphics.
 #'
 #' @param eulerr euler diagram specifications of type \code{'eulerr'}
 #' @param pal Palette from RColorBrewer.
