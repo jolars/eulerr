@@ -13,39 +13,43 @@ test_that("eulerr can reproduce random layout", {
 
   names(x) <- names(y) <- names(r) <- n_one
 
-  r_combos <- utils::combn(r, 2)
-  r1 <- r_combos[1, ]
-  r2 <- r_combos[2, ]
+  return_intersections(par, areas, names, id) {
 
-  d <- as.vector(dist(cbind(x, y)))
+  }
 
-  disjoint  <- d > r1 + r2 | d == abs(r1 + r2)
-  contained <- d < abs(r1 - r2)
-  intersecting <- !(disjoint | contained)
 
-  a_two <- double(length(n_two))
-  names(a_two) <- n_two
-  a_two[contained]    <- min(r1, r2) ^ 2 * pi
-  a_two[disjoint]     <- 0
-  a_two[intersecting] <- eulerr:::intersect_two_discs(d = d[intersecting],
-                                             r1 = r1[intersecting],
-                                             r2 = r2[intersecting])
-  a_one <- r ^2 * pi
-
-  layout <- final_layout_test(par = c(x, y, r),
-                    all_areas = a_all,
-                    oneset_areas = a_one,
-                    setnames = n_one,
-                    twoset_areas = a_two,
-                    twoset_names = n_two)
-  fit1 <- structure(
-    list(
-      x = x,
-      y = y,
-      r = r
-    ),
-    class = c("eulerr", "list"))
-
-  fit2 <- eulerr(layout)
 
 })
+
+sets <- c(SE = 13, Treat = 28, AntiCCP = 101, DAS28 = 91, "SE&Treat" = 1,
+                 "SE&DAS28" = 14, "Treat&AntiCCP" = 6, "SE&AntiCCP&DAS28" = 1)
+
+sets <- c("B&C" = 2, B = 6, A = 4, C = 3, D = 2, E = 7, F = 3,
+                 "A&B" = 2, "F&A" = 2, "B&D" = 1, "D&F" = 0, "B&E" = 0,
+                 "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+                 "A&B&F" = 1, "C&B&D" = 1)
+
+# Uniform intersections
+sets <- c("A" = 10, "B" = 10, "C" = 10, "A&B" = 8, "A&C" = 8, "B&C" = 8, "A&B&C" = 3)
+
+# Completely disjoint
+sets <- c("A" = 10, "B" = 10, "C" = 10)
+
+# One completely contained
+sets <- c("A" = 10, "B" = 10, "C" = 3, "A&B" = 6, "A&C" = 3, "B&C" = 3, "A&B&C" = 3)
+
+# Two sets interacting inside a third
+
+sets <- c("A" = 25, "B" = 5, "C" = 5, "A&B" = 5, "A&C" = 5, "B&C" = 3, "A&B&C" = 3)
+
+# One set contained, all other interacting
+
+sets <- c("A" = 15, "B" = 15, "C" = 5, "A&B" = 10, "A&C" = 5, "B&C" = 3, "A&B&C" = 3)
+
+# Russian doll
+
+sets <- c("A" = 15, "B" = 10, C = 5, "A&B" = 10, "A&C" = 5, "B&C" = 5, "A&B&C" = 5)
+
+# Unequal overlaps
+
+sets <- c("A" = 10, B = 9, C = 4, "A&B" = 2, "A&C" = 3, "B&C" = 3, "A&B&C" = 2)
