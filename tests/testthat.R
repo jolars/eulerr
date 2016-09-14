@@ -1,4 +1,4 @@
 library(testthat)
-library(vennr)
+library(eulerr)
 
-test_check("vennr")
+test_check("eulerr")
