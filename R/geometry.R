@@ -1,8 +1,22 @@
 # Compute the overlap of two circles
-intersect_two_discs <- function(d, r1, r2) {
+intersect_two_discs <- function(r1, r2, d) {
   r1 ^ 2 * acos((d ^ 2 + r1 ^ 2 - r2 ^ 2) / (2 * d * r1)) +
   r2 ^ 2 * acos((d ^ 2 + r2 ^ 2 - r1 ^ 2) / (2 * d * r2)) -
   .5 * sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2))
+}
+
+# Find intersection points
+locate_intersections <- function(r1, r2, x_d, y_d, x_c, y_c, d) {
+  l <- (r2 ^ 2 - r1 ^ 2 + d ^ 2) / (2 * d)
+  h <- sqrt(r2 ^ 2 - l ^ 2)
+  ld <- l / d
+  hd <- h / d
+  x1 <- x_d * ld + y_d * hd + x_c
+  x2 <- x_d * ld - y_d * hd + x_c
+  y1 <- y_d * ld - x_d * hd + y_c
+  y2 <- y_d * ld + x_d * hd + y_c
+
+  array(c(x1, y1, x2, y2), dim = c(length(r1), 2, 2))
 }
 
 # Compute the area of a polygon
@@ -13,40 +27,44 @@ find_polygon_area <- function(x, y) {
     area[i] <- (x[j] + x[i]) * (y[j] - y[i])
     j <- i
   }
-  sum(area) * 0.5
+  sum(area) / 2
 }
 
 # Compute the overlap of three or more circles
-find_threeplus_areas <- function(x, y, radiuses, circles, names, pars) {
+find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
   # Sort points clockwise from center
-  i1 <- order(atan2(x - mean(x), y - mean(y)))
-  x <- x[i1]
-  y <- y[i1]
-  circles <- circles[, i1]
+  ind <- order(atan2(x_int - mean(x_int), y_int - mean(y_int)))
+  x_int <- x_int[ind]
+  y_int <- y_int[ind]
+  circles <- circles[, ind]
 
-  j <- n <- length(x)
+  j <- n <- length(x_int)
   arc_areas <- double(n)
 
   for (i in 1:n) {
-    c_1 <- circles[, i]
-    c_2 <- circles[, j]
+    circle_now <- circles[, i][circles[, i] %in% circles[, j]]
 
-    i2 <- c_1[c_1 %in% c_2]
-
-    d <- sqrt((x[j] - x[i]) ^ 2 + (y[j] - y[i]) ^ 2)
-    r <- radiuses[i2]
+    d <- sqrt((x_int[j] - x_int[i]) ^ 2 + (y_int[j] - y_int[i]) ^ 2)
+    r <- radiuses[circle_now]
 
     # Find angle from center to segment
     u <- 2 * asin(d / (2 * r))
 
-    # Find area of circle segment
-    arc_areas[i] <- ((r ^ 2) / 2) * (u - sin(u))
+    # Find area of circle segment, in case we have to competing circles
+    A <- ((r ^ 2) / 2) * (u - sin(u))
+
+    # pick the smallest area
+    arc_areas[i] <- A[which.min(A)]
 
     j <- i
   }
-  sum(arc_areas, find_polygon_area(x, y))
+  sum(arc_areas, find_polygon_area(x_int, y_int))
 }
 
-find_sets_containing_points <- function (x_int, y_int, x, y, r) {
-  (x_int - x) ^ 2 + (y_int - y) ^ 2 < r ^ 2
+find_sets_containing_points <- function (points, x, y, r) {
+  x_int <- points[1]
+  y_int <- points[2]
+  L <- (x_int - x) ^ 2 + (y_int - y) ^ 2
+  R <- r ^ 2
+  all(abs(L - R) < .Machine$double.eps ^ 0.5 | L < R)
 }
