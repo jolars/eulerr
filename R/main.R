@@ -38,8 +38,8 @@ eulerr <- function(sets) {
   disjoint <- areas[[2]] == 0
 
   distances <- mapply(separate_two_discs,
-                      r1 = radiuses[id[[2]][1,]],
-                      r2 = radiuses[id[[2]][2,]],
+                      r1 = radiuses[id[[2]][1, ]],
+                      r2 = radiuses[id[[2]][2, ]],
                       overlap = areas[[2]])
 
   # Establish identities of disjoint and contained sets
@@ -65,25 +65,28 @@ eulerr <- function(sets) {
     fn = final_layout_optimizer,
     par = c(initial_layout$par, radiuses),
     areas = areas,
-    names = names,
     id = id,
     method = c("Nelder-Mead")
   )
+
+  fit <- return_intersections(par = final_layout$par,
+                              areas = areas,
+                              id = id)
 
   fpar <- matrix(final_layout$par,
                  ncol = 3,
                  dimnames = list(names[[1]], c("x", "y", "r")))
 
-  fit <- structure(
+  output <- structure(
     list(
-      Circles = fpar,
-      Stress = final_layout$value
+      Circles = fpar#,
+      #Stress = final_layout$value
     ),
     class = c("eulerr", "list"))
 }
 
 # Utils -----------------------------------------------------------------
 
-is_equal <- function(x, y, tol = .Machine$double.eps ^ 0.5) {
-  abs(x - y) < tol
+is_equal <- function(x, y) {
+  abs(x - y) < .Machine$double.eps ^ 0.5
 }
