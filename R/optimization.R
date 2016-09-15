@@ -47,7 +47,7 @@ separate_two_discs <- function(r1, r2, overlap) {
 # Optimization wrapper for the final layout
 final_layout_optimizer <- function(par, areas, id) {
   fit <- return_intersections(par, areas, id)
-  sum((unlist(fit) - unlist(areas)) ^ 2)
+  sum((unlist(fit) - unlist(areas)) ^ 2) / sum(unlist(areas) ^ 2)
 }
 
 # Return areas from x, y, etc.
@@ -68,6 +68,8 @@ return_intersections <- function(par, areas, id) {
   r1  <- r[id[[2]][1, ]]
   r2  <- r[id[[2]][2, ]]
 
+  # contained    <- d < abs(r1 - r2)
+  # disjoint     <- d > r1 + r2
   contained    <- is_equal(d, abs(r1 - r2)) | d < abs(r1 - r2)
   disjoint     <- is_equal(d, r1 + r2) | d > r1 + r2
   intersecting <- !(disjoint | contained)
@@ -78,10 +80,8 @@ return_intersections <- function(par, areas, id) {
                                                   r2 = r2[intersecting],
                                                   d  = d[intersecting])
 
-  if (!any(intersecting) | length(areas) < 3) return(areas)
-
-  int_points <- array(NA, dim = c(length(areas[[2]]), 2, 2))
-  int_points[intersecting, , ] <- locate_intersections(
+  int_points <- matrix(NA, ncol = 2, nrow = length(areas[[2]]) * 2)
+  int_points[intersecting, ] <- locate_intersections(
     r1  = r1[intersecting],
     r2  = r2[intersecting],
     x_d = x_d[intersecting],
@@ -91,35 +91,35 @@ return_intersections <- function(par, areas, id) {
     d   = d[intersecting]
   )
 
-  for (i in 3:length(id)) {
+  in_circles <- matrix(FALSE, ncol = nrow(int_points), nrow = length(x))
+  in_circles[, intersecting] <- apply(int_points[intersecting, ],
+                                      1, find_sets_containing_points, x, y, r)
+
+  old_int <- cbind(id[[2]][, intersecting], id[[2]][, intersecting])
+
+  for (i in seq_along(old_int[1, ])) {
+    in_circles[, intersecting][old_int[, i], i] <- TRUE
+  }
+
+  for (i in seq_along(id[-c(1, 2)])) {
     for (j in 1:ncol(id[[i]])) {
       a <- id[[i]][, j]
       b <- id[[2]][1, ] %in% a & id[[2]][2, ] %in% a
 
       # Which of the intersection points are within all sets?
-      in_all <- matrix(F, ncol = 2, nrow = length(b))
-      in_all[b & intersecting,] <-
-        apply(
-          int_points[b & intersecting, , , drop = FALSE],
-          c(1, 3),
-          find_sets_containing_points,
-          x = x[a],
-          y = y[a],
-          r = r[a]
-        )
+      in_all <- colSums(in_circles[a, ]) == length(a) & b
 
-      circles <- cbind(id[[2]][, in_all[, 1] & b, drop = FALSE],
-                       id[[2]][, in_all[, 2] & b, drop = FALSE])
+      circles <- cbind(id[[2]], id[[2]])[, in_all, drop = FALSE]
 
       if (ncol(circles) < 2) {
         # Either no interactions between the sets or fully contained
-        one_cont <- logical(length(a))
-        for (k in seq_along(a)) {
-          u <- (id[[2]][1, ] %in% a[k] | id[[2]][2, ] %in% a[k]) & b
-          one_cont[k] <- all(contained[u])
-        }
-        if (any(one_cont)) {
-          areas[[i]][j] <- min(r[a]) ^ 2 * pi
+        l <- which.min(r[a])
+
+        dl <- (x[a][l] - x[a][-l]) ^ 2 + (y[a][l] - y[a][-l]) ^ 2 <=
+              abs(r[a][l] - r[a][-l])
+
+        if (all(dl)) {
+          areas[[i]][j] <- r[a][l] ^ 2 * pi
         } else {
           areas[[i]][j] <- 0
         }
@@ -128,15 +128,13 @@ return_intersections <- function(par, areas, id) {
         areas[[i]][j] <- intersect_two_discs(
           r[circles[1, 1]],
           r[circles[2, 1]],
-          d[b & (in_all[, 1] | in_all[, 2])]
+          d[in_all][1]
         )
       } else if (ncol(circles) > 2) {
         # Return three plus circle interaction
         areas[[i]][j] <- find_threeplus_areas(
-          x_int = c(int_points[in_all[, 1] & b, 1, 1],
-                    int_points[in_all[, 2] & b, 1, 2]),
-          y_int = c(int_points[in_all[, 1] & b, 2, 1],
-                    int_points[in_all[, 2] & b, 2, 2]),
+          x_int = int_points[in_all, 1],
+          y_int = int_points[in_all, 2],
           radiuses = r,
           circles = circles
         )
