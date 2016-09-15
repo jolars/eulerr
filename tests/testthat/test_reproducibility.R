@@ -33,7 +33,7 @@ sets <- c("B&C" = 2, B = 6, A = 4, C = 3, D = 2, E = 7, F = 3,
 sets <- c("A" = 10, "B" = 10, "C" = 10, "A&B" = 8, "A&C" = 8, "B&C" = 8, "A&B&C" = 3)
 
 # Completely disjoint
-sets <- c("A" = 10, "B" = 10, "C" = 10)
+sets <- c(A = 10, B = 10, C = 8)
 
 # One completely contained
 sets <- c("A" = 10, "B" = 10, "C" = 3, "A&B" = 6, "A&C" = 3, "B&C" = 3, "A&B&C" = 3)
@@ -53,3 +53,7 @@ sets <- c("A" = 15, "B" = 10, C = 5, "A&B" = 10, "A&C" = 5, "B&C" = 5, "A&B&C" =
 # Unequal overlaps
 
 sets <- c("A" = 10, B = 9, C = 4, "A&B" = 2, "A&C" = 3, "B&C" = 3, "A&B&C" = 2)
+
+# Only two sets
+
+sets <- c(A = 10, B = 9)
