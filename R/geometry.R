@@ -16,7 +16,8 @@ locate_intersections <- function(r1, r2, x_d, y_d, x_c, y_c, d) {
   y1 <- y_d * ld - x_d * hd + y_c
   y2 <- y_d * ld + x_d * hd + y_c
 
-  array(c(x1, y1, x2, y2), dim = c(length(r1), 2, 2))
+  cbind(c(x1, x2), c(y1, y2))
+  #array(c(x1, y1, x2, y2), dim = c(length(r1), 2, 2))
 }
 
 # Compute the area of a polygon
@@ -33,12 +34,13 @@ find_polygon_area <- function(x, y) {
 # Compute the overlap of three or more circles
 find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
   # Sort points clockwise from center
-  ind <- order(atan2(x_int - mean(x_int), y_int - mean(y_int)))
+  j <- n <- length(x_int)
+  ind <- order(atan2(x_int - sum(x_int) / n,
+                     y_int - sum(y_int) / n))
   x_int <- x_int[ind]
   y_int <- y_int[ind]
   circles <- circles[, ind]
 
-  j <- n <- length(x_int)
   arc_areas <- double(n)
 
   for (i in 1:n) {
@@ -54,7 +56,7 @@ find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
     A <- ((r ^ 2) / 2) * (u - sin(u))
 
     # pick the smallest area
-    arc_areas[i] <- A[which.min(A)]
+    arc_areas[i] <- min(A[which.min(A)], 0)
 
     j <- i
   }
@@ -64,7 +66,5 @@ find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
 find_sets_containing_points <- function (points, x, y, r) {
   x_int <- points[1]
   y_int <- points[2]
-  L <- (x_int - x) ^ 2 + (y_int - y) ^ 2
-  R <- r ^ 2
-  all(abs(L - R) < .Machine$double.eps ^ 0.5 | L < R)
+  (x_int - x) ^ 2 + (y_int - y) ^ 2 < r ^ 2
 }
