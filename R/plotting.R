@@ -14,9 +14,9 @@
 #' @export
 
 plot.eulerr <- function(eulerr, alpha = .4, ...) {
-  x <- fit[["circles"]][, 1]
-  y <- fit[["circles"]][, 2]
-  r <- fit[["circles"]][, 3]
+  x <- eulerr[["circles"]][, 1]
+  y <- eulerr[["circles"]][, 2]
+  r <- eulerr[["circles"]][, 3]
 
   # Find good positions for the text centers
   text_x <- double(length(x))

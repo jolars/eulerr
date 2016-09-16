@@ -103,7 +103,6 @@ return_intersections <- function(par, areas, id) {
     in_circles[, intersecting][twoway_int[, i], i] <- TRUE
   }
 
-
   all_circles <- cbind(two, two)
 
   # Iterate over all higher order intersections
