@@ -1,8 +1,17 @@
 #' Euler diagrams
 #'
-#' @param sets
+#' @param sets Set relationships in the form of a named numeric vector, with
+#'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
+#'   Missing interactions are treated as being 0.
 #' @return A list object of class 'vennr'.
 #' @examples
+#'
+#' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+#'
+#' # Same result as above
+#' fit2 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3,
+#'                  "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
+#'                  "A&B&C" = 0) )
 #'
 #' @export
 #' @importFrom assertthat assert_that
