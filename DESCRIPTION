@@ -9,7 +9,7 @@ Description: If possible, generates exactly area-proportional Euler diagrams,
     criterion that all interactions need to be represented.
 License: GPL-3
 Imports:
-    RColorBrewer
+    grDevices, utils, stats, graphics, assertthat, randtoolbox
 Depends:
     R (>= 3.3.1)
 Enconding: UTF-8
