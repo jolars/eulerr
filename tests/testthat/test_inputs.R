@@ -1,4 +1,4 @@
-library(eulerr)
+library(assertthat)
 context("Test inputs to eulerr")
 
 test_that("erroneous input returns errors", {

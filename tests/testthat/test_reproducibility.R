@@ -1,5 +1,6 @@
-library(eulerr)
-context("Reproduce euler diagrams")
+library(assertthat)
+context("Test if diagrams can be reproduced")
+
 
 test_that("eulerr can reproduce its own solution given the areas", {
   fit1 <- eulerr(c("A" = 10, "B" = 10, "C" = 10, "A&B" = 8, "A&C" = 8,
@@ -32,10 +33,10 @@ test_that("expect no errors for a variety of predefined sets", {
   s8 <- c(A = 10, B = 9)
 
   # Difficult set (From Wilkinsons article)
-  s9 <- c("B&C" = 2, B = 6, A = 4, C = 3, D = 2, E = 7, F = 3,
-          "A&B" = 2, "F&A" = 2, "B&D" = 1, "D&F" = 0, "B&E" = 0,
-          "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
-          "A&B&F" = 1, "C&B&D" = 1)
+  s9 <-  c(A = 4, B = 6, C = 3, D = 2, E = 7, F = 3,
+           "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
+           "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+           "A&B&F" = 1, "B&C&D" = 1)
 
   expect_error(eulerr(s1), NA)
   expect_error(eulerr(s2), NA)
