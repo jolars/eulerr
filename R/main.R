@@ -14,13 +14,12 @@
 #'                  "A&B&C" = 0) )
 #'
 #' @export
-#' @importFrom assertthat assert_that
 
 eulerr <- function(sets) {
-  assert_that(not_empty(sets))
-  assert_that(length(sets) >= 1)
-  assert_that(has_attr(sets, "names"))
-  assert_that(is.numeric(sets))
+  assertthat::assert_that(assertthat::not_empty(sets))
+  assertthat::assert_that(length(sets) >= 1)
+  assertthat::assert_that(assertthat::has_attr(sets, "names"))
+  assertthat::assert_that(is.numeric(sets))
 
   setnames <- strsplit(names(sets), split = "&", fixed = T)
   one_sets <- unlist(setnames[lengths(setnames) == 1])
@@ -115,13 +114,13 @@ eulerr <- function(sets) {
 
 #' Residuals from eulerr fit
 #'
-#' @param eulerr A eulerr object.
+#' @param object A eulerr object.
 #' @param ... Currently ignored.
-#' @return Residuals
+#' @return Residuals.
 #'
 #' @export
-residuals.eulerr <- function(eulerr, ...) {
-  stopifnot(inherits(eulerr, "eulerr"))
+residuals.eulerr <- function(object, ...) {
+  assertthat::assert_that(inherits(eulerr, "eulerr"))
 
   eulerr[["residuals"]]
 }
