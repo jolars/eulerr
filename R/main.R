@@ -5,8 +5,14 @@
 #' @examples
 #'
 #' @export
+#' @importFrom assertthat assert_that
 
 eulerr <- function(sets) {
+  assert_that(not_empty(sets))
+  assert_that(length(sets) >= 1)
+  assert_that(has_attr(sets, "names"))
+  assert_that(is.numeric(sets))
+
   setnames <- strsplit(names(sets), split = "&", fixed = T)
   one_sets <- unlist(setnames[lengths(setnames) == 1])
 
@@ -15,6 +21,10 @@ eulerr <- function(sets) {
   for (i in seq_along(one_sets)) {
     names[[i]] <- utils::combn(one_sets, i)
   }
+
+  # Scale the values to fractions
+  scale_factor <- sum(sets)
+  sets <- sets / scale_factor
 
   # Set up area matrix
   areas <- vector("list", length = length(names))
@@ -37,13 +47,15 @@ eulerr <- function(sets) {
 
   disjoint <- areas[[2]] == 0
 
+  two <- id[[2]]
+
   distances <- mapply(separate_two_discs,
-                      r1 = radiuses[id[[2]][1, ]],
-                      r2 = radiuses[id[[2]][2, ]],
+                      r1 = radiuses[two[1, ]],
+                      r2 = radiuses[two[2, ]],
                       overlap = areas[[2]])
 
   # Establish identities of disjoint and contained sets
-  tmp <- matrix(areas[[1]][id[[2]]], nrow = 2)
+  tmp <- matrix(areas[[1]][two], nrow = 2)
   contained <- areas[[2]] == tmp[1, ] | areas[[2]] == tmp[2, ]
 
   # Compute an initial layout
@@ -54,7 +66,7 @@ eulerr <- function(sets) {
     distances = distances,
     disjoint = disjoint,
     contained = contained,
-    id = id,
+    two = two,
     lower = rep(0, times = length(areas[[1]]) * 2),
     upper = rep(sum(radiuses) * 2 - min(radiuses) - max(radiuses)),
     method = c("L-BFGS-B")
@@ -68,28 +80,39 @@ eulerr <- function(sets) {
     method = c("Nelder-Mead")
   )
 
-  fit <- return_intersections(par = final_layout$par,
-                              areas = areas,
-                              id = id)
-  sum((unlist(fit) - unlist(areas)) ^ 2) / sum(unlist(areas) ^ 2)
+  fit <- unlist(return_intersections(par = final_layout$par,
+                                     areas = areas,
+                                     id = id)) * scale_factor
+  names(fit) <- unlist(lapply(names, apply, 2, paste0, collapse = "&"))
+
+  orig <- unlist(areas) * scale_factor
+  names(orig) <- names(fit)
 
   fpar <- matrix(final_layout$par,
                  ncol = 3,
                  dimnames = list(names[[1]], c("x", "y", "r")))
-  # fpar <- matrix(c(initial_layout$par, radiuses),
-  #                ncol = 3,
-  #                dimnames = list(names[[1]], c("x", "y", "r")))
-
   output <- structure(
     list(
-      Circles = fpar,
-      Stress = final_layout$value
+      circles = fpar * scale_factor,
+      original_areas = orig,
+      fitted_areas = fit,
+      residuals = orig - fit,
+      stress = final_layout$value
     ),
     class = c("eulerr", "list"))
 }
 
-# Utils -----------------------------------------------------------------
+# Methods for the eulerr object -------------------------------------------
 
-is_equal <- function(x, y) {
-  abs(x - y) < .Machine$double.eps ^ 0.5
+#' Residuals from eulerr fit
+#'
+#' @param eulerr A eulerr object.
+#' @param ... Currently ignored.
+#' @return Residuals
+#'
+#' @export
+residuals.eulerr <- function(eulerr, ...) {
+  stopifnot(inherits(eulerr, "eulerr"))
+
+  eulerr[["residuals"]]
 }
