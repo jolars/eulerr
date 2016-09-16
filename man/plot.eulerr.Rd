@@ -4,15 +4,14 @@
 \alias{plot.eulerr}
 \title{Plot Euler diagrams}
 \usage{
-\method{plot}{eulerr}(eulerr, alpha = 0.4, ...)
+\method{plot}{eulerr}(x, alpha = 0.4, ...)
 }
 \arguments{
-\item{eulerr}{euler diagram specifications of class \code{'eulerr'}}
+\item{x}{euler diagram specifications of class \code{'eulerr'}}
 
 \item{alpha}{Alpha for the colors to be plotted}
 
-\item{col}{Colors to fill the circles with. The default uses the
-"Accent" palette from RColorBrewer.}
+\item{...}{Arguments to pass to text, polygon, or plot.}
 }
 \value{
 Plots euler diagram using Base R graphics.
@@ -22,7 +21,7 @@ Plot euler diagrams using base R graphics.
 }
 \examples{
 fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
-plot(fit, pal = "Set2", alpha = .3)
+plot(fit, alpha = .7)
 
 }
 
