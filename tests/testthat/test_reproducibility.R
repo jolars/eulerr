@@ -1,4 +1,3 @@
-library(assertthat)
 context("Test if diagrams can be reproduced")
 
 
