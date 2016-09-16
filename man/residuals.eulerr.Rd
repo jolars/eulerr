@@ -4,15 +4,15 @@
 \alias{residuals.eulerr}
 \title{Residuals from eulerr fit}
 \usage{
-\method{residuals}{eulerr}(eulerr, ...)
+\method{residuals}{eulerr}(object, ...)
 }
 \arguments{
-\item{eulerr}{A eulerr object.}
+\item{object}{A eulerr object.}
 
 \item{...}{Currently ignored.}
 }
 \value{
-Residuals
+Residuals.
 }
 \description{
 Residuals from eulerr fit
