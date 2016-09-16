@@ -1,18 +1,20 @@
-initial_layout_optimizer <- function(par, distances, disjoint, contained, id) {
+initial_layout_optimizer <- function(par, distances, disjoint, contained, two) {
   pars <- matrix(par, ncol = 2)
-  x <- pars[, 1]
-  y <- pars[, 2]
-  d <- as.vector(dist(cbind(x, y)) ^ 2)
+  x    <- pars[, 1]
+  y    <- pars[, 2]
+  x_d  <- x[two[1, ]] - x[two[2, ]]
+  y_d  <- y[two[1, ]] - y[two[2, ]]
+  d    <- x_d ^ 2 + y_d ^ 2
   i <- !(((d >= distances ^ 2) & disjoint) | (d <= distances ^ 2 & contained))
   sum((d[i] - distances[i] ^ 2) ^ 2)
 }
 
-initial_layout_gradient <- function(par, distances, disjoint, contained, id) {
+initial_layout_gradient <- function(par, distances, disjoint, contained, two) {
   pars <- matrix(par, ncol = 2)
   x    <- pars[, 1]
   y    <- pars[, 2]
-  x_d  <- x[id[[2]][1, ]] - x[id[[2]][2, ]]
-  y_d  <- y[id[[2]][1, ]] - y[id[[2]][2, ]]
+  x_d  <- x[two[1, ]] - x[two[2, ]]
+  y_d  <- y[two[1, ]] - y[two[2, ]]
   d    <- x_d ^ 2 + y_d ^ 2
   i    <- !((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained))
 
@@ -22,9 +24,9 @@ initial_layout_gradient <- function(par, distances, disjoint, contained, id) {
   grad_x    <- rbind(grad_x, -grad_x)
   grad_y    <- rbind(grad_y, -grad_y)
 
-  c(vapply(seq_along(x), function(x) {sum(grad_x[id[[2]] == x])},
+  c(vapply(seq_along(x), function(x) {sum(grad_x[two == x])},
            FUN.VALUE = double(1)),
-    vapply(seq_along(y), function(y) {sum(grad_y[id[[2]] == y])},
+    vapply(seq_along(y), function(y) {sum(grad_y[two == y])},
            FUN.VALUE = double(1)))
 }
 
@@ -57,21 +59,21 @@ return_intersections <- function(par, areas, id) {
   y <- pars[, 2]
   r <- pars[, 3]
 
+  two <- id[[2]]
+
   for (i in seq_along(areas)) areas[[i]] <- 0
   areas[[1]] <- r ^ 2 * pi
 
-  x_c <- matrix(x[id[[2]]], nrow = 2)
-  y_c <- matrix(y[id[[2]]], nrow = 2)
-  x_d <- x[id[[2]][1, ]] - x[id[[2]][2, ]]
-  y_d <- y[id[[2]][1, ]] - y[id[[2]][2, ]]
+  x_c <- matrix(x[two], nrow = 2)
+  y_c <- matrix(y[two], nrow = 2)
+  x_d <- x[two[1, ]] - x[two[2, ]]
+  y_d <- y[two[1, ]] - y[two[2, ]]
   d   <- sqrt(x_d ^ 2 + y_d ^ 2)
-  r1  <- r[id[[2]][1, ]]
-  r2  <- r[id[[2]][2, ]]
+  r1  <- r[two[1, ]]
+  r2  <- r[two[2, ]]
 
-  # contained    <- d < abs(r1 - r2)
-  # disjoint     <- d > r1 + r2
-  contained    <- is_equal(d, abs(r1 - r2)) | d < abs(r1 - r2)
-  disjoint     <- is_equal(d, r1 + r2) | d > r1 + r2
+  contained    <- d <= abs(r1 - r2)
+  disjoint     <- d >= r1 + r2
   intersecting <- !(disjoint | contained)
 
   areas[[2]][contained]    <- pmin(r1[contained], r2[contained]) ^ 2 * pi
@@ -95,21 +97,27 @@ return_intersections <- function(par, areas, id) {
   in_circles[, intersecting] <- apply(int_points[intersecting, ],
                                       1, find_sets_containing_points, x, y, r)
 
-  old_int <- cbind(id[[2]][, intersecting], id[[2]][, intersecting])
+  twoway_int <- cbind(two[, intersecting], two[, intersecting])
 
-  for (i in seq_along(old_int[1, ])) {
-    in_circles[, intersecting][old_int[, i], i] <- TRUE
+  for (i in seq_along(twoway_int[1, ])) {
+    in_circles[, intersecting][twoway_int[, i], i] <- TRUE
   }
 
+
+  all_circles <- cbind(two, two)
+
+  # Iterate over all higher order intersections
   for (i in seq_along(id[-c(1, 2)])) {
+    i <- i + 2
     for (j in 1:ncol(id[[i]])) {
       a <- id[[i]][, j]
-      b <- id[[2]][1, ] %in% a & id[[2]][2, ] %in% a
+      b <- two[1, ] %in% a & two[2, ] %in% a
 
       # Which of the intersection points are within all sets?
-      in_all <- colSums(in_circles[a, ]) == length(a) & b
+      in_all <- .colSums(in_circles[a, , drop = FALSE],
+                         m = length(a), n = ncol(in_circles)) == length(a) & b
 
-      circles <- cbind(id[[2]], id[[2]])[, in_all, drop = FALSE]
+      circles <- all_circles[, in_all, drop = FALSE]
 
       if (ncol(circles) < 2) {
         # Either no interactions between the sets or fully contained
