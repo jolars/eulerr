@@ -3,4 +3,3 @@
 S3method(plot,eulerr)
 S3method(residuals,eulerr)
 export(eulerr)
-importFrom(assertthat,assert_that)
