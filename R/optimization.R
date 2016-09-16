@@ -49,7 +49,7 @@ separate_two_discs <- function(r1, r2, overlap) {
 # Optimization wrapper for the final layout
 final_layout_optimizer <- function(par, areas, id) {
   fit <- return_intersections(par, areas, id)
-  sum((unlist(fit) - unlist(areas)) ^ 2) / sum(unlist(areas) ^ 2)
+  sum(abs(unlist(fit) - unlist(areas))) / sum(unlist(areas))
 }
 
 # Return areas from x, y, etc.
@@ -121,7 +121,6 @@ return_intersections <- function(par, areas, id) {
       if (ncol(circles) < 2) {
         # Either no interactions between the sets or fully contained
         l <- which.min(r[a])
-
         dl <- (x[a][l] - x[a][-l]) ^ 2 + (y[a][l] - y[a][-l]) ^ 2 <=
               abs(r[a][l] - r[a][-l])
 
