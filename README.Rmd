@@ -27,7 +27,7 @@ produce Venn diagrams but other times not.
 With three or more sets interacting, exact euler diagrams are frequently
 impossible. In these cases, eulerr will provide the best
 approximation possible by numerically tuning the circles positions and radiuses
-so that the sum of squared errors is minimized.
+so that the sum of absolute errors is minimized.
 
 When solutions are approximate, eulerr helpfully provides statistics
 that allow the user decide if the approximation can be trusted.
@@ -42,11 +42,11 @@ devtools::install_github("jolars/eulerr")
 
 ## Usage
 
-```{r titanic}
+```{r sets}
 library(eulerr)
-
-sets <- c(A = 10, B = 9, C = 4, "A&B" = 2, "A&C" = 3, "B&C" = 3, "A&B&C" = 2)
-
+sets <- c("A" = 10, "B" = 9, "C" = 4,
+          "A&B" = 2, "A&C" = 3, "B&C" = 3,
+          "A&B&C" = 2)
 fit <- eulerr(sets)
 ```
 
