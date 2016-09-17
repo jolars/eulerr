@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{residuals.eulerr}
 \alias{residuals.eulerr}
-\title{Residuals from eulerr fit}
+\title{Residuals from a eulerr fit}
 \usage{
 \method{residuals}{eulerr}(object, ...)
 }
@@ -15,6 +15,6 @@
 Residuals.
 }
 \description{
-Residuals from eulerr fit
+Residuals from a eulerr fit
 }
 
