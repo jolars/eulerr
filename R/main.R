@@ -14,12 +14,15 @@
 #'                  "A&B&C" = 0) )
 #'
 #' @export
+#' @import assertthat
 
 eulerr <- function(sets) {
-  assertthat::assert_that(assertthat::not_empty(sets))
-  assertthat::assert_that(length(sets) >= 1)
-  assertthat::assert_that(assertthat::has_attr(sets, "names"))
-  assertthat::assert_that(is.numeric(sets))
+  assert_that(not_empty(sets))
+  assert_that(length(sets) > 0)
+  assert_that(has_attr(sets, "names"))
+  assert_that(all(names(sets) != ""))
+  assert_that(is.numeric(sets))
+  assert_that(!any(duplicated(names(sets))))
 
   setnames <- strsplit(names(sets), split = "&", fixed = T)
   one_sets <- unlist(setnames[lengths(setnames) == 1])
@@ -45,12 +48,25 @@ eulerr <- function(sets) {
     }
   }
 
+  assert_that(all(areas[[1]] > 0))
+
   radiuses <- sqrt(areas[[1]] / pi)
 
   # Set up index matrix
   id <- vector("list", length = length(areas))
   for (i in seq_along(id)) {
     id[[i]] <- utils::combn(length(areas[[1]]), i)
+  }
+
+  # Make sure that no intersections are larger than their components
+  for (i in seq_along(id[-1])) {
+    i <- i + 1
+    for (j in 1:ncol(id[[i]])) {
+      m <- id[[1]] %in% id[[i]][1, j] | id[[1]] %in% id[[i]][2, j]
+      if(any(areas[[i]][j] > areas[[1]][m])) {
+        stop("Intersection areas cannot exceed their components' areas.")
+      }
+    }
   }
 
   disjoint <- areas[[2]] == 0
@@ -112,7 +128,7 @@ eulerr <- function(sets) {
 
 # Methods for the eulerr object -------------------------------------------
 
-#' Residuals from eulerr fit
+#' Residuals from a eulerr fit
 #'
 #' @param object A eulerr object.
 #' @param ... Currently ignored.
@@ -120,7 +136,7 @@ eulerr <- function(sets) {
 #'
 #' @export
 residuals.eulerr <- function(object, ...) {
-  assertthat::assert_that(inherits(eulerr, "eulerr"))
+  assert_that(inherits(eulerr, "eulerr"))
 
   eulerr[["residuals"]]
 }
