@@ -7,17 +7,22 @@ Description: If possible, generates exactly area-proportional Euler diagrams,
     or otherwise approximately proportional diagrams using numeric optimization.
     A Euler diagram is a generalization of a Venn diagram, relaxing the
     criterion that all interactions need to be represented.
-License: GPL-3
-Imports:
-    grDevices, utils, stats, graphics, assertthat, randtoolbox
 Depends:
     R (>= 3.3.1)
-Enconding: UTF-8
-LazyData: true
+Imports:
+    assertthat (>= 0.1),
+    randtoolbox (>= 1.17),
+    grDevices,
+    utils,
+    stats,
+    graphics
 Suggests:
     knitr,
     rmarkdown,
     testthat
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
 VignetteBuilder: knitr
 URL: http://github.com/jolars/eulerr
 BugReports: http://github.com/jolars/eulerr/issues

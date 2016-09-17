@@ -54,4 +54,3 @@ test_that("degenerative cases are fit properly", {
   fit <- eulerr(s10)
   expect_true(all(fit$residuals < 10e-3))
 })
-

@@ -10,5 +10,3 @@ test_that("erroneous input returns errors", {
   expect_error(eulerr(c(A = 10, 4)))
   expect_error(eulerr(c(A = 10, B = 5, "A&B" = 6)))
 })
-
-
