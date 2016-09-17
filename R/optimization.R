@@ -55,13 +55,14 @@ final_layout_optimizer <- function(par, areas, id) {
 # Return areas from x, y, etc.
 return_intersections <- function(par, areas, id) {
   pars <- matrix(par, ncol = 3)
-  x <- pars[, 1]
-  y <- pars[, 2]
-  r <- pars[, 3]
-
-  two <- id[[2]]
+  x    <- pars[, 1]
+  y    <- pars[, 2]
+  r    <- pars[, 3]
+  two  <- id[[2]]
 
   for (i in seq_along(areas)) areas[[i]] <- 0
+
+  # Fill in the one set areas
   areas[[1]] <- r ^ 2 * pi
 
   x_c <- matrix(x[two], nrow = 2)
@@ -75,7 +76,6 @@ return_intersections <- function(par, areas, id) {
   contained    <- d <= abs(r1 - r2)
   disjoint     <- d >= r1 + r2
   intersecting <- !(disjoint | contained)
-
   areas[[2]][contained]    <- pmin(r1[contained], r2[contained]) ^ 2 * pi
   areas[[2]][disjoint]     <- 0
   areas[[2]][intersecting] <- intersect_two_discs(r1 = r1[intersecting],
@@ -92,17 +92,13 @@ return_intersections <- function(par, areas, id) {
     y_c = y_c[2, intersecting],
     d   = d[intersecting]
   )
-
   in_circles <- matrix(FALSE, ncol = nrow(int_points), nrow = length(x))
   in_circles[, intersecting] <- apply(int_points[intersecting, ],
                                       1, find_sets_containing_points, x, y, r)
-
   twoway_int <- cbind(two[, intersecting], two[, intersecting])
-
   for (i in seq_along(twoway_int[1, ])) {
     in_circles[, intersecting][twoway_int[, i], i] <- TRUE
   }
-
   all_circles <- cbind(two, two)
 
   # Iterate over all higher order intersections
@@ -115,7 +111,6 @@ return_intersections <- function(par, areas, id) {
       # Which of the intersection points are within all sets?
       in_all <- .colSums(in_circles[a, , drop = FALSE],
                          m = length(a), n = ncol(in_circles)) == length(a) & b
-
       circles <- all_circles[, in_all, drop = FALSE]
 
       if (ncol(circles) < 2) {
@@ -123,27 +118,23 @@ return_intersections <- function(par, areas, id) {
         l <- which.min(r[a])
         dl <- (x[a][l] - x[a][-l]) ^ 2 + (y[a][l] - y[a][-l]) ^ 2 <=
               abs(r[a][l] - r[a][-l])
-
         if (all(dl)) {
           areas[[i]][j] <- r[a][l] ^ 2 * pi
         } else {
           areas[[i]][j] <- 0
         }
+
       } else if (ncol(circles) == 2) {
         # Return 2 circle interaction
-        areas[[i]][j] <- intersect_two_discs(
-          r[circles[1, 1]],
-          r[circles[2, 1]],
-          d[in_all][1]
-        )
+        areas[[i]][j] <- intersect_two_discs(r[circles[1, 1]],
+                                             r[circles[2, 1]],
+                                             d[in_all][1])
       } else if (ncol(circles) > 2) {
         # Return three plus circle interaction
-        areas[[i]][j] <- find_threeplus_areas(
-          x_int = int_points[in_all, 1],
-          y_int = int_points[in_all, 2],
-          radiuses = r,
-          circles = circles
-        )
+        areas[[i]][j] <- find_threeplus_areas(x_int = int_points[in_all, 1],
+                                              y_int = int_points[in_all, 2],
+                                              radiuses = r,
+                                              circles = circles)
       }
     }
   }
