@@ -3,7 +3,7 @@
 #' Plot Euler diagrams using base R graphics.
 #'
 #' If no color is specified to \code{polygon_args}, fills will be colored
-#' using a predefined palette taken from \code{\link[qualpalr]{qualpal}}.
+#' using a predefined palette taken from \pkg{qualpal}.
 #'
 #' @param x Specifications for a Euler diagram in the form of a object of class
 #'   \code{'eulerr'}
@@ -13,9 +13,8 @@
 #'   which is used to draw the circles.
 #' @param text_args Arguments for \code{\link[graphics]{text}},
 #'   which is used to draw the text.
-#' @param ... Arguments for \code{\link[graphics]{plot}}, which is used to draw
+#' @param \dots Arguments for \code{\link[graphics]{plot}}, which is used to draw
 #'   the plot area.
-#' @return Plots euler diagram using base R graphics.
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
 #'   \code{\link[graphics]{text}}
 #' @examples
