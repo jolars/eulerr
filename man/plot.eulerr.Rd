@@ -4,24 +4,60 @@
 \alias{plot.eulerr}
 \title{Plot Euler diagrams}
 \usage{
-\method{plot}{eulerr}(x, alpha = 0.4, ...)
+\method{plot}{eulerr}(x, fill_opacity = 0.4, polygon_args = list(),
+  text_args = list(), ...)
 }
 \arguments{
-\item{x}{euler diagram specifications of class \code{'eulerr'}}
+\item{x}{Specifications for a Euler diagram in the form of a object of class
+\code{'eulerr'}}
 
-\item{alpha}{Alpha for the colors to be plotted}
+\item{fill_opacity}{Opacity for the fill colors between 0 and 1. Values
+beyond this range will be clamped to [0, 1] without warning.}
 
-\item{...}{Arguments to pass to text, polygon, or plot.}
+\item{polygon_args}{Arguments for \code{\link[graphics]{polygon}},
+which is used to draw the circles.}
+
+\item{text_args}{Arguments for \code{\link[graphics]{text}},
+which is used to draw the text.}
+
+\item{...}{Arguments for \code{\link[graphics]{plot}}, which is used to draw
+the plot area.}
 }
 \value{
-Plots euler diagram using Base R graphics.
+Plots euler diagram using base R graphics.
 }
 \description{
-Plot euler diagrams using base R graphics.
+Plot Euler diagrams using base R graphics.
+}
+\details{
+If no color is specified to \code{polygon_args}, fills will be colored
+using a predefined palette taken from \code{\link[qualpalr]{qualpal}}.
 }
 \examples{
 fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
-plot(fit, alpha = .7)
+plot(fit, fill_opacity = .7)
 
+# Change to italic roman font, remove borders and switch colors
+plot(fit,
+     polygon_args = list(col = c("dodgerblue4", "darkgoldenrod1"),
+                         border = "transparent"),
+     text_args = list(font = 8))
+
+# Plot without fills and distinguish sets with border types instead
+plot(fit,
+     polygon_args = list(lty = c("solid", "dotted"), col = "transparent"),
+     text_args = list(cex = 2, font = 2))
+
+# Slim down margins and surround plot with a box
+opar <- par(no.readonly = TRUE)
+par(mar = c(0.1, 0.1, 0.1, 0.1))
+plot(fit)
+box()
+par(opar)
+
+}
+\seealso{
+\code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
+  \code{\link[graphics]{text}}
 }
 
