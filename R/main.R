@@ -3,7 +3,17 @@
 #' @param sets Set relationships in the form of a named numeric vector, with
 #'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 #'   Missing interactions are treated as being 0.
-#' @return A list object of class 'vennr'.
+#' @return A list object of class 'vennr' with the following parameters
+#'   \item{circles}{A matrix of x and y coordinates for the centers of the
+#'   circles and their radiuses.}
+#'   \item{original_areas}{The areas the user supplied \pkg{eulerr} with.}
+#'   \item{fitted_areas}{The areas of the Euler diagram solution \pkg{eulerr}
+#'   came up with.}
+#'   \item{residuals}{Absolute deviations between the original areas and the
+#'   fitted areas.}
+#'   \item{stress}{The stress of the solution, computed as the sum of
+#'   absolute deviations over the sum of areas.}
+#' @seealso \code{\link{plot.eulerr}}
 #' @examples
 #'
 #' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
@@ -120,7 +130,7 @@ eulerr <- function(sets) {
       circles = fpar * scale_factor,
       original_areas = orig,
       fitted_areas = fit,
-      residuals = orig - fit,
+      residuals = abs(orig - fit),
       stress = final_layout$value
     ),
     class = c("eulerr", "list"))
@@ -136,7 +146,7 @@ eulerr <- function(sets) {
 #'
 #' @export
 residuals.eulerr <- function(object, ...) {
-  assert_that(inherits(eulerr, "eulerr"))
+  assert_that(inherits(object, "eulerr"))
 
-  eulerr[["residuals"]]
+  eulerr$residuals
 }
