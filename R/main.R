@@ -1,4 +1,4 @@
-#' Euler diagrams
+#' Area-proportional Euler diagrams
 #'
 #' @param sets Set relationships in the form of a named numeric vector, with
 #'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
