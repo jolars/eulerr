@@ -1,3 +1,4 @@
+# Initial optimizer
 initial_layout_optimizer <- function(par, distances, disjoint, contained, two) {
   pars <- matrix(par, ncol = 2)
   x    <- pars[, 1]
@@ -9,6 +10,7 @@ initial_layout_optimizer <- function(par, distances, disjoint, contained, two) {
   sum((d[i] - distances[i] ^ 2) ^ 2)
 }
 
+# Gradient for initial optimizer
 initial_layout_gradient <- function(par, distances, disjoint, contained, two) {
   pars <- matrix(par, ncol = 2)
   x    <- pars[, 1]
@@ -110,14 +112,15 @@ return_intersections <- function(par, areas, id) {
 
       # Which of the intersection points are within all sets?
       in_all <- .colSums(in_circles[a, , drop = FALSE],
-                         m = length(a), n = ncol(in_circles)) == length(a) & b
+                         m = length(a),
+                         n = ncol(in_circles)) == length(a) & b
       circles <- all_circles[, in_all, drop = FALSE]
 
       if (ncol(circles) < 2) {
-        # Either no interactions between the sets or fully contained
+        # Either no intersections between the sets or fully contained
         l <- which.min(r[a])
-        dl <- (x[a][l] - x[a][-l]) ^ 2 + (y[a][l] - y[a][-l]) ^ 2 <=
-              abs(r[a][l] - r[a][-l])
+        dl <- ((x[a][l] - x[a][-l]) ^ 2 + (y[a][l] - y[a][-l]) ^ 2) ^ 2 <=
+              (r[a][l] - r[a][-l]) ^ 2
         if (all(dl)) {
           areas[[i]][j] <- r[a][l] ^ 2 * pi
         } else {
@@ -125,12 +128,12 @@ return_intersections <- function(par, areas, id) {
         }
 
       } else if (ncol(circles) == 2) {
-        # Return 2 circle interaction
+        # Return 2 circle intersecting
         areas[[i]][j] <- intersect_two_discs(r[circles[1, 1]],
                                              r[circles[2, 1]],
                                              d[in_all][1])
       } else if (ncol(circles) > 2) {
-        # Return three plus circle interaction
+        # Return three plus circle intersection
         areas[[i]][j] <- find_threeplus_areas(x_int = int_points[in_all, 1],
                                               y_int = int_points[in_all, 2],
                                               radiuses = r,

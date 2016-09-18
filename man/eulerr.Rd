@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{eulerr}
 \alias{eulerr}
-\title{Euler diagrams}
+\title{Area-proportional Euler diagrams}
 \usage{
 eulerr(sets)
 }
@@ -15,7 +15,7 @@ Missing interactions are treated as being 0.}
 A list object of class 'vennr'.
 }
 \description{
-Euler diagrams
+Area-proportional Euler diagrams
 }
 \examples{
 
