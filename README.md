@@ -3,7 +3,7 @@
 eulerr
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
+[![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
 
 eulerr generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) using circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not). Thus, depending on input, eulerr will sometimes produce Venn diagrams but other times not.
 
@@ -37,9 +37,9 @@ We look at the solution,
 fit
 #> $circles
 #>           x          y         r
-#> A 0.1217015  0.9820174 10.249014
-#> B 8.6784605 11.2482255  9.723067
-#> C 4.5647425  6.3496022  6.482045
+#> A 0.5804283 10.8909681 10.249013
+#> B 9.0546894  0.5566362  9.723067
+#> C 5.0193810  5.5200165  6.482045
 #> 
 #> $original_areas
 #>     A     B     C   A&B   A&C   B&C A&B&C 
@@ -47,16 +47,16 @@ fit
 #> 
 #> $fitted_areas
 #>         A         B         C       A&B       A&C       B&C     A&B&C 
-#> 10.000003  9.000000  4.000000  2.056407  2.999995  2.999989  1.999985 
+#> 10.000001  9.000000  4.000000  2.056433  2.999999  2.999999  1.999998 
 #> 
 #> $residuals
 #>             A             B             C           A&B           A&C 
-#> -3.271395e-06 -8.529852e-10 -2.252391e-07 -5.640653e-02  4.665318e-06 
+#> -9.572706e-07  4.920243e-07  1.504690e-07 -5.643329e-02  9.951197e-07 
 #>           B&C         A&B&C 
-#>  1.051228e-05  1.540284e-05 
+#>  8.535960e-07  1.698247e-06 
 #> 
 #> $stress
-#> [1] 0.001710321
+#> [1] 0.001710256
 #> 
 #> attr(,"class")
 #> [1] "eulerr" "list"
