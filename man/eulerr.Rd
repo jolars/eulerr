@@ -12,7 +12,16 @@ interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 Missing interactions are treated as being 0.}
 }
 \value{
-A list object of class 'vennr'.
+A list object of class 'vennr' with the following parameters
+  \item{circles}{A matrix of x and y coordinates for the centers of the
+  circles and their radiuses.}
+  \item{original_areas}{The areas the user supplied eulerr with.}
+  \item{fitted_areas}{The areas of the Euler diagram solution \pkg{eulerr}
+  came up with.}
+  \item{residuals}{Absolute deviations between the original areas and the
+  fitted areas.}
+  \item{stress}{The stress of the solution, computed as the sum of
+  absolute deviations over the sum of areas.}#'
 }
 \description{
 Area-proportional Euler diagrams

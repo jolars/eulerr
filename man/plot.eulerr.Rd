@@ -20,18 +20,15 @@ which is used to draw the circles.}
 \item{text_args}{Arguments for \code{\link[graphics]{text}},
 which is used to draw the text.}
 
-\item{...}{Arguments for \code{\link[graphics]{plot}}, which is used to draw
+\item{\dots}{Arguments for \code{\link[graphics]{plot}}, which is used to draw
 the plot area.}
-}
-\value{
-Plots euler diagram using base R graphics.
 }
 \description{
 Plot Euler diagrams using base R graphics.
 }
 \details{
 If no color is specified to \code{polygon_args}, fills will be colored
-using a predefined palette taken from \code{\link[qualpalr]{qualpal}}.
+using a predefined palette taken from \pkg{qualpal}.
 }
 \examples{
 fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
