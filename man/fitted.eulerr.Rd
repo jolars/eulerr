@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{An object of class \code{eulerr}.}
+
+\item{...}{Currently ignored}
 }
 \value{
 A matrix of x and y coordinates and radiuses.

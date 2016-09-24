@@ -2,19 +2,27 @@
 % Please edit documentation in R/main.R
 \name{residuals.eulerr}
 \alias{residuals.eulerr}
-\title{Residuals from a eulerr fit}
+\title{Squared residuals from a eulerr fit.}
 \usage{
 \method{residuals}{eulerr}(object, ...)
 }
 \arguments{
-\item{object}{A eulerr object.}
+\item{object}{A euler specification of class \code{eulerr}.}
 
-\item{...}{Currently ignored.}
+\item{\dots}{Currently ignored.}
 }
 \value{
-Residuals.
+Squared residuals.#'
 }
 \description{
-Residuals from a eulerr fit
+Squared residuals from a eulerr fit.
+}
+\examples{
+fit <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+residuals(fit)
+
+}
+\seealso{
+\code{\link[eulerr]{plot.residuals.eulerr}}
 }
 

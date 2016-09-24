@@ -142,11 +142,15 @@ eulerr <- function(sets) {
 
 # Methods for the eulerr object -------------------------------------------
 
-#' Residuals from a eulerr fit
+#' Squared residuals from a eulerr fit.
 #'
-#' @param object A eulerr object.
+#' @param object A euler specification of class \code{eulerr}.
 #' @param \dots Currently ignored.
-#' @return Absolute deviations.
+#' @return Squared residuals.#'
+#' @seealso \code{\link[eulerr]{plot.residuals.eulerr}}
+#' @examples
+#' fit <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+#' residuals(fit)
 #'
 #' @export
 
@@ -169,11 +173,12 @@ resid.eulerr <- function(object, ...) {
 #' the radiuses.
 #'
 #' @param object An object of class \code{eulerr}.
-#' @param ...
+#' @param ... Currently ignored
 #' @return A matrix of x and y coordinates and radiuses.
 #'
 #' @export
 
 fitted.eulerr <- function(object, ...) {
-
+  assert_that(inherits(x, "eulerr"))
+  x$fitted_areas
 }

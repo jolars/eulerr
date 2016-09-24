@@ -18,13 +18,15 @@ A list object of class 'vennr' with the following parameters
   \item{original_areas}{The areas the user supplied \pkg{eulerr} with.}
   \item{fitted_areas}{The areas of the Euler diagram solution \pkg{eulerr}
   came up with.}
-  \item{residuals}{Absolute deviations between the original areas and the
+  \item{residuals}{Squared deviations between the original areas and the
   fitted areas.}
-  \item{stress}{The stress of the solution, computed as the sum of
-  absolute deviations over the sum of areas.}
+  \item{stress}{The stress of the solution, computed as
+  squared residuals over the sum of squared residuals.}
 }
 \description{
-Area-proportional Euler diagrams
+eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
+numerical optimization to find and exact or the best available approximation
+to a input of set combinations.
 }
 \examples{
 
@@ -37,6 +39,6 @@ fit2 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3,
 
 }
 \seealso{
-\code{\link{plot.eulerr}}
+\code{\link{plot.eulerr}}, \code{\link{residuals.eulerr}}
 }
 

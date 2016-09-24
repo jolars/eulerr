@@ -12,8 +12,15 @@
 \item{...}{Arguments passed to \code{link[graphics]{dotchart}}.}
 }
 \description{
-Plot residuals from an object of class \code{eulerr} using a cleveland dot
-plot via \code{link[graphics]{dotchart}}.
-Residuals are squared residuals.
+Plot squared residuals from an object of class \code{eulerr} using a
+cleveland dot plot via \code{link[graphics]{dotchart}}.
+}
+\examples{
+fit <- eulerr(c(A = 1, B = 1, C = 1,
+                "A&B" = 0.5, "A&C" = 0.5, "B&C" = 0.5,
+                "A&B&C" = 0.25))
+res <- resid(fit)
+plot(res, pch = 19)#'
+
 }
 
