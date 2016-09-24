@@ -51,7 +51,7 @@ separate_two_discs <- function(r1, r2, overlap) {
 # Optimization wrapper for the final layout
 final_layout_optimizer <- function(par, areas, id) {
   fit <- return_intersections(par, areas, id)
-  sum(abs(unlist(fit) - unlist(areas))) / sum(unlist(areas))
+  sum((unlist(fit) - unlist(areas)) ^ 2) / sum(unlist(areas) ^ 2)
 }
 
 # Return areas from x, y, etc.
