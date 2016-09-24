@@ -50,15 +50,16 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
   Y <- x[["circles"]][, 2]
   r <- x[["circles"]][, 3]
 
-  graphics::plot(
-    NULL,
-    axes = F,
-    ann = F,
-    xlim = range(c(X + r, X - r)),
-    ylim = range(c(Y + r, Y - r)),
-    asp = 1,
-    ...
-  )
+  plot_args <- list(...)
+  if(is.null(plot_args$x)) plot_args$x <- double(0)
+  plot_args$xlab <- ""
+  plot_args$ylab <- ""
+  if(is.null(plot_args$axes)) plot_args$axes <- FALSE
+  if(is.null(plot_args$xlim)) plot_args$xlim <- range(c(X + r, X - r))
+  if(is.null(plot_args$ylim)) plot_args$ylim <- range(c(Y + r, Y - r))
+  if(is.null(plot_args$asp)) plot_args$asp <- 1
+
+  do.call(graphics::plot, plot_args)
 
   g <- seq(0, 2 * pi, length = 500)
   x_coords <- double(0)
@@ -76,8 +77,8 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
                           "#B0C2A3", "#C8B778", "#8BCDD7", "#9F79CC", "#7391CE")
   }
 
-  polygon_args$col <- grDevices::adjustcolor(polygon_args$col,
-                                             alpha = fill_opacity)
+  polygon_args$col <-
+    grDevices::adjustcolor(polygon_args$col, alpha = fill_opacity)
   polygon_args$x <- x_coords
   polygon_args$y <- y_coords
 
@@ -87,7 +88,7 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
   text_x <- double(length(X))
   text_y <- double(length(Y))
 
-  rpoints <- randtoolbox::sobol(100, 2)
+  rpoints <- randtoolbox::sobol(300, dim = 2, scrambling = 2)
   u <- 2 * pi * (rpoints[, 1] - 1) + 2 * pi
   v <- sqrt(rpoints[, 2])
   for (i in seq_along(r)) {
@@ -95,8 +96,8 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
     xs <- X[i] + rs * cos(u)
     ys <- Y[i] + rs * sin(u)
 
-    locs <- colSums(apply(cbind(xs, ys), 1, find_sets_containing_points,
-                          X, Y, r))
+    locs <-
+      colSums(apply(cbind(xs, ys), 1, find_sets_containing_points, X, Y, r))
 
     outskirts <- which(locs == min(locs))
     text_x[i] <- mean(xs[outskirts])
@@ -110,3 +111,26 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
   do.call(graphics::text, text_args)
 }
 
+# Plot residuals ----------------------------------------------------------
+
+#' Plot residuals from eulerr fit.
+#'
+#' Plot squared residuals from an object of class \code{eulerr} using a
+#' cleveland dot plot via \code{link[graphics]{dotchart}}.
+#'
+#' @param x Residuals from eulerr object produced by \code{residuals(eulerr(.))}
+#' @param ... Arguments passed to \code{link[graphics]{dotchart}}.
+#' @examples
+#' fit <- eulerr(c(A = 1, B = 1, C = 1,
+#'                 "A&B" = 0.5, "A&C" = 0.5, "B&C" = 0.5,
+#'                 "A&B&C" = 0.25))
+#' res <- resid(fit)
+#' plot(res, pch = 19)#'
+#'
+#' @export
+
+plot.residuals.eulerr <- function(x, ...) {
+  assert_that(inherits(x, "residuals.eulerr"))
+  graphics::dotchart(x, ...)
+  abline(v = 0, lty = "dotted")
+}
