@@ -1,5 +1,9 @@
 #' Area-proportional Euler diagrams
 #'
+#' eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
+#' numerical optimization to find and exact or the best available approximation
+#' to a input of set combinations.
+#'
 #' @param sets Set relationships in the form of a named numeric vector, with
 #'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 #'   Missing interactions are treated as being 0.
@@ -9,11 +13,11 @@
 #'   \item{original_areas}{The areas the user supplied \pkg{eulerr} with.}
 #'   \item{fitted_areas}{The areas of the Euler diagram solution \pkg{eulerr}
 #'   came up with.}
-#'   \item{residuals}{Absolute deviations between the original areas and the
+#'   \item{residuals}{Squared deviations between the original areas and the
 #'   fitted areas.}
-#'   \item{stress}{The stress of the solution, computed as the sum of
-#'   absolute deviations over the sum of areas.}
-#' @seealso \code{\link{plot.eulerr}}
+#'   \item{stress}{The stress of the solution, computed as
+#'   squared residuals over the sum of squared residuals.}
+#' @seealso \code{\link{plot.eulerr}}, \code{\link{residuals.eulerr}}
 #' @examples
 #'
 #' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
@@ -130,7 +134,7 @@ eulerr <- function(sets) {
       circles = fpar * scale_factor,
       original_areas = orig,
       fitted_areas = fit,
-      residuals = abs(orig - fit),
+      residuals = orig - fit,
       stress = final_layout$value
     ),
     class = c("eulerr", "list"))
@@ -141,12 +145,35 @@ eulerr <- function(sets) {
 #' Residuals from a eulerr fit
 #'
 #' @param object A eulerr object.
-#' @param ... Currently ignored.
-#' @return Residuals.
+#' @param \dots Currently ignored.
+#' @return Absolute deviations.
 #'
 #' @export
+
 residuals.eulerr <- function(object, ...) {
   assert_that(inherits(object, "eulerr"))
 
-  eulerr$residuals
+  structure(
+    object$residuals,
+    class = c("residuals.eulerr", "residuals", "eulerr")
+    )
+}
+
+resid.eulerr <- function(object, ...) {
+  residuals.eulerr(object, ...)
+}
+
+#' Fitted values from a eulerr fit
+#'
+#' Returns a matrix of the circle centers in x and y coordinates, as well as
+#' the radiuses.
+#'
+#' @param object An object of class \code{eulerr}.
+#' @param ...
+#' @return A matrix of x and y coordinates and radiuses.
+#'
+#' @export
+
+fitted.eulerr <- function(object, ...) {
+
 }
