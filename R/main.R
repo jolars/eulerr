@@ -1,27 +1,30 @@
 #' Area-proportional Euler diagrams
 #'
 #' eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
-#' numerical optimization to find exact or the best possible approximations
-#' to a input of set combinations.
+#' numerical optimization to find exact or the optimal approximations
+#' for a input of set relationships.
 #'
 #' @param sets Set relationships in the form of a named numeric vector, with
 #'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 #'   Missing interactions are treated as being 0.
-#' @param matrix A matrix of logicals with columns representing sets and rows
-#'   representing each observations set relationships (see examples).
-#' @param data.frame A data frame of
-#' @param ... Currently ignored.
-#' @return A list object of class 'vennr' with the following parameters
-#'   \item{circles}{A matrix of x and y coordinates for the centers of the
-#'   circles and their radiuses.}
-#'   \item{original_areas}{The areas the user supplied \pkg{eulerr} with.}
-#'   \item{fitted_areas}{The areas of the Euler diagram solution \pkg{eulerr}
-#'   came up with.}
-#'   \item{residuals}{Squared deviations between the original areas and the
-#'   fitted areas.}
+#' @param matrix A matrix of logical vectors with columns representing sets and rows
+#'   representing each observation's set relationships (see examples).
+#' @param data.frame A data.frame of logical vectors with columns representing
+#'   sets and rows representing each obervation's set relationships. Will be
+#'   converted to a matrix by \code{\link[base]{as.matrix}}.
+#' @param \dots Currently ignored.
+#' @return A list object of class 'eulerr' with the following parameters.
+#'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
+#'     circles and their radiuses.}
+#'   \item{original.values}{The set relationships provided by the user.}
+#'   \item{fitted.values}{The set relationships in the solution given by
+#'     \pkg{eulerr}.}
+#'   \item{residuals}{Squared residuals between the original areas and the
+#'     fitted areas.}
 #'   \item{stress}{The stress of the solution, computed as
 #'   squared residuals over the sum of squared residuals.}
-#' @seealso \code{\link{plot.eulerr}}, \code{\link{residuals.eulerr}}
+#' @family eulerr functions
+#' @seealso \code{\link{plot.eulerr}}
 #' @examples
 #'
 #' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
@@ -51,6 +54,7 @@ eulerr.default <- function(sets, ...) {
   assert_that(all(names(sets) != ""))
   assert_that(is.numeric(sets))
   assert_that(!any(duplicated(names(sets))))
+  if(length(list(...)) > 0) warning("... arguments are currently ignored.")
 
   setnames <- strsplit(names(sets), split = "&", fixed = T)
   one_sets <- unlist(setnames[lengths(setnames) == 1])
@@ -145,9 +149,9 @@ eulerr.default <- function(sets, ...) {
                  dimnames = list(names[[1]], c("x", "y", "r")))
   output <- structure(
     list(
-      circles = fpar * scale_factor,
-      original_areas = orig,
-      fitted_areas = fit,
+      coefficients = fpar * scale_factor,
+      original.values = orig,
+      fitted.values = fit,
       residuals = orig - fit,
       stress = final_layout$value
     ),
@@ -158,6 +162,8 @@ eulerr.default <- function(sets, ...) {
 #' @export
 
 eulerr.matrix <- function(matrix, ...) {
+  assert_that(is.logical(mat))
+  assert_that(!all(grepl("&", colnames, fixed = TRUE)))
   sets <- vector("list", length = ncol(matrix))
 
   for (i in seq_along(colnames(matrix))) {
