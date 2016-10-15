@@ -19,7 +19,8 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    venneuler
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
