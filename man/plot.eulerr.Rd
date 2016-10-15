@@ -24,7 +24,7 @@ which is used to draw the text.}
 the plot area.}
 }
 \description{
-Plot Euler diagrams using base R graphics.
+Plot Euler diagrams from eulerr using base R graphics.
 }
 \details{
 If no color is specified to \code{polygon_args}, fills will be colored
@@ -55,6 +55,6 @@ par(opar)
 }
 \seealso{
 \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
-  \code{\link[graphics]{text}}
+  \code{\link[graphics]{text}} \code{\link{eulerr}}
 }
 

@@ -1,6 +1,6 @@
 #' Plot Euler diagrams
 #'
-#' Plot Euler diagrams using base R graphics.
+#' Plot Euler diagrams from eulerr using base R graphics.
 #'
 #' If no color is specified to \code{polygon_args}, fills will be colored
 #' using a predefined palette taken from \pkg{qualpal}.
@@ -16,7 +16,7 @@
 #' @param \dots Arguments for \code{\link[graphics]{plot}}, which is used to draw
 #'   the plot area.
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
-#'   \code{\link[graphics]{text}}
+#'   \code{\link[graphics]{text}} \code{\link{eulerr}}
 #' @examples
 #' fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
 #' plot(fit, fill_opacity = .7)
@@ -88,6 +88,9 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
   text_x <- double(length(X))
   text_y <- double(length(Y))
 
+  # Pick a text center location by filling each circle with a quasirandom
+  # point sequence and finding the center of the points that belong to the
+  # least number of other circles
   rpoints <- randtoolbox::sobol(300, dim = 2, scrambling = 2)
   u <- 2 * pi * (rpoints[, 1] - 1) + 2 * pi
   v <- sqrt(rpoints[, 2])
