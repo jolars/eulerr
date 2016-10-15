@@ -36,10 +36,10 @@ We look at the solution,
 ``` r
 fit
 #> $coefficients
-#>            x         y         r
-#> A  0.1427803 7.6697229 10.248892
-#> B 11.2651435 0.1440287  9.722910
-#> C  5.9406384 3.7466206  6.490148
+#>          x         y         r
+#> A 0.636158 11.266144 10.248850
+#> B 8.183286  0.158440  9.722880
+#> C 4.564672  5.472092  6.490124
 #> 
 #> $original.values
 #>     A     B     C   A&B   A&C   B&C A&B&C 
@@ -47,16 +47,16 @@ fit
 #> 
 #> $fitted.values
 #>        A        B        C      A&B      A&C      B&C    A&B&C 
-#> 9.999765 8.999709 4.010008 2.027308 2.992822 2.992918 1.975732 
+#> 9.999683 8.999654 4.009978 2.027319 2.992833 2.992882 1.975737 
 #> 
 #> $residuals
 #>             A             B             C           A&B           A&C 
-#>  0.0002347296  0.0002912414 -0.0100076022 -0.0273082858  0.0071783619 
+#>  0.0003166278  0.0003460540 -0.0099779647 -0.0273190236  0.0071670734 
 #>           B&C         A&B&C 
-#>  0.0070819525  0.0242679166 
+#>  0.0071179365  0.0242629746 
 #> 
 #> $stress
-#> [1] 9.379149e-06
+#> [1] 9.38027e-06
 #> 
 #> attr(,"class")
 #> [1] "eulerr" "list"
@@ -71,7 +71,12 @@ plot(fit)
 License
 -------
 
-eulerr is open source software, licensed under GPL-3.
+eulerr is open source software, licensed under [GPL-3](LICENSE).
+
+Code of conduct
+---------------
+
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 Thanks
 ------
