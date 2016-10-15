@@ -105,7 +105,7 @@ values, the residuals are arguably small.
 
 For an overall measure of the fit of the solution, we use the same stress
 statistic that Leland Wilkinson presented in his academic paper on venneuler 
-@wilkinson_exact_2012, which is given by the sums of squared residuals divided
+(@wilkinson_exact_2012), which is given by the sums of squared residuals divided
 by the total sums of squares:
 $$\frac{\sum \limits_{i=1}^n (f_i -y_i)^2}{\sum \limits_{i=1}^n (y_i - \bar{y})^2}$$
 
