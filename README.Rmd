@@ -30,8 +30,8 @@ impossible. For such cases eulerr attempts to provide the best
 approximation possible by numerically tuning the circles positions and radiuses
 so that the sum of absolute errors is minimized.
 
-When solutions are approximate, eulerr helpfully provides statistics
-that allow the user decide if the approximation can be trusted.
+When solutions are approximate, eulerr helpfully provides residuals and a stress
+statistic that allow the user decide if the approximation can be trusted.
 
 ## Installation
 
