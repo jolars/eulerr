@@ -5,9 +5,9 @@ eulerr
 
 [![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
 
-eulerr generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) using circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not). Thus, depending on input, eulerr will sometimes produce Venn diagrams but other times not.
+**eulerr** generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) with circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not). That is, depending on input, eulerr will sometimes produce Venn diagrams but sometimes not.
 
-With three or more sets interacting, exact euler diagrams are frequently impossible. In these cases, eulerr will provide the best approximation possible by numerically tuning the circles positions and radiuses so that the sum of absolute errors is minimized.
+With three or more sets intersecting, exact euler diagrams are often impossible. For such cases eulerr attempts to provide the best approximation possible by numerically tuning the circles positions and radiuses so that the sum of absolute errors is minimized.
 
 When solutions are approximate, eulerr helpfully provides statistics that allow the user decide if the approximation can be trusted.
 
@@ -29,34 +29,35 @@ sets <- c("A" = 10, "B" = 9, "C" = 4,
           "A&B" = 2, "A&C" = 3, "B&C" = 3,
           "A&B&C" = 2)
 fit <- eulerr(sets)
+#> Warning in eulerr.default(sets): ... arguments are currently ignored.
 ```
 
 We look at the solution,
 
 ``` r
 fit
-#> $circles
-#>           x          y         r
-#> A 0.5804283 10.8909681 10.249013
-#> B 9.0546894  0.5566362  9.723067
-#> C 5.0193810  5.5200165  6.482045
+#> $coefficients
+#>            x        y         r
+#> A  0.9348876 6.648058 10.248898
+#> B 13.1813117 1.137312  9.722915
+#> C  7.3187757 3.775446  6.490142
 #> 
-#> $original_areas
+#> $original.values
 #>     A     B     C   A&B   A&C   B&C A&B&C 
 #>    10     9     4     2     3     3     2 
 #> 
-#> $fitted_areas
-#>         A         B         C       A&B       A&C       B&C     A&B&C 
-#> 10.000001  9.000000  4.000000  2.056433  2.999999  2.999999  1.999998 
+#> $fitted.values
+#>        A        B        C      A&B      A&C      B&C    A&B&C 
+#> 9.999775 8.999718 4.010000 2.027310 2.992819 2.992914 1.975733 
 #> 
 #> $residuals
 #>             A             B             C           A&B           A&C 
-#> -9.572706e-07  4.920243e-07  1.504690e-07 -5.643329e-02  9.951197e-07 
+#>  0.0002245617  0.0002822668 -0.0099999700 -0.0273101157  0.0071813602 
 #>           B&C         A&B&C 
-#>  8.535960e-07  1.698247e-06 
+#>  0.0070858477  0.0242671779 
 #> 
 #> $stress
-#> [1] 0.001710256
+#> [1] 6.890803e-06
 #> 
 #> attr(,"class")
 #> [1] "eulerr" "list"
@@ -76,4 +77,4 @@ eulerr is open source software, licensed under GPL-3.
 Thanks
 ------
 
-eulerr would not be possible without Ben Fredrickson's work on [venn.js](http://www.benfrederickson.com) or Leland Wilkinson's [venneuler](https://cran.r-project.org/web/packages/venneuler/index.html).
+eulerr would not be possible without Ben Fredrickson's work on [venn.js](http://www.benfrederickson.com) or Leland Wilkinson's [venneuler](https://cran.r-project.org/package=venneuler).
