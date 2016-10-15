@@ -1,7 +1,7 @@
 Package: eulerr
 Title: Area-Proportional Euler Diagrams
-Version: 0.0.0.9003
-Authors@R: person("Johan", "Larsson", email = "johan.larsson@outlook.com",
+Version: 0.1.0
+Authors@R: person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                   role = c("aut", "cre"))
 Description: If possible, generates exactly area-proportional Euler diagrams,
     or otherwise approximately proportional diagrams using numeric optimization.
@@ -25,6 +25,6 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-URL: http://github.com/jolars/eulerr
-BugReports: http://github.com/jolars/eulerr/issues
+URL: https://github.com/jolars/eulerr
+BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 5.0.1
