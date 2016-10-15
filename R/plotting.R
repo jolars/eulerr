@@ -1,4 +1,4 @@
-#' Plot Euler diagrams
+#' eulerr plots
 #'
 #' Plot Euler diagrams from eulerr using base R graphics.
 #'
@@ -13,8 +13,8 @@
 #'   which is used to draw the circles.
 #' @param text_args Arguments for \code{\link[graphics]{text}},
 #'   which is used to draw the text.
-#' @param \dots Arguments for \code{\link[graphics]{plot}}, which is used to draw
-#'   the plot area.
+#' @param \dots Arguments for \code{\link[graphics]{plot}} (that draws the plot
+#'   area).
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
 #'   \code{\link[graphics]{text}} \code{\link{eulerr}}
 #' @examples
@@ -46,9 +46,9 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
                         text_args = list(), ...) {
   assert_that(inherits(x, "eulerr"))
 
-  X <- x[["circles"]][, 1]
-  Y <- x[["circles"]][, 2]
-  r <- x[["circles"]][, 3]
+  X <- coef(x)[, 1]
+  Y <- coef(x)[, 2]
+  r <- coef(x)[, 3]
 
   plot_args <- list(...)
   if(is.null(plot_args$x)) plot_args$x <- double(0)
@@ -107,33 +107,9 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
     text_y[i] <- mean(ys[outskirts])
   }
 
-  text_args$x <- text_x
-  text_args$y <- text_y
+  text_args$x      <- text_x
+  text_args$y      <- text_y
   text_args$labels <- names(r)
 
   do.call(graphics::text, text_args)
-}
-
-# Plot residuals ----------------------------------------------------------
-
-#' Plot residuals from eulerr fit.
-#'
-#' Plot squared residuals from an object of class \code{eulerr} using a
-#' cleveland dot plot via \code{link[graphics]{dotchart}}.
-#'
-#' @param x Residuals from eulerr object produced by \code{residuals(eulerr(.))}
-#' @param ... Arguments passed to \code{link[graphics]{dotchart}}.
-#' @examples
-#' fit <- eulerr(c(A = 1, B = 1, C = 1,
-#'                 "A&B" = 0.5, "A&C" = 0.5, "B&C" = 0.5,
-#'                 "A&B&C" = 0.25))
-#' res <- resid(fit)
-#' plot(res, pch = 19)#'
-#'
-#' @export
-
-plot.residuals.eulerr <- function(x, ...) {
-  assert_that(inherits(x, "residuals.eulerr"))
-  graphics::dotchart(x, ...)
-  abline(v = 0, lty = "dotted")
 }
