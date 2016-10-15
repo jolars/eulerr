@@ -4,14 +4,7 @@
 #' numerical optimization to find exact or the optimal approximations
 #' for a input of set relationships.
 #'
-#' @param sets Set relationships in the form of a named numeric vector, with
-#'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
-#'   Missing interactions are treated as being 0.
-#' @param matrix A matrix of logical vectors with columns representing sets and rows
-#'   representing each observation's set relationships (see examples).
-#' @param data.frame A data.frame of logical vectors with columns representing
-#'   sets and rows representing each obervation's set relationships. Will be
-#'   converted to a matrix by \code{\link[base]{as.matrix}}.
+#' @param sets Set relationships (see methods (by class) section).
 #' @param \dots Currently ignored.
 #' @return A list object of class 'eulerr' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
@@ -44,7 +37,9 @@
 
 eulerr <- function(sets, ...) UseMethod("eulerr")
 
-#' @rdname eulerr
+#' @describeIn eulerr A named numeric vector, with
+#'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
+#'   Missing interactions are treated as being 0.
 #' @export
 
 eulerr.default <- function(sets, ...) {
@@ -158,27 +153,28 @@ eulerr.default <- function(sets, ...) {
     class = c("eulerr", "list"))
 }
 
-#' @rdname eulerr
+#' @describeIn eulerr A matrix of logical vectors with columns representing sets
+#'   and rows representing each observation's set relationships (see examples).
 #' @export
 
-eulerr.matrix <- function(matrix, ...) {
-  assert_that(is.logical(mat))
-  assert_that(!all(grepl("&", colnames(matrix), fixed = TRUE)))
-  sets <- vector("list", length = ncol(matrix))
+eulerr.matrix <- function(sets, ...) {
+  assert_that(is.logical(sets))
+  assert_that(!all(grepl("&", colnames(sets), fixed = TRUE)))
+  setlist <- vector("list", length = ncol(sets))
 
-  for (i in seq_along(colnames(matrix))) {
-    sets[[i]] <- utils::combn(colnames(matrix), i)
+  for (i in seq_along(colnames(sets))) {
+    setlist[[i]] <- utils::combn(colnames(sets), i)
   }
 
   tally <- double(0)
 
-  for (i in seq_along(sets)) {
-    for (j in 1:ncol(sets[[i]])) {
-      combos <- sets[[i]][, j]
+  for (i in seq_along(setlist)) {
+    for (j in 1:ncol(setlist[[i]])) {
+      combos <- setlist[[i]][, j]
       if (i == 1) {
-        intersections <- matrix[, combos]
+        intersections <- sets[, combos]
       } else {
-        intersections <- apply(matrix[, combos], 1, all)
+        intersections <- apply(sets[, combos], 1, all)
       }
       sum_intersections <- sum(intersections)
       names(sum_intersections) <- paste0(combos, collapse = "&")
@@ -189,10 +185,11 @@ eulerr.matrix <- function(matrix, ...) {
   eulerr(tally, ...)
 }
 
-#' @rdname eulerr
+#' @describeIn eulerr A data.frame that can be converted to a matrix of logicals
+#'   (as in the description above) via \code{\link[base]{as.matrix}}.
 #' @export
 
-eulerr.data.frame <- function(data.frame, ...) {
-  matrix <- as.matrix(data.frame)
+eulerr.data.frame <- function(sets, ...) {
+  matrix <- as.matrix(sets)
   eulerr(matrix, ...)
 }

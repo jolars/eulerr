@@ -11,21 +11,12 @@ eulerr(sets, ...)
 
 \method{eulerr}{default}(sets, ...)
 
-\method{eulerr}{matrix}(matrix, ...)
+\method{eulerr}{matrix}(sets, ...)
 
-\method{eulerr}{data.frame}(data.frame, ...)
+\method{eulerr}{data.frame}(sets, ...)
 }
 \arguments{
-\item{sets}{Set relationships in the form of a named numeric vector, with
-interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
-Missing interactions are treated as being 0.}
-
-\item{matrix}{A matrix of logical vectors with columns representing sets and rows
-representing each observation's set relationships (see examples).}
-
-\item{data.frame}{A data.frame of logical vectors with columns representing
-sets and rows representing each obervation's set relationships. Will be
-converted to a matrix by \code{\link[base]{as.matrix}}.}
+\item{sets}{Set relationships (see methods (by class) section).}
 
 \item{\dots}{Currently ignored.}
 }
@@ -46,6 +37,18 @@ eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
 numerical optimization to find exact or the optimal approximations
 for a input of set relationships.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: A named numeric vector, with
+interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
+Missing interactions are treated as being 0.
+
+\item \code{matrix}: A matrix of logical vectors with columns representing sets
+and rows representing each observation's set relationships (see examples).
+
+\item \code{data.frame}: A data.frame that can be converted to a matrix of logicals
+(as in the description above) via \code{\link[base]{as.matrix}}.
+}}
 \examples{
 
 fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
