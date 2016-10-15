@@ -20,29 +20,31 @@ eulerr(sets, ...)
 interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 Missing interactions are treated as being 0.}
 
-\item{...}{Currently ignored.}
+\item{matrix}{A matrix of logical vectors with columns representing sets and rows
+representing each observation's set relationships (see examples).}
 
-\item{matrix}{A matrix of logicals with columns representing sets and rows
-representing each observations set relationships (see examples).}
+\item{data.frame}{A data.frame of logical vectors with columns representing
+sets and rows representing each obervation's set relationships. Will be
+converted to a matrix by \code{\link[base]{as.matrix}}.}
 
-\item{data.frame}{A data frame of}
+\item{\dots}{Currently ignored.}
 }
 \value{
-A list object of class 'vennr' with the following parameters
-  \item{circles}{A matrix of x and y coordinates for the centers of the
-  circles and their radiuses.}
-  \item{original_areas}{The areas the user supplied \pkg{eulerr} with.}
-  \item{fitted_areas}{The areas of the Euler diagram solution \pkg{eulerr}
-  came up with.}
-  \item{residuals}{Squared deviations between the original areas and the
-  fitted areas.}
+A list object of class 'eulerr' with the following parameters.
+  \item{coefficients}{A matrix of x and y coordinates for the centers of the
+    circles and their radiuses.}
+  \item{original.values}{The set relationships provided by the user.}
+  \item{fitted.values}{The set relationships in the solution given by
+    \pkg{eulerr}.}
+  \item{residuals}{Squared residuals between the original areas and the
+    fitted areas.}
   \item{stress}{The stress of the solution, computed as
   squared residuals over the sum of squared residuals.}
 }
 \description{
 eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
-numerical optimization to find exact or the best possible approximations
-to a input of set combinations.
+numerical optimization to find exact or the optimal approximations
+for a input of set relationships.
 }
 \examples{
 
@@ -60,6 +62,6 @@ fit3 <- eulerr(mat)
 
 }
 \seealso{
-\code{\link{plot.eulerr}}, \code{\link{residuals.eulerr}}
+\code{\link{plot.eulerr}}
 }
 
