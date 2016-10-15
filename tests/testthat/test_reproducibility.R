@@ -3,8 +3,8 @@ context("Test if diagrams can be reproduced")
 test_that("eulerr can reproduce its own solution given the areas", {
   fit1 <- eulerr(c("A" = 10, "B" = 10, "C" = 10, "A&B" = 8, "A&C" = 8,
                   "B&C" = 8, "A&B&C" = 3))
-  fit2 <- eulerr(fit1$fitted_areas)
-  expect_equal(fit1$fitted_areas, fit2$fitted_areas, tolerance = 1e-02)
+  fit2 <- eulerr(fitted(fit1))
+  expect_equal(fitted(fit1), fitted(fit2), tolerance = 1e-02)
 })
 
 test_that("expect no errors for a variety of predefined sets", {
@@ -52,5 +52,5 @@ test_that("degenerative cases are fit properly", {
   s10 <- c("A" = 10, "B" = 10, "A&B" = 10)
   expect_error(eulerr(s10), NA)
   fit <- eulerr(s10)
-  expect_true(all(fit$residuals < 10e-3))
+  expect_true(all(resid(fit) < 10e-3))
 })
