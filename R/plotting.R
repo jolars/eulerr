@@ -46,9 +46,9 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
                         text_args = list(), ...) {
   assert_that(inherits(x, "eulerr"))
 
-  X <- coef(x)[, 1]
-  Y <- coef(x)[, 2]
-  r <- coef(x)[, 3]
+  X <- stats::coef(x)[, 1]
+  Y <- stats::coef(x)[, 2]
+  r <- stats::coef(x)[, 3]
 
   plot_args <- list(...)
   if(is.null(plot_args$x)) plot_args$x <- double(0)
