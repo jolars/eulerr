@@ -67,8 +67,8 @@ library(eulerr)
 
 # Input in the form of a named numeric vector
 fit1 <- eulerr(c("A" = 25, "B" = 5, "C" = 5,
-                "A&B" = 5, "A&C" = 5, "B&C" = 3,
-                "A&B&C" = 3))
+                 "A&B" = 5, "A&C" = 5, "B&C" = 3,
+                 "A&B&C" = 3))
 
 # Input as a matrix of logicals
 set.seed(1)
@@ -100,37 +100,45 @@ abline(v = 0, lty = 3)
 ```
 
 This shows us that the `A&B&C` intersection is somewhat overrepresented in
-`fit2`. (Notice that these residuals are on the scale of the original values.)
-However, the stress of the solution, which is the same statistic that 
-Leland Wilkinson presented in his academic paper on venneuler 
-@wilkinson_exact_2012, is low:
+`fit2`. Althgouh, given that these residuals are on the scale of the original
+values, the residuals are arguably small.
+
+For an overall measure of the fit of the solution, we use the same stress
+statistic that Leland Wilkinson presented in his academic paper on venneuler 
+@wilkinson_exact_2012, which is given by the sums of squared residuals divided
+by the total sums of squares:
+$$\frac{\sum \limits_{i=1}^n (f_i -y_i)^2}{\sum \limits_{i=1}^n (y_i - \bar{y})^2}$$
+
+For our solution, the stress is
 
 ```{r stress}
 fit2$stress
 ```
 
-Now we can be confident in that the euler diagram we produce will be a
-reasonable representation of our input. Were it otherwise, we should probably
-stop here and look for another way to visualize our data. (I suggest the
-excellent [UpSetR](https://cran.r-project.org/package=UpSetR) package.)
+, which is quite low.
+
+We can now be confident that eulerr provides a reasonable representation of
+our input. Were it otherwise, we would do best to stop here and look for another
+way to visualize our data. (I suggest the excellent
+[UpSetR](https://cran.r-project.org/package=UpSetR) package.)
 
 ### Plotting
 
-Now that we know we can trust our fit, we can get to the fun part: plotting,
-which is easy, and highly customizable, with eulerr
+No we get to the fun part: plotting our euler fit. This is easy, as well as
+highly customizable, with eulerr.
 
 ```{r eulerr_plot, fig.show='hold'}
 par(mar = c(0, 0, 0, 0))
 plot(fit2)
 
-# Or with some modifications
+# Change fill colors, border type (remove) and fontface.
 plot(fit2,
      polygon_args = list(col = c("dodgerblue4", "darkgoldenrod1", "cornsilk4"),
                          border = "transparent"),
      text_args = list(font = 8))
 ```
 
-The default color palette is taken from
+eulerr's default color palette is taken from
 [qualpalr](https://cran.r-project.org/package=qualpalr) -- another
 package that I have developed -- which uses color difference algorithms to 
 generate distinct qualitative color palettes.
