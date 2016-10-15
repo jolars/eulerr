@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{plot.eulerr}
 \alias{plot.eulerr}
-\title{Plot Euler diagrams}
+\title{eulerr plots}
 \usage{
 \method{plot}{eulerr}(x, fill_opacity = 0.4, polygon_args = list(),
   text_args = list(), ...)
@@ -20,8 +20,8 @@ which is used to draw the circles.}
 \item{text_args}{Arguments for \code{\link[graphics]{text}},
 which is used to draw the text.}
 
-\item{\dots}{Arguments for \code{\link[graphics]{plot}}, which is used to draw
-the plot area.}
+\item{\dots}{Arguments for \code{\link[graphics]{plot}} (that draws the plot
+area).}
 }
 \description{
 Plot Euler diagrams from eulerr using base R graphics.
