@@ -1,12 +1,16 @@
 #' Area-proportional Euler diagrams
 #'
 #' eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
-#' numerical optimization to find and exact or the best available approximation
+#' numerical optimization to find exact or the best possible approximations
 #' to a input of set combinations.
 #'
 #' @param sets Set relationships in the form of a named numeric vector, with
 #'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 #'   Missing interactions are treated as being 0.
+#' @param matrix A matrix of logicals with columns representing sets and rows
+#'   representing each observations set relationships (see examples).
+#' @param data.frame A data frame of
+#' @param ... Currently ignored.
 #' @return A list object of class 'vennr' with the following parameters
 #'   \item{circles}{A matrix of x and y coordinates for the centers of the
 #'   circles and their radiuses.}
@@ -27,10 +31,20 @@
 #'                  "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
 #'                  "A&B&C" = 0) )
 #'
+#' # Using the matrix method
+#' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
+#'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
+#' fit3 <- eulerr(mat)
+#'
 #' @export
 #' @import assertthat
 
-eulerr <- function(sets) {
+eulerr <- function(sets, ...) UseMethod("eulerr")
+
+#' @rdname eulerr
+#' @export
+
+eulerr.default <- function(sets, ...) {
   assert_that(not_empty(sets))
   assert_that(length(sets) > 0)
   assert_that(has_attr(sets, "names"))
@@ -140,45 +154,39 @@ eulerr <- function(sets) {
     class = c("eulerr", "list"))
 }
 
-# Methods for the eulerr object -------------------------------------------
-
-#' Squared residuals from a eulerr fit.
-#'
-#' @param object A euler specification of class \code{eulerr}.
-#' @param \dots Currently ignored.
-#' @return Squared residuals.#'
-#' @seealso \code{\link[eulerr]{plot.residuals.eulerr}}
-#' @examples
-#' fit <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
-#' residuals(fit)
-#'
+#' @rdname eulerr
 #' @export
 
-residuals.eulerr <- function(object, ...) {
-  assert_that(inherits(object, "eulerr"))
+eulerr.matrix <- function(matrix, ...) {
+  sets <- vector("list", length = ncol(matrix))
 
-  structure(
-    object$residuals,
-    class = c("residuals.eulerr", "residuals", "eulerr")
-    )
+  for (i in seq_along(colnames(matrix))) {
+    sets[[i]] <- utils::combn(colnames(matrix), i)
+  }
+
+  tally <- double(0)
+
+  for (i in seq_along(sets)) {
+    for (j in 1:ncol(sets[[i]])) {
+      combos <- sets[[i]][, j]
+      if (i == 1) {
+        intersections <- matrix[, combos]
+      } else {
+        intersections <- apply(matrix[, combos], 1, all)
+      }
+      sum_intersections <- sum(intersections)
+      names(sum_intersections) <- c(setnames, paste0(combos, collapse = "&"))
+      tally <- c(tally, sum_intersections)
+    }
+  }
+
+  eulerr(tally, ...)
 }
 
-resid.eulerr <- function(object, ...) {
-  residuals.eulerr(object, ...)
-}
-
-#' Fitted values from a eulerr fit
-#'
-#' Returns a matrix of the circle centers in x and y coordinates, as well as
-#' the radiuses.
-#'
-#' @param object An object of class \code{eulerr}.
-#' @param ... Currently ignored
-#' @return A matrix of x and y coordinates and radiuses.
-#'
+#' @rdname eulerr
 #' @export
 
-fitted.eulerr <- function(object, ...) {
-  assert_that(inherits(x, "eulerr"))
-  x$fitted_areas
+eulerr.data.frame <- function(data.frame, ...) {
+  matrix <- as.matrix(data.frame)
+  eulerr(matrix, ...)
 }

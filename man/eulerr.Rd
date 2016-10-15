@@ -2,14 +2,30 @@
 % Please edit documentation in R/main.R
 \name{eulerr}
 \alias{eulerr}
+\alias{eulerr.data.frame}
+\alias{eulerr.default}
+\alias{eulerr.matrix}
 \title{Area-proportional Euler diagrams}
 \usage{
-eulerr(sets)
+eulerr(sets, ...)
+
+\method{eulerr}{default}(sets, ...)
+
+\method{eulerr}{matrix}(matrix, ...)
+
+\method{eulerr}{data.frame}(data.frame, ...)
 }
 \arguments{
 \item{sets}{Set relationships in the form of a named numeric vector, with
 interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 Missing interactions are treated as being 0.}
+
+\item{...}{Currently ignored.}
+
+\item{matrix}{A matrix of logicals with columns representing sets and rows
+representing each observations set relationships (see examples).}
+
+\item{data.frame}{A data frame of}
 }
 \value{
 A list object of class 'vennr' with the following parameters
@@ -25,7 +41,7 @@ A list object of class 'vennr' with the following parameters
 }
 \description{
 eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
-numerical optimization to find and exact or the best available approximation
+numerical optimization to find exact or the best possible approximations
 to a input of set combinations.
 }
 \examples{
@@ -36,6 +52,11 @@ fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
 fit2 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3,
                  "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
                  "A&B&C" = 0) )
+
+# Using the matrix method
+mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
+             B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
+fit3 <- eulerr(mat)
 
 }
 \seealso{
