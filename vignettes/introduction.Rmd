@@ -3,9 +3,149 @@ title: "An introduction to eulerr"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: eulerr.bib
 vignette: >
   %\VignetteIndexEntry{An introduction to eulerr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+**eulerr** generates area-proportional euler diagrams that display set
+relationships (intersections, unions, and disjoints) with circles.
+[Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn
+diagrams without the requirement that all set interactions be present (whether
+they are empty or not). That is, depending on input, eulerr will sometimes
+produce Venn diagrams but sometimes not.
+
+## Background
+
+R features a number of packages that produce euler and/or venn diagrams;
+some of the more prominent ones (on CRAN) are
+
+* [eVenn](https://cran.r-project.org/package=eVenn),
+* [VennDiagram](https://cran.r-project.org/package=VennDiagram),
+* [venn](https://cran.r-project.org/package=venn),
+* [colorfulVennPlot](https://cran.r-project.org/package=colorfulVennPlot), and
+* [venneuler](https://cran.r-project.org/package=venneuler).
+
+The last of these serves as the primary inspiration for this package, along with
+the refinements that Ben Fredrickson has presented on his
+[blog](http://www.benfrederickson.com/) and made available in his javascript
+[venn.js](https://github.com/benfred/venn.js).
+
+venneuler, however, is written in java, which prevents R users from 
+browsing the source code (unless they are also literate in java) or
+contributing. Furthermore, venneuler is known to produce imperfect output for
+set relationships that have perfect euler diagram solutions. Consider,
+for instance
+
+```{r venneuler_failure}
+venn_fit <- venneuler::venneuler(c(A = 75, B = 50, "A&B" = 0))
+par(mar = c(0, 0, 0, 0))
+plot(venn_fit)
+```
+
+that reasonably should not display any intersection between `A` and `B`.
+
+## Enter eulerr
+
+eulerr is based around the improvements to **venneuler** that Ben Fredrickson
+introcued with **venn.js** but with rewritten code, different optimizers, and 
+methods to calculate stress statistics. It also provides a highly customizable
+interface for its plotting function.
+
+### Input
+
+Currently, it is possible to provide input to `eulerr` as either
+
+* a named numeric vector or
+* a matrix of logicals with columns representing sets and rows the set
+relationships for each observation.
+
+```{r input}
+library(eulerr)
+
+# Input in the form of a named numeric vector
+fit1 <- eulerr(c("A" = 25, "B" = 5, "C" = 5,
+                "A&B" = 5, "A&C" = 5, "B&C" = 3,
+                "A&B&C" = 3))
+
+# Input as a matrix of logicals
+set.seed(1)
+mat <-
+  cbind(
+  A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
+  B = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
+  C = sample(c(TRUE, FALSE, FALSE, FALSE), size = 50, replace = TRUE)
+  )
+fit2 <- eulerr(mat)
+```
+
+### Fit
+
+We can expect our results by printing the eulerr object
+
+```{r fit1_print}
+fit2
+```
+
+or directly access and plot the residuals and plot using standard methods.
+
+```{r residual_plot}
+resid(fit2)
+
+# Cleveland dot plot of the residuals
+graphics::dotchart(resid(fit2))
+abline(v = 0, lty = 3)
+```
+
+This shows us that the `A&B&C` intersection is somewhat overrepresented in
+`fit2`. (Notice that these residuals are on the scale of the original values.)
+However, the stress of the solution, which is the same statistic that 
+Leland Wilkinson presented in his academic paper on venneuler 
+@wilkinson_exact_2012, is low:
+
+```{r stress}
+fit2$stress
+```
+
+Now we can be confident in that the euler diagram we produce will be a
+reasonable representation of our input. Were it otherwise, we should probably
+stop here and look for another way to visualize our data. (I suggest the
+excellent [UpSetR](https://cran.r-project.org/package=UpSetR) package.)
+
+### Plotting
+
+Now that we know we can trust our fit, we can get to the fun part: plotting,
+which is easy, and highly customizable, with eulerr
+
+```{r eulerr_plot, fig.show='hold'}
+par(mar = c(0, 0, 0, 0))
+plot(fit2)
+
+# Or with some modifications
+plot(fit2,
+     polygon_args = list(col = c("dodgerblue4", "darkgoldenrod1", "cornsilk4"),
+                         border = "transparent"),
+     text_args = list(font = 8))
+```
+
+The default color palette is taken from
+[qualpalr](https://cran.r-project.org/package=qualpalr) -- another
+package that I have developed -- which uses color difference algorithms to 
+generate distinct qualitative color palettes.
+
+## Details
+
+Details of the implementation will be left for a future vignette but almost
+completely resemble the approach documented
+[here](http://www.benfrederickson.com/better-venn-diagrams/).
+
+## Thanks
+
+eulerr would not be possible without Ben Fredrickson's work on
+[venn.js](http://www.benfrederickson.com) or Leland Wilkinson's
+[venneuler](https://cran.r-project.org/package=venneuler).
+
+## References
 
