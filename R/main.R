@@ -163,7 +163,7 @@ eulerr.default <- function(sets, ...) {
 
 eulerr.matrix <- function(matrix, ...) {
   assert_that(is.logical(mat))
-  assert_that(!all(grepl("&", colnames, fixed = TRUE)))
+  assert_that(!all(grepl("&", colnames(matrix), fixed = TRUE)))
   sets <- vector("list", length = ncol(matrix))
 
   for (i in seq_along(colnames(matrix))) {
@@ -181,7 +181,7 @@ eulerr.matrix <- function(matrix, ...) {
         intersections <- apply(matrix[, combos], 1, all)
       }
       sum_intersections <- sum(intersections)
-      names(sum_intersections) <- c(setnames, paste0(combos, collapse = "&"))
+      names(sum_intersections) <- paste0(combos, collapse = "&")
       tally <- c(tally, sum_intersections)
     }
   }
