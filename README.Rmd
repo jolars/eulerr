@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 [![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
 [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 
 **eulerr** generates area-proportional euler diagrams that display set
 relationships (intersections, unions, and disjoints) with circles.
@@ -34,6 +35,12 @@ When solutions are approximate, eulerr helpfully provides residuals and a stress
 statistic that allow the user decide if the approximation can be trusted.
 
 ## Installation
+
+The CRAN version can be installed by running
+
+```{r install_cran, eval = FALSE}
+install.packages("eulerr")
+```
 
 The development version can be installed by running
 
