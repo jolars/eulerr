@@ -1,6 +1,3 @@
-## First release
-This is the first release of eulerr.
-
 ## Test environments
 * local Windows Pro 10 install (v1607 build 14393.321)
     - R 3.3.1
