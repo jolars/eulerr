@@ -7,7 +7,7 @@ eulerr
 
 **eulerr** generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) with circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not). That is, depending on input, eulerr will sometimes produce Venn diagrams but sometimes not.
 
-With three or more sets intersecting, exact euler diagrams are often impossible. For such cases eulerr attempts to provide the best approximation possible by numerically tuning the circles positions and radiuses so that the sum of absolute errors is minimized.
+With three or more sets intersecting, exact euler diagrams are often impossible. For such cases eulerr attempts to provide the best approximation possible by numerically tuning the circles' positions and radiuses so that the sum of squared errors is minimized.
 
 When solutions are approximate, eulerr helpfully provides residuals and a stress statistic that allow the user decide if the approximation can be trusted.
 
@@ -37,15 +37,15 @@ sets <- c("A" = 10, "B" = 9, "C" = 4,
 fit <- eulerr(sets)
 ```
 
-We look at the solution,
+We can inspect the solution
 
 ``` r
 fit
 #> $coefficients
 #>            x         y         r
-#> A 10.1294247 0.5053975 10.248901
-#> B  0.1843481 9.5297602  9.722922
-#> C  4.9451699 5.2096055  6.490149
+#> A  0.1057003 6.7403707 10.248873
+#> B 12.1774901 0.8568468  9.722933
+#> C  6.3985574 3.6736595  6.490100
 #> 
 #> $original.values
 #>     A     B     C   A&B   A&C   B&C A&B&C 
@@ -53,16 +53,16 @@ fit
 #> 
 #> $fitted.values
 #>        A        B        C      A&B      A&C      B&C    A&B&C 
-#> 9.999781 8.999730 4.010008 2.027308 2.992820 2.992919 1.975731 
+#> 9.999727 8.999751 4.009948 2.027294 2.992812 2.992851 1.975714 
 #> 
 #> $residuals
 #>             A             B             C           A&B           A&C 
-#>  0.0002186451  0.0002695094 -0.0100081709 -0.0273078240  0.0071795796 
+#>  0.0002734398  0.0002492474 -0.0099482270 -0.0272944866  0.0071881326 
 #>           B&C         A&B&C 
-#>  0.0070808247  0.0242685752 
+#>  0.0071491696  0.0242855292 
 #> 
 #> $stress
-#> [1] 9.37915e-06
+#> [1] 9.379215e-06
 #> 
 #> attr(,"class")
 #> [1] "eulerr" "list"

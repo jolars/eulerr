@@ -28,8 +28,8 @@ produce Venn diagrams but sometimes not.
 
 With three or more sets intersecting, exact euler diagrams are often
 impossible. For such cases eulerr attempts to provide the best
-approximation possible by numerically tuning the circles positions and radiuses
-so that the sum of absolute errors is minimized.
+approximation possible by numerically tuning the circles' positions and radiuses
+so that the sum of squared errors is minimized.
 
 When solutions are approximate, eulerr helpfully provides residuals and a stress
 statistic that allow the user decide if the approximation can be trusted.
@@ -58,7 +58,7 @@ sets <- c("A" = 10, "B" = 9, "C" = 4,
 fit <- eulerr(sets)
 ```
 
-We look at the solution,
+We can inspect the solution
 
 ```{r}
 fit
