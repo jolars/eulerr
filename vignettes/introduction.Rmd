@@ -28,31 +28,31 @@ some of the more prominent ones (on CRAN) are
 * [colorfulVennPlot](https://cran.r-project.org/package=colorfulVennPlot), and
 * [venneuler](https://cran.r-project.org/package=venneuler).
 
-The last of these serves as the primary inspiration for this package, along with
-the refinements that Ben Fredrickson has presented on his
+The last of these (venneuler) serves as the primary inspiration for this package,
+along with the refinements that Ben Fredrickson has presented on his
 [blog](http://www.benfrederickson.com/) and made available in his javascript
 [venn.js](https://github.com/benfred/venn.js).
 
-venneuler, however, is written in java, which prevents R users from 
+venneuler, however, is written in java, preventing R users from 
 browsing the source code (unless they are also literate in java) or
 contributing. Furthermore, venneuler is known to produce imperfect output for
-set relationships that have perfect euler diagram solutions. Consider,
-for instance
+set configurations that have perfect solutions. Consider,
+for instance, the following example in which the intersection between `A` and
+`B` is unwanted.
 
-```{r venneuler_failure}
-venn_fit <- venneuler::venneuler(c(A = 75, B = 50, "A&B" = 0))
+```{r venneuler_failure, fig.height=5, fight.width=5, fig.cap='venneuler plot with unwanted overlap.'}
+library(venneuler,  quietly = TRUE)
+venn_fit <- venneuler(c(A = 75, B = 50, "A&B" = 0))
 par(mar = c(0, 0, 0, 0))
 plot(venn_fit)
 ```
 
-that reasonably should not display any intersection between `A` and `B`.
-
 ## Enter eulerr
 
-eulerr is based around the improvements to **venneuler** that Ben Fredrickson
-introcued with **venn.js** but with rewritten code, different optimizers, and 
-methods to calculate stress statistics. It also provides a highly customizable
-interface for its plotting function.
+eulerr is based on the improvements to **venneuler** that Ben Fredrickson
+introcued with **venn.js** but has been coded from scratch, uses different
+optimizers, and returns the residuals and stress statistic that venneuler
+features. 
 
 ### Input
 
@@ -83,25 +83,23 @@ fit2 <- eulerr(mat)
 
 ### Fit
 
-We can expect our results by printing the eulerr object
+We inspect our results by printing the eulerr object
 
 ```{r fit1_print}
 fit2
 ```
 
-or directly access and plot the residuals and plot using standard methods.
+or directly access and plot the residuals.
 
-```{r residual_plot}
-resid(fit2)
-
+```{r residual_plot, fig.cap='Residuals for the eulerr fit.'}
 # Cleveland dot plot of the residuals
 graphics::dotchart(resid(fit2))
 abline(v = 0, lty = 3)
 ```
 
 This shows us that the `A&B&C` intersection is somewhat overrepresented in
-`fit2`. Althgouh, given that these residuals are on the scale of the original
-values, the residuals are arguably small.
+`fit2`. Given that these residuals are on the scale of the original
+values, however, the residuals are arguably of little concern.
 
 For an overall measure of the fit of the solution, we use the same stress
 statistic that Leland Wilkinson presented in his academic paper on venneuler 
@@ -109,13 +107,11 @@ statistic that Leland Wilkinson presented in his academic paper on venneuler
 by the total sums of squares:
 $$\frac{\sum \limits_{i=1}^n (f_i -y_i)^2}{\sum \limits_{i=1}^n (y_i - \bar{y})^2}$$
 
-For our solution, the stress is
+We fetch it from the `stress` attribute of the `eulerr` object.
 
 ```{r stress}
 fit2$stress
 ```
-
-, which is quite low.
 
 We can now be confident that eulerr provides a reasonable representation of
 our input. Were it otherwise, we would do best to stop here and look for another
@@ -124,10 +120,10 @@ way to visualize our data. (I suggest the excellent
 
 ### Plotting
 
-No we get to the fun part: plotting our euler fit. This is easy, as well as
+No we get to the fun part: plotting our diagram. This is easy, as well as
 highly customizable, with eulerr.
 
-```{r eulerr_plot, fig.show='hold'}
+```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.'}
 par(mar = c(0, 0, 0, 0))
 plot(fit2)
 
@@ -156,4 +152,3 @@ eulerr would not be possible without Ben Fredrickson's work on
 [venneuler](https://cran.r-project.org/package=venneuler).
 
 ## References
-
