@@ -55,6 +55,7 @@ library(eulerr)
 sets <- c("A" = 10, "B" = 9, "C" = 4,
           "A&B" = 2, "A&C" = 3, "B&C" = 3,
           "A&B&C" = 2)
+set.seed(1)
 fit <- eulerr(sets)
 ```
 
@@ -69,6 +70,9 @@ and plot it using `plot`.
 ```{r plot_methods, eval = FALSE}
 plot(fit)
 ```
+
+Please see the introductory [vignette](https://cran.r-project.org/web/packages/eulerr/vignettes/introduction.html)
+for usage details.
 
 ## License
 

@@ -34,6 +34,7 @@ library(eulerr)
 sets <- c("A" = 10, "B" = 9, "C" = 4,
           "A&B" = 2, "A&C" = 3, "B&C" = 3,
           "A&B&C" = 2)
+set.seed(1)
 fit <- eulerr(sets)
 ```
 
@@ -42,10 +43,10 @@ We can inspect the solution
 ``` r
 fit
 #> $coefficients
-#>            x         y         r
-#> A  0.1057003 6.7403707 10.248873
-#> B 12.1774901 0.8568468  9.722933
-#> C  6.3985574 3.6736595  6.490100
+#>          x          y         r
+#> A 1.414019 13.5875821 10.248902
+#> B 4.370636  0.4878819  9.722912
+#> C 2.955592  6.7589832  6.490137
 #> 
 #> $original.values
 #>     A     B     C   A&B   A&C   B&C A&B&C 
@@ -53,16 +54,16 @@ fit
 #> 
 #> $fitted.values
 #>        A        B        C      A&B      A&C      B&C    A&B&C 
-#> 9.999727 8.999751 4.009948 2.027294 2.992812 2.992851 1.975714 
+#> 9.999785 8.999713 4.009993 2.027303 2.992809 2.992910 1.975726 
 #> 
 #> $residuals
 #>             A             B             C           A&B           A&C 
-#>  0.0002734398  0.0002492474 -0.0099482270 -0.0272944866  0.0071881326 
+#>  0.0002154188  0.0002869387 -0.0099933937 -0.0273028295  0.0071909144 
 #>           B&C         A&B&C 
-#>  0.0071491696  0.0242855292 
+#>  0.0070898292  0.0242741373 
 #> 
 #> $stress
-#> [1] 9.379215e-06
+#> [1] 9.379153e-06
 #> 
 #> attr(,"class")
 #> [1] "eulerr" "list"
@@ -73,6 +74,8 @@ and plot it using `plot`.
 ``` r
 plot(fit)
 ```
+
+Please see the introductory [vignette](https://cran.r-project.org/web/packages/eulerr/vignettes/introduction.html) for usage details.
 
 License
 -------
