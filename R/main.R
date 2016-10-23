@@ -1,10 +1,16 @@
 #' Area-proportional Euler diagrams
 #'
-#' eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
-#' numerical optimization to find exact or the optimal approximations
-#' for a input of set relationships.
+#' eulerr computes Euler diagrams (a generalization of Venn diagrams) using
+#' numerical optimization to find exact or optimal approximations for an
+#' input of set relationships.
 #'
-#' @param sets Set relationships (see methods (by class) section).
+#' If \code{by} is specified, \code{eulerr} returns a list of euler diagrams
+#' for which there is a separate plot method that plots a grid of diagrams.
+#'
+#' @param sets Set relationships as a named numeric vector, matrix, or
+#'   data.frame. (See the methods (by class) section for details.)
+#' @param by A factor or character vector used in \code{\link[base]{by}} to
+#'   split the data.frame or matrix and compute euler diagrams for each split.
 #' @param \dots Currently ignored.
 #' @return A list object of class 'eulerr' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
@@ -44,15 +50,15 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 
 eulerr.default <- function(sets, ...) {
   assert_that(not_empty(sets))
-  assert_that(length(sets) > 0)
+  assert_that(length(sets) > 0L)
   assert_that(has_attr(sets, "names"))
   assert_that(all(names(sets) != ""))
   assert_that(is.numeric(sets))
   assert_that(!any(duplicated(names(sets))))
-  if(length(list(...)) > 0) warning("... arguments are currently ignored.")
+  if(length(list(...)) > 0L) warning("... arguments are currently ignored.")
 
   setnames <- strsplit(names(sets), split = "&", fixed = T)
-  one_sets <- unlist(setnames[lengths(setnames) == 1])
+  one_sets <- unlist(setnames[lengths(setnames) == 1L])
 
   # Set up names matrix
   names <- vector("list", length = length(one_sets))
@@ -69,13 +75,13 @@ eulerr.default <- function(sets, ...) {
   for (i in seq_along(names)) {
     for (j in 1:ncol(names[[i]])) {
       tmp <- lapply(setnames, is.element, unlist(names[[i]][, j]))
-      ind <- vapply(tmp, all, FUN.VALUE = logical(1)) &
-          (vapply(tmp, sum, FUN.VALUE = integer(1)) == i)
+      ind <- vapply(tmp, all, FUN.VALUE = logical(1L)) &
+          (vapply(tmp, sum, FUN.VALUE = integer(1L)) == i)
       areas[[i]][j] <- ifelse(!any(ind), 0, sets[ind])
     }
   }
 
-  assert_that(all(areas[[1]] > 0))
+  assert_that(all(areas[[1]] > 0L))
 
   radiuses <- sqrt(areas[[1]] / pi)
 
@@ -87,7 +93,7 @@ eulerr.default <- function(sets, ...) {
 
   # Make sure that no intersections are larger than their components
   for (i in seq_along(id[-1])) {
-    i <- i + 1
+    i <- i + 1L
     for (j in 1:ncol(id[[i]])) {
       m <- id[[1]] %in% id[[i]][1, j] | id[[1]] %in% id[[i]][2, j]
       if(any(areas[[i]][j] > areas[[1]][m])) {
@@ -96,7 +102,7 @@ eulerr.default <- function(sets, ...) {
     }
   }
 
-  disjoint <- areas[[2]] == 0
+  disjoint <- areas[[2]] == 0L
 
   two <- id[[2]]
 
@@ -111,15 +117,15 @@ eulerr.default <- function(sets, ...) {
 
   # Compute an initial layout
   initial_layout <- stats::optim(
-    par = stats::runif(length(areas[[1]]) * 2, 0, min(radiuses)),
+    par = stats::runif(length(areas[[1]]) * 2L, 0L, min(radiuses)),
     fn = initial_layout_optimizer,
     gr = initial_layout_gradient,
     distances = distances,
     disjoint = disjoint,
     contained = contained,
     two = two,
-    lower = rep(0, times = length(areas[[1]]) * 2),
-    upper = rep(sum(radiuses) * 2 - min(radiuses) - max(radiuses)),
+    lower = rep(0, times = length(areas[[1]]) * 2L),
+    upper = rep(sum(radiuses) * 2L - min(radiuses) - max(radiuses)),
     method = c("L-BFGS-B")
   )
 
@@ -157,39 +163,37 @@ eulerr.default <- function(sets, ...) {
 #'   and rows representing each observation's set relationships (see examples).
 #' @export
 
-eulerr.matrix <- function(sets, ...) {
-  assert_that(is.logical(sets))
+eulerr.matrix <- function(sets, by = NULL, ...) {
+  assert_that(is.logical(sets) | (is.numeric(sets) &
+                                    max(sets, na.rm = TRUE) == 1 &
+                                    min(sets, na.rm = TRUE) == 0))
   assert_that(!all(grepl("&", colnames(sets), fixed = TRUE)))
-  setlist <- vector("list", length = ncol(sets))
 
-  for (i in seq_along(colnames(sets))) {
-    setlist[[i]] <- utils::combn(colnames(sets), i)
+  if (!is.null(by)) {
+    set_combos <- by(sets, by, tally_sets, simplify = FALSE)
+  } else {
+    tally_sets(sets)
   }
-
-  tally <- double(0)
-
-  for (i in seq_along(setlist)) {
-    for (j in 1:ncol(setlist[[i]])) {
-      combos <- setlist[[i]][, j]
-      if (i == 1) {
-        intersections <- sets[, combos]
-      } else {
-        intersections <- apply(sets[, combos], 1, all)
-      }
-      sum_intersections <- sum(intersections)
-      names(sum_intersections) <- paste0(combos, collapse = "&")
-      tally <- c(tally, sum_intersections)
-    }
-  }
-
-  eulerr(tally, ...)
 }
 
 #' @describeIn eulerr A data.frame that can be converted to a matrix of logicals
 #'   (as in the description above) via \code{\link[base]{as.matrix}}.
 #' @export
 
-eulerr.data.frame <- function(sets, ...) {
-  matrix <- as.matrix(sets)
-  eulerr(matrix, ...)
+eulerr.data.frame <- function(sets, by = NULL, ...) {
+  if (ncol(by) > 2)
+    stop("No more than two grouping variables are currently allowed.")
+  if (is.data.frame(by) | is.matrix(by)) {
+    lapply(by, FUN = function(x) assert_that(is.character(x) | is.factor(x)))
+  } else {
+    assert_that(is.character(by) | is.factor(by))
+  }
+
+  if (is.null(by)) {
+    return(tally_sets(sets))
+  } else {
+    out <- by(sets, by, tally_sets)
+    class(out) <- c("eulerr_grid", "by")
+    out
+  }
 }
