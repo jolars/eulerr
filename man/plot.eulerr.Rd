@@ -5,7 +5,7 @@
 \title{eulerr plots}
 \usage{
 \method{plot}{eulerr}(x, fill_opacity = 0.4, polygon_args = list(),
-  text_args = list(), ...)
+  text_args = list(), mar = c(2, 2, 2, 2), ...)
 }
 \arguments{
 \item{x}{Specifications for a Euler diagram in the form of a object of class
@@ -19,6 +19,8 @@ which is used to draw the circles.}
 
 \item{text_args}{Arguments for \code{\link[graphics]{text}},
 which is used to draw the text.}
+
+\item{mar}{Margins for the plot area, set via\code{par()[["mar"]]}.}
 
 \item{\dots}{Arguments for \code{\link[graphics]{plot}} (that draws the plot
 area).}
@@ -44,13 +46,6 @@ plot(fit,
 plot(fit,
      polygon_args = list(lty = c("solid", "dotted"), col = "transparent"),
      text_args = list(cex = 2, font = 2))
-
-# Slim down margins and surround plot with a box
-opar <- par(no.readonly = TRUE)
-par(mar = c(0.1, 0.1, 0.1, 0.1))
-plot(fit)
-box()
-par(opar)
 
 }
 \seealso{

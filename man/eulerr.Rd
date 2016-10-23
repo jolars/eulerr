@@ -11,12 +11,16 @@ eulerr(sets, ...)
 
 \method{eulerr}{default}(sets, ...)
 
-\method{eulerr}{matrix}(sets, ...)
+\method{eulerr}{matrix}(sets, by = NULL, ...)
 
-\method{eulerr}{data.frame}(sets, ...)
+\method{eulerr}{data.frame}(sets, by = NULL, ...)
 }
 \arguments{
-\item{sets}{Set relationships (see methods (by class) section).}
+\item{sets}{Set relationships as a named numeric vector, matrix, or
+data.frame. (See the methods (by class) section for details.)}
+
+\item{by}{A factor or character vector used in \code{\link[base]{by}} to
+split the data.frame or matrix and compute euler diagrams for each split.}
 
 \item{\dots}{Currently ignored.}
 }
@@ -33,9 +37,13 @@ A list object of class 'eulerr' with the following parameters.
   squared residuals over the sum of squared residuals.}
 }
 \description{
-eulerr computes eulerr diagrams (a generalization of Venn diagrams) using
-numerical optimization to find exact or the optimal approximations
-for a input of set relationships.
+eulerr computes Euler diagrams (a generalization of Venn diagrams) using
+numerical optimization to find exact or optimal approximations for an
+input of set relationships.
+}
+\details{
+If \code{by} is specified, \code{eulerr} returns a list of euler diagrams
+for which there is a separate plot method that plots a grid of diagrams.
 }
 \section{Methods (by class)}{
 \itemize{
