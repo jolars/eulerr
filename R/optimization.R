@@ -21,20 +21,20 @@ initial_layout_gradient <- function(par, distances, disjoint, contained, two) {
   i    <- !((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained))
 
   grad_x    <- grad_y <- double(length(i))
-  grad_x[i] <- 4 * (d[i] - distances[i] ^ 2) * (x_d[i])
-  grad_y[i] <- 4 * (d[i] - distances[i] ^ 2) * (y_d[i])
+  grad_x[i] <- 4L * (d[i] - distances[i] ^ 2L) * (x_d[i])
+  grad_y[i] <- 4L * (d[i] - distances[i] ^ 2L) * (y_d[i])
   grad_x    <- rbind(grad_x, -grad_x)
   grad_y    <- rbind(grad_y, -grad_y)
 
   c(vapply(seq_along(x), function(x) {sum(grad_x[two == x])},
-           FUN.VALUE = double(1)),
+           FUN.VALUE = double(1L)),
     vapply(seq_along(y), function(y) {sum(grad_y[two == y])},
-           FUN.VALUE = double(1)))
+           FUN.VALUE = double(1L)))
 }
 
 # Optimization wrapper for intersect_two_discs when distance is unknown
 opt_disc_intersection <- function(x, r1, r2, overlap) {
-  (intersect_two_discs(r1, r2, d = x) - overlap) ^ 2
+  (intersect_two_discs(r1, r2, d = x) - overlap) ^ 2L
 }
 
 # Optimization function for disc_disc intersection
@@ -52,8 +52,8 @@ separate_two_discs <- function(r1, r2, overlap) {
 final_layout_optimizer <- function(par, areas, id) {
   fit <- return_intersections(par, areas, id)
   y <- unlist(areas)
-  TSS <- sum((y - y / length(y)) ^ 2)
-  SSE <- sum((y - unlist(fit)) ^ 2)
+  TSS <- sum((y - y / length(y)) ^ 2L)
+  SSE <- sum((y - unlist(fit)) ^ 2L)
 
   if (TSS > 0) {
     SSE / TSS
@@ -73,26 +73,26 @@ return_intersections <- function(par, areas, id) {
   for (i in seq_along(areas)) areas[[i]] <- 0
 
   # Fill in the one set areas
-  areas[[1]] <- r ^ 2 * pi
+  areas[[1]] <- r ^ 2L * pi
 
   x_c <- matrix(x[two], nrow = 2)
   y_c <- matrix(y[two], nrow = 2)
   x_d <- x[two[1, ]] - x[two[2, ]]
   y_d <- y[two[1, ]] - y[two[2, ]]
-  d   <- sqrt(x_d ^ 2 + y_d ^ 2)
+  d   <- sqrt(x_d ^ 2L + y_d ^ 2L)
   r1  <- r[two[1, ]]
   r2  <- r[two[2, ]]
 
   contained    <- d <= abs(r1 - r2)
   disjoint     <- d >= r1 + r2
   intersecting <- !(disjoint | contained)
-  areas[[2]][contained]    <- pmin(r1[contained], r2[contained]) ^ 2 * pi
+  areas[[2]][contained]    <- pmin(r1[contained], r2[contained]) ^ 2L * pi
   areas[[2]][disjoint]     <- 0
   areas[[2]][intersecting] <- intersect_two_discs(r1 = r1[intersecting],
                                                   r2 = r2[intersecting],
                                                   d  = d[intersecting])
 
-  int_points <- matrix(NA, ncol = 2, nrow = length(areas[[2]]) * 2)
+  int_points <- matrix(NA, ncol = 2, nrow = length(areas[[2]]) * 2L)
   int_points[intersecting, ] <- locate_intersections(
     r1  = r1[intersecting],
     r2  = r2[intersecting],
@@ -113,7 +113,7 @@ return_intersections <- function(par, areas, id) {
 
   # Iterate over all higher order intersections
   for (i in seq_along(id[-c(1, 2)])) {
-    i <- i + 2
+    i <- i + 2L
     for (j in 1:ncol(id[[i]])) {
       a <- id[[i]][, j]
       b <- two[1, ] %in% a & two[2, ] %in% a
@@ -127,20 +127,20 @@ return_intersections <- function(par, areas, id) {
       if (ncol(circles) < 2) {
         # Either no intersections between the sets or fully contained
         l <- which.min(r[a])
-        dl <- ((x[a][l] - x[a][-l]) ^ 2 + (y[a][l] - y[a][-l]) ^ 2) ^ 2 <=
-              (r[a][l] - r[a][-l]) ^ 2
+        dl <- ((x[a][l] - x[a][-l]) ^ 2L + (y[a][l] - y[a][-l]) ^ 2L) ^ 2L <=
+              (r[a][l] - r[a][-l]) ^ 2L
         if (all(dl)) {
-          areas[[i]][j] <- r[a][l] ^ 2 * pi
+          areas[[i]][j] <- r[a][l] ^ 2L * pi
         } else {
           areas[[i]][j] <- 0
         }
 
-      } else if (ncol(circles) == 2) {
+      } else if (ncol(circles) == 2L) {
         # Return 2 circle intersecting
         areas[[i]][j] <- intersect_two_discs(r[circles[1, 1]],
                                              r[circles[2, 1]],
                                              d[in_all][1])
-      } else if (ncol(circles) > 2) {
+      } else if (ncol(circles) > 2L) {
         # Return three plus circle intersection
         areas[[i]][j] <- find_threeplus_areas(x_int = int_points[in_all, 1],
                                               y_int = int_points[in_all, 2],
