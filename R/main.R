@@ -165,8 +165,8 @@ eulerr.default <- function(sets, ...) {
 
 eulerr.matrix <- function(sets, by = NULL, ...) {
   assert_that(is.logical(sets) | (is.numeric(sets) &
-                                    max(sets, na.rm = TRUE) == 1 &
-                                    min(sets, na.rm = TRUE) == 0))
+                                    max(sets, na.rm = TRUE) == 1L &
+                                    min(sets, na.rm = TRUE) == 0L))
   assert_that(!all(grepl("&", colnames(sets), fixed = TRUE)))
 
   if (!is.null(by)) {
@@ -181,7 +181,7 @@ eulerr.matrix <- function(sets, by = NULL, ...) {
 #' @export
 
 eulerr.data.frame <- function(sets, by = NULL, ...) {
-  if (ncol(by) > 2)
+  if (ncol(by) > 2L)
     stop("No more than two grouping variables are currently allowed.")
   if (is.data.frame(by) | is.matrix(by)) {
     lapply(by, FUN = function(x) assert_that(is.character(x) | is.factor(x)))

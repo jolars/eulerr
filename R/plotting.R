@@ -159,7 +159,7 @@ plot.eulerr_grid <- function(x, main, ...) {
 
   if (!missing(main)) {
     assert_that(is.character(main))
-    assert_that(length(main) == n)
+    assert_that(length(main) == length(x))
   }
 
   d  <- dim(x)
