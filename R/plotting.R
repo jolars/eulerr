@@ -13,6 +13,7 @@
 #'   which is used to draw the circles.
 #' @param text_args Arguments for \code{\link[graphics]{text}},
 #'   which is used to draw the text.
+#' @param mar Margins for the plot area, set via\code{par()[["mar"]]}.
 #' @param \dots Arguments for \code{\link[graphics]{plot}} (that draws the plot
 #'   area).
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
@@ -32,19 +33,21 @@
 #'      polygon_args = list(lty = c("solid", "dotted"), col = "transparent"),
 #'      text_args = list(cex = 2, font = 2))
 #'
-#' # Slim down margins and surround plot with a box
-#' opar <- par(no.readonly = TRUE)
-#' par(mar = c(0.1, 0.1, 0.1, 0.1))
-#' plot(fit)
-#' box()
-#' par(opar)
-#'
 #' @export
 #' @import assertthat
 
-plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
-                        text_args = list(), ...) {
+plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
+                        text_args = list(), mar = c(2, 2, 2, 2), ...) {
   assert_that(inherits(x, "eulerr"))
+  assert_that(length(mar) == 4)
+  assert_that(is.numeric(mar))
+  assert_that(is.numeric(fill_opacity))
+  assert_that(is.list(polygon_args))
+  assert_that(is.list(text_args))
+
+  old_mar <- graphics::par(no.readonly = TRUE)[["mar"]]
+  on.exit(graphics::par(mar = old_mar))
+  graphics::par(mar = mar)
 
   X <- stats::coef(x)[, 1]
   Y <- stats::coef(x)[, 2]
@@ -103,8 +106,8 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
       colSums(apply(cbind(xs, ys), 1, find_sets_containing_points, X, Y, r))
 
     outskirts <- which(locs == min(locs))
-    text_x[i] <- mean(xs[outskirts])
-    text_y[i] <- mean(ys[outskirts])
+    text_x[i] <- stats::median(xs[outskirts], na.rm = TRUE)
+    text_y[i] <- stats::median(ys[outskirts], na.rm = TRUE)
   }
 
   text_args$x      <- text_x
@@ -112,4 +115,71 @@ plot.eulerr <- function(x, fill_opacity = 0.4,  polygon_args = list(),
   text_args$labels <- names(r)
 
   do.call(graphics::text, text_args)
+}
+
+#' Plot eulerr plot grid
+#'
+#' Plot a grid of eulerr plots.
+#'
+#' @param x A grid of euler diagrams of class \code{eulerr_grid} produced by
+#'   \code{\link{eulerr}}.
+#' @param main Titles for the euler plots. If not provided, uses grouping
+#'   variables from \code{\link{eulerr}}.
+#' @param \dots Arguments to pass forward to \code{\link{plot.eulerr}}.'
+#' @seealso \code{\link{plot.eulerr}}, \code{\link{eulerr}}
+#' @examples
+#' dat <- data.frame(
+#'   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+#'   B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+#'   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
+#'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
+#' )
+#'
+#' e_grid <- eulerr(dat[, 1:2], by = dat[, 3:4])
+#' plot(e_grid)
+#'
+#' # We can provide custom titles for our diagrams
+#'
+#' plot(e_grid, main = c("A", "B", "C", "D"))
+#'
+#' # and use any options that plot.eulerr takes
+#'
+#' plot(e_grid, polygon_args = list(col = "transparent"))
+#'
+#' @import assertthat
+#' @export
+
+plot.eulerr_grid <- function(x, main, ...) {
+  assert_that(inherits(x, "eulerr_grid"))
+
+  n <- ceiling(sqrt(length(x)))
+  old_par <- graphics::par(no.readonly = TRUE)
+  graphics::par(mfrow = c(n, n))
+  on.exit(graphics::par(old_par))
+
+  if (!missing(main)) {
+    assert_that(is.character(main))
+    assert_that(length(main) == n)
+  }
+
+  d  <- dim(x)
+  dn <- dimnames(x)
+
+  for (i in seq_along(x)) {
+    ii <- i - 1L
+    if (missing(main)) {
+      for (j in seq_along(dn)) {
+        iii <- ii%%d[j] + 1L
+        ii <- ii%/%d[j]
+        if (j == 1) {
+          title <- dn[[j]][iii]
+        } else {
+          title <- paste(title, dn[[j]][iii], sep = ", ")
+        }
+      }
+      plot.eulerr(x[[i]], main = title, ...)
+    } else {
+      plot.eulerr(x[[i]], main = main[i], ...)
+    }
+  }
 }
