@@ -125,8 +125,11 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 #'   \code{\link{eulerr}}.
 #' @param main Titles for the euler plots. If not provided, uses grouping
 #'   variables from \code{\link{eulerr}}.
-#' @param \dots Arguments to pass forward to \code{\link{plot.eulerr}}.'
-#' @seealso \code{\link{plot.eulerr}}, \code{\link{eulerr}}
+#' @param mfrow Number of rows and columns in the grid as a vector of two
+#'   integers: \code{c(columns, rows)}.
+#' @param \dots Arguments to pass forward to \code{\link{plot.eulerr}}.
+#' @seealso \code{\link{plot.eulerr}}, \code{\link{eulerr}},
+#'   \code{\link[graphics]{par}}
 #' @examples
 #' dat <- data.frame(
 #'   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
@@ -146,15 +149,29 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 #'
 #' plot(e_grid, polygon_args = list(col = "transparent"))
 #'
+#' # It is also possible to change grid layout
+#'
+#' plot(f, mfrow = c(1, 4))
+#'
 #' @import assertthat
 #' @export
 
-plot.eulerr_grid <- function(x, main, ...) {
+plot.eulerr_grid <- function(x, main, mfrow, ...) {
   assert_that(inherits(x, "eulerr_grid"))
 
-  n <- ceiling(sqrt(length(x)))
+  if (missing(mfrow)) {
+    lsq  <- sqrt(length(x))
+    n <- floor(lsq)
+    m <- ceiling(lsq)
+  } else {
+    assert_that(length(mfrow) == 2)
+    assert_that(is.numeric(mfrow))
+    n <- mfrow[1]
+    m <- mfrow[2]
+  }
+
   old_par <- graphics::par(no.readonly = TRUE)
-  graphics::par(mfrow = c(n, n))
+  graphics::par(mfrow = c(n, m))
   on.exit(graphics::par(old_par))
 
   if (!missing(main)) {

@@ -4,7 +4,7 @@
 \alias{plot.eulerr_grid}
 \title{Plot eulerr plot grid}
 \usage{
-\method{plot}{eulerr_grid}(x, main, ...)
+\method{plot}{eulerr_grid}(x, main, mfrow, ...)
 }
 \arguments{
 \item{x}{A grid of euler diagrams of class \code{eulerr_grid} produced by
@@ -13,7 +13,10 @@
 \item{main}{Titles for the euler plots. If not provided, uses grouping
 variables from \code{\link{eulerr}}.}
 
-\item{\dots}{Arguments to pass forward to \code{\link{plot.eulerr}}.'}
+\item{mfrow}{Number of rows and columns in the grid as a vector of two
+integers: \code{c(columns, rows)}.}
+
+\item{\dots}{Arguments to pass forward to \code{\link{plot.eulerr}}.}
 }
 \description{
 Plot a grid of eulerr plots.
@@ -37,8 +40,11 @@ plot(e_grid, main = c("A", "B", "C", "D"))
 
 plot(e_grid, polygon_args = list(col = "transparent"))
 
+# It is also possible to change the layout
+
 }
 \seealso{
-\code{\link{plot.eulerr}}, \code{\link{eulerr}}
+\code{\link{plot.eulerr}}, \code{\link{eulerr}},
+  \code{\link[graphics]{par}}
 }
 
