@@ -181,8 +181,9 @@ eulerr.matrix <- function(sets, by = NULL, ...) {
 #' @export
 
 eulerr.data.frame <- function(sets, by = NULL, ...) {
-  if (ncol(by) > 2L)
-    stop("No more than two grouping variables are currently allowed.")
+  if (!is.null(ncol(by)))
+    if (ncol(by) > 2)
+      stop("Currently no more than two grouping variables are allowed.")
   if (is.data.frame(by) | is.matrix(by)) {
     lapply(by, FUN = function(x) assert_that(is.character(x) | is.factor(x)))
   } else {
