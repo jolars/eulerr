@@ -38,6 +38,16 @@
 #'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
 #' fit3 <- eulerr(mat)
 #'
+#' # Using grouping via the 'by' argument
+#' dat <- data.frame(
+#'   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+#'   B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+#'   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
+#'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
+#' )
+#'
+#' fit4 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+#'
 #' @export
 #' @import assertthat
 
@@ -49,11 +59,11 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 #' @export
 
 eulerr.default <- function(sets, ...) {
+  assert_that(is.numeric(sets))
   assert_that(not_empty(sets))
   assert_that(length(sets) > 0L)
   assert_that(has_attr(sets, "names"))
   assert_that(all(names(sets) != ""))
-  assert_that(is.numeric(sets))
   assert_that(!any(duplicated(names(sets))))
   if(length(list(...)) > 0L) warning("... arguments are currently ignored.")
 
@@ -164,16 +174,32 @@ eulerr.default <- function(sets, ...) {
 #' @export
 
 eulerr.matrix <- function(sets, by = NULL, ...) {
+  if (!is.null(ncol(by)))
+    if (ncol(by) > 2)
+      stop("Currently no more than two grouping variables are allowed.")
+
+  if (!is.null(by)) {
+    assert_that(is.character(by) | is.factor(by) | is.data.frame(by) |
+                  is.matrix(by))
+    if (is.data.frame(by) | is.matrix(by)) {
+      lapply(by, FUN = function(x) assert_that(is.character(x) | is.factor(x)))
+    } else {
+      assert_that(is.character(by) | is.factor(by))
+    }
+  }
+
   assert_that(is.logical(sets) | (is.numeric(sets) &
                                     max(sets, na.rm = TRUE) == 1L &
                                     min(sets, na.rm = TRUE) == 0L))
   assert_that(!all(grepl("&", colnames(sets), fixed = TRUE)))
 
-  if (!is.null(by)) {
-    set_combos <- by(sets, by, tally_sets, simplify = FALSE)
+  if (is.null(by)) {
+    out <- tally_sets(sets)
   } else {
-    tally_sets(sets)
+    out <- by(sets, by, tally_sets, simplify = FALSE)
+    class(out) <- c("eulerr_grid", "by")
   }
+  out
 }
 
 #' @describeIn eulerr A data.frame that can be converted to a matrix of logicals
@@ -181,20 +207,5 @@ eulerr.matrix <- function(sets, by = NULL, ...) {
 #' @export
 
 eulerr.data.frame <- function(sets, by = NULL, ...) {
-  if (!is.null(ncol(by)))
-    if (ncol(by) > 2)
-      stop("Currently no more than two grouping variables are allowed.")
-  if (is.data.frame(by) | is.matrix(by)) {
-    lapply(by, FUN = function(x) assert_that(is.character(x) | is.factor(x)))
-  } else {
-    assert_that(is.character(by) | is.factor(by))
-  }
-
-  if (is.null(by)) {
-    return(tally_sets(sets))
-  } else {
-    out <- by(sets, by, tally_sets)
-    class(out) <- c("eulerr_grid", "by")
-    out
-  }
+  eulerr(as.matrix(sets), by = by, ...)
 }

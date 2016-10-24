@@ -42,6 +42,7 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   assert_that(length(mar) == 4)
   assert_that(is.numeric(mar))
   assert_that(is.numeric(fill_opacity))
+  assert_that(length(fill_opacity) == 1)
   assert_that(is.list(polygon_args))
   assert_that(is.list(text_args))
 
@@ -158,6 +159,10 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 
 plot.eulerr_grid <- function(x, main, mfrow, ...) {
   assert_that(inherits(x, "eulerr_grid"))
+  if (!missing(main)) {
+    assert_that(is.character(main))
+    assert_that(length(main) == length(x))
+  }
 
   if (missing(mfrow)) {
     lsq  <- sqrt(length(x))
@@ -174,11 +179,6 @@ plot.eulerr_grid <- function(x, main, mfrow, ...) {
   graphics::par(mfrow = c(n, m))
   on.exit(graphics::par(old_par))
 
-  if (!missing(main)) {
-    assert_that(is.character(main))
-    assert_that(length(main) == length(x))
-  }
-
   d  <- dim(x)
   dn <- dimnames(x)
 
@@ -186,9 +186,9 @@ plot.eulerr_grid <- function(x, main, mfrow, ...) {
     ii <- i - 1L
     if (missing(main)) {
       for (j in seq_along(dn)) {
-        iii <- ii%%d[j] + 1L
-        ii <- ii%/%d[j]
-        if (j == 1) {
+        iii <- ii %% d[j] + 1L
+        ii <- ii %/% d[j]
+        if (j == 1L) {
           title <- dn[[j]][iii]
         } else {
           title <- paste(title, dn[[j]][iii], sep = ", ")

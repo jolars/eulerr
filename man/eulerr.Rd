@@ -71,6 +71,16 @@ mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
 fit3 <- eulerr(mat)
 
+# Using grouping via the 'by' argument
+dat <- data.frame(
+  A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+  B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+  gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
+  nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
+)
+
+fit4 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+
 }
 \seealso{
 \code{\link{plot.eulerr}}
