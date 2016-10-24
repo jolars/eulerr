@@ -40,7 +40,9 @@ plot(e_grid, main = c("A", "B", "C", "D"))
 
 plot(e_grid, polygon_args = list(col = "transparent"))
 
-# It is also possible to change the layout
+# It is also possible to change grid layout
+
+plot(e_grid, mfrow = c(1, 4))
 
 }
 \seealso{

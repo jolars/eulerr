@@ -151,7 +151,7 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 #'
 #' # It is also possible to change grid layout
 #'
-#' plot(f, mfrow = c(1, 4))
+#' plot(e_grid, mfrow = c(1, 4))
 #'
 #' @import assertthat
 #' @export
