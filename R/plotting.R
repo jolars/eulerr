@@ -95,11 +95,11 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   # Pick a text center location by filling each circle with a quasirandom
   # point sequence and finding the center of the points that belong to the
   # least number of other circles
-  rpoints <- randtoolbox::sobol(300, dim = 2, scrambling = 2)
-  u <- 2 * pi * (rpoints[, 1] - 1) + 2 * pi
-  v <- sqrt(rpoints[, 2])
+  rpoints <- randtoolbox::sobol(300L, dim = 2, scrambling = 2)
+  u <- 2L * pi * (rpoints[, 1] - 1L) + 2L * pi
+  v <- sqrt(rpoints[, 2L])
   for (i in seq_along(r)) {
-    rs <- r[i] * (v - 1) + r[i]
+    rs <- r[i] * (v - 1L) + r[i]
     xs <- X[i] + rs * cos(u)
     ys <- Y[i] + rs * sin(u)
 
@@ -107,8 +107,28 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
       colSums(apply(cbind(xs, ys), 1, find_sets_containing_points, X, Y, r))
 
     outskirts <- which(locs == min(locs))
-    text_x[i] <- stats::median(xs[outskirts], na.rm = TRUE)
-    text_y[i] <- stats::median(ys[outskirts], na.rm = TRUE)
+
+    #And as a further note you can drop the bandwidth and lower the density
+    #level to get a tighter fit:
+
+    xx <- xs[outskirts]
+    yy <- ys[outskirts]
+
+    dens <- MASS::kde2d(
+      xx,
+      yy,
+      h = c(MASS::bandwidth.nrd(xx), MASS::bandwidth.nrd(yy)),
+      n = 51,
+      lims = c(min(xx) - stats::sd(xx),
+               max(xx) + stats::sd(xx),
+               min(yy) - stats::sd(yy),
+               max(yy) + stats::sd(yy))
+    )
+
+    mind <- which(dens$z == max(dens$z), arr.ind = TRUE)
+    text_x[i] <- dens$x[mind[, 1]]
+    text_y[i] <- dens$y[mind[, 2]]
+    #contour(dens, add = TRUE)
   }
 
   text_args$x      <- text_x
