@@ -30,4 +30,3 @@ tally_sets <- function(sets, ...) {
   }
   eulerr(tally, ...)
 }
-

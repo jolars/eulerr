@@ -1,6 +1,6 @@
 Package: eulerr
 Title: Area-Proportional Euler Diagrams
-Version: 0.1.0.9008
+Version: 0.1.0.9009
 Authors@R: person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                   role = c("aut", "cre"))
 Description: If possible, generates exactly area-proportional Euler diagrams,
@@ -11,7 +11,7 @@ Depends:
     R (>= 3.3.1)
 Imports:
     assertthat (>= 0.1),
-    randtoolbox (>= 1.17),
+    MASS (>= 7.3),
     grDevices,
     utils,
     stats,

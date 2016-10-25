@@ -92,32 +92,29 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   text_x <- double(length(X))
   text_y <- double(length(Y))
 
-  # Pick a text center location by filling each circle with a quasirandom
-  # point sequence and finding the center of the points that belong to the
-  # least number of other circles
-  rpoints <- randtoolbox::sobol(300L, dim = 2, scrambling = 2)
-  u <- 2L * pi * (rpoints[, 1] - 1L) + 2L * pi
-  v <- sqrt(rpoints[, 2L])
+  # Pick a text center location by filling each circle with points and then
+  # picking a point in the area of highest density
+
+  n <- 500
+  theta <- (1L:n) * pi * (3L - sqrt(5))
+  rad   <- sqrt(1L:n) / sqrt(n)
+  px    <- rad * cos(theta)
+  py    <- rad * sin(theta)
+
   for (i in seq_along(r)) {
-    rs <- r[i] * (v - 1L) + r[i]
-    xs <- X[i] + rs * cos(u)
-    ys <- Y[i] + rs * sin(u)
+    xs <- px * (r[i] / max(rad)) + X[i]
+    ys <- py * (r[i] / max(rad)) + Y[i]
 
     locs <-
       colSums(apply(cbind(xs, ys), 1, find_sets_containing_points, X, Y, r))
 
-    outskirts <- which(locs == min(locs))
-
-    #And as a further note you can drop the bandwidth and lower the density
-    #level to get a tighter fit:
-
+    outskirts <- locs == min(locs) | locs == 1
     xx <- xs[outskirts]
     yy <- ys[outskirts]
 
     dens <- MASS::kde2d(
       xx,
       yy,
-      h = c(MASS::bandwidth.nrd(xx), MASS::bandwidth.nrd(yy)),
       n = 51,
       lims = c(min(xx) - stats::sd(xx),
                max(xx) + stats::sd(xx),
@@ -125,10 +122,9 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
                max(yy) + stats::sd(yy))
     )
 
-    mind <- which(dens$z == max(dens$z), arr.ind = TRUE)
+    mind <- which(dens$z == max(dens$z), arr.ind = TRUE, useNames = FALSE)
     text_x[i] <- dens$x[mind[, 1]]
     text_y[i] <- dens$y[mind[, 2]]
-    #contour(dens, add = TRUE)
   }
 
   text_args$x      <- text_x
