@@ -124,7 +124,6 @@ No we get to the fun part: plotting our diagram. This is easy, as well as
 highly customizable, with eulerr.
 
 ```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.'}
-par(mar = c(0, 0, 0, 0))
 plot(fit2)
 
 # Change fill colors, border type (remove) and fontface.
