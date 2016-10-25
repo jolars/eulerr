@@ -62,5 +62,5 @@ find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
 find_sets_containing_points <- function (points, x, y, r) {
   x_int <- points[1]
   y_int <- points[2]
-  (x_int - x) ^ 2L + (y_int - y) ^ 2L < r ^ 2L
+  (x_int - x) ^ 2L + (y_int - y) ^ 2L <= r ^ 2L
 }
