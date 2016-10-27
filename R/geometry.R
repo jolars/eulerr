@@ -20,20 +20,21 @@ locate_intersections <- function(r1, r2, x_d, y_d, x_c, y_c, d) {
 
 # Compute the area of a polygon
 find_polygon_area <- function(x, y, n) {
-  j <- n
-  area <- double(n)
-  for (i in seq_along(x)) {
-    area[i] <- (x[j] + x[i]) * (y[j] - y[i])
-    j <- i
-  }
-  sum(area) / 2L
+  s <- seq_along(x)
+  k <- c(length(s), s[-length(s)])
+  sum((x[k] + x[s]) * (y[k] - y[s])) / 2L
+}
+
+my_check <- function(values) {
+  all(sapply(values[-1], function(x) identical(values[[1]], x)))
 }
 
 # Compute the overlap of three or more circles
 find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
   # Sort points clockwise from center
   j <- n <- length(x_int)
-  ind <- order(atan2(x_int - sum(x_int) / n, y_int - sum(y_int) / n))
+  ind <- order(atan2(x_int - sum(x_int) / n, y_int - sum(y_int) / n),
+               method = "radix")
   x_int <- x_int[ind]
   y_int <- y_int[ind]
   circles <- circles[, ind]
