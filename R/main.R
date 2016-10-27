@@ -68,7 +68,7 @@ eulerr.default <- function(sets, ...) {
   if(length(list(...)) > 0L) warning("... arguments are currently ignored.")
 
   setnames <- strsplit(names(sets), split = "&", fixed = T)
-  one_sets <- unlist(setnames[lengths(setnames) == 1L])
+  one_sets <- unique(unlist(setnames, use.names = FALSE))
 
   # Set up names matrix
   names <- vector("list", length = length(one_sets))
