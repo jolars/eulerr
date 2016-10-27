@@ -2,7 +2,7 @@
 intersect_two_discs <- function(r1, r2, d) {
   r1 ^ 2L * acos((d ^ 2L + r1 ^ 2L - r2 ^ 2L) / (2L * d * r1)) +
   r2 ^ 2L * acos((d ^ 2L + r2 ^ 2L - r1 ^ 2L) / (2L * d * r2)) -
-  0.5 * sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2))
+  sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2L
 }
 
 # Find intersection points
@@ -49,7 +49,7 @@ find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
     A <- ((r ^ 2L) / 2L) * (u - sin(u))
 
     # Pick the smallest area in case there are two competing areas
-    arc_areas[i] <- A[which.min(A)]
+    arc_areas[i] <- min(A)
 
     j <- i
   }
