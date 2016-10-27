@@ -95,15 +95,15 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   # Pick a text center location by filling each circle with points and then
   # picking a point in the area of highest density
 
-  n <- 500
-  theta <- (1L:n) * pi * (3L - sqrt(5))
-  rad   <- sqrt(1L:n) / sqrt(n)
+  n <- 499
+  theta <- (0L:n) * pi * (3L - sqrt(5))
+  rad   <- sqrt(0L:n) / sqrt(n)
   px    <- rad * cos(theta)
   py    <- rad * sin(theta)
 
   for (i in seq_along(r)) {
-    xs <- px * (r[i] / max(rad)) + X[i]
-    ys <- py * (r[i] / max(rad)) + Y[i]
+    xs <- px * (r[i] / max(rad) - sqrt(.Machine$double.eps)) + X[i]
+    ys <- py * (r[i] / max(rad) - sqrt(.Machine$double.eps)) + Y[i]
 
     locs <-
       colSums(apply(cbind(xs, ys), 1, find_sets_containing_points, X, Y, r))
