@@ -25,10 +25,6 @@ find_polygon_area <- function(x, y, n) {
   sum((x[k] + x[s]) * (y[k] - y[s])) / 2L
 }
 
-my_check <- function(values) {
-  all(sapply(values[-1], function(x) identical(values[[1]], x)))
-}
-
 # Compute the overlap of three or more circles
 find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
   # Sort points clockwise from center
