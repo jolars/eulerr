@@ -21,7 +21,7 @@ locate_intersections <- function(r1, r2, x_d, y_d, x_c, y_c, d) {
 # Compute the area of a polygon
 find_polygon_area <- function(x, y, n) {
   s <- seq_along(x)
-  k <- c(length(s), s[-length(s)])
+  k <- c(n, s[-n])
   sum((x[k] + x[s]) * (y[k] - y[s])) / 2L
 }
 
@@ -29,14 +29,15 @@ find_polygon_area <- function(x, y, n) {
 find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
   # Sort points clockwise from center
   j <- n <- length(x_int)
-  ind <- order(atan2(x_int - sum(x_int) / n, y_int - sum(y_int) / n),
-               method = "radix")
+  ux <- sum(x_int) / n
+  uy <- sum(y_int) / n
+  ind <- order(atan2(x_int - ux, y_int - uy), method = "radix")
   x_int <- x_int[ind]
   y_int <- y_int[ind]
   circles <- circles[, ind]
 
   arc_areas <- double(n)
-  for (i in 1:n) {
+  for (i in seq_along(arc_areas)) {
     circle_now <- circles[, i][circles[, i] %in% circles[, j]]
 
     d <- sqrt((x_int[j] - x_int[i]) ^ 2L + (y_int[j] - y_int[i]) ^ 2L)
@@ -56,8 +57,9 @@ find_threeplus_areas <- function(x_int, y_int, radiuses, circles) {
   sum(arc_areas, find_polygon_area(x_int, y_int, n))
 }
 
-find_sets_containing_points <- function (points, x, y, r) {
-  x_int <- points[1]
-  y_int <- points[2]
-  (x_int - x) ^ 2L + (y_int - y) ^ 2L <= r ^ 2L
+# find
+
+find_sets_containing_points <- function(int_points, x, y, r) {
+  t(outer(int_points[, 1], x, function(a, x) (a - x) ^ 2) +
+      outer(int_points[, 2], y, function(b, y) (b - y) ^ 2)) <= r ^ 2L
 }

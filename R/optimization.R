@@ -1,24 +1,24 @@
 # Initial optimizer
 initial_layout_optimizer <- function(par, distances, disjoint, contained, two) {
-  m    <- matrix(par, ncol = 2)
-  x    <- m[, 1]
-  y    <- m[, 2]
-  x_d  <- x[two[1, ]] - x[two[2, ]]
-  y_d  <- y[two[1, ]] - y[two[2, ]]
-  d    <- x_d ^ 2 + y_d ^ 2
-  i <- !(((d >= distances ^ 2) & disjoint) | (d <= distances ^ 2 & contained))
-  sum((d[i] - distances[i] ^ 2) ^ 2)
+  m    <- matrix(par, ncol = 2L)
+  x    <- m[, 1L]
+  y    <- m[, 2L]
+  x_d  <- x[two[1L, ]] - x[two[2L, ]]
+  y_d  <- y[two[1L, ]] - y[two[2L, ]]
+  d    <- x_d ^ 2L + y_d ^ 2L
+  i <- !(((d >= distances ^ 2L) & disjoint) | (d <= distances ^ 2L & contained))
+  sum((d[i] - distances[i] ^ 2L) ^ 2L)
 }
 
 # Gradient for initial optimizer
 initial_layout_gradient <- function(par, distances, disjoint, contained, two) {
-  m   <- matrix(par, ncol = 2)
-  x   <- m[, 1]
-  y   <- m[, 2]
-  x_d <- x[two[1, ]] - x[two[2, ]]
-  y_d <- y[two[1, ]] - y[two[2, ]]
-  d   <- x_d ^ 2 + y_d ^ 2
-  i   <- !((d >= distances ^ 2 & disjoint) | (d <= distances ^ 2 & contained))
+  m   <- matrix(par, ncol = 2L)
+  x   <- m[, 1L]
+  y   <- m[, 2L]
+  x_d <- x[two[1L, ]] - x[two[2L, ]]
+  y_d <- y[two[1L, ]] - y[two[2L, ]]
+  d   <- x_d ^ 2L + y_d ^ 2L
+  i   <- !((d >= distances ^ 2L & disjoint) | (d <= distances ^ 2L & contained))
 
   grad_x    <- grad_y <- double(length(i))
   grad_x[i] <- 4L * (d[i] - distances[i] ^ 2L) * x_d[i]
@@ -26,10 +26,8 @@ initial_layout_gradient <- function(par, distances, disjoint, contained, two) {
   grad_x    <- rbind(grad_x, -grad_x)
   grad_y    <- rbind(grad_y, -grad_y)
 
-  c(vapply(seq_along(x), function(x) sum(grad_x[two == x]),
-           FUN.VALUE = double(1L)),
-    vapply(seq_along(y), function(y) sum(grad_y[two == y]),
-           FUN.VALUE = double(1L)))
+  c(vapply(seq_along(x), function(x) sum(grad_x[two == x]), FUN.VALUE = double(1L)),
+    vapply(seq_along(y), function(y) sum(grad_y[two == y]), FUN.VALUE = double(1L)))
 }
 
 # Optimization wrapper for intersect_two_discs when distance is unknown
@@ -50,73 +48,74 @@ separate_two_discs <- function(r1, r2, overlap) {
 
 # Optimization wrapper for the final layout
 final_layout_optimizer <- function(par, areas, id) {
-  fit <- return_intersections(par, areas, id)
-  y <- unlist(areas)
-  TSS <- sum((y - y / length(y)) ^ 2L)
-  SSE <- sum((y - unlist(fit, use.names = FALSE)) ^ 2L)
+  fit <- unlist(return_intersections(par, areas, id), use.names = FALSE)
+  y   <- unlist(areas, use.names = FALSE)
+  tss <- sum((y - y / length(y)) ^ 2L)
+  sse <- sum((y - fit) ^ 2L)
 
-  if (TSS > 0) {
-    SSE / TSS
+  if (tss > 0L) {
+    sse / tss
   } else {
-    0 #for degenerate cases
+    0L #for degenerate cases
   }
 }
 
 # Return areas from x, y, etc.
 return_intersections <- function(par, areas, id) {
-  m   <- matrix(par, ncol = 3)
-  x   <- m[, 1]
-  y   <- m[, 2]
-  r   <- m[, 3]
-  two <- id[[2]]
-
-  for (i in seq_along(areas)) areas[[i]] <- 0L
+  m   <- matrix(par, ncol = 3L)
+  x   <- m[, 1L]
+  y   <- m[, 2L]
+  r   <- m[, 3L]
+  two <- id[[2L]]
 
   # Fill in the one set areas
   areas[[1]] <- r ^ 2L * pi
 
-  x_c <- matrix(x[two], nrow = 2)
-  y_c <- matrix(y[two], nrow = 2)
-  x_d <- x[two[1, ]] - x[two[2, ]]
-  y_d <- y[two[1L, ]] - y[two[2, ]]
+  x_c <- matrix(x[two], nrow = 2L)
+  y_c <- matrix(y[two], nrow = 2L)
+  x_d <- x[two[1L, ]] - x[two[2L, ]]
+  y_d <- y[two[1L, ]] - y[two[2L, ]]
   d   <- sqrt(x_d ^ 2L + y_d ^ 2L)
-  r1  <- r[two[1, ]]
-  r2  <- r[two[2, ]]
+  r1  <- r[two[1L, ]]
+  r2  <- r[two[2L, ]]
 
-  contained    <- d <= abs(r1 - r2)
-  disjoint     <- d >= r1 + r2
-  intersecting <- !(disjoint | contained)
-  areas[[2]][contained]    <- pmin.int(r1[contained], r2[contained]) ^ 2L * pi
-  areas[[2]][disjoint]     <- 0L
-  areas[[2]][intersecting] <- intersect_two_discs(r1 = r1[intersecting],
-                                                  r2 = r2[intersecting],
-                                                  d  = d[intersecting])
+  # Establish if sets are contained, disjoint, or intersecting
+  ct <- d <= abs(r1 - r2)
+  dj <- d >= r1 + r2
+  is <- !(dj | ct)
+  areas[[2L]][ct] <- pmin.int(r1[ct], r2[ct]) ^ 2L * pi
+  areas[[2L]][dj] <- 0L
+  areas[[2L]][is] <- intersect_two_discs(r1 = r1[is], r2 = r2[is], d  = d[is])
 
   int_points <- matrix(NA, ncol = 2L, nrow = length(areas[[2L]]) * 2L)
-  int_points[intersecting, ] <- locate_intersections(
-    r1  = r1[intersecting],
-    r2  = r2[intersecting],
-    x_d = x_d[intersecting],
-    y_d = y_d[intersecting],
-    x_c = x_c[2, intersecting],
-    y_c = y_c[2, intersecting],
-    d   = d[intersecting]
+  int_points[is, ] <- locate_intersections(
+    r1  = r1[is],
+    r2  = r2[is],
+    x_d = x_d[is],
+    y_d = y_d[is],
+    x_c = x_c[2L, is],
+    y_c = y_c[2L, is],
+    d   = d[is]
   )
-  in_circles <- matrix(FALSE, ncol = nrow(int_points), nrow = length(x))
-  in_circles[, intersecting] <- apply(int_points[intersecting, ],
-                                      1, find_sets_containing_points, x, y, r)
-  twoway_int <- cbind(two[, intersecting], two[, intersecting])
-  for (i in seq_along(twoway_int[1, ])) {
-    in_circles[, intersecting][twoway_int[, i], i] <- TRUE
+
+  in_circles <-
+    t(outer(int_points[, 1L], x, function(a, x) (a - x) ^ 2L) +
+      outer(int_points[, 2L], y, function(b, y) (b - y) ^ 2L)) <= r ^ 2L
+  in_circles[is.na(in_circles)] <- FALSE
+
+  twoway_int <- cbind(two[, is], two[, is])
+  for (i in seq_along(twoway_int[1L, ])) {
+    in_circles[, is][twoway_int[, i], i] <- TRUE
   }
+
   all_circles <- cbind(two, two)
 
   # Iterate over all higher order intersections
-  for (i in seq_along(id[-c(1, 2)])) {
+  for (i in seq_along(id[-c(1L, 2L)])) {
     i <- i + 2L
-    for (j in 1L:ncol(id[[i]])) {
-      a <- id[[i]][, j]
-      b <- two[1, ] %in% a & two[2, ] %in% a
+    for (j in 1L:ncol(.subset2(id, i))) {
+      a <- .subset2(id, i)[, j]
+      b <- match(two[1L, ], a, FALSE) + match(two[2L, ], a, FALSE) > 0L
 
       # Which of the intersection points are within all sets?
       in_all <- .colSums(in_circles[a, , drop = FALSE],
@@ -136,16 +135,22 @@ return_intersections <- function(par, areas, id) {
         }
 
       } else if (ncol(circles) == 2L) {
-        # Return 2 circle intersecting
-        areas[[i]][j] <- intersect_two_discs(r[circles[1, 1]],
-                                             r[circles[2, 1]],
-                                             d[in_all][1])
+        # Return 2 circle intersection
+        areas[[i]][j] <-
+          intersect_two_discs(
+            r[circles[1L, 1L]],
+            r[circles[2L, 1L]],
+            d[in_all][1L]
+          )
       } else if (ncol(circles) > 2L) {
         # Return three plus circle intersection
-        areas[[i]][j] <- find_threeplus_areas(x_int = int_points[in_all, 1],
-                                              y_int = int_points[in_all, 2],
-                                              radiuses = r,
-                                              circles = circles)
+        areas[[i]][j] <-
+          find_threeplus_areas(
+            x_int = int_points[in_all, 1L],
+            y_int = int_points[in_all, 2L],
+            radiuses = r,
+            circles = circles
+          )
       }
     }
   }
