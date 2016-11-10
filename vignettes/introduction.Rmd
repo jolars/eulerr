@@ -40,7 +40,7 @@ set configurations that have perfect solutions. Consider,
 for instance, the following example in which the intersection between `A` and
 `B` is unwanted.
 
-```{r venneuler_failure, fig.height=5, fight.width=5, fig.cap='venneuler plot with unwanted overlap.'}
+```{r venneuler_failure, fig.height=5, fig.width=5, fig.cap='venneuler plot with unwanted overlap.', dev='CairoPNG'}
 library(venneuler,  quietly = TRUE)
 venn_fit <- venneuler(c(A = 75, B = 50, "A&B" = 0))
 par(mar = c(0, 0, 0, 0))
@@ -123,7 +123,7 @@ way to visualize our data. (I suggest the excellent
 No we get to the fun part: plotting our diagram. This is easy, as well as
 highly customizable, with eulerr.
 
-```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.'}
+```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.', dev='CairoPNG'}
 plot(fit2)
 
 # Change fill colors, border type (remove) and fontface.
