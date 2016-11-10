@@ -59,13 +59,14 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 #' @export
 
 eulerr.default <- function(sets, ...) {
-  assert_that(is.numeric(sets))
-  assert_that(not_empty(sets))
-  assert_that(length(sets) > 0L)
-  assert_that(has_attr(sets, "names"))
-  assert_that(all(names(sets) != ""))
-  assert_that(!any(duplicated(names(sets))))
-  if(length(list(...)) > 0L) warning("... arguments are currently ignored.")
+  assert_that(
+    is.numeric(sets),
+    not_empty(sets),
+    length(sets) > 0,
+    has_attr(sets, "names"),
+    all(names(sets) != ""),
+    !any(duplicated(names(sets)))
+  )
 
   setnames <- strsplit(names(sets), split = "&", fixed = T)
   one_sets <- unique(unlist(setnames, use.names = FALSE))
@@ -84,7 +85,8 @@ eulerr.default <- function(sets, ...) {
   areas <- vector("list", length = length(names))
   for (i in seq_along(names)) {
     for (j in 1:ncol(names[[i]])) {
-      tmp <- lapply(setnames, is.element, unlist(names[[i]][, j]))
+      tmp <- lapply(setnames, is.element, unlist(names[[i]][, j],
+                                                 use.names = FALSE))
       ind <- vapply(tmp, all, FUN.VALUE = logical(1L)) &
           (vapply(tmp, sum, FUN.VALUE = integer(1L)) == i)
       areas[[i]][j] <- ifelse(!any(ind), 0, sets[ind])
@@ -144,21 +146,22 @@ eulerr.default <- function(sets, ...) {
     par = c(initial_layout$par, radiuses),
     areas = areas,
     id = id,
+    control = list(reltol = 1e-3),
     method = c("Nelder-Mead")
   )
 
-  fit <- unlist(return_intersections(par = final_layout$par,
-                                     areas = areas,
-                                     id = id)) * scale_factor
-  names(fit) <- unlist(lapply(names, apply, 2, paste0, collapse = "&"))
+  fit <- unlist(return_intersections(final_layout$par, areas, id),
+                use.names = FALSE) * scale_factor
+  names(fit) <- unlist(lapply(names, apply, 2, paste0, collapse = "&"),
+                       use.names = FALSE)
 
-  orig <- unlist(areas) * scale_factor
+  orig <- unlist(areas, use.names = FALSE) * scale_factor
   names(orig) <- names(fit)
 
   fpar <- matrix(final_layout$par,
                  ncol = 3,
                  dimnames = list(names[[1]], c("x", "y", "r")))
-  output <- structure(
+  structure(
     list(
       coefficients = fpar * scale_factor,
       original.values = orig,
@@ -179,19 +182,30 @@ eulerr.matrix <- function(sets, by = NULL, ...) {
       stop("Currently no more than two grouping variables are allowed.")
 
   if (!is.null(by)) {
-    assert_that(is.character(by) | is.factor(by) | is.data.frame(by) |
-                  is.matrix(by))
-    if (is.data.frame(by) | is.matrix(by)) {
-      lapply(by, FUN = function(x) assert_that(is.character(x) | is.factor(x)))
+    assert_that(
+      is.character(by) | is.factor(by) | is.data.frame(by) | is.matrix(by)
+    )
+    if (any(is.data.frame(by), is.matrix(by))) {
+      assert_that(
+        all(
+          vapply(
+            by,
+            function(x) any(is.character(x), is.factor(x)),
+            FUN.VALUE = logical(1)
+          )
+        )
+      )
     } else {
       assert_that(is.character(by) | is.factor(by))
     }
   }
 
-  assert_that(is.logical(sets) | (is.numeric(sets) &
-                                    max(sets, na.rm = TRUE) == 1L &
-                                    min(sets, na.rm = TRUE) == 0L))
-  assert_that(!all(grepl("&", colnames(sets), fixed = TRUE)))
+  assert_that(
+    any(is.logical(sets), is.numeric(sets)),
+    max(sets, na.rm = TRUE) == 1L,
+    min(sets, na.rm = TRUE) == 0L,
+    !any(grepl("&", colnames(sets), fixed = TRUE))
+  )
 
   if (is.null(by)) {
     out <- tally_sets(sets)
