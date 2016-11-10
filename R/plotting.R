@@ -38,21 +38,21 @@
 
 plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
                         text_args = list(), mar = c(2, 2, 2, 2), ...) {
-  assert_that(inherits(x, "eulerr"))
-  assert_that(length(mar) == 4)
-  assert_that(is.numeric(mar))
-  assert_that(is.numeric(fill_opacity))
-  assert_that(length(fill_opacity) == 1)
-  assert_that(is.list(polygon_args))
-  assert_that(is.list(text_args))
-
+  assert_that(
+    inherits(x, "eulerr"),
+    length(mar) == 4,
+    is.numeric(mar),
+    is.number(fill_opacity),
+    is.list(polygon_args),
+    is.list(text_args)
+  )
   old_mar <- graphics::par(no.readonly = TRUE)[["mar"]]
   on.exit(graphics::par(mar = old_mar))
   graphics::par(mar = mar)
 
-  X <- stats::coef(x)[, 1]
-  Y <- stats::coef(x)[, 2]
-  r <- stats::coef(x)[, 3]
+  X <- stats::coef(x)[, 1L]
+  Y <- stats::coef(x)[, 2L]
+  r <- stats::coef(x)[, 3L]
 
   plot_args <- list(...)
   if(is.null(plot_args$x)) plot_args$x <- double(0)
@@ -61,13 +61,13 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   if(is.null(plot_args$axes)) plot_args$axes <- FALSE
   if(is.null(plot_args$xlim)) plot_args$xlim <- range(c(X + r, X - r))
   if(is.null(plot_args$ylim)) plot_args$ylim <- range(c(Y + r, Y - r))
-  if(is.null(plot_args$asp)) plot_args$asp <- 1
+  if(is.null(plot_args$asp)) plot_args$asp <- 1L
 
   do.call(graphics::plot, plot_args)
 
-  g <- seq(0, 2 * pi, length = 500)
-  x_coords <- double(0)
-  y_coords <- double(0)
+  g <- seq(0L, 2L * pi, length = 500L)
+  x_coords <- double(0L)
+  y_coords <- double(0L)
   for (i in seq_along(X)) {
     x_coords <- c(x_coords, r[i] * cos(g) + X[i], NA)
     y_coords <- c(y_coords, r[i] * sin(g) + Y[i], NA)
@@ -95,8 +95,8 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   # Pick a text center location by filling each circle with points and then
   # picking a point in the area of highest density
 
-  n <- 499
-  theta <- (0L:n) * pi * (3L - sqrt(5))
+  n <- 499L
+  theta <- (0L:n) * pi * (3L - sqrt(5L))
   rad   <- sqrt(0L:n) / sqrt(n)
   px    <- rad * cos(theta)
   py    <- rad * sin(theta)
@@ -105,17 +105,16 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
     xs <- px * (r[i] / max(rad) - sqrt(.Machine$double.eps)) + X[i]
     ys <- py * (r[i] / max(rad) - sqrt(.Machine$double.eps)) + Y[i]
 
-    locs <-
-      colSums(apply(cbind(xs, ys), 1, find_sets_containing_points, X, Y, r))
+    locs <- colSums(find_sets_containing_points(cbind(xs, ys), X, Y, r))
 
-    outskirts <- locs == min(locs) | locs == 1
+    outskirts <- locs == min(locs) | locs == 1L
     xx <- xs[outskirts]
     yy <- ys[outskirts]
 
     dens <- MASS::kde2d(
       xx,
       yy,
-      n = 51,
+      n = 51L,
       lims = c(min(xx) - stats::sd(xx),
                max(xx) + stats::sd(xx),
                min(yy) - stats::sd(yy),
@@ -123,8 +122,8 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
     )
 
     mind <- which(dens$z == max(dens$z), arr.ind = TRUE, useNames = FALSE)
-    text_x[i] <- dens$x[mind[, 1]]
-    text_y[i] <- dens$y[mind[, 2]]
+    text_x[i] <- dens$x[mind[, 1L]]
+    text_y[i] <- dens$y[mind[, 2L]]
   }
 
   text_args$x      <- text_x
@@ -176,19 +175,17 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 plot.eulerr_grid <- function(x, main, mfrow, ...) {
   assert_that(inherits(x, "eulerr_grid"))
   if (!missing(main)) {
-    assert_that(is.character(main))
-    assert_that(length(main) == length(x))
+    assert_that(is.character(main), length(main) == length(x))
   }
 
   if (missing(mfrow)) {
-    lsq  <- sqrt(length(x))
+    lsq <- sqrt(length(x))
     n <- floor(lsq)
     m <- ceiling(lsq)
   } else {
-    assert_that(length(mfrow) == 2)
-    assert_that(is.numeric(mfrow))
-    n <- mfrow[1]
-    m <- mfrow[2]
+    assert_that(length(mfrow) == 2, is.numeric(mfrow))
+    n <- mfrow[1L]
+    m <- mfrow[2L]
   }
 
   old_par <- graphics::par(no.readonly = TRUE)
