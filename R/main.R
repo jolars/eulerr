@@ -48,8 +48,11 @@
 #'
 #' fit4 <- eulerr(dat[, 1:2], by = dat[, 3:4])
 #'
-#' @export
+#' @useDynLib eulerr
+#' @importFrom Rcpp sourceCpp
 #' @import assertthat
+#'
+#' @export
 
 eulerr <- function(sets, ...) UseMethod("eulerr")
 
@@ -63,104 +66,90 @@ eulerr.default <- function(sets, ...) {
     is.numeric(sets),
     not_empty(sets),
     length(sets) > 0,
+    all(sets >= 0),
     has_attr(sets, "names"),
-    all(names(sets) != ""),
+    !any(names(sets) == ""),
     !any(duplicated(names(sets)))
   )
 
   setnames <- strsplit(names(sets), split = "&", fixed = T)
   one_sets <- unique(unlist(setnames, use.names = FALSE))
+  n <- length(one_sets)
 
-  # Set up names matrix
-  names <- vector("list", length = length(one_sets))
-  for (i in seq_along(one_sets)) {
-    names[[i]] <- utils::combn(one_sets, i)
-  }
+  id <- as.matrix(expand.grid(
+    lapply(seq_along(one_sets), function(x) c(FALSE, TRUE)),
+    stringsAsFactors = FALSE,
+    KEEP.OUT.ATTRS = FALSE
+  ))
+  id <- id[-1, ] # get rid of row of empty
 
   # Scale the values to fractions
   scale_factor <- sum(sets)
   sets <- sets / scale_factor
 
-  # Set up area matrix
-  areas <- vector("list", length = length(names))
-  for (i in seq_along(names)) {
-    for (j in 1:ncol(names[[i]])) {
-      tmp <- lapply(setnames, is.element, unlist(names[[i]][, j],
-                                                 use.names = FALSE))
-      ind <- vapply(tmp, all, FUN.VALUE = logical(1L)) &
-          (vapply(tmp, sum, FUN.VALUE = integer(1L)) == i)
-      areas[[i]][j] <- ifelse(!any(ind), 0, sets[ind])
-    }
-  }
+  areas <- apply(id, 1, function(x) {
+    i <- names(sets) == paste(one_sets[x], collapse = "&")
+    if (any(i)) sets[i] else 0
+  })
 
-  assert_that(all(areas[[1]] > 0L))
+  id_sums <- rowSums(id)
+  ones <- id_sums == 1
+  twos <- id_sums == 2
 
-  radiuses <- sqrt(areas[[1]] / pi)
+  two <- apply(id[twos, , drop = FALSE], 1, which)
+  two_a <- two[1, ]
+  two_b <- two[2, ]
 
-  # Set up index matrix
-  id <- vector("list", length = length(areas))
-  for (i in seq_along(id)) {
-    id[[i]] <- utils::combn(length(areas[[1]]), i)
-  }
+  r <- sqrt(areas[ones] / pi)
+  disjoint <- areas[twos] == 0
 
-  # Make sure that no intersections are larger than their components
-  for (i in seq_along(id[-1])) {
-    i <- i + 1L
-    for (j in 1:ncol(id[[i]])) {
-      m <- id[[1]] %in% id[[i]][1, j] | id[[1]] %in% id[[i]][2, j]
-      if(any(areas[[i]][j] > areas[[1]][m])) {
-        stop("Intersection areas cannot exceed their components' areas.")
-      }
-    }
-  }
-
-  disjoint <- areas[[2]] == 0L
-
-  two <- id[[2]]
-
-  distances <- mapply(separate_two_discs,
-                      r1 = radiuses[two[1, ]],
-                      r2 = radiuses[two[2, ]],
-                      overlap = areas[[2]])
+  distances <- mapply(
+    separate_two_discs,
+    r1 = r[two_a],
+    r2 = r[two_b],
+    overlap = areas[twos],
+    USE.NAMES = FALSE
+  )
 
   # Establish identities of disjoint and contained sets
-  tmp <- matrix(areas[[1]][two], nrow = 2)
-  contained <- areas[[2]] == tmp[1, ] | areas[[2]] == tmp[2, ]
+  tmp <- matrix(areas[ones][two], nrow = 2)
+  contained <- areas[twos] == tmp[1, ] | areas[twos] == tmp[2, ]
 
-  # Compute an initial layout
+  # Make sure that no two set intersections are larger than their parent sets
+  assert_that(!any(areas[twos] > tmp[1, ] | areas[twos] > tmp[2, ]))
+
   initial_layout <- stats::optim(
-    par = stats::runif(length(areas[[1]]) * 2L, 0L, min(radiuses)),
+    par = stats::runif(n * 2L, 0L, min(r)),
     fn = initial_layout_optimizer,
     gr = initial_layout_gradient,
     distances = distances,
     disjoint = disjoint,
     contained = contained,
     two = two,
-    lower = rep(0, times = length(areas[[1]]) * 2L),
-    upper = rep(sum(radiuses) * 2L - min(radiuses) - max(radiuses)),
+    lower = rep(0, times = n * 2L),
+    upper = rep(sum(r) * 2L - min(r) - max(r)),
     method = c("L-BFGS-B")
   )
 
   final_layout <- stats::optim(
     fn = final_layout_optimizer,
-    par = c(initial_layout$par, radiuses),
+    par = c(initial_layout$par, r),
     areas = areas,
     id = id,
-    control = list(reltol = 1e-3),
+    two = two,
+    twos = twos,
+    ones = ones,
     method = c("Nelder-Mead")
   )
 
-  fit <- unlist(return_intersections(final_layout$par, areas, id),
-                use.names = FALSE) * scale_factor
-  names(fit) <- unlist(lapply(names, apply, 2, paste0, collapse = "&"),
-                       use.names = FALSE)
-
-  orig <- unlist(areas, use.names = FALSE) * scale_factor
+  fit <- return_intersections(final_layout$par, areas, id, two, twos, ones) *
+    scale_factor
+  names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
+  orig <- areas * scale_factor
   names(orig) <- names(fit)
-
   fpar <- matrix(final_layout$par,
                  ncol = 3,
-                 dimnames = list(names[[1]], c("x", "y", "r")))
+                 dimnames = list(one_sets, c("x", "y", "r")))
   structure(
     list(
       coefficients = fpar * scale_factor,
