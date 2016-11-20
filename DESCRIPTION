@@ -15,7 +15,8 @@ Imports:
     grDevices,
     utils,
     stats,
-    graphics
+    graphics,
+    Rcpp
 Suggests:
     knitr,
     rmarkdown,
@@ -28,3 +29,4 @@ VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 5.0.1
+LinkingTo: Rcpp
