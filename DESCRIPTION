@@ -16,7 +16,7 @@ Imports:
     utils,
     stats,
     graphics,
-    Rcpp
+    Rcpp (>= 0.12.8)
 Suggests:
     knitr,
     rmarkdown,
