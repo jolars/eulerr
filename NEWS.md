@@ -1,6 +1,8 @@
-# eulerr 0.2.0
+# eulerr 1.0.0
 
 ## New features
+* Switched to the cost function used in EulerAPE to avoid local minimums.
+* Optimization has been rewritten using RcppArmadillo speed up performance.
 * Added the option to produce conditional eulerr plots via a `by` argument to
 `eulerr`. The result is a list of euler diagrams. These diagrams can be plotted
 in a grid arrangement via a new plot method.
@@ -13,7 +15,7 @@ instead of means to calculate label centers.
 symmetric diagrams.
 * Uses Vogel's method instead of *randtoolbox* to sample points on the disks for
 labael placement.
-* Vectorized polygon area computations to improve speed
+* Vectorized polygon area computations to boost performance..
 * Minor clean up and performance fixes all around.
 
 # eulerr 0.1.0
