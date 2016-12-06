@@ -39,7 +39,6 @@
 plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
                         text_args = list(), mar = c(2, 2, 2, 2), ...) {
   assert_that(
-    inherits(x, "eulerr"),
     length(mar) == 4,
     is.numeric(mar),
     is.number(fill_opacity),
@@ -55,7 +54,7 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   r <- stats::coef(x)[, 3L]
 
   plot_args <- list(...)
-  if(is.null(plot_args$x)) plot_args$x <- double(0)
+  if(is.null(plot_args$x)) plot_args$x <- double(0L)
   plot_args$xlab <- ""
   plot_args$ylab <- ""
   if(is.null(plot_args$axes)) plot_args$axes <- FALSE
@@ -96,30 +95,35 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   # picking a point in the area of highest density
 
   n <- 499L
-  theta <- (0L:n) * pi * (3L - sqrt(5L))
+  theta <- seq.int(0L, n, 1L) * pi * (3L - sqrt(5L))
   rad   <- sqrt(0L:n) / sqrt(n)
   px    <- rad * cos(theta)
   py    <- rad * sin(theta)
+  max_rad <- max(rad)
 
   for (i in seq_along(r)) {
-    xs <- px * (r[i] / max(rad) - sqrt(.Machine$double.eps)) + X[i]
-    ys <- py * (r[i] / max(rad) - sqrt(.Machine$double.eps)) + Y[i]
+    xs <- px * (r[i] / max_rad) + X[i]
+    ys <- py * (r[i] / max_rad) + Y[i]
 
     locs <- colSums(find_sets_containing_points(cbind(xs, ys), X, Y, r))
 
-    outskirts <- locs == min(locs) | locs == 1L
+    tip <- table(locs)
+
+    if (any(tip) > 30L) {
+      large_enough <- which(tip > 30L)[1L]
+    } else if (any(tip) > 20L) {
+      large_enough <- which(tip > 20L)[1L]
+    } else {
+      large_enough <- which(tip > 5L)[1L]
+    }
+
+    large_enough <- which(table(locs) > 30L)[1L]
+
+    outskirts <- locs == as.numeric(names(large_enough))
     xx <- xs[outskirts]
     yy <- ys[outskirts]
 
-    dens <- MASS::kde2d(
-      xx,
-      yy,
-      n = 51L,
-      lims = c(min(xx) - stats::sd(xx),
-               max(xx) + stats::sd(xx),
-               min(yy) - stats::sd(yy),
-               max(yy) + stats::sd(yy))
-    )
+    dens <- MASS::kde2d(xx, yy, n = 51L)
 
     mind <- which(dens$z == max(dens$z), arr.ind = TRUE, useNames = FALSE)
     text_x[i] <- dens$x[mind[, 1L]]
@@ -173,7 +177,6 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 #' @export
 
 plot.eulerr_grid <- function(x, main, mfrow, ...) {
-  assert_that(inherits(x, "eulerr_grid"))
   if (!missing(main)) {
     assert_that(is.character(main), length(main) == length(x))
   }
