@@ -12,7 +12,7 @@ test_that("expect no errors for a variety of predefined sets", {
   s1 <- c("A" = 10, "B" = 10, "C" = 10, "A&B" = 8, "A&C" = 8, "B&C" = 8,
           "A&B&C" = 3)
   # Completely disjoint
-  s2 <- c(A = 10, B = 10, C = 8)
+  s2 <- c(A = 1, B = 1, C = 1)
   # One completely contained
   s3 <- c("A" = 10, "B" = 10, "C" = 3, "A&B" = 6, "A&C" = 3, "B&C" = 3,
           "A&B&C" = 3)
@@ -36,6 +36,19 @@ test_that("expect no errors for a variety of predefined sets", {
            "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
            "A&B&F" = 1, "B&C&D" = 1)
 
+  s10 <- c("SE" = 14, "Treat" = 28, "Anti-CCP" = 101, "DAS28" = 91,
+           "SE&Treat" = 1, "SE&DAS28" = 14, "Treat&Anti-CCP" = 6,
+           "SE&Anti-CCP&DAS28" = 1)
+
+  s11 <- c("A" = 10, "B" = 2, "C" = 2, "D" = 2,
+           "A&B" = 2, "A&C" = 2, "A&D" = 2, "B&C" = 1, "B&D" = 1, "C&D" = 1,
+           "A&B&C" = 0.5, "A&B&D" = 0.5, "A&C&D" = 0.5, "B&C&D" = 0.5,
+           "A&B&C&D" = 0.5)
+
+  s12 <- c("a" = 3491, "b" = 3409, "c" = 3503,
+           "a&b" = 120, "a&c" = 114, "b&c" = 132,
+           "a&b&c" = 126)
+
   expect_error(eulerr(s1), NA)
   expect_error(eulerr(s2), NA)
   expect_error(eulerr(s3), NA)
@@ -45,6 +58,9 @@ test_that("expect no errors for a variety of predefined sets", {
   expect_error(eulerr(s7), NA)
   expect_error(eulerr(s8), NA)
   expect_error(eulerr(s9), NA)
+  expect_error(eulerr(s10), NA)
+  expect_error(eulerr(s11), NA)
+  expect_error(eulerr(s12), NA)
 })
 
 test_that("degenerative cases are fit properly", {
