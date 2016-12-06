@@ -1,6 +1,6 @@
 Package: eulerr
 Title: Area-Proportional Euler Diagrams
-Version: 0.1.0.9010
+Version: 1.0.0.9000
 Authors@R: person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                   role = c("aut", "cre"))
 Description: If possible, generates exactly area-proportional Euler diagrams,
@@ -16,7 +16,8 @@ Imports:
     utils,
     stats,
     graphics,
-    Rcpp (>= 0.12.8)
+    Rcpp (>= 0.12.8),
+    RcppArmadillo (>= 0.7.500.0.0)
 Suggests:
     knitr,
     rmarkdown,
@@ -29,4 +30,4 @@ VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 5.0.1
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
