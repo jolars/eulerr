@@ -76,48 +76,55 @@ eulerr.default <- function(sets, ...) {
   one_sets <- unique(unlist(setnames, use.names = FALSE))
   n <- length(one_sets)
 
-  id <- as.matrix(expand.grid(
-    lapply(seq_along(one_sets), function(x) c(FALSE, TRUE)),
-    stringsAsFactors = FALSE,
-    KEEP.OUT.ATTRS = FALSE
-  ))
-  id <- id[-1, ] # get rid of row of empty
+  no_combos <- choose(n, 1L:n)
+  id <- matrix(FALSE, sum(no_combos), n)
+  cum_combos <- c(0, cumsum(no_combos)[-n])
+
+  k <- 1
+  for (i in cum_combos) {
+    permutations <- utils::combn(n, k)
+    for (j in 1:(ncol(permutations))) {
+      id[i + j, permutations[, j]] <- TRUE
+    }
+    k <- k + 1
+  }
 
   # Scale the values to fractions
-  scale_factor <- sum(sets)
-  sets <- sets / scale_factor
+  scale_factor <- 100 / sum(sets)
+  sets <- sets * scale_factor
 
-  areas <- apply(id, 1, function(x) {
-    i <- names(sets) == paste(one_sets[x], collapse = "&")
-    if (any(i)) sets[i] else 0
-  })
+  areas <- double(nrow(id))
+  for (i in 1:nrow(id)) {
+    s <- one_sets[id[i, ]]
+    for (j in seq_along(setnames)) {
+      if (setequal(s, setnames[[j]])) {
+        areas[i] <- sets[j]
+      }
+    }
+  }
 
   id_sums <- rowSums(id)
   ones <- id_sums == 1
   twos <- id_sums == 2
 
-  two <- apply(id[twos, , drop = FALSE], 1, which)
-  two_a <- two[1, ]
-  two_b <- two[2, ]
+  two <- choose_two(1:n)
 
   r <- sqrt(areas[ones] / pi)
+
+  # Establish identities of disjoint and contained sets
   disjoint <- areas[twos] == 0
+  tmp <- matrix(areas[ones][two], ncol = 2)
+  contained <- areas[twos] == tmp[, 1] | areas[twos] == tmp[, 2]
 
   distances <- mapply(
     separate_two_discs,
-    r1 = r[two_a],
-    r2 = r[two_b],
+    r1 = r[two[, 1]],
+    r2 = r[two[, 2]],
     overlap = areas[twos],
     USE.NAMES = FALSE
   )
 
-  # Establish identities of disjoint and contained sets
-  tmp <- matrix(areas[ones][two], nrow = 2)
-  contained <- areas[twos] == tmp[1, ] | areas[twos] == tmp[2, ]
-
-  # Make sure that no two set intersections are larger than their parent sets
-  assert_that(!any(areas[twos] > tmp[1, ] | areas[twos] > tmp[2, ]))
-
+  # Starting layout
   initial_layout <- stats::optim(
     par = stats::runif(n * 2L, 0L, min(r)),
     fn = initial_layout_optimizer,
@@ -131,6 +138,7 @@ eulerr.default <- function(sets, ...) {
     method = c("L-BFGS-B")
   )
 
+  # Final layout
   final_layout <- stats::optim(
     fn = final_layout_optimizer,
     par = c(initial_layout$par, r),
@@ -142,21 +150,25 @@ eulerr.default <- function(sets, ...) {
     method = c("Nelder-Mead")
   )
 
-  fit <- return_intersections(final_layout$par, areas, id, two, twos, ones) *
-    scale_factor
+  fit <- as.vector(as.vector(return_intersections(final_layout$par, areas, id, two, twos,
+                                        ones))) / scale_factor
+
   names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
-  orig <- areas * scale_factor
+  orig <- areas / scale_factor
+
+  region_error <- abs(fit / sum(fit) - orig / sum(orig))
+  diag_error <- max(region_error)
+
   names(orig) <- names(fit)
-  fpar <- matrix(final_layout$par,
-                 ncol = 3,
-                 dimnames = list(one_sets, c("x", "y", "r")))
+  fpar <- matrix(final_layout$par, ncol = 3,
+                 dimnames = list(one_sets, c("x", "y", "r"))) / scale_factor
   structure(
     list(
-      coefficients = fpar * scale_factor,
+      coefficients = fpar,
       original.values = orig,
       fitted.values = fit,
       residuals = orig - fit,
-      stress = final_layout$value
+      diag_error = diag_error
     ),
     class = c("eulerr", "list"))
 }
