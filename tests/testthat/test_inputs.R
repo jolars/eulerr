@@ -8,7 +8,6 @@ test_that("erroneous named numeric vectors returns errors", {
   expect_error(eulerr(c(A = 0, B = 2)))
   expect_error(eulerr(c(A = 10, A = 5)))
   expect_error(eulerr(c(A = 10, 4)))
-  expect_error(eulerr(c(A = 10, B = 5, "A&B" = 6)))
 })
 
 test_that("erroneous matrix returns errors", {

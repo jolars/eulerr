@@ -10,8 +10,6 @@ test_that("erroneous input to plot.eulerr return errors", {
   expect_error(plot(f, text_args = 1))
   class(f) <- "list"
   expect_error(plot(f))
-  expect_error(eulerr:::plot.eulerr.single(2))
-  expect_error(eulerr:::plot.eulerr.single)
 })
 
 test_that("erroneous input to plot.eulerr_grid return errors", {
@@ -30,5 +28,4 @@ test_that("erroneous input to plot.eulerr_grid return errors", {
   expect_error(plot(f2, main = c("aa", "a")))
 
   class(f2) <- "eulerr"
-  expect_error(eulerr:::plot.eulerr_grid(f2))
 })
