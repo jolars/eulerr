@@ -9,7 +9,7 @@ eulerr
 
 With three or more sets intersecting, exact euler diagrams are often impossible. For such cases eulerr attempts to provide the best approximation possible by numerically tuning the circles' positions and radiuses so that the sum of squared errors is minimized.
 
-When solutions are approximate, eulerr helpfully provides residuals and a stress statistic that allow the user decide if the approximation can be trusted.
+When solutions are approximate, residuals and error statistics are provided to assess whether the resulting diagram can be trusted.
 
 Installation
 ------------
@@ -43,10 +43,10 @@ We can inspect the solution
 ``` r
 fit
 #> $coefficients
-#>          x          y         r
-#> A 1.414019 13.5875821 10.248902
-#> B 4.370636  0.4878819  9.722912
-#> C 2.955592  6.7589832  6.490137
+#>           x           y         r
+#> A 0.1908380 1.242263586 1.0248457
+#> B 0.7135357 0.005019887 0.9722516
+#> C 0.4628823 0.597102331 0.6492812
 #> 
 #> $original.values
 #>     A     B     C   A&B   A&C   B&C A&B&C 
@@ -54,16 +54,19 @@ fit
 #> 
 #> $fitted.values
 #>        A        B        C      A&B      A&C      B&C    A&B&C 
-#> 9.999785 8.999713 4.009993 2.027303 2.992809 2.992910 1.975726 
+#> 9.998915 8.998979 4.013300 2.025966 2.993940 2.994237 1.974876 
 #> 
 #> $residuals
-#>             A             B             C           A&B           A&C 
-#>  0.0002154188  0.0002869387 -0.0099933937 -0.0273028295  0.0071909144 
-#>           B&C         A&B&C 
-#>  0.0070898292  0.0242741373 
+#>            A            B            C          A&B          A&C 
+#>  0.001085073  0.001021204 -0.013300114 -0.025966127  0.006060486 
+#>          B&C        A&B&C 
+#>  0.005763308  0.025123909 
+#> 
+#> $diag_error
+#> [1] 0.0007864574
 #> 
 #> $stress
-#> [1] 9.379153e-06
+#> [1] 6.970875e-06
 #> 
 #> attr(,"class")
 #> [1] "eulerr" "list"
