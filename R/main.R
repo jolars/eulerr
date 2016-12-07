@@ -11,6 +11,9 @@
 #'   data.frame. (See the methods (by class) section for details.)
 #' @param by A factor or character vector used in \code{\link[base]{by}} to
 #'   split the data.frame or matrix and compute euler diagrams for each split.
+#' @param cost Cost function to use to optimize the
+#'   fit of the solution. Briefly, `eulerape` from (EulerAPE)
+#'   `venneuler` uses the stress function used in \pkg{venneuler}.
 #' @param \dots Currently ignored.
 #' @return A list object of class 'eulerr' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
@@ -61,7 +64,7 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 #'   Missing interactions are treated as being 0.
 #' @export
 
-eulerr.default <- function(sets, ...) {
+eulerr.default <- function(sets, cost = c("eulerape", "venneuler"), ...) {
   assert_that(
     is.numeric(sets),
     not_empty(sets),
@@ -133,25 +136,26 @@ eulerr.default <- function(sets, ...) {
     disjoint = disjoint,
     contained = contained,
     two = two,
-    lower = rep(0, times = n * 2L),
-    upper = rep(sum(r) * 2L - min(r) - max(r)),
+    lower = 0,
+    upper = sqrt(sum(r ^ 2 * pi)),
     method = c("L-BFGS-B")
   )
 
   # Final layout
   final_layout <- stats::optim(
-    fn = final_layout_optimizer,
+    fn = compute_fit,
     par = c(initial_layout$par, r),
     areas = areas,
     id = id,
     two = two,
     twos = twos,
     ones = ones,
-    method = c("Nelder-Mead")
+    cost = match.arg(cost),
+    method = c("Nelder-Mead"),
+    control = list(maxit = 500)
   )
 
-  fit <- as.vector(as.vector(return_intersections(final_layout$par, areas, id, two, twos,
-                                        ones))) / scale_factor
+  fit <- return_intersections(final_layout$par, areas, id, two, twos, ones) /scale_factor
 
   names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
   orig <- areas / scale_factor
@@ -168,7 +172,8 @@ eulerr.default <- function(sets, ...) {
       original.values = orig,
       fitted.values = fit,
       residuals = orig - fit,
-      diag_error = diag_error
+      diag_error = diag_error,
+      stress = stress(orig, fit)
     ),
     class = c("eulerr", "list"))
 }
@@ -177,10 +182,11 @@ eulerr.default <- function(sets, ...) {
 #'   and rows representing each observation's set relationships (see examples).
 #' @export
 
-eulerr.matrix <- function(sets, by = NULL, ...) {
+eulerr.matrix <- function(sets, by = NULL, cost = c("eulerape", "venneuler"),
+                          ...) {
   if (!is.null(ncol(by)))
     if (ncol(by) > 2)
-      stop("Currently no more than two grouping variables are allowed.")
+      stop("Currently, no more than two grouping variables are allowed.")
 
   if (!is.null(by)) {
     assert_that(
@@ -221,6 +227,7 @@ eulerr.matrix <- function(sets, by = NULL, ...) {
 #'   (as in the description above) via \code{\link[base]{as.matrix}}.
 #' @export
 
-eulerr.data.frame <- function(sets, by = NULL, ...) {
-  eulerr(as.matrix(sets), by = by, ...)
+eulerr.data.frame <- function(sets, by = NULL,
+                              cost = c("eulerape", "venneuler"), ...) {
+  eulerr(as.matrix(sets), by = by, cost = cost, ...)
 }
