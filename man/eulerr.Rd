@@ -9,15 +9,21 @@
 \usage{
 eulerr(sets, ...)
 
-\method{eulerr}{default}(sets, ...)
+\method{eulerr}{default}(sets, cost = c("eulerape", "venneuler"), ...)
 
-\method{eulerr}{matrix}(sets, by = NULL, ...)
+\method{eulerr}{matrix}(sets, by = NULL, cost = c("eulerape", "venneuler"),
+  ...)
 
-\method{eulerr}{data.frame}(sets, by = NULL, ...)
+\method{eulerr}{data.frame}(sets, by = NULL, cost = c("eulerape",
+  "venneuler"), ...)
 }
 \arguments{
 \item{sets}{Set relationships as a named numeric vector, matrix, or
 data.frame. (See the methods (by class) section for details.)}
+
+\item{cost}{Cost function to use to optimize the
+fit of the solution. Briefly, `eulerape` from (EulerAPE)
+`venneuler` uses the stress function used in \pkg{venneuler}.}
 
 \item{by}{A factor or character vector used in \code{\link[base]{by}} to
 split the data.frame or matrix and compute euler diagrams for each split.}
