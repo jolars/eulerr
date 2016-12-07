@@ -46,9 +46,3 @@ separate_two_discs <- function(r1, r2, overlap) {
   )$minimum
 }
 
-# Optimization wrapper for the final layout
-final_layout_optimizer <- function(par, areas, id, two, twos, ones) {
-  fit <- as.vector(return_intersections(par, areas, id, two, twos, ones))
-  sum((areas - fit) ^ 2L / (fit + sqrt(.Machine$double.eps))) / length(areas)
-  #sum((areas - fit) ^ 2L)
-}
