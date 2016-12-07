@@ -25,3 +25,11 @@ return_intersections <- function(par, areas, id, two, twos, ones) {
     .Call('eulerr_return_intersections', PACKAGE = 'eulerr', par, areas, id, two, twos, ones)
 }
 
+stress <- function(areas, fit) {
+    .Call('eulerr_stress', PACKAGE = 'eulerr', areas, fit)
+}
+
+compute_fit <- function(par, areas, id, two, twos, ones, cost) {
+    .Call('eulerr_compute_fit', PACKAGE = 'eulerr', par, areas, id, two, twos, ones, cost)
+}
+
