@@ -74,7 +74,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // return_intersections
-arma::vec return_intersections(arma::vec par, arma::vec areas, arma::umat id, arma::umat two, arma::uvec twos, arma::uvec ones);
+std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::umat id, arma::umat two, arma::uvec twos, arma::uvec ones);
 RcppExport SEXP eulerr_return_intersections(SEXP parSEXP, SEXP areasSEXP, SEXP idSEXP, SEXP twoSEXP, SEXP twosSEXP, SEXP onesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -86,6 +86,35 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::uvec >::type twos(twosSEXP);
     Rcpp::traits::input_parameter< arma::uvec >::type ones(onesSEXP);
     rcpp_result_gen = Rcpp::wrap(return_intersections(par, areas, id, two, twos, ones));
+    return rcpp_result_gen;
+END_RCPP
+}
+// stress
+double stress(arma::vec areas, arma::vec fit);
+RcppExport SEXP eulerr_stress(SEXP areasSEXP, SEXP fitSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type areas(areasSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type fit(fitSEXP);
+    rcpp_result_gen = Rcpp::wrap(stress(areas, fit));
+    return rcpp_result_gen;
+END_RCPP
+}
+// compute_fit
+double compute_fit(arma::vec par, arma::vec areas, arma::umat id, arma::umat two, arma::uvec twos, arma::uvec ones, std::string cost);
+RcppExport SEXP eulerr_compute_fit(SEXP parSEXP, SEXP areasSEXP, SEXP idSEXP, SEXP twoSEXP, SEXP twosSEXP, SEXP onesSEXP, SEXP costSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type par(parSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type areas(areasSEXP);
+    Rcpp::traits::input_parameter< arma::umat >::type id(idSEXP);
+    Rcpp::traits::input_parameter< arma::umat >::type two(twoSEXP);
+    Rcpp::traits::input_parameter< arma::uvec >::type twos(twosSEXP);
+    Rcpp::traits::input_parameter< arma::uvec >::type ones(onesSEXP);
+    Rcpp::traits::input_parameter< std::string >::type cost(costSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_fit(par, areas, id, two, twos, ones, cost));
     return rcpp_result_gen;
 END_RCPP
 }

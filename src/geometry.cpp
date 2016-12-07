@@ -153,7 +153,7 @@ double polyarc_areas(arma::vec x_int, arma::vec y_int, arma::vec radiuses,
 
 
 // [[Rcpp::export]]
-arma::vec return_intersections(arma::vec par, arma::vec areas, arma::umat id,
+std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::umat id,
                                arma::umat two, arma::uvec twos,
                                arma::uvec ones) {
   arma::uword N = par.n_elem;
@@ -264,5 +264,31 @@ arma::vec return_intersections(arma::vec par, arma::vec areas, arma::umat id,
                                r, circles);
     }
   }
-  return areas;
+  return arma::conv_to< std::vector<double> >::from(areas);;
+}
+
+// [[Rcpp::export]]
+double stress(arma::vec areas, arma::vec fit) {
+  double sst = arma::accu(pow(fit, 2));
+  double slope = arma::accu(areas % fit) / arma::accu(pow(areas, 2));
+  double sse = arma::accu(pow(fit - areas * slope, 2));
+  return sse / sst;
+}
+
+// [[Rcpp::export]]
+
+double compute_fit(arma::vec par, arma::vec areas, arma::umat id,
+                   arma::umat two, arma::uvec twos, arma::uvec ones,
+                   std::string cost) {
+  arma::vec fit = return_intersections(par, areas, id, two, twos, ones);
+
+  double loss = 0;
+
+  if (cost == "venneuler") {
+    loss = stress(areas, fit);
+  } else if (cost == "eulerape") {
+    loss = arma::accu(pow(areas - fit, 2) / (fit + 1e-8)) / areas.n_elem;
+  }
+
+  return loss;
 }
