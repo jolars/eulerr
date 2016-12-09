@@ -281,11 +281,11 @@ double compute_fit(arma::vec par, arma::vec areas, arma::umat id,
   arma::vec fit = return_intersections(par, areas, id, two, twos, ones);
 
   switch(cost) {
-  case 0:
+  case 1:
     // venneuler stress function
-    return arma::accu(pow(areas - fit, 2) / (fit + 1e-6));
+    return stress(areas, fit);
   default:
     // eulerAPE cost function
-    return stress(areas, fit);
+    return arma::accu(pow(areas - fit, 2) / (fit + 1e-6));
   }
 }
