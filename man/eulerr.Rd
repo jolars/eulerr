@@ -5,11 +5,11 @@
 \alias{eulerr.data.frame}
 \alias{eulerr.default}
 \alias{eulerr.matrix}
-\title{Area-proportional Euler diagrams}
+\title{Area-Proportional Euler Diagrams}
 \usage{
 eulerr(sets, ...)
 
-\method{eulerr}{default}(sets, cost = c("eulerape", "venneuler"), ...)
+\method{eulerr}{default}(sets, cost = c("eulerAPE", "venneuler"), ...)
 
 \method{eulerr}{matrix}(sets, by = NULL, cost = c("eulerape", "venneuler"),
   ...)
@@ -21,9 +21,7 @@ eulerr(sets, ...)
 \item{sets}{Set relationships as a named numeric vector, matrix, or
 data.frame. (See the methods (by class) section for details.)}
 
-\item{cost}{Cost function to use to optimize the
-fit of the solution. Briefly, `eulerape` from (EulerAPE)
-`venneuler` uses the stress function used in \pkg{venneuler}.}
+\item{cost}{Cost function to use in optimizing the fit. See details.}
 
 \item{by}{A factor or character vector used in \code{\link[base]{by}} to
 split the data.frame or matrix and compute euler diagrams for each split.}
@@ -39,8 +37,10 @@ A list object of class 'eulerr' with the following parameters.
     \pkg{eulerr}.}
   \item{residuals}{Squared residuals between the original areas and the
     fitted areas.}
-  \item{stress}{The stress of the solution, computed as
-  squared residuals over the sum of squared residuals.}
+  \item{diagError}{The largest absolute deviation in percentage points
+    between the original and fitted areas.}
+  \item{stress}{The stress of the solution, computed as the sum of squared
+    residuals over the total sum of squares.}
 }
 \description{
 eulerr computes Euler diagrams (a generalization of Venn diagrams) using
@@ -50,6 +50,10 @@ input of set relationships.
 \details{
 If \code{by} is specified, \code{eulerr} returns a list of euler diagrams
 for which there is a separate plot method that plots a grid of diagrams.
+
+The fit can be optimized using either the cost function that is used in the
+eulerAPE software package or the stress statistic of the R package
+\pkg{venneuler}.
 }
 \section{Methods (by class)}{
 \itemize{

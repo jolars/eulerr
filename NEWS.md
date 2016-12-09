@@ -18,6 +18,7 @@ instead of means to calculate label centers.
 symmetric margins.
 * Switched to Vogel's sampling method to sample points for label placement.
 * Minor clean up and performance fixes all around.
+* Added a print.eulerr method.
 
 # eulerr 0.1.0
 * The first release.

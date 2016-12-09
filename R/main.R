@@ -1,4 +1,4 @@
-#' Area-proportional Euler diagrams
+#' Area-Proportional Euler Diagrams
 #'
 #' eulerr computes Euler diagrams (a generalization of Venn diagrams) using
 #' numerical optimization to find exact or optimal approximations for an
@@ -7,13 +7,15 @@
 #' If \code{by} is specified, \code{eulerr} returns a list of euler diagrams
 #' for which there is a separate plot method that plots a grid of diagrams.
 #'
+#' The fit can be optimized using either the cost function that is used in the
+#' eulerAPE software package or the stress statistic of the R package
+#' \pkg{venneuler}.
+#'
 #' @param sets Set relationships as a named numeric vector, matrix, or
 #'   data.frame. (See the methods (by class) section for details.)
 #' @param by A factor or character vector used in \code{\link[base]{by}} to
 #'   split the data.frame or matrix and compute euler diagrams for each split.
-#' @param cost Cost function to use to optimize the
-#'   fit of the solution. Briefly, `eulerape` from (EulerAPE)
-#'   `venneuler` uses the stress function used in \pkg{venneuler}.
+#' @param cost Cost function to use in optimizing the fit. See details.
 #' @param \dots Currently ignored.
 #' @return A list object of class 'eulerr' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
@@ -23,8 +25,10 @@
 #'     \pkg{eulerr}.}
 #'   \item{residuals}{Squared residuals between the original areas and the
 #'     fitted areas.}
-#'   \item{stress}{The stress of the solution, computed as
-#'   squared residuals over the sum of squared residuals.}
+#'   \item{diagError}{The largest absolute deviation in percentage points
+#'     between the original and fitted areas.}
+#'   \item{stress}{The stress of the solution, computed as the sum of squared
+#'     residuals over the total sum of squares.}
 #' @family eulerr functions
 #' @seealso \code{\link{plot.eulerr}}
 #' @examples
@@ -64,7 +68,7 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 #'   Missing interactions are treated as being 0.
 #' @export
 
-eulerr.default <- function(sets, cost = c("eulerape", "venneuler"), ...) {
+eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
   assert_that(
     is.numeric(sets),
     not_empty(sets),
@@ -93,7 +97,7 @@ eulerr.default <- function(sets, cost = c("eulerape", "venneuler"), ...) {
   }
 
   # Scale the values to fractions
-  scale_factor <- 100 / sum(sets)
+  scale_factor <- 100 / min(sets[sets > 0])
   sets <- sets * scale_factor
 
   areas <- double(nrow(id))
@@ -150,12 +154,14 @@ eulerr.default <- function(sets, cost = c("eulerape", "venneuler"), ...) {
     two = two,
     twos = twos,
     ones = ones,
-    cost = match.arg(cost),
+    cost = switch(match.arg(cost),
+                  "eulerAPE" = 0,
+                  "venneuler" = 1),
     method = c("Nelder-Mead"),
     control = list(maxit = 500)
   )
 
-  fit <- return_intersections(final_layout$par, areas, id, two, twos, ones) /scale_factor
+  fit <- return_intersections(final_layout$par, areas, id, two, twos, ones) / scale_factor
 
   names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
   orig <- areas / scale_factor
@@ -172,6 +178,7 @@ eulerr.default <- function(sets, cost = c("eulerape", "venneuler"), ...) {
       original.values = orig,
       fitted.values = fit,
       residuals = orig - fit,
+      region_error = region_error,
       diag_error = diag_error,
       stress = stress(orig, fit)
     ),
@@ -230,4 +237,29 @@ eulerr.matrix <- function(sets, by = NULL, cost = c("eulerape", "venneuler"),
 eulerr.data.frame <- function(sets, by = NULL,
                               cost = c("eulerape", "venneuler"), ...) {
   eulerr(as.matrix(sets), by = by, cost = cost, ...)
+}
+
+#' Print eulerr fits
+#'
+#' Prints a data frame of the original set relationships and the fitted
+#' values as well as diagError and stress statistics.
+#'
+#' @param x Euler diagram specification from \pkg{eulerr}.
+#' @param round Number of decimal places to round to.
+#' @param ... Arguments passed to \code{\link[base]{print.data.frame}}.
+#' @return Prints the results of the fit.
+#' @export
+
+print.eulerr <- function(x, round = 3, ...) {
+  out <- data.frame(
+    "original" = x$original.values,
+    "fitted" = x$fitted.values,
+    "residuals" = x$residuals,
+    "region_error" = x$region_error
+  )
+
+  print(round(out, digits = round), ...)
+  cat("\n \n")
+  cat("diagError: ", round(x$diag_error, digits = round), "\n")
+  cat("stress:    ", round(x$stress, digits = round))
 }
