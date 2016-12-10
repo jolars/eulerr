@@ -5,20 +5,8 @@ choose_two <- function(x) {
     .Call('eulerr_choose_two', PACKAGE = 'eulerr', x)
 }
 
-intersect_all <- function(r1, r2, x_d, y_d, x_c, y_c, d) {
-    .Call('eulerr_intersect_all', PACKAGE = 'eulerr', r1, r2, x_d, y_d, x_c, y_c, d)
-}
-
 discdisc <- function(r1, r2, d) {
     .Call('eulerr_discdisc', PACKAGE = 'eulerr', r1, r2, d)
-}
-
-subv <- function(x, index) {
-    .Call('eulerr_subv', PACKAGE = 'eulerr', x, index)
-}
-
-polyarc_areas <- function(x_int, y_int, radiuses, circles) {
-    .Call('eulerr_polyarc_areas', PACKAGE = 'eulerr', x_int, y_int, radiuses, circles)
 }
 
 return_intersections <- function(par, areas, id, two, twos, ones) {
