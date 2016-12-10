@@ -1,15 +1,35 @@
 #' Area-Proportional Euler Diagrams
 #'
-#' eulerr computes Euler diagrams (a generalization of Venn diagrams) using
-#' numerical optimization to find exact or optimal approximations for an
-#' input of set relationships.
+#' Compute Euler diagrams (a generalization of Venn diagrams) using
+#' numerical optimization to find exact or approximate solutions to a
+#' specification of set relationships.
 #'
 #' If \code{by} is specified, \code{eulerr} returns a list of euler diagrams
-#' for which there is a separate plot method that plots a grid of diagrams.
+#' that can be plotted in facets via a special plot method.
 #'
-#' The fit can be optimized using either the cost function that is used in the
+#' The fit is optimized using either the cost function used in the
 #' eulerAPE software package or the stress statistic of the R package
-#' \pkg{venneuler}.
+#' \pkg{venneuler}. The eulerAPE cost function is defined as
+#'
+#' \deqn{%
+#'   \frac{1}{n} \sum_{i=1}^{n} \frac{(y_i - \hat{y}_i) ^ 2}{\hat{y}_i}
+#' }{%
+#'   (1 / n) \sum (orig - fit) / \sum fit
+#' }
+#'
+#' where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are currently
+#' explored during optimization. For \code{venneuler}, the stress function is
+#' defined as
+#'
+#' \deqn{%
+#'   \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
+#' }{%
+#'   (\sum (fit - orig) ^ 2) / (\sum orig ^ 2)
+#' }
+#'
+#' where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
+#' areas on the original areas that are currently being explored during
+#' optimization.
 #'
 #' @param sets Set relationships as a named numeric vector, matrix, or
 #'   data.frame. (See the methods (by class) section for details.)
@@ -20,17 +40,16 @@
 #' @return A list object of class 'eulerr' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
 #'     circles and their radiuses.}
-#'   \item{original.values}{The set relationships provided by the user.}
-#'   \item{fitted.values}{The set relationships in the solution given by
+#'   \item{original.values}{Set relationships provided by the user.}
+#'   \item{fitted.values}{Set relationships in the solution given by
 #'     \pkg{eulerr}.}
-#'   \item{residuals}{Squared residuals between the original areas and the
-#'     fitted areas.}
-#'   \item{diagError}{The largest absolute deviation in percentage points
+#'   \item{residuals}{Residuals.}
+#'   \item{diagError}{The largest absolute residual in percentage points
 #'     between the original and fitted areas.}
 #'   \item{stress}{The stress of the solution, computed as the sum of squared
 #'     residuals over the total sum of squares.}
 #' @family eulerr functions
-#' @seealso \code{\link{plot.eulerr}}
+#' @seealso \code{\link{plot.eulerr}}, \code{\link{print.eulerr}}
 #' @examples
 #'
 #' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
@@ -54,6 +73,29 @@
 #' )
 #'
 #' fit4 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+#'
+#' # A set with no perfect solution
+#' rel <- c("a" = 3491, "b" = 3409, "c" = 3503,
+#'          "a&b" = 120, "a&c" = 114, "b&c" = 132, "a&b&c" = 126)
+#'
+#' # Use the cost function from eulerAPE (the default)
+#' fit5 <- eulerr(rel, cost = "eulerAPE")
+#'
+#' # Use the stress function from venneuler
+#' fit6 <- eulerr(rel, cost = "venneuler")
+#'
+#' par(mfrow = c(1, 2))
+#' plot(fit5); plot(fit6)
+#'
+#' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
+#' Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
+#' Graphics [Internet]. 2012 Feb [cited 2016 Apr 9];18(2):321–31. Available
+#' from: \url{http://doi.org/10.1109/TVCG.2011.56}
+#'
+#' Micallef L, Rodgers P. eulerAPE: Drawing Area-Proportional 3-Venn Diagrams
+#' Using Ellipses. PLOS ONE [Internet]. 2014 Jul [cited 2016 Dec
+#' 10];9(7):e101717. Available from:
+#' \url{http://dx.doi.org/10.1371/journal.pone.0101717}
 #'
 #' @useDynLib eulerr
 #' @importFrom Rcpp sourceCpp
@@ -259,7 +301,7 @@ print.eulerr <- function(x, round = 3, ...) {
   )
 
   print(round(out, digits = round), ...)
-  cat("\n \n")
+  cat("\n")
   cat("diagError: ", round(x$diag_error, digits = round), "\n")
   cat("stress:    ", round(x$stress, digits = round))
 }
