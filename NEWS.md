@@ -20,6 +20,7 @@ symmetric margins.
 * Switched to Vogel sampling to generate points to choose label positions from.
 * Minor clean up and performance fixes all around.
 * Added a `print.eulerr` method.
+* Updated vignette to cover new features and changes.
 
 # eulerr 0.1.0
 * The first release.
