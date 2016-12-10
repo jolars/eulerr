@@ -44,7 +44,6 @@ arma::umat choose_two(arma::uvec x) {
   return m;
 }
 
-// [[Rcpp::export]]
 arma::mat intersect_all(arma::vec r1, arma::vec r2,
                         arma::vec x_d, arma::vec y_d,
                         arma::vec x_c, arma::vec y_c,
@@ -93,7 +92,6 @@ double discdisc_dbl(double r1, double r2, double d) {
     sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
 
-// [[Rcpp::export]]
 arma::vec subv(arma::vec x, arma::uvec index) {
   arma::vec out(index.n_elem);
 
@@ -107,7 +105,6 @@ arma::vec subv(arma::vec x, arma::uvec index) {
   return out;
 }
 
-// [[Rcpp::export]]
 double polyarc_areas(arma::vec x_int, arma::vec y_int, arma::vec radiuses,
                      arma::umat circles) {
 
@@ -286,6 +283,6 @@ double compute_fit(arma::vec par, arma::vec areas, arma::umat id,
     return stress(areas, fit);
   default:
     // eulerAPE cost function
-    return arma::accu(pow(areas - fit, 2) / (fit + 1e-6));
+    return arma::accu(pow(areas - fit, 2) / (fit + 1e-6)) / areas.n_elem;
   }
 }
