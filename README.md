@@ -51,7 +51,6 @@ fit
 #> B&C          3  2.994     0.006        0.000
 #> A&B&C        2  1.975     0.025        0.001
 #> 
-#>  
 #> diagError:  0.001 
 #> stress:     0
 ```
@@ -62,7 +61,7 @@ and plot it using `plot`.
 plot(fit)
 ```
 
-Please see the introductory [vignette](https://cran.r-project.org/web/packages/eulerr/vignettes/introduction.html) for usage details.
+Please see the introductory [vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html) for usage details.
 
 License
 -------

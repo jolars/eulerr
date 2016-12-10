@@ -71,7 +71,7 @@ and plot it using `plot`.
 plot(fit)
 ```
 
-Please see the introductory [vignette](https://cran.r-project.org/web/packages/eulerr/vignettes/introduction.html)
+Please see the introductory [vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
 for usage details.
 
 ## License
