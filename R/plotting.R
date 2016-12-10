@@ -109,10 +109,10 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 
     tip <- table(locs)
 
-    if (any(tip) > 30L) {
+    if (any(tip) > 40L) {
+      large_enough <- which(tip > 40L)[1L]
+    } else if (any(tip) > 30L) {
       large_enough <- which(tip > 30L)[1L]
-    } else if (any(tip) > 20L) {
-      large_enough <- which(tip > 20L)[1L]
     } else {
       large_enough <- which(tip > 5L)[1L]
     }
