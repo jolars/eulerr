@@ -69,12 +69,12 @@ test_that("expect no errors for a variety of predefined sets", {
   expect_error(eulerr(s10), NA)
   expect_error(eulerr(s11), NA)
   expect_error(eulerr(s12), NA)
+  expect_error(eulerr(s13), NA)
 })
 
 test_that("degenerative cases are fit properly", {
   # Test two circles completely on top of one another
-  s13 <- c("A" = 10, "B" = 10, "A&B" = 10)
-  expect_error(eulerr(s13), NA)
-  fit <- eulerr(s13)
-  expect_true(all(resid(fit) < 10e-3))
+  sA <- c("A" = 10, "B" = 10, "A&B" = 10)
+  expect_error(eulerr(sA), NA)
+  expect_true(all(resid(eulerr(sA)) < 10e-3))
 })
