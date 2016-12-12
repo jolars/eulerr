@@ -110,7 +110,7 @@ coef(fit2)
 
 A starting configuration is obtained via a constrained version of 
 multidimensional scaling that has been explained thoroughly
-[elsewhere]{http://www.benfrederickson.com/better-venn-diagrams/}. 
+[elsewhere](http://www.benfrederickson.com/better-venn-diagrams/). 
 
 ### Optimization
 
