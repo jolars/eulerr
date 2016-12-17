@@ -1,5 +1,9 @@
 # eulerr 1.0.0.9000
 
+## Bug fixes and minor improvements
+* Fixed misspelled `eulerAPE` argument to the cost function in `eulerr()`.
+* Added version requirement for RcppArmadillo in LinkingTo.
+
 # eulerr 1.0.0
 
 ## New features
