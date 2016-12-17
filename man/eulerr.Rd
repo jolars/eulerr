@@ -11,10 +11,10 @@ eulerr(sets, ...)
 
 \method{eulerr}{default}(sets, cost = c("eulerAPE", "venneuler"), ...)
 
-\method{eulerr}{matrix}(sets, by = NULL, cost = c("eulerape", "venneuler"),
+\method{eulerr}{matrix}(sets, by = NULL, cost = c("eulerAPE", "venneuler"),
   ...)
 
-\method{eulerr}{data.frame}(sets, by = NULL, cost = c("eulerape",
+\method{eulerr}{data.frame}(sets, by = NULL, cost = c("eulerAPE",
   "venneuler"), ...)
 }
 \arguments{

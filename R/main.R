@@ -231,7 +231,7 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
 #'   and rows representing each observation's set relationships (see examples).
 #' @export
 
-eulerr.matrix <- function(sets, by = NULL, cost = c("eulerape", "venneuler"),
+eulerr.matrix <- function(sets, by = NULL, cost = c("eulerAPE", "venneuler"),
                           ...) {
   if (!is.null(ncol(by)))
     if (ncol(by) > 2)
@@ -277,7 +277,7 @@ eulerr.matrix <- function(sets, by = NULL, cost = c("eulerape", "venneuler"),
 #' @export
 
 eulerr.data.frame <- function(sets, by = NULL,
-                              cost = c("eulerape", "venneuler"), ...) {
+                              cost = c("eulerAPE", "venneuler"), ...) {
   eulerr(as.matrix(sets), by = by, cost = cost, ...)
 }
 
