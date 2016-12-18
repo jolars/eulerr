@@ -18,14 +18,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // discdisc
-NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d);
+Rcpp::NumericVector discdisc(Rcpp::NumericVector r1, Rcpp::NumericVector r2, Rcpp::NumericVector d);
 RcppExport SEXP eulerr_discdisc(SEXP r1SEXP, SEXP r2SEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type r1(r1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type r2(r2SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type r1(r1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type r2(r2SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type d(dSEXP);
     rcpp_result_gen = Rcpp::wrap(discdisc(r1, r2, d));
     return rcpp_result_gen;
 END_RCPP
