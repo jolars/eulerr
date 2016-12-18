@@ -1,8 +1,11 @@
 # eulerr 1.0.0.9000
 
-## Bug fixes and minor improvements
-* Fixed misspelled `eulerAPE` argument to the cost function in `eulerr()`.
+## Minor improvements
+* Use atan2() from RcppArmadillo in area computations.
 * Added version requirement for RcppArmadillo in LinkingTo.
+
+## Bug fixes
+* Fixed misspelled `eulerAPE` argument to the cost function in `eulerr()`.
 
 # eulerr 1.0.0
 

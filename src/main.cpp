@@ -62,10 +62,11 @@ arma::mat intersect_all(arma::vec r1, arma::vec r2,
 }
 
 // [[Rcpp::export]]
-NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d) {
-  NumericVector r1e = pow(r1, 2);
-  NumericVector r2e = pow(r2, 2);
-  NumericVector de = pow(d, 2);
+Rcpp::NumericVector discdisc(Rcpp::NumericVector r1, Rcpp::NumericVector r2,
+                             Rcpp::NumericVector d) {
+  Rcpp::NumericVector r1e = pow(r1, 2);
+  Rcpp::NumericVector r2e = pow(r2, 2);
+  Rcpp::NumericVector de = pow(d, 2);
 
   return r1e * acos((de + r1e - r2e) / (2 * d * r1)) +
     r2e * acos((de + r2e - r1e) / (2 * d * r2)) -
@@ -98,7 +99,9 @@ arma::vec subv(arma::vec x, arma::uvec index) {
   arma::uvec::iterator it;
   arma::vec::iterator out_it;
 
-  for (it = index.begin(), out_it = out.begin(); it != index.end(); ++it, ++out_it) {
+  for (it = index.begin(), out_it = out.begin();
+       it != index.end();
+       ++it, ++out_it) {
     *out_it = x(*it);
   }
 
@@ -110,13 +113,10 @@ double polyarc_areas(arma::vec x_int, arma::vec y_int, arma::vec radiuses,
 
   // Sort points by their angle to the centroid
   arma::uword n = x_int.n_elem;
-  double xv = sum(x_int) / n;
-  double yv = sum(y_int) / n;
+  const double xv = sum(x_int) / n;
+  const double yv = sum(y_int) / n;
 
-  arma::vec srt_ind(n);
-  for (arma::uword i = 0; i < n; i++) {
-    srt_ind(i) = std::atan2(x_int(i) - xv, y_int(i) - yv);
-  }
+  arma::vec srt_ind = arma::atan2(x_int - xv, y_int - yv);
 
   arma::uvec ind = sort_index(srt_ind);
 
