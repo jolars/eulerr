@@ -61,12 +61,17 @@ and plot it using `plot`.
 plot(fit)
 ```
 
-Please see the introductory [vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html) for usage details.
+Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html) for usage details.
 
 License
 -------
 
 eulerr is open source software, licensed under [GPL-3](LICENSE).
+
+Versioning
+----------
+
+Version numbers are based on the principles of [semantic versioning](http://semver.org).
 
 Code of conduct
 ---------------
