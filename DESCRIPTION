@@ -29,4 +29,4 @@ VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 5.0.1
-LinkingTo: Rcpp, RcppArmadillo (>= 0.7.500.0.0)
+LinkingTo: Rcpp, RcppArmadillo (>= 0.7.600.1.0)
