@@ -1,17 +1,50 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
-language: R
+language: r
 sudo: false
 cache: packages
+warnings_are_errors: true
 
-r_packages:
-  - covr
+matrix:
+  include:
+    - os: linux
+      dist: precise
+      compiler: gcc
+      r: release
+      r_github_packages:
+        - jimhester/covr
+      after_success:
+        - Rscript -e 'covr::codecov()'
 
-after_success:
-  - Rscript -e 'covr::codecov()'
+    - os: linux
+      dist: trusty
+      r: devel
+      compiler: clang
+      sudo: required
 
-r_check_args: --use-valgrind
-addons:
-  apt:
-    packages:
-      - valgrind
+    - os: linux
+      dist: precise
+      compiler: gcc
+      r: release
+      r_check_args: '--use-valgrind'
+      addons:
+        apt:
+          packages:
+            - valgrind
+
+    - os: osx
+      r: release
+      latex: false
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes --no-examples'
+
+  allow_failures:
+    - os: osx
+      r: devel
+      osx_image: xcode8
+      latex: false
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes --no-examples'
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
