@@ -40,7 +40,7 @@ plot(fit, fill_opacity = .7)
 plot(fit,
      polygon_args = list(col = c("dodgerblue4", "darkgoldenrod1"),
                          border = "transparent"),
-     text_args = list(font = 8))
+     text_args = list(font = 3))
 
 # Plot without fills and distinguish sets with border types instead
 plot(fit,
