@@ -27,8 +27,6 @@ environment:
   - R_VERSION: release
     R_ARCH: x64
 
-  - R_VERSION: stable
-
   - R_VERSION: patched
 
 build_script:

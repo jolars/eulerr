@@ -19,6 +19,10 @@ matrix:
       r: devel
       compiler: clang
       sudo: required
+      addons:
+        apt:
+          packages:
+            - java
 
     - os: linux
       dist: precise
