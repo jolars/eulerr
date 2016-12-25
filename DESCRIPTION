@@ -11,7 +11,6 @@ Depends:
     R (>= 3.3.1)
 Imports:
     assertthat (>= 0.1),
-    MASS (>= 7.3),
     grDevices,
     utils,
     stats,
