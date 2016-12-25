@@ -18,6 +18,7 @@ matrix:
       dist: trusty
       r: devel
       compiler: clang
+      sudo: required
       addons:
         apt:
           packages:
@@ -44,10 +45,6 @@ matrix:
       latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes --no-examples'
-      addons:
-        apt:
-          packages:
-            - r-cran-rjava
 
 notifications:
   email:
