@@ -22,7 +22,7 @@ matrix:
       addons:
         apt:
           packages:
-            - java
+            - r-cran-rjava
 
     - os: linux
       dist: precise
