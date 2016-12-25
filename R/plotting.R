@@ -26,7 +26,7 @@
 #' plot(fit,
 #'      polygon_args = list(col = c("dodgerblue4", "darkgoldenrod1"),
 #'                          border = "transparent"),
-#'      text_args = list(font = 8))
+#'      text_args = list(font = 3))
 #'
 #' # Plot without fills and distinguish sets with border types instead
 #' plot(fit,
@@ -34,14 +34,13 @@
 #'      text_args = list(cex = 2, font = 2))
 #'
 #' @export
-#' @import assertthat
 
 plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
                         text_args = list(), mar = c(2, 2, 2, 2), ...) {
-  assert_that(
+  assertthat::assert_that(
     length(mar) == 4,
     is.numeric(mar),
-    is.number(fill_opacity),
+    assertthat::is.number(fill_opacity),
     is.list(polygon_args),
     is.list(text_args)
   )
@@ -49,18 +48,18 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   on.exit(graphics::par(mar = old_mar))
   graphics::par(mar = mar)
 
-  X <- stats::coef(x)[, 1L]
-  Y <- stats::coef(x)[, 2L]
-  r <- stats::coef(x)[, 3L]
+  X <- x[["coefficients"]][, 1L]
+  Y <- x[["coefficients"]][, 2L]
+  r <- x[["coefficients"]][, 3L]
 
   plot_args <- list(...)
-  if(is.null(plot_args$x)) plot_args$x <- double(0L)
+  if (is.null(plot_args$x)) plot_args$x <- double(0L)
   plot_args$xlab <- ""
   plot_args$ylab <- ""
-  if(is.null(plot_args$axes)) plot_args$axes <- FALSE
-  if(is.null(plot_args$xlim)) plot_args$xlim <- range(c(X + r, X - r))
-  if(is.null(plot_args$ylim)) plot_args$ylim <- range(c(Y + r, Y - r))
-  if(is.null(plot_args$asp)) plot_args$asp <- 1L
+  if (is.null(plot_args$axes)) plot_args$axes <- FALSE
+  if (is.null(plot_args$xlim)) plot_args$xlim <- range(c(X + r, X - r))
+  if (is.null(plot_args$ylim)) plot_args$ylim <- range(c(Y + r, Y - r))
+  if (is.null(plot_args$asp)) plot_args$asp <- 1L
 
   do.call(graphics::plot, plot_args)
 
@@ -95,39 +94,38 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   # picking a point in the area of highest density
 
   n <- 499L
-  theta <- seq.int(0L, n, 1L) * pi * (3L - sqrt(5L))
-  rad   <- sqrt(0L:n) / sqrt(n)
+  seqn  <- seq.int(0L, n, 1L)
+  theta <- seqn * pi * (3L - sqrt(5L))
+  rad   <- sqrt(seqn / (n + 1))
   px    <- rad * cos(theta)
   py    <- rad * sin(theta)
-  max_rad <- max(rad)
 
   for (i in seq_along(r)) {
-    xs <- px * (r[i] / max_rad) + X[i]
-    ys <- py * (r[i] / max_rad) + Y[i]
+    xs <- px * r[i] + X[i]
+    ys <- py * r[i] + Y[i]
 
     locs <- colSums(find_sets_containing_points(cbind(xs, ys), X, Y, r))
 
     tip <- table(locs)
 
-    if (any(tip) > 40L) {
+    if (any(tip > 40L)) {
       large_enough <- which(tip > 40L)[1L]
-    } else if (any(tip) > 30L) {
+    } else if (any(tip > 30L)) {
       large_enough <- which(tip > 30L)[1L]
     } else {
-      large_enough <- which(tip > 5L)[1L]
+      large_enough <- which(tip > 1L)[1L]
     }
-
-    large_enough <- which(table(locs) > 30L)[1L]
 
     outskirts <- locs == as.numeric(names(large_enough))
     xx <- xs[outskirts]
     yy <- ys[outskirts]
 
-    dens <- MASS::kde2d(xx, yy, n = 51L)
+    dip <- mapply(dist_point_circle, xx, yy, MoreArgs = list(h = X, k = Y, r = r))
 
-    mind <- which(dens$z == max(dens$z), arr.ind = TRUE, useNames = FALSE)
-    text_x[i] <- dens$x[mind[, 1L]]
-    text_y[i] <- dens$y[mind[, 2L]]
+    dipmax <- which.max(dip[(1:ncol(dip) - 1) * nrow(dip) + max.col(t(-dip))])
+
+    text_x[i] <- xx[dipmax]
+    text_y[i] <- yy[dipmax]
   }
 
   text_args$x      <- text_x
@@ -178,15 +176,27 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 
 plot.eulerr_grid <- function(x, main, mfrow, ...) {
   if (!missing(main)) {
-    assert_that(is.character(main), length(main) == length(x))
+
+    assertthat::assert_that(
+      is.character(main),
+      length(main) == length(x)
+    )
+
   }
 
   if (missing(mfrow)) {
+
     lsq <- sqrt(length(x))
     n <- floor(lsq)
     m <- ceiling(lsq)
+
   } else {
-    assert_that(length(mfrow) == 2, is.numeric(mfrow))
+
+    assertthat::assert_that(
+      length(mfrow) == 2,
+      is.numeric(mfrow)
+    )
+
     n <- mfrow[1L]
     m <- mfrow[2L]
   }
