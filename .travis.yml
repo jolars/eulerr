@@ -18,7 +18,6 @@ matrix:
       dist: trusty
       r: devel
       compiler: clang
-      sudo: required
       addons:
         apt:
           packages:
@@ -40,13 +39,15 @@ matrix:
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes --no-examples'
 
-  allow_failures:
     - os: osx
       r: devel
-      osx_image: xcode8
       latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes --no-examples'
+      addons:
+        apt:
+          packages:
+            - r-cran-rjava
 
 notifications:
   email:
