@@ -29,3 +29,33 @@ test_that("erroneous input to plot.eulerr_grid return errors", {
 
   class(f2) <- "eulerr"
 })
+
+test_that("normal plotting works without errors", {
+  expect_error(
+    plot(
+      eulerr(c("A" = 10, "B" = 5, "A&B" = 2)),
+      fill_opacity = 0.3,
+      polygon_args = list(col = c(1 ,2)),
+      text_args = list(font = 4),
+      mar = c(1, 2, 1, 2)
+    ),
+    NA
+  )
+
+  dat <- data.frame(
+    A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+    B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+    gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
+    nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
+  )
+
+  expect_error(
+    plot(
+      eulerr(dat[, 1:2], by = dat[, 3:4]),
+      polygon_args = list(col = "transparent"),
+      mfrow = c(1, 4),
+      main = c("A", "B", "C", "D")
+    ),
+    NA
+  )
+})
