@@ -36,6 +36,9 @@ matrix:
       compiler: gcc
       r: release
       r_check_args: '--use-valgrind'
+      env:
+        global:
+          - VALGRIND_OPTS='--tool=memcheck --memcheck:leak-check=full'
       addons:
         apt:
           packages:
