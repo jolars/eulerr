@@ -1,42 +1,56 @@
-#include <RcppArmadillo.h>
-
 // [[Rcpp::depends(RcppArmadillo)]]
+
+#include <RcppArmadillo.h>
 
 using namespace Rcpp;
 using namespace arma;
 
-arma::uvec set_intersect(arma::uvec x, arma::uvec y) {
+arma::uvec set_intersect(const arma::uvec & x, const arma::uvec & y) {
 
-  std::vector<int> a = arma::conv_to< std::vector<int> >::from(x);
-  std::vector<int> b = arma::conv_to< std::vector<int> >::from(y);
+  std::vector<int> a = arma::conv_to< std::vector<int> >::from(arma::sort(x));
+  std::vector<int> b = arma::conv_to< std::vector<int> >::from(arma::sort(y));
   std::vector<int> out;
 
   std::set_intersection(a.begin(), a.end(), b.begin(), b.end(),
                         std::back_inserter(out));
 
-  return arma::conv_to< arma::uvec >::from(out);
+  return arma::conv_to<arma::uvec>::from(out);
 }
 
-arma::uvec locate(arma::uvec x, arma::uvec y) {
+arma::uvec locate(const arma::uvec & x, const arma::uvec & y) {
   arma::uvec out(x.n_elem);
 
-  arma::uvec::iterator it;
-  arma::uvec::iterator out_it;
+  arma::uvec::const_iterator it;
+  arma::uvec::iterator out_it = out.begin();
 
-  for(it = x.begin(), out_it = out.begin(); it != x.end(); ++it, ++out_it) {
+  for(it = x.begin(); it != x.end(); ++it, ++out_it) {
     *out_it = any(y == *it);
   }
 
   return out;
 }
 
-// [[Rcpp::export]]
-arma::umat choose_two(arma::uvec x) {
-  arma::uword n = x.n_elem;
-  arma::umat m(n * (n - 1) / 2, 2);
+// // [[Rcpp::export]]
+// arma::umat choose_two(const arma::uvec & x) {
+//   arma::uword n = x.n_elem;
+//   arma::umat m(n * (n - 1) / 2, 2);
+//
+//   for (arma::uword i = 0, k = 0; i < n - 1; i++) {
+//     for (arma::uword j = i + 1; j < n; j++, k++) {
+//       m(k, 0) = x(i);
+//       m(k, 1) = x(j);
+//     }
+//   }
+//   return m;
+// }
 
-  for (arma::uword i = 0, k = 0; i < n - 1; i++) {
-    for (arma::uword j = i + 1; j < n; j++, k++) {
+// [[Rcpp::export]]
+IntegerMatrix choose_two(IntegerVector x) {
+  int n = x.size();
+  IntegerMatrix m(n * (n - 1) / 2, 2);
+
+  for (int i = 0, k = 0; i < n - 1; i++) {
+    for (int j = i + 1; j < n; j++, k++) {
       m(k, 0) = x(i);
       m(k, 1) = x(j);
     }
@@ -44,12 +58,12 @@ arma::umat choose_two(arma::uvec x) {
   return m;
 }
 
-arma::mat intersect_all(arma::vec r1, arma::vec r2,
-                        arma::vec x_d, arma::vec y_d,
-                        arma::vec x_c, arma::vec y_c,
-                        arma::vec d) {
-  arma::vec l = (pow(r2, 2) - pow(r1, 2) + pow(d, 2)) / (2 * d);
-  arma::vec h = sqrt(pow(r2, 2) - pow(l, 2));
+arma::mat intersect_all(const arma::vec & r1, const arma::vec & r2,
+                        const arma::vec & x_d, const arma::vec & y_d,
+                        const arma::vec & x_c, const arma::vec & y_c,
+                        const arma::vec & d) {
+  arma::vec l = (square(r2) - square(r1) + square(d)) / (2 * d);
+  arma::vec h = sqrt(square(r2) - square(l));
   arma::vec ld = l / d;
   arma::vec hd = h / d;
 
@@ -62,18 +76,19 @@ arma::mat intersect_all(arma::vec r1, arma::vec r2,
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector discdisc(Rcpp::NumericVector r1, Rcpp::NumericVector r2,
-                             Rcpp::NumericVector d) {
-  Rcpp::NumericVector r1e = pow(r1, 2);
-  Rcpp::NumericVector r2e = pow(r2, 2);
-  Rcpp::NumericVector de = pow(d, 2);
+NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d) {
+
+  NumericVector r1e = pow(r1, 2);
+  NumericVector r2e = pow(r2, 2);
+  NumericVector de = pow(d, 2);
 
   return r1e * acos((de + r1e - r2e) / (2 * d * r1)) +
     r2e * acos((de + r2e - r1e) / (2 * d * r2)) -
     sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
 
-arma::vec discdisc_vec(arma::vec r1, arma::vec r2, arma::vec d) {
+arma::vec discdisc_vec(const arma::vec & r1, const arma::vec & r2,
+                       const arma::vec & d) {
   arma::vec r1e = pow(r1, 2);
   arma::vec r2e = pow(r2, 2);
   arma::vec de = pow(d, 2);
@@ -93,32 +108,29 @@ double discdisc_dbl(double r1, double r2, double d) {
     sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
 
-arma::vec subv(arma::vec x, arma::uvec index) {
+arma::vec subv(const arma::vec & x, const arma::uvec & index) {
   arma::vec out(index.n_elem);
 
-  arma::uvec::iterator it;
-  arma::vec::iterator out_it;
+  arma::uvec::const_iterator it;
+  arma::vec::iterator out_it = out.begin();
 
-  for (it = index.begin(), out_it = out.begin();
-       it != index.end();
-       ++it, ++out_it) {
+  for (it = index.begin(); it != index.end(); ++it, ++out_it) {
     *out_it = x(*it);
   }
 
   return out;
 }
 
-double polyarc_areas(arma::vec x_int, arma::vec y_int, arma::vec radiuses,
-                     arma::umat circles) {
+double polyarc_areas(arma::vec x_int, arma::vec y_int,
+                     const arma::vec & radiuses,
+                     const arma::umat & circles) {
 
   // Sort points by their angle to the centroid
   arma::uword n = x_int.n_elem;
-  const double xv = sum(x_int) / n;
-  const double yv = sum(y_int) / n;
+  double xv = sum(x_int) / n;
+  double yv = sum(y_int) / n;
 
-  arma::vec srt_ind = arma::atan2(x_int - xv, y_int - yv);
-
-  arma::uvec ind = sort_index(srt_ind);
+  arma::uvec ind = arma::sort_index(arma::atan2(x_int - xv, y_int - yv));
 
   // Reorder vectors and matrix based on angles to centroid
   x_int = x_int(ind);
@@ -145,14 +157,16 @@ double polyarc_areas(arma::vec x_int, arma::vec y_int, arma::vec radiuses,
 
     j = i;
   }
+
   return area;
+
 }
 
-
 // [[Rcpp::export]]
-std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::umat id,
-                               arma::umat two, arma::uvec twos,
-                               arma::uvec ones) {
+std::vector<double> return_intersections(const arma::vec par, arma::vec areas,
+                                         const arma::umat id, arma::umat two,
+                                         const arma::uvec twos,
+                                         const arma::uvec ones) {
   arma::uword N = par.n_elem;
   arma::uword n = id.n_cols;
   two = two - 1;
@@ -186,7 +200,7 @@ std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::u
   arma::uvec dj = arma::find(disjoint == 1);
   arma::uvec is = arma::find(intersecting == 1);
 
-  atwos.elem(ct) = pow(min(ra(ct), rb(ct)), 2) * datum::pi;
+  atwos.elem(ct) = square(min(ra(ct), rb(ct))) * datum::pi;
   atwos.elem(dj).zeros();
   atwos.elem(is) = discdisc_vec(ra(is), rb(is), d(is));
 
@@ -195,7 +209,7 @@ std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::u
   arma::uword nint = int_points.n_rows;
   arma::umat in_circles(nint, n);
 
-  arma::vec rsq = pow(r, 2);
+  arma::vec rsq = square(r);
 
   for (arma::uword i = 0; i < n; i++) {
     in_circles.col(i) = (pow(int_points.col(0) - x(i), 2) +
@@ -204,7 +218,8 @@ std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::u
 
   arma::umat twoway = arma::join_cols(two.rows(is), two.rows(is));
 
-  arma::uvec isis = arma::find(arma::join_cols(intersecting, intersecting) == 1);
+  arma::uvec isis = arma::find(arma::join_cols(intersecting,
+                                               intersecting) == 1);
 
   arma::umat in_circles_is = in_circles.rows(isis);
 
@@ -222,11 +237,13 @@ std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::u
 
   // Work out areas of relationships of 3 or more sets.
   for (arma::uword i = n * (n - 1) / 2 + n; i < id.n_rows; i++) {
+
     arma::uvec curr_set = arma::find(id.row(i) == 1);
     arma::uvec twoway = locate(two_a, curr_set) && locate(two_b, curr_set);
 
     arma::uvec twotwo = arma::join_cols(twoway, twoway);
-    arma::uvec in_all = arma::sum(in_circles.cols(curr_set), 1) == curr_set.n_elem;
+    arma::uvec in_all =
+      arma::sum(in_circles.cols(curr_set),1) == curr_set.n_elem;
 
     in_all = in_all && twotwo;
 
@@ -237,6 +254,7 @@ std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::u
     arma::uword crow = circles.n_rows;
 
     if (crow < 2) {
+
       arma::uword l = curr_set(r(curr_set).index_min());
       arma::uvec la(1);
       la.fill(l);
@@ -244,45 +262,65 @@ std::vector<double> return_intersections(arma::vec par, arma::vec areas, arma::u
       arma::uvec ff = locate(two_a, la) || locate(two_b, la);
 
       if (all(contained(find(ff == 1)))) {
+
         // One set is contained within the others. Return its area.
         areas(i) = pow(min(r(curr_set)), 2) * datum::pi;
+
       } else {
+
         // All sets are disjoint. Return 0.
         areas(i) = 0;
+
       }
     } else if (crow == 2) {
+
       // Return 2 circle intersection
       areas(i) = discdisc_dbl(r(circles(0, 0)), r(circles(0, 1)), d(veci(0)));
+
     } else {
+
       // Return intersection of 3 or more circles
       arma::mat curr_intpoints = int_points.rows(veci);
       areas(i) = polyarc_areas(curr_intpoints.col(0), curr_intpoints.col(1),
                                r, circles);
     }
   }
-  return arma::conv_to< std::vector<double> >::from(areas);;
+
+  return arma::conv_to< std::vector<double> >::from(areas);
+
 }
 
 // [[Rcpp::export]]
-double stress(arma::vec areas, arma::vec fit) {
+double stress(const arma::vec & areas, const arma::vec & fit) {
+
   double sst = arma::accu(pow(fit, 2));
   double slope = arma::accu(areas % fit) / arma::accu(pow(areas, 2));
   double sse = arma::accu(pow(fit - areas * slope, 2));
+
   return sse / sst;
 }
 
 // [[Rcpp::export]]
-double compute_fit(arma::vec par, arma::vec areas, arma::umat id,
-                   arma::umat two, arma::uvec twos, arma::uvec ones,
-                   arma::uword cost) {
+double compute_fit(const arma::vec & par, const arma::vec & areas,
+                   const arma::umat & id, const arma::umat & two,
+                   const arma::uvec & twos, const arma::uvec & ones,
+                   const arma::uword & cost) {
+
   arma::vec fit = return_intersections(par, areas, id, two, twos, ones);
 
   switch(cost) {
+
+  case 0:
+    // eulerAPE cost function
+    return arma::accu(pow(areas - fit, 2) / (fit + 1e-6)) / areas.n_elem;
+
   case 1:
     // venneuler stress function
     return stress(areas, fit);
+
   default:
-    // eulerAPE cost function
-    return arma::accu(pow(areas - fit, 2) / (fit + 1e-6)) / areas.n_elem;
+    // throw an error if we for some reason end up here
+    stop("For some reason none of the cost functions were triggered.");
+
   }
 }
