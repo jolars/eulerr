@@ -37,6 +37,7 @@
 #'   split the data.frame or matrix and compute euler diagrams for each split.
 #' @param cost Cost function to use in optimizing the fit. See details.
 #' @param \dots Currently ignored.
+#'
 #' @return A list object of class 'eulerr' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
 #'     circles and their radiuses.}
@@ -48,10 +49,10 @@
 #'     between the original and fitted areas.}
 #'   \item{stress}{The stress of the solution, computed as the sum of squared
 #'     residuals over the total sum of squares.}
-#' @family eulerr functions
-#' @seealso \code{\link{plot.eulerr}}, \code{\link{print.eulerr}}
-#' @examples
 #'
+#' @seealso \code{\link{plot.eulerr}}, \code{\link{print.eulerr}}
+#'
+#' @examples
 #' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
 #'
 #' # Same result as above
@@ -97,10 +98,6 @@
 #' 10];9(7):e101717. Available from:
 #' \url{http://dx.doi.org/10.1371/journal.pone.0101717}
 #'
-#' @useDynLib eulerr
-#' @importFrom Rcpp sourceCpp
-#' @import assertthat
-#'
 #' @export
 
 eulerr <- function(sets, ...) UseMethod("eulerr")
@@ -108,15 +105,16 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 #' @describeIn eulerr A named numeric vector, with
 #'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 #'   Missing interactions are treated as being 0.
+#'
 #' @export
 
 eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
-  assert_that(
+  assertthat::assert_that(
     is.numeric(sets),
-    not_empty(sets),
+    assertthat::not_empty(sets),
     length(sets) > 0,
     all(sets >= 0),
-    has_attr(sets, "names"),
+    assertthat::has_attr(sets, "names"),
     !any(names(sets) == ""),
     !any(duplicated(names(sets)))
   )
@@ -196,14 +194,13 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
     two = two,
     twos = twos,
     ones = ones,
-    cost = switch(match.arg(cost),
-                  "eulerAPE" = 0,
-                  "venneuler" = 1),
+    cost = switch(match.arg(cost), "eulerAPE" = 0, "venneuler" = 1),
     method = c("Nelder-Mead"),
     control = list(maxit = 500)
   )
 
-  fit <- return_intersections(final_layout$par, areas, id, two, twos, ones) / scale_factor
+  fit <- return_intersections(final_layout$par,areas, id, two, twos,
+                              ones) / scale_factor
 
   names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
   orig <- areas / scale_factor
@@ -229,20 +226,25 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
 
 #' @describeIn eulerr A matrix of logical vectors with columns representing sets
 #'   and rows representing each observation's set relationships (see examples).
+#'
 #' @export
 
 eulerr.matrix <- function(sets, by = NULL, cost = c("eulerAPE", "venneuler"),
                           ...) {
   if (!is.null(ncol(by)))
+
     if (ncol(by) > 2)
       stop("Currently, no more than two grouping variables are allowed.")
 
   if (!is.null(by)) {
-    assert_that(
-      is.character(by) | is.factor(by) | is.data.frame(by) | is.matrix(by)
+
+    assertthat::assert_that(
+      any(is.character(by), is.factor(by), is.data.frame(by), is.matrix(by))
     )
+
     if (any(is.data.frame(by), is.matrix(by))) {
-      assert_that(
+
+      assertthat::assert_that(
         all(
           vapply(
             by,
@@ -251,15 +253,18 @@ eulerr.matrix <- function(sets, by = NULL, cost = c("eulerAPE", "venneuler"),
           )
         )
       )
+
     } else {
-      assert_that(is.character(by) | is.factor(by))
+
+      assertthat::assert_that(any(is.character(by), is.factor(by)))
+
     }
   }
 
-  assert_that(
+  assertthat::assert_that(
     any(is.logical(sets), is.numeric(sets)),
-    max(sets, na.rm = TRUE) == 1L,
-    min(sets, na.rm = TRUE) == 0L,
+    max(sets, na.rm = TRUE) == 1,
+    min(sets, na.rm = TRUE) == 0,
     !any(grepl("&", colnames(sets), fixed = TRUE))
   )
 
@@ -289,10 +294,16 @@ eulerr.data.frame <- function(sets, by = NULL,
 #' @param x Euler diagram specification from \pkg{eulerr}.
 #' @param round Number of decimal places to round to.
 #' @param ... Arguments passed to \code{\link[base]{print.data.frame}}.
+#'
 #' @return Prints the results of the fit.
+#'
 #' @export
 
 print.eulerr <- function(x, round = 3, ...) {
+  assertthat::assert_that(
+    assertthat::is.number(round)
+  )
+
   out <- data.frame(
     "original" = x$original.values,
     "fitted" = x$fitted.values,
@@ -303,5 +314,5 @@ print.eulerr <- function(x, round = 3, ...) {
   print(round(out, digits = round), ...)
   cat("\n")
   cat("diagError: ", round(x$diag_error, digits = round), "\n")
-  cat("stress:    ", round(x$stress, digits = round))
+  cat("stress:    ", round(x$stress, digits = round), "\n")
 }
