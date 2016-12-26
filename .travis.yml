@@ -4,22 +4,23 @@ cache: packages
 warnings_are_errors: true
 
 matrix:
-  allow_failures:
-    - os: osx
-      r: devel
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes --no-examples'
-
   include:
     - os: linux
       dist: precise
       compiler: gcc
       r: release
+      r_check_args:
+        - '--as-cran --use-valgrind'
+      env:
+        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
       r_github_packages:
         - jimhester/covr
       after_success:
         - Rscript -e 'covr::codecov()'
+
+    - os: linux
+      dist: precise
+      compiler: clang
 
     - os: linux
       dist: trusty
@@ -30,19 +31,6 @@ matrix:
         apt:
           packages:
             - r-cran-rjava
-
-    - os: linux
-      dist: precise
-      compiler: gcc
-      r: release
-      r_check_args: '--use-valgrind'
-      env:
-        global:
-          - VALGRIND_OPTS='--tool=memcheck --memcheck:leak-check=full'
-      addons:
-        apt:
-          packages:
-            - valgrind
 
     - os: osx
       r: release
