@@ -87,7 +87,6 @@ and rows representing each observation's set relationships (see examples).
 (as in the description above) via \code{\link[base]{as.matrix}}.
 }}
 \examples{
-
 fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
 
 # Same result as above
