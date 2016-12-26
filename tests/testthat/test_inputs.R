@@ -30,3 +30,8 @@ test_that("erroneous input using by argument return errors", {
   expect_error(eulerr(cbind(1:100, 1:100)))
 })
 
+test_that("arguments to print.eulerr are specified correctly", {
+  f <- eulerr(c(A = 10.923, B = 5.4, "A&B" = 0.43))
+  expect_error(print(f, round = "hello"))
+  expect_error(print(f, round = c(1, 2)))
+})

@@ -8,8 +8,6 @@ test_that("erroneous input to plot.eulerr return errors", {
   expect_error(plot(f, fill_opacity = c(2, 3)))
   expect_error(plot(f, polygon_args = 1))
   expect_error(plot(f, text_args = 1))
-  class(f) <- "list"
-  expect_error(plot(f))
 })
 
 test_that("erroneous input to plot.eulerr_grid return errors", {
@@ -21,21 +19,20 @@ test_that("erroneous input to plot.eulerr_grid return errors", {
     z = sample(c("asdf", "qwer", size = 100, replace = TRUE))
   )
   f2 <- eulerr(dat[, 1:2], by = dat[, 3:4])
-  expect_error(plot(f2, mfrow = 1))
   expect_error(plot(f2, mfrow = c(1, 2, 3)))
   expect_error(plot(f2, mfrow = "asdf"))
   expect_error(plot(f2, main = 1))
   expect_error(plot(f2, main = c("aa", "a")))
-
-  class(f2) <- "eulerr"
 })
 
 test_that("normal plotting works without errors", {
+  f1 <- eulerr(c("A" = 10, "B" = 5, "A&B" = 2))
+
   expect_error(
     plot(
-      eulerr(c("A" = 10, "B" = 5, "A&B" = 2)),
+      f1,
       fill_opacity = 0.3,
-      polygon_args = list(col = c(1 ,2)),
+      polygon_args = list(col = c("transparent" ,2)),
       text_args = list(font = 4),
       mar = c(1, 2, 1, 2)
     ),
@@ -49,9 +46,11 @@ test_that("normal plotting works without errors", {
     nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
   )
 
+  f2 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+
   expect_error(
     plot(
-      eulerr(dat[, 1:2], by = dat[, 3:4]),
+      f2,
       polygon_args = list(col = "transparent"),
       mfrow = c(1, 4),
       main = c("A", "B", "C", "D")
