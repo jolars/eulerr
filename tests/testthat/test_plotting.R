@@ -27,6 +27,8 @@ test_that("erroneous input to plot.eulerr_grid return errors", {
 
 test_that("normal plotting works without errors", {
   f1 <- eulerr(c("A" = 10, "B" = 5, "A&B" = 2))
+  ff <- tempfile()
+  png(filename = ff)
 
   expect_error(
     plot(
@@ -39,6 +41,9 @@ test_that("normal plotting works without errors", {
     NA
   )
 
+  dev.off()
+  unlink(ff)
+
   dat <- data.frame(
     A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
     B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
@@ -47,6 +52,9 @@ test_that("normal plotting works without errors", {
   )
 
   f2 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+
+  ff <- tempfile()
+  png(filename = ff)
 
   expect_error(
     plot(
@@ -57,4 +65,7 @@ test_that("normal plotting works without errors", {
     ),
     NA
   )
+
+  dev.off()
+  unlink(ff)
 })
