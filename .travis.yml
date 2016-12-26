@@ -9,6 +9,10 @@ matrix:
       dist: precise
       compiler: gcc
       r: release
+      addons:
+        apt:
+          packages:
+            - valgrind
       r_check_args:
         - '--as-cran --use-valgrind'
       env:
