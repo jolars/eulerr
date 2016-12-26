@@ -1,4 +1,5 @@
-# Initial optimizer
+# Initial optimizer -------------------------------------------------------
+
 initial_layout_optimizer <- function(par, distances, disjoint, contained, two) {
   m <- matrix(par, ncol = 2L)
   x <- m[, 1L]
@@ -8,7 +9,8 @@ initial_layout_optimizer <- function(par, distances, disjoint, contained, two) {
   sum((d[i] - distances[i] ^ 2L) ^ 2L)
 }
 
-# Gradient for initial optimizer
+# Gradient for initial optimizer ------------------------------------------
+
 initial_layout_gradient <- function(par, distances, disjoint, contained, two) {
   m   <- matrix(par, ncol = 2L)
   x   <- m[, 1L]
@@ -32,7 +34,8 @@ initial_layout_gradient <- function(par, distances, disjoint, contained, two) {
            FUN.VALUE = double(1L)))
 }
 
-# Optimization function for disc_disc intersection
+# Optimization function for disc_disc intersection ------------------------
+
 separate_two_discs <- function(r1, r2, overlap) {
   stats::optimize(
     function(x, r1, r2, overlap) (discdisc(r1, r2, d = x) - overlap) ^ 2L,
