@@ -18,6 +18,7 @@
 #'   area).
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
 #'   \code{\link[graphics]{text}} \code{\link{eulerr}}
+#'
 #' @examples
 #' fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
 #' plot(fit, fill_opacity = .7)
@@ -120,7 +121,8 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
     xx <- xs[outskirts]
     yy <- ys[outskirts]
 
-    dip <- mapply(dist_point_circle, xx, yy, MoreArgs = list(h = X, k = Y, r = r))
+    dip <- mapply(dist_point_circle, xx, yy,
+                  MoreArgs = list(h = X, k = Y, r = r))
 
     dipmax <- which.max(dip[(1:ncol(dip) - 1) * nrow(dip) + max.col(t(-dip))])
 
@@ -171,27 +173,20 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
 #'
 #' plot(e_grid, mfrow = c(1, 4))
 #'
-#' @import assertthat
 #' @export
 
 plot.eulerr_grid <- function(x, main, mfrow, ...) {
   if (!missing(main)) {
-
     assertthat::assert_that(
       is.character(main),
       length(main) == length(x)
     )
-
   }
-
   if (missing(mfrow)) {
-
     lsq <- sqrt(length(x))
     n <- floor(lsq)
     m <- ceiling(lsq)
-
   } else {
-
     assertthat::assert_that(
       length(mfrow) == 2,
       is.numeric(mfrow)
