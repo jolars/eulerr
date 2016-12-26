@@ -1,11 +1,16 @@
 # eulerr 1.0.0.9000
 
 ## Minor improvements
-* Use atan2() from RcppArmadillo in area computations.
-* Added version requirement for RcppArmadillo in LinkingTo.
+* Switch to atan2() from RcppArmadillo.
+* Added version requirement for RcppArmadillo.
+* Dropped dependency on MASS for computing label placement, replacing it
+with a faster, geometric function.
+* Performance improvements
+* Added additional assertions to prevent erroneous use.
 
 ## Bug fixes
 * Fixed misspelled `eulerAPE` argument to the cost function in `eulerr()`.
+* Fixed missing row breaks in `print.eulerr`.
 
 # eulerr 1.0.0
 
