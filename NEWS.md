@@ -5,7 +5,7 @@
 * Added version requirement for RcppArmadillo.
 * Dropped dependency on MASS for computing label placement, replacing it
 with a faster, geometric function.
-* Performance improvements
+* Introduced several performance improvements all around.
 * Added additional assertions to prevent erroneous use.
 
 ## Bug fixes

@@ -34,7 +34,6 @@ test_that("normal plotting works without errors", {
     plot(
       f1,
       fill_opacity = 0.3,
-      polygon_args = list(col = c("transparent" ,2)),
       text_args = list(font = 4),
       mar = c(1, 2, 1, 2)
     ),

@@ -23,6 +23,7 @@ test_that("erroneous input using by argument return errors", {
     y = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE),
     z = sample(c("asdf", "qwer", size = 100, replace = TRUE))
   )
+
   expect_error(eulerr(dat[, 1:2], by = dat[, 3:5]))
   expect_error(eulerr(dat[, 1:2], by = dat[1:50, 3]))
   expect_error(eulerr(dat[, 1:2], by = list(dat[, 2])))
@@ -34,4 +35,22 @@ test_that("arguments to print.eulerr are specified correctly", {
   f <- eulerr(c(A = 10.923, B = 5.4, "A&B" = 0.43))
   expect_error(print(f, round = "hello"))
   expect_error(print(f, round = c(1, 2)))
+})
+
+test_that("normal use returns no errors", {
+  f <- eulerr(c(A = 10.923, B = 5.4, "A&B" = 0.43))
+
+  expect_error(print(f, round = 2), NA)
+
+  dat <- data.frame(
+    A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+    B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+    x = sample(c("Men", "Women"), size = 100, replace = TRUE)
+  )
+
+  expect_error(eulerr(dat[, 1:2]), NA)
+  expect_error(eulerr(as.matrix(dat[, 1:2])), NA)
+
+  expect_error(eulerr(dat[, 1:2], by = dat[, 3]), NA)
+  expect_error(print(eulerr(dat[, 1:2], by = dat[, 3])), NA)
 })

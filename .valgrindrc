@@ -1,0 +1,2 @@
+--tool=memcheck
+--memcheck:leak-check=full

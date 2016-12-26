@@ -113,8 +113,10 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
       large_enough <- which(tip > 40L)[1L]
     } else if (any(tip > 30L)) {
       large_enough <- which(tip > 30L)[1L]
+    } else if (any(tip > 20L)) {
+      large_enough <- which(tip > 20L)[1L]
     } else {
-      large_enough <- which(tip > 1L)[1L]
+      large_enough <- which(tip)[1L]
     }
 
     outskirts <- locs == as.numeric(names(large_enough))
