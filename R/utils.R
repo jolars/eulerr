@@ -2,7 +2,9 @@
 
 tally_sets <- function(sets, ...) {
   for (i in seq_along(sets)) {
-    assert_that(is.numeric(sets[[i]]) | is.logical(sets[[i]]))
+    assertthat::assert_that(
+      any(is.numeric(sets[[i]]), is.logical(sets[[i]]))
+    )
   }
   if (!is.matrix(sets)) {
     sets <- as.matrix(sets)
