@@ -5,13 +5,11 @@
 using namespace Rcpp;
 using namespace arma;
 
-arma::uvec set_intersect(const arma::uvec & x, const arma::uvec & y) {
+arma::uvec set_intersect(const arma::uvec& x, const arma::uvec& y) {
 
-  std::vector<int> a = arma::conv_to< std::vector<int> >::from(arma::sort(x));
-  std::vector<int> b = arma::conv_to< std::vector<int> >::from(arma::sort(y));
   std::vector<int> out;
 
-  std::set_intersection(a.begin(), a.end(), b.begin(), b.end(),
+  std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
                         std::back_inserter(out));
 
   return arma::conv_to<arma::uvec>::from(out);
@@ -30,20 +28,6 @@ arma::uvec locate(const arma::uvec & x, const arma::uvec & y) {
   return out;
 }
 
-// // [[Rcpp::export]]
-// arma::umat choose_two(const arma::uvec & x) {
-//   arma::uword n = x.n_elem;
-//   arma::umat m(n * (n - 1) / 2, 2);
-//
-//   for (arma::uword i = 0, k = 0; i < n - 1; i++) {
-//     for (arma::uword j = i + 1; j < n; j++, k++) {
-//       m(k, 0) = x(i);
-//       m(k, 1) = x(j);
-//     }
-//   }
-//   return m;
-// }
-
 // [[Rcpp::export]]
 IntegerMatrix choose_two(IntegerVector x) {
   int n = x.size();
@@ -55,6 +39,7 @@ IntegerMatrix choose_two(IntegerVector x) {
       m(k, 1) = x(j);
     }
   }
+
   return m;
 }
 
@@ -87,11 +72,12 @@ NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d) {
     sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
 
-arma::vec discdisc_vec(const arma::vec & r1, const arma::vec & r2,
-                       const arma::vec & d) {
-  arma::vec r1e = pow(r1, 2);
-  arma::vec r2e = pow(r2, 2);
-  arma::vec de = pow(d, 2);
+arma::vec discdisc_vec(const arma::vec& r1,
+                       const arma::vec& r2,
+                       const arma::vec& d) {
+  arma::vec r1e = square(r1);
+  arma::vec r2e = square(r2);
+  arma::vec de = square(d);
 
   return r1e % acos((de + r1e - r2e) / ((2 * d) % r1)) +
     r2e % acos((de + r2e - r1e) / ((2 * d) % r2)) -
@@ -108,7 +94,7 @@ double discdisc_dbl(double r1, double r2, double d) {
     sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
 
-arma::vec subv(const arma::vec & x, const arma::uvec & index) {
+arma::vec subv(const arma::vec& x, const arma::uvec& index) {
   arma::vec out(index.n_elem);
 
   arma::uvec::const_iterator it;
@@ -148,7 +134,7 @@ double polyarc_areas(arma::vec x_int, arma::vec y_int,
     arma::vec r = radiuses(now);
 
     arma::vec u = 2 * asin(d / (2 * r));
-    arma::vec a = (u - sin(u)) % pow(r, 2) / 2;
+    arma::vec a = (u - sin(u)) % square(r) / 2;
 
     area += min(a);
 
@@ -163,8 +149,10 @@ double polyarc_areas(arma::vec x_int, arma::vec y_int,
 }
 
 // [[Rcpp::export]]
-std::vector<double> return_intersections(const arma::vec par, arma::vec areas,
-                                         const arma::umat id, arma::umat two,
+std::vector<double> return_intersections(const arma::vec par,
+                                         arma::vec areas,
+                                         const arma::umat id,
+                                         arma::umat two,
                                          const arma::uvec twos,
                                          const arma::uvec ones) {
   arma::uword N = par.n_elem;
@@ -187,7 +175,7 @@ std::vector<double> return_intersections(const arma::vec par, arma::vec areas,
 
   arma::vec x_d = xa - xb;
   arma::vec y_d = ya - yb;
-  arma::vec d = sqrt(pow(x_d, 2) + pow(y_d, 2));
+  arma::vec d = sqrt(square(x_d) + square(y_d));
 
   arma::uvec contained = d <= abs(ra - rb);
   arma::uvec disjoint = d >= (ra + rb);
@@ -291,7 +279,7 @@ std::vector<double> return_intersections(const arma::vec par, arma::vec areas,
 }
 
 // [[Rcpp::export]]
-double stress(const arma::vec & areas, const arma::vec & fit) {
+double stress(const arma::vec& areas, const arma::vec& fit) {
 
   double sst = arma::accu(pow(fit, 2));
   double slope = arma::accu(areas % fit) / arma::accu(pow(areas, 2));
