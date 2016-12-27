@@ -13,8 +13,7 @@ matrix:
         apt:
           packages:
             - valgrind
-      r_check_args:
-        - '--as-cran --use-valgrind'
+      r_check_args: '--as-cran --use-valgrind'
       env:
         - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
       r_github_packages:
@@ -25,6 +24,7 @@ matrix:
     - os: linux
       dist: precise
       compiler: clang
+      r: release
 
     - os: linux
       dist: trusty
@@ -41,6 +41,7 @@ matrix:
       latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes --no-examples'
+
 notifications:
   email:
     on_success: change
