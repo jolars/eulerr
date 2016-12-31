@@ -14,6 +14,7 @@
 #' @param text_args Arguments for \code{\link[graphics]{text}},
 #'   which is used to draw the text.
 #' @param mar Margins for the plot area, set via\code{par()[["mar"]]}.
+#' @param counts Display counts in the diagram.
 #' @param \dots Arguments for \code{\link[graphics]{plot}} (that draws the plot
 #'   area).
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
@@ -37,7 +38,8 @@
 #' @export
 
 plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
-                        text_args = list(), mar = c(2, 2, 2, 2), ...) {
+                        text_args = list(), mar = c(2, 2, 2, 2), counts = FALSE,
+                        ...) {
   assertthat::assert_that(
     length(mar) == 4,
     is.numeric(mar),
@@ -45,28 +47,32 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
     is.list(polygon_args),
     is.list(text_args)
   )
-  old_mar <- graphics::par(no.readonly = TRUE)[["mar"]]
+
+  old_mar <- graphics::par()[["mar"]]
   on.exit(graphics::par(mar = old_mar))
   graphics::par(mar = mar)
 
-  X <- x[["coefficients"]][, 1L]
-  Y <- x[["coefficients"]][, 2L]
-  r <- x[["coefficients"]][, 3L]
+  X <- x[["coefficients"]][, 1]
+  Y <- x[["coefficients"]][, 2]
+  r <- x[["coefficients"]][, 3]
+
+  n <- length(X)
 
   plot_args <- list(...)
-  if (is.null(plot_args$x)) plot_args$x <- double(0L)
+  plot_args$x <- 0
+  plot_args$type <- "n"
   plot_args$xlab <- ""
   plot_args$ylab <- ""
   if (is.null(plot_args$axes)) plot_args$axes <- FALSE
   if (is.null(plot_args$xlim)) plot_args$xlim <- range(c(X + r, X - r))
   if (is.null(plot_args$ylim)) plot_args$ylim <- range(c(Y + r, Y - r))
-  if (is.null(plot_args$asp)) plot_args$asp <- 1L
+  if (is.null(plot_args$asp)) plot_args$asp <- 1
 
   do.call(graphics::plot, plot_args)
 
   g <- seq(0L, 2L * pi, length = 500L)
-  x_coords <- double(0L)
-  y_coords <- double(0L)
+  x_coords <- double(0)
+  y_coords <- double(0)
   for (i in seq_along(X)) {
     x_coords <- c(x_coords, r[i] * cos(g) + X[i], NA)
     y_coords <- c(y_coords, r[i] * sin(g) + Y[i], NA)
@@ -88,53 +94,91 @@ plot.eulerr <- function(x, fill_opacity = 0.4, polygon_args = list(),
   do.call(graphics::polygon, polygon_args)
 
   # Find good positions for the text centers
-  text_x <- double(length(X))
-  text_y <- double(length(Y))
+  text_x <- double(n)
+  text_y <- double(n)
 
-  # Pick a text center location by filling each circle with points and then
-  # picking a point in the area of highest density
+  # Place a grid of points across the diagram
+  smpl_pts <- expand_grid(seq.int(min(X - r), max(X + r), length.out = 100),
+                          seq.int(min(Y - r), max(Y + r), length.out = 100))
 
-  n <- 499L
-  seqn  <- seq.int(0L, n, 1L)
-  theta <- seqn * pi * (3L - sqrt(5L))
-  rad   <- sqrt(seqn / (n + 1))
-  px    <- rad * cos(theta)
-  py    <- rad * sin(theta)
+  smpl_in <- find_sets_containing_points(smpl_pts, X, Y, r)
 
   for (i in seq_along(r)) {
-    xs <- px * r[i] + X[i]
-    ys <- py * r[i] + Y[i]
 
-    locs <- colSums(find_sets_containing_points(cbind(xs, ys), X, Y, r))
+    in_curr <- smpl_in[i, ]
+    out_curr <- smpl_in[-i, , drop = FALSE]
 
-    tip <- table(locs)
+    candidates <- out_curr[, in_curr, drop = FALSE]
+    candsums <- colSums(candidates)
 
-    if (any(tip > 40L)) {
-      large_enough <- which(tip > 40L)[1L]
-    } else if (any(tip > 30L)) {
-      large_enough <- which(tip > 30L)[1L]
-    } else if (any(tip > 20L)) {
-      large_enough <- which(tip > 20L)[1L]
-    } else {
-      large_enough <- which(tip)[1L]
-    }
+    pick_these <- candsums == min(candsums)
 
-    outskirts <- locs == as.numeric(names(large_enough))
-    xx <- xs[outskirts]
-    yy <- ys[outskirts]
+    xx <- smpl_pts[in_curr, 1][pick_these]
+    yy <- smpl_pts[in_curr, 2][pick_these]
 
-    dip <- mapply(dist_point_circle, xx, yy,
+    pcd <- mapply(dist_point_circle, xx, yy,
                   MoreArgs = list(h = X, k = Y, r = r))
 
-    dipmax <- which.max(dip[(1:ncol(dip) - 1) * nrow(dip) + max.col(t(-dip))])
+    max_ind <- which.max(pcd[(1:ncol(pcd) - 1) * nrow(pcd) + max.col(t(-pcd))])
 
-    text_x[i] <- xx[dipmax]
-    text_y[i] <- yy[dipmax]
+    text_x[i] <- xx[max_ind]
+    text_y[i] <- yy[max_ind]
   }
 
-  text_args$x      <- text_x
-  text_args$y      <- text_y
-  text_args$labels <- names(r)
+  if (counts) {
+
+    no_combos <- choose(n, 1L:n)
+    id <- matrix(FALSE, sum(no_combos), n)
+    cum_combos <- c(0, cumsum(no_combos)[-n])
+
+    k <- 1
+    for (i in cum_combos) {
+      permutations <- utils::combn(n, k)
+      for (j in 1:(ncol(permutations))) {
+        id[i + j, permutations[, j]] <- TRUE
+      }
+      k <- k + 1
+    }
+
+    fpts <- which(rowSums(id) > 1 & x$fitted.values > 0)
+    centroid <- matrix(NA, nrow = nrow(id), ncol = 3)
+
+    for (i in fpts) {
+      sets_a <- which(id[i, ])
+
+      aa <- colSums(smpl_in[sets_a, ]) == length(sets_a)
+      minbb <- colSums(smpl_in[-sets_a, , drop = FALSE])
+      bb <- minbb == min(minbb)
+
+      centpoints <- aa & bb
+
+      sets_id <- id[, sets_a]
+      sets_ind <- rowSums(sets_id) == ncol(sets_id)
+      sets_areas <- x$original.values[sets_ind]
+
+      # Find the areas of all sets with this combination of sets in them
+      # in the hierarchy above.
+      set_size <- sets_areas[1] - sum(sets_areas[-1])
+
+      centroid[i, ] <- cbind(sum(smpl_pts[centpoints, 1]) / sum(centpoints),
+                             sum(smpl_pts[centpoints, 2]) / sum(centpoints),
+                             set_size)
+    }
+
+    graphics::text(x = centroid[, 1],
+                   y = centroid[, 2],
+                   labels = centroid[, 3])
+  }
+
+  text_args$x <- text_x
+  text_args$y <- text_y
+
+  if (counts) {
+    text_args$labels <- paste(names(r), "\n", x$original.values[1:length(r)],
+                              sep = "")
+  } else {
+    text_args$labels <- names(r)
+  }
 
   do.call(graphics::text, text_args)
 }
