@@ -5,7 +5,7 @@
 \title{eulerr plots}
 \usage{
 \method{plot}{eulerr}(x, fill_opacity = 0.4, polygon_args = list(),
-  text_args = list(), mar = c(2, 2, 2, 2), ...)
+  text_args = list(), mar = c(2, 2, 2, 2), counts = FALSE, ...)
 }
 \arguments{
 \item{x}{Specifications for a Euler diagram in the form of a object of class
@@ -21,6 +21,8 @@ which is used to draw the circles.}
 which is used to draw the text.}
 
 \item{mar}{Margins for the plot area, set via\code{par()[["mar"]]}.}
+
+\item{counts}{Display counts in the diagram.}
 
 \item{\dots}{Arguments for \code{\link[graphics]{plot}} (that draws the plot
 area).}
