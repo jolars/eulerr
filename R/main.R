@@ -108,7 +108,9 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 #'
 #' @export
 
-eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
+eulerr.default <- function(sets,
+                           cost = c("eulerAPE", "venneuler", "sse"),
+                           ...) {
   assertthat::assert_that(
     is.numeric(sets),
     assertthat::not_empty(sets),
@@ -138,6 +140,7 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
 
   # Scale the values to fractions
   scale_factor <- 100 / min(sets[sets > 0])
+  # scale_factor <- 1 / sum(sets)
   sets <- sets * scale_factor
 
   areas <- double(nrow(id))
@@ -149,6 +152,16 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
       }
     }
   }
+
+  areas_cut = double(length(areas))
+
+  for (i in rev(seq_along(areas))) {
+    curr_sets <- id[i, ]
+    prev_areas <- rowSums(id[, curr_sets, drop = FALSE]) == sum(curr_sets)
+    areas_cut[i] <- areas[i] - sum(areas_cut[prev_areas])
+  }
+
+  areas_cut[areas_cut < 0] <- 0
 
   id_sums <- rowSums(id)
   ones <- id_sums == 1
@@ -173,7 +186,7 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
 
   # Starting layout
   initial_layout <- stats::optim(
-    par = stats::runif(n * 2L, 0L, min(r)),
+    par = as.vector(randtoolbox::sobol(n, 2)),
     fn = initial_layout_optimizer,
     gr = initial_layout_gradient,
     distances = distances,
@@ -189,32 +202,34 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
   final_layout <- stats::optim(
     fn = compute_fit,
     par = c(initial_layout$par, r),
-    areas = areas,
+    areas = areas_cut,
     id = id,
     two = two,
     twos = twos,
     ones = ones,
-    cost = switch(match.arg(cost), "eulerAPE" = 0, "venneuler" = 1),
-    method = c("Nelder-Mead"),
-    control = list(maxit = 500)
+    cost = switch(match.arg(cost),
+                  eulerAPE = 0,
+                  venneuler = 1,
+                  sse = 2),
+    method = c("Nelder-Mead")
   )
 
-  fit <- return_intersections(final_layout$par,areas, id, two, twos,
-                              ones) / scale_factor
+  fit <- return_intersections(final_layout$par, areas_cut, id, two, twos, ones)
+  fit <- fit / scale_factor
 
   names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
-  orig <- areas / scale_factor
 
   region_error <- abs(fit / sum(fit) - orig / sum(orig))
   diag_error <- max(region_error)
 
   names(orig) <- names(fit)
   fpar <- matrix(final_layout$par, ncol = 3,
-                 dimnames = list(one_sets, c("x", "y", "r"))) / scale_factor
+                 dimnames = list(one_sets, c("x", "y", "r")))
+
   structure(
     list(
-      coefficients = fpar,
-      original.values = orig,
+      coefficients = fpar / scale_factor,
+      original.values = orig / scale_factor,
       fitted.values = fit,
       residuals = orig - fit,
       region_error = region_error,
@@ -229,7 +244,9 @@ eulerr.default <- function(sets, cost = c("eulerAPE", "venneuler"), ...) {
 #'
 #' @export
 
-eulerr.matrix <- function(sets, by = NULL, cost = c("eulerAPE", "venneuler"),
+eulerr.matrix <- function(sets,
+                          by = NULL,
+                          cost = c("eulerAPE", "venneuler", "sse"),
                           ...) {
   if (!is.null(ncol(by)))
 
@@ -281,8 +298,10 @@ eulerr.matrix <- function(sets, by = NULL, cost = c("eulerAPE", "venneuler"),
 #'   (as in the description above) via \code{\link[base]{as.matrix}}.
 #' @export
 
-eulerr.data.frame <- function(sets, by = NULL,
-                              cost = c("eulerAPE", "venneuler"), ...) {
+eulerr.data.frame <- function(sets,
+                              by = NULL,
+                              cost = c("eulerAPE", "venneuler", "sse"),
+                              ...) {
   eulerr(as.matrix(sets), by = by, cost = cost, ...)
 }
 
