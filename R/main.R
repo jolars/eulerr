@@ -218,18 +218,19 @@ eulerr.default <- function(sets,
   fit <- fit / scale_factor
 
   names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
+  orig <- areas_cut / scale_factor
 
   region_error <- abs(fit / sum(fit) - orig / sum(orig))
   diag_error <- max(region_error)
 
   names(orig) <- names(fit)
   fpar <- matrix(final_layout$par, ncol = 3,
-                 dimnames = list(one_sets, c("x", "y", "r")))
+                 dimnames = list(one_sets, c("x", "y", "r"))) / scale_factor
 
   structure(
     list(
-      coefficients = fpar / scale_factor,
-      original.values = orig / scale_factor,
+      coefficients = fpar,
+      original.values = orig,
       fitted.values = fit,
       residuals = orig - fit,
       region_error = region_error,

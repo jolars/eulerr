@@ -306,13 +306,13 @@ double stress(const arma::vec& areas, const arma::vec& fit) {
 }
 
 // [[Rcpp::export]]
-double compute_fit(const arma::vec par,
-                   const arma::vec areas,
-                   const arma::umat id,
-                   const arma::umat two,
-                   const arma::uvec twos,
-                   const arma::uvec ones,
-                   const arma::uword cost) {
+double compute_fit(const arma::vec& par,
+                   const arma::vec& areas,
+                   const arma::umat& id,
+                   const arma::umat& two,
+                   const arma::uvec& twos,
+                   const arma::uvec& ones,
+                   const arma::uword& cost) {
 
   arma::vec fit = return_intersections(par, areas, id, two, twos, ones);
 
