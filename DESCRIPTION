@@ -10,11 +10,12 @@ Description: If possible, generates exactly area-proportional Euler diagrams,
 Depends:
     R (>= 3.3.1)
 Imports:
-    assertthat (>= 0.1),
     grDevices,
     utils,
     stats,
     graphics,
+    assertthat,
+    randtoolbox,
     Rcpp (>= 0.12.8)
 Suggests:
     knitr,
