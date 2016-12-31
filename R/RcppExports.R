@@ -5,6 +5,10 @@ choose_two <- function(x) {
     .Call('eulerr_choose_two', PACKAGE = 'eulerr', x)
 }
 
+intersect_all <- function(r1, r2, x_d, y_d, x_c, y_c, d) {
+    .Call('eulerr_intersect_all', PACKAGE = 'eulerr', r1, r2, x_d, y_d, x_c, y_c, d)
+}
+
 discdisc <- function(r1, r2, d) {
     .Call('eulerr_discdisc', PACKAGE = 'eulerr', r1, r2, d)
 }
