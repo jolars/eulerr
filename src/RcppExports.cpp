@@ -17,6 +17,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// intersect_all
+arma::mat intersect_all(const arma::vec& r1, const arma::vec& r2, const arma::vec& x_d, const arma::vec& y_d, const arma::vec& x_c, const arma::vec& y_c, const arma::vec& d);
+RcppExport SEXP eulerr_intersect_all(SEXP r1SEXP, SEXP r2SEXP, SEXP x_dSEXP, SEXP y_dSEXP, SEXP x_cSEXP, SEXP y_cSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type r1(r1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type r2(r2SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type x_d(x_dSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y_d(y_dSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type x_c(x_cSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y_c(y_cSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(intersect_all(r1, r2, x_d, y_d, x_c, y_c, d));
+    return rcpp_result_gen;
+END_RCPP
+}
 // discdisc
 NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d);
 RcppExport SEXP eulerr_discdisc(SEXP r1SEXP, SEXP r2SEXP, SEXP dSEXP) {
@@ -59,18 +76,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // compute_fit
-double compute_fit(const arma::vec& par, const arma::vec& areas, const arma::umat& id, const arma::umat& two, const arma::uvec& twos, const arma::uvec& ones, const arma::uword& cost);
+double compute_fit(const arma::vec par, const arma::vec areas, const arma::umat id, const arma::umat two, const arma::uvec twos, const arma::uvec ones, const arma::uword cost);
 RcppExport SEXP eulerr_compute_fit(SEXP parSEXP, SEXP areasSEXP, SEXP idSEXP, SEXP twoSEXP, SEXP twosSEXP, SEXP onesSEXP, SEXP costSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type areas(areasSEXP);
-    Rcpp::traits::input_parameter< const arma::umat& >::type id(idSEXP);
-    Rcpp::traits::input_parameter< const arma::umat& >::type two(twoSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type twos(twosSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type ones(onesSEXP);
-    Rcpp::traits::input_parameter< const arma::uword& >::type cost(costSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type areas(areasSEXP);
+    Rcpp::traits::input_parameter< const arma::umat >::type id(idSEXP);
+    Rcpp::traits::input_parameter< const arma::umat >::type two(twoSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec >::type twos(twosSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec >::type ones(onesSEXP);
+    Rcpp::traits::input_parameter< const arma::uword >::type cost(costSEXP);
     rcpp_result_gen = Rcpp::wrap(compute_fit(par, areas, id, two, twos, ones, cost));
     return rcpp_result_gen;
 END_RCPP
