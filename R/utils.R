@@ -32,3 +32,11 @@ tally_sets <- function(sets, ...) {
   }
   eulerr(tally, ...)
 }
+
+
+# Faster expand.grid ------------------------------------------------------
+
+expand_grid <- function(x, y) {
+  cbind(rep.int(x, length(y)),
+        rep.int(x, rep.int(length(x), length(y))))
+}
