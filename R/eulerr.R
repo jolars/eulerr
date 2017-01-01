@@ -1,3 +1,3 @@
 #' @useDynLib eulerr
-#' @importFrom Rcpp sourceCpp
+#' @importFrom Rcpp evalCpp
 NULL

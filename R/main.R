@@ -174,11 +174,11 @@ eulerr.default <- function(sets,
   )
 
   starting_values <- rescale(as.vector(randtoolbox::sobol(n, 2)),
-                             0, sqrt(sum(r ^ 2 * pi)))
+                             0, sum(2 * r) - max(r) - min(r))
 
   # Starting layout
   initial_layout <- stats::optim(
-    par = as.vector(randtoolbox::sobol(n, 2)),
+    par = stats::runif(n * 2L, 0L, sqrt(sum(r ^ 2 * pi))),
     fn = initial_layout_optimizer,
     gr = initial_layout_gradient,
     distances = distances,
@@ -199,10 +199,12 @@ eulerr.default <- function(sets,
     two = two,
     twos = twos,
     ones = ones,
-    cost = switch(match.arg(cost),
-                  eulerAPE = 0,
-                  venneuler = 1),
-    method = c("Nelder-Mead")
+    cost = 0,
+    # cost = switch(match.arg(cost),
+    #               eulerAPE = 0,
+    #               venneuler = 1),
+    method = c("Nelder-Mead"),
+    control = list(maxit = 500)
   )
 
   fit <- return_intersections(final_layout$par, areas_cut, id, two, twos, ones)

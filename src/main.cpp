@@ -5,11 +5,12 @@
 using namespace Rcpp;
 using namespace arma;
 
-arma::uvec set_intersect(const arma::uvec& x, const arma::uvec& y) {
-
+arma::uvec set_intersect(const arma::urowvec& x, const arma::urowvec& y) {
+  std::vector<int> a = arma::conv_to<std::vector<int> >::from(arma::sort(x));
+  std::vector<int> b = arma::conv_to<std::vector<int> >::from(arma::sort(y));
   std::vector<int> out;
 
-  std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
+  std::set_intersection(a.begin(), a.end(), b.begin(), b.end(),
                         std::back_inserter(out));
 
   return arma::conv_to<arma::uvec>::from(out);
@@ -89,13 +90,28 @@ arma::vec discdisc_vec(const arma::vec& r1,
 }
 
 double discdisc_dbl(double r1, double r2, double d) {
-  double r1e = pow(r1, 2);
-  double r2e = pow(r2, 2);
-  double de = pow(d, 2);
+  if (d >= r1 + r2) {
 
-  return r1e * acos((de + r1e - r2e) / ((2 * d) * r1)) +
-    r2e * acos((de + r2e - r1e) / ((2 * d) * r2)) -
-    sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
+    return 0;
+
+  } else if (d <= abs(r1 - r2)) {
+
+    arma::vec rr(2);
+    rr(0) = r1;
+    rr(1) = r2;
+
+    return datum::pi * pow(rr.min(), 2);
+
+  } else {
+
+    double r1e = pow(r1, 2);
+    double r2e = pow(r2, 2);
+    double de = pow(d, 2);
+
+    return r1e * acos((de + r1e - r2e) / ((2 * d) * r1)) +
+      r2e * acos((de + r2e - r1e) / ((2 * d) * r2)) -
+      sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
+  }
 }
 
 arma::vec subv(const arma::vec& x, const arma::uvec& index) {
@@ -117,29 +133,30 @@ double polyarc_areas(arma::vec x_int,
                      const arma::umat& circles) {
 
   // Sort points by their angle to the centroid
-  arma::uword n = x_int.n_elem;
-  double xv = arma::accu(x_int) / n;
-  double yv = arma::accu(y_int) / n;
+  uword n = x_int.n_elem;
+  double xv = accu(x_int) / n;
+  double yv = accu(y_int) / n;
 
-  arma::uvec ind = arma::sort_index(arma::atan2(x_int - xv, y_int - yv));
+  uvec ind = sort_index(atan2(x_int - xv, y_int - yv));
 
   // Reorder vectors and matrix based on angles to centroid
   x_int = x_int(ind);
   y_int = y_int(ind);
-  arma::umat matty = circles.rows(ind);
+  umat matty = circles.rows(ind);
 
   double area = 0;
 
   for (arma::uword i = 0, j = n - 1; i < n; i++) {
 
     // Circular segment
-    arma::uvec now = set_intersect(matty.row(i).t(), matty.row(j).t());
+
+    arma::uvec now = set_intersect(matty.row(i), matty.row(j));
 
     double d = sqrt(pow(x_int(j) - x_int(i), 2) + pow(y_int(j) - y_int(i), 2));
     arma::vec r = radiuses(now);
 
     arma::vec u = 2 * asin(d / (2 * r));
-    arma::vec a = (u - sin(u)) % arma::square(r) / 2;
+    arma::vec a = (u - sin(u)) % pow(r, 2) / 2;
 
     area += min(a);
 
@@ -180,20 +197,20 @@ std::vector<double> return_intersections(const arma::vec par,
 
   arma::vec x_d = xa - xb;
   arma::vec y_d = ya - yb;
-  arma::vec d = sqrt(square(x_d) + square(y_d));
+  arma::vec d = sqrt(arma::square(x_d) + arma::square(y_d));
 
   arma::uvec contained = d <= abs(ra - rb);
   arma::uvec disjoint = d >= (ra + rb);
-  arma::uvec intersecting = (disjoint + contained) == 0;
+  arma::uvec intersecting = (disjoint + contained) < 1;
 
   arma::uvec itwos = arma::find(twos == 1);
-  arma::vec atwos = areas(find(twos == 1));
+  arma::vec atwos = areas(itwos);
 
   arma::uvec ct = arma::find(contained == 1);
   arma::uvec dj = arma::find(disjoint == 1);
   arma::uvec is = arma::find(intersecting == 1);
 
-  atwos.elem(ct) = square(min(ra(ct), rb(ct))) * datum::pi;
+  atwos.elem(ct) = arma::square(min(ra(ct), rb(ct))) * datum::pi;
   atwos.elem(dj).zeros();
   atwos.elem(is) = discdisc_vec(ra(is), rb(is), d(is));
 
@@ -234,7 +251,7 @@ std::vector<double> return_intersections(const arma::vec par,
 
     arma::uvec twotwo = arma::join_cols(twoway, twoway);
     arma::uvec in_all =
-      arma::sum(in_circles.cols(curr_set),1) == curr_set.n_elem;
+      arma::sum(in_circles.cols(curr_set), 1) == curr_set.n_elem;
 
     in_all = in_all && twotwo;
 
@@ -278,17 +295,23 @@ std::vector<double> return_intersections(const arma::vec par,
     }
   }
 
-  arma::vec areas_cut(areas.n_elem);
+  vec areas_cut(areas.n_elem);
 
-  for (int i = areas.size() - 1; i >= 0; i--) {
+  // Figure out intersections and relative complements
+  for (unsigned int i = areas.size(); i-- > 0; ) {
 
-    arma::umat subareas = id.cols(arma::find(id.row(i) == 1));
-    arma::uvec prev_areas = arma::find(arma::sum(subareas, 1) == subareas.n_cols);
-    areas_cut(i) = areas(i) - arma::accu(areas_cut(prev_areas));
+    urowvec idx = id.row(i);
+
+    umat subareas = id.cols(find(idx == 1));
+    uvec prev_areas = find(sum(subareas, 1) == subareas.n_cols);
+    areas_cut(i) = areas(i) - accu(areas_cut(prev_areas));
 
   }
 
-  return arma::conv_to< std::vector<double> >::from(areas_cut);
+  areas_cut.replace(datum::nan, 0);
+  arma::vec areas_out = arma::clamp(areas_cut, 0, areas_cut.max());
+
+  return arma::conv_to< std::vector<double> >::from(areas_out);
 
 }
 

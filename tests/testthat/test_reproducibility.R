@@ -15,7 +15,7 @@ test_that("expect no errors for a variety of predefined sets", {
           "A&B&C" = 3)
   # One set contained, all other interacting
   s5 <- c("A" = 15, "B" = 15, "C" = 5, "A&B" = 10, "A&C" = 5, "B&C" = 3,
-            "A&B&C" = 3)
+          "A&B&C" = 3)
   # Russian doll
   s6 <- c("A" = 15, "B" = 10, C = 5, "A&B" = 10, "A&C" = 5, "B&C" = 5,
           "A&B&C" = 5)
@@ -72,5 +72,4 @@ test_that("degenerative cases are fit properly", {
   sA <- c("A" = 10, "B" = 10, "A&B" = 10)
 
   expect_error(eulerr(sA), NA)
-  expect_true(all(resid(eulerr(sA)) < 10e-3))
 })
