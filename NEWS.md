@@ -1,7 +1,12 @@
 # eulerr 1.0.0.9000
+## New features
 
 ## Minor improvements
-* Switch to atan2() from RcppArmadillo.
+* The cost function from `eulerAPE` has been deprecated and replaced with
+that from `venneuler` since the former failed unexpectedly for some set
+specifications.
+* Starting values for the optimization now use a quasi-random sequence.
+* Switched to atan2() from RcppArmadillo.
 * Added version requirement for RcppArmadillo.
 * Dropped dependency on MASS for computing label placement, replacing it
 with a faster, geometric function.
@@ -9,8 +14,9 @@ with a faster, geometric function.
 * Added additional assertions to prevent erroneous use.
 
 ## Bug fixes
-* Fixed misspelled `eulerAPE` argument to the cost function in `eulerr()`.
-* Fixed missing row breaks in `print.eulerr`.
+* eulerr previously, and incorrectly, computed loss from unions of sets. It now
+computes loss from intersections and set-theoretic differences.
+* Added missing row breaks in `print.eulerr`.
 
 # eulerr 1.0.0
 
