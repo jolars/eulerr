@@ -79,9 +79,9 @@ NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d) {
 arma::vec discdisc_vec(const arma::vec& r1,
                        const arma::vec& r2,
                        const arma::vec& d) {
-  arma::vec r1e = square(r1);
-  arma::vec r2e = square(r2);
-  arma::vec de = square(d);
+  arma::vec r1e = arma::square(r1);
+  arma::vec r2e = arma::square(r2);
+  arma::vec de = arma::square(d);
 
   return r1e % acos((de + r1e - r2e) / ((2 * d) % r1)) +
     r2e % acos((de + r2e - r1e) / ((2 * d) % r2)) -
@@ -118,8 +118,8 @@ double polyarc_areas(arma::vec x_int,
 
   // Sort points by their angle to the centroid
   arma::uword n = x_int.n_elem;
-  double xv = sum(x_int) / n;
-  double yv = sum(y_int) / n;
+  double xv = arma::accu(x_int) / n;
+  double yv = arma::accu(y_int) / n;
 
   arma::uvec ind = arma::sort_index(arma::atan2(x_int - xv, y_int - yv));
 
@@ -139,7 +139,7 @@ double polyarc_areas(arma::vec x_int,
     arma::vec r = radiuses(now);
 
     arma::vec u = 2 * asin(d / (2 * r));
-    arma::vec a = (u - sin(u)) % square(r) / 2;
+    arma::vec a = (u - sin(u)) % arma::square(r) / 2;
 
     area += min(a);
 
@@ -223,7 +223,7 @@ std::vector<double> return_intersections(const arma::vec par,
 
   arma::umat all_circles = arma::join_cols(two, two);
 
-  areas(find(ones == 1)) = square(r) * datum::pi;
+  areas(arma::find(ones == 1)) = arma::square(r) * datum::pi;
   areas(itwos) = atwos;
 
   // Work out areas of relationships of 3 or more sets.

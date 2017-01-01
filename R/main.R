@@ -77,7 +77,7 @@
 #'
 #' # A set with no perfect solution
 #' rel <- c("a" = 3491, "b" = 3409, "c" = 3503,
-#'          "a&b" = 120, "a&c" = 114, "b&c" = 132, "a&b&c" = 126)
+#'          "a&b" = 120, "a&c" = 114, "b&c" = 132, "a&b&c" = 50)
 #'
 #' # Use the cost function from eulerAPE (the default)
 #' fit5 <- eulerr(rel, cost = "eulerAPE")
