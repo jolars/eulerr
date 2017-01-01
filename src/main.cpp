@@ -43,7 +43,6 @@ IntegerMatrix choose_two(IntegerVector x) {
   return m;
 }
 
-
 // [[Rcpp::export]]
 arma::mat intersect_all(const arma::vec& r1,
                         const arma::vec& r2,
@@ -253,7 +252,7 @@ std::vector<double> return_intersections(const arma::vec par,
 
       arma::uvec ff = locate(two_a, la) || locate(two_b, la);
 
-      if (all(contained(find(ff == 1)))) {
+      if (all(contained(arma::find(ff == 1)))) {
 
         // One set is contained within the others. Return its area.
         areas(i) = pow(min(r(curr_set)), 2) * datum::pi;
@@ -273,7 +272,8 @@ std::vector<double> return_intersections(const arma::vec par,
 
       // Return intersection of 3 or more circles
       arma::mat curr_intpoints = int_points.rows(veci);
-      areas(i) = polyarc_areas(curr_intpoints.col(0), curr_intpoints.col(1),
+      areas(i) = polyarc_areas(curr_intpoints.col(0),
+                               curr_intpoints.col(1),
                                r, circles);
     }
   }
@@ -282,14 +282,11 @@ std::vector<double> return_intersections(const arma::vec par,
 
   for (int i = areas.size() - 1; i >= 0; i--) {
 
-    arma::urowvec idx = id.row(i);
-    arma::umat subareas = id.cols(arma::find(idx == 1));
-    arma::uvec prev_areas = arma::find(arma::sum(subareas, 1) == arma::accu(idx));
+    arma::umat subareas = id.cols(arma::find(id.row(i) == 1));
+    arma::uvec prev_areas = arma::find(arma::sum(subareas, 1) == subareas.n_cols);
     areas_cut(i) = areas(i) - arma::accu(areas_cut(prev_areas));
 
   }
-
-  areas_cut = arma::clamp(areas_cut, 0, areas_cut.max());
 
   return arma::conv_to< std::vector<double> >::from(areas_cut);
 
@@ -306,33 +303,29 @@ double stress(const arma::vec& areas, const arma::vec& fit) {
 }
 
 // [[Rcpp::export]]
-double compute_fit(const arma::vec& par,
-                   const arma::vec& areas,
-                   const arma::umat& id,
-                   const arma::umat& two,
-                   const arma::uvec& twos,
-                   const arma::uvec& ones,
-                   const arma::uword& cost) {
+double compute_fit(const arma::vec par,
+                   const arma::vec areas,
+                   const arma::umat id,
+                   const arma::umat two,
+                   const arma::uvec twos,
+                   const arma::uvec ones,
+                   const arma::uword cost) {
 
   arma::vec fit = return_intersections(par, areas, id, two, twos, ones);
 
   switch(cost) {
 
   case 0:
-    // eulerAPE cost function
-    return arma::accu(arma::square(areas - fit) / (fit + 1e-6)) / areas.n_elem;
-
-  case 1:
-    // venneuler stress function
+    // venneuler cost function
     return stress(areas, fit);
 
-  case 2:
-    // sums of squares
-    return arma::accu(square(areas - fit));
+  case 1:
+    // sums of squared errors
+    return arma::accu(arma::square(fit - areas));
 
   default:
     // throw an error if we for some reason end up here
-    stop("For some reason none of the cost functions were triggered.");
+    stop("None of the cost functions were triggered. This might be a bug.");
 
   }
 }

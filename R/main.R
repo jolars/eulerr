@@ -125,22 +125,10 @@ eulerr.default <- function(sets,
   one_sets <- unique(unlist(setnames, use.names = FALSE))
   n <- length(one_sets)
 
-  no_combos <- choose(n, 1L:n)
-  id <- matrix(FALSE, sum(no_combos), n)
-  cum_combos <- c(0, cumsum(no_combos)[-n])
-
-  k <- 1
-  for (i in cum_combos) {
-    permutations <- utils::combn(n, k)
-    for (j in 1:(ncol(permutations))) {
-      id[i + j, permutations[, j]] <- TRUE
-    }
-    k <- k + 1
-  }
+  id <- binary_indexing(n)
 
   # Scale the values to fractions
-  scale_factor <- 100 / min(sets[sets > 0])
-  # scale_factor <- 1 / sum(sets)
+  scale_factor <- 1 / sum(sets)
   sets <- sets * scale_factor
 
   areas <- double(nrow(id))
@@ -161,7 +149,8 @@ eulerr.default <- function(sets,
     areas_cut[i] <- areas[i] - sum(areas_cut[prev_areas])
   }
 
-  areas_cut[areas_cut < 0] <- 0
+  if (any(areas_cut < 0))
+    stop("Check your set configuration.")
 
   id_sums <- rowSums(id)
   ones <- id_sums == 1
@@ -183,6 +172,9 @@ eulerr.default <- function(sets,
     overlap = areas[twos],
     USE.NAMES = FALSE
   )
+
+  starting_values <- rescale(as.vector(randtoolbox::sobol(n, 2)),
+                             0, sqrt(sum(r ^ 2 * pi)))
 
   # Starting layout
   initial_layout <- stats::optim(
@@ -209,8 +201,7 @@ eulerr.default <- function(sets,
     ones = ones,
     cost = switch(match.arg(cost),
                   eulerAPE = 0,
-                  venneuler = 1,
-                  sse = 2),
+                  venneuler = 1),
     method = c("Nelder-Mead")
   )
 
