@@ -34,14 +34,14 @@ test_that("expect no errors for a variety of predefined sets", {
            "SE&Anti-CCP" = 3, "Anti-CCP&DAS28" = 2,
            "SE&Anti-CCP&DAS28" = 1)
   # Three sets intersecting inside a fourth
-  s11 <- c("A" = 15, "B" = 2, "C" = 2, "D" = 2,
-           "A&B" = 2, "A&C" = 2, "A&D" = 2, "B&C" = 1, "B&D" = 1, "C&D" = 1,
-           "A&B&C" = 0.5, "A&B&D" = 0.5, "A&C&D" = 0.5, "B&C&D" = 0.5,
-           "A&B&C&D" = 0.5)
+  s11 <- c("A" = 30, "B" = 7, "C" = 7, "D" = 7,
+           "A&B" = 7, "A&C" = 7, "A&D" = 7, "B&C" = 2, "B&D" = 2, "C&D" = 2,
+           "A&B&C" = 2, "A&B&D" = 2, "A&C&D" = 2, "B&C&D" = 1,
+           "A&B&C&D" = 1)
   # From eulerAPE article
   s12 <- c("a" = 3491, "b" = 3409, "c" = 3503,
            "a&b" = 120, "a&c" = 114, "b&c" = 132,
-           "a&b&c" = 126)
+           "a&b&c" = 50)
   # Sets with 0-intersections.
   s13 <- c("A" = 1, "B" = 0.4, "C" = 3,
            "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
