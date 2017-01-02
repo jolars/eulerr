@@ -65,3 +65,12 @@ expand_grid <- function(x, y) {
 rescale <- function(x, new_min, new_max) {
   (new_max - new_min) / (max(x) - min(x)) * (x - max(x)) + new_max
 }
+
+
+# Find min value of each column -------------------------------------------
+
+col_mins <- function(mat) {
+  which.max(mat[(1:ncol(mat) - 1) * nrow(mat) + max.col(t(-mat))])
+}
+
+
