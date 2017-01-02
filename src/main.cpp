@@ -6,11 +6,9 @@ using namespace Rcpp;
 using namespace arma;
 
 arma::uvec set_intersect(const arma::urowvec& x, const arma::urowvec& y) {
-  std::vector<int> a = arma::conv_to<std::vector<int> >::from(arma::sort(x));
-  std::vector<int> b = arma::conv_to<std::vector<int> >::from(arma::sort(y));
   std::vector<int> out;
 
-  std::set_intersection(a.begin(), a.end(), b.begin(), b.end(),
+  std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
                         std::back_inserter(out));
 
   return arma::conv_to<arma::uvec>::from(out);
@@ -52,8 +50,8 @@ arma::mat intersect_all(const arma::vec& r1,
                         const arma::vec& x_c,
                         const arma::vec& y_c,
                         const arma::vec& d) {
-  arma::vec l = (square(r2) - square(r1) + square(d)) / (2 * d);
-  arma::vec h = sqrt(square(r2) - square(l));
+  arma::vec l = (arma::square(r2) - arma::square(r1) + arma::square(d)) / (2 * d);
+  arma::vec h = sqrt(arma::square(r2) - arma::square(l));
   arma::vec ld = l / d;
   arma::vec hd = h / d;
 
@@ -62,7 +60,8 @@ arma::mat intersect_all(const arma::vec& r1,
   arma::vec y1 = (y_d % ld) - (x_d % hd) + y_c;
   arma::vec y2 = (y_d % ld) + (x_d % hd) + y_c;
 
-  return arma::join_rows(arma::join_cols(x1, x2), arma::join_cols(y1, y2));
+  return arma::join_rows(arma::join_cols(x1, x2),
+                         arma::join_cols(y1, y2));
 }
 
 // [[Rcpp::export]]
@@ -119,15 +118,15 @@ double polyarc_areas(arma::vec x_int,
 
   // Sort points by their angle to the centroid
   uword n = x_int.n_elem;
-  double xv = accu(x_int) / n;
-  double yv = accu(y_int) / n;
+  double xv = arma::accu(x_int) / n;
+  double yv = arma::accu(y_int) / n;
 
-  uvec ind = sort_index(atan2(x_int - xv, y_int - yv));
+  arma::uvec ind = arma::sort_index(arma::atan2(x_int - xv, y_int - yv));
 
   // Reorder vectors and matrix based on angles to centroid
   x_int = x_int(ind);
   y_int = y_int(ind);
-  umat matty = circles.rows(ind);
+  arma::umat matty = circles.rows(ind);
 
   double area = 0;
 
@@ -245,15 +244,12 @@ std::vector<double> return_intersections(const arma::vec& par,
 
     arma::umat circles = all_circles.rows(veci);
 
-    arma::uword crow = circles.n_rows;
+    if (circles.n_rows < 2) {
 
-    if (crow < 2) {
+      arma::uvec l(1);
+      l(0) = curr_set(r(curr_set).index_min());
 
-      arma::uword l = curr_set(r(curr_set).index_min());
-      arma::uvec la(1);
-      la.fill(l);
-
-      arma::uvec ff = locate(two_a, la) || locate(two_b, la);
+      arma::uvec ff = locate(two_a, l) || locate(two_b, l);
 
       if (all(contained(arma::find(ff == 1)))) {
 
@@ -266,7 +262,7 @@ std::vector<double> return_intersections(const arma::vec& par,
         areas(i) = 0;
 
       }
-    } else if (crow == 2) {
+    } else if (circles.n_rows == 2) {
 
       // Return 2 circle intersection
       areas(i) = discdisc_dbl(r(circles(0, 0)), r(circles(0, 1)), d(veci(0)));
@@ -284,13 +280,11 @@ std::vector<double> return_intersections(const arma::vec& par,
   vec areas_cut(areas.n_elem);
 
   // Figure out intersections and relative complements
-  for (unsigned int i = areas.size(); i-- > 0; ) {
+  for (arma::uword i = areas.n_elem; i --> 0; ) {
 
-    urowvec idx = id.row(i);
-
-    umat subareas = id.cols(find(idx == 1));
-    uvec prev_areas = find(sum(subareas, 1) == subareas.n_cols);
-    areas_cut(i) = areas(i) - accu(areas_cut(prev_areas));
+    arma::umat subareas = id.cols(find(id.row(i) == 1));
+    arma::uvec prev_areas = arma::find(sum(subareas, 1) == subareas.n_cols);
+    areas_cut(i) = areas(i) - arma::accu(areas_cut(prev_areas));
 
   }
 
@@ -325,12 +319,12 @@ double compute_fit(const arma::vec par,
   switch(cost) {
 
   case 0:
-    // venneuler cost function
-    return stress(areas, fit);
+    // eulerAPE cost function
+    return arma::accu(arma::square(fit - areas) / (fit + 1e-10)) / areas.n_elem;
 
   case 1:
-    // sums of squared errors
-    return arma::accu(arma::square(fit - areas));
+    // venneuler cost function
+    return stress(areas, fit);
 
   default:
     // throw an error if we for some reason end up here

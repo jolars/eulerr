@@ -9,13 +9,13 @@
 \usage{
 eulerr(sets, ...)
 
-\method{eulerr}{default}(sets, cost = c("eulerAPE", "venneuler", "sse"), ...)
+\method{eulerr}{default}(sets, cost = c("eulerAPE", "venneuler"), ...)
 
-\method{eulerr}{matrix}(sets, by = NULL, cost = c("eulerAPE", "venneuler",
-  "sse"), ...)
+\method{eulerr}{matrix}(sets, by = NULL, cost = c("eulerAPE", "venneuler"),
+  ...)
 
 \method{eulerr}{data.frame}(sets, by = NULL, cost = c("eulerAPE",
-  "venneuler", "sse"), ...)
+  "venneuler"), ...)
 }
 \arguments{
 \item{sets}{Set relationships as a named numeric vector, matrix, or
