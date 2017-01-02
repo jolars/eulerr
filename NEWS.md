@@ -1,21 +1,18 @@
 # eulerr 1.0.0.9000
-## New features
+## Major changes
+* Added a `counts` argument to `plot.eulerr` that adds labels for the counts
+of the original set specificiation (#6).
 
-## Minor improvements
-* The cost function from `eulerAPE` has been deprecated and replaced with
-that from `venneuler` since the former failed unexpectedly for some set
-specifications.
-* Starting values for the optimization now use a quasi-random sequence.
+## Minor changes
 * Switched to atan2() from RcppArmadillo.
 * Added version requirement for RcppArmadillo.
 * Dropped dependency on MASS for computing label placement, replacing it
-with a faster, geometric function.
-* Introduced several performance improvements all around.
+with a faster, geometric algorithm.
 * Added additional assertions to prevent erroneous use.
 
 ## Bug fixes
-* eulerr previously, and incorrectly, computed loss from unions of sets. It now
-computes loss from intersections and set-theoretic differences.
+* The previous algorithm incorrectly computed loss from unions of sets. It now
+computes loss from intersections and relative complements.
 * Added missing row breaks in `print.eulerr`.
 
 # eulerr 1.0.0
