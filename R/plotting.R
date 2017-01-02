@@ -116,9 +116,9 @@ plot.eulerr <- function(x,
     xx_labels[] <- NA
     yy_labels[] <- NA
     id <- binary_indexing(n)
+    set_labels <- character(length(not_zero))
   }
 
-  set_labels <- character(length(not_zero))
 
   for (i in seq_along(r)) {
 
