@@ -207,7 +207,7 @@ eulerr.default <- function(sets,
     control = list(maxit = 500)
   )
 
-  fit <- return_intersections(final_layout$par, areas_cut, id, two, twos, ones)
+  fit <- return_intersections(final_layout$par, id, two, twos, ones)
   fit <- fit / scale_factor
 
   names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))

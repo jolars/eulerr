@@ -90,28 +90,13 @@ arma::vec discdisc_vec(const arma::vec& r1,
 }
 
 double discdisc_dbl(double r1, double r2, double d) {
-  if (d >= r1 + r2) {
+  double r1e = pow(r1, 2);
+  double r2e = pow(r2, 2);
+  double de = pow(d, 2);
 
-    return 0;
-
-  } else if (d <= abs(r1 - r2)) {
-
-    arma::vec rr(2);
-    rr(0) = r1;
-    rr(1) = r2;
-
-    return datum::pi * pow(rr.min(), 2);
-
-  } else {
-
-    double r1e = pow(r1, 2);
-    double r2e = pow(r2, 2);
-    double de = pow(d, 2);
-
-    return r1e * acos((de + r1e - r2e) / ((2 * d) * r1)) +
-      r2e * acos((de + r2e - r1e) / ((2 * d) * r2)) -
-      sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
-  }
+  return r1e * acos((de + r1e - r2e) / ((2 * d) * r1)) +
+    r2e * acos((de + r2e - r1e) / ((2 * d) * r2)) -
+    sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
 
 arma::vec subv(const arma::vec& x, const arma::uvec& index) {
@@ -150,14 +135,13 @@ double polyarc_areas(arma::vec x_int,
 
     // Circular segment
 
-    arma::uvec now = set_intersect(matty.row(i), matty.row(j));
-
     double d = sqrt(pow(x_int(j) - x_int(i), 2) + pow(y_int(j) - y_int(i), 2));
-    arma::vec r = radiuses(now);
+    arma::vec r = radiuses(set_intersect(matty.row(i), matty.row(j)));
 
     arma::vec u = 2 * asin(d / (2 * r));
-    arma::vec a = (u - sin(u)) % pow(r, 2) / 2;
+    arma::vec a = (u - sin(u)) % square(r) / 2;
 
+    // If we have two circles at these points, pick the smaller
     area += min(a);
 
     // Triangular segment
@@ -171,14 +155,16 @@ double polyarc_areas(arma::vec x_int,
 }
 
 // [[Rcpp::export]]
-std::vector<double> return_intersections(const arma::vec par,
-                                         arma::vec areas,
-                                         const arma::umat id,
+std::vector<double> return_intersections(const arma::vec& par,
+                                         const arma::umat& id,
                                          arma::umat two,
-                                         const arma::uvec twos,
-                                         const arma::uvec ones) {
+                                         const arma::uvec& twos,
+                                         const arma::uvec& ones) {
   arma::uword N = par.n_elem;
   arma::uword n = id.n_cols;
+  arma::uword n_combos = id.n_rows;
+
+  arma::vec areas(n_combos);
   two = two - 1;
 
   arma::vec x = par.head(N / 3);
@@ -244,7 +230,7 @@ std::vector<double> return_intersections(const arma::vec par,
   areas(itwos) = atwos;
 
   // Work out areas of relationships of 3 or more sets.
-  for (arma::uword i = n * (n - 1) / 2 + n; i < id.n_rows; i++) {
+  for (arma::uword i = n * (n - 1) / 2 + n; i < n_combos; i++) {
 
     arma::uvec curr_set = arma::find(id.row(i) == 1);
     arma::uvec twoway = locate(two_a, curr_set) && locate(two_b, curr_set);
@@ -309,7 +295,7 @@ std::vector<double> return_intersections(const arma::vec par,
   }
 
   areas_cut.replace(datum::nan, 0);
-  arma::vec areas_out = arma::clamp(areas_cut, 0, areas_cut.max());
+  arma::vec areas_out = arma::clamp(areas_cut, 0, 1);
 
   return arma::conv_to< std::vector<double> >::from(areas_out);
 
@@ -334,7 +320,7 @@ double compute_fit(const arma::vec par,
                    const arma::uvec ones,
                    const arma::uword cost) {
 
-  arma::vec fit = return_intersections(par, areas, id, two, twos, ones);
+  arma::vec fit = return_intersections(par, id, two, twos, ones);
 
   switch(cost) {
 

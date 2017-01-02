@@ -48,18 +48,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // return_intersections
-std::vector<double> return_intersections(const arma::vec par, arma::vec areas, const arma::umat id, arma::umat two, const arma::uvec twos, const arma::uvec ones);
-RcppExport SEXP eulerr_return_intersections(SEXP parSEXP, SEXP areasSEXP, SEXP idSEXP, SEXP twoSEXP, SEXP twosSEXP, SEXP onesSEXP) {
+std::vector<double> return_intersections(const arma::vec& par, const arma::umat& id, arma::umat two, const arma::uvec& twos, const arma::uvec& ones);
+RcppExport SEXP eulerr_return_intersections(SEXP parSEXP, SEXP idSEXP, SEXP twoSEXP, SEXP twosSEXP, SEXP onesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec >::type par(parSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type areas(areasSEXP);
-    Rcpp::traits::input_parameter< const arma::umat >::type id(idSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type id(idSEXP);
     Rcpp::traits::input_parameter< arma::umat >::type two(twoSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec >::type twos(twosSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec >::type ones(onesSEXP);
-    rcpp_result_gen = Rcpp::wrap(return_intersections(par, areas, id, two, twos, ones));
+    Rcpp::traits::input_parameter< const arma::uvec& >::type twos(twosSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec& >::type ones(onesSEXP);
+    rcpp_result_gen = Rcpp::wrap(return_intersections(par, id, two, twos, ones));
     return rcpp_result_gen;
 END_RCPP
 }

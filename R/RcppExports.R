@@ -13,8 +13,8 @@ discdisc <- function(r1, r2, d) {
     .Call('eulerr_discdisc', PACKAGE = 'eulerr', r1, r2, d)
 }
 
-return_intersections <- function(par, areas, id, two, twos, ones) {
-    .Call('eulerr_return_intersections', PACKAGE = 'eulerr', par, areas, id, two, twos, ones)
+return_intersections <- function(par, id, two, twos, ones) {
+    .Call('eulerr_return_intersections', PACKAGE = 'eulerr', par, id, two, twos, ones)
 }
 
 stress <- function(areas, fit) {
