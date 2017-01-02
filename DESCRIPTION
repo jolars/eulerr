@@ -15,13 +15,15 @@ Imports:
     stats,
     graphics,
     assertthat,
-    randtoolbox,
-    Rcpp (>= 0.12.8)
+    Rcpp
 Suggests:
     knitr,
     rmarkdown,
     testthat,
     venneuler
+LinkingTo:
+    Rcpp (>= 0.12.8),
+    RcppArmadillo (>= 0.7.600.1.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -29,4 +31,3 @@ VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 5.0.1
-LinkingTo: Rcpp, RcppArmadillo (>= 0.7.600.1.0)
