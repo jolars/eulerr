@@ -109,7 +109,7 @@ eulerr <- function(sets, ...) UseMethod("eulerr")
 #' @export
 
 eulerr.default <- function(sets,
-                           cost = c("eulerAPE", "venneuler", "sse"),
+                           cost = c("eulerAPE", "venneuler"),
                            ...) {
   assertthat::assert_that(
     is.numeric(sets),
@@ -173,20 +173,17 @@ eulerr.default <- function(sets,
     USE.NAMES = FALSE
   )
 
-  starting_values <- rescale(as.vector(randtoolbox::sobol(n, 2)),
-                             0, sum(2 * r) - max(r) - min(r))
-
   # Starting layout
   initial_layout <- stats::optim(
-    par = stats::runif(n * 2L, 0L, sqrt(sum(r ^ 2 * pi))),
+    par = stats::runif(n * 2L, 0L, sqrt(sum(r ^ 2L * pi))),
     fn = initial_layout_optimizer,
     gr = initial_layout_gradient,
     distances = distances,
     disjoint = disjoint,
     contained = contained,
     two = two,
-    lower = 0,
-    upper = sqrt(sum(r ^ 2 * pi)),
+    lower = 0L,
+    upper = sqrt(sum(r ^ 2L * pi)),
     method = c("L-BFGS-B")
   )
 
@@ -199,10 +196,9 @@ eulerr.default <- function(sets,
     two = two,
     twos = twos,
     ones = ones,
-    cost = 0,
-    # cost = switch(match.arg(cost),
-    #               eulerAPE = 0,
-    #               venneuler = 1),
+    cost = switch(match.arg(cost),
+                  eulerAPE = 0,
+                  venneuler = 1),
     method = c("Nelder-Mead"),
     control = list(maxit = 500)
   )
@@ -240,7 +236,7 @@ eulerr.default <- function(sets,
 
 eulerr.matrix <- function(sets,
                           by = NULL,
-                          cost = c("eulerAPE", "venneuler", "sse"),
+                          cost = c("eulerAPE", "venneuler"),
                           ...) {
   if (!is.null(ncol(by)))
 
@@ -294,7 +290,7 @@ eulerr.matrix <- function(sets,
 
 eulerr.data.frame <- function(sets,
                               by = NULL,
-                              cost = c("eulerAPE", "venneuler", "sse"),
+                              cost = c("eulerAPE", "venneuler"),
                               ...) {
   eulerr(as.matrix(sets), by = by, cost = cost, ...)
 }
