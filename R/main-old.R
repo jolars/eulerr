@@ -51,44 +51,6 @@
 #'     between the original and fitted areas.}
 #'   \item{stress}{The stress of the solution, computed as the sum of squared
 #'     residuals over the total sum of squares.}
-#' @family eulerr functions
-#' @seealso \code{\link{euler}}
-#' @examples
-#'
-#' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
-#'
-#' # Same result as above
-#' fit2 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3,
-#'                  "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-#'                  "A&B&C" = 0) )
-#'
-#' # Using the matrix method
-#' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-#'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-#' fit3 <- eulerr(mat)
-#'
-#' # Using grouping via the 'by' argument
-#' dat <- data.frame(
-#'   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-#'   B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-#'   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-#'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-#' )
-#'
-#' fit4 <- eulerr(dat[, 1:2], by = dat[, 3:4])
-#'
-#' # A set with no perfect solution
-#' rel <- c("a" = 3491, "b" = 3409, "c" = 3503,
-#'          "a&b" = 120, "a&c" = 114, "b&c" = 132, "a&b&c" = 126)
-#'
-#' # Use the cost function from eulerAPE (the default)
-#' fit5 <- eulerr(rel, cost = "eulerAPE")
-#'
-#' # Use the stress function from venneuler
-#' fit6 <- eulerr(rel, cost = "venneuler")
-#'
-#' par(mfrow = c(1, 2))
-#' plot(fit5); plot(fit6)
 #'
 #' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
 #' Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
@@ -127,7 +89,7 @@ eulerr.default <- function(sets, cost = NULL, ...) {
             of squared errors will be used at all times.")
   }
 
-  euler(combinations = sets, input = "unions")
+  euler(combinations = sets, input = "union")
 }
 
 
