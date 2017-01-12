@@ -87,44 +87,6 @@ and rows representing each observation's set relationships (see examples).
 \item \code{data.frame}: A data.frame that can be converted to a matrix of logicals
 (as in the description above) via \code{\link[base]{as.matrix}}.
 }}
-\examples{
-
-fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
-
-# Same result as above
-fit2 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3,
-                 "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-                 "A&B&C" = 0) )
-
-# Using the matrix method
-mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-             B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-fit3 <- eulerr(mat)
-
-# Using grouping via the 'by' argument
-dat <- data.frame(
-  A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-  B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-  gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-  nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-)
-
-fit4 <- eulerr(dat[, 1:2], by = dat[, 3:4])
-
-# A set with no perfect solution
-rel <- c("a" = 3491, "b" = 3409, "c" = 3503,
-         "a&b" = 120, "a&c" = 114, "b&c" = 132, "a&b&c" = 126)
-
-# Use the cost function from eulerAPE (the default)
-fit5 <- eulerr(rel, cost = "eulerAPE")
-
-# Use the stress function from venneuler
-fit6 <- eulerr(rel, cost = "venneuler")
-
-par(mfrow = c(1, 2))
-plot(fit5); plot(fit6)
-
-}
 \references{
 Wilkinson L. Exact and Approximate Area-Proportional Circular
 Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
@@ -135,8 +97,5 @@ Micallef L, Rodgers P. eulerAPE: Drawing Area-Proportional 3-Venn Diagrams
 Using Ellipses. PLOS ONE [Internet]. 2014 Jul [cited 2016 Dec
 10];9(7):e101717. Available from:
 \url{http://dx.doi.org/10.1371/journal.pone.0101717}
-}
-\seealso{
-\code{\link{euler}}
 }
 
