@@ -7,7 +7,7 @@
 \method{print}{euler}(x, round = 3, ...)
 }
 \arguments{
-\item{x}{Euler diagram specification from \code{\link{eulerr}}.}
+\item{x}{Euler diagram specification from \code{\link{euler}}.}
 
 \item{round}{Number of decimal places to round to.}
 
