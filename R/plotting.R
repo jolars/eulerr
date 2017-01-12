@@ -1,12 +1,12 @@
-#' eulerr plots
+#' euler plots
 #'
-#' Plot Euler diagrams from eulerr using base R graphics.
+#' Plot Euler diagrams from euler using base R graphics.
 #'
 #' If no color is specified to \code{polygon_args}, fills will be colored
 #' using a predefined palette taken from \pkg{qualpal}.
 #'
 #' @param x Specifications for a Euler diagram in the form of a object of class
-#'   \code{'eulerr'}
+#'   \code{'euler'}
 #' @param fill_opacity Opacity for the fill colors between 0 and 1. Values
 #'   beyond this range will be clamped to [0, 1] without warning.
 #' @param polygon_args Arguments for \code{\link[graphics]{polygon}},
@@ -19,11 +19,11 @@
 #' @param \dots Arguments for \code{\link[graphics]{plot}} (that draws the plot
 #'   area).
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
-#'   \code{\link[graphics]{text}} \code{\link{eulerr}}
+#'   \code{\link[graphics]{text}} \code{\link{euler}}
 #'
 #' @examples
-#' fit <- eulerr(c(A = 10, B = 5, "A&B" = 3))
-#' plot(fit, fill_opacity = .7)
+#' fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
+#' plot(fit, fill_opacity = 0.7)
 #'
 #' # Change to italic roman font, remove borders and switch colors
 #' plot(fit,
@@ -38,13 +38,13 @@
 #'
 #' @export
 
-plot.eulerr <- function(x,
-                        fill_opacity = 0.4,
-                        polygon_args = list(),
-                        text_args = list(),
-                        mar = c(2, 2, 2, 2),
-                        counts = FALSE,
-                        ...) {
+plot.euler <- function(x,
+                       fill_opacity = 0.4,
+                       polygon_args = list(),
+                       text_args = list(),
+                       mar = c(2, 2, 2, 2),
+                       counts = FALSE,
+                       ...) {
   assertthat::assert_that(
     length(mar) == 4,
     is.numeric(mar),
@@ -199,18 +199,18 @@ plot.eulerr <- function(x,
 
 }
 
-#' Plot eulerr plot grid
+#' Plot euler plot grid
 #'
-#' Plot a grid of eulerr plots.
+#' Plot a grid of euler plots.
 #'
-#' @param x A grid of euler diagrams of class \code{eulerr_grid} produced by
-#'   \code{\link{eulerr}}.
+#' @param x A grid of euler diagrams of class \code{euler_grid} produced by
+#'   \code{\link{euler}}.
 #' @param main Titles for the euler plots. If not provided, uses grouping
-#'   variables from \code{\link{eulerr}}.
+#'   variables from \code{\link{euler}}.
 #' @param mfrow Number of rows and columns in the grid as a vector of two
 #'   integers: \code{c(columns, rows)}.
-#' @param \dots Arguments to pass forward to \code{\link{plot.eulerr}}.
-#' @seealso \code{\link{plot.eulerr}}, \code{\link{eulerr}},
+#' @param \dots Arguments to pass forward to \code{\link{plot.euler}}.
+#' @seealso \code{\link{plot.euler}}, \code{\link{euler}},
 #'   \code{\link[graphics]{par}}
 #' @examples
 #' dat <- data.frame(
@@ -220,14 +220,14 @@ plot.eulerr <- function(x,
 #'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
 #' )
 #'
-#' e_grid <- eulerr(dat[, 1:2], by = dat[, 3:4])
+#' e_grid <- euler(dat[, 1:2], by = dat[, 3:4])
 #' plot(e_grid)
 #'
 #' # We can provide custom titles for our diagrams
 #'
 #' plot(e_grid, main = c("A", "B", "C", "D"))
 #'
-#' # and use any options that plot.eulerr takes
+#' # and use any options that plot.euler takes
 #'
 #' plot(e_grid, polygon_args = list(col = "transparent"))
 #'
@@ -237,7 +237,7 @@ plot.eulerr <- function(x,
 #'
 #' @export
 
-plot.eulerr_grid <- function(x, main, mfrow, ...) {
+plot.euler_grid <- function(x, main, mfrow, ...) {
   if (!missing(main)) {
     assertthat::assert_that(
       is.character(main),
@@ -277,9 +277,9 @@ plot.eulerr_grid <- function(x, main, mfrow, ...) {
           title <- paste(title, dn[[j]][iii], sep = ", ")
         }
       }
-      plot.eulerr(x[[i]], main = title, ...)
+      plot.euler(x[[i]], main = title, ...)
     } else {
-      plot.eulerr(x[[i]], main = main[i], ...)
+      plot.euler(x[[i]], main = main[i], ...)
     }
   }
 }

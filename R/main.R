@@ -4,7 +4,7 @@
 #' numerical optimization to find exact or approximate solutions to a
 #' specification of set relationships.
 #'
-#' If \code{by} is specified, \code{eulerr} returns a list of euler diagrams
+#' If \code{by} is specified, \code{euler} returns a list of euler diagrams
 #' that can be plotted in facets via a special plot method.
 #'
 #' The fit is optimized using either the cost function used in the
@@ -31,126 +31,119 @@
 #' areas on the original areas that are currently being explored during
 #' optimization.
 #'
-#' @param sets Set relationships as a named numeric vector, matrix, or
+#' @param combinations Set relationships as a named numeric vector, matrix, or
 #'   data.frame. (See the methods (by class) section for details.)
 #' @param by A factor or character vector used in \code{\link[base]{by}} to
 #'   split the data.frame or matrix and compute euler diagrams for each split.
 #' @param cost Cost function to use in optimizing the fit. See details.
 #' @param \dots Currently ignored.
 #'
-#' @return A list object of class 'eulerr' with the following parameters.
+#' @return A list object of class 'euler' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
 #'     circles and their radiuses.}
 #'   \item{original.values}{Set relationships provided by the user.}
-#'   \item{fitted.values}{Set relationships in the solution given by
-#'     \pkg{eulerr}.}
+#'   \item{fitted.values}{Set relationships in the solution.}
 #'   \item{residuals}{Residuals.}
 #'   \item{diagError}{The largest absolute residual in percentage points
 #'     between the original and fitted areas.}
 #'   \item{stress}{The stress of the solution, computed as the sum of squared
 #'     residuals over the total sum of squares.}
 #'
-#' @seealso \code{\link{plot.eulerr}}, \code{\link{print.eulerr}}
+#' @seealso \code{\link{plot.euler}}, \code{\link{print.euler}}
 #'
 #' @examples
-#' fit1 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+#' fit1 <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
 #'
 #' # Same result as above
-#' fit2 <- eulerr(c("A" = 1, "B" = 0.4, "C" = 3,
+#' fit2 <- euler(c("A" = 1, "B" = 0.4, "C" = 3,
 #'                  "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
 #'                  "A&B&C" = 0) )
 #'
 #' # Using the matrix method
-#' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-#'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-#' fit3 <- eulerr(mat)
+# mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
+#              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
+#' fit3 <- euler(mat)
 #'
 #' # Using grouping via the 'by' argument
-#' dat <- data.frame(
-#'   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-#'   B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-#'   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-#'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-#' )
+# dat <- data.frame(
+#   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+#   B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+#   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
+#   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
+# )
 #'
-#' fit4 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+#' fit4 <- euler(dat[, 1:2], by = dat[, 3:4])
 #'
 #' # A set with no perfect solution
 #' rel <- c("a" = 3491, "b" = 3409, "c" = 3503,
 #'          "a&b" = 120, "a&c" = 114, "b&c" = 132, "a&b&c" = 50)
 #'
-#' # Use the cost function from eulerAPE (the default)
-#' fit5 <- eulerr(rel, cost = "eulerAPE")
-#'
-#' # Use the stress function from venneuler
-#' fit6 <- eulerr(rel, cost = "venneuler")
-#'
-#' par(mfrow = c(1, 2))
-#' plot(fit5); plot(fit6)
+#' euler(rel)
 #'
 #' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
 #' Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
 #' Graphics [Internet]. 2012 Feb [cited 2016 Apr 9];18(2):321–31. Available
 #' from: \url{http://doi.org/10.1109/TVCG.2011.56}
 #'
-#' Micallef L, Rodgers P. eulerAPE: Drawing Area-Proportional 3-Venn Diagrams
-#' Using Ellipses. PLOS ONE [Internet]. 2014 Jul [cited 2016 Dec
-#' 10];9(7):e101717. Available from:
-#' \url{http://dx.doi.org/10.1371/journal.pone.0101717}
-#'
 #' @export
 
-eulerr <- function(sets, ...) UseMethod("eulerr")
+euler <- function(combinations, ...) UseMethod("euler")
 
-#' @describeIn eulerr A named numeric vector, with
+#' @describeIn euler A named numeric vector, with
 #'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
 #'   Missing interactions are treated as being 0.
 #'
 #' @export
 
-eulerr.default <- function(sets,
-                           cost = c("eulerAPE", "venneuler"),
-                           ...) {
+euler.default <- function(combinations, input_type = c("disjoints", "unions"), ...) {
   assertthat::assert_that(
-    is.numeric(sets),
-    assertthat::not_empty(sets),
-    length(sets) > 0,
-    all(sets >= 0),
-    assertthat::has_attr(sets, "names"),
-    !any(names(sets) == ""),
-    !any(duplicated(names(sets)))
+    is.numeric(combinations),
+    assertthat::not_empty(combinations),
+    all(combinations >= 0),
+    assertthat::has_attr(combinations, "names"),
+    !any(names(combinations) == ""),
+    !any(duplicated(names(combinations)))
   )
 
-  setnames <- strsplit(names(sets), split = "&", fixed = T)
-  one_sets <- unique(unlist(setnames, use.names = FALSE))
-  n <- length(one_sets)
+  combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
+  setnames <- unique(unlist(combo_names, use.names = FALSE))
+  n <- length(setnames)
 
-  id <- binary_indexing(n)
+  id <- bit_index(n)
+  mode(id) <- "logical"
 
   # Scale the values to fractions
-  scale_factor <- 1 / sum(sets)
-  sets <- sets * scale_factor
+  scale_factor <- 1 / sum(combinations)
+  combinations <- combinations * scale_factor
 
   areas <- double(nrow(id))
   for (i in 1:nrow(id)) {
-    s <- one_sets[id[i, ]]
-    for (j in seq_along(setnames)) {
-      if (setequal(s, setnames[[j]])) {
-        areas[i] <- sets[j]
+    s <- setnames[id[i, ]]
+    for (j in seq_along(combo_names)) {
+      if (setequal(s, combo_names[[j]])) {
+        areas[i] <- combinations[j]
       }
     }
   }
 
-  areas_cut = double(length(areas))
-
-  for (i in rev(seq_along(areas))) {
-    curr_sets <- id[i, ]
-    prev_areas <- rowSums(id[, curr_sets, drop = FALSE]) == sum(curr_sets)
-    areas_cut[i] <- areas[i] - sum(areas_cut[prev_areas])
+  # Decompose or collect set volumes depending on input
+  if (match.arg(input_type) == "disjoints") {
+    areas_disjoint <- areas
+    areas[] <- 0
+    for (i in rev(seq_along(areas))) {
+      prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
+      areas[i] <- sum(areas_disjoint[prev_areas])
+    }
+  } else if (match.arg(input_type) == "unions") {
+    areas_disjoint <- double(length(areas))
+    for (i in rev(seq_along(areas))) {
+      prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
+      areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
+    }
+    if (any(areas_disjoint < 0))
+      stop("Check your set configuration. Your specification resulted in some
+         disjoint areas being set to 0.")
   }
-
-  if (any(areas_cut < 0))
-    stop("Check your set configuration.")
 
   id_sums <- rowSums(id)
   ones <- id_sums == 1
@@ -187,34 +180,37 @@ eulerr.default <- function(sets,
     method = c("L-BFGS-B")
   )
 
-  # Final layout
-  final_layout <- stats::optim(
-    fn = compute_fit,
-    par = c(initial_layout$par, r),
-    areas = areas_cut,
-    id = id,
-    two = two,
-    twos = twos,
-    ones = ones,
-    cost = switch(match.arg(cost),
-                  eulerAPE = 0,
-                  venneuler = 1),
-    method = c("Nelder-Mead"),
-    control = list(maxit = 500)
+  # # Final layout
+  # final_layout <- stats::optim(
+  #   fn = loss_final,
+  #   par = c(initial_layout$par, r),
+  #   id = id,
+  #   areas = areas_disjoint,
+  #   cost = switch(match.arg(cost),
+  #                 venneuler = 0,
+  #                 sse = 1),
+  #   method = c("BFGS"),
+  #   control = list(maxit = 100)
+  # )
+
+  final_layout <- stats::nlm(
+    f = loss_final,
+    p = c(initial_layout$par, r),
+    areas = areas_disjoint
   )
 
-  fit <- return_intersections(final_layout$par, id, two, twos, ones)
+  fit <- return_intersections(final_layout$estimate)
   fit <- fit / scale_factor
 
-  names(fit) <- apply(id, 1, function(x) paste0(one_sets[x], collapse = "&"))
-  orig <- areas_cut / scale_factor
+  names(fit) <- apply(id, 1, function(x) paste0(setnames[x], collapse = "&"))
+  orig <- areas_disjoint / scale_factor
 
   region_error <- abs(fit / sum(fit) - orig / sum(orig))
   diag_error <- max(region_error)
 
   names(orig) <- names(fit)
-  fpar <- matrix(final_layout$par, ncol = 3,
-                 dimnames = list(one_sets, c("x", "y", "r"))) / scale_factor
+  fpar <- matrix(final_layout$estimate, ncol = 3,
+                 dimnames = list(setnames, c("x", "y", "r"))) / scale_factor
 
   structure(
     list(
@@ -224,83 +220,57 @@ eulerr.default <- function(sets,
       residuals = orig - fit,
       region_error = region_error,
       diag_error = diag_error,
-      stress = stress(orig, fit)
+      stress = venneuler_stress(orig, fit)
     ),
-    class = c("eulerr", "list"))
+    class = c("euler", "list"))
 }
 
-#' @describeIn eulerr A matrix of logical vectors with columns representing sets
+#' @describeIn euler A matrix of logical vectors with columns representing sets
 #'   and rows representing each observation's set relationships (see examples).
 #'
 #' @export
 
-eulerr.matrix <- function(sets,
-                          by = NULL,
-                          cost = c("eulerAPE", "venneuler"),
-                          ...) {
-  if (!is.null(ncol(by)))
-
-    if (ncol(by) > 2)
-      stop("Currently, no more than two grouping variables are allowed.")
-
+euler.matrix <- function(combinations, by = NULL, ...) {
   if (!is.null(by)) {
-
-    assertthat::assert_that(
-      any(is.character(by), is.factor(by), is.data.frame(by), is.matrix(by))
-    )
-
-    if (any(is.data.frame(by), is.matrix(by))) {
-
-      assertthat::assert_that(
-        all(
-          vapply(
-            by,
-            function(x) any(is.character(x), is.factor(x)),
-            FUN.VALUE = logical(1)
-          )
-        )
-      )
-
-    } else {
-
-      assertthat::assert_that(any(is.character(by), is.factor(by)))
-
+    vapply(by,
+           function(x) assertthat::assert_that(is.factor(x) || is.character(x)),
+           FUN.VALUE = logical(1))
+    if (is.matrix(by) || is.data.frame(by)) {
+      if (ncol(by) > 2)
+        stop("Currently, no more than two grouping variables are allowed.")
     }
   }
 
   assertthat::assert_that(
-    any(is.logical(sets), is.numeric(sets)),
-    max(sets, na.rm = TRUE) == 1,
-    min(sets, na.rm = TRUE) == 0,
-    !any(grepl("&", colnames(sets), fixed = TRUE))
+    any(is.logical(combinations), is.numeric(combinations)),
+    max(combinations, na.rm = TRUE) == 1,
+    min(combinations, na.rm = TRUE) == 0,
+    !any(grepl("&", colnames(combinations), fixed = TRUE))
   )
 
   if (is.null(by)) {
-    out <- tally_sets(sets)
+    out <- tally_combinations(combinations)
   } else {
-    out <- by(sets, by, tally_sets, simplify = FALSE)
-    class(out) <- c("eulerr_grid", "by")
+    out <- by(combinations, by, tally_combinations, simplify = FALSE)
+    class(out) <- c("euler_grid", "by")
   }
   out
 }
 
-#' @describeIn eulerr A data.frame that can be converted to a matrix of logicals
+#' @describeIn euler A data.frame that can be converted to a matrix of logicals
 #'   (as in the description above) via \code{\link[base]{as.matrix}}.
 #' @export
 
-eulerr.data.frame <- function(sets,
-                              by = NULL,
-                              cost = c("eulerAPE", "venneuler"),
-                              ...) {
-  eulerr(as.matrix(sets), by = by, cost = cost, ...)
+euler.data.frame <- function(combinations, by = NULL, ...) {
+  euler(as.matrix(combinations), by = by, ...)
 }
 
-#' Print eulerr fits
+#' Print euler fits
 #'
 #' Prints a data frame of the original set relationships and the fitted
 #' values as well as diagError and stress statistics.
 #'
-#' @param x Euler diagram specification from \pkg{eulerr}.
+#' @param x Euler diagram specification from \code{\link{euler}}.
 #' @param round Number of decimal places to round to.
 #' @param ... Arguments passed to \code{\link[base]{print.data.frame}}.
 #'
@@ -308,7 +278,7 @@ eulerr.data.frame <- function(sets,
 #'
 #' @export
 
-print.eulerr <- function(x, round = 3, ...) {
+print.euler <- function(x, round = 3, ...) {
   assertthat::assert_that(
     assertthat::is.number(round)
   )
