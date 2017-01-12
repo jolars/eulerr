@@ -115,10 +115,10 @@ plot.euler <- function(x,
     xx_labels <- yy_labels <- double(length(not_zero))
     xx_labels[] <- NA
     yy_labels[] <- NA
-    id <- binary_indexing(n)
+    id <- bit_index(n)
+    mode(id) <- 'logical'
     set_labels <- character(length(not_zero))
   }
-
 
   for (i in seq_along(r)) {
 
