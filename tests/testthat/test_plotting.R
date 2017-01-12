@@ -30,15 +30,9 @@ test_that("normal plotting works without errors", {
   ff <- tempfile()
   png(filename = ff)
 
-  expect_error(
-    plot(
-      f1,
-      fill_opacity = 0.3,
-      text_args = list(font = 4),
-      mar = c(1, 2, 1, 2)
-    ),
-    NA
-  )
+  expect_error(plot(f1, fill_opacity = 0.3, text_args = list(font = 4),
+                    mar = c(1, 2, 1, 2)),
+               NA)
 
   dev.off()
   unlink(ff)
@@ -55,15 +49,9 @@ test_that("normal plotting works without errors", {
   ff <- tempfile()
   png(filename = ff)
 
-  expect_error(
-    plot(
-      f2,
-      polygon_args = list(col = "transparent"),
-      mfrow = c(1, 4),
-      main = c("A", "B", "C", "D")
-    ),
-    NA
-  )
+  expect_error(plot(f2, polygon_args = list(col = "transparent"),
+                    mfrow = c(1, 4), main = c("A", "B", "C", "D")),
+               NA)
 
   dev.off()
   unlink(ff)
