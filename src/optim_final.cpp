@@ -25,7 +25,6 @@ int nck(int n, int k) {
 // (http://stackoverflow.com/questions/9430568/generating-combinations-in-c)
 // [[Rcpp::export]]
 arma::umat bit_index(int n) {
-
   int n_combos = 0;
 
   for (int i = 1; i < n + 1; i++) {
@@ -37,7 +36,6 @@ arma::umat bit_index(int n) {
   for (int i = 1, k = 0; i < n + 1; i++) {
     std::vector<bool> v(n);
     std::fill(v.begin(), v.begin() + i, true);
-
     do {
       for (int j = 0; j < n; ++j) {
         if (v[j]) {out(k, j) = true;}
@@ -45,7 +43,6 @@ arma::umat bit_index(int n) {
       k++;
     } while (std::prev_permutation(v.begin(), v.end()));
   }
-
   return out;
 }
 
@@ -93,17 +90,13 @@ void get_intersections(mat& int_points,
   // Loop over all combinations of circles and their overlaps
   for (uword i = 0, k = 0; i < n - 1; i++) {
     for (uword j = i + 1; j < n; j++) {
-
       double d = sqrt(pow(x(i) - x(j), 2) + pow(y(i) - y(j), 2));
 
       if (d >= r(i) + r(j) || d <= std::abs(r(i) - r(j))) {
-
         // Shed rows of set combinations that do not intersect
         int_points.shed_rows(k, k + 1);
         in_circles.shed_rows(k, k + 1);
-
       } else {
-
         double l = (pow(r(i), 2) - pow(r(j), 2) + pow(d, 2)) / (2 * d);
         double h = sqrt(pow(r(i), 2) - pow(l, 2));
         double ld = l / d;
@@ -139,7 +132,6 @@ void get_intersections(mat& int_points,
       // Drop points that are not inside all circles
       int_points.shed_row(j);
       in_circles.shed_row(j);
-
     } else {
       j++;
     }
@@ -149,7 +141,6 @@ void get_intersections(mat& int_points,
 double polyarc_areas(const mat& int_points,
                      const vec& r,
                      const umat& circles) {
-
   vec x_int = int_points.col(0);
   vec y_int = int_points.col(1);
   uword n = x_int.n_elem;
@@ -161,11 +152,9 @@ double polyarc_areas(const mat& int_points,
   x_int = x_int(ind);
   y_int = y_int(ind);
   umat circles_ord = circles.rows(ind);
-
   double area = 0;
 
   for (uword i = 0, j = n - 1; i < n; i++) {
-
     // Circular segment
     double d = sqrt(pow(x_int(j) - x_int(i), 2) + pow(y_int(j) - y_int(i), 2));
     vec rr = r(set_intersect(circles_ord.row(i), circles_ord.row(j)));
@@ -177,30 +166,22 @@ double polyarc_areas(const mat& int_points,
 
     // Triangular segment
     area += ((x_int(j) + x_int(i)) * (y_int(j) - y_int(i))) / 2;
-
     j = i;
   }
-
   return area;
 }
 
 // [[Rcpp::export]]
 arma::vec return_intersections(arma::vec par) {
-
   uword n_col = par.n_elem / 3;
-
   umat id = bit_index(n_col);
-
   uword n_row = id.n_rows;
-
   vec areas(n_row);
-
   vec x = par.head(n_col);
   vec y = par.subvec(n_col, n_col * 2 - 1);
   vec r = par.tail(n_col);
 
   for (uword i = 0; i < n_row; i++) {
-
     urowvec sets = id.row(i);
     uvec ids = find(sets == 1);
     uword n_sets = accu(sets);
@@ -209,17 +190,14 @@ arma::vec return_intersections(arma::vec par) {
     vec rr = r(ids);
 
     if (n_sets == 1) {
-
       // A single set
       areas(i) = datum::pi * pow(rr(0), 2);
 
     } else if (n_sets == 2) {
-
       // Two sets
       areas(i) = disc_overlap(xx, yy, rr);
 
     } else {
-
       // Three or more sets
       // Get all intersection points that are inside all circles
       uword n_pairs = n_sets * (n_sets - 1) / 2;
@@ -230,7 +208,6 @@ arma::vec return_intersections(arma::vec par) {
       uword n_points = int_points.n_rows;
 
       if (n_points == 0) {
-
         // No overlaps, either disjoint or subset
         uvec is_subset = sqrt(square(xx(rr.index_min()) - xx) +
                               square(yy(rr.index_min()) - yy)) <=
@@ -238,25 +215,18 @@ arma::vec return_intersections(arma::vec par) {
         is_subset(rr.index_min()) = true;
 
         if (all(is_subset)) {
-
           // One set is completely subset
           areas(i) = datum::pi * pow(rr.min(), 2);
-
         } else {
-
           // All sets are disjoint
           areas(i) = 0;
         }
-
       } else if (n_points < 3) {
-
         // Two circles overlapping inside the other circle(s)
         areas(i) = disc_overlap(xx(in_circles.row(0)),
                                 yy(in_circles.row(0)),
                                 rr(in_circles.row(0)));
-
       } else if (n_points > 2) {
-
         // Three or more circles overlapping
         areas(i) = polyarc_areas(int_points, rr, in_circles);
       }
@@ -267,12 +237,10 @@ arma::vec return_intersections(arma::vec par) {
   vec areas_out(n_row, fill::zeros);
 
   for (uword i = n_row; i --> 0; ) {
-
     umat subareas = id.cols(find(id.row(i) == true));
     uvec prev_areas = find(sum(subareas, 1) == subareas.n_cols);
     areas_out(i) = areas(i) - accu(areas_out(prev_areas));
   }
-
   return conv_to< std::vector<double> >::from(clamp(areas_out, 0, datum::inf));
 }
 
