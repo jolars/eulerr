@@ -1,41 +1,53 @@
 #' Area-Proportional Euler Diagrams
 #'
-#' Compute Euler diagrams (a generalization of Venn diagrams) using
+#' Compute euler diagrams (a generalization of venn diagrams) using
 #' numerical optimization to find exact or approximate solutions to a
 #' specification of set relationships.
 #'
 #' If \code{by} is specified, \code{euler} returns a list of euler diagrams
-#' that can be plotted in facets via a special plot method.
+#' that can be plotted as a grid.
 #'
-#' The fit is optimized using either the cost function used in the
-#' eulerAPE software package or the stress statistic of the R package
-#' \pkg{venneuler}. The eulerAPE cost function is defined as
+#' The fit is optimized using sums of squared errors between the areas of the
+#' euler diagram and the user's specification.
 #'
 #' \deqn{%
-#'   \frac{1}{n} \sum_{i=1}^{n} \frac{(y_i - \hat{y}_i) ^ 2}{\hat{y}_i}
+#'   \sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2
 #' }{%
-#'   (1 / n) \sum (orig - fit) / \sum fit
+#'   \sum (orig - fit) ^ 2
 #' }
 #'
 #' where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are currently
-#' explored during optimization. For \code{venneuler}, the stress function is
-#' defined as
+#' explored during optimization.
+#'
+#' Diagnostics are provided by the fit as the stress statistic from \pkg{venneuler}:
 #'
 #' \deqn{%
 #'   \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
 #' }{%
-#'   (\sum (fit - orig) ^ 2) / (\sum orig ^ 2)
+#'   (\sum (fit - original) ^ 2) / (\sum original ^ 2)
 #' }
 #'
 #' where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
 #' areas on the original areas that are currently being explored during
 #' optimization.
 #'
+#' We also return diagError and regionError from \emph{eulerAPE}. RegionError is
+#' computed as
+#'
+#' \deqn{%
+#'   \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
+#' }{%
+#'   max(|fit / \sum  - original / \sum original|)
+#' }
+#'
+#' whereas diagError is the maximum of regionError.
+#'
 #' @param combinations Set relationships as a named numeric vector, matrix, or
 #'   data.frame. (See the methods (by class) section for details.)
 #' @param by A factor or character vector used in \code{\link[base]{by}} to
 #'   split the data.frame or matrix and compute euler diagrams for each split.
-#' @param cost Cost function to use in optimizing the fit. See details.
+#' @param input Whether the input is given as disjoint class combinations
+#'   (\code{disjoint}) or unions (\code{union}).
 #' @param \dots Currently ignored.
 #'
 #' @return A list object of class 'euler' with the following parameters.
@@ -60,17 +72,17 @@
 #'                  "A&B&C" = 0) )
 #'
 #' # Using the matrix method
-# mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-#              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
+#' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
+#'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
 #' fit3 <- euler(mat)
 #'
 #' # Using grouping via the 'by' argument
-# dat <- data.frame(
-#   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-#   B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-#   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-#   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-# )
+#' dat <- data.frame(
+#'   A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+#'   B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+#'   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
+#'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
+#' )
 #'
 #' fit4 <- euler(dat[, 1:2], by = dat[, 3:4])
 #'
@@ -95,7 +107,7 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'
 #' @export
 
-euler.default <- function(combinations, input_type = c("disjoints", "unions"), ...) {
+euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   assertthat::assert_that(
     is.numeric(combinations),
     assertthat::not_empty(combinations),
@@ -127,14 +139,14 @@ euler.default <- function(combinations, input_type = c("disjoints", "unions"), .
   }
 
   # Decompose or collect set volumes depending on input
-  if (match.arg(input_type) == "disjoints") {
+  if (match.arg(input) == "disjoint") {
     areas_disjoint <- areas
     areas[] <- 0
     for (i in rev(seq_along(areas))) {
       prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
       areas[i] <- sum(areas_disjoint[prev_areas])
     }
-  } else if (match.arg(input_type) == "unions") {
+  } else if (match.arg(input) == "union") {
     areas_disjoint <- double(length(areas))
     for (i in rev(seq_along(areas))) {
       prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
@@ -179,19 +191,6 @@ euler.default <- function(combinations, input_type = c("disjoints", "unions"), .
     upper = sqrt(sum(r ^ 2L * pi)),
     method = c("L-BFGS-B")
   )
-
-  # # Final layout
-  # final_layout <- stats::optim(
-  #   fn = loss_final,
-  #   par = c(initial_layout$par, r),
-  #   id = id,
-  #   areas = areas_disjoint,
-  #   cost = switch(match.arg(cost),
-  #                 venneuler = 0,
-  #                 sse = 1),
-  #   method = c("BFGS"),
-  #   control = list(maxit = 100)
-  # )
 
   final_layout <- stats::nlm(
     f = loss_final,
