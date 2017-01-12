@@ -11,5 +11,3 @@ find_sets_containing_points <- function(int_points, x, y, r) {
 dist_point_circle <- function(x, y, h, k, r) {
   abs(sqrt((h - x) ^ 2 + (k - y) ^ 2) - r)
 }
-
-

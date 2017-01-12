@@ -1,56 +1,20 @@
-# Tally set relationships from a matrix of logicals (set interactions)
+# Tally set relationships from a matrix of logicals ----------------------
 
-tally_sets <- function(sets, ...) {
-  for (i in seq_along(sets)) {
-    assertthat::assert_that(
-      any(is.numeric(sets[[i]]), is.logical(sets[[i]]))
-    )
-  }
+tally_combinations <- function(sets, ...) {
   if (!is.matrix(sets)) {
     sets <- as.matrix(sets)
   }
-  setlist <- vector("list", length = ncol(sets))
 
-  for (i in seq_along(colnames(sets))) {
-    setlist[[i]] <- utils::combn(colnames(sets), i)
+  id <- bit_index(ncol(sets))
+  mode(id) <- "logical"
+  tally <- double(nrow(id))
+
+  for (i in 1:nrow(id)) {
+    tally[i] <- sum(apply(sets, 1, function(x) all(x == id[i, ])))
+    names(tally)[i] <- paste0(colnames(sets)[id[i, ]], collapse = "&")
   }
 
-  tally <- double(0L)
-
-  for (i in seq_along(setlist)) {
-    for (j in 1:ncol(setlist[[i]])) {
-      combos <- setlist[[i]][, j]
-      if (i == 1) {
-        intersections <- sets[, combos]
-      } else {
-        intersections <- apply(sets[, combos], 1, all)
-      }
-      sum_intersections <- sum(intersections)
-      names(sum_intersections) <- paste0(combos, collapse = "&")
-      tally <- c(tally, sum_intersections)
-    }
-  }
-  eulerr(tally, ...)
-}
-
-
-# Set up binary indexing --------------------------------------------------
-
-binary_indexing <- function(n) {
-  no_combos <- choose(n, 1L:n)
-  id <- matrix(FALSE, sum(no_combos), n)
-  cum_combos <- c(0, cumsum(no_combos)[-n])
-
-  k <- 1
-  for (i in cum_combos) {
-    permutations <- utils::combn(n, k)
-    for (j in 1:(ncol(permutations))) {
-      id[i + j, permutations[, j]] <- TRUE
-    }
-    k <- k + 1
-  }
-
-  return(id)
+  euler(combinations = tally, ...)
 }
 
 # Faster expand.grid ------------------------------------------------------
@@ -72,5 +36,3 @@ rescale <- function(x, new_min, new_max) {
 col_mins <- function(mat) {
   which.max(mat[(1:ncol(mat) - 1) * nrow(mat) + max.col(t(-mat))])
 }
-
-
