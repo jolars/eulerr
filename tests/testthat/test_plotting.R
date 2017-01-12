@@ -34,9 +34,6 @@ test_that("normal plotting works without errors", {
                     mar = c(1, 2, 1, 2)),
                NA)
 
-  dev.off()
-  unlink(ff)
-
   dat <- data.frame(
     A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
     B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
@@ -45,9 +42,6 @@ test_that("normal plotting works without errors", {
   )
 
   f2 <- euler(dat[, 1:2], by = dat[, 3:4])
-
-  ff <- tempfile()
-  png(filename = ff)
 
   expect_error(plot(f2, polygon_args = list(col = "transparent"),
                     mfrow = c(1, 4), main = c("A", "B", "C", "D")),
