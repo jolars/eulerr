@@ -1,5 +1,10 @@
 # eulerr 1.0.0.9000
 ## Major changes
+* `eulerr()` and its related methods been deprecated and are being replaced by
+`euler()`, which takes different input. Notably, the default is
+now to provide input in the form of disjoint class combinations, rather
+than unions. This is to make the function a drop in replacement for
+`venneuler::venneuler`.
 * Added a `counts` argument to `plot.eulerr` that adds labels for the counts
 of the original set specificiation (#6).
 
@@ -12,7 +17,7 @@ with a faster, geometric algorithm.
 
 ## Bug fixes
 * The previous algorithm incorrectly computed loss from unions of sets. It now
-computes loss from intersections and relative complements.
+computes loss from disjoint class combinations.
 * Added missing row breaks in `print.eulerr`.
 
 # eulerr 1.0.0
