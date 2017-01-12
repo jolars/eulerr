@@ -1,18 +1,18 @@
-context("Test inputs to eulerr")
+context("Test inputs to euler")
 
 test_that("erroneous named numeric vectors returns errors", {
-  expect_error(eulerr(c(A = 1)))
-  expect_error(eulerr(c(1, 2, 3)))
-  expect_error(eulerr(c()))
-  expect_error(eulerr(c(A = FALSE, B = TRUE, C = FALSE)))
-  expect_error(eulerr(c(A = 0, B = 2)))
-  expect_error(eulerr(c(A = 10, A = 5)))
-  expect_error(eulerr(c(A = 10, 4)))
+  expect_error(euler(c(A = 1)))
+  expect_error(euler(c(1, 2, 3)))
+  expect_error(euler(c()))
+  expect_error(euler(c(A = FALSE, B = TRUE, C = FALSE)))
+  expect_error(euler(c(A = 0, B = 2)))
+  expect_error(euler(c(A = 10, A = 5)))
+  expect_error(euler(c(A = 10, 4)))
 })
 
 test_that("erroneous matrix returns errors", {
-  expect_error(eulerr(cbind(A = TRUE, "&asdf" = FALSE)))
-  expect_error(eulerr(cbind(A = "asfh", B = "qwer")))
+  expect_error(euler(cbind(A = TRUE, "&asdf" = FALSE)))
+  expect_error(euler(cbind(A = "asfh", B = "qwer")))
 })
 
 test_that("erroneous input using by argument return errors", {
@@ -24,21 +24,21 @@ test_that("erroneous input using by argument return errors", {
     z = sample(c("asdf", "qwer", size = 100, replace = TRUE))
   )
 
-  expect_error(eulerr(dat[, 1:2], by = dat[, 3:5]))
-  expect_error(eulerr(dat[, 1:2], by = dat[1:50, 3]))
-  expect_error(eulerr(dat[, 1:2], by = list(dat[, 2])))
-  expect_error(eulerr(dat[, 1:2], by = 1:100))
-  expect_error(eulerr(cbind(1:100, 1:100)))
+  expect_error(euler(dat[, 1:2], by = dat[, 3:5]))
+  expect_error(euler(dat[, 1:2], by = dat[1:50, 3]))
+  expect_error(euler(dat[, 1:2], by = list(dat[, 2])))
+  expect_error(euler(dat[, 1:2], by = 1:100))
+  expect_error(euler(cbind(1:100, 1:100)))
 })
 
-test_that("arguments to print.eulerr are specified correctly", {
-  f <- eulerr(c(A = 10.923, B = 5.4, "A&B" = 0.43))
+test_that("arguments to print.euler are specified correctly", {
+  f <- euler(c(A = 10.923, B = 5.4, "A&B" = 0.43))
   expect_error(print(f, round = "hello"))
   expect_error(print(f, round = c(1, 2)))
 })
 
 test_that("normal use returns no errors", {
-  f <- eulerr(c(A = 10.923, B = 5.4, "A&B" = 0.43))
+  f <- euler(c(A = 10.923, B = 5.4, "A&B" = 0.43))
 
   expect_error(print(f, round = 2), NA)
 
@@ -48,9 +48,8 @@ test_that("normal use returns no errors", {
     x = sample(c("Men", "Women"), size = 100, replace = TRUE)
   )
 
-  expect_error(eulerr(dat[, 1:2]), NA)
-  expect_error(eulerr(as.matrix(dat[, 1:2])), NA)
-
-  expect_error(eulerr(dat[, 1:2], by = dat[, 3]), NA)
-  expect_error(print(eulerr(dat[, 1:2], by = dat[, 3])), NA)
+  expect_error(euler(dat[, 1:2]), NA)
+  expect_error(euler(as.matrix(dat[, 1:2])), NA)
+  expect_error(euler(dat[, 1:2], by = dat[, 3]), NA)
+  expect_error(print(euler(dat[, 1:2], by = dat[, 3])), NA)
 })

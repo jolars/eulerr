@@ -6,5 +6,4 @@ test_that("that find_sets_containing_points function works", {
   expect_equal(sum(res), 4)
 
   expect_equal(dist_point_circle(-4, -11, 4, -5, 7), 3)
-
 })

@@ -1,7 +1,7 @@
 context("Test plot functions")
 
-test_that("erroneous input to plot.eulerr return errors", {
-  f <- eulerr(c(A = 5, B = 2))
+test_that("erroneous input to plot.euler return errors", {
+  f <- euler(c(A = 5, B = 2))
   expect_error(plot(f, mar = c(2, 2, 2)))
   expect_error(plot(f, mar = "Hello"))
   expect_error(plot(f, fill_opacity = "f"))
@@ -10,7 +10,7 @@ test_that("erroneous input to plot.eulerr return errors", {
   expect_error(plot(f, text_args = 1))
 })
 
-test_that("erroneous input to plot.eulerr_grid return errors", {
+test_that("erroneous input to plot.euler_grid return errors", {
   dat <- data.frame(
     A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
     B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
@@ -18,7 +18,7 @@ test_that("erroneous input to plot.eulerr_grid return errors", {
     y = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE),
     z = sample(c("asdf", "qwer", size = 100, replace = TRUE))
   )
-  f2 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+  f2 <- euler(dat[, 1:2], by = dat[, 3:4])
   expect_error(plot(f2, mfrow = c(1, 2, 3)))
   expect_error(plot(f2, mfrow = "asdf"))
   expect_error(plot(f2, main = 1))
@@ -26,7 +26,7 @@ test_that("erroneous input to plot.eulerr_grid return errors", {
 })
 
 test_that("normal plotting works without errors", {
-  f1 <- eulerr(c("A" = 10, "B" = 5, "A&B" = 2))
+  f1 <- euler(c("A" = 10, "B" = 5, "A&B" = 2))
   ff <- tempfile()
   png(filename = ff)
 
@@ -50,7 +50,7 @@ test_that("normal plotting works without errors", {
     nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
   )
 
-  f2 <- eulerr(dat[, 1:2], by = dat[, 3:4])
+  f2 <- euler(dat[, 1:2], by = dat[, 3:4])
 
   ff <- tempfile()
   png(filename = ff)
