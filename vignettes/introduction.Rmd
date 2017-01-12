@@ -33,9 +33,7 @@ along with the refinements that Ben Fredrickson has presented on his
 [blog](http://www.benfrederickson.com/) and made available in his javascript
 [venn.js](https://github.com/benfred/venn.js).
 
-venneuler, however, is written in java, preventing R users from 
-browsing the source code (unless they are also literate in java) or
-contributing. Furthermore, venneuler is known to produce imperfect output for
+venneuler, however, is known to produce imperfect output for
 set configurations that have perfect solutions. Consider,
 for instance, the following example in which the intersection between `A` and
 `B` is both needless and unwanted.
@@ -57,7 +55,9 @@ optimizers, and returns statistics featured in `venneuler` and `eulerAPE`.
 
 At the time of writing, it is possible to provide input to `eulerr` as either
 
-* a named numeric vector or
+* a named numeric vector with set combinations as
+    - disjoint set combinations or
+    - unions
 * a matrix of logicals with columns representing sets and rows the set
 relationships for each observation.
 
@@ -65,9 +65,9 @@ relationships for each observation.
 library(eulerr)
 
 # Input in the form of a named numeric vector
-fit1 <- eulerr(c("A" = 25, "B" = 5, "C" = 5,
-                 "A&B" = 5, "A&C" = 5, "B&C" = 3,
-                 "A&B&C" = 3))
+fit1 <- euler(c("A" = 25, "B" = 5, "C" = 5,
+                "A&B" = 5, "A&C" = 5, "B&C" = 3,
+                "A&B&C" = 3))
 
 # Input as a matrix of logicals
 set.seed(1)
@@ -76,7 +76,7 @@ mat <- cbind(
   B = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
   C = sample(c(TRUE, FALSE, FALSE, FALSE), size = 50, replace = TRUE)
 )
-fit2 <- eulerr(mat)
+fit2 <- euler(mat)
 ```
 
 ### Fit
@@ -91,7 +91,7 @@ or directly access and plot the residuals.
 
 ```{r residual_plot, fig.cap='Residuals for the eulerr fit.'}
 # Cleveland dot plot of the residuals
-graphics::dotchart(resid(fit2))
+dotchart(resid(fit2))
 abline(v = 0, lty = 3)
 ```
 
@@ -118,32 +118,27 @@ The starting configuration is based solely on the two-way relationships of the
 sets so has to be optimized for most set relationships. We try to optimize the 
 coordinates and radii of the solution with the objective of producing a diagram
 that is as *accurate* as possible. In this context, however, accuracy is an
-ambigious objective that has produced a slew of proposals. In eulerr, the user
-can choose between the cost function of eulerAPE (the default) (@micallef2014)
-and the stress statistic of venneuler (@wilkinson_exact_2012).
+ambigious objective that has produced a slew of proposals. eulerr uses
+the sums of squares as the target loss function to minimize 
 
-eulerAPE's cost function is computed by  
-
-$$\frac{1}{n} \sum_{i=1}^{n} \frac{(y_i - \hat{y}_i) ^ 2}{\hat{y}_i}$$
-
-where $\hat{y}_i$ in an estimate of $y_i$ that is explored during
-optimization and $n$ is the number of set relationships. venneuler's stress
-function is defined as
-
-$$\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}$$
-
-where $\hat{y}_i$ is an OLS estimate from the regression of the fitted
-areas on the original areas that is being explored during optimization.
+$$\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2$$
+where $\hat{y}$ is the fitted disjoint areas.
 
 ### Goodness-of-fit
 
-For goodness-of-fit measures, we the same stress statistic from venneuler
-that was used during optimization (@wilkinson_exact_2012) and the diagError
-statistic from eulerAPE (@micallef2014) which is
+For goodness-of-fit measures, we the stress statistic from venneuler
+(@wilkinson_exact_2012)
+
+$$\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}$$
+where $\hat{y}_i$ is an ordinary least squares estimate from the regression of
+the fitted areas on the original areas that is being explored during
+optimization.
+
+We also provide the diagError statistic from eulerAPE (@micallef2014):
 
 $$ \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i} \right|$$
-Our diagError is ```r round(fit2$diag_error, 4)``` and our stress is
-```r round(fit2$stress, 4)```, suggesting that the fit is accurate.
+In our example, the diagError is ```r round(fit2$diag_error, 4)``` and our
+stress is ```r round(fit2$stress, 4)```, suggesting that the fit is accurate.
 
 We can now be confident that eulerr provides a reasonable representation of
 our input. Were it otherwise, we would do best to stop here and look for another
