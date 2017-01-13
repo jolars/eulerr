@@ -251,7 +251,7 @@ euler.matrix <- function(combinations, by = NULL, ...) {
     out <- tally_combinations(combinations)
   } else {
     out <- by(combinations, by, tally_combinations, simplify = FALSE)
-    class(out) <- c("euler_grid", "by")
+    class(out) <- c("by", "euler", "list")
   }
   out
 }
@@ -291,6 +291,6 @@ print.euler <- function(x, round = 3, ...) {
 
   print(round(out, digits = round), ...)
   cat("\n")
-  cat("diagError: ", round(x$diag_error, digits = round), "\n")
+  cat("diag_error: ", round(x$diag_error, digits = round), "\n")
   cat("stress:    ", round(x$stress, digits = round), "\n")
 }

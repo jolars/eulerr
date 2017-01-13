@@ -5,7 +5,8 @@
 \title{euler plots}
 \usage{
 \method{plot}{euler}(x, fill_opacity = 0.4, polygon_args = list(),
-  text_args = list(), mar = c(2, 2, 2, 2), counts = FALSE, ...)
+  text_args = list(), mar = c(2, 2, 2, 2), counts = FALSE, main, mfrow,
+  ...)
 }
 \arguments{
 \item{x}{Specifications for a Euler diagram in the form of a object of class
@@ -49,6 +50,29 @@ plot(fit,
 plot(fit,
      polygon_args = list(lty = c("solid", "dotted"), col = "transparent"),
      text_args = list(cex = 2, font = 2))
+
+# Plot a grid of euler plots
+dat <- data.frame(
+  A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+  B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+  gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
+  nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
+)
+
+e_grid <- euler(dat[, 1:2], by = dat[, 3:4])
+plot(e_grid)
+
+# We can provide custom titles for our diagrams
+
+plot(e_grid, main = c("A", "B", "C", "D"))
+
+# and use any options that plot.euler takes
+
+plot(e_grid, polygon_args = list(col = "transparent"))
+
+# It is also possible to change grid layout
+
+plot(e_grid, mfrow = c(1, 4))
 
 }
 \seealso{

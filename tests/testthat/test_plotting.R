@@ -35,8 +35,8 @@ test_that("normal plotting works without errors", {
                NA)
 
   dat <- data.frame(
-    A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-    B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+    Liberal = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+    Conservative = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
     gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
     nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
   )
