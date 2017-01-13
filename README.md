@@ -5,9 +5,9 @@ eulerr
 
 [![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 
-**eulerr** generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) with circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not). That is, depending on input, eulerr will sometimes produce Venn diagrams but sometimes not.
+**eulerr** generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) with circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, eulerr sometimes produce venn diagrams and sometimes not.
 
-With three or more sets intersecting, exact euler diagrams are often impossible. For such cases eulerr attempts to provide the best approximation possible by numerically tuning the circles' positions and radiuses so that the sum of squared errors is minimized.
+With three or more sets intersecting, exact euler diagrams are often impossible. For such cases eulerr attempts to provide a good approximation by numerically tuning the circles' positions and radiuses so that the sum of squared errors is minimized.
 
 When solutions are approximate, residuals and error statistics are provided to assess whether the resulting diagram can be trusted.
 
@@ -71,7 +71,7 @@ eulerr is open source software, licensed under [GPL-3](LICENSE).
 Versioning
 ----------
 
-Version numbers are based on the principles of [semantic versioning](http://semver.org).
+eulerr uses [semantic versioning](http://semver.org).
 
 Code of conduct
 ---------------
