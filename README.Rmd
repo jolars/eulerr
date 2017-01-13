@@ -55,8 +55,7 @@ library(eulerr)
 sets <- c("A" = 10, "B" = 9, "C" = 4,
           "A&B" = 2, "A&C" = 3, "B&C" = 3,
           "A&B&C" = 2)
-set.seed(1)
-fit <- eulerr(sets)
+fit <- euler(sets)
 ```
 
 We can inspect the solution
@@ -65,9 +64,9 @@ We can inspect the solution
 fit
 ```
 
-and plot it using `plot`.
+and plot it
 
-```{r plot_methods, eval = FALSE}
+```{r plot_methods}
 plot(fit)
 ```
 

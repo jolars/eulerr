@@ -34,8 +34,7 @@ library(eulerr)
 sets <- c("A" = 10, "B" = 9, "C" = 4,
           "A&B" = 2, "A&C" = 3, "B&C" = 3,
           "A&B&C" = 2)
-set.seed(1)
-fit <- eulerr(sets)
+fit <- euler(sets)
 ```
 
 We can inspect the solution
@@ -43,23 +42,25 @@ We can inspect the solution
 ``` r
 fit
 #>       original fitted residuals region_error
-#> A           10  9.999     0.001        0.000
-#> B            9  8.999     0.001        0.000
-#> C            4  4.013    -0.013        0.000
-#> A&B          2  2.026    -0.026        0.001
-#> A&C          3  2.994     0.006        0.000
-#> B&C          3  2.994     0.006        0.000
-#> A&B&C        2  1.975     0.025        0.001
+#> A           10 10.044    -0.044        0.005
+#> B            9  9.050    -0.050        0.005
+#> C            4  4.128    -0.128        0.005
+#> A&B          2  1.601     0.399        0.011
+#> A&C          3  2.719     0.281        0.007
+#> B&C          3  2.716     0.284        0.008
+#> A&B&C        2  2.324    -0.324        0.011
 #> 
-#> diagError:  0.001 
-#> stress:     0
+#> diagError:  0.011 
+#> stress:     0.002
 ```
 
-and plot it using `plot`.
+and plot it
 
 ``` r
 plot(fit)
 ```
+
+![](README-plot_methods-1.png)
 
 Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html) for usage details.
 
