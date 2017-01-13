@@ -16,6 +16,8 @@
 #' @param mar Margins for the plot area, set via\code{par()[["mar"]]}.
 #' @param counts Plot counts for each unique section of the diagram. Thse are
 #'   the values from the original set specification.
+#' @param main Title for the euler diagram(s).
+#' @param mfrow Layout for the grid if a list of euler diagrams is provided.
 #' @param \dots Arguments for \code{\link[graphics]{plot}} (that draws the plot
 #'   area).
 #' @seealso \code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
@@ -60,7 +62,6 @@
 #' plot(e_grid, mfrow = c(1, 4))
 #'
 #' @export
-
 plot.euler <- function(x,
                        fill_opacity = 0.4,
                        polygon_args = list(),
@@ -109,7 +110,7 @@ plot.euler <- function(x,
             title <- paste(title, dn[[j]][iii], sep = ", ")
           }
         }
-        # Recurse and plot each separate euler diagram
+        # Recurse and plot each individual euler diagram
         plot(x[[i]], main = title, ...)
       } else {
         plot(x[[i]], main = main[i], ...)
