@@ -31,10 +31,9 @@ Usage
 
 ``` r
 library(eulerr)
-sets <- c("A" = 10, "B" = 9, "C" = 4,
-          "A&B" = 2, "A&C" = 3, "B&C" = 3,
-          "A&B&C" = 2)
-fit <- euler(sets)
+fit <- euler(c("A" = 10, "B" = 9, "C" = 4,
+               "A&B" = 2, "A&C" = 3, "B&C" = 3,
+               "A&B&C" = 2))
 ```
 
 We can inspect the solution
@@ -60,7 +59,7 @@ and plot it
 plot(fit)
 ```
 
-![](README-plot_methods-1.svg)
+![](README-plot_method-1.png)
 
 Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html) for usage details.
 

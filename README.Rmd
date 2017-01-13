@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "README-",
-  dev = 'svg'
+  dev = 'CairoPNG'
 )
 ```
 
@@ -51,12 +51,11 @@ devtools::install_github("jolars/eulerr")
 
 ## Usage
 
-```{r sets}
+```{r specification}
 library(eulerr)
-sets <- c("A" = 10, "B" = 9, "C" = 4,
-          "A&B" = 2, "A&C" = 3, "B&C" = 3,
-          "A&B&C" = 2)
-fit <- euler(sets)
+fit <- euler(c("A" = 10, "B" = 9, "C" = 4,
+               "A&B" = 2, "A&C" = 3, "B&C" = 3,
+               "A&B&C" = 2))
 ```
 
 We can inspect the solution
@@ -67,7 +66,7 @@ fit
 
 and plot it
 
-```{r plot_methods}
+```{r plot_method}
 plot(fit)
 ```
 
