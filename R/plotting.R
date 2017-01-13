@@ -111,9 +111,9 @@ plot.euler <- function(x,
           }
         }
         # Recurse and plot each individual euler diagram
-        plot(x[[i]], main = title, ...)
+        graphics::plot(x[[i]], main = title, ...)
       } else {
-        plot(x[[i]], main = main[i], ...)
+        graphics::plot(x[[i]], main = main[i], ...)
       }
     }
 

@@ -19,69 +19,28 @@ euler(combinations, ...)
 \item{combinations}{Set relationships as a named numeric vector, matrix, or
 data.frame. (See the methods (by class) section for details.)}
 
-\item{input}{Whether the input is given as disjoint class combinations
+\item{input}{The type of input: disjoint class combinations
 (\code{disjoint}) or unions (\code{union}).}
 
-\item{by}{A factor or character vector used in \code{\link[base]{by}} to
-split the data.frame or matrix and compute euler diagrams for each split.}
+\item{by}{A factor or character matrix to be used in \code{\link[base]{by}} to
+split the data.frame or matrix of set combinations.}
 
 \item{\dots}{Currently ignored.}
 }
 \value{
 A list object of class 'euler' with the following parameters.
   \item{coefficients}{A matrix of x and y coordinates for the centers of the
-    circles and their radiuses.}
-  \item{original.values}{Set relationships provided by the user.}
-  \item{fitted.values}{Set relationships in the solution.}
-  \item{residuals}{Residuals.}
-  \item{diagError}{The largest absolute residual in percentage points
-    between the original and fitted areas.}
-  \item{stress}{The stress of the solution, computed as the sum of squared
-    residuals over the total sum of squares.}
+  circles and their radiuses.} \item{original.values}{Set relationships
+  provided by the user.} \item{fitted.values}{Set relationships in the
+  solution.} \item{residuals}{Residuals.} \item{diagError}{The largest
+  absolute residual in percentage points between the original and fitted
+  areas.} \item{stress}{The stress of the solution, computed as the sum of
+  squared residuals over the total sum of squares.}
 }
 \description{
-Compute euler diagrams (a generalization of venn diagrams) using
-numerical optimization to find exact or approximate solutions to a
-specification of set relationships.
-}
-\details{
-If \code{by} is specified, \code{euler} returns a list of euler diagrams
-that can be plotted as a grid.
-
-The fit is optimized using sums of squared errors between the areas of the
-euler diagram and the user's specification.
-
-\deqn{%
-  \sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2
-}{%
-  \sum (orig - fit) ^ 2
-}
-
-where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are currently
-explored during optimization.
-
-Diagnostics are provided by the fit as the stress statistic from \pkg{venneuler}:
-
-\deqn{%
-  \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
-}{%
-  (\sum (fit - original) ^ 2) / (\sum original ^ 2)
-}
-
-where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
-areas on the original areas that are currently being explored during
-optimization.
-
-We also return diagError and regionError from \emph{eulerAPE}. RegionError is
-computed as
-
-\deqn{%
-  \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
-}{%
-  max(|fit / \sum  - original / \sum original|)
-}
-
-whereas diagError is the maximum of regionError.
+Fit euler diagrams (a generalization of venn diagrams) using numerical
+optimization to find exact or approximate solutions to a specification of set
+relationships.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -110,8 +69,8 @@ fit3 <- euler(mat)
 
 # Using grouping via the 'by' argument
 dat <- data.frame(
-  A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-  B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+  A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+  B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
 )
@@ -119,17 +78,21 @@ dat <- data.frame(
 fit4 <- euler(dat[, 1:2], by = dat[, 3:4])
 
 # A set with no perfect solution
-rel <- c("a" = 3491, "b" = 3409, "c" = 3503,
-         "a&b" = 120, "a&c" = 114, "b&c" = 132, "a&b&c" = 50)
-
-euler(rel)
+euler(c("a" = 3491, "b" = 3409, "c" = 3503,
+        "a&b" = 120, "a&c" = 114, "b&c" = 132,
+        "a&b&c" = 50))
 
 }
 \references{
 Wilkinson L. Exact and Approximate Area-Proportional Circular
-Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
-Graphics [Internet]. 2012 Feb [cited 2016 Apr 9];18(2):321–31. Available
-from: \url{http://doi.org/10.1109/TVCG.2011.56}
+  Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
+  Graphics [Internet]. 2012 Feb [cited 2016 Apr 9];18(2):321–31. Available
+  from: \url{http://doi.org/10.1109/TVCG.2011.56}
+
+  Micallef L, Rodgers P. eulerAPE: Drawing Area-Proportional 3-Venn Diagrams
+  Using Ellipses. PLOS ONE [Internet]. 2014 Jul [cited 2016 Dec
+  10];9(7):e101717. Available from:
+  \url{http://dx.doi.org/10.1371/journal.pone.0101717}
 }
 \seealso{
 \code{\link{plot.euler}}, \code{\link{print.euler}}

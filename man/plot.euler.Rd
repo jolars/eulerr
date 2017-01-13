@@ -26,6 +26,10 @@ which is used to draw the text.}
 \item{counts}{Plot counts for each unique section of the diagram. Thse are
 the values from the original set specification.}
 
+\item{main}{Title for the euler diagram(s).}
+
+\item{mfrow}{Layout for the grid if a list of euler diagrams is provided.}
+
 \item{\dots}{Arguments for \code{\link[graphics]{plot}} (that draws the plot
 area).}
 }
