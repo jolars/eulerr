@@ -162,12 +162,13 @@ plot.euler <- function(x,
 
     # Use color palette from qualpalr if none was specified.
     if (is.null(polygon_args$col)) {
-      polygon_args$col <- c("#6ACB69", "#C96CC6", "#76AACE", "#CF9D74", "#E4CCDD",
-                            "#C0EADF", "#6A71CC", "#E0E1A8", "#C86D7A", "#AFA1DD",
-                            "#C19DA0", "#77BDA5", "#C6D4E8", "#E6CCB9", "#E1A7DC",
-                            "#B0C2A3", "#C8B778", "#8BCDD7", "#9F79CC", "#7391CE")
+      polygon_args$col <- c(
+        "#6ACB69", "#C96CC6", "#76AACE", "#CF9D74", "#E4CCDD",
+        "#C0EADF", "#6A71CC", "#E0E1A8", "#C86D7A", "#AFA1DD",
+        "#C19DA0", "#77BDA5", "#C6D4E8", "#E6CCB9", "#E1A7DC",
+        "#B0C2A3", "#C8B778", "#8BCDD7", "#9F79CC", "#7391CE"
+      )
     }
-
     polygon_args$col <-
       grDevices::adjustcolor(polygon_args$col, alpha = fill_opacity)
     polygon_args$x <- x_coords
@@ -220,12 +221,14 @@ plot.euler <- function(x,
                                  MoreArgs = list(h = X, k = Y, r = r),
                                  SIMPLIFY = FALSE, USE.NAMES = FALSE)
 
-            lab_cp <- matrix(unlist(lab_cplist, use.names = FALSE), nrow = n)
+            if (assertthat::not_empty(lab_cplist)) {
+              lab_cp <- matrix(unlist(lab_cplist, use.names = FALSE), nrow = n)
 
-            if (ncol(lab_cp) > 0) {
-              labmax <- col_mins(lab_cp)
-              xx_labels[j] <- xx_lab[labmax]
-              yy_labels[j] <- yy_lab[labmax]
+              if (ncol(lab_cp) > 0) {
+                labmax <- col_mins(lab_cp)
+                xx_labels[j] <- xx_lab[labmax]
+                yy_labels[j] <- yy_lab[labmax]
+              }
             }
           }
         }
