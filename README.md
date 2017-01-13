@@ -60,7 +60,7 @@ and plot it
 plot(fit)
 ```
 
-![](README-plot_methods-1.png)
+![](README-plot_methods-1.svg)
 
 Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html) for usage details.
 
