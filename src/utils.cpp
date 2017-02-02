@@ -22,7 +22,6 @@ IntegerMatrix choose_two(IntegerVector x) {
 
 // [[Rcpp::export]]
 NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d) {
-
   NumericVector r1e = pow(r1, 2);
   NumericVector r2e = pow(r2, 2);
   NumericVector de = pow(d, 2);

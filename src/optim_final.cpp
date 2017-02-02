@@ -17,7 +17,6 @@ int nck(int n, int k) {
     result *= (n - i + 1);
     result /= i;
   }
-
   return result;
 }
 
@@ -43,15 +42,14 @@ arma::umat bit_index(int n) {
       k++;
     } while (std::prev_permutation(v.begin(), v.end()));
   }
+
   return out;
 }
 
 uvec set_intersect(const urowvec& x, const urowvec& y) {
   std::vector<int> out;
-
   std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
                         std::back_inserter(out));
-
   return conv_to<uvec>::from(out);
 }
 
@@ -117,7 +115,6 @@ void get_intersections(mat& int_points,
       }
     }
   }
-
   uword nrows = int_points.n_rows;
 
   for (uword i = 0, j = 0; i < nrows; i++) {
@@ -168,6 +165,7 @@ double polyarc_areas(const mat& int_points,
     area += ((x_int(j) + x_int(i)) * (y_int(j) - y_int(i))) / 2;
     j = i;
   }
+
   return area;
 }
 
@@ -232,7 +230,6 @@ arma::vec return_intersections(arma::vec par) {
       }
     }
   }
-
   // Decompose unions into unique sections
   vec areas_out(n_row, fill::zeros);
 
@@ -241,22 +238,20 @@ arma::vec return_intersections(arma::vec par) {
     uvec prev_areas = find(sum(subareas, 1) == subareas.n_cols);
     areas_out(i) = areas(i) - accu(areas_out(prev_areas));
   }
+
   return conv_to< std::vector<double> >::from(clamp(areas_out, 0, datum::inf));
 }
 
 // [[Rcpp::export]]
 double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
-
   double sst = accu(square(fit));
   double slope = accu(areas % fit) / accu(square(areas));
   double sse = accu(square(fit - areas * slope));
-
   return sse / sst;
 }
 
 // [[Rcpp::export]]
 double loss_final(const arma::vec par, const arma::vec areas) {
-
   // Sum of squared errors
   return accu(square(areas - return_intersections(par)));
 }
