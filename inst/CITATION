@@ -1,0 +1,15 @@
+citHeader("To cite eulerr in publications, please use")
+
+citEntry(entry = "Manual",
+  title        = "{eulerr}: Area-Proportional Euler Diagrams",
+  author       = personList(as.person("Johan Larsson")),
+  year         = "2016",
+  note         = "R package version 1.0.0",
+  url          = "https://cran.r-project.org/package=eulerr",
+
+  textVersion  =
+  paste("Johan Larsson (2016).",
+        "eulerr: Area-Proportional Euler Diagrams",
+        "R package version 1.0.0",
+        "URL https://cran.r-project.org/package=eulerr")
+)
