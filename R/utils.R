@@ -36,3 +36,19 @@ rescale <- function(x, new_min, new_max) {
 col_mins <- function(mat) {
   which.max(mat[(1:ncol(mat) - 1) * nrow(mat) + max.col(t(-mat))])
 }
+
+# Center circles on coordinate plane --------------------------------------
+
+center_circles <- function(pars) {
+  x <- pars[, 1]
+  y <- pars[, 2]
+  r <- pars[, 3]
+
+  xlim <- range(c(x + r, x - r))
+  ylim <- range(c(y + r, y - r))
+
+  pars[, 1] <- x + abs(xlim[1] - xlim[2]) / 2 - xlim[2]
+  pars[, 2] <- y + abs(ylim[1] - ylim[2]) / 2 - ylim[2]
+
+  pars
+}
