@@ -53,3 +53,7 @@ test_that("normal use returns no errors", {
   expect_error(euler(dat[, 1:2], by = dat[, 3]), NA)
   expect_error(print(euler(dat[, 1:2], by = dat[, 3])), NA)
 })
+
+test_that("impossible configurations throw errors", {
+  expect_error(euler(c(A = 10, B = 14, "A&B" = 15), input = "union"))
+})
