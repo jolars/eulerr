@@ -30,17 +30,56 @@ split the data.frame or matrix of set combinations.}
 \value{
 A list object of class 'euler' with the following parameters.
   \item{coefficients}{A matrix of x and y coordinates for the centers of the
-  circles and their radiuses.} \item{original.values}{Set relationships
-  provided by the user.} \item{fitted.values}{Set relationships in the
-  solution.} \item{residuals}{Residuals.} \item{diagError}{The largest
-  absolute residual in percentage points between the original and fitted
-  areas.} \item{stress}{The stress of the solution, computed as the sum of
-  squared residuals over the total sum of squares.}
+    circles and their radiuses.}
+  \item{original.values}{Set relationships provided by the user.}
+  \item{fitted.values}{Set relationships in the solution.}
+  \item{residuals}{Residuals.}
+  \item{diag_error}{The largest absolute residual in percentage points
+    between the original and fitted areas.}
+  \item{stress}{The stress of the solution, computed as the sum of squared
+    residuals over the total sum of squares.}
 }
 \description{
 Fit euler diagrams (a generalization of venn diagrams) using numerical
 optimization to find exact or approximate solutions to a specification of set
 relationships.
+}
+\details{
+If \code{by} is specified, \code{euler} returns a list of diagrams separated
+by the categorical variables in \code{by}.
+
+The fit minimizes the sums of squared residuals between the areas in the
+euler diagram and the user's initial specification (as disjoint class
+combinations),
+
+\deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2 }{\sum (orig - fit) ^ 2}
+
+where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are
+explored during optimization.
+
+Diagnostics are provided by the fit as the stress statistic from
+\pkg{venneuler}:
+
+\deqn{
+  \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
+  }{
+  \sum (fit - original) ^ 2 / \sum original ^ 2
+}
+
+where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
+areas on the original areas that are currently being explored during
+optimization.
+
+We also return \code{diag_error} and \code{region_error} from
+\emph{eulerAPE}. region_error is computed as
+
+\deqn{
+  \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|
+  }{
+  max|fit / \sum fit  - original / \sum original|
+}
+
+whereas diagError is the maximum of regionError.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -59,8 +98,8 @@ fit1 <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
 
 # Same result as above
 fit2 <- euler(c("A" = 1, "B" = 0.4, "C" = 3,
-                 "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-                 "A&B&C" = 0) )
+                "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
+                "A&B&C" = 0) )
 
 # Using the matrix method
 mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
