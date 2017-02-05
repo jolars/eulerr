@@ -15,6 +15,9 @@ Imports:
     stats,
     graphics,
     assertthat,
+    grid,
+    lattice,
+    latticeExtra,
     Rcpp
 Suggests:
     knitr,
