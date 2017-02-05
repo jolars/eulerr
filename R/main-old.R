@@ -86,7 +86,8 @@ eulerr.default <- function(sets, cost = NULL, ...) {
 
   if (!missing(cost)) {
     warning("The option to choose cost function has been deprecated and sums
-            of squared errors will be used at all times.")
+            of squared errors will be used at all times.",
+            call. = FALSE)
   }
 
   euler(combinations = sets, input = "union")
@@ -100,7 +101,8 @@ eulerr.default <- function(sets, cost = NULL, ...) {
 eulerr.matrix <- function(sets, by = NULL, cost = NULL, ...) {
   if (!is.null(ncol(by)))
     if (ncol(by) > 2)
-      stop("Currently, no more than two grouping variables are allowed.")
+      stop("Currently, no more than two grouping variables are allowed.",
+           .call = FALSE)
 
   if (!is.null(by)) {
     assertthat::assert_that(

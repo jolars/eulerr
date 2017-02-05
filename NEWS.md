@@ -1,4 +1,4 @@
-# eulerr 1.0.0.9000
+# eulerr 1.1.0
 ## Major changes
 * `eulerr()` and its related methods been deprecated and are being replaced by
 `euler()`, which takes slightly different input. Notably, the default is
@@ -18,10 +18,11 @@ diagram.
 * Added version requirement for RcppArmadillo.
 * Dropped dependency on MASS for computing label placement, replacing it
 with a faster, geometric algorithm.
-* Added additional assertions to prevent erroneous use.
 * Color palettes in `plot.euler()` now chooses colors adapted to color vision
 deficiency (deuteranopia). With increasingly large numbers of sets, this 
 adaptation is relaxed to make sure that colors are kept visually distinct.
+* `euler()` now uses `nlm()` instead of `optim(method = "Nelder-Mead")` for
+its final optimization.
 
 ## Bug fixes
 * The previous algorithm incorrectly computed loss from unions of sets. It now
