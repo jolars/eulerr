@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{plot.euler}
 \alias{plot.euler}
-\title{euler plots}
+\title{Plot euler diagrams}
 \usage{
 \method{plot}{euler}(x, fill = NULL, fill_opacity = 0.4, border = "black",
   lty = 1, lwd = 1, fontface = "plain", cex = 1, labels = NULL,
@@ -59,7 +59,7 @@ Invisibly returns a trellis object, which can be updated or modified
   as usual.
 }
 \description{
-Plot Euler diagrams with trellis graphics from \pkg{lattice}. This function
+Plot euler diagrams with trellis graphics from \pkg{lattice}. This function
 calls \code{\link[lattice]{xyplot}} under the hood, allowing plots of
 both individual euler diagrams as well as grids of diagrams
 in case the \code{by} argument was used in the call to \code{\link{euler}}.

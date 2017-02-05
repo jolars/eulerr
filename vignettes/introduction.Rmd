@@ -152,7 +152,7 @@ highly customizable, with eulerr.
 ```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.', dev.args=list(type='cairo-png')}
 plot(fit2)
 
-# Change fill colors, vary border type, and switch fontface.
+# Remove fills, vary border type, and switch fontface.
 plot(fit2, fill = "transparent", lty = 1:3, fontface = 4)
 ```
 
