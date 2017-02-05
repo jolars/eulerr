@@ -39,8 +39,7 @@ for instance, the following example in which the intersection between `A` and
 `B` is both needless and unwanted.
 
 ```{r venneuler_failure, fig.height=5, fig.width=5, fig.cap='venneuler plot with unwanted overlap.', dev.args=list(type='cairo-png')}
-library(venneuler,  quietly = TRUE)
-venn_fit <- venneuler(c(A = 75, B = 50, "A&B" = 0))
+venn_fit <- venneuler::venneuler(c(A = 75, B = 50, "A&B" = 0))
 par(mar = c(0, 0, 0, 0))
 plot(venn_fit)
 ```
@@ -153,11 +152,8 @@ highly customizable, with eulerr.
 ```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.', dev.args=list(type='cairo-png')}
 plot(fit2)
 
-# Change fill colors, border type (remove) and fontface.
-plot(fit2,
-     polygon_args = list(col = c("dodgerblue4", "darkgoldenrod1", "cornsilk4"),
-                         border = "transparent"),
-     text_args = list(font = 8))
+# Change fill colors, vary border type, and switch fontface.
+plot(fit2, fill = "transparent", lty = 1:3, fontface = 4)
 ```
 
 eulerr's default color palette is taken from
