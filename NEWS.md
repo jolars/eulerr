@@ -1,3 +1,5 @@
+# eulerr 1.1.0.9000
+
 # eulerr 1.1.0
 ## Major changes
 * `eulerr()` and its related methods been deprecated and are being replaced by
