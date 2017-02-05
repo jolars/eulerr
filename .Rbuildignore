@@ -9,3 +9,4 @@
 ^revdep$
 ^CONDUCT\.md$
 ^LICENSE$
+^data-raw$
