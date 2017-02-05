@@ -18,6 +18,9 @@ diagram.
 * Added version requirement for RcppArmadillo.
 * Dropped dependency on MASS for computing label placement, replacing it
 with a faster, geometric algorithm.
+* Dropped the cost function argument `cost` and now forces the function to
+use sums of squares, which is more or less equivalent to the cost function
+from `venneuler`.
 * Color palettes in `plot.euler()` now chooses colors adapted to color vision
 deficiency (deuteranopia). With increasingly large numbers of sets, this 
 adaptation is relaxed to make sure that colors are kept visually distinct.
