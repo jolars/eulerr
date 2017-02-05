@@ -1,19 +1,27 @@
 # eulerr 1.0.0.9000
 ## Major changes
 * `eulerr()` and its related methods been deprecated and are being replaced by
-`euler()`, which takes different input. Notably, the default is
+`euler()`, which takes slightly different input. Notably, the default is
 now to provide input in the form of disjoint class combinations, rather
-than unions. This is to make the function a drop in replacement for
+than unions. This is partly to make the function a drop-in replacement for
 `venneuler::venneuler`.
-* Added a `counts` argument to `plot.eulerr` that adds labels for the counts
-of the original set specificiation (#6).
+* `plot.euler()` has been completely revamped, now interfacing `xyplot()` from
+lattice. As a result, arguments `polygon_args`, `mar`, and `text_args` have been
+deprecated.
 
 ## Minor changes
-* Switched to atan2() from RcppArmadillo.
+* Added a `counts` argument to `plot.eulerr`, which adds labels for the counts
+of the original set specificiation (#6).
+* Added a `key` argument to `plot.eulerr` that prints a legend next to the
+diagram and omits labels from the circles.
+* Switched to `atan2()` from RcppArmadillo.
 * Added version requirement for RcppArmadillo.
 * Dropped dependency on MASS for computing label placement, replacing it
 with a faster, geometric algorithm.
 * Added additional assertions to prevent erroneous use.
+* Color palettes in `plot.euler()` now chooses colors adapted to color vision
+deficiency (deuteranopia). With increasingly large numbers of sets, this 
+adaptation is relaxed to make sure that colors are visually distinct.
 
 ## Bug fixes
 * The previous algorithm incorrectly computed loss from unions of sets. It now
