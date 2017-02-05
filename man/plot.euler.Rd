@@ -4,56 +4,94 @@
 \alias{plot.euler}
 \title{euler plots}
 \usage{
-\method{plot}{euler}(x, fill_opacity = 0.4, polygon_args = list(),
-  text_args = list(), mar = c(2, 2, 2, 2), counts = FALSE, main, mfrow,
-  ...)
+\method{plot}{euler}(x, fill = NULL, fill_opacity = 0.4, border = "black",
+  lty = 1, lwd = 1, fontface = "plain", cex = 1, labels = NULL,
+  key = FALSE, counts = FALSE, main = NULL, layout = NULL,
+  outer_strips = TRUE, polygon_args, text_args, mar, ...)
 }
 \arguments{
-\item{x}{Specifications for a Euler diagram in the form of a object of class
-\code{'euler'}}
+\item{x}{euler diagram specification from \pkg{eulerr}}
 
-\item{fill_opacity}{Opacity for the fill colors between 0 and 1. Values
-beyond this range will be clamped to [0, 1] without warning.}
+\item{fill}{Colors to fill circles with.}
 
-\item{polygon_args}{Arguments for \code{\link[graphics]{polygon}},
-which is used to draw the circles.}
+\item{fill_opacity}{Opacity of fill colors.}
 
-\item{text_args}{Arguments for \code{\link[graphics]{text}},
-which is used to draw the text.}
+\item{border}{Border color.}
 
-\item{mar}{Margins for the plot area, set via\code{par()[["mar"]]}.}
+\item{lty}{Line type(s) for circles. (See \code{\link[grid]{gpar}}.)}
 
-\item{counts}{Plot counts for each unique section of the diagram. Thse are
-the values from the original set specification.}
+\item{lwd}{Line weight(s) for circles. (See \code{\link[grid]{gpar}}.)}
 
-\item{main}{Title for the euler diagram(s).}
+\item{fontface}{Fontface. (See \code{\link[grid]{gpar}}.)}
 
-\item{mfrow}{Layout for the grid if a list of euler diagrams is provided.}
+\item{cex}{The relative size of text. (See \code{\link[grid]{gpar}}.)}
 
-\item{\dots}{Arguments for \code{\link[graphics]{plot}} (that draws the plot
-area).}
+\item{labels}{Changes the labels from the original call.}
+
+\item{key}{Set to \code{FALSE} to labels the sets, \code{TRUE}
+to automatically generate a legend, or supply a list (please see the entry
+for \code{auto.key} in \code{\link[lattice]{xyplot}}) to fine tune
+the appreance of the legend.}
+
+\item{counts}{Set to \code{TRUE} to label set combinations with counts from
+the original data (not the fit).}
+
+\item{main}{Plot title.}
+
+\item{layout}{For euler grids, specifies the layout for the strip. Cannot be used
+in conjunction with \code{outer_strips}, which will be automatically
+set to false if \code{layout} is given.}
+
+\item{outer_strips}{Whether to place the second level strips on the left of the
+trellis plot. (Only applicable when there were 2 factors specifeid to
+\code{by} in the call to \code{\link{euler}}.)}
+
+\item{polygon_args}{Deprecated}
+
+\item{text_args}{Deprecated}
+
+\item{mar}{Deprecated}
+
+\item{\dots}{Arguments to pass to \code{\link[lattice]{xyplot}}.}
+}
+\value{
+Invisibly returns a trellis object, which can be updated or modified
+  as usual.
 }
 \description{
-Plot Euler diagrams from euler using base R graphics.
+Plot Euler diagrams with trellis graphics from \pkg{lattice}. This function
+calls \code{\link[lattice]{xyplot}} under the hood, allowing plots of
+both individual euler diagrams as well as grids of diagrams
+in case the \code{by} argument was used in the call to \code{\link{euler}}.
 }
 \details{
-If no color is specified to \code{polygon_args}, fills will be colored
-using a predefined palette taken from \pkg{qualpal}.
+If \code{fill} is left blank, \pkg{eulerr} chooses color palettes based on
+the number of sets and tries to provide palettes adapted to color vision
+deficiencie based on functionality from \pkg{qualpalr}.
+
+Several additional arguments can be handed down to
+\code{\link[lattice]{xyplot}} via \ldots but be advised that this might cause
+undesired conflicts with arguments that are provided inside this function.
+It may be safer to use \code{\link[stats]{update}} to provide further
+arguments instead.
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
 plot(fit, fill_opacity = 0.7)
 
 # Change to italic roman font, remove borders and switch colors
-plot(fit,
-     polygon_args = list(col = c("dodgerblue4", "darkgoldenrod1"),
-                         border = "transparent"),
-     text_args = list(font = 3))
+plot(fit, fill = c("dodgerblue4", "darkgoldenrod1"), lwd = 0,
+     fontface = "italic")
+
+# Add counts to the plot
+plot(fit, counts = TRUE)
+
+# Add a custom legend and retain counts
+plot(fit, counts = TRUE, key = list(space = "bottom", columns = 2))
 
 # Plot without fills and distinguish sets with border types instead
-plot(fit,
-     polygon_args = list(lty = c("solid", "dotted"), col = "transparent"),
-     text_args = list(cex = 2, font = 2))
+plot(fit, lty = c("solid", "dotted"), fill = "transparent", cex = 2,
+     fontface = 2, labels = c("foo", "bar"))
 
 # Plot a grid of euler plots
 dat <- data.frame(
@@ -64,23 +102,15 @@ dat <- data.frame(
 )
 
 e_grid <- euler(dat[, 1:2], by = dat[, 3:4])
-plot(e_grid)
+plot(e_grid, key = TRUE)
 
-# We can provide custom titles for our diagrams
-
-plot(e_grid, main = c("A", "B", "C", "D"))
-
-# and use any options that plot.euler takes
-
-plot(e_grid, polygon_args = list(col = "transparent"))
-
-# It is also possible to change grid layout
-
-plot(e_grid, mfrow = c(1, 4))
+# We can modify the grid layout as well
+plot(e_grip, layout = c(1, 4))
 
 }
 \seealso{
-\code{\link[graphics]{plot}}, \code{\link[graphics]{polygon}},
-  \code{\link[graphics]{text}} \code{\link{euler}}
+\code{\link[lattice]{xyplot}}, \code{\link[grid]{gpar}},
+  \code{\link[grid]{grid.circle}}, \code{\link[lattice]{panel.xyplot}},
+  \code{\link{euler}}, \code{\link[qualpalr]{qualpal}}
 }
 
