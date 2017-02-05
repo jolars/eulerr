@@ -1,6 +1,6 @@
 Package: eulerr
 Title: Area-Proportional Euler Diagrams
-Version: 1.0.0.9000
+Version: 1.1.0
 Authors@R: person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                   role = c("aut", "cre"))
 Description: If possible, generates exactly area-proportional Euler diagrams,
