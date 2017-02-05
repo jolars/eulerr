@@ -10,10 +10,10 @@ lattice. As a result, arguments `polygon_args`, `mar`, and `text_args` have been
 deprecated.
 
 ## Minor changes
-* Added a `counts` argument to `plot.eulerr`, which adds labels for the counts
-of the original set specificiation (#6).
+* Added a `counts` argument to `plot.eulerr`, which intersections and
+complements with counts from the original set specificiation (#6).
 * Added a `key` argument to `plot.eulerr` that prints a legend next to the
-diagram and omits labels from the circles.
+diagram.
 * Switched to `atan2()` from RcppArmadillo.
 * Added version requirement for RcppArmadillo.
 * Dropped dependency on MASS for computing label placement, replacing it
@@ -21,7 +21,7 @@ with a faster, geometric algorithm.
 * Added additional assertions to prevent erroneous use.
 * Color palettes in `plot.euler()` now chooses colors adapted to color vision
 deficiency (deuteranopia). With increasingly large numbers of sets, this 
-adaptation is relaxed to make sure that colors are visually distinct.
+adaptation is relaxed to make sure that colors are kept visually distinct.
 
 ## Bug fixes
 * The previous algorithm incorrectly computed loss from unions of sets. It now
