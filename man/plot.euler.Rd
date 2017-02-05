@@ -105,7 +105,7 @@ e_grid <- euler(dat[, 1:2], by = dat[, 3:4])
 plot(e_grid, key = TRUE)
 
 # We can modify the grid layout as well
-plot(e_grip, layout = c(1, 4))
+plot(e_grid, layout = c(1, 4))
 
 }
 \seealso{
