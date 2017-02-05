@@ -94,7 +94,7 @@ dotchart(resid(fit2))
 abline(v = 0, lty = 3)
 ```
 
-This shows us that the `A&B&C` intersection is somewhat overrepresented in
+This shows us that the `A&C` intersection is somewhat overrepresented in
 `fit2`. Given that these residuals are on the scale of the original
 values, however, the residuals are arguably of little concern.
 
