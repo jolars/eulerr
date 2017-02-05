@@ -49,14 +49,14 @@ fit
 #> B&C          3  2.716     0.284        0.008
 #> A&B&C        2  2.324    -0.324        0.011
 #> 
-#> diagError:  0.011 
-#> stress:     0.002
+#> diag_error:  0.011 
+#> stress:      0.002
 ```
 
 and plot it
 
 ``` r
-plot(fit)
+plot(fit, labels = c("PubMed", "Scopus", "Google Scholar"), main = "Databases")
 ```
 
 ![](README-plot_method-1.png)

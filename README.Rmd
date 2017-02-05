@@ -67,7 +67,7 @@ fit
 and plot it
 
 ```{r plot_method}
-plot(fit)
+plot(fit, labels = c("PubMed", "Scopus", "Google Scholar"), main = "Databases")
 ```
 
 Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
