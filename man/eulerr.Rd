@@ -2,9 +2,9 @@
 % Please edit documentation in R/main-old.R
 \name{eulerr}
 \alias{eulerr}
-\alias{eulerr.data.frame}
 \alias{eulerr.default}
 \alias{eulerr.matrix}
+\alias{eulerr.data.frame}
 \title{Area-Proportional Euler Diagrams (deprecated)}
 \usage{
 eulerr(sets, ...)
@@ -19,12 +19,12 @@ eulerr(sets, ...)
 \item{sets}{Set relationships as a named numeric vector, matrix, or
 data.frame. (See the methods (by class) section for details.)}
 
+\item{\dots}{Currently ignored.}
+
 \item{cost}{Deprecated.}
 
 \item{by}{A factor or character vector used in \code{\link[base]{by}} to
 split the data.frame or matrix and compute euler diagrams for each split.}
-
-\item{\dots}{Currently ignored.}
 }
 \value{
 A list object of class 'eulerr' with the following parameters.
@@ -87,6 +87,7 @@ and rows representing each observation's set relationships (see examples).
 \item \code{data.frame}: A data.frame that can be converted to a matrix of logicals
 (as in the description above) via \code{\link[base]{as.matrix}}.
 }}
+
 \references{
 Wilkinson L. Exact and Approximate Area-Proportional Circular
 Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
@@ -98,4 +99,3 @@ Using Ellipses. PLOS ONE [Internet]. 2014 Jul [cited 2016 Dec
 10];9(7):e101717. Available from:
 \url{http://dx.doi.org/10.1371/journal.pone.0101717}
 }
-

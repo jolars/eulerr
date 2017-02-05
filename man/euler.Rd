@@ -2,9 +2,9 @@
 % Please edit documentation in R/main.R
 \name{euler}
 \alias{euler}
-\alias{euler.data.frame}
 \alias{euler.default}
 \alias{euler.matrix}
+\alias{euler.data.frame}
 \title{Area-Proportional Euler Diagrams}
 \usage{
 euler(combinations, ...)
@@ -19,13 +19,13 @@ euler(combinations, ...)
 \item{combinations}{Set relationships as a named numeric vector, matrix, or
 data.frame. (See the methods (by class) section for details.)}
 
+\item{\dots}{Currently ignored.}
+
 \item{input}{The type of input: disjoint class combinations
 (\code{disjoint}) or unions (\code{union}).}
 
 \item{by}{A factor or character matrix to be used in \code{\link[base]{by}} to
 split the data.frame or matrix of set combinations.}
-
-\item{\dots}{Currently ignored.}
 }
 \value{
 A list object of class 'euler' with the following parameters.
@@ -93,13 +93,14 @@ and rows representing each observation's set relationships (see examples).
 \item \code{data.frame}: A data.frame that can be converted to a matrix of logicals
 (as in the description above) via \code{\link[base]{as.matrix}}.
 }}
+
 \examples{
 fit1 <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
 
 # Same result as above
 fit2 <- euler(c("A" = 1, "B" = 0.4, "C" = 3,
                 "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-                "A&B&C" = 0) )
+                "A&B&C" = 0))
 
 # Using the matrix method
 mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
@@ -136,4 +137,3 @@ Wilkinson L. Exact and Approximate Area-Proportional Circular
 \seealso{
 \code{\link{plot.euler}}, \code{\link{print.euler}}
 }
-

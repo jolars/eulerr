@@ -67,7 +67,7 @@
 #' # Same result as above
 #' fit2 <- euler(c("A" = 1, "B" = 0.4, "C" = 3,
 #'                 "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-#'                 "A&B&C" = 0) )
+#'                 "A&B&C" = 0))
 #'
 #' # Using the matrix method
 #' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),

@@ -113,4 +113,3 @@ plot(e_grid, layout = c(1, 4))
   \code{\link[grid]{grid.circle}}, \code{\link[lattice]{panel.xyplot}},
   \code{\link{euler}}, \code{\link[qualpalr]{qualpal}}
 }
-

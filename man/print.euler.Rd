@@ -20,4 +20,3 @@ Prints the results of the fit.
 Prints a data frame of the original set relationships and the fitted
 values as well as diagError and stress statistics.
 }
-
