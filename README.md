@@ -56,7 +56,7 @@ fit
 and plot it
 
 ``` r
-plot(fit, labels = c("PubMed", "Scopus", "Google Scholar"), main = "Databases")
+plot(fit, labels = c("PubMed", "Scopus", "Embase"), main = "Databases")
 ```
 
 ![](README-plot_method-1.png)
