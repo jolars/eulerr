@@ -9,9 +9,9 @@
 #'
 #' The fit minimizes the sums of squared residuals between the areas in the
 #' euler diagram and the user's initial specification (as disjoint class
-#' combinations,
+#' combinations),
 #'
-#' \deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2 }{% \sum (orig - fit) ^ 2}
+#' \deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2 }{\sum (orig - fit) ^ 2}
 #'
 #' where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are
 #' explored during optimization.
@@ -19,8 +19,11 @@
 #' Diagnostics are provided by the fit as the stress statistic from
 #' \pkg{venneuler}:
 #'
-#' \deqn{\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
-#' }\sum (fit - original) ^ 2 / \sum original ^ 2}
+#' \deqn{
+#'   \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
+#'   }{
+#'   \sum (fit - original) ^ 2 / \sum original ^ 2
+#' }
 #'
 #' where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
 #' areas on the original areas that are currently being explored during
@@ -29,8 +32,11 @@
 #' We also return \code{diag_error} and \code{region_error} from
 #' \emph{eulerAPE}. region_error is computed as
 #'
-#' \deqn{\left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}
-#' \right|}{% max|fit / \sum fit  - original / \sum original|}
+#' \deqn{
+#'   \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|
+#'   }{
+#'   max|fit / \sum fit  - original / \sum original|
+#' }
 #'
 #' whereas diagError is the maximum of regionError.
 #'
@@ -44,12 +50,14 @@
 #'
 #' @return A list object of class 'euler' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
-#'   circles and their radiuses.} \item{original.values}{Set relationships
-#'   provided by the user.} \item{fitted.values}{Set relationships in the
-#'   solution.} \item{residuals}{Residuals.} \item{diagError}{The largest
-#'   absolute residual in percentage points between the original and fitted
-#'   areas.} \item{stress}{The stress of the solution, computed as the sum of
-#'   squared residuals over the total sum of squares.}
+#'     circles and their radiuses.}
+#'   \item{original.values}{Set relationships provided by the user.}
+#'   \item{fitted.values}{Set relationships in the solution.}
+#'   \item{residuals}{Residuals.}
+#'   \item{diag_error}{The largest absolute residual in percentage points
+#'     between the original and fitted areas.}
+#'   \item{stress}{The stress of the solution, computed as the sum of squared
+#'     residuals over the total sum of squares.}
 #'
 #' @seealso \code{\link{plot.euler}}, \code{\link{print.euler}}
 #'
@@ -58,8 +66,8 @@
 #'
 #' # Same result as above
 #' fit2 <- euler(c("A" = 1, "B" = 0.4, "C" = 3,
-#'                  "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-#'                  "A&B&C" = 0) )
+#'                 "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
+#'                 "A&B&C" = 0) )
 #'
 #' # Using the matrix method
 #' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
@@ -92,7 +100,6 @@
 #'   \url{http://dx.doi.org/10.1371/journal.pone.0101717}
 #'
 #' @export
-
 euler <- function(combinations, ...) UseMethod("euler")
 
 #' @describeIn euler A named numeric vector, with
@@ -100,7 +107,6 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'   Missing interactions are treated as being 0.
 #'
 #' @export
-
 euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   assertthat::assert_that(
     is.numeric(combinations),
@@ -110,7 +116,6 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     !any(names(combinations) == ""),
     !any(duplicated(names(combinations)))
   )
-
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
   n <- length(setnames)
@@ -205,6 +210,10 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   fpar <- matrix(final_layout$estimate, ncol = 3,
                  dimnames = list(setnames, c("x", "y", "r"))) / scale_factor
 
+  # Center the solution on the coordinate plane
+  fpar <- center_circles(fpar)
+
+  # Return eulerr structure
   structure(
     list(
       coefficients = fpar,
@@ -222,7 +231,6 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
 #'   and rows representing each observation's set relationships (see examples).
 #'
 #' @export
-
 euler.matrix <- function(combinations, by = NULL, ...) {
   if (!is.null(by)) {
     vapply(by,
@@ -233,14 +241,12 @@ euler.matrix <- function(combinations, by = NULL, ...) {
         stop("Currently, no more than two grouping variables are allowed.")
     }
   }
-
   assertthat::assert_that(
     any(is.logical(combinations), is.numeric(combinations)),
     max(combinations, na.rm = TRUE) == 1,
     min(combinations, na.rm = TRUE) == 0,
     !any(grepl("&", colnames(combinations), fixed = TRUE))
   )
-
   if (is.null(by)) {
     out <- tally_combinations(combinations)
   } else {
@@ -253,7 +259,6 @@ euler.matrix <- function(combinations, by = NULL, ...) {
 #' @describeIn euler A data.frame that can be converted to a matrix of logicals
 #'   (as in the description above) via \code{\link[base]{as.matrix}}.
 #' @export
-
 euler.data.frame <- function(combinations, by = NULL, ...) {
   euler(as.matrix(combinations), by = by, ...)
 }
@@ -270,21 +275,18 @@ euler.data.frame <- function(combinations, by = NULL, ...) {
 #' @return Prints the results of the fit.
 #'
 #' @export
-
 print.euler <- function(x, round = 3, ...) {
   assertthat::assert_that(
     assertthat::is.number(round)
   )
-
   out <- data.frame(
     "original" = x$original.values,
     "fitted" = x$fitted.values,
     "residuals" = x$residuals,
     "region_error" = x$region_error
   )
-
   print(round(out, digits = round), ...)
   cat("\n")
   cat("diag_error: ", round(x$diag_error, digits = round), "\n")
-  cat("stress:    ", round(x$stress, digits = round), "\n")
+  cat("stress:     ", round(x$stress, digits = round), "\n")
 }
