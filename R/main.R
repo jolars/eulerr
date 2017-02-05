@@ -197,16 +197,18 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     areas = areas_disjoint
   )
 
-  fit <- return_intersections(final_layout$estimate)
+  fit <- as.vector(return_intersections(final_layout$estimate))
   fit <- fit / scale_factor
 
-  names(fit) <- apply(id, 1, function(x) paste0(setnames[x], collapse = "&"))
   orig <- areas_disjoint / scale_factor
+
+  names(orig) <-
+    names(fit) <-
+      apply(id, 1, function(x) paste0(setnames[x], collapse = "&"))
 
   region_error <- abs(fit / sum(fit) - orig / sum(orig))
   diag_error <- max(region_error)
 
-  names(orig) <- names(fit)
   fpar <- matrix(final_layout$estimate, ncol = 3,
                  dimnames = list(setnames, c("x", "y", "r"))) / scale_factor
 
