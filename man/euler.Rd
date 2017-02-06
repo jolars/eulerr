@@ -5,7 +5,7 @@
 \alias{euler.default}
 \alias{euler.matrix}
 \alias{euler.data.frame}
-\title{Area-Proportional Euler Diagrams}
+\title{Area-proportional euler diagrams}
 \usage{
 euler(combinations, ...)
 
@@ -45,41 +45,40 @@ optimization to find exact or approximate solutions to a specification of set
 relationships.
 }
 \details{
-If \code{by} is specified, \code{euler} returns a list of diagrams separated
-by the categorical variables in \code{by}.
+If the input is a matrix or data frame and argument \code{by} is specified,
+the function returns a list of euler diagrams.
 
-The fit minimizes the sums of squared residuals between the areas in the
-euler diagram and the user's initial specification (as disjoint class
-combinations),
+The function minimizes the sums of squared errors between the disjoint areas
+in the euler diagram and the user's input, namely
 
 \deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2 }{\sum (orig - fit) ^ 2}
 
-where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are
-explored during optimization.
+where \eqn{\hat{y}}{fit} are estimates of \eqn{y} that are currently being
+explored.
 
-Diagnostics are provided by the fit as the stress statistic from
-\pkg{venneuler}:
+The stress statistic from \pkg{venneuler} is returned to give an indication
+of the goodness of the fit:
 
 \deqn{
   \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
   }{
   \sum (fit - original) ^ 2 / \sum original ^ 2
-}
+},
 
-where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
-areas on the original areas that are currently being explored during
-optimization.
+where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
+regression of the fitted areas on the original areas that are currently being
+explored.
 
-We also return \code{diag_error} and \code{region_error} from
-\emph{eulerAPE}. region_error is computed as
+\code{euler()} also returns \code{diag_error} and \code{region_error} from
+\emph{eulerAPE}. \code{region_error} is computed as
 
 \deqn{
   \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|
   }{
   max|fit / \sum fit  - original / \sum original|
-}
+}.
 
-whereas diagError is the maximum of regionError.
+\code{diag_error} is simply the maximum of region_error.
 }
 \section{Methods (by class)}{
 \itemize{

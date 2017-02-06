@@ -1,44 +1,43 @@
-#' Area-Proportional Euler Diagrams
+#' Area-proportional euler diagrams
 #'
 #' Fit euler diagrams (a generalization of venn diagrams) using numerical
 #' optimization to find exact or approximate solutions to a specification of set
 #' relationships.
 #'
-#' If \code{by} is specified, \code{euler} returns a list of diagrams separated
-#' by the categorical variables in \code{by}.
+#' If the input is a matrix or data frame and argument \code{by} is specified,
+#' the function returns a list of euler diagrams.
 #'
-#' The fit minimizes the sums of squared residuals between the areas in the
-#' euler diagram and the user's initial specification (as disjoint class
-#' combinations),
+#' The function minimizes the sums of squared errors between the disjoint areas
+#' in the euler diagram and the user's input, namely
 #'
 #' \deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2 }{\sum (orig - fit) ^ 2}
 #'
-#' where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are
-#' explored during optimization.
+#' where \eqn{\hat{y}}{fit} are estimates of \eqn{y} that are currently being
+#' explored.
 #'
-#' Diagnostics are provided by the fit as the stress statistic from
-#' \pkg{venneuler}:
+#' The stress statistic from \pkg{venneuler} is returned to give an indication
+#' of the goodness of the fit:
 #'
 #' \deqn{
 #'   \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
 #'   }{
 #'   \sum (fit - original) ^ 2 / \sum original ^ 2
-#' }
+#' },
 #'
-#' where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
-#' areas on the original areas that are currently being explored during
-#' optimization.
+#' where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
+#' regression of the fitted areas on the original areas that are currently being
+#' explored.
 #'
-#' We also return \code{diag_error} and \code{region_error} from
-#' \emph{eulerAPE}. region_error is computed as
+#' \code{euler()} also returns \code{diag_error} and \code{region_error} from
+#' \emph{eulerAPE}. \code{region_error} is computed as
 #'
 #' \deqn{
 #'   \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|
 #'   }{
 #'   max|fit / \sum fit  - original / \sum original|
-#' }
+#' }.
 #'
-#' whereas diagError is the maximum of regionError.
+#' \code{diag_error} is simply the maximum of region_error.
 #'
 #' @param combinations Set relationships as a named numeric vector, matrix, or
 #'   data.frame. (See the methods (by class) section for details.)
@@ -197,14 +196,12 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     areas = areas_disjoint
   )
 
-  fit <- as.vector(return_intersections(final_layout$estimate))
-  fit <- fit / scale_factor
+  fit <- as.vector(return_intersections(final_layout$estimate)) / scale_factor
 
   orig <- areas_disjoint / scale_factor
 
-  names(orig) <-
-    names(fit) <-
-      apply(id, 1, function(x) paste0(setnames[x], collapse = "&"))
+  names(orig) <- names(fit) <-
+    apply(id, 1, function(x) paste0(setnames[x], collapse = "&"))
 
   region_error <- abs(fit / sum(fit) - orig / sum(orig))
   diag_error <- max(region_error)
