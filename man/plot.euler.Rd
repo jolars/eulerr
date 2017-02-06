@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{plot.euler}
 \alias{plot.euler}
-\title{Plot euler diagrams}
+\title{Plot Euler diagrams}
 \usage{
 \method{plot}{euler}(x, fill = NULL, fill_opacity = 0.4, border = "black",
   lty = 1, lwd = 1, fontface = "plain", cex = 1, labels = NULL,
@@ -10,7 +10,7 @@
   outer_strips = TRUE, polygon_args, text_args, mar, ...)
 }
 \arguments{
-\item{x}{euler diagram specification from \pkg{eulerr}}
+\item{x}{Euler diagram specification from \pkg{eulerr}}
 
 \item{fill}{Colors to fill circles with.}
 
@@ -18,33 +18,38 @@
 
 \item{border}{Border color.}
 
-\item{lty}{Line type(s) for circles. (See \code{\link[grid]{gpar}}.)}
+\item{lty}{Line type(s) for circles as a integer or character vector. (See
+\code{\link[grid]{gpar}}.)}
 
-\item{lwd}{Line weight(s) for circles. (See \code{\link[grid]{gpar}}.)}
+\item{lwd}{Line weight(s) for circles as a numeric vector. (See
+\code{\link[grid]{gpar}}.)}
 
-\item{fontface}{Fontface. (See \code{\link[grid]{gpar}}.)}
+\item{fontface}{Fontface as a integer or character vector. (See
+\code{\link[grid]{gpar}}.)}
 
-\item{cex}{The relative size of text. (See \code{\link[grid]{gpar}}.)}
+\item{cex}{The relative size of text as a numeric vector. (See
+\code{\link[grid]{gpar}}.)}
 
-\item{labels}{Changes the labels from the original call.}
+\item{labels}{Labels for the sets as a character vector.}
 
-\item{key}{Set to \code{FALSE} to labels the sets, \code{TRUE}
-to automatically generate a legend, or supply a list (please see the entry
-for \code{auto.key} in \code{\link[lattice]{xyplot}}) to fine tune
-the appreance of the legend.}
+\item{key}{Set to \code{TRUE} to automatically generate a legend or input a
+list to manually construct the legend (please see the entry
+for \code{auto.key} in \code{\link[lattice]{xyplot}}). If \code{FALSE},
+labels will be automatically generated inside the sets.}
 
 \item{counts}{Set to \code{TRUE} to label set combinations with counts from
-the original data (not the fit).}
+the input.}
 
-\item{main}{Plot title.}
+\item{main}{Title of the plot.}
 
-\item{layout}{For euler grids, specifies the layout for the strip. Cannot be used
-in conjunction with \code{outer_strips}, which will be automatically
-set to false if \code{layout} is given.}
+\item{layout}{Specifies the layout for the trellis panels if \code{by} was
+used in the call to \code{\link{euler}}. This argument cannot be used
+in conjunction with \code{outer_strips}, which will be forced to
+\code{FALSE} if \code{layout} is not \code{NULL}.}
 
-\item{outer_strips}{Whether to place the second level strips on the left of the
-trellis plot. (Only applicable when there were 2 factors specifeid to
-\code{by} in the call to \code{\link{euler}}.)}
+\item{outer_strips}{Set to \code{TRUE} to put second level factors on the
+left margin of the trellis plot. (This argument is only considered if there
+are 2 factors specified to \code{by} in the call to \code{\link{euler}}.)}
 
 \item{polygon_args}{Deprecated}
 
@@ -55,11 +60,12 @@ trellis plot. (Only applicable when there were 2 factors specifeid to
 \item{\dots}{Arguments to pass to \code{\link[lattice]{xyplot}}.}
 }
 \value{
-Invisibly returns a trellis object, which can be updated or modified
-  as usual.
+An object of class \code{trellis} from \pkg{lattice}, which has
+\code{print} (plots the object and is called by default) and \code{update}
+methods.
 }
 \description{
-Plot euler diagrams with trellis graphics from \pkg{lattice}. This function
+Plot Euler diagrams with trellis graphics from \pkg{lattice}. This function
 calls \code{\link[lattice]{xyplot}} under the hood, allowing plots of
 both individual euler diagrams as well as grids of diagrams
 in case the \code{by} argument was used in the call to \code{\link{euler}}.

@@ -1,6 +1,6 @@
-#' Plot euler diagrams
+#' Plot Euler diagrams
 #'
-#' Plot euler diagrams with trellis graphics from \pkg{lattice}. This function
+#' Plot Euler diagrams with trellis graphics from \pkg{lattice}. This function
 #' calls \code{\link[lattice]{xyplot}} under the hood, allowing plots of
 #' both individual euler diagrams as well as grids of diagrams
 #' in case the \code{by} argument was used in the call to \code{\link{euler}}.
@@ -15,35 +15,41 @@
 #' It may be safer to use \code{\link[stats]{update}} to provide further
 #' arguments instead.
 #'
-#' @param x euler diagram specification from \pkg{eulerr}
+#' @param x Euler diagram specification from \pkg{eulerr}
 #' @param fill Colors to fill circles with.
 #' @param fill_opacity Opacity of fill colors.
 #' @param border Border color.
-#' @param lty Line type(s) for circles. (See \code{\link[grid]{gpar}}.)
-#' @param lwd Line weight(s) for circles. (See \code{\link[grid]{gpar}}.)
-#' @param fontface Fontface. (See \code{\link[grid]{gpar}}.)
-#' @param cex The relative size of text. (See \code{\link[grid]{gpar}}.)
-#' @param labels Changes the labels from the original call.
-#' @param key Set to \code{FALSE} to labels the sets, \code{TRUE}
-#'   to automatically generate a legend, or supply a list (please see the entry
-#'   for \code{auto.key} in \code{\link[lattice]{xyplot}}) to fine tune
-#'   the appreance of the legend.
+#' @param lty Line type(s) for circles as a integer or character vector. (See
+#'   \code{\link[grid]{gpar}}.)
+#' @param lwd Line weight(s) for circles as a numeric vector. (See
+#'   \code{\link[grid]{gpar}}.)
+#' @param fontface Fontface as a integer or character vector. (See
+#'   \code{\link[grid]{gpar}}.)
+#' @param cex The relative size of text as a numeric vector. (See
+#'   \code{\link[grid]{gpar}}.)
+#' @param labels Labels for the sets as a character vector.
+#' @param key Set to \code{TRUE} to automatically generate a legend or input a
+#'   list to manually construct the legend (please see the entry
+#'   for \code{auto.key} in \code{\link[lattice]{xyplot}}). If \code{FALSE},
+#'   labels will be automatically generated inside the sets.
 #' @param counts Set to \code{TRUE} to label set combinations with counts from
-#'   the original data (not the fit).
-#' @param main Plot title.
-#' @param layout For euler grids, specifies the layout for the strip. Cannot be used
-#'   in conjunction with \code{outer_strips}, which will be automatically
-#'   set to false if \code{layout} is given.
-#' @param outer_strips Whether to place the second level strips on the left of the
-#'   trellis plot. (Only applicable when there were 2 factors specifeid to
-#'   \code{by} in the call to \code{\link{euler}}.)
+#'   the input.
+#' @param main Title of the plot.
+#' @param layout Specifies the layout for the trellis panels if \code{by} was
+#'   used in the call to \code{\link{euler}}. This argument cannot be used
+#'   in conjunction with \code{outer_strips}, which will be forced to
+#'   \code{FALSE} if \code{layout} is not \code{NULL}.
+#' @param outer_strips Set to \code{TRUE} to put second level factors on the
+#'   left margin of the trellis plot. (This argument is only considered if there
+#'   are 2 factors specified to \code{by} in the call to \code{\link{euler}}.)
 #' @param polygon_args Deprecated
 #' @param text_args Deprecated
 #' @param mar Deprecated
 #' @param \dots Arguments to pass to \code{\link[lattice]{xyplot}}.
 #'
-#' @return Invisibly returns a trellis object, which can be updated or modified
-#'   as usual.
+#' @return An object of class \code{trellis} from \pkg{lattice}, which has
+#' \code{print} (plots the object and is called by default) and \code{update}
+#' methods.
 #'
 #' @seealso \code{\link[lattice]{xyplot}}, \code{\link[grid]{gpar}},
 #'   \code{\link[grid]{grid.circle}}, \code{\link[lattice]{panel.xyplot}},
