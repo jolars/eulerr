@@ -2,100 +2,14 @@
 % Please edit documentation in R/main-old.R
 \name{eulerr}
 \alias{eulerr}
-\alias{eulerr.default}
-\alias{eulerr.matrix}
-\alias{eulerr.data.frame}
-\title{Area-Proportional Euler Diagrams (deprecated)}
+\title{Area-Proportional Euler Diagrams (defunct)}
 \usage{
-eulerr(sets, ...)
-
-\method{eulerr}{default}(sets, cost = NULL, ...)
-
-\method{eulerr}{matrix}(sets, by = NULL, cost = NULL, ...)
-
-\method{eulerr}{data.frame}(sets, by = NULL, cost = NULL, ...)
+eulerr(...)
 }
 \arguments{
-\item{sets}{Set relationships as a named numeric vector, matrix, or
-data.frame. (See the methods (by class) section for details.)}
-
-\item{\dots}{Currently ignored.}
-
-\item{cost}{Deprecated.}
-
-\item{by}{A factor or character vector used in \code{\link[base]{by}} to
-split the data.frame or matrix and compute euler diagrams for each split.}
-}
-\value{
-A list object of class 'eulerr' with the following parameters.
-  \item{coefficients}{A matrix of x and y coordinates for the centers of the
-    circles and their radiuses.}
-  \item{original.values}{Set relationships provided by the user.}
-  \item{fitted.values}{Set relationships in the solution given by
-    \pkg{eulerr}.}
-  \item{residuals}{Residuals.}
-  \item{diagError}{The largest absolute residual in percentage points
-    between the original and fitted areas.}
-  \item{stress}{The stress of the solution, computed as the sum of squared
-    residuals over the total sum of squares.}
+\item{\dots}{Ignored}
 }
 \description{
-\emph{Note: This function has been deprecated; please use \code{\link{euler}}
+\emph{Note: This function is defunct; please use \code{\link{euler}}
 instead.}
-}
-\details{
-Compute Euler diagrams (a generalization of Venn diagrams) using
-numerical optimization to find exact or approximate solutions to a
-specification of set relationships.
-
-If \code{by} is specified, \code{eulerr} returns a list of euler diagrams
-that can be plotted in facets via a special plot method.
-
-The fit is optimized using either the cost function used in the
-eulerAPE software package or the stress statistic of the R package
-\pkg{venneuler}. The eulerAPE cost function is defined as
-
-\deqn{%
-  \frac{1}{n} \sum_{i=1}^{n} \frac{(y_i - \hat{y}_i) ^ 2}{\hat{y}_i}
-}{%
-  (1 / n) \sum (orig - fit) / \sum fit
-}
-
-where \eqn{\hat{y}}{fit} are the estimates of \eqn{y} that are currently
-explored during optimization. For \code{venneuler}, the stress function is
-defined as
-
-\deqn{%
-  \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
-}{%
-  (\sum (fit - orig) ^ 2) / (\sum orig ^ 2)
-}
-
-where \eqn{\hat{y}}{fit} are OLS estimates from the regression of the fitted
-areas on the original areas that are currently being explored during
-optimization.
-}
-\section{Methods (by class)}{
-\itemize{
-\item \code{default}: A named numeric vector, with
-interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
-Missing interactions are treated as being 0.
-
-\item \code{matrix}: A matrix of logical vectors with columns representing sets
-and rows representing each observation's set relationships (see examples).
-
-\item \code{data.frame}: A data.frame that can be converted to a matrix of logicals
-(as in the description above) via \code{\link[base]{as.matrix}}.
-}}
-
-\references{
-Wilkinson L. Exact and Approximate Area-Proportional Circular
-Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
-Graphics [Internet]. 2012 Feb [cited 2016 Apr 9];18(2):321–31. Available
-from: \url{http://doi.org/10.1109/TVCG.2011.56}
-
-Micallef L, Rodgers P. eulerAPE: Drawing Area-Proportional 3-Venn Diagrams
-Using Ellipses. PLOS ONE [Internet]. 2014 Jul [cited 2016 Dec
-10];9(7):e101717. Available from:
-\url{http://dx.doi.org/10.1371/journal.pone.0101717}
 }
