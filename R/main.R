@@ -102,8 +102,8 @@
 euler <- function(combinations, ...) UseMethod("euler")
 
 #' @describeIn euler A named numeric vector, with
-#'   interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
-#'   Missing interactions are treated as being 0.
+#'   combinations seperated by an ampersand, for instance \code{`A&B` = 10}.
+#'   Missing combinations are treated as being 0.
 #'
 #' @export
 euler.default <- function(combinations, input = c("disjoint", "union"), ...) {

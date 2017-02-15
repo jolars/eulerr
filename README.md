@@ -61,7 +61,7 @@ plot(fit, labels = c("PubMed", "Scopus", "Embase"), main = "Databases")
 
 ![](README-plot_method-1.png)
 
-Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html) for usage details.
+Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/Introduction.html) for usage details.
 
 License
 -------
