@@ -1,8 +1,11 @@
 Package: eulerr
 Title: Area-Proportional Euler Diagrams
 Version: 1.1.0.9000
-Authors@R: person("Johan", "Larsson", email = "johanlarsson@outlook.com",
-                  role = c("aut", "cre"))
+Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
+                    role = c("aut", "cre")),
+             person("A. Jonathan R.", "Godfrey",
+                    email = "a.j.godfrey@massey.ac.nz",
+                    role = "ctb"))
 Description: If possible, generates exactly area-proportional Euler diagrams,
     or otherwise approximately proportional diagrams using numerical
     optimization. A Euler diagram is a generalization of a Venn diagram,
