@@ -122,10 +122,6 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   id <- bit_index(n)
   mode(id) <- "logical"
 
-  # Scale the values to fractions
-  scale_factor <- 1 / sum(combinations)
-  combinations <- combinations * scale_factor
-
   areas <- double(nrow(id))
   for (i in 1:nrow(id)) {
     s <- setnames[id[i, ]]
@@ -196,9 +192,9 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     areas = areas_disjoint
   )
 
-  fit <- as.vector(return_intersections(final_layout$estimate)) / scale_factor
+  fit <- as.vector(return_intersections(final_layout$estimate))
 
-  orig <- areas_disjoint / scale_factor
+  orig <- areas_disjoint
 
   names(orig) <- names(fit) <-
     apply(id, 1, function(x) paste0(setnames[x], collapse = "&"))
@@ -207,7 +203,7 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   diag_error <- max(region_error)
 
   fpar <- matrix(final_layout$estimate, ncol = 3,
-                 dimnames = list(setnames, c("x", "y", "r"))) / scale_factor
+                 dimnames = list(setnames, c("x", "y", "r")))
 
   # Center the solution on the coordinate plane
   fpar <- center_circles(fpar)

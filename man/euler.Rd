@@ -83,8 +83,8 @@ explored.
 \section{Methods (by class)}{
 \itemize{
 \item \code{default}: A named numeric vector, with
-interactions seperated by an ampersand, for instance \code{`A&B` = 10}.
-Missing interactions are treated as being 0.
+combinations seperated by an ampersand, for instance \code{`A&B` = 10}.
+Missing combinations are treated as being 0.
 
 \item \code{matrix}: A matrix of logical vectors with columns representing sets
 and rows representing each observation's set relationships (see examples).
