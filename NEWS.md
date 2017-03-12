@@ -2,6 +2,8 @@
 ## Major changes
 * `eulerr()` has been replaced with `euler()` (see update 1.1.0) and made
 defunct.
+* `euler()` can now produce diagrams from a list of sample spaces if the input
+to `euler()` is a `list`.
 
 # eulerr 1.1.0
 ## Major changes

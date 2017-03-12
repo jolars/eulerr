@@ -2,6 +2,7 @@
 
 S3method(euler,data.frame)
 S3method(euler,default)
+S3method(euler,list)
 S3method(euler,matrix)
 S3method(plot,euler)
 S3method(print,euler)

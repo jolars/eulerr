@@ -5,6 +5,7 @@
 \alias{euler.default}
 \alias{euler.matrix}
 \alias{euler.data.frame}
+\alias{euler.list}
 \title{Area-proportional euler diagrams}
 \usage{
 euler(combinations, ...)
@@ -14,6 +15,8 @@ euler(combinations, ...)
 \method{euler}{matrix}(combinations, by = NULL, ...)
 
 \method{euler}{data.frame}(combinations, by = NULL, ...)
+
+\method{euler}{list}(combinations, ...)
 }
 \arguments{
 \item{combinations}{Set relationships as a named numeric vector, matrix, or
@@ -91,6 +94,9 @@ and rows representing each observation's set relationships (see examples).
 
 \item \code{data.frame}: A data.frame that can be converted to a matrix of logicals
 (as in the description above) via \code{\link[base]{as.matrix}}.
+
+\item \code{list}: A list of vectors, each vector giving the contents of
+that set. Vectors in the list do not need to be named. (Broken.)
 }}
 
 \examples{

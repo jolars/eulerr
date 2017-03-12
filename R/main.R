@@ -285,3 +285,27 @@ print.euler <- function(x, round = 3, ...) {
   cat("diag_error: ", round(x$diag_error, digits = round), "\n")
   cat("stress:     ", round(x$stress, digits = round), "\n")
 }
+
+#' @describeIn euler A list of vectors, each vector giving the contents of
+#'   that set. Vectors in the list do not need to be named. (Broken.)
+#' @export
+euler.list <- function(combinations, ...) {
+  assertthat::assert_that(
+    assertthat::has_attr(combinations, "names")
+  )
+
+  sets <- names(combinations)
+  n <- length(sets)
+
+  id <- eulerr:::bit_index(n)
+  mode(id) <- "logical"
+
+  out <- integer(nrow(id))
+  names(out) <- apply(id, 1, function(x) paste(sets[x], collapse = "&"))
+
+  for (i in 1:nrow(id)) {
+    out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
+  }
+
+  euler(out, input = "union", ...)
+}
