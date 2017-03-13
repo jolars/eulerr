@@ -61,17 +61,26 @@
 #' @seealso \code{\link{plot.euler}}, \code{\link{print.euler}}
 #'
 #' @examples
-#' fit1 <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+#' # First fit the euler specification
+#' fit <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+#'
+#' # Then plot it
+#' plot(fit)
 #'
 #' # Same result as above
-#' fit2 <- euler(c("A" = 1, "B" = 0.4, "C" = 3,
-#'                 "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-#'                 "A&B&C" = 0))
+#' euler(c("A" = 1, "B" = 0.4, "C" = 3,
+#'         "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
+#'         "A&B&C" = 0))
+#'
+#' # A euler diagram from a list of sample spaces (the list method)
+#' euler(list(c("a", "ab", "ac", "abc"),
+#'            c("b", "ab", "bc", "abc"),
+#'            c("c", "ac", "bc", "abc")))
 #'
 #' # Using the matrix method
 #' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
 #'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-#' fit3 <- euler(mat)
+#' euler(mat)
 #'
 #' # Using grouping via the 'by' argument
 #' dat <- data.frame(
@@ -81,7 +90,7 @@
 #'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
 #' )
 #'
-#' fit4 <- euler(dat[, 1:2], by = dat[, 3:4])
+#' euler(dat[, 1:2], by = dat[, 3:4])
 #'
 #' # A set with no perfect solution
 #' euler(c("a" = 3491, "b" = 3409, "c" = 3503,
