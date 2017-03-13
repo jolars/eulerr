@@ -297,7 +297,7 @@ euler.list <- function(combinations, ...) {
   sets <- names(combinations)
   n <- length(sets)
 
-  id <- eulerr:::bit_index(n)
+  id <- bit_index(n)
   mode(id) <- "logical"
 
   out <- integer(nrow(id))
