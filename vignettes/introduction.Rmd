@@ -40,8 +40,10 @@ for instance, the following example in which the intersection between `A` and
 
 ```{r venneuler_failure, fig.height=5, fig.width=5, fig.cap='venneuler plot with unwanted overlap.', dev.args=list(type='cairo-png')}
 venn_fit <- venneuler::venneuler(c(A = 75, B = 50, "A&B" = 0))
+opar <- par(no.readonly = TRUE)
 par(mar = c(0, 0, 0, 0))
 plot(venn_fit)
+par(opar)
 ```
 
 ## Enter eulerr
