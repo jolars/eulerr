@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^\.Rprofile$
 ^README\.Rmd$
-^README-.*\.png$
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^cran-comments\.md$
