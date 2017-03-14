@@ -96,21 +96,30 @@ and rows representing each observation's set relationships (see examples).
 (as in the description above) via \code{\link[base]{as.matrix}}.
 
 \item \code{list}: A list of vectors, each vector giving the contents of
-that set. Vectors in the list do not need to be named. (Broken.)
+that set. Vectors in the list do not need to be named.
 }}
 
 \examples{
-fit1 <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+# First fit the euler specification
+fit <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+
+# Then plot it
+plot(fit)
 
 # Same result as above
-fit2 <- euler(c("A" = 1, "B" = 0.4, "C" = 3,
-                "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-                "A&B&C" = 0))
+euler(c("A" = 1, "B" = 0.4, "C" = 3,
+        "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
+        "A&B&C" = 0))
+
+# A euler diagram from a list of sample spaces (the list method)
+euler(list(A = c("a", "ab", "ac", "abc"),
+           B = c("b", "ab", "bc", "abc"),
+           C = c("c", "ac", "bc", "abc")))
 
 # Using the matrix method
 mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-fit3 <- euler(mat)
+euler(mat)
 
 # Using grouping via the 'by' argument
 dat <- data.frame(
@@ -120,7 +129,7 @@ dat <- data.frame(
   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
 )
 
-fit4 <- euler(dat[, 1:2], by = dat[, 3:4])
+euler(dat[, 1:2], by = dat[, 3:4])
 
 # A set with no perfect solution
 euler(c("a" = 3491, "b" = 3409, "c" = 3503,
