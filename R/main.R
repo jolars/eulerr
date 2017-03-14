@@ -73,9 +73,9 @@
 #'         "A&B&C" = 0))
 #'
 #' # A euler diagram from a list of sample spaces (the list method)
-#' euler(list(c("a", "ab", "ac", "abc"),
-#'            c("b", "ab", "bc", "abc"),
-#'            c("c", "ac", "bc", "abc")))
+#' euler(list(A = c("a", "ab", "ac", "abc"),
+#'            B = c("b", "ab", "bc", "abc"),
+#'            C = c("c", "ac", "bc", "abc")))
 #'
 #' # Using the matrix method
 #' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
@@ -145,19 +145,21 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   if (match.arg(input) == "disjoint") {
     areas_disjoint <- areas
     areas[] <- 0
+
     for (i in rev(seq_along(areas))) {
       prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
       areas[i] <- sum(areas_disjoint[prev_areas])
     }
   } else if (match.arg(input) == "union") {
     areas_disjoint <- double(length(areas))
+
     for (i in rev(seq_along(areas))) {
       prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
       areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
     }
+
     if (any(areas_disjoint < 0))
-      stop("Check your set configuration. Your specification resulted in some
-         disjoint areas being set to 0.")
+      stop("Check your set configuration. Your specification resulted in some disjoint areas being set to 0.")
   }
 
   id_sums <- rowSums(id)
@@ -245,18 +247,21 @@ euler.matrix <- function(combinations, by = NULL, ...) {
         stop("Currently, no more than two grouping variables are allowed.")
     }
   }
+
   assertthat::assert_that(
     any(is.logical(combinations), is.numeric(combinations)),
     max(combinations, na.rm = TRUE) == 1,
     min(combinations, na.rm = TRUE) == 0,
     !any(grepl("&", colnames(combinations), fixed = TRUE))
   )
+
   if (is.null(by)) {
     out <- tally_combinations(combinations)
   } else {
     out <- by(combinations, by, tally_combinations, simplify = FALSE)
     class(out) <- c("by", "euler", "list")
   }
+
   out
 }
 
@@ -296,11 +301,13 @@ print.euler <- function(x, round = 3, ...) {
 }
 
 #' @describeIn euler A list of vectors, each vector giving the contents of
-#'   that set. Vectors in the list do not need to be named. (Broken.)
+#'   that set. Vectors in the list do not need to be named.
 #' @export
 euler.list <- function(combinations, ...) {
   assertthat::assert_that(
-    assertthat::has_attr(combinations, "names")
+    assertthat::has_attr(combinations, "names"),
+    !any(names(combinations) == ""),
+    !any(duplicated(names(combinations)))
   )
 
   sets <- names(combinations)
