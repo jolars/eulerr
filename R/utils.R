@@ -1,3 +1,10 @@
+# Wrapper for bit_index to return a logical matrix
+
+bit_indexr <- function(x) {
+  mode(x) <- "logical"
+  x
+}
+
 # Tally set relationships from a matrix of logicals ----------------------
 
 tally_combinations <- function(sets, ...) {
@@ -5,8 +12,7 @@ tally_combinations <- function(sets, ...) {
     sets <- as.matrix(sets)
   }
 
-  id <- bit_index(ncol(sets))
-  mode(id) <- "logical"
+  id <- bit_indexr(ncol(sets))
   tally <- double(nrow(id))
 
   for (i in 1:nrow(id)) {

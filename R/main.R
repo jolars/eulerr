@@ -128,8 +128,7 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   setnames <- unique(unlist(combo_names, use.names = FALSE))
   n <- length(setnames)
 
-  id <- bit_index(n)
-  mode(id) <- "logical"
+  id <- bit_indexr(n)
 
   areas <- double(nrow(id))
   for (i in 1:nrow(id)) {
@@ -313,8 +312,7 @@ euler.list <- function(combinations, ...) {
   sets <- names(combinations)
   n <- length(sets)
 
-  id <- bit_index(n)
-  mode(id) <- "logical"
+  id <- bit_indexr(n)
 
   out <- integer(nrow(id))
   names(out) <- apply(id, 1, function(x) paste(sets[x], collapse = "&"))
