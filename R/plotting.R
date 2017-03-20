@@ -42,9 +42,6 @@
 #' @param outer_strips Set to \code{TRUE} to put second level factors on the
 #'   left margin of the trellis plot. (This argument is only considered if there
 #'   are 2 factors specified to \code{by} in the call to \code{\link{euler}}.)
-#' @param polygon_args Deprecated
-#' @param text_args Deprecated
-#' @param mar Deprecated
 #' @param \dots Arguments to pass to \code{\link[lattice]{xyplot}}.
 #'
 #' @return An object of class \code{trellis} from \pkg{lattice}, which has
@@ -102,33 +99,7 @@ plot.euler <- function(x,
                        main = NULL,
                        layout = NULL,
                        outer_strips = TRUE,
-                       polygon_args,
-                       text_args,
-                       mar,
                        ...) {
-  # Warn about deprecated arguments
-  if (!missing(polygon_args)) {
-    warning("argument 'polygon_args' is deprecated. Please see the updated documentation.",
-            call. = FALSE)
-    if (!is.null(polygon_args[["border"]])) border <- polygon_args[["border"]]
-    if (!is.null(polygon_args[["col"]])) fill <- polygon_args[["col"]]
-    if (!is.null(polygon_args[["lty"]])) lty <- polygon_args[["lty"]]
-  }
-
-  if (!missing(text_args)) {
-    warning("argument 'text_args' is deprecated. Please see the updated documentation.",
-            call. = FALSE)
-    if (!is.null(text_args[["labels"]])) labels <- text_args[["labels"]]
-    if (!is.null(text_args[["cex"]])) cex <- text_args[["cex"]]
-    if (!is.null(text_args[["font"]])) fontface <- text_args[["font"]]
-  }
-
-  if (!missing(mar)) {
-    warning("argument 'mar' is deprecated; please use 'layout' instead.",
-            call. = FALSE)
-    layout <- mar
-  }
-
   # Assertations
   assertthat::assert_that(
     assertthat::is.number(fill_opacity),
@@ -136,12 +107,7 @@ plot.euler <- function(x,
     assertthat::is.flag(key) | is.list(key)
   )
 
-  # Set sets as a global variable to pass R CMD check
-  sets <- NULL
-
-  # If layout was given, disable useOuterStris
-  if (!is.null(layout))
-    outer_strips <- FALSE
+  ll <- list(...)
 
   # Add default key if none was specified
   if (is.logical(key)) {
@@ -155,6 +121,7 @@ plot.euler <- function(x,
     if (is.null(key[["points"]])) key[["points"]] <- FALSE
     if (is.null(key[["rectangles"]])) key[["rectangles"]] <- TRUE
   }
+  ll$auto.key <- key
 
   # Add qualitative color palette if none was given
   if (is.null(fill)) {
@@ -168,21 +135,52 @@ plot.euler <- function(x,
   # Apply opacity to color palette
   fill <- grDevices::adjustcolor(fill, fill_opacity)
 
-  # Set up lattice par settings
-  euler_par_settings <- lattice::trellis.par.get()
-  euler_par_settings$superpose.polygon$col <- fill
-  euler_par_settings$superpose.polygon$lty <- lty
-  euler_par_settings$superpose.polygon$lwd <- lwd
-  euler_par_settings$superpose.polygon$border <- border
+  ll$aspect <- "iso"
+  ll$main <- main
+  ll$fontface <- fontface
+  ll$cex <- cex
+  ll$layout <- layout
+  ll$ylab <- ""
+  ll$xlab <- ""
+  if (is.null(ll$prepanel))
+    ll$prepanel <- prepanel_euler
+  if (is.null(ll$groups))
+    ll$groups <- quote(sets)
 
+  # Remove axes unless the user wants them
+  if (is.null(ll$scales)) {
+    ll$scales <- list(x = list(draw = FALSE), y = list(draw = FALSE))
+  } else {
+    if (is.null(ll$scales$x)) {
+      ll$scales$x <- list(draw = FALSE)
+    } else if (is.null(ll$scales$x$draw)) {
+      ll$scales$x$draw <- FALSE
+    }
+    if (is.null(ll$scales$y)) {
+      ll$scales$y <- list(draw = FALSE)
+    } else if (is.null(ll$scales$y$draw)) {
+      ll$scales$y$draw <- FALSE
+    }
+  }
+
+  if (is.null(ll$par.settings))
+    ll$par.settings <- list()
+
+  if (is.null(ll$par.settings$superpose.polygon$col))
+    ll$par.settings$superpose.polygon$col <- fill
+  ll$par.settings$superpose.polygon$lty <- lty
+  ll$par.settings$superpose.polygon$lwd <- lwd
+  ll$par.settings$superpose.polygon$border <- border
+
+  # Turn off the plot area frame unless it is required.
   if (!inherits(x, "by"))
-    euler_par_settings$axis.line$col <- 0
+    if (is.null(ll$par.settings$axis.line$col))
+      ll$par.settings$axis.line$col <- 0
 
   if (inherits(x, "by")) {
     d  <- dim(x)
     dn <- dimnames(x)
-    euler_list <- data.frame()
-    label_data <- data.frame()
+    euler_list <- label_data <- data.frame()
 
     for (i in seq_along(x)) {
       ii <- i - 1
@@ -215,102 +213,48 @@ plot.euler <- function(x,
 
     euler_list$sets <- rownames(x[[i]][["coefficients"]])
 
-    if (length(dn) == 1) {
-      lattice::xyplot(
-        y ~ x | v1,
-        r = euler_list$r,
-        counts = counts,
-        label_data = label_data,
-        data = euler_list,
-        groups = sets,
-        auto.key = key,
-        aspect = "iso",
-        main = main,
-        fontface = fontface,
-        cex = cex,
-        layout = layout,
-        par.settings = euler_par_settings,
-        xlab = NULL,
-        ylab = NULL,
-        scales = list(x = list(draw = FALSE), y = list(draw = FALSE)),
-        prepanel = prepanel_euler,
-        panel = function(x, y, r, label_data, subscripts, ...) {
-          panel_circles(x, y, r, subscripts, ...)
-          if (any(!is.list(key), counts)) {
-            panel_labels(x, y, label_data, ...)
-          }
-        },
-        ...
-      )
-    } else if (length(dn) == 2) {
-      grob <- lattice::xyplot(
-        y ~ x | v1 + v2,
-        r = euler_list$r,
-        counts = counts,
-        label_data = label_data,
-        data = euler_list,
-        groups = sets,
-        auto.key = key,
-        aspect = "iso",
-        main = main,
-        fontface = fontface,
-        cex = cex,
-        layout = layout,
-        par.settings = euler_par_settings,
-        xlab = NULL,
-        ylab = NULL,
-        scales = list(x = list(draw = FALSE), y = list(draw = FALSE)),
-        prepanel = prepanel_euler,
-        panel = function(x, y, r, label_data, subscripts, ...) {
-          panel_circles(x, y, r, subscripts, ...)
-          if (any(!is.list(key), counts)) {
-            panel_labels(x, y, label_data, ...)
-          }
-        },
-        ...
-      )
-
-      if (outer_strips) {
-        latticeExtra::useOuterStrips(grob)
-      } else {
-        grob
+    ll$r <- euler_list$r
+    ll$data <- euler_list
+    ll$label_data <- label_data
+    ll$panel <- function(x, y, r, label_data, subscripts, ...) {
+      panel_circles(x, y, r, subscripts, ...)
+      if (!is.list(key) | counts) {
+        panel_labels(x, y, label_data, ...)
       }
+    }
 
+    if (length(dn) == 1) {
+      ll$x <- stats::formula(y ~ x | v1)
+
+      do.call(lattice::xyplot, ll)
+
+    } else {
+      ll$x <- stats::formula(y ~ x | v1 + v2)
+
+      if (outer_strips & is.null(layout)) {
+        latticeExtra::useOuterStrips(do.call(lattice::xyplot, ll))
+      } else {
+        do.call(lattice::xyplot, ll)
+      }
     }
   } else {
-    euler_list <- data.frame(x[["coefficients"]],
-                             rownames(x[["coefficients"]]))
-    colnames(euler_list) <- c("x", "y", "r", "sets")
+    dd <- data.frame(x[["coefficients"]], rownames(x[["coefficients"]]))
+    colnames(dd) <- c("x", "y", "r", "sets")
 
-    label_data <- position_labels(x, counts, labels, key)
+    ll$x <- stats::formula(y ~ x)
+    ll$r <- dd$r
+    ll$data <- dd
+    ll$label_data <- position_labels(x, counts, labels, key)
+    ll$panel <- function(x, y, r, label_data, subscripts, ...) {
+      panel_circles(x, y, r, subscripts, ...)
+      if (any(!is.list(key), counts)) {
+        lattice::panel.text(labels = label_data$labels,
+                            x = label_data$x,
+                            y = label_data$y, ...)
+      }
+    }
 
-    lattice::xyplot(
-      y ~ x,
-      r = euler_list$r,
-      counts = counts,
-      label_data = label_data,
-      data = euler_list,
-      groups = sets,
-      auto.key = key,
-      aspect = "iso",
-      main = main,
-      fontface = fontface,
-      cex = cex,
-      par.settings = euler_par_settings,
-      xlab = NULL,
-      ylab = NULL,
-      scales = list(x = list(draw = FALSE), y = list(draw = FALSE)),
-      prepanel = prepanel_euler,
-      panel = function(x, y, r, label_data, subscripts, ...) {
-        panel_circles(x, y, r, subscripts, ...)
-        if (any(!is.list(key), counts)) {
-          lattice::panel.text(labels = label_data$labels,
-                              x = label_data$x,
-                              y = label_data$y, ...)
-        }
-      },
-      ...
-    )
+    do.call(lattice::xyplot, ll)
   }
 }
 
@@ -436,4 +380,13 @@ position_labels <- function(fit, counts, labels, key) {
 
 fill_color <- function(n) {
   palettes[[n]]
+}
+
+
+# Convencience function to set list options -------------------------------
+
+ifnulldo <- function(x, nullobj = x, do) {
+  if (is.null(nullobj)) {
+    x <<- do
+  }
 }

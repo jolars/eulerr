@@ -4,6 +4,11 @@
 defunct.
 * `euler()` can now produce diagrams from a list of sample spaces if the input
 to `euler()` is a `list`.
+* Arguments `polygon_args`, `mar`, and `text_args` to `plot.euler()` have been
+made defunct.
+
+## Minor changes
+* `plot.euler()` now handles conflicting arguments better.
 
 # eulerr 1.1.0
 ## Major changes
