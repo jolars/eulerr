@@ -1,8 +1,9 @@
 # Wrapper for bit_index to return a logical matrix
 
 bit_indexr <- function(x) {
-  mode(x) <- "logical"
-  x
+  out <- bit_index(x)
+  mode(out) <- "logical"
+  out
 }
 
 # Tally set relationships from a matrix of logicals ----------------------
