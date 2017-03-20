@@ -7,7 +7,7 @@
 \method{plot}{euler}(x, fill = NULL, fill_opacity = 0.4, border = "black",
   lty = 1, lwd = 1, fontface = "plain", cex = 1, labels = NULL,
   key = FALSE, counts = FALSE, main = NULL, layout = NULL,
-  outer_strips = TRUE, polygon_args, text_args, mar, ...)
+  outer_strips = TRUE, ...)
 }
 \arguments{
 \item{x}{Euler diagram specification from \pkg{eulerr}}
@@ -50,12 +50,6 @@ in conjunction with \code{outer_strips}, which will be forced to
 \item{outer_strips}{Set to \code{TRUE} to put second level factors on the
 left margin of the trellis plot. (This argument is only considered if there
 are 2 factors specified to \code{by} in the call to \code{\link{euler}}.)}
-
-\item{polygon_args}{Deprecated}
-
-\item{text_args}{Deprecated}
-
-\item{mar}{Deprecated}
 
 \item{\dots}{Arguments to pass to \code{\link[lattice]{xyplot}}.}
 }
