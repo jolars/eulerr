@@ -37,17 +37,23 @@ to assess whether the resulting diagram can be trusted.
 
 ## Installation
 
-The CRAN version can be installed by running
+### CRAN version
 
 ```{r install_cran, eval = FALSE}
 install.packages("eulerr")
 ```
 
-The development version can be installed by running
+### Development version
 
 ```{r install_github, eval = FALSE}
 devtools::install_github("jolars/eulerr")
 ```
+
+### Shiny app
+
+eulerr is also available as a shiny app hosted on
+[shinyapps.io](https://shinyapps.io). You can find it
+[here](https://jolars.shinyapps.io/eulerr/).
 
 ## Usage
 

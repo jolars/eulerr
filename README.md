@@ -14,17 +14,21 @@ When solutions are approximate, residuals and error statistics are provided to a
 Installation
 ------------
 
-The CRAN version can be installed by running
+### CRAN version
 
 ``` r
 install.packages("eulerr")
 ```
 
-The development version can be installed by running
+### Development version
 
 ``` r
 devtools::install_github("jolars/eulerr")
 ```
+
+### Shiny app
+
+eulerr is also available as a shiny app hosted on [shinyapps.io](https://shinyapps.io). You can find it [here](https://jolars.shinyapps.io/eulerr/).
 
 Usage
 -----

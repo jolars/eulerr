@@ -36,7 +36,6 @@ rescale <- function(x, new_min, new_max) {
   (new_max - new_min) / (max(x) - min(x)) * (x - max(x)) + new_max
 }
 
-
 # Find min value of each column -------------------------------------------
 
 col_mins <- function(mat) {
