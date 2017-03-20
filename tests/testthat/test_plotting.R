@@ -40,29 +40,4 @@ test_that("normal plotting works without errors", {
   unlink(ff)
 })
 
-test_that("deprecated arguments throw warnings", {
-  ff <- tempfile()
-  png(filename = ff)
-  f <- euler(c(A = 5, B = 2))
-  expect_warning(plot(f, polygon_args = list(col = "black",
-                                             border = "black",
-                                             lty = 0)))
-  expect_warning(plot(f, text_args = list(labels = c("a", "b"),
-                                          cex = 2,
-                                          font = 2)))
-
-  dat <- data.frame(
-    Liberal = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-    Conservative = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-    Gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-    Nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-  )
-
-  f2 <- euler(dat[, 1:2], by = dat[, 3:4])
-
-  expect_warning(plot(f2, mar = c(2, 2, 2, 2)))
-  dev.off()
-  unlink(ff)
-})
-
 
