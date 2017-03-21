@@ -272,7 +272,7 @@ panel_circles <- function(x, y, r, subscripts, ...) {
     gp = grid::gpar(
       fill = lattice::trellis.par.get()$superpose.polygon$col,
       lty = lattice::trellis.par.get()$superpose.polygon$lty,
-      border = lattice::trellis.par.get()$superpose.polygon$border,
+      col = lattice::trellis.par.get()$superpose.polygon$border,
       lwd = lattice::trellis.par.get()$superpose.polygon$lwd,
       alpha = lattice::trellis.par.get()$superpose.polygon$alpha
     )
