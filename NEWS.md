@@ -10,6 +10,9 @@ made defunct.
 ## Minor changes
 * `plot.euler()` now handles conflicting arguments better.
 
+## Bug fixes
+* `border` argument in `plot.euler()` now works again.
+
 # eulerr 1.1.0
 ## Major changes
 * `eulerr()` and its related methods been deprecated and are being replaced by

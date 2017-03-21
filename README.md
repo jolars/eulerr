@@ -28,7 +28,7 @@ devtools::install_github("jolars/eulerr")
 
 ### Shiny app
 
-eulerr is also available as a shiny app hosted on [shinyapps.io](https://shinyapps.io). You can find it [here](https://jolars.shinyapps.io/eulerr/).
+eulerr is also available as a shiny app hosted on [shinyapps.io](https://shinyapps.io). You can find at [jolars.shinyapps.io/eulerr](https://jolars.shinyapps.io/eulerr/).
 
 Usage
 -----
@@ -85,4 +85,4 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 Thanks
 ------
 
-eulerr would not be possible without Ben Fredrickson's work on [venn.js](http://www.benfrederickson.com) or Leland Wilkinson's [venneuler](https://cran.r-project.org/package=venneuler).
+eulerr would not be possible without Ben Frederickson's work on [venn.js](http://www.benfrederickson.com) or Leland Wilkinson's [venneuler](https://cran.r-project.org/package=venneuler).
