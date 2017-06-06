@@ -9,21 +9,23 @@ matrix:
       dist: precise
       compiler: gcc
       r: release
-    - os: linux
-      dist: precise
-      compiler: gcc
-      r: release
       addons:
         apt:
           packages:
             - valgrind
-      r_check_args: '--as-cran --use-valgrind'
+      r_check_args: '--ignore-vignettes --as-cran --use-valgrind'
+      r_build_args: '--no-build-vignettes'
       env:
         - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
       r_github_packages:
         - jimhester/covr
       after_success:
         - Rscript -e 'covr::codecov()'
+
+    - os: linux
+      dist: precise
+      compiler: gcc
+      r: devel
 
     - os: linux
       dist: precise
