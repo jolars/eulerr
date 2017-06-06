@@ -23,8 +23,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    venneuler,
-    qualpalr
+    venneuler
 LinkingTo:
     Rcpp (>= 0.12.8),
     RcppArmadillo (>= 0.7.600.1.0)
