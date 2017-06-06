@@ -8,10 +8,11 @@ to `euler()` is a `list`.
 made defunct.
 
 ## Minor changes
-* `plot.euler()` now handles conflicting arguments better.
+* `plot.euler()` handles conflicting arguments better.
+* c++ routines in `eulerr` now use registration.
 
 ## Bug fixes
-* `border` argument in `plot.euler()` now works again.
+* `border` argument in `plot.euler()` works again (#7).
 
 # eulerr 1.1.0
 ## Major changes
