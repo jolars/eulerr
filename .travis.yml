@@ -9,6 +9,10 @@ matrix:
       dist: precise
       compiler: gcc
       r: release
+    - os: linux
+      dist: precise
+      compiler: gcc
+      r: release
       addons:
         apt:
           packages:
