@@ -17,7 +17,6 @@ Imports:
     assertthat,
     grid,
     lattice,
-    latticeExtra,
     Rcpp
 Suggests:
     knitr,
@@ -34,3 +33,4 @@ VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)
