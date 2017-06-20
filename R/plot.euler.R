@@ -301,6 +301,11 @@ panel.euler <- function(
 #' @param col Ignored
 #' @param font Ignored
 #' @param fontface Ignored
+#' @param identifier A character string that is prepended to the name of the
+#'   grob that is created.
+#' @param name.type A character value indicating whether the name of the grob
+#'   should have panel or strip information added to it. Typically either
+#'   `"panel"`, `"strip"`, `"strip.left"`, or `""` (for no extra information).
 #'
 #' @seealso [grid::grid.circle()].
 #'

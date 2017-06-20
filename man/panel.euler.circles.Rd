@@ -5,7 +5,7 @@
 \title{Panel Function for Circles}
 \usage{
 panel.euler.circles(x, y, r, border = "black", fill = "transparent", ...,
-  col, font, fontface)
+  identifier = NULL, name.type = "panel", col, font, fontface)
 }
 \arguments{
 \item{x}{X coordinates for the circle centers.}
@@ -19,6 +19,13 @@ panel.euler.circles(x, y, r, border = "black", fill = "transparent", ...,
 \item{fill}{Circle fill.}
 
 \item{...}{Passed on to \code{\link[grid:grid.circle]{grid::grid.circle()}}.}
+
+\item{identifier}{A character string that is prepended to the name of the
+grob that is created.}
+
+\item{name.type}{A character value indicating whether the name of the grob
+should have panel or strip information added to it. Typically either
+\code{"panel"}, \code{"strip"}, \code{"strip.left"}, or \code{""} (for no extra information).}
 
 \item{col}{Ignored}
 
