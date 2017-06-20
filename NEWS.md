@@ -2,11 +2,13 @@
 ## Major changes
 * `eulerr()` has been replaced with `euler()` (see update 1.1.0) and made
 defunct.
-* `euler()` can now produce diagrams from a list of sample spaces if the input
-to `euler()` is a `list`.
-* `plot.euler()` has been rewritten from the ground up to better match
-other high-level functions from **lattice**. This will not make much of a 
-difference for most users.
+* There are two new methods for `euler`:
+  - `euler.list()` produces diagrams from a list of sample spaces.
+  - `euler.table()` produces diagrams from a `table` object, as long as there
+     are no dimensions with values greater than 2.
+* `plot.euler()` has been rewritten (again) from the ground up to better match
+other high-level functions from **lattice**. This change is intended to be
+as smooth as possible and should not make much of a difference to *most* users.
 * Arguments `polygon_args`, `mar`, and `text_args` to `plot.euler()` have been
 made defunct.
 * Argument `key` in `plot.euler()` has been deprecated and replaced with 

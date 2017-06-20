@@ -234,23 +234,43 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
             class = c("euler", "list"))
 }
 
-#' @describeIn euler A matrix of logical vectors with columns representing sets
-#'   and rows representing each observation's set relationships (see examples).
-#'
+#' @describeIn euler A data.frame of logicals, two-level factors (see examples).
+#' @param weights A numeric vector of weights of the same length as `by` and
+#'   the number of rows in `combinations`.
 #' @export
-euler.matrix <- function(combinations, by = NULL, ...) {
+euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
+  assert_that(!any(grepl("&", colnames(combinations), fixed = TRUE)))
+
+  if (is.null(weights))
+    weights <- rep.int(1, NROW(combinations))
   if (!is.null(by)) {
     vapply(by,
            function(x) assert_that(is.factor(x) || is.character(x)),
            FUN.VALUE = logical(1))
     if (NCOL(by) > 2L)
-      stop("Currently, no more than two grouping variables are allowed.")
+      stop("No more than two conditioning variables are allowed.")
   }
 
-  assert_that(any(is.logical(combinations), is.numeric(combinations)),
-              max(combinations, na.rm = TRUE) == 1,
-              min(combinations, na.rm = TRUE) == 0,
-              !any(grepl("&", colnames(combinations), fixed = TRUE)))
+  out <- matrix(NA, nrow = NROW(combinations), ncol = NCOL(combinations))
+  colnames(out) <- colnames(combinations)
+  for (i in seq_along(combinations)) {
+    y <- combinations[, i]
+    if (is.factor(y) || is.character(y)) {
+      facs <- unique(as.character(y))
+      if (length(facs) > 2L)
+        stop("No more than 2 levels allowed.")
+      out[, i] <- y == facs[1L]
+      colnames(out)[i] <- facs[1L]
+    } else if (is.numeric(y)) {
+      out[, i] <- as.logical(y)
+    } else if (is.logical(y)) {
+      out[, i] <- y
+    } else {
+      stop("Unsupported type of variables.")
+    }
+  }
+  combinations <- as.data.frame(out)
+  combinations$weights <- weights
 
   if (is.null(by)) {
     out <- tally_combinations(combinations)
@@ -262,12 +282,24 @@ euler.matrix <- function(combinations, by = NULL, ...) {
   out
 }
 
-#' @describeIn euler A data.frame that can be converted to a matrix of logicals
-#'   (as in the description above) via [base::as.matrix()].
+#' @describeIn euler A matrix that can be converted to a data.frame of logicals
+#'   (as in the description above) via [base::as.data.frame.matrix()].
 #' @export
-euler.data.frame <- function(combinations, ...) {
-  euler(as.matrix(combinations), ...)
+euler.matrix <- function(combinations, ...) {
+  euler(as.data.frame(combinations), ...)
 }
+
+#' @describeIn euler A table with `max(dim(x)) < 3`.
+#' @export
+#' @examples
+#' plot(euler(as.table(apply(Titanic, 2:4, sum))))
+euler.table <- function(combinations, ...) {
+  if (max(dim(combinations)) > 2L)
+    stop("No table dimension may exceed 2.")
+  x <- as.data.frame(combinations)
+  euler(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
+}
+
 
 #' @describeIn euler A list of vectors, each vector giving the contents of
 #'   that set. Vectors in the list do not need to be named.

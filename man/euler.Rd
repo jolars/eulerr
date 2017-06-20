@@ -3,8 +3,9 @@
 \name{euler}
 \alias{euler}
 \alias{euler.default}
-\alias{euler.matrix}
 \alias{euler.data.frame}
+\alias{euler.matrix}
+\alias{euler.table}
 \alias{euler.list}
 \title{Area-Proportional Euler Diagrams}
 \usage{
@@ -12,9 +13,11 @@ euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"), ...)
 
-\method{euler}{matrix}(combinations, by = NULL, ...)
+\method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
 
-\method{euler}{data.frame}(combinations, ...)
+\method{euler}{matrix}(combinations, ...)
+
+\method{euler}{table}(combinations, ...)
 
 \method{euler}{list}(combinations, ...)
 }
@@ -26,6 +29,9 @@ data.frame. (See the methods (by class) section for details.)}
 
 \item{input}{The type of input: disjoint class combinations
 (\code{disjoint}) or unions (\code{union}).}
+
+\item{weights}{A numeric vector of weights of the same length as \code{by} and
+the number of rows in \code{combinations}.}
 
 \item{by}{A factor or character matrix to be used in \code{\link[base:by]{base::by()}} to
 split the data.frame or matrix of set combinations.}
@@ -89,11 +95,12 @@ explored.
 combinations seperated by an ampersand, for instance \code{A&B = 10}.
 Missing combinations are treated as being 0.
 
-\item \code{matrix}: A matrix of logical vectors with columns representing sets
-and rows representing each observation's set relationships (see examples).
+\item \code{data.frame}: A data.frame of logicals, two-level factors (see examples).
 
-\item \code{data.frame}: A data.frame that can be converted to a matrix of logicals
-(as in the description above) via \code{\link[base:as.matrix]{base::as.matrix()}}.
+\item \code{matrix}: A matrix that can be converted to a data.frame of logicals
+(as in the description above) via \code{\link[base:as.data.frame.matrix]{base::as.data.frame.matrix()}}.
+
+\item \code{table}: A table with \code{max(dim(x)) < 3}.
 
 \item \code{list}: A list of vectors, each vector giving the contents of
 that set. Vectors in the list do not need to be named.
@@ -136,6 +143,7 @@ euler(c("a" = 3491, "b" = 3409, "c" = 3503,
         "a&b" = 120, "a&c" = 114, "b&c" = 132,
         "a&b&c" = 50))
 
+plot(euler(as.table(apply(Titanic, 2:4, sum))))
 }
 \references{
 Wilkinson L. Exact and Approximate Area-Proportional Circular

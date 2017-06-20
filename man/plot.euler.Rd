@@ -97,6 +97,10 @@ plot(e_grid, auto.key = TRUE)
 
 # We can modify the grid layout as well
 plot(e_grid, layout = c(1, 4))
+
+# Titanic data
+titanic <- as.data.frame(Titanic)
+
 }
 \seealso{
 \code{\link[=panel.euler.circles]{panel.euler.circles()}}, \code{\link[=panel.euler.labels]{panel.euler.labels()}},

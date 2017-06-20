@@ -73,6 +73,10 @@
 #'
 #' # We can modify the grid layout as well
 #' plot(e_grid, layout = c(1, 4))
+#'
+#' # Titanic data
+#' titanic <- as.data.frame(Titanic)
+#'
 plot.euler <- function(
   x,
   fill = qualpalr_pal,
@@ -418,14 +422,14 @@ locate_centers <- function(x, y, r, original.values, fitted.values) {
       y0 <- py * r[i] + y[i]
       in_which <- find_surrounding_sets(x0, y0, x, y, r)
 
-      for (j in seq_len(nrow(id))[which(not_zero & id[, i])]) {
+      for (j in seq_len(nrow(id))[id[, i]]) {
         idj <- id[j, ]
-        if (all(is.na(xx[j]), not_zero[j], idj[i])) {
+        if (all(is.na(xx[j]), idj[i])) {
           if (singles[j]) {
             sums <- colSums(in_which)
             locs <- sums == min(sums)
           } else {
-            locs <- colSums(in_which == idj) == length(idj)
+            locs <- colSums(in_which[idj, ]) == sum(idj)
           }
 
           if (any(locs)) {

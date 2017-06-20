@@ -1,6 +1,8 @@
 # Tally set relationships from a matrix of logicals ----------------------
 
-tally_combinations <- function(sets, weights) {
+tally_combinations <- function(sets) {
+  weights <- sets$weights
+  sets <- sets[, !(colnames(sets) == "weights")]
   if (!is.matrix(sets))
     sets <- as.matrix(sets)
 
