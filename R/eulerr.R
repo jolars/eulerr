@@ -6,6 +6,6 @@
 #' @importFrom utils capture.output modifyList
 #' @importFrom assertthat assert_that is.number is.flag has_attr not_empty
 #' @importFrom lattice trellis.par.get xyplot panel.text lattice.options
-#'   panel.superpose packet.number
+#'   panel.superpose packet.number trellis.grobname
 #' @importFrom grid gpar grid.circle
 NULL
