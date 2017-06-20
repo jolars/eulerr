@@ -5,11 +5,9 @@ eulerr
 
 [![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 
-**eulerr** generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) with circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, eulerr sometimes produce venn diagrams and sometimes not.
+**eulerr** generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) with circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, **eulerr** sometimes produces venn diagrams and sometimes not.
 
-With three or more sets intersecting, exact euler diagrams are often impossible. For such cases eulerr attempts to provide a good approximation by numerically tuning the circles' positions and radiuses so that the sum of squared errors is minimized.
-
-When solutions are approximate, residuals and error statistics are provided to assess whether the resulting diagram can be trusted.
+With three or more sets intersecting, exact euler diagrams are often impossible. For such cases **eulerr** attempts to provide a good approximation by numerically tuning the circles' positions and radii so that the sum of squared errors is minimized. Residuals and goodness of fit statistics are provided to assess whether the resulting diagram can be trusted.
 
 Installation
 ------------

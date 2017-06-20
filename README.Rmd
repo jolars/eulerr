@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = file.path("tools", "README-"),
-  dev = 'CairoPNG'
+  dev = "CairoPNG"
 )
 ```
 
@@ -24,16 +24,14 @@ knitr::opts_chunk$set(
 relationships (intersections, unions, and disjoints) with circles.
 [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn
 diagrams without the requirement that all set interactions be present (whether
-they are empty or not), which means that, depending on input, eulerr sometimes
-produce venn diagrams and sometimes not.
+they are empty or not), which means that, depending on input, **eulerr**
+sometimes produces venn diagrams and sometimes not.
 
 With three or more sets intersecting, exact euler diagrams are often
-impossible. For such cases eulerr attempts to provide a good
-approximation by numerically tuning the circles' positions and radiuses
-so that the sum of squared errors is minimized.
-
-When solutions are approximate, residuals and error statistics are provided
-to assess whether the resulting diagram can be trusted.
+impossible. For such cases **eulerr** attempts to provide a good
+approximation by numerically tuning the circles' positions and radii
+so that the sum of squared errors is minimized. Residuals and goodness of fit
+statistics are provided to assess whether the resulting diagram can be trusted.
 
 ## Installation
 
