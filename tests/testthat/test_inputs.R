@@ -11,7 +11,6 @@ test_that("erroneous named numeric vectors returns errors", {
 
 test_that("erroneous matrix returns errors", {
   expect_error(euler(cbind(A = TRUE, "&asdf" = FALSE)))
-  expect_error(euler(cbind(A = "asfh", B = "qwer")))
 })
 
 test_that("erroneous input using by argument return errors", {
@@ -27,7 +26,6 @@ test_that("erroneous input using by argument return errors", {
   expect_error(euler(dat[, 1:2], by = dat[1:50, 3]))
   expect_error(euler(dat[, 1:2], by = list(dat[, 2])))
   expect_error(euler(dat[, 1:2], by = 1:100))
-  expect_error(euler(cbind(1:100, 1:100)))
 })
 
 test_that("arguments to print.euler are specified correctly", {
