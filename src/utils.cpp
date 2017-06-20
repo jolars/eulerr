@@ -30,3 +30,28 @@ NumericVector discdisc(NumericVector r1, NumericVector r2, NumericVector d) {
     r2e * acos((de + r2e - r1e) / (2 * d * r2)) -
     sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
+
+// [[Rcpp::export]]
+LogicalMatrix find_surrounding_sets(NumericVector xs,
+                                    NumericVector ys,
+                                    NumericVector x,
+                                    NumericVector y,
+                                    NumericVector r) {
+  int n = x.length();
+  LogicalMatrix out(n, xs.length());
+
+  for (int i = 0; i < n; i++) {
+    out(i, _) = (pow(xs - x[i], 2) + pow(ys - y[i], 2) <= pow(r[i], 2));
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
+arma::uword max_colmins(arma::mat x) {
+  uword n = x.n_cols;
+  vec mins(n);
+  for (uword i = 0; i < n; i++) {
+    mins(i) = x.col(i).min();
+  }
+  return mins.index_max() + 1;
+}

@@ -22,21 +22,20 @@ int nck(int n, int k) {
 
 // Bit indexing
 // (http://stackoverflow.com/questions/9430568/generating-combinations-in-c)
-// [[Rcpp::export]]
-arma::umat bit_index(int n) {
-  int n_combos = 0;
+arma::umat bit_index(arma::uword n) {
+  uword n_combos = 0;
 
-  for (int i = 1; i < n + 1; i++) {
+  for (uword i = 1; i < n + 1; i++) {
     n_combos += nck(n, i);
   }
 
   umat out(n_combos, n, fill::zeros);
 
-  for (int i = 1, k = 0; i < n + 1; i++) {
+  for (uword i = 1, k = 0; i < n + 1; i++) {
     std::vector<bool> v(n);
     std::fill(v.begin(), v.begin() + i, true);
     do {
-      for (int j = 0; j < n; ++j) {
+      for (uword j = 0; j < n; ++j) {
         if (v[j]) {out(k, j) = true;}
       }
       k++;
@@ -46,7 +45,12 @@ arma::umat bit_index(int n) {
   return out;
 }
 
-uvec set_intersect(const urowvec& x, const urowvec& y) {
+// [[Rcpp::export]]
+LogicalMatrix bit_indexr(arma::uword n) {
+  return wrap(bit_index(n));
+}
+
+uvec set_intersect(const arma::urowvec& x, const arma::urowvec& y) {
   std::vector<int> out;
   std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
                         std::back_inserter(out));
@@ -80,9 +84,9 @@ double disc_overlap(const vec& x, const vec& y, const vec& r) {
 
 void get_intersections(mat& int_points,
                        umat& in_circles,
-                       const vec& x,
-                       const vec& y,
-                       const vec& r) {
+                       vec& x,
+                       vec& y,
+                       vec& r) {
   uword n = x.n_elem;
 
   // Loop over all combinations of circles and their overlaps
@@ -135,9 +139,9 @@ void get_intersections(mat& int_points,
   }
 }
 
-double polyarc_areas(const mat& int_points,
-                     const vec& r,
-                     const umat& circles) {
+double polyarc_areas(mat& int_points,
+                     vec& r,
+                     umat& circles) {
   vec x_int = int_points.col(0);
   vec y_int = int_points.col(1);
   uword n = x_int.n_elem;
@@ -243,7 +247,7 @@ arma::vec return_intersections(arma::vec par) {
 }
 
 // [[Rcpp::export]]
-double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
+double venneuler_stress(arma::vec& areas, arma::vec& fit) {
   double sst = accu(square(fit));
   double slope = accu(areas % fit) / accu(square(areas));
   double sse = accu(square(fit - areas * slope));
@@ -251,7 +255,8 @@ double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
 }
 
 // [[Rcpp::export]]
-double loss_final(const arma::vec par, const arma::vec areas) {
+double loss_final(arma::vec par, arma::vec areas) {
   // Sum of squared errors
   return accu(square(areas - return_intersections(par)));
 }
+
