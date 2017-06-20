@@ -1,5 +1,10 @@
-# Tally set relationships from a matrix of logicals ----------------------
-
+#' Tally Set Relationships
+#'
+#' @param sets A data.frame with set relationships and weights.
+#'
+#' @return Calls [euler()] after the set relationships have been coerced to a
+#'   named numeric vector.
+#' @keywords internal
 tally_combinations <- function(sets) {
   weights <- sets$weights
   sets <- sets[, !(colnames(sets) == "weights")]
@@ -18,47 +23,35 @@ tally_combinations <- function(sets) {
   euler(tally)
 }
 
-# Faster expand.grid ------------------------------------------------------
-
-expand_grid <- function(x, y) {
-  cbind(rep.int(x, length(y)),
-        rep.int(x, rep.int(length(x), length(y))))
-}
-
-# Scale values to range ---------------------------------------------------
-
+#' Rescale Values to a New Range
+#'
+#' @param x Numeric vector
+#' @param new_min New min
+#' @param new_max New max
+#'
+#' @return Rescaled vector
+#' @keywords internal
 rescale <- function(x, new_min, new_max) {
   (new_max - new_min) / (max(x) - min(x)) * (x - max(x)) + new_max
 }
 
-# Find min value of each column -------------------------------------------
-
-col_mins <- function(mat) {
-  which.max(mat[(1:ncol(mat) - 1) * nrow(mat) + max.col(t(-mat))])
-}
-
-# Find min of each row
-
-row_mins <- function(x) {
-  do.call(pmin.int, as.data.frame(x))
-}
-
-# Center circles on coordinate plane --------------------------------------
-
+#' Center Circles
+#'
+#' @param pars A matrix or data.frame of x coordinates, y coordinates, and
+#'   radii.
+#'
+#' @return A centered version of `pars`.
+#' @keywords internal
 center_circles <- function(pars) {
   x <- pars[, 1L]
   y <- pars[, 2L]
   r <- pars[, 3L]
-
   xlim <- range(c(x + r, x - r))
   ylim <- range(c(y + r, y - r))
-
   pars[, 1L] <- x + abs(xlim[1L] - xlim[2L]) / 2L - xlim[2L]
   pars[, 2L] <- y + abs(ylim[1L] - ylim[2L]) / 2L - ylim[2L]
-
   pars
 }
-
 
 #' Update a List with User Input
 #'
@@ -68,7 +61,6 @@ center_circles <- function(pars) {
 #' @param val Stuff to update `x` with.
 #'
 #' @seealso [utils::modifyList()]
-#'
 #' @return Returns an updated list.
 #' @keywords internal
 update_list <- function(x, val) {
@@ -79,14 +71,6 @@ update_list <- function(x, val) {
   if (!is.list(x))
     tryCatch(x <- as.list(x))
   modifyList(x, val)
-}
-
-# Convenience function to set list options -------------------------------
-
-ifnulldo <- function(x, nullobj = x, do) {
-  if (is.null(nullobj)) {
-    x <<- do
-  }
 }
 
 #' Suppress Plotting
@@ -105,7 +89,6 @@ dont_plot <- function(x, ...) {
   unlink(tmp)
   invisible(p)
 }
-
 
 #' Suppress Printing
 #'
@@ -130,7 +113,6 @@ dont_print <- function(x, ...) {
 #' @param n Number of Colors to Generate
 #'
 #' @return A string of hex colors
-#'
 #' @keywords internal
 qualpalr_pal <- function(n) {
   palettes[[n]]
