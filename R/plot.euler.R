@@ -44,11 +44,15 @@
 #'
 #' @examples
 #' fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
-#' plot(fit, fill_opacity = 0.7)
+#' plot(fit, labels = c("foo", "bar"), fill_opacity = 0.7)
 #'
-#' # Change to italic roman font, remove borders and switch colors
-#' plot(fit, fill = c("dodgerblue4", "darkgoldenrod1"), lwd = 0,
-#'      fontface = "italic")
+#' # Customize colors, remove borders, bump alpha, color labels white
+#' plot(fit,
+#'      alpha = 0.5,
+#'      fill = c("red", "steelblue4"),
+#'      col = "white",
+#'      border = "transparent",
+#'      fontface = "bold.italic")
 #'
 #' # Add counts to the plot
 #' plot(fit, counts = TRUE)
@@ -68,11 +72,11 @@
 #'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
 #' )
 #'
-#' e_grid <- euler(dat[, 1:2], by = dat[, 3:4])
-#' plot(e_grid, auto.key = TRUE)
+#' gridfit <- euler(dat[, 1:2], by = dat[, 3:4])
+#' plot(gridfit, auto.key = TRUE)
 #'
 #' # We can modify the grid layout as well
-#' plot(e_grid, layout = c(1, 4))
+#' plot(gridfit, layout = c(1, 4))
 #'
 #' # Titanic data
 #' titanic <- as.data.frame(Titanic)
@@ -192,7 +196,6 @@ plot.euler <- function(
   ccall[[1]] <- quote(lattice::xyplot)
   ans <- eval.parent(ccall)
   ans$call <- ocall
-
   ans
 }
 
@@ -273,6 +276,7 @@ panel.euler <- function(
                       lty = lty,
                       lwd = lwd,
                       border = border,
+                      identifier = "euler",
                       ...)
 
   if ((is.list(counts) || isTRUE(counts)) || !is.null(labels)) {
@@ -309,6 +313,8 @@ panel.euler.circles <- function(
   border = "black",
   fill = "transparent",
   ...,
+  identifier = NULL,
+  name.type = "panel",
   col,
   font,
   fontface
@@ -323,13 +329,19 @@ panel.euler.circles <- function(
   else
     border
 
+  if (hasGroupNumber())
+    group <- list(...)$group.number
+  else
+    group <- 0
+
   xy <- xy.coords(x, y, recycle = TRUE)
   grid.circle(
     x = xy$x,
     y = xy$y,
     r = r,
     default.units = "native",
-    gp = gpar(fill = fill, col = border, ...)
+    gp = gpar(fill = fill, col = border, ...),
+    name = primName("circles", identifier, name.type, group)
   )
 }
 
@@ -356,6 +368,7 @@ panel.euler.labels <- function(
   singles <- rowSums(id) == 1L
 
   do_counts <- isTRUE(counts) || is.list(counts)
+  do_labels <- !is.null(labels)
 
   centers <- locate_centers(x = x,
                             y = y,
@@ -365,26 +378,34 @@ panel.euler.labels <- function(
 
   # Plot counts
   if (do_counts) {
-    offset <- rep.int(0L, length(centers$n))
-    offset[singles] <- 0.25
+    do.call(panel.text, update_list(list(
+      x = centers$x[singles],
+      y = centers$y[singles],
+      labels = centers$n[singles],
+      identifier = "counts",
+      offset = if (do_labels) 0.25 else NULL,
+      pos = if (do_labels) 1 else NULL
+    ), if (is.list(counts)) counts else list()))
 
     do.call(panel.text, update_list(list(
-      x = centers$x,
-      y = centers$y,
-      labels = centers$n,
-      pos = rep.int(1L, n),
-      offset = offset
+      x = centers$x[!singles],
+      y = centers$y[!singles],
+      labels = centers$n[!singles],
+      identifier = "counts"
     ), if (is.list(counts)) counts else list()))
   }
 
   # Plot labels
-  do.call(panel.text, update_list(list(
-    centers$x[singles],
-    centers$y[singles],
-    labels,
-    offset = 0.25,
-    pos = if (do_counts) 3L else NULL
-  ), list(...)))
+  if (do_labels)
+    do.call(panel.text, update_list(list(
+      centers$x[singles],
+      centers$y[singles],
+      labels,
+      offset = 0.25,
+      pos = if (do_counts) 3L else NULL,
+      identifier = "labels",
+      name.type = "panel"
+    ), list(...)))
 }
 
 
