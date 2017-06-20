@@ -2,11 +2,11 @@
 % Please edit documentation in R/plot.euler.R
 \name{plot.euler}
 \alias{plot.euler}
-\title{Title}
+\title{Plot Area-Proportional Euler Diagrams}
 \usage{
 \method{plot}{euler}(x, fill = qualpalr_pal, alpha = 0.4,
-  auto.key = FALSE, counts = FALSE, labels = !(isTRUE(auto.key) ||
-  is.list(auto.key)), fontface = "bold", par.settings = list(), ...,
+  auto.key = FALSE, counts = FALSE, labels = is.logical(auto.key) &&
+  !isTRUE(auto.key), fontface = "bold", par.settings = list(), ...,
   default.prepanel = prepanel.euler, default.scales = list(draw = FALSE),
   panel = panel.euler, outer_strips)
 }
@@ -22,15 +22,15 @@ the number of colors to generate, or a sequence of colors.}
 
 \item{counts}{Plot counts.}
 
-\item{labels}{Labels. A list or character vector.}
+\item{labels}{A list or character vector of labels.}
 
-\item{fontface}{Fontface for the labels. (See \code{\link[=grid:.gpar]{grid:.gpar()}}).}
+\item{fontface}{Fontface for the labels. (See \code{\link[grid:gpar]{grid::gpar()}}).}
 
 \item{par.settings}{Graphical parameters for trellis displays. See
 \code{\link[lattice:trellis.par.get]{lattice::trellis.par.get()}}.}
 
 \item{...}{Arguments to pass down to \code{\link[=panel.euler]{panel.euler()}}, which in turn passes
-them down to \code{\link[=panel.circles]{panel.circles()}} and \code{\link[=panel.labels]{panel.labels()}}.}
+them down to \code{\link[=panel.euler.circles]{panel.euler.circles()}} and \code{\link[=panel.euler.labels]{panel.euler.labels()}}.}
 
 \item{default.prepanel}{Default prepanel function. Should usually be left
 untouched.}
