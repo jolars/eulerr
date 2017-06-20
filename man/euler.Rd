@@ -144,6 +144,7 @@ euler(c("a" = 3491, "b" = 3409, "c" = 3503,
         "a&b" = 120, "a&c" = 114, "b&c" = 132,
         "a&b&c" = 50))
 
+# The table method
 plot(euler(as.table(apply(Titanic, 2:4, sum))))
 }
 \references{
