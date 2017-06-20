@@ -4,12 +4,18 @@
 defunct.
 * `euler()` can now produce diagrams from a list of sample spaces if the input
 to `euler()` is a `list`.
+* `plot.euler()` has been rewritten from the ground up to better match
+other high-level functions from **lattice**. This will not make much of a 
+difference for most users.
 * Arguments `polygon_args`, `mar`, and `text_args` to `plot.euler()` have been
 made defunct.
+* Argument `key` in `plot.euler()` has been deprecated and replaced with 
+`auto.key`.
 
 ## Minor changes
 * `plot.euler()` handles conflicting arguments better.
 * c++ routines in `eulerr` now use registration.
+* `euler()` now allows single sets (#9).
 
 ## Bug fixes
 * `border` argument in `plot.euler()` works again (#7).
