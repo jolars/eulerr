@@ -38,11 +38,9 @@ matrix:
       dist: trusty
       r: devel
       compiler: clang
-      sudo: required
-      addons:
-        apt:
-          packages:
-            - r-cran-rjava
+
+    - os: linux
+      r: oldrel
 
     - os: osx
       r: release
