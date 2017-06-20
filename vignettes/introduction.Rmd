@@ -33,34 +33,27 @@ along with the refinements that Ben Fredrickson has presented on his
 [blog](http://www.benfrederickson.com/) and made available in his javascript
 [venn.js](https://github.com/benfred/venn.js).
 
-venneuler, however, is known to produce imperfect output for
-set configurations that have perfect solutions. Consider,
-for instance, the following example in which the intersection between `A` and
-`B` is both needless and unwanted.
-
-```{r venneuler_failure, fig.height=5, fig.width=5, fig.cap='venneuler plot with unwanted overlap.', dev.args=list(type='cairo-png')}
-venn_fit <- venneuler::venneuler(c(A = 75, B = 50, "A&B" = 0))
-opar <- par(no.readonly = TRUE)
-par(mar = c(0, 0, 0, 0))
-plot(venn_fit)
-par(opar)
-```
+**venneuler**, however, is known to produce
+[imperfect output](http://benfred.github.io/venn.js/tests/venneuler_comparison/)
+for set configurations that have perfect solutions.
 
 ## Enter eulerr
 
-eulerr is based on the improvements to **venneuler** that Ben Fredrickson
+**eulerr** is based on the improvements to **venneuler** that Ben Fredrickson
 introduced with **venn.js** but has been recoded from scratch, uses different
-optimizers, and returns statistics featured in `venneuler` and `eulerAPE`.
+optimizers, and returns statistics featured in `venneuler` and `eulerAPE` as
+well as allows a range of different inputs and conditioning on additional 
+variables.
 
 ### Input
 
 At the time of writing, it is possible to provide input to `eulerr` as either
 
-* a named numeric vector with set combinations as
-    - disjoint set combinations or
-    - unions
-* a matrix of logicals with columns representing sets and rows the set
-relationships for each observation.
+* a named numeric vector with set combinations as disjoint set combinations
+or unions (depending on how the argument `type` is set),
+* a matrix or data frame of logicals with columns representing sets and rows the
+set relationships for each observation, or
+* a list of sample spaces.
 
 ```{r input}
 library(eulerr)
@@ -101,7 +94,7 @@ This shows us that the `A&C` intersection is somewhat overrepresented in
 values, however, the residuals are arguably of little concern.
 
 As an alternative, we could plot the circles in another program by retrieving
-their coordinates and radii 
+their coordinates and radii.
 
 ```{r coefs}
 coef(fit2)
