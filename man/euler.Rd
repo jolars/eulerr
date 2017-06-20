@@ -119,9 +119,9 @@ euler(c("A" = 1, "B" = 0.4, "C" = 3,
         "A&B&C" = 0))
 
 # A euler diagram from a list of sample spaces (the list method)
-f <- euler(list(A = c("a", "ab", "ac", "abc"),
-                B = c("b", "ab", "bc", "abc"),
-                C = c("c", "ac", "bc", "abc")))
+euler(list(A = c("a", "ab", "ac", "abc"),
+           B = c("b", "ab", "bc", "abc"),
+           C = c("c", "ac", "bc", "abc")))
 
 # Using the matrix method
 mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
