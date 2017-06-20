@@ -68,11 +68,15 @@ vision deficiencies based on \code{\link[qualpalr:qualpal]{qualpalr::qualpal()}}
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
-plot(fit, fill_opacity = 0.7)
+plot(fit, labels = c("foo", "bar"), fill_opacity = 0.7)
 
-# Change to italic roman font, remove borders and switch colors
-plot(fit, fill = c("dodgerblue4", "darkgoldenrod1"), lwd = 0,
-     fontface = "italic")
+# Customize colors, remove borders, bump alpha, color labels white
+plot(fit,
+     alpha = 0.5,
+     fill = c("red", "steelblue4"),
+     col = "white",
+     border = "transparent",
+     fontface = "bold.italic")
 
 # Add counts to the plot
 plot(fit, counts = TRUE)
@@ -92,11 +96,11 @@ dat <- data.frame(
   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
 )
 
-e_grid <- euler(dat[, 1:2], by = dat[, 3:4])
-plot(e_grid, auto.key = TRUE)
+gridfit <- euler(dat[, 1:2], by = dat[, 3:4])
+plot(gridfit, auto.key = TRUE)
 
 # We can modify the grid layout as well
-plot(e_grid, layout = c(1, 4))
+plot(gridfit, layout = c(1, 4))
 
 # Titanic data
 titanic <- as.data.frame(Titanic)
