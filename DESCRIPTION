@@ -1,6 +1,6 @@
 Package: eulerr
 Title: Area-Proportional Euler Diagrams
-Version: 1.1.0.9000
+Version: 2.0.0
 Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     role = c("aut", "cre")),
              person("A. Jonathan R.", "Godfrey", role = "ctb"))
