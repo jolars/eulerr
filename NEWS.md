@@ -3,9 +3,9 @@
 * `eulerr()` has been replaced with `euler()` (see update 1.1.0) and made
 defunct.
 * There are two new methods for `euler`:
-  - `euler.list()` produces diagrams from a list of sample spaces.
-  - `euler.table()` produces diagrams from a `table` object, as long as there
-     are no dimensions with values greater than 2.
+    - `euler.list()` produces diagrams from a list of sample spaces.
+    - `euler.table()` produces diagrams from a `table` object, as long as there
+      are no dimensions with values greater than 2.
 * `plot.euler()` has been rewritten (again) from the ground up to better match
 other high-level functions from **lattice**. This change is intended to be
 as smooth as possible and should not make much of a difference to *most* users.
@@ -23,9 +23,6 @@ distinguish them from the typeface used for counts.
 
 ## Bug fixes
 * `border` argument in `plot.euler()` works again (#7).
-
-## Bug fixes
-* `border` argument in `plot.euler()` now works again.
 
 # eulerr 1.1.0
 ## Major changes
