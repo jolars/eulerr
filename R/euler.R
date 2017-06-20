@@ -10,7 +10,7 @@
 #' The function minimizes the sums of squared errors between the disjoint areas
 #' in the euler diagram and the user's input, namely
 #'
-#' \deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2 }{\sum (orig - fit) ^ 2}
+#' \deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2,}{\sum (orig - fit) ^ 2,}
 #'
 #' where \eqn{\hat{y}}{fit} are estimates of \eqn{y} that are currently being
 #' explored.
@@ -19,10 +19,11 @@
 #' of the goodness of the fit:
 #'
 #' \deqn{
-#'   \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
+#'   \frac{
+#'     \sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2},
 #'   }{
-#'   \sum (fit - original) ^ 2 / \sum original ^ 2
-#' },
+#'   \sum (fit - original) ^ 2 / \sum original ^ 2,
+#' }
 #'
 #' where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
 #' regression of the fitted areas on the original areas that are currently being
@@ -32,10 +33,10 @@
 #' *eulerAPE*. `region_error` is computed as
 #'
 #' \deqn{
-#'   \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|
+#'     \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
 #'   }{
-#'   max|fit / \sum fit  - original / \sum original|
-#' }.
+#'     max|fit / \sum fit  - original / \sum original|.
+#'   }
 #'
 #' `diag_error` is simply the maximum of region_error.
 #'
@@ -292,6 +293,7 @@ euler.matrix <- function(combinations, ...) {
 #' @describeIn euler A table with `max(dim(x)) < 3`.
 #' @export
 #' @examples
+#' # The table method
 #' plot(euler(as.table(apply(Titanic, 2:4, sum))))
 euler.table <- function(combinations, ...) {
   if (max(dim(combinations)) > 2L)
@@ -315,7 +317,7 @@ euler.list <- function(combinations, ...) {
   id <- bit_indexr(n)
 
   out <- integer(nrow(id))
-  names(out) <- apply(id, 1, function(x) paste(sets[x], collapse = "&"))
+  names(out) <- apply(id, 1L, function(x) paste(sets[x], collapse = "&"))
 
   for (i in 1:nrow(id))
     out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
@@ -325,8 +327,7 @@ euler.list <- function(combinations, ...) {
 
 #' Area-Proportional Euler Diagrams (defunct)
 #'
-#' * Note: This function is defunct; please use [euler()].
-#' instead.*
+#' *Note: This function is defunct; please use [euler()] instead.*
 #'
 #' @param ... Ignored
 #'
