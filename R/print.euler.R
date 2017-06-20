@@ -1,7 +1,7 @@
-#' Print euler fits
+#' Print Euler Fits
 #'
 #' Prints a data frame of the original set relationships and the fitted
-#' values as well as diagError and stress statistics.
+#' values as well as `diag_error` and `stress` statistics.
 #'
 #' @param x Euler diagram specification from [euler()].
 #' @param round Number of decimal places to round to.
@@ -11,7 +11,7 @@
 #'
 #' @export
 print.euler <- function(x, round = 3, ...) {
-  assert_that(is.number(round), round > 0)
+  assert_that(is.number(round), round > 0L)
 
   out <- data.frame(
     "original" = x$original.values,

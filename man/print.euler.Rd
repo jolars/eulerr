@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.euler.R
 \name{print.euler}
 \alias{print.euler}
-\title{Print euler fits}
+\title{Print Euler Fits}
 \usage{
 \method{print}{euler}(x, round = 3, ...)
 }
