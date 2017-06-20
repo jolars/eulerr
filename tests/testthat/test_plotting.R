@@ -2,8 +2,8 @@ context("Test plot functions")
 
 test_that("erroneous input to plot.euler return errors", {
   f <- euler(c(A = 5, B = 2))
-  expect_error(dont_plot(f, alpha = "f"))
-  expect_error(dont_plot(f, alpha = c(2, 3)))
+  expect_error(dont_plot(f, fill_alpha = "f"))
+  expect_error(dont_plot(f, fill_alpha = c(2, 3)))
 })
 
 test_that("normal plotting works without errors", {
@@ -13,7 +13,7 @@ test_that("normal plotting works without errors", {
     f1,
     fill = c("black", "blue"),
     labels = c("Yes", "No"),
-    fill_opacity = 0.3,
+    fill_alpha = 0.3,
     fontface = 4
   ), NA)
 

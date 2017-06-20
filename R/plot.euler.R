@@ -19,7 +19,7 @@
 #' @param x An object of class `euler`.
 #' @param fill Fill color. Either a function that takes as its first argument
 #'   the number of colors to generate, or a sequence of colors.
-#' @param alpha Alpha for the fill.
+#' @param fill_alpha Alpha for the fill.
 #' @param auto.key Plot a legend for the sets.
 #' @param counts Plot counts.
 #' @param labels A list or character vector of labels.
@@ -32,7 +32,8 @@
 #'   untouched.
 #' @param ... Arguments to pass down to [panel.euler()], which in turn passes
 #'   them down to [panel.euler.circles()] and [panel.euler.labels()].
-#' @param outer_strips Deprecated.
+#' @param outer_strips Deprecated
+#' @param fill_opacity Deprecated
 #'
 #' @inherit lattice::levelplot return
 #'
@@ -44,11 +45,11 @@
 #'
 #' @examples
 #' fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
-#' plot(fit, labels = c("foo", "bar"), fill_opacity = 0.7)
+#' plot(fit, labels = c("foo", "bar"), fill_alpha = 0.7)
 #'
 #' # Customize colors, remove borders, bump alpha, color labels white
 #' plot(fit,
-#'      alpha = 0.5,
+#'      fill_alpha = 0.5,
 #'      fill = c("red", "steelblue4"),
 #'      col = "white",
 #'      border = "transparent",
@@ -84,7 +85,7 @@
 plot.euler <- function(
   x,
   fill = qualpalr_pal,
-  alpha = 0.4,
+  fill_alpha = 0.4,
   auto.key = FALSE,
   counts = FALSE,
   labels = is.logical(auto.key) && !isTRUE(auto.key),
@@ -94,12 +95,16 @@ plot.euler <- function(
   default.prepanel = prepanel.euler,
   default.scales = list(draw = FALSE),
   panel = panel.euler,
-  outer_strips
+  outer_strips,
+  fill_opacity
 ) {
-  assert_that(is.number(alpha),
+  assert_that(is.number(fill_alpha),
               is.flag(auto.key) || is.list(auto.key),
               is.flag(counts) || is.list(counts),
               is.list(par.settings))
+
+  if (!missing(fill_opacity))
+    fill_alpha <- fill_opacity
 
   if (!missing(outer_strips)) {
     warning("'outer_strips' is deprecated; try latticeExtra::useOuterStrips() for the same functionality.")
@@ -110,7 +115,7 @@ plot.euler <- function(
   if (is.function(fill))
     fill <- fill(if (is_by) nrow(x[[1]]$coefficients) else nrow(x$coefficients))
 
-  fill <- adjustcolor(fill, alpha)
+  fill <- adjustcolor(fill, fill_alpha)
 
   if (is_by) {
     dd <- do.call(rbind, lapply(x, "[[", "coefficients"))

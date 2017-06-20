@@ -4,11 +4,11 @@
 \alias{plot.euler}
 \title{Plot Area-Proportional Euler Diagrams}
 \usage{
-\method{plot}{euler}(x, fill = qualpalr_pal, alpha = 0.4,
+\method{plot}{euler}(x, fill = qualpalr_pal, fill_alpha = 0.4,
   auto.key = FALSE, counts = FALSE, labels = is.logical(auto.key) &&
   !isTRUE(auto.key), fontface = "bold", par.settings = list(), ...,
   default.prepanel = prepanel.euler, default.scales = list(draw = FALSE),
-  panel = panel.euler, outer_strips)
+  panel = panel.euler, outer_strips, fill_opacity)
 }
 \arguments{
 \item{x}{An object of class \code{euler}.}
@@ -16,7 +16,7 @@
 \item{fill}{Fill color. Either a function that takes as its first argument
 the number of colors to generate, or a sequence of colors.}
 
-\item{alpha}{Alpha for the fill.}
+\item{fill_alpha}{Alpha for the fill.}
 
 \item{auto.key}{Plot a legend for the sets.}
 
@@ -39,7 +39,9 @@ untouched.}
 
 \item{panel}{The panel function. Should usually be left untouched.}
 
-\item{outer_strips}{Deprecated.}
+\item{outer_strips}{Deprecated}
+
+\item{fill_opacity}{Deprecated}
 }
 \value{
 An object of class \code{"trellis"}. The
@@ -72,7 +74,7 @@ plot(fit, labels = c("foo", "bar"), fill_opacity = 0.7)
 
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,
-     alpha = 0.5,
+     fill_alpha = 0.5,
      fill = c("red", "steelblue4"),
      col = "white",
      border = "transparent",

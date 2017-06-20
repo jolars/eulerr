@@ -11,8 +11,6 @@ other high-level functions from **lattice**. This change is intended to be
 as smooth as possible and should not make much of a difference to *most* users.
 * Arguments `polygon_args`, `mar`, and `text_args` to `plot.euler()` have been
 made defunct.
-* Argument `key` in `plot.euler()` has been deprecated and replaced with 
-`auto.key`.
 
 ## Minor changes
 * `plot.euler()` handles conflicting arguments better.
@@ -20,6 +18,11 @@ made defunct.
 * `euler()` now allows single sets (#9).
 * Labels in `plot.euler()` now use a bold fontface by default in order to
 distinguish them from the typeface used for counts.
+* Argument `key` in `plot.euler()` has been deprecated and replaced with 
+`auto.key`. Notice that using `key` does not throw a warning since the 
+argument is used in `lattice::xyplot()` (which `plot.euler()` relies on).
+* Argument `fill_opacity` is softly deprecated and has been replaced with 
+`fill_alpha` for consistency with other lattice functions.
 
 ## Bug fixes
 * `border` argument in `plot.euler()` works again (#7).
