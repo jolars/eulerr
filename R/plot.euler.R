@@ -218,7 +218,7 @@ prepanel.euler <- function(x, y, r, subscripts, ...) {
 #' @param x X coordinates for the circle centers.
 #' @param y Y coordinates for the circle centers.
 #' @param r Radii.
-#' @param subscripts A vector of subs cripts (See [lattice::xyplot()]).
+#' @param subscripts A vector of subscripts (See [lattice::xyplot()]).
 #' @param fill Fill color for circles. (See [grid::gpar()].)
 #' @param lty Line type for circles. (See [grid::gpar()].)
 #' @param lwd Line weight for circles. (See [grid::gpar()].)

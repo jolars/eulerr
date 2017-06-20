@@ -13,7 +13,7 @@ prepanel.euler(x, y, r, subscripts, ...)
 
 \item{r}{Radii.}
 
-\item{subscripts}{A vector of subs cripts (See \code{\link[lattice:xyplot]{lattice::xyplot()}}).}
+\item{subscripts}{A vector of subscripts (See \code{\link[lattice:xyplot]{lattice::xyplot()}}).}
 
 \item{...}{Ignored.}
 }

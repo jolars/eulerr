@@ -17,7 +17,7 @@ panel.euler(x, y, r, subscripts, fill = superpose.polygon$col,
 
 \item{r}{Radii.}
 
-\item{subscripts}{A vector of subs cripts (See \code{\link[lattice:xyplot]{lattice::xyplot()}}).}
+\item{subscripts}{A vector of subscripts (See \code{\link[lattice:xyplot]{lattice::xyplot()}}).}
 
 \item{fill}{Fill color for circles. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 

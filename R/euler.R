@@ -50,7 +50,7 @@
 #'
 #' @return A list object of class 'euler' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
-#'     circles and their radiuses.}
+#'     circles and their radii.}
 #'   \item{original.values}{Set relationships provided by the user.}
 #'   \item{fitted.values}{Set relationships in the solution.}
 #'   \item{residuals}{Residuals.}
@@ -112,7 +112,7 @@
 euler <- function(combinations, ...) UseMethod("euler")
 
 #' @describeIn euler A named numeric vector, with
-#'   combinations seperated by an ampersand, for instance `A&B = 10`.
+#'   combinations separated by an ampersand, for instance `A&B = 10`.
 #'   Missing combinations are treated as being 0.
 #'
 #' @export

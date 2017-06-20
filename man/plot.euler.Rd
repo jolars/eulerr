@@ -70,7 +70,7 @@ vision deficiencies based on \code{\link[qualpalr:qualpal]{qualpalr::qualpal()}}
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
-plot(fit, labels = c("foo", "bar"), fill_opacity = 0.7)
+plot(fit, labels = c("foo", "bar"), fill_alpha = 0.7)
 
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,
@@ -103,10 +103,6 @@ plot(gridfit, auto.key = TRUE)
 
 # We can modify the grid layout as well
 plot(gridfit, layout = c(1, 4))
-
-# Titanic data
-titanic <- as.data.frame(Titanic)
-
 }
 \seealso{
 \code{\link[=panel.euler.circles]{panel.euler.circles()}}, \code{\link[=panel.euler.labels]{panel.euler.labels()}},
