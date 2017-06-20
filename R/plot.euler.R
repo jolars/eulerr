@@ -78,10 +78,6 @@
 #'
 #' # We can modify the grid layout as well
 #' plot(gridfit, layout = c(1, 4))
-#'
-#' # Titanic data
-#' titanic <- as.data.frame(Titanic)
-#'
 plot.euler <- function(
   x,
   fill = qualpalr_pal,
