@@ -18,5 +18,5 @@ Prints the results of the fit.
 }
 \description{
 Prints a data frame of the original set relationships and the fitted
-values as well as diagError and stress statistics.
+values as well as \code{diag_error} and \code{stress} statistics.
 }
