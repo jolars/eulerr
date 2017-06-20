@@ -186,6 +186,7 @@ plot.euler <- function(
   ccall$xlab <- ""
   ccall$ylab <- ""
   ccall$auto.key <- auto.key
+  ccall$fill <- fill
 
   # Make the call
   ccall[[1]] <- quote(lattice::xyplot)
@@ -409,9 +410,7 @@ locate_centers <- function(x, y, r, original.values, fitted.values) {
     n_combos <- nrow(id)
 
     # In case the user asks for counts, compute locations for these
-    xx <- yy <- double(n_combos)
-    xx[] <- NA_real_
-    yy[] <- NA_real_
+    xx <- yy <- rep.int(NA_real_, nrow(id))
 
     not_zero <- fitted.values > .Machine$double.eps ^ 0.25
 
@@ -429,7 +428,7 @@ locate_centers <- function(x, y, r, original.values, fitted.values) {
             sums <- colSums(in_which)
             locs <- sums == min(sums)
           } else {
-            locs <- colSums(in_which[idj, ]) == sum(idj)
+            locs <- colSums(in_which == idj) == nrow(in_which)
           }
 
           if (any(locs)) {
