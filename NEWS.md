@@ -16,6 +16,8 @@ made defunct.
 * `plot.euler()` handles conflicting arguments better.
 * c++ routines in `eulerr` now use registration.
 * `euler()` now allows single sets (#9).
+* Labels in `plot.euler()` now use a bold fontface by default in order to
+distinguish them from the typeface used for counts.
 
 ## Bug fixes
 * `border` argument in `plot.euler()` works again (#7).
