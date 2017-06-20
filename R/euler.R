@@ -1,4 +1,4 @@
-#' Area-proportional euler diagrams
+#' Area-Proportional Euler Diagrams
 #'
 #' Fit euler diagrams (a generalization of venn diagrams) using numerical
 #' optimization to find exact or approximate solutions to a specification of set
@@ -45,6 +45,7 @@
 #'   split the data.frame or matrix of set combinations.
 #' @param input The type of input: disjoint class combinations
 #'   (`disjoint`) or unions (`union`).
+#' @param ... Arguments passed down to other methods.
 #'
 #' @return A list object of class 'euler' with the following parameters.
 #'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
@@ -73,8 +74,8 @@
 #'
 #' # A euler diagram from a list of sample spaces (the list method)
 #' f <- euler(list(A = c("a", "ab", "ac", "abc"),
-#'            B = c("b", "ab", "bc", "abc"),
-#'            C = c("c", "ac", "bc", "abc")))
+#'                 B = c("b", "ab", "bc", "abc"),
+#'                 C = c("c", "ac", "bc", "abc")))
 #'
 #' # Using the matrix method
 #' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
@@ -114,7 +115,7 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'   Missing combinations are treated as being 0.
 #'
 #' @export
-euler.default <- function(combinations, input = c("disjoint", "union")) {
+euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   # Assertions
   assert_that(is.numeric(combinations),
               not_empty(combinations),
@@ -242,18 +243,14 @@ euler.matrix <- function(combinations, by = NULL, ...) {
     vapply(by,
            function(x) assert_that(is.factor(x) || is.character(x)),
            FUN.VALUE = logical(1))
-    if (is.matrix(by) || is.data.frame(by)) {
-      if (ncol(by) > 2)
-        stop("Currently, no more than two grouping variables are allowed.")
-    }
+    if (NCOL(by) > 2L)
+      stop("Currently, no more than two grouping variables are allowed.")
   }
 
-  assert_that(
-    any(is.logical(combinations), is.numeric(combinations)),
-    max(combinations, na.rm = TRUE) == 1,
-    min(combinations, na.rm = TRUE) == 0,
-    !any(grepl("&", colnames(combinations), fixed = TRUE))
-  )
+  assert_that(any(is.logical(combinations), is.numeric(combinations)),
+              max(combinations, na.rm = TRUE) == 1,
+              min(combinations, na.rm = TRUE) == 0,
+              !any(grepl("&", colnames(combinations), fixed = TRUE)))
 
   if (is.null(by)) {
     out <- tally_combinations(combinations)
@@ -268,8 +265,8 @@ euler.matrix <- function(combinations, by = NULL, ...) {
 #' @describeIn euler A data.frame that can be converted to a matrix of logicals
 #'   (as in the description above) via [base::as.matrix()].
 #' @export
-euler.data.frame <- function(combinations, by = NULL, ...) {
-  euler(as.matrix(combinations), by = by, ...)
+euler.data.frame <- function(combinations, ...) {
+  euler(as.matrix(combinations), ...)
 }
 
 #' @describeIn euler A list of vectors, each vector giving the contents of
@@ -291,5 +288,18 @@ euler.list <- function(combinations, ...) {
   for (i in 1:nrow(id))
     out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
 
-  euler(out, input = "union", ...)
+  euler(out, input = "union")
+}
+
+#' Area-Proportional Euler Diagrams (defunct)
+#'
+#' * Note: This function is defunct; please use [euler()].
+#' instead.*
+#'
+#' @param ... Ignored
+#'
+#' @export
+
+eulerr <- function(...) {
+  .Defunct("euler")
 }
