@@ -11,18 +11,18 @@ Description: If possible, generates exactly area-proportional Euler diagrams,
 Depends:
     R (>= 3.3.1)
 Imports:
-    grDevices,
-    utils,
-    stats,
     assertthat,
+    graphics,
+    grDevices,
     grid,
     lattice,
+    stats,
+    utils,
     Rcpp
 Suggests:
     knitr,
     rmarkdown,
-    testthat,
-    venneuler
+    testthat
 LinkingTo:
     Rcpp (>= 0.12.8),
     RcppArmadillo (>= 0.7.600.1.0)
