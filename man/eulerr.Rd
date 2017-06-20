@@ -10,8 +10,5 @@ eulerr(...)
 \item{...}{Ignored}
 }
 \description{
-\itemize{
-\item Note: This function is defunct; please use \code{\link[=euler]{euler()}}.
-instead.*
-}
+\emph{Note: This function is defunct; please use \code{\link[=euler]{euler()}} instead.}
 }

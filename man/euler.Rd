@@ -60,7 +60,7 @@ the function returns a list of euler diagrams.
 The function minimizes the sums of squared errors between the disjoint areas
 in the euler diagram and the user's input, namely
 
-\deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2 }{\sum (orig - fit) ^ 2}
+\deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2,}{\sum (orig - fit) ^ 2,}
 
 where \eqn{\hat{y}}{fit} are estimates of \eqn{y} that are currently being
 explored.
@@ -69,10 +69,11 @@ The stress statistic from \pkg{venneuler} is returned to give an indication
 of the goodness of the fit:
 
 \deqn{
-  \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
+  \frac{
+    \sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2},
   }{
-  \sum (fit - original) ^ 2 / \sum original ^ 2
-},
+  \sum (fit - original) ^ 2 / \sum original ^ 2,
+}
 
 where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
 regression of the fitted areas on the original areas that are currently being
@@ -82,10 +83,10 @@ explored.
 \emph{eulerAPE}. \code{region_error} is computed as
 
 \deqn{
-  \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|
+    \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
   }{
-  max|fit / \sum fit  - original / \sum original|
-}.
+    max|fit / \sum fit  - original / \sum original|.
+  }
 
 \code{diag_error} is simply the maximum of region_error.
 }
