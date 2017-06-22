@@ -83,12 +83,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // choose_two
-arma::umat choose_two(arma::uvec x);
+IntegerMatrix choose_two(IntegerVector x);
 RcppExport SEXP eulerr_choose_two(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::uvec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(choose_two(x));
     return rcpp_result_gen;
 END_RCPP
