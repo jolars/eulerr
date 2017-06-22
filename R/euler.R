@@ -180,9 +180,9 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     # Starting layout
     initial_layout <- optim(
       par = runif(n * 2L, 0L, sqrt(sum(r ^ 2L * pi))),
-      fn = initial_layout_optimizer,
-      gr = initial_layout_gradient,
-      distances = distances,
+      fn = optim_init_loss,
+      gr = optim_init_grad,
+      d = distances,
       disjoint = disjoint,
       contained = contained,
       two = two,
