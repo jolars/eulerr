@@ -57,6 +57,7 @@ set relationships for each observation, or
 
 ```{r input}
 library(eulerr)
+options(digits = 4)
 
 # Input in the form of a named numeric vector
 fit1 <- euler(c("A" = 25, "B" = 5, "C" = 5,
@@ -131,8 +132,8 @@ optimization.
 We also provide the diagError statistic from eulerAPE (@micallef2014):
 
 $$ \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i} \right|$$
-In our example, the diagError is ```r round(fit2$diag_error, 4)``` and our
-stress is ```r round(fit2$stress, 4)```, suggesting that the fit is accurate.
+In our example, the diagError is $`r fit2$diag_error`$ and our
+stress is $`r fit2$stress`$, suggesting that the fit is accurate.
 
 We can now be confident that eulerr provides a reasonable representation of
 our input. Were it otherwise, we would do best to stop here and look for another
