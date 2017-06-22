@@ -1,4 +1,4 @@
-# eulerr 2.0.0
+# eulerr 2.0.0.9000
 ## Major changes
 * `eulerr()` has been replaced with `euler()` (see update 1.1.0) and made
 defunct.
