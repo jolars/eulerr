@@ -125,5 +125,5 @@ qualpalr_pal <- function(n) {
 #' @return Logical.
 #' @keywords internal
 is_false <- function(x) {
-  is.logical(x) && !isTRUE(x)
+  identical(x, FALSE)
 }
