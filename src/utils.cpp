@@ -7,7 +7,7 @@ using namespace arma;
 
 // [[Rcpp::export]]
 IntegerMatrix choose_two(IntegerVector x) {
-  int n = x.size();
+  unsigned int n = x.size();
   IntegerMatrix m(n * (n - 1) / 2, 2);
 
   for (int i = 0, k = 0; i < n - 1; i++) {
