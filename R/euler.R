@@ -132,7 +132,7 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
   id <- bit_indexr(n)
 
   areas <- double(nrow(id))
-  for (i in 1:nrow(id)) {
+  for (i in 1L:nrow(id)) {
     s <- setnames[id[i, ]]
     for (j in seq_along(combo_names)) {
       if (setequal(s, combo_names[[j]])) {
@@ -141,11 +141,11 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     }
   }
 
-  if (n > 1) {
+  if (n > 1L) {
     # Decompose or collect set volumes depending on input
     if (match.arg(input) == "disjoint") {
       areas_disjoint <- areas
-      areas[] <- 0
+      areas[] <- 0L
       for (i in rev(seq_along(areas))) {
         prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
         areas[i] <- sum(areas_disjoint[prev_areas])
@@ -156,24 +156,24 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
         prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
         areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
       }
-      if (any(areas_disjoint < 0))
+      if (any(areas_disjoint < 0L))
         stop("Check your set configuration. Your specification resulted in some disjoint areas being set to 0.")
     }
 
     id_sums <- rowSums(id)
-    ones <- id_sums == 1
-    twos <- id_sums == 2
-    two <- choose_two(1:n)
+    ones <- id_sums == 1L
+    twos <- id_sums == 2L
+    two <- choose_two(1L:n)
     r <- sqrt(areas[ones] / pi)
 
     # Establish identities of disjoint and contained sets
-    disjoint <- areas[twos] == 0
-    tmp <- matrix(areas[ones][two], ncol = 2)
-    contained <- areas[twos] == tmp[, 1] | areas[twos] == tmp[, 2]
+    disjoint <- areas[twos] == 0L
+    tmp <- matrix(areas[ones][two], ncol = 2L)
+    contained <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
 
     distances <- mapply(separate_two_discs,
-                        r1 = r[two[, 1]],
-                        r2 = r[two[, 2]],
+                        r1 = r[two[, 1L]],
+                        r2 = r[two[, 2L]],
                         overlap = areas[twos],
                         USE.NAMES = FALSE)
 
@@ -185,7 +185,6 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
       d = distances,
       disjoint = disjoint,
       contained = contained,
-      two = two,
       lower = 0L,
       upper = sqrt(sum(r ^ 2L * pi)),
       method = c("L-BFGS-B")
@@ -202,13 +201,13 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     orig <- areas_disjoint
 
     names(orig) <- names(fit) <-
-      apply(id, 1, function(x) paste0(setnames[x], collapse = "&"))
+      apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
 
     region_error <- abs(fit / sum(fit) - orig / sum(orig))
     diag_error <- max(region_error)
 
     fpar <- matrix(final_layout$estimate,
-                   ncol = 3,
+                   ncol = 3L,
                    dimnames = list(setnames, c("x", "y", "r")))
     stress <- venneuler_stress(orig, fit)
 
@@ -216,10 +215,10 @@ euler.default <- function(combinations, input = c("disjoint", "union"), ...) {
     fpar <- center_circles(fpar)
   } else {
     # Just one circle
-    fpar <-  matrix(c(0, 0, sqrt(areas / pi)),
-                    ncol = 3,
+    fpar <-  matrix(c(0L, 0L, sqrt(areas / pi)),
+                    ncol = 3L,
                     dimnames = list(setnames, c("x", "y", "r")))
-    region_error <- diag_error <- stress <- 0
+    region_error <- diag_error <- stress <- 0L
     orig <- fit <- areas
     names(orig) <- names(fit) <- setnames
   }
@@ -243,7 +242,7 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
   assert_that(!any(grepl("&", colnames(combinations), fixed = TRUE)))
 
   if (is.null(weights))
-    weights <- rep.int(1, NROW(combinations))
+    weights <- rep.int(1L, NROW(combinations))
   if (!is.null(by)) {
     vapply(by,
            function(x) assert_that(is.factor(x) || is.character(x)),
@@ -319,20 +318,8 @@ euler.list <- function(combinations, ...) {
   out <- integer(nrow(id))
   names(out) <- apply(id, 1L, function(x) paste(sets[x], collapse = "&"))
 
-  for (i in 1:nrow(id))
+  for (i in 1L:nrow(id))
     out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
 
   euler(out, input = "union")
-}
-
-#' Area-Proportional Euler Diagrams (defunct)
-#'
-#' *Note: This function is defunct; please use [euler()] instead.*
-#'
-#' @param ... Ignored
-#'
-#' @export
-
-eulerr <- function(...) {
-  .Defunct("euler")
 }
