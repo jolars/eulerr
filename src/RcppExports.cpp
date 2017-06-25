@@ -81,12 +81,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // choose_two
-IntegerMatrix choose_two(IntegerVector x);
+arma::umat choose_two(arma::uvec x);
 RcppExport SEXP eulerr_choose_two(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::uvec >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(choose_two(x));
     return rcpp_result_gen;
 END_RCPP
@@ -105,16 +105,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_surrounding_sets
-LogicalMatrix find_surrounding_sets(NumericVector xs, NumericVector ys, NumericVector x, NumericVector y, NumericVector r);
+LogicalMatrix find_surrounding_sets(arma::vec xs, arma::vec ys, arma::vec x, arma::vec y, arma::vec r);
 RcppExport SEXP eulerr_find_surrounding_sets(SEXP xsSEXP, SEXP ysSEXP, SEXP xSEXP, SEXP ySEXP, SEXP rSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type xs(xsSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type ys(ysSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type r(rSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type xs(xsSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type ys(ysSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type r(rSEXP);
     rcpp_result_gen = Rcpp::wrap(find_surrounding_sets(xs, ys, x, y, r));
     return rcpp_result_gen;
 END_RCPP
