@@ -21,14 +21,13 @@ double optim_init_loss(
   for (uword i = 0, k = 0; i < n; i++) {
     for (uword j = i + 1; j < n; j++, k++) {
       vec xycold = xy.col(i) - xy.col(j);
-      double D = as_scalar(xycold.t() * xycold);
-      double dk2 = pow(d[k], 2);
-      if (disjoint[k] && (D >= dk2)) {
+      double D = as_scalar(xycold.t() * xycold) - pow(d[k], 2);
+      if (disjoint[k] && (D >= 0)) {
         continue;
-      } else if (contained[k] && (D <= dk2)) {
+      } else if (contained[k] && (D < 0)) {
         continue;
       } else {
-        out += pow(D - dk2, 2);
+        out += pow(D, 2);
       }
     }
   }
@@ -51,15 +50,14 @@ std::vector<double> optim_init_grad(
   for (uword i = 0, k = 0; i < n; i++) {
     for (uword j = i + 1; j < n; j++, k++) {
       vec xycold = xy.col(i) - xy.col(j);
-      double D = as_scalar(xycold.t() * xycold);
-      double dsq = pow(d[k], 2);
-      if (disjoint[k] && (D >= dsq)) {
+      double D = as_scalar(xycold.t() * xycold) - pow(d[k], 2);
+      if (disjoint[k] && (D >= 0)) {
         continue;
-      } else if (contained[k] && (D <= dsq)) {
+      } else if (contained[k] && (D < 0)) {
         continue;
       } else {
-        out.col(i) += (4 * (D - dsq)) * xycold;
-        out.col(j) -= (4 * (D - dsq)) * xycold;
+        out.col(i) += (4 * (D)) * xycold;
+        out.col(j) -= (4 * (D)) * xycold;
       }
     }
   }
