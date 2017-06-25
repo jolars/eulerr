@@ -36,12 +36,11 @@ arma::umat bit_index(arma::uword n) {
     std::fill(v.begin(), v.begin() + i, true);
     do {
       for (uword j = 0; j < n; ++j) {
-        if (v[j]) {out(k, j) = true;}
+        if (v[j]) out(k, j) = true;
       }
       k++;
     } while (std::prev_permutation(v.begin(), v.end()));
   }
-
   return out;
 }
 
@@ -65,17 +64,14 @@ double disc_overlap(const vec& x, const vec& y, const vec& r) {
   if (d >= r1 + r2) {
     // Disjoint
     return 0;
-
   } else if (d <= std::abs(r1 - r2)) {
     // Subset
     return datum::pi * pow(r.min(), 2);
-
   } else {
     // Intersecting
     double r1e = pow(r1, 2);
     double r2e = pow(r2, 2);
     double de = pow(d, 2);
-
     return r1e * acos((de + r1e - r2e) / (2 * d * r1)) +
       r2e * acos((de + r2e - r1e) / (2 * d * r2)) -
       sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
