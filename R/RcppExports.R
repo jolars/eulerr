@@ -17,12 +17,12 @@ loss_final <- function(par, areas) {
     .Call(eulerr_loss_final, par, areas)
 }
 
-optim_init_loss <- function(par, d, disjoint, contained, two) {
-    .Call(eulerr_optim_init_loss, par, d, disjoint, contained, two)
+optim_init_loss <- function(par, d, disjoint, contained) {
+    .Call(eulerr_optim_init_loss, par, d, disjoint, contained)
 }
 
-optim_init_grad <- function(par, d, disjoint, contained, two) {
-    .Call(eulerr_optim_init_grad, par, d, disjoint, contained, two)
+optim_init_grad <- function(par, d, disjoint, contained) {
+    .Call(eulerr_optim_init_grad, par, d, disjoint, contained)
 }
 
 choose_two <- function(x) {

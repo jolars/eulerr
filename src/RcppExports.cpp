@@ -53,32 +53,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // optim_init_loss
-double optim_init_loss(arma::vec par, arma::vec d, arma::uvec disjoint, arma::uvec contained, arma::umat two);
-RcppExport SEXP eulerr_optim_init_loss(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP, SEXP twoSEXP) {
+double optim_init_loss(arma::rowvec par, arma::vec d, arma::uvec disjoint, arma::uvec contained);
+RcppExport SEXP eulerr_optim_init_loss(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type par(parSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type par(parSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type d(dSEXP);
     Rcpp::traits::input_parameter< arma::uvec >::type disjoint(disjointSEXP);
     Rcpp::traits::input_parameter< arma::uvec >::type contained(containedSEXP);
-    Rcpp::traits::input_parameter< arma::umat >::type two(twoSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_init_loss(par, d, disjoint, contained, two));
+    rcpp_result_gen = Rcpp::wrap(optim_init_loss(par, d, disjoint, contained));
     return rcpp_result_gen;
 END_RCPP
 }
 // optim_init_grad
-NumericVector optim_init_grad(arma::vec par, arma::vec d, arma::uvec disjoint, arma::uvec contained, arma::umat two);
-RcppExport SEXP eulerr_optim_init_grad(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP, SEXP twoSEXP) {
+std::vector<double> optim_init_grad(arma::rowvec par, arma::vec d, arma::uvec disjoint, arma::uvec contained);
+RcppExport SEXP eulerr_optim_init_grad(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type par(parSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type par(parSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type d(dSEXP);
     Rcpp::traits::input_parameter< arma::uvec >::type disjoint(disjointSEXP);
     Rcpp::traits::input_parameter< arma::uvec >::type contained(containedSEXP);
-    Rcpp::traits::input_parameter< arma::umat >::type two(twoSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_init_grad(par, d, disjoint, contained, two));
+    rcpp_result_gen = Rcpp::wrap(optim_init_grad(par, d, disjoint, contained));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -138,8 +136,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"eulerr_return_intersections", (DL_FUNC) &eulerr_return_intersections, 1},
     {"eulerr_venneuler_stress", (DL_FUNC) &eulerr_venneuler_stress, 2},
     {"eulerr_loss_final", (DL_FUNC) &eulerr_loss_final, 2},
-    {"eulerr_optim_init_loss", (DL_FUNC) &eulerr_optim_init_loss, 5},
-    {"eulerr_optim_init_grad", (DL_FUNC) &eulerr_optim_init_grad, 5},
+    {"eulerr_optim_init_loss", (DL_FUNC) &eulerr_optim_init_loss, 4},
+    {"eulerr_optim_init_grad", (DL_FUNC) &eulerr_optim_init_grad, 4},
     {"eulerr_choose_two", (DL_FUNC) &eulerr_choose_two, 1},
     {"eulerr_discdisc", (DL_FUNC) &eulerr_discdisc, 3},
     {"eulerr_find_surrounding_sets", (DL_FUNC) &eulerr_find_surrounding_sets, 5},
