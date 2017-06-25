@@ -8,4 +8,6 @@
 #' @importFrom lattice trellis.par.get xyplot panel.text lattice.options
 #'   panel.superpose packet.number trellis.grobname
 #' @importFrom grid gpar grid.circle
-NULL
+
+#' @keywords internal
+"_PACKAGE"
