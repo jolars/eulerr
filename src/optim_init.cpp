@@ -5,6 +5,7 @@
 using namespace Rcpp;
 using namespace arma;
 
+// Loss function for the intial optimizer.
 // [[Rcpp::export]]
 double optim_init_loss(
     arma::rowvec par,
@@ -34,6 +35,7 @@ double optim_init_loss(
   return out;
 }
 
+// Gradient for the initial optimizer.
 // [[Rcpp::export]]
 std::vector<double> optim_init_grad(
     arma::rowvec par,
