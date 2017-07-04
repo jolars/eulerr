@@ -94,15 +94,15 @@ arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
   cx_vec::fixed<3> roots = solve_cubic(v);
 
   // Select a real root
-  double lambda = datum::nan;
-  for (auto root : roots) {
-    if (std::imag(root) == 0) {
-      lambda = std::real(root);
-      break;
-    }
-  }
+  double lambda = 0;
+  for (auto root : roots)
+    if (std::imag(root) == 0)
+      if (std::abs(std::real(root)) > lambda)
+        lambda = std::real(root);
 
   mat::fixed<3, 3> C = lambda*A + B;
+
+  C.transform([](double x) {return (std::abs(x) < sqrt(datum::eps) ? 0 : x);});
 
   // Split the degenerate conic into lines g and h
   mat::fixed<3, 2> lines = split_conic(C);
@@ -199,30 +199,33 @@ double polysegments(
     arma::mat ellipses,
     arma::umat parents
   ) {
-  rowvec x_int = points.row(0);
-  rowvec y_int = points.row(1);
+  vec x_int = points.row(0).t();
+  vec y_int = points.row(1).t();
   uword n = points.n_cols;
 
   // Sort points by their angle to the centroid
-  uvec ind = sort_index(atan2(y_int - accu(y_int)/n, x_int - accu(x_int)/n));
+  vec angle = atan2(x_int - accu(x_int)/n, y_int - accu(y_int)/n);
+  //angle.transform([](double x) {return (x >= 0 ? x : (2*datum::pi + x));});
+  uvec ind = sort_index(angle);
 
   // Reorder vectors and matrix based on angles to centroid
   points  = points.cols(ind);
   parents = parents.cols(ind);
+  x_int = x_int(ind);
+  y_int = y_int(ind);
   double area = 0;
 
   for (uword i = 0, j = n - 1; i < n; i++) {
-    // Ellipse segment
-
     // First discover which ellipses the points belong to
     uvec ii = set_intersect(parents.col(i).t(),
                             parents.col(j).t());
     vec areas(ii.n_elem);
 
+    // Ellipse segment
     for (uword k = 0; k < ii.n_elem; k++) {
       areas(k) = ellipse_segment(ellipses.col(ii(k)),
-                                 points.col(j),
-                                 points.col(i));
+                                 points.col(i),
+                                 points.col(j));
     }
 
     // If we have two circles at these points, pick the smaller
@@ -236,7 +239,7 @@ double polysegments(
 }
 
 // [[Rcpp::export]]
-arma::vec intersect_ellipses(const arma::vec par) {
+arma::mat intersect_ellipses(const arma::vec par) {
   uword n = par.n_elem/5;
   uword nint = 4 * n * (n - 1) / 2;
   umat  id = bit_index(n);
@@ -271,6 +274,7 @@ arma::vec intersect_ellipses(const arma::vec par) {
   adopters = adopters.cols(not_na);
   parents  = parents.cols(not_na);
 
+
   // Loop over each set combination
   for (uword i = 0; i < n_combos; i++) {
     urowvec sets = id.row(i);
@@ -281,15 +285,20 @@ arma::vec intersect_ellipses(const arma::vec par) {
       areas(i) = ellipse_area(ellipses.col(as_scalar(ids)));
     } else if (ids.n_elem > 1) {
       // Two or more sets
-      urowvec int_points = sum(adopters.rows(ids)) == ids.n_elem;
-      uword n_points = accu(int_points);
+      uvec subparents(parents.n_cols);
+      for (uword q = 0; q < parents.n_cols; q++) {
+        subparents(q) = any(parents(0, q) == ids) * any(parents(1, q) == ids);
+      }
+
+      uvec int_points = find((sum(adopters.rows(ids)).t() == ids.n_elem)%subparents);
+      uword n_points = int_points.n_elem;
 
       if (n_points == 0) {
         // No intersections; either disjoint or subset
         mat curr = ellipses.cols(ids);
         rowvec A = curr.row(2) % curr.row(3) * datum::pi;
         double x = curr(0, A.index_min());
-        double y = curr(0, A.index_min());
+        double y = curr(1, A.index_min());
         curr.shed_col(A.index_min());
 
         rowvec h   = curr.row(0);
@@ -301,17 +310,28 @@ arma::vec intersect_ellipses(const arma::vec par) {
           pow((x - h)%cos(phi) + (y - k)%sin(phi), 2)/pow(a, 2) +
           pow((x - h)%sin(phi) - (y - k)%cos(phi), 2)/pow(b, 2) < 1;
         if (all(is_subset)) {
-          areas(i) = min(areas);
+          areas(i) = min(A);
         } else {
           areas(i) = 0;
         }
       } else {
-        areas(i) = polysegments(points.cols(ids),
-                                ellipses.cols(ids),
-                                parents.cols(ids));
+        areas(i) = polysegments(points.cols(int_points),
+                                ellipses,
+                                parents.cols(int_points));
       }
     }
   }
-  return areas;
+
+  vec areas_out(n_combos, fill::zeros);
+
+  for (uword i = n_combos; i --> 0; ) {
+    umat subareas = id.cols(find(id.row(i) == 1));
+    uvec prev_areas = find(sum(subareas, 1) == subareas.n_cols);
+    areas_out(i) = areas(i) - accu(areas_out(prev_areas));
+  }
+  areas.print();
+  return areas_out;
+
+  //return clamp(areas_out, 0, datum::inf);
 }
 
