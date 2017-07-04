@@ -8,15 +8,13 @@ using namespace arma;
 // Loss function for the intial optimizer.
 // [[Rcpp::export]]
 double optim_init_loss(
-    arma::rowvec par,
+    arma::vec par,
     arma::vec d,
     arma::uvec disjoint,
     arma::uvec contained
   ) {
   uword n = par.n_elem/2;
-  mat xy(2, n);
-  xy.row(0) = par.head(n);
-  xy.row(1) = par.tail(n);
+  mat xy = reshape(par, n, 2).t();
 
   double out = 0;
   for (uword i = 0, k = 0; i < n; i++) {
@@ -44,9 +42,7 @@ std::vector<double> optim_init_grad(
     arma::uvec contained
   ) {
   uword n = par.n_elem/2;
-  mat xy(2, n);
-  xy.row(0) = par.head(n);
-  xy.row(1) = par.tail(n);
+  mat xy = reshape(par, n, 2).t();
 
   mat out(2, n, fill::zeros);
   for (uword i = 0, k = 0; i < n; i++) {
