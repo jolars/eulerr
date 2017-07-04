@@ -13,6 +13,38 @@ inline arma::uvec set_intersect(const arma::urowvec x, const arma::urowvec y) {
   return arma::conv_to<uvec>::from(out);
 }
 
+template <typename T>
+arma::Mat<T> adjoint(const arma::Mat<T> M) {
+  arma::Mat<T> out(3, 3);
+  T a = M(0, 0),
+    b = M(1, 0),
+    c = M(1, 1),
+    d = M(2, 0),
+    e = M(2, 1),
+    f = M(2, 2);
+
+  out(0, 0) = c*f - e*e;
+  out(1, 0) = d*e - b*f;
+  out(1, 1) = a*f - d*d;
+  out(2, 0) = b*e - c*d;
+  out(2, 1) = b*d - a*e;
+  out(2, 2) = a*c - b*b;
+
+  return symmatl(out);
+}
+
+template <typename T>
+arma::Mat<T> skewsymmat(const arma::Col<T>& v) {
+  arma::Mat<T> out(3, 3, fill::zeros);
+  out(0, 1) =  v(2);
+  out(0, 2) = -v(1);
+  out(1, 0) = -v(2);
+  out(1, 2) =  v(0);
+  out(2, 0) =  v(1);
+  out(2, 1) = -v(0);
+  return out;
+}
+
 // Number of n choose k. (Credited to Ben Voigt.)
 inline arma::uword nck(arma::uword n, arma::uword k) {
   if (k > n) return 0;
