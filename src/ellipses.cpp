@@ -129,6 +129,9 @@ arma::umat adopt(
   ) {
   arma::umat out(n, 4);
 
+  arma::rowvec x = points.row(0);
+  arma::rowvec y = points.row(1);
+
   for (uword l = 0; l < n; l++) {
     if (l == i) {
       out.row(i).ones();
@@ -136,8 +139,6 @@ arma::umat adopt(
       out.row(j).ones();
     } else {
       // Check if the points lie inside the ellipse
-      rowvec x = points.row(0);
-      rowvec y = points.row(1);
       double h   = ellipses(0, l);
       double k   = ellipses(1, l);
       double a   = ellipses(2, l);
@@ -239,6 +240,29 @@ double polysegments(
   return area;
 }
 
+
+double disjoint_or_subset(arma::mat m) {
+  arma::rowvec h, k, a, b, phi;
+  arma::rowvec A = m.row(2) % m.row(3) * datum::pi;
+  arma::uword i = A.index_min();
+  double x = m(0, i);
+  double y = m(1, i);
+  m.shed_col(i);
+
+  h   = m.row(0);
+  k   = m.row(1);
+  a   = m.row(2);
+  b   = m.row(3);
+  phi = m.row(4);
+
+  arma::urowvec is_subset =
+    arma::pow((x - h)%arma::cos(phi) + (y - k)%arma::sin(phi), 2)/(a*a) +
+    arma::pow((x - h)%arma::sin(phi) - (y - k)%arma::cos(phi), 2)/(b*b) < 1;
+
+  return all(is_subset) ? A.min() : 0;
+}
+
+
 // [[Rcpp::export]]
 arma::mat intersect_ellipses(const arma::vec par) {
   arma::uword n = par.n_elem/5;
@@ -298,24 +322,8 @@ arma::mat intersect_ellipses(const arma::vec par) {
       if (int_points.n_elem == 0) {
         // No intersections; either disjoint or subset
         mat curr = ellipses.cols(ids);
-        rowvec A = curr.row(2) % curr.row(3) * datum::pi;
-        double x = curr(0, A.index_min());
-        double y = curr(1, A.index_min());
-        curr.shed_col(A.index_min());
+        areas(i) = disjoint_or_subset(curr);
 
-        arma::rowvec h   = curr.row(0);
-        arma::rowvec k   = curr.row(1);
-        arma::rowvec a   = curr.row(2);
-        arma::rowvec b   = curr.row(3);
-        arma::rowvec phi = curr.row(4);
-        arma::urowvec is_subset =
-          pow((x - h)%cos(phi) + (y - k)%sin(phi), 2)/(a*a) +
-          pow((x - h)%sin(phi) - (y - k)%cos(phi), 2)/(b*b) < 1;
-        if (arma::all(is_subset)) {
-          areas(i) = A.min();
-        } else {
-          areas(i) = 0;
-        }
       } else {
         areas(i) = polysegments(points.cols(int_points),
                                 ellipses,
@@ -328,9 +336,9 @@ arma::mat intersect_ellipses(const arma::vec par) {
 
   for (arma::uword i = n_combos; i > 0; i--) {
     arma::umat subareas = id.cols(arma::find(id.row(i) == 1));
-    arma::uvec prev_areas =
-      arma::find(arma::sum(subareas, 1) == subareas.n_cols);
-    areas_out(i) = areas(i) - arma::accu(areas_out(prev_areas));
+    areas_out(i) = areas(i) - arma::accu(
+      areas_out(arma::find(arma::sum(subareas, 1) == subareas.n_cols))
+    );
   }
   areas.print();
   return areas_out;
