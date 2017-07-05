@@ -22,7 +22,7 @@ arma::mat intersect_conic_line(
   B = M.t()*A*M;
 
   // Pick a non-zero element of l
-  arma::uword i = arma::as_scalar(find(l != 0, 1));
+  arma::uword i = arma::as_scalar(arma::find(l != 0, 1));
   arma::uvec li = {0, 1, 2};
   li.shed_row(i);
 
@@ -31,9 +31,8 @@ arma::mat intersect_conic_line(
   if (arma::is_finite(alpha)) {
     B += alpha*M;
     arma::uvec ind = arma::ind2sub(size(B), arma::find(B != 0, 1));
-    arma::uword i0 = ind(0), i1 = ind(1);
-    out.col(0) = B.row(i0).t() / B(i0, 2);
-    out.col(1) = B.col(i1)     / B(2, i1);
+    out.col(0) = B.row(ind(0)).t() / B(ind(0), 2);
+    out.col(1) = B.col(ind(1))     / B(2, ind(1));
   } else {
     out.fill(datum::nan);
   }
@@ -46,25 +45,26 @@ arma::mat split_conic(const arma::mat A) {
   arma::mat::fixed<3, 3> B;
   arma::mat::fixed<3, 2> out;
   arma::cx_mat::fixed<3, 3> C;
+  arma::cx_vec::fixed<3> p;
 
   B = -adjoint(A);
 
   // Find non-zero index on the diagonal
-  uvec i = find(B.diag() != 0, 1);
+  arma::uvec i = arma::find(B.diag() != 0, 1);
 
-  if (i.n_elem == 1) {
-    uword ii = i(0);
+  if (i.n_elem > 0) {
+    arma::uword ii = i(0);
     std::complex<double> Bii = sqrt(B(ii, ii));
 
     if (std::real(Bii) >= 0) {
-      cx_vec p = B.col(ii) / Bii;
+      p = B.col(ii) / Bii;
       C = A + skewsymmat(p);
 
-      uvec ij = ind2sub(size(C), find(C != 0, 1));
+      arma::uvec ij = arma::ind2sub(size(C), arma::find(C != 0, 1));
       if (ij.n_elem > 0) {
         // Extract the lines
-        out.col(0) = real(C.row(ij(0)).t());
-        out.col(1) = real(C.col(ij(1)));
+        out.col(0) = arma::real(C.row(ij(0)).t());
+        out.col(1) = arma::real(C.col(ij(1)));
       } else {
         out.fill(datum::nan);
       }
@@ -79,19 +79,23 @@ arma::mat split_conic(const arma::mat A) {
 
 // [[Rcpp::export]]
 arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
-  vec::fixed<4> v;
+  arma::vec::fixed<4> v;
+  arma::mat::fixed<3, 3> C;
+  arma::mat::fixed<3, 2> lines;
+  arma::cx_vec::fixed<3> roots;
+  arma::mat::fixed<3, 4> out;
 
-  v(0) = det(A);
-  v(1) = det(join_rows(A.cols(0, 1), B.col(2))) +
-    det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2))) +
-    det(join_rows(B.col(0), A.cols(1, 2)));
-  v(2) = det(join_rows(A.col(0), B.cols(1, 2))) +
-    det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2))) +
-    det(join_rows(B.cols(0, 1), A.col(2)));
-  v(3) = det(B);
+  v(0) = arma::det(A);
+  v(1) = arma::det(arma::join_rows(A.cols(0, 1), B.col(2))) +
+    det(arma::join_rows(arma::join_rows(A.col(0), B.col(1)), A.col(2))) +
+    det(arma::join_rows(B.col(0), A.cols(1, 2)));
+  v(2) = arma::det(arma::join_rows(A.col(0), B.cols(1, 2))) +
+    det(arma::join_rows(arma::join_rows(B.col(0), A.col(1)), B.col(2))) +
+    det(arma::join_rows(B.cols(0, 1), A.col(2)));
+  v(3) = arma::det(B);
 
   // Find the cubic roots
-  cx_vec::fixed<3> roots = solve_cubic(v);
+  roots = solve_cubic(v);
 
   // Select a real root
   double lambda = 0;
@@ -100,15 +104,15 @@ arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
       if (std::abs(std::real(root)) > lambda)
         lambda = std::real(root);
 
-  mat::fixed<3, 3> C = lambda*A + B;
+  C = lambda*A + B;
 
-  C.transform([](double x) {return (std::abs(x) < sqrt(datum::eps) ? 0 : x);});
+  //C.transform([](double x) {return (std::abs(x) < sqrt(datum::eps) ? 0 : x);});
+  C(find(arma::abs(C) < sqrt(datum::eps))).zeros();
 
   // Split the degenerate conic into lines g and h
-  mat::fixed<3, 2> lines = split_conic(C);
+  lines = split_conic(C);
 
   // Intersect one of the conics with each line to get points p q
-  mat::fixed<3, 4> out;
   out.cols(0, 1) = intersect_conic_line(A, lines.col(0));
   out.cols(2, 3) = intersect_conic_line(A, lines.col(1));
 
@@ -123,11 +127,9 @@ arma::umat adopt(
     arma::uword i,
     arma::uword j
   ) {
-  umat out(n, 4, fill::zeros);
+  arma::umat out(n, 4);
 
   for (uword l = 0; l < n; l++) {
-    //mat pp = translate(hk) * rotate(-ellipses(4, l)) * translate(-hk) * points;
-
     if (l == i) {
       out.row(i).ones();
     } else if (l == j) {
@@ -154,10 +156,10 @@ double ellipse_area(arma::vec v) {
 
 // [[Rcpp::export]]
 double ellipse_segment(arma::vec v, arma::vec p0, arma::vec p1) {
-  vec    hk  = v.subvec(0, 1);
-  double a   = v[2];
-  double b   = v[3];
-  double phi = v[4];
+  arma::vec hk = v.subvec(0, 1);
+  double a     = v[2];
+  double b     = v[3];
+  double phi   = v[4];
   arma::vec::fixed<2> x, y, sector, theta;
 
   p0 = rotate(-phi) * translate(-hk) * p0;
@@ -190,7 +192,7 @@ double ellipse_segment(arma::vec v, arma::vec p0, arma::vec p1) {
     theta(0) += 2*datum::pi;
     sector = 0.5*a*b*(theta - atan2((b - a)*sin(2*theta),
                                     (b + a + (b - a)*cos(2*theta))));
-    return a*b*datum::pi - sector(0) + sector(1) + triangle;
+    return a*b*datum::pi - (sector(0) - sector(1) - triangle);
   }
 }
 
@@ -199,30 +201,29 @@ double polysegments(
     arma::mat ellipses,
     arma::umat parents
   ) {
-  vec x_int = points.row(0).t();
-  vec y_int = points.row(1).t();
-  uword n = points.n_cols;
+  arma::vec x_int = points.row(0).t();
+  arma::vec y_int = points.row(1).t();
+  arma::uword n = points.n_cols;
 
   // Sort points by their angle to the centroid
-  vec angle = atan2(x_int - accu(x_int)/n, y_int - accu(y_int)/n);
-  //angle.transform([](double x) {return (x >= 0 ? x : (2*datum::pi + x));});
-  uvec ind = sort_index(angle);
+  arma::uvec ind = arma::sort_index(arma::atan2(x_int - arma::accu(x_int)/n,
+                                                y_int - arma::accu(y_int)/n));
 
   // Reorder vectors and matrix based on angles to centroid
   points  = points.cols(ind);
   parents = parents.cols(ind);
-  x_int = x_int(ind);
-  y_int = y_int(ind);
+  x_int   = x_int(ind);
+  y_int   = y_int(ind);
   double area = 0;
 
-  for (uword i = 0, j = n - 1; i < n; i++) {
+  for (arma::uword i = 0, j = n - 1; i < n; i++) {
     // First discover which ellipses the points belong to
-    uvec ii = set_intersect(parents.col(i).t(),
-                            parents.col(j).t());
-    vec areas(ii.n_elem);
+    arma::uvec ii = set_intersect(parents.col(i).t(),
+                                  parents.col(j).t());
+    arma::vec areas(ii.n_elem);
 
     // Ellipse segment
-    for (uword k = 0; k < ii.n_elem; k++) {
+    for (arma::uword k = 0; k < ii.n_elem; k++) {
       areas(k) = ellipse_segment(ellipses.col(ii(k)),
                                  points.col(i),
                                  points.col(j));
@@ -232,7 +233,7 @@ double polysegments(
     area += areas.min();
 
     // Triangular segment
-    area += ((x_int(j) + x_int(i)) * (y_int(j) - y_int(i))) / 2;
+    area += ((x_int(j) + x_int(i))*(y_int(j) - y_int(i)))/2;
     j = i;
   }
   return area;
@@ -240,25 +241,25 @@ double polysegments(
 
 // [[Rcpp::export]]
 arma::mat intersect_ellipses(const arma::vec par) {
-  uword n = par.n_elem/5;
-  uword nint = 4 * n * (n - 1) / 2;
-  umat  id = bit_index(n);
-  uword n_combos = id.n_rows;
-  vec   areas(n_combos, fill::zeros);
+  arma::uword n = par.n_elem/5;
+  arma::uword nint = 4*n*(n - 1)/2;
+  arma::umat  id = bit_index(n);
+  arma::uword n_combos = id.n_rows;
+  arma::vec   areas(n_combos, fill::zeros);
+  arma::mat   ellipses = reshape(par, 5, n);
+  arma::cube  conics(3, 3, n);
+  arma::mat   points   (3, nint);
+  arma::umat  parents  (2, nint);
+  arma::umat  adopters (n, nint);
 
   // Set up a matrix of the ellipses in standard form and a cube of conics
-  mat  ellipses = reshape(par, 5, n);
-  cube conics(3, 3, n);
-  for (uword i = 0; i < n; i++)
+
+  for (arma::uword i = 0; i < n; i++)
     conics.slice(i) = standard_to_matrix2(ellipses.col(i));
 
   // Collect all points of intersection
-  mat  points   (3, nint);
-  umat parents  (2, nint);
-  umat adopters (n, nint);
-
-  for (uword i = 0, k = 0; i < n - 1; i++) {
-    for (uword j = i + 1; j < n; j++) {
+  for (arma::uword i = 0, k = 0; i < n - 1; i++) {
+    for (arma::uword j = i + 1; j < n; j++) {
       points.cols(k, k + 3) = intersect_conics(conics.slice(i),
                                                conics.slice(j));
       adopters.cols(k, k + 3) = adopt(points.cols(k, k + 3), ellipses, n, i, j);
@@ -269,31 +270,32 @@ arma::mat intersect_ellipses(const arma::vec par) {
   }
 
   // Shed points that are NA
-  uvec not_na = find_finite(points.row(0));
+  arma::uvec not_na = arma::find_finite(points.row(0));
   points   = points.cols(not_na);
   adopters = adopters.cols(not_na);
   parents  = parents.cols(not_na);
 
 
   // Loop over each set combination
-  for (uword i = 0; i < n_combos; i++) {
-    urowvec sets = id.row(i);
-    uvec ids = find(sets == 1);
+  for (arma::uword i = 0; i < n_combos; i++) {
+    arma::urowvec sets = id.row(i);
+    arma::uvec ids = find(sets == 1);
 
     if (ids.n_elem == 1) {
       // One set
       areas(i) = ellipse_area(ellipses.col(as_scalar(ids)));
-    } else if (ids.n_elem > 1) {
+    } else {
       // Two or more sets
-      uvec subparents(parents.n_cols);
-      for (uword q = 0; q < parents.n_cols; q++) {
-        subparents(q) = any(parents(0, q) == ids) * any(parents(1, q) == ids);
+      arma::uvec subparents(parents.n_cols);
+      for (arma::uword q = 0; q < parents.n_cols; q++) {
+        subparents(q) = arma::any(parents(0, q) == ids)*
+                        arma::any(parents(1, q) == ids);
       }
 
-      uvec int_points = find((sum(adopters.rows(ids)).t() == ids.n_elem)%subparents);
-      uword n_points = int_points.n_elem;
+      arma::uvec int_points =
+        arma::find((arma::sum(adopters.rows(ids)).t() == ids.n_elem)%subparents);
 
-      if (n_points == 0) {
+      if (int_points.n_elem == 0) {
         // No intersections; either disjoint or subset
         mat curr = ellipses.cols(ids);
         rowvec A = curr.row(2) % curr.row(3) * datum::pi;
@@ -301,16 +303,16 @@ arma::mat intersect_ellipses(const arma::vec par) {
         double y = curr(1, A.index_min());
         curr.shed_col(A.index_min());
 
-        rowvec h   = curr.row(0);
-        rowvec k   = curr.row(1);
-        rowvec a   = curr.row(2);
-        rowvec b   = curr.row(3);
-        rowvec phi = curr.row(4);
-        urowvec is_subset =
-          pow((x - h)%cos(phi) + (y - k)%sin(phi), 2)/pow(a, 2) +
-          pow((x - h)%sin(phi) - (y - k)%cos(phi), 2)/pow(b, 2) < 1;
-        if (all(is_subset)) {
-          areas(i) = min(A);
+        arma::rowvec h   = curr.row(0);
+        arma::rowvec k   = curr.row(1);
+        arma::rowvec a   = curr.row(2);
+        arma::rowvec b   = curr.row(3);
+        arma::rowvec phi = curr.row(4);
+        arma::urowvec is_subset =
+          pow((x - h)%cos(phi) + (y - k)%sin(phi), 2)/(a*a) +
+          pow((x - h)%sin(phi) - (y - k)%cos(phi), 2)/(b*b) < 1;
+        if (arma::all(is_subset)) {
+          areas(i) = A.min();
         } else {
           areas(i) = 0;
         }
@@ -322,12 +324,13 @@ arma::mat intersect_ellipses(const arma::vec par) {
     }
   }
 
-  vec areas_out(n_combos, fill::zeros);
+  arma::vec areas_out(n_combos, fill::zeros);
 
-  for (uword i = n_combos; i --> 0; ) {
-    umat subareas = id.cols(find(id.row(i) == 1));
-    uvec prev_areas = find(sum(subareas, 1) == subareas.n_cols);
-    areas_out(i) = areas(i) - accu(areas_out(prev_areas));
+  for (arma::uword i = n_combos; i > 0; i--) {
+    arma::umat subareas = id.cols(arma::find(id.row(i) == 1));
+    arma::uvec prev_areas =
+      arma::find(arma::sum(subareas, 1) == subareas.n_cols);
+    areas_out(i) = areas(i) - arma::accu(areas_out(prev_areas));
   }
   areas.print();
   return areas_out;
