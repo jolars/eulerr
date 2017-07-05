@@ -5,6 +5,10 @@
 using namespace Rcpp;
 using namespace arma;
 
+inline double ellipse_area(arma::vec v) {
+  return datum::pi * v[2] * v[3];
+}
+
 arma::mat translate(arma::vec xy) {
   mat::fixed<3, 3> out;
   out.eye();
@@ -22,24 +26,22 @@ arma::mat rotate(double phi) {
   return out;
 }
 
-// [[Rcpp::export]]
-arma::mat standard_to_matrix(arma::vec v) {
-  mat out(3, 3, fill::zeros);
-  mat trans(3, 3, fill::zeros);
+// arma::mat standard_to_matrix(arma::vec v) {
+//   mat out(3, 3, fill::zeros);
+//   mat trans(3, 3, fill::zeros);
+//
+//   out(0, 0) = 1/pow(v(2), 2);
+//   out(1, 1) = 1/pow(v(3), 2);
+//   out(2, 2) = -1;
+//
+//   double theta = v(4);
+//   vec xy = -v.subvec(0, 1);
+//
+//   out = translate(xy).t()*rotate(theta).t()*out*rotate(theta)*translate(xy);
+//   return (out + out.t()) / 2;
+// }
 
-  out(0, 0) = 1/pow(v(2), 2);
-  out(1, 1) = 1/pow(v(3), 2);
-  out(2, 2) = -1;
-
-  double theta = v(4);
-  vec xy = -v.subvec(0, 1);
-
-  out = translate(xy).t()*rotate(theta).t()*out*rotate(theta)*translate(xy);
-  return (out + out.t()) / 2;
-}
-
-// [[Rcpp::export]]
-arma::mat standard_to_matrix2(const arma::vec v) {
+arma::mat standard_to_matrix(const arma::vec v) {
   double h   = v[0],
          k   = v[1],
          a   = v[2],
@@ -66,7 +68,6 @@ arma::mat standard_to_matrix2(const arma::vec v) {
   return symmatl(out);
 }
 
-// [[Rcpp::export]]
 arma::vec matrix_to_standard(const arma::mat m) {
   double A = m.at(0, 0),
     B = m.at(1, 0) * 2,

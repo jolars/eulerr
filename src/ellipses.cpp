@@ -8,11 +8,10 @@
 using namespace Rcpp;
 using namespace arma;
 
-// [[Rcpp::export]]
 arma::mat intersect_conic_line(
     const arma::mat A,
     const arma::vec l
-) {
+  ) {
   mat::fixed<3, 3> B, M;
   mat::fixed<3, 3> C;
   mat::fixed<2, 2> Bb;
@@ -41,7 +40,6 @@ arma::mat intersect_conic_line(
   return out;
 }
 
-// [[Rcpp::export]]
 arma::mat split_conic(const arma::mat A) {
   mat::fixed<3, 3> B;
   mat::fixed<3, 2> out;
@@ -77,7 +75,6 @@ arma::mat split_conic(const arma::mat A) {
   return out;
 }
 
-// [[Rcpp::export]]
 arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
   vec::fixed<4> v;
 
@@ -100,30 +97,30 @@ arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
       if (std::abs(std::real(root)) > lambda)
         lambda = std::real(root);
 
-      mat::fixed<3, 3> C = lambda*A + B;
+  mat::fixed<3, 3> C = lambda*A + B;
 
-      C.transform([](double x) {return (std::abs(x) < sqrt(datum::eps) ? 0 : x);});
+  //C.transform([](double x) {return (std::abs(x) < sqrt(datum::eps) ? 0 : x);});
+  C(find(abs(C) < sqrt(datum::eps))).zeros();
 
-      // Split the degenerate conic into lines g and h
-      mat::fixed<3, 2> lines = split_conic(C);
+  // Split the degenerate conic into lines g and h
+  mat::fixed<3, 2> lines = split_conic(C);
 
-      // Intersect one of the conics with each line to get points p q
-      mat::fixed<3, 4> out;
-      out.cols(0, 1) = intersect_conic_line(A, lines.col(0));
-      out.cols(2, 3) = intersect_conic_line(A, lines.col(1));
+  // Intersect one of the conics with each line to get points p q
+  mat::fixed<3, 4> out;
+  out.cols(0, 1) = intersect_conic_line(A, lines.col(0));
+  out.cols(2, 3) = intersect_conic_line(A, lines.col(1));
 
-      return out;
+  return out;
 }
 
-// [[Rcpp::export]]
 arma::umat adopt(
     arma::mat points,
     arma::mat ellipses,
     arma::uword n,
     arma::uword i,
     arma::uword j
-) {
-  umat out(n, 4, fill::zeros);
+  ) {
+  umat out(n, 4);
 
   for (uword l = 0; l < n; l++) {
     //mat pp = translate(hk) * rotate(-ellipses(4, l)) * translate(-hk) * points;
@@ -134,25 +131,20 @@ arma::umat adopt(
       out.row(j).ones();
     } else {
       // Check if the points lie inside the ellipse
-      rowvec x = points.row(0);
-      rowvec y = points.row(1);
+      rowvec x   = points.row(0);
+      rowvec y   = points.row(1);
       double h   = ellipses(0, l);
       double k   = ellipses(1, l);
       double a   = ellipses(2, l);
       double b   = ellipses(3, l);
       double phi = ellipses(4, l);
       out.row(l) = pow((x - h)*cos(phi) + (y - k)*sin(phi), 2)/pow(a, 2) +
-        pow((x - h)*sin(phi) - (y - k)*cos(phi), 2)/pow(b, 2) < 1;
+                   pow((x - h)*sin(phi) - (y - k)*cos(phi), 2)/pow(b, 2) < 1;
     }
   }
   return out;
 }
 
-double ellipse_area(arma::vec v) {
-  return datum::pi * v(2) * v(3);
-}
-
-// [[Rcpp::export]]
 double ellipse_segment(arma::vec v, arma::vec p0, arma::vec p1) {
   vec    hk  = v.subvec(0, 1);
   double a   = v[2];
@@ -204,9 +196,7 @@ double polysegments(
   uword n = points.n_cols;
 
   // Sort points by their angle to the centroid
-  vec angle = atan2(x_int - accu(x_int)/n, y_int - accu(y_int)/n);
-  //angle.transform([](double x) {return (x >= 0 ? x : (2*datum::pi + x));});
-  uvec ind = sort_index(angle);
+  uvec ind = sort_index(atan2(x_int - accu(x_int)/n, y_int - accu(y_int)/n));
 
   // Reorder vectors and matrix based on angles to centroid
   points  = points.cols(ind);
@@ -217,15 +207,15 @@ double polysegments(
 
   for (uword i = 0, j = n - 1; i < n; i++) {
     // First discover which ellipses the points belong to
-    uvec ii = set_intersect(parents.col(i).t(),
-                            parents.col(j).t());
-    vec areas(ii.n_elem);
+    uvec ii = set_intersect(parents.col(i).t(), parents.col(j).t());
+    uword i_n = ii.n_elem;
+    vec areas(i_n);
 
     // Ellipse segment
-    for (uword k = 0; k < ii.n_elem; k++) {
+    for (uword k = 0; k < i_n; k++) {
       areas(k) = ellipse_segment(ellipses.col(ii(k)),
-            points.col(i),
-            points.col(j));
+                                 points.col(i),
+                                 points.col(j));
     }
 
     // If we have two circles at these points, pick the smaller
@@ -236,6 +226,26 @@ double polysegments(
     j = i;
   }
   return area;
+}
+
+double disjoint_or_subset(arma::mat M) {
+  rowvec areas = M.row(2) % M.row(3) * datum::pi;
+  uword i = areas.index_min();
+  double x = M.at(0, i);
+  double y = M.at(1, i);
+  M.shed_col(i);
+
+  rowvec xmh    = x - M.row(0);
+  rowvec ymk    = y - M.row(1);
+  rowvec a2     = pow(M.row(2), 2);
+  rowvec b2     = pow(M.row(3), 2);
+  rowvec phi    = M.row(4);
+  rowvec cosphi = cos(phi);
+  rowvec sinphi = sin(phi);
+  urowvec is_subset = pow(xmh%cosphi + ymk%sinphi, 2)/a2 +
+                      pow(xmh%sinphi - ymk%cosphi, 2)/b2 < 1;
+
+  return all(is_subset) ? areas(i) : 0;
 }
 
 // [[Rcpp::export]]
@@ -250,7 +260,7 @@ arma::mat intersect_ellipses(const arma::vec par) {
   mat  ellipses = reshape(par, 5, n);
   cube conics(3, 3, n);
   for (uword i = 0; i < n; i++)
-    conics.slice(i) = standard_to_matrix2(ellipses.col(i));
+    conics.slice(i) = standard_to_matrix(ellipses.col(i));
 
   // Collect all points of intersection
   mat  points   (3, nint);
@@ -260,7 +270,7 @@ arma::mat intersect_ellipses(const arma::vec par) {
   for (uword i = 0, k = 0; i < n - 1; i++) {
     for (uword j = i + 1; j < n; j++) {
       points.cols(k, k + 3) = intersect_conics(conics.slice(i),
-                  conics.slice(j));
+                                               conics.slice(j));
       adopters.cols(k, k + 3) = adopt(points.cols(k, k + 3), ellipses, n, i, j);
       parents(0, span(k, k + 3)).fill(i);
       parents(1, span(k, k + 3)).fill(j);
@@ -283,54 +293,35 @@ arma::mat intersect_ellipses(const arma::vec par) {
     if (ids.n_elem == 1) {
       // One set
       areas(i) = ellipse_area(ellipses.col(as_scalar(ids)));
-    } else if (ids.n_elem > 1) {
+    } else {
       // Two or more sets
       uvec subparents(parents.n_cols);
-      for (uword q = 0; q < parents.n_cols; q++) {
+      for (uword q = 0; q < parents.n_cols; q++)
         subparents(q) = any(parents(0, q) == ids) * any(parents(1, q) == ids);
-      }
 
-      uvec int_points = find((sum(adopters.rows(ids)).t() == ids.n_elem)%subparents);
-      uword n_points = int_points.n_elem;
+      uvec int_points =
+        find((sum(adopters.rows(ids)).t() == ids.n_elem)%subparents);
 
-      if (n_points == 0) {
-        // No intersections; either disjoint or subset
-        mat curr = ellipses.cols(ids);
-        rowvec A = curr.row(2) % curr.row(3) * datum::pi;
-        double x = curr(0, A.index_min());
-        double y = curr(1, A.index_min());
-        curr.shed_col(A.index_min());
+      if (int_points.n_elem == 0) {
+        // No intersections: either disjoint or subset
+        areas(i) = disjoint_or_subset(ellipses.cols(ids));
 
-        rowvec h   = curr.row(0);
-        rowvec k   = curr.row(1);
-        rowvec a   = curr.row(2);
-        rowvec b   = curr.row(3);
-        rowvec phi = curr.row(4);
-        urowvec is_subset =
-          pow((x - h)%cos(phi) + (y - k)%sin(phi), 2)/pow(a, 2) +
-          pow((x - h)%sin(phi) - (y - k)%cos(phi), 2)/pow(b, 2) < 1;
-        if (all(is_subset)) {
-          areas(i) = min(A);
-        } else {
-          areas(i) = 0;
-        }
       } else {
         areas(i) = polysegments(points.cols(int_points),
-              ellipses,
-              parents.cols(int_points));
+                                ellipses,
+                                parents.cols(int_points));
       }
     }
   }
 
   vec areas_out(n_combos, fill::zeros);
 
-  for (uword i = n_combos; i --> 0; ) {
+  for (uword i = n_combos; i-- > 0;) {
     umat subareas = id.cols(find(id.row(i) == 1));
-    uvec prev_areas = find(sum(subareas, 1) == subareas.n_cols);
-    areas_out(i) = areas(i) - accu(areas_out(prev_areas));
+    areas_out(i) =
+      areas(i) - accu(areas_out(find(sum(subareas, 1) == subareas.n_cols)));
   }
-  areas.print();
-  return areas_out;
+  //return areas_out;
 
-  //return clamp(areas_out, 0, datum::inf);
+  return clamp(areas_out, 0, datum::inf);
 }
