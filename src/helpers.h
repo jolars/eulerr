@@ -10,7 +10,15 @@ inline arma::uvec set_intersect(const arma::urowvec x, const arma::urowvec y) {
   std::vector<int> out;
   std::set_intersection(x.begin(),x.end(), y.begin(), y.end(),
                         std::back_inserter(out));
-  return arma::conv_to<uvec>::from(out);
+  return arma::conv_to<arma::uvec>::from(out);
+}
+
+// Set difference
+inline arma::uvec set_diff(const arma::uvec x, const arma::uvec y) {
+  std::vector<int> out;
+  std::set_difference(x.begin(),x.end(), y.begin(), y.end(),
+                      std::back_inserter(out));
+  return arma::conv_to<arma::uvec>::from(out);
 }
 
 template <typename T>
