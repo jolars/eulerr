@@ -41,9 +41,8 @@ arma::mat intersect_conic_line(
 }
 
 // [[Rcpp::export]]
-arma::mat split_conic(const arma::mat A) {
+void split_conic(const arma::mat A, arma::vec& l0, arma::vec& l1) {
   arma::mat::fixed<3, 3> B;
-  arma::mat::fixed<3, 2> out;
   arma::cx_mat::fixed<3, 3> C;
   arma::cx_vec::fixed<3> p;
 
@@ -52,8 +51,8 @@ arma::mat split_conic(const arma::mat A) {
   // Find non-zero index on the diagonal
   arma::uvec i = arma::find(B.diag() != 0, 1);
 
-  if (i.n_elem > 0) {
-    arma::uword ii = i(0);
+  if (i.n_elem == 1) {
+    arma::uword ii = as_scalar(i);
     std::complex<double> Bii = sqrt(B(ii, ii));
 
     if (std::real(Bii) >= 0) {
@@ -61,20 +60,13 @@ arma::mat split_conic(const arma::mat A) {
       C = A + skewsymmat(p);
 
       arma::uvec ij = arma::ind2sub(size(C), arma::find(C != 0, 1));
-      if (ij.n_elem > 0) {
+      if (ij.n_elem == 1) {
         // Extract the lines
-        out.col(0) = arma::real(C.row(ij(0)).t());
-        out.col(1) = arma::real(C.col(ij(1)));
-      } else {
-        out.fill(datum::nan);
+        l0 = arma::real(C.row(ij(0)).t());
+        l1 = arma::real(C.col(ij(1)));
       }
-    } else {
-      out.fill(datum::nan);
     }
-  } else {
-    out.fill(datum::nan);
   }
-  return out;
 }
 
 // [[Rcpp::export]]
