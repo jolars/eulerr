@@ -13,27 +13,27 @@ arma::mat intersect_conic_line(
     const arma::mat A,
     const arma::vec l
   ) {
-  mat::fixed<3, 3> B, M;
-  mat::fixed<3, 3> C;
-  mat::fixed<2, 2> Bb;
-  mat::fixed<3, 2> out;
+  arma::mat::fixed<3, 3> B, M;
+  arma::mat::fixed<2, 2> Bb;
+  arma::mat::fixed<3, 2> out;
   double alpha;
 
   M = skewsymmat(l);
-  B = M.t() * A * M;
+  B = M.t()*A*M;
 
   // Pick a non-zero element of l
-  uword i = as_scalar(find(l != 0, 1));
-  uvec li = {0, 1, 2};
+  arma::uword i = arma::as_scalar(find(l != 0, 1));
+  arma::uvec li = {0, 1, 2};
   li.shed_row(i);
 
-  alpha = (1.0/l(i))*sqrt(-det(symmatl(B.submat(li, li))));
+  alpha = sqrt(-arma::det(arma::symmatl(B.submat(li, li))))/l(i);
 
-  if (is_finite(alpha)) {
-    C = B + alpha*M;
-    uvec ind = ind2sub(size(C), find(C != 0, 1));
-    out.col(0) = C.row(ind(0)).t() / C(ind(0), 2);
-    out.col(1) = C.col(ind(1)) / C(2, ind(1));
+  if (arma::is_finite(alpha)) {
+    B += alpha*M;
+    arma::uvec ind = arma::ind2sub(size(B), arma::find(B != 0, 1));
+    arma::uword i0 = ind(0), i1 = ind(1);
+    out.col(0) = B.row(i0).t() / B(i0, 2);
+    out.col(1) = B.col(i1)     / B(2, i1);
   } else {
     out.fill(datum::nan);
   }
@@ -43,9 +43,9 @@ arma::mat intersect_conic_line(
 
 // [[Rcpp::export]]
 arma::mat split_conic(const arma::mat A) {
-  mat::fixed<3, 3> B;
-  mat::fixed<3, 2> out;
-  cx_mat::fixed<3, 3> C;
+  arma::mat::fixed<3, 3> B;
+  arma::mat::fixed<3, 2> out;
+  arma::cx_mat::fixed<3, 3> C;
 
   B = -adjoint(A);
 

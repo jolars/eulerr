@@ -6,6 +6,113 @@
 
 using namespace Rcpp;
 
+// standard_to_matrix
+arma::mat standard_to_matrix(arma::vec v);
+RcppExport SEXP eulerr_standard_to_matrix(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(standard_to_matrix(v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// standard_to_matrix2
+arma::mat standard_to_matrix2(const arma::vec v);
+RcppExport SEXP eulerr_standard_to_matrix2(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(standard_to_matrix2(v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// matrix_to_standard
+arma::vec matrix_to_standard(const arma::mat m);
+RcppExport SEXP eulerr_matrix_to_standard(SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(matrix_to_standard(m));
+    return rcpp_result_gen;
+END_RCPP
+}
+// intersect_conic_line
+arma::mat intersect_conic_line(const arma::mat A, const arma::vec l);
+RcppExport SEXP eulerr_intersect_conic_line(SEXP ASEXP, SEXP lSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type l(lSEXP);
+    rcpp_result_gen = Rcpp::wrap(intersect_conic_line(A, l));
+    return rcpp_result_gen;
+END_RCPP
+}
+// split_conic
+arma::mat split_conic(const arma::mat A);
+RcppExport SEXP eulerr_split_conic(SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(split_conic(A));
+    return rcpp_result_gen;
+END_RCPP
+}
+// intersect_conics
+arma::mat intersect_conics(const arma::mat A, const arma::mat B);
+RcppExport SEXP eulerr_intersect_conics(SEXP ASEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(intersect_conics(A, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// adopt
+arma::umat adopt(arma::mat points, arma::mat ellipses, arma::uword n, arma::uword i, arma::uword j);
+RcppExport SEXP eulerr_adopt(SEXP pointsSEXP, SEXP ellipsesSEXP, SEXP nSEXP, SEXP iSEXP, SEXP jSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type ellipses(ellipsesSEXP);
+    Rcpp::traits::input_parameter< arma::uword >::type n(nSEXP);
+    Rcpp::traits::input_parameter< arma::uword >::type i(iSEXP);
+    Rcpp::traits::input_parameter< arma::uword >::type j(jSEXP);
+    rcpp_result_gen = Rcpp::wrap(adopt(points, ellipses, n, i, j));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ellipse_segment
+double ellipse_segment(arma::vec v, arma::vec p0, arma::vec p1);
+RcppExport SEXP eulerr_ellipse_segment(SEXP vSEXP, SEXP p0SEXP, SEXP p1SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type v(vSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type p0(p0SEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type p1(p1SEXP);
+    rcpp_result_gen = Rcpp::wrap(ellipse_segment(v, p0, p1));
+    return rcpp_result_gen;
+END_RCPP
+}
+// intersect_ellipses
+arma::mat intersect_ellipses(const arma::vec par);
+RcppExport SEXP eulerr_intersect_ellipses(SEXP parSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type par(parSEXP);
+    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par));
+    return rcpp_result_gen;
+END_RCPP
+}
 // return_intersections
 arma::vec return_intersections(const arma::vec par);
 RcppExport SEXP eulerr_return_intersections(SEXP parSEXP) {
@@ -132,6 +239,15 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"eulerr_standard_to_matrix", (DL_FUNC) &eulerr_standard_to_matrix, 1},
+    {"eulerr_standard_to_matrix2", (DL_FUNC) &eulerr_standard_to_matrix2, 1},
+    {"eulerr_matrix_to_standard", (DL_FUNC) &eulerr_matrix_to_standard, 1},
+    {"eulerr_intersect_conic_line", (DL_FUNC) &eulerr_intersect_conic_line, 2},
+    {"eulerr_split_conic", (DL_FUNC) &eulerr_split_conic, 1},
+    {"eulerr_intersect_conics", (DL_FUNC) &eulerr_intersect_conics, 2},
+    {"eulerr_adopt", (DL_FUNC) &eulerr_adopt, 5},
+    {"eulerr_ellipse_segment", (DL_FUNC) &eulerr_ellipse_segment, 3},
+    {"eulerr_intersect_ellipses", (DL_FUNC) &eulerr_intersect_ellipses, 1},
     {"eulerr_return_intersections", (DL_FUNC) &eulerr_return_intersections, 1},
     {"eulerr_venneuler_stress", (DL_FUNC) &eulerr_venneuler_stress, 2},
     {"eulerr_loss_final", (DL_FUNC) &eulerr_loss_final, 2},
