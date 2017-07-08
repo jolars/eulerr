@@ -1,10 +1,13 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
+// #define ARMA_NO_DEBUG // For the final version
+
 #include <RcppArmadillo.h>
 #include "ellipse_conversions.h"
 #include "solvers.h"
 #include "helpers.h"
+
 using namespace Rcpp;
 using namespace arma;
 
@@ -13,10 +16,7 @@ arma::mat intersect_conic_line(
     const arma::vec l
   ) {
   mat::fixed<3, 3> B, M;
-  mat::fixed<3, 3> C;
-  mat::fixed<2, 2> Bb;
   mat::fixed<3, 2> out;
-  double alpha;
 
   M = skewsymmat(l);
   B = M.t() * A * M;
@@ -26,13 +26,16 @@ arma::mat intersect_conic_line(
   uvec li = {0, 1, 2};
   li.shed_row(i);
 
-  alpha = (1.0/l(i))*sqrt(-det(symmatl(B.submat(li, li))));
+  double alpha = (1.0/l(i))*sqrt(-det(symmatl(B.submat(li, li))));
 
   if (is_finite(alpha)) {
-    C = B + alpha*M;
+    mat C = B + alpha*M;
     uvec ind = ind2sub(size(C), find(C != 0, 1));
-    out.col(0) = C.row(ind(0)).t() / C(ind(0), 2);
-    out.col(1) = C.col(ind(1)) / C(2, ind(1));
+    uword i0 = ind(0);
+    uword i1 = ind(1);
+
+    out.col(0) = C.row(i0).t() / C(i0, 2);
+    out.col(1) = C.col(i1)     / C(2, i1);
   } else {
     out.fill(datum::nan);
   }
@@ -40,39 +43,28 @@ arma::mat intersect_conic_line(
   return out;
 }
 
-arma::mat split_conic(const arma::mat A) {
-  mat::fixed<3, 3> B;
-  mat::fixed<3, 2> out;
-  cx_mat::fixed<3, 3> C;
-
-  B = -adjoint(A);
+void split_conic(const arma::mat A, arma::vec& g, arma::vec& h) {
+  mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
   uvec i = find(B.diag() != 0, 1);
 
   if (i.n_elem == 1) {
-    uword ii = i(0);
+    uword ii = as_scalar(i);
     std::complex<double> Bii = sqrt(B(ii, ii));
 
     if (std::real(Bii) >= 0) {
       cx_vec p = B.col(ii) / Bii;
-      C = A + skewsymmat(p);
-
+      cx_mat C = A + skewsymmat(p);
       uvec ij = ind2sub(size(C), find(C != 0, 1));
+
       if (ij.n_elem > 0) {
         // Extract the lines
-        out.col(0) = real(C.row(ij(0)).t());
-        out.col(1) = real(C.col(ij(1)));
-      } else {
-        out.fill(datum::nan);
+        g = real(C.row(ij(0)).t());
+        h = real(C.col(ij(1)));
       }
-    } else {
-      out.fill(datum::nan);
     }
-  } else {
-    out.fill(datum::nan);
   }
-  return out;
 }
 
 arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
@@ -80,17 +72,17 @@ arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
 
   v(0) = det(A);
   v(1) = det(join_rows(A.cols(0, 1), B.col(2))) +
-    det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2))) +
-    det(join_rows(B.col(0), A.cols(1, 2)));
+         det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2))) +
+         det(join_rows(B.col(0), A.cols(1, 2)));
   v(2) = det(join_rows(A.col(0), B.cols(1, 2))) +
-    det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2))) +
-    det(join_rows(B.cols(0, 1), A.col(2)));
+         det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2))) +
+         det(join_rows(B.cols(0, 1), A.col(2)));
   v(3) = det(B);
 
   // Find the cubic roots
   cx_vec::fixed<3> roots = solve_cubic(v);
 
-  // Select a real root
+  // Select the largest real root
   double lambda = 0;
   for (auto root : roots)
     if (std::imag(root) == 0)
@@ -99,16 +91,18 @@ arma::mat intersect_conics(const arma::mat A, const arma::mat B) {
 
   mat::fixed<3, 3> C = lambda*A + B;
 
-  //C.transform([](double x) {return (std::abs(x) < sqrt(datum::eps) ? 0 : x);});
   C(find(abs(C) < sqrt(datum::eps))).zeros();
 
   // Split the degenerate conic into lines g and h
-  mat::fixed<3, 2> lines = split_conic(C);
+  vec::fixed<3> g, h;
+  g.fill(datum::nan);
+  h.fill(datum::nan);
+  split_conic(C, g, h);
 
   // Intersect one of the conics with each line to get points p q
   mat::fixed<3, 4> out;
-  out.cols(0, 1) = intersect_conic_line(A, lines.col(0));
-  out.cols(2, 3) = intersect_conic_line(A, lines.col(1));
+  out.cols(0, 1) = intersect_conic_line(A, g);
+  out.cols(2, 3) = intersect_conic_line(A, h);
 
   return out;
 }
@@ -123,8 +117,6 @@ arma::umat adopt(
   umat out(n, 4);
 
   for (uword l = 0; l < n; l++) {
-    //mat pp = translate(hk) * rotate(-ellipses(4, l)) * translate(-hk) * points;
-
     if (l == i) {
       out.row(i).ones();
     } else if (l == j) {
@@ -147,24 +139,21 @@ arma::umat adopt(
 
 double ellipse_segment(arma::vec v, arma::vec p0, arma::vec p1) {
   vec    hk  = v.subvec(0, 1);
-  double a   = v[2];
-  double b   = v[3];
-  double phi = v[4];
+  double a   = v(2);
+  double b   = v(3);
+  double phi = v(4);
   arma::vec::fixed<2> x, y, sector, theta;
 
   p0 = rotate(-phi) * translate(-hk) * p0;
   p1 = rotate(-phi) * translate(-hk) * p1;
 
-  x[0] = p0[0];
-  x[1] = p1[0];
-  y[0] = p0[1];
-  y[1] = p1[1];
+  x(0) = p0(0);
+  x(1) = p1(0);
+  y(0) = p0(1);
+  y(1) = p1(1);
 
   // Find the angle to the points from the center of the ellipse.
   theta = arma::atan2(y, x);
-
-  // Add 2 pi to negative radians
-  //theta.transform([](double x) {return (x >= 0 ? x : (2*datum::pi + x));});
 
   if (theta(1) < theta(0))
     theta(1) += 2*datum::pi;
@@ -190,7 +179,7 @@ double polysegments(
     arma::mat points,
     arma::mat ellipses,
     arma::umat parents
-) {
+  ) {
   vec x_int = points.row(0).t();
   vec y_int = points.row(1).t();
   uword n = points.n_cols;
@@ -231,8 +220,8 @@ double polysegments(
 double disjoint_or_subset(arma::mat M) {
   rowvec areas = M.row(2) % M.row(3) * datum::pi;
   uword i = areas.index_min();
-  double x = M.at(0, i);
-  double y = M.at(1, i);
+  double x = M(0, i);
+  double y = M(1, i);
   M.shed_col(i);
 
   rowvec xmh    = x - M.row(0);
@@ -242,6 +231,7 @@ double disjoint_or_subset(arma::mat M) {
   rowvec phi    = M.row(4);
   rowvec cosphi = cos(phi);
   rowvec sinphi = sin(phi);
+
   urowvec is_subset = pow(xmh%cosphi + ymk%sinphi, 2)/a2 +
                       pow(xmh%sinphi - ymk%cosphi, 2)/b2 < 1;
 
@@ -314,14 +304,12 @@ arma::mat intersect_ellipses(const arma::vec par) {
     }
   }
 
-  vec areas_out(n_combos, fill::zeros);
+  vec out(n_combos, fill::zeros);
 
   for (uword i = n_combos; i-- > 0;) {
     umat subareas = id.cols(find(id.row(i) == 1));
-    areas_out(i) =
-      areas(i) - accu(areas_out(find(sum(subareas, 1) == subareas.n_cols)));
+    out(i) = areas(i) - accu(out(find(sum(subareas, 1) == subareas.n_cols)));
   }
-  //return areas_out;
 
-  return clamp(areas_out, 0, datum::inf);
+  return clamp(out, 0, datum::inf);
 }
