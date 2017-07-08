@@ -142,7 +142,7 @@ double ellipse_segment(arma::vec v, arma::vec p0, arma::vec p1) {
   double a   = v(2);
   double b   = v(3);
   double phi = v(4);
-  arma::vec::fixed<2> x, y, sector, theta;
+  vec::fixed<2> x, y, sector, theta;
 
   p0 = rotate(-phi) * translate(-hk) * p0;
   p1 = rotate(-phi) * translate(-hk) * p1;
@@ -190,8 +190,8 @@ double polysegments(
   // Reorder vectors and matrix based on angles to centroid
   points  = points.cols(ind);
   parents = parents.cols(ind);
-  x_int = x_int(ind);
-  y_int = y_int(ind);
+  x_int   = x_int(ind);
+  y_int   = y_int(ind);
   double area = 0;
 
   for (uword i = 0, j = n - 1; i < n; i++) {
@@ -239,15 +239,21 @@ double disjoint_or_subset(arma::mat M) {
 }
 
 // [[Rcpp::export]]
-arma::mat intersect_ellipses(const arma::vec par) {
-  uword n = par.n_elem/5;
-  uword nint = 4 * n * (n - 1) / 2;
-  umat  id = bit_index(n);
+arma::vec intersect_ellipses(const arma::vec par, bool circles) {
+  uword n_pars   = circles ? 3 : 5;
+  uword n        = par.n_elem / n_pars;
+  uword nint     = 2*n*(n - 1);
+  umat  id       = bit_index(n);
   uword n_combos = id.n_rows;
-  vec   areas(n_combos, fill::zeros);
 
   // Set up a matrix of the ellipses in standard form and a cube of conics
-  mat  ellipses = reshape(par, 5, n);
+  mat ellipses = reshape(par, n_pars, n);
+
+  if (circles) {
+    ellipses.insert_rows(3, ellipses.row(2));
+    ellipses.insert_rows(4, 1);
+  }
+
   cube conics(3, 3, n);
   for (uword i = 0; i < n; i++)
     conics.slice(i) = standard_to_matrix(ellipses.col(i));
@@ -259,11 +265,11 @@ arma::mat intersect_ellipses(const arma::vec par) {
 
   for (uword i = 0, k = 0; i < n - 1; i++) {
     for (uword j = i + 1; j < n; j++) {
-      points.cols(k, k + 3) = intersect_conics(conics.slice(i),
-                                               conics.slice(j));
-      adopters.cols(k, k + 3) = adopt(points.cols(k, k + 3), ellipses, n, i, j);
-      parents(0, span(k, k + 3)).fill(i);
-      parents(1, span(k, k + 3)).fill(j);
+      uword kp3 = k + 3;
+      points.cols(k, kp3) = intersect_conics(conics.slice(i), conics.slice(j));
+      adopters.cols(k, kp3) = adopt(points.cols(k, kp3), ellipses, n, i, j);
+      parents(0, span(k, kp3)).fill(i);
+      parents(1, span(k, kp3)).fill(j);
       k += 4;
     }
   }
@@ -274,8 +280,8 @@ arma::mat intersect_ellipses(const arma::vec par) {
   adopters = adopters.cols(not_na);
   parents  = parents.cols(not_na);
 
-
   // Loop over each set combination
+  vec areas(n_combos, fill::zeros);
   for (uword i = 0; i < n_combos; i++) {
     urowvec sets = id.row(i);
     uvec ids = find(sets == 1);
@@ -312,4 +318,10 @@ arma::mat intersect_ellipses(const arma::vec par) {
   }
 
   return clamp(out, 0, datum::inf);
+}
+
+
+// [[Rcpp::export]]
+double optim_final_loss(arma::vec par, arma::vec areas, bool circles) {
+  return accu(square(areas - intersect_ellipses(par, circles)));
 }
