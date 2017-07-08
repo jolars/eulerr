@@ -13,14 +13,6 @@ inline arma::uvec set_intersect(const arma::urowvec x, const arma::urowvec y) {
   return arma::conv_to<arma::uvec>::from(out);
 }
 
-// Set difference
-inline arma::uvec set_diff(const arma::uvec x, const arma::uvec y) {
-  std::vector<int> out;
-  std::set_difference(x.begin(),x.end(), y.begin(), y.end(),
-                      std::back_inserter(out));
-  return arma::conv_to<arma::uvec>::from(out);
-}
-
 template <typename T>
 arma::Mat<T> adjoint(const arma::Mat<T> M) {
   arma::Mat<T> out(3, 3);
