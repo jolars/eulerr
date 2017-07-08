@@ -6,7 +6,7 @@ using namespace Rcpp;
 using namespace arma;
 
 inline double ellipse_area(arma::vec v) {
-  return datum::pi * v[2] * v[3];
+  return datum::pi * v(2) * v(3);
 }
 
 arma::mat translate(arma::vec xy) {
@@ -42,14 +42,13 @@ arma::mat rotate(double phi) {
 // }
 
 arma::mat standard_to_matrix(const arma::vec v) {
-  double h   = v[0],
-         k   = v[1],
-         a   = v[2],
-         b   = v[3],
-         phi = v[4];
+  double h   = v(0),
+         k   = v(1),
+         a   = v(2),
+         b   = v(3),
+         phi = v(4);
   double A, B, C, D, E, F;
   mat::fixed<3, 3> out;
-  out.zeros();
 
   A = pow(a, 2)*pow(sin(phi), 2) + pow(b, 2)*pow(cos(phi), 2);
   B = 2*(pow(b, 2) - pow(a, 2))*sin(phi)*cos(phi);
@@ -58,40 +57,42 @@ arma::mat standard_to_matrix(const arma::vec v) {
   E = -B*h - 2*C*k;
   F = A*pow(h, 2) + B*h*k + C*pow(k, 2) - pow(a, 2)*pow(b, 2);
 
-  out.at(0, 0) = A;
-  out.at(1, 0) = B / 2;
-  out.at(1, 1) = C;
-  out.at(2, 0) = D / 2;
-  out.at(2, 1) = E / 2;
-  out.at(2, 2) = F;
+  out(0, 0) = A;
+  out(1, 0) = B / 2;
+  out(1, 1) = C;
+  out(2, 0) = D / 2;
+  out(2, 1) = E / 2;
+  out(2, 2) = F;
 
   return symmatl(out);
 }
 
 arma::vec matrix_to_standard(const arma::mat m) {
-  double A = m.at(0, 0),
-    B = m.at(1, 0) * 2,
-    C = m.at(1, 1),
-    D = m.at(2, 0) * 2,
-    E = m.at(2, 1) * 2,
-    F = m.at(2, 2);
+  double A = m(0, 0);
+  double B = m(1, 0) * 2;
+  double C = m(1, 1);
+  double D = m(2, 0) * 2;
+  double E = m(2, 1) * 2;
+  double F = m(2, 2);
+
+  double Bsq = B*B;
+  double Dsq = D*D;
+  double Esq = E*E;
+  double Bsq_AC4 = Bsq - 4*A*C;
+
   double h, k, a, b, phi;
 
-  h = (2*C*D - B*E) / (pow(B, 2) - 4*A*C);
-  k = (2*A*E - B*D) / (pow(B, 2) - 4*A*C);
-  a = (-sqrt(2*(A*pow(E, 2) + C*pow(D, 2) - B*D*E + (pow(B, 2) - 4*A*C)*F)*
-    (A + C + sqrt(pow(A - C, 2) + pow(B, 2)))))/(pow(B, 2) - 4*A*C);
-  b = (-sqrt(2*(A*pow(E, 2) + C*pow(D, 2) - B*D*E + (pow(B, 2) - 4*A*C)*F)*
-    (A + C - sqrt(pow(A - C, 2) + pow(B, 2)))))/(pow(B, 2) - 4*A*C);
+  h = (2*C*D - B*E) / Bsq_AC4;
+  k = (2*A*E - B*D) / Bsq_AC4;
+  a = (-sqrt(2*(A*Esq + C*Dsq - B*D*E + Bsq_AC4*F)*
+      (A + C + sqrt(pow(A - C, 2) + Bsq))))/Bsq_AC4;
+  b = (-sqrt(2*(A*Esq + C*Dsq - B*D*E + Bsq_AC4*F)*
+      (A + C - sqrt(pow(A - C, 2) + Bsq))))/Bsq_AC4;
 
   if (B == 0) {
-    if (A < C) {
-      phi = 0;
-    } else {
-      phi = datum::pi / 2;
-    }
+    phi = A < C ? 0 : datum::pi/2;
   } else {
-    phi = atan2(C - A - sqrt(pow(A - C, 2) + pow(B, 2)), B);
+    phi = atan2(C - A - sqrt(pow(A - C, 2) + Bsq), B);
   }
 
   return {h, k, a, b, phi};
