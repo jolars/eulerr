@@ -15,7 +15,9 @@ inline double ellipse_area(const arma::vec& v) {
 
 
 // Split a degenerate conic into two lines.
-void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
+void split_conic(const arma::mat& A,
+                 arma::vec& g,
+                 arma::vec& h) {
   arma::mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
@@ -26,13 +28,12 @@ void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
     if (std::real(Bii) >= 0) {
       arma::cx_vec p = B.col(i) / Bii;
       arma::cx_mat C = A + skewsymmat(p);
-      arma::uvec ij = arma::ind2sub(
-        arma::size(C),
-        arma::find(arma::abs(C) > sqrt(arma::datum::eps), 1)
-      );
 
-      if (ij.n_elem > 0) {
+      if (arma::any(arma::abs(arma::vectorise(C)) > sqrt(arma::datum::eps))) {
         // Extract the lines
+        arma::uvec ij =
+          arma::ind2sub(arma::size(C),
+                        arma::index_max(arma::abs(arma::vectorise(C))));
         g = arma::real(C.row(ij(0)).t());
         h = arma::real(C.col(ij(1)));
       } else {
@@ -66,16 +67,18 @@ arma::mat intersect_conic_line(const arma::mat& A,
 
     double alpha = sqrt(-arma::det(arma::symmatl(B.submat(li, li))))/l(i);
 
-    if (arma::is_finite(alpha)) {
-      arma::mat C = B + alpha*M;
-      arma::uvec ind = arma::ind2sub(arma::size(C), arma::find(C != 0, 1));
-      if (ind.n_elem > 0) {
-        arma::uword i0 = ind(0);
-        arma::uword i1 = ind(1);
+    arma::mat C = B + alpha*M;
 
-        out.col(0) = C.row(i0).t() / C(i0, 2);
-        out.col(1) = C.col(i1)     / C(2, i1);
-      } else {
+    if (arma::any(arma::abs(arma::vectorise(C)) > sqrt(arma::datum::eps))) {
+      arma::uvec ind =
+        arma::ind2sub(arma::size(C),
+                      arma::index_max(arma::abs(arma::vectorise(C))));
+      arma::uword i0 = ind(0);
+      arma::uword i1 = ind(1);
+
+      out.col(0) = C.row(i0).t() / C(i0, 2);
+      out.col(1) = C.col(i1)     / C(2, i1);
+      if (!is_finite(out)) {
         out.fill(arma::datum::nan);
       }
     } else {
@@ -90,7 +93,7 @@ arma::mat intersect_conic_line(const arma::mat& A,
 
 // Intersect two conics, returning 0-4 intersection points
 arma::mat intersect_conics(const arma::mat& A,
-                                        const arma::mat& B) {
+                           const arma::mat& B) {
   arma::vec::fixed<4> v;
   v(0) = arma::det(A);
   v(1) = arma::det(arma::join_rows(A.cols(0, 1), B.col(2))) +
