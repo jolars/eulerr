@@ -2,28 +2,28 @@
 // [[Rcpp::plugins(cpp11)]]
 
 #include <RcppArmadillo.h>
-using namespace Rcpp;
-using namespace arma;
+
+// #define ARMA_NO_DEBUG
 
 // Loss function for the intial optimizer.
 // [[Rcpp::export]]
 double optim_init_loss(
-    arma::vec par,
-    arma::vec d,
-    arma::uvec disjoint,
-    arma::uvec contained
+    const arma::vec& par,
+    const arma::vec& d,
+    const arma::uvec& disjoint,
+    const arma::uvec& contained
   ) {
-  uword n = par.n_elem/2;
-  mat xy = reshape(par, n, 2).t();
+  arma::uword n = par.n_elem/2;
+  arma::mat xy = arma::reshape(par, n, 2).t();
 
   double out = 0;
-  for (uword i = 0, k = 0; i < n; i++) {
-    for (uword j = i + 1; j < n; j++, k++) {
-      vec xycold = xy.col(i) - xy.col(j);
-      double D = as_scalar(xycold.t() * xycold) - pow(d[k], 2);
-      if (disjoint[k] && (D >= 0)) {
+  for (arma::uword i = 0, k = 0; i < n; i++) {
+    for (arma::uword j = i + 1; j < n; j++, k++) {
+      arma::vec xycold = xy.col(i) - xy.col(j);
+      double D = arma::as_scalar(xycold.t() * xycold) - pow(d(k), 2);
+      if (disjoint(k) && (D >= 0)) {
         continue;
-      } else if (contained[k] && (D < 0)) {
+      } else if (contained(k) && (D < 0)) {
         continue;
       } else {
         out += pow(D, 2);
@@ -36,22 +36,22 @@ double optim_init_loss(
 // Gradient for the initial optimizer.
 // [[Rcpp::export]]
 std::vector<double> optim_init_grad(
-    arma::rowvec par,
-    arma::vec d,
-    arma::uvec disjoint,
-    arma::uvec contained
+    const arma::rowvec& par,
+    const arma::vec& d,
+    const arma::uvec& disjoint,
+    const arma::uvec& contained
   ) {
-  uword n = par.n_elem/2;
-  mat xy = reshape(par, n, 2).t();
+  arma::uword n = par.n_elem/2;
+  arma::mat xy = arma::reshape(par, n, 2).t();
 
-  mat out(2, n, fill::zeros);
-  for (uword i = 0, k = 0; i < n; i++) {
-    for (uword j = i + 1; j < n; j++, k++) {
-      vec xycold = xy.col(i) - xy.col(j);
-      double D = as_scalar(xycold.t() * xycold) - pow(d[k], 2);
-      if (disjoint[k] && (D >= 0)) {
+  arma::mat out(2, n, arma::fill::zeros);
+  for (arma::uword i = 0, k = 0; i < n; i++) {
+    for (arma::uword j = i + 1; j < n; j++, k++) {
+      arma::vec xycold = xy.col(i) - xy.col(j);
+      double D = arma::as_scalar(xycold.t() * xycold) - pow(d(k), 2);
+      if (disjoint(k) && (D >= 0)) {
         continue;
-      } else if (contained[k] && (D < 0)) {
+      } else if (contained(k) && (D < 0)) {
         continue;
       } else {
         out.col(i) += (4 * (D)) * xycold;
@@ -59,5 +59,5 @@ std::vector<double> optim_init_grad(
       }
     }
   }
-  return conv_to< std::vector<double> >::from(vectorise(out, 1));
+  return arma::conv_to< std::vector<double> >::from(arma::vectorise(out, 1));
 }
