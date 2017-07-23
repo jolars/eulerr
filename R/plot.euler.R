@@ -79,25 +79,25 @@
 #' # We can modify the grid layout as well
 #' plot(gridfit, layout = c(1, 4))
 plot.euler <- function(
-  x,
-  fill = qualpalr_pal,
-  fill_alpha = 0.4,
-  auto.key = FALSE,
-  counts = FALSE,
-  labels = is.logical(auto.key) && !isTRUE(auto.key),
-  fontface = "bold",
-  par.settings = list(),
-  ...,
-  default.prepanel = prepanel.euler,
-  default.scales = list(draw = FALSE),
-  panel = panel.euler,
-  outer_strips,
-  fill_opacity
-) {
-  assert_that(is.number(fill_alpha),
-              is.flag(auto.key) || is.list(auto.key),
-              is.flag(counts) || is.list(counts),
-              is.list(par.settings))
+    x,
+    fill = qualpalr_pal,
+    fill_alpha = 0.4,
+    auto.key = FALSE,
+    counts = FALSE,
+    labels = is.logical(auto.key) && !isTRUE(auto.key),
+    fontface = "bold",
+    par.settings = list(),
+    ...,
+    default.prepanel = prepanel.euler,
+    default.scales = list(draw = FALSE),
+    panel = panel.euler,
+    outer_strips,
+    fill_opacity
+  ) {
+  assertthat::assert_that(assertthat::is.number(fill_alpha),
+                          assertthat::is.flag(auto.key) || is.list(auto.key),
+                          assertthat::is.flag(counts) || is.list(counts),
+                          is.list(par.settings))
 
   if (!missing(fill_opacity))
     fill_alpha <- fill_opacity
@@ -111,7 +111,7 @@ plot.euler <- function(
   if (is.function(fill))
     fill <- fill(if (is_by) nrow(x[[1]]$coefficients) else nrow(x$coefficients))
 
-  fill <- adjustcolor(fill, fill_alpha)
+  fill <- grDevices::adjustcolor(fill, fill_alpha)
 
   if (is_by) {
     dd <- do.call(rbind, lapply(x, "[[", "coefficients"))
@@ -153,7 +153,7 @@ plot.euler <- function(
   if (is_by) {
     d <- dim(x)
     dn <- dimnames(x)
-    n <- NROW(coef(x[[1]]))
+    n <- NROW(stats::coef(x[[1]]))
 
     factors <- lapply(dn, as.factor)
     levels <- names(factors)
@@ -171,12 +171,20 @@ plot.euler <- function(
   ocall[[1]] <- quote(eulerplot)
 
   # Update call
-  ccall$x <- as.formula(
+  ccall$x <- stats::as.formula(
     paste("y ~ x",
           if (is_by) paste("|", paste(levels, collapse = " + ")) else "")
   )
-  ccall$r <- dd$r
+
   ccall$data <- dd
+  if (!is.null(dd$r)) {
+    ccall$r <- dd$r
+  } else {
+    ccall$ra <- dd$a
+    ccall$rb <- dd$b
+    ccall$phi <- dd$phi
+  }
+
   ccall$groups <- quote(set)
   ccall$panel <- panel
   ccall$default.prepanel <- default.prepanel
@@ -207,10 +215,35 @@ plot.euler <- function(
 #'
 #' @return A list of `xlim` and `ylim` items.
 #' @export
-prepanel.euler <- function(x, y, r, subscripts, ...) {
-  r <- r[subscripts]
-  list(xlim = range(x + r, x - r),
-       ylim = range(y + r, y - r))
+prepanel.euler <- function(
+  x,
+  y,
+  r = NULL,
+  ra = NULL,
+  rb = NULL,
+  phi = NULL,
+  subscripts,
+  ...
+) {
+  if (!is.null(r)) {
+    r <- r[subscripts]
+    out <- list(xlim = range(x + r, x - r),
+                ylim = range(y + r, y - r))
+  } else {
+    a    <- ra[subscripts]
+    b    <- rb[subscripts]
+    phi  <- phi[subscripts]
+    tx <- atan2(-b*tan(phi), a)
+    ty <- atan2(b*tan(pi/2L - phi), a)
+
+    out  <- list(
+      xlim = range(x + a*cos(tx)*cos(phi) - b*sin(tx)*sin(phi),
+                   x + a*cos(tx + pi)*cos(phi) - b*sin(tx + pi)*sin(phi)),
+      ylim = range(y + b*sin(ty)*cos(phi) + a*cos(ty)*sin(phi),
+                   y + b*sin(ty + pi)*cos(phi) + a*cos(ty + pi)*sin(phi))
+    )
+  }
+  out
 }
 
 #' Panel Function for Euler Diagrams
@@ -242,60 +275,75 @@ prepanel.euler <- function(x, y, r, subscripts, ...) {
 #'
 #' @export
 panel.euler <- function(
-  x,
-  y,
-  r,
-  subscripts,
-  fill = superpose.polygon$col,
-  lty = superpose.polygon$lty,
-  lwd = superpose.polygon$lwd,
-  border = superpose.polygon$border,
-  alpha = superpose.polygon$alpha,
-  fontface = "bold",
-  counts = TRUE,
-  labels = NULL,
-  original.values,
-  fitted.values,
-  ...
-) {
-  superpose.polygon <- trellis.par.get("superpose.polygon")
+    x,
+    y,
+    r = NULL,
+    ra = NULL,
+    rb = NULL,
+    phi = NULL,
+    subscripts,
+    fill = superpose.polygon$col,
+    lty = superpose.polygon$lty,
+    lwd = superpose.polygon$lwd,
+    border = superpose.polygon$border,
+    alpha = superpose.polygon$alpha,
+    fontface = "bold",
+    counts = TRUE,
+    labels = NULL,
+    original.values,
+    fitted.values,
+    ...
+  ) {
+  superpose.polygon <- lattice::trellis.par.get("superpose.polygon")
 
-  assert_that(is.numeric(x),
-              is.numeric(y),
-              is.numeric(r),
-              is.flag(counts) || is.list(counts))
+  assertthat::assert_that(assertthat::is.flag(counts) || is.list(counts))
 
   if (is.matrix(original.values)) {
-    original.values <- original.values[, packet.number()]
-    fitted.values <- fitted.values[, packet.number()]
+    original.values <- original.values[, lattice::packet.number()]
+    fitted.values <- fitted.values[, lattice::packet.number()]
   }
 
-  panel.euler.circles(x = x,
-                      y = y,
-                      r = r[subscripts],
-                      fill = fill,
-                      lty = lty,
-                      lwd = lwd,
-                      border = border,
-                      identifier = "euler",
-                      ...)
-
-  if ((is.list(counts) || isTRUE(counts)) || !is.null(labels)) {
-    panel.euler.labels(x = x,
-                       y = y,
-                       r = r[subscripts],
-                       labels = labels,
-                       counts = counts,
-                       original.values = original.values,
-                       fitted.values = fitted.values,
-                       fontface = fontface,
-                       ...)
+  if (!is.null(r)) {
+    panel.euler.circles(x = x,
+                        y = y,
+                        r = r[subscripts],
+                        fill = fill,
+                        lty = lty,
+                        lwd = lwd,
+                        border = border,
+                        identifier = "euler",
+                        ...)
+  } else {
+    panel.euler.ellipses(x = x,
+                         y = y,
+                         ra = ra[subscripts],
+                         rb = rb[subscripts],
+                         phi = phi[subscripts],
+                         fill = fill,
+                         lty = lty,
+                         lwd = lwd,
+                         border = border,
+                         identifier = "euler",
+                         ...)
   }
+
+  # if ((is.list(counts) || isTRUE(counts)) || !is.null(labels)) {
+  #   panel.euler.labels(x = x,
+  #                      y = y,
+  #                      r = r[subscripts],
+  #                      labels = labels,
+  #                      counts = counts,
+  #                      original.values = original.values,
+  #                      fitted.values = fitted.values,
+  #                      fontface = fontface,
+  #                      ...)
+  # }
 }
 
 #' Panel Function for Circles
 #'
 #' @inheritParams panel.euler
+#' @param r Radius of the circle
 #' @param border Border color.
 #' @param fill Circle fill.
 #' @param ... Passed on to [grid::grid.circle()].
@@ -340,13 +388,91 @@ panel.euler.circles <- function(
   else
     group <- 0
 
-  xy <- xy.coords(x, y, recycle = TRUE)
-  grid.circle(
+  xy <- grDevices::xy.coords(x, y, recycle = TRUE)
+  grid::grid.circle(
     x = xy$x,
     y = xy$y,
     r = r,
     default.units = "native",
-    gp = gpar(fill = fill, col = border, ...),
+    gp = grid::gpar(fill = fill, col = border, ...),
+    name = primName("circles", identifier, name.type, group)
+  )
+}
+
+#' Panel Function for Ellipses
+#'
+#' @inheritParams panel.euler
+#' @param a Semi-major axis
+#' @param b Semi-minor axis
+#' @param phi Rotation angle to the semi-major axis
+#' @param border Border color.
+#' @param fill Ellipse fill.
+#' @param ... Passed on to [gridExtra::grid.ellipse()].
+#' @param col Ignored
+#' @param font Ignored
+#' @param fontface Ignored
+#' @param identifier A character string that is prepended to the name of the
+#'   grob that is created.
+#' @param name.type A character value indicating whether the name of the grob
+#'   should have panel or strip information added to it. Typically either
+#'   `"panel"`, `"strip"`, `"strip.left"`, or `""` (for no extra information).
+#'
+#' @seealso [gridExtra::grid.ellipse()].
+#'
+#' @return Plots ellipses inside a trellis panel.
+#' @export
+panel.euler.ellipses <- function(
+  x,
+  y,
+  ra,
+  rb,
+  phi,
+  border = "black",
+  fill = "transparent",
+  n = 200,
+  ...,
+  identifier = NULL,
+  name.type = "panel",
+  col,
+  font,
+  fontface
+) {
+  if (sum(!is.na(x)) < 1)
+    return()
+
+  border <- if (all(is.na(border)))
+    "transparent"
+  else if (is.logical(border))
+    if (border) "black" else "transparent"
+  else
+    border
+
+  if (hasGroupNumber())
+    group <- list(...)$group.number
+  else
+    group <- 0L
+
+  N <- length(x)
+  xy <- matrix(NA, nrow = n * N, ncol = 2L)
+
+  for (i in seq_along(x)) {
+    theta <- seq.int(0L, 2L * pi, length.out = n)
+
+    j <- seq.int(((i - 1L)*n + 1L), i*n, 1L)
+
+    xy[j, 1L] <-
+      x[i] + ra[i]*cos(theta)*cos(phi[i]) - rb[i]*sin(theta)*sin(phi[i])
+    xy[j, 2L] <-
+      y[i] + rb[i]*sin(theta)*cos(phi[i]) + ra[i]*cos(theta)*sin(phi[i])
+
+  }
+
+  grid::grid.polygon(
+    x = xy[, 1L],
+    y = xy[, 2L],
+    id.lengths = rep.int(n, N),
+    default.units = "native",
+    gp = grid::gpar(fill = fill, col = border),
     name = primName("circles", identifier, name.type, group)
   )
 }
@@ -384,7 +510,7 @@ panel.euler.labels <- function(
 
   # Plot counts
   if (do_counts) {
-    do.call(panel.text, update_list(list(
+    do.call(lattice::panel.text, update_list(list(
       x = centers$x[singles],
       y = centers$y[singles],
       labels = centers$n[singles],
@@ -393,7 +519,7 @@ panel.euler.labels <- function(
       pos = if (do_labels) 1 else NULL
     ), if (is.list(counts)) counts else list()))
 
-    do.call(panel.text, update_list(list(
+    do.call(lattice::panel.text, update_list(list(
       x = centers$x[!singles],
       y = centers$y[!singles],
       labels = centers$n[!singles],
@@ -403,7 +529,7 @@ panel.euler.labels <- function(
 
   # Plot labels
   if (do_labels)
-    do.call(panel.text, update_list(list(
+    do.call(lattice::panel.text, update_list(list(
       centers$x[singles],
       centers$y[singles],
       labels,
