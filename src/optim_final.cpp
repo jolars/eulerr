@@ -127,8 +127,10 @@ arma::mat intersect_conics(const arma::mat& A,
     split_conic(C, g, h);
 
     // Intersect one of the conics with each line to get points p q
-    out = arma::join_rows(intersect_conic_line(A, g),
-                          intersect_conic_line(A, h));
+    out.cols(0, 1) = intersect_conic_line(A, g);
+    out.cols(2, 3) = intersect_conic_line(A, h);
+    // out = arma::join_rows(intersect_conic_line(A, g),
+    //                       intersect_conic_line(A, h));
 
   } else {
     out.fill(arma::datum::nan);
