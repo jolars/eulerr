@@ -26,8 +26,7 @@ void split_conic(const arma::mat& A,
     std::complex<double> Bii = sqrt(B(i, i));
 
     if (std::real(Bii) >= 0) {
-      arma::cx_vec p = B.col(i) / Bii;
-      arma::cx_mat C = A + skewsymmat(p);
+      arma::cx_mat C = A + skewsymmat(B.col(i)/Bii);
 
       if (arma::any(arma::abs(arma::vectorise(C)) > sqrt(arma::datum::eps))) {
         // Extract the lines
