@@ -14,6 +14,13 @@ prepanel.euler(x, y, r = NULL, ra = NULL, rb = NULL, phi = NULL,
 
 \item{r}{Radii.}
 
+\item{ra}{Semi-major axes.}
+
+\item{rb}{Semi-minor axes.}
+
+\item{phi}{Rotation of the ellipse (as the counter-clockwise angle from
+the positive x-axis to the semi-major axis).}
+
 \item{subscripts}{A vector of subscripts (See \code{\link[lattice:xyplot]{lattice::xyplot()}}).}
 
 \item{...}{Ignored.}

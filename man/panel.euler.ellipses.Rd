@@ -13,7 +13,12 @@ panel.euler.ellipses(x, y, ra, rb, phi, border = "black",
 
 \item{y}{Y coordinates for the circle centers.}
 
-\item{phi}{Rotation angle to the semi-major axis}
+\item{ra}{Semi-major axes.}
+
+\item{rb}{Semi-minor axes.}
+
+\item{phi}{Rotation of the ellipse (as the counter-clockwise angle from
+the positive x-axis to the semi-major axis).}
 
 \item{border}{Border color.}
 
@@ -33,10 +38,6 @@ should have panel or strip information added to it. Typically either
 \item{font}{Ignored}
 
 \item{fontface}{Ignored}
-
-\item{a}{Semi-major axis}
-
-\item{b}{Semi-minor axis}
 }
 \value{
 Plots ellipses inside a trellis panel.
