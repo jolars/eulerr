@@ -11,7 +11,8 @@
 \usage{
 euler(combinations, ...)
 
-\method{euler}{default}(combinations, input = c("disjoint", "union"), ...)
+\method{euler}{default}(combinations, input = c("disjoint", "union"),
+  shape = c("circle", "ellipse"), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
 
@@ -29,6 +30,8 @@ data.frame. (See the methods (by class) section for details.)}
 
 \item{input}{The type of input: disjoint class combinations
 (\code{disjoint}) or unions (\code{union}).}
+
+\item{shape}{The geometric shape used in the diagram: circles or ellipses.}
 
 \item{weights}{A numeric vector of weights of the same length as \code{by} and
 the number of rows in \code{combinations}.}
@@ -86,7 +89,7 @@ explored.
     \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
   }{
     max|fit / \sum fit  - original / \sum original|.
-  }
+ }
 
 \code{diag_error} is simply the maximum of region_error.
 }

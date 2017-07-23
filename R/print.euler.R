@@ -11,7 +11,7 @@
 #'
 #' @export
 print.euler <- function(x, round = 3, ...) {
-  assert_that(is.number(round), round > 0L)
+  assertthat::assert_that(assertthat::is.number(round), round > 0L)
 
   out <- data.frame(
     "original" = x$original.values,
