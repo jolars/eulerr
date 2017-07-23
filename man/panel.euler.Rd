@@ -4,11 +4,11 @@
 \alias{panel.euler}
 \title{Panel Function for Euler Diagrams}
 \usage{
-panel.euler(x, y, r, subscripts, fill = superpose.polygon$col,
-  lty = superpose.polygon$lty, lwd = superpose.polygon$lwd,
-  border = superpose.polygon$border, alpha = superpose.polygon$alpha,
-  fontface = "bold", counts = TRUE, labels = NULL, original.values,
-  fitted.values, ...)
+panel.euler(x, y, r = NULL, ra = NULL, rb = NULL, phi = NULL,
+  subscripts, fill = superpose.polygon$col, lty = superpose.polygon$lty,
+  lwd = superpose.polygon$lwd, border = superpose.polygon$border,
+  alpha = superpose.polygon$alpha, fontface = "bold", counts = TRUE,
+  labels = NULL, original.values, fitted.values, ...)
 }
 \arguments{
 \item{x}{X coordinates for the circle centers.}

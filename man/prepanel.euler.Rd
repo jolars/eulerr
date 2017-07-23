@@ -4,7 +4,8 @@
 \alias{prepanel.euler}
 \title{Prepanel Function for Euler Diagrams}
 \usage{
-prepanel.euler(x, y, r, subscripts, ...)
+prepanel.euler(x, y, r = NULL, ra = NULL, rb = NULL, phi = NULL,
+  subscripts, ...)
 }
 \arguments{
 \item{x}{X coordinates for the circle centers.}
