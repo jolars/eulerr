@@ -9,7 +9,7 @@ Description: If possible, generates exactly area-proportional Euler diagrams,
     optimization. A Euler diagram is a generalization of a Venn diagram,
     relaxing the criterion that all interactions need to be represented.
 Depends:
-    R (>= 3.3.1)
+    R (>= 3.4.0)
 Imports:
     graphics,
     grDevices,
@@ -25,7 +25,7 @@ Suggests:
     testthat
 LinkingTo:
     Rcpp (>= 0.12.12),
-    RcppArmadillo (>= 0.7.600.1.0)
+    RcppArmadillo (>= 0.7.900.2.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
