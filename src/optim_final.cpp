@@ -52,7 +52,7 @@ void split_conic(const arma::mat& A,
 
 // Intersect a conic with two lines to return 0 to 4 intersection points.
 arma::mat intersect_conic_line(const arma::mat& A,
-                                            arma::vec& l) {
+                               arma::vec l) {
   arma::mat::fixed<3, 2> out;
 
   arma::mat::fixed<3, 3> M = skewsymmat(l);
@@ -78,7 +78,7 @@ arma::mat intersect_conic_line(const arma::mat& A,
 
       out.col(0) = C.row(i0).t() / C(i0, 2);
       out.col(1) = C.col(i1)     / C(2, i1);
-      if (!is_finite(out)) {
+      if (!out.is_finite()) {
         out.fill(arma::datum::nan);
       }
     } else {
