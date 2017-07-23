@@ -24,7 +24,7 @@ Suggests:
     rmarkdown,
     testthat
 LinkingTo:
-    Rcpp (>= 0.12.8),
+    Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0)
 License: GPL-3
 Encoding: UTF-8
