@@ -268,6 +268,10 @@ prepanel.euler <- function(
 #' @param original.values Original values for the disjoint set combinations.
 #' @param fitted.values Fitted values for the disjoint set combinations.
 #' @param ... Passed down to [panel.euler.circles()] and [panel.euler.labels()].
+#' @param ra Semi-major axes.
+#' @param rb Semi-minor axes.
+#' @param phi Rotation of the ellipse (as the counter-clockwise angle from
+#'   the positive x-axis to the semi-major axis).
 #'
 #' @seealso [grid::gpar()].
 #'
@@ -402,11 +406,9 @@ panel.euler.circles <- function(
 #' Panel Function for Ellipses
 #'
 #' @inheritParams panel.euler
-#' @param a Semi-major axis
-#' @param b Semi-minor axis
-#' @param phi Rotation angle to the semi-major axis
 #' @param border Border color.
 #' @param fill Ellipse fill.
+#' @param n Number of vertices to draw for each ellipse.
 #' @param ... Passed on to [gridExtra::grid.ellipse()].
 #' @param col Ignored
 #' @param font Ignored
