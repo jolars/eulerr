@@ -220,10 +220,6 @@ double polysegments(arma::mat points,
   // Sort points by their angle to the centroid
   arma::uvec ind = arma::sort_index(arma::atan2(x_int - arma::accu(x_int)/n,
                                                 y_int - arma::accu(y_int)/n));
-  // arma::vec ang = arma::atan2(y_int - arma::mean(y_int),
-  //                             x_int - arma::mean(x_int));
-  // ang(arma::find(ang < 0)) += 2*arma::datum::pi;
-  // arma::uvec ind = arma::sort_index(ang);
 
   // Reorder vectors and matrix based on angles to centroid
   points  = points.cols(ind);
@@ -350,8 +346,6 @@ arma::vec intersect_ellipses(const arma::vec& par,
     }
   }
 
-  areas.print();
-
   arma::vec out(n_combos, arma::fill::zeros);
 
   for (arma::uword i = n_combos; i-- > 0;) {
@@ -369,9 +363,4 @@ double optim_final_loss(const arma::vec& par,
                         const arma::vec& areas,
                         const bool circles) {
   return arma::accu(arma::square(areas - intersect_ellipses(par, circles)));
-  // arma::vec fit = intersect_ellipses(par, circles);
-  // double sst   = accu(square(fit));
-  // double slope = accu(areas % fit) / accu(square(areas));
-  // double sse   = accu(square(fit - areas * slope));
-  // return sse / sst;
 }
