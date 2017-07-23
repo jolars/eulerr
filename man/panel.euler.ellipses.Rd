@@ -24,6 +24,8 @@ the positive x-axis to the semi-major axis).}
 
 \item{fill}{Ellipse fill.}
 
+\item{n}{Number of vertices to draw for each ellipse.}
+
 \item{...}{Passed on to \code{\link[gridExtra:grid.ellipse]{gridExtra::grid.ellipse()}}.}
 
 \item{identifier}{A character string that is prepended to the name of the
