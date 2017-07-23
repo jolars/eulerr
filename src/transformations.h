@@ -34,27 +34,27 @@ inline arma::mat rotate(const double phi) {
 
 
 // Return the adjoint (adjugate) of a matrix
-inline arma::mat adjoint(const arma::mat& m) {
-  arma::mat::fixed<3, 3> out;
-  double a = m(0, 0);
-  double b = m(1, 0);
-  double c = m(1, 1);
-  double d = m(2, 0);
-  double e = m(2, 1);
-  double f = m(2, 2);
-
-  out(0, 0) = c*f - e*e;
-  out(1, 0) = d*e - b*f;
-  out(1, 1) = a*f - d*d;
-  out(2, 0) = b*e - c*d;
-  out(2, 1) = b*d - a*e;
-  out(2, 2) = a*c - b*b;
-
-  return arma::symmatl(out);
-}
+// inline arma::mat adjoint(const arma::mat& m) {
+//   arma::mat::fixed<3, 3> out;
+//   double a = m(0, 0);
+//   double b = m(1, 0);
+//   double c = m(1, 1);
+//   double d = m(2, 0);
+//   double e = m(2, 1);
+//   double f = m(2, 2);
+//
+//   out(0, 0) = c*f - e*e;
+//   out(1, 0) = d*e - b*f;
+//   out(1, 1) = a*f - d*d;
+//   out(2, 0) = b*e - c*d;
+//   out(2, 1) = b*d - a*e;
+//   out(2, 2) = a*c - b*b;
+//
+//   return arma::symmatl(out);
+// }
 
 // Return the adjoint (adjugate) of a matrix
-inline arma::mat adjoint2(const arma::mat& m) {
+inline arma::mat adjoint(const arma::mat& m) {
   arma::mat::fixed<3, 3> out;
   arma::mat temp(3, 3);
   for (arma::uword i = 0; i < 3; i++) {
