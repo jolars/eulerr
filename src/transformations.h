@@ -1,5 +1,5 @@
-#ifndef TRANSFORMATIONS_H_
-#define TRANSFORMATIONS_H_
+#ifndef eulerr_transformations_h_
+#define eulerr_transformations_h_
 
 #include <RcppArmadillo.h>
 
@@ -25,10 +25,10 @@ inline arma::mat translate(const arma::vec& xy) {
 inline arma::mat rotate(const double phi) {
   arma::mat::fixed<3, 3> out;
   out.eye();
-  out(0, 0) =  std::cos(phi);
-  out(1, 0) = -std::sin(phi);
-  out(0, 1) =  std::sin(phi);
-  out(1, 1) =  std::cos(phi);
+  out(0, 0) =  cos(phi);
+  out(1, 0) = -sin(phi);
+  out(0, 1) =  sin(phi);
+  out(1, 1) =  cos(phi);
   return out;
 }
 
@@ -95,4 +95,4 @@ inline arma::mat skewsymmat(const arma::vec& v) {
   return out;
 }
 
-#endif // TRANSFORMATIONS_H_
+#endif

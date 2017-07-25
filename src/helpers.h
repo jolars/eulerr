@@ -1,5 +1,5 @@
-#ifndef HELPERS_H_
-#define HELPERS_H_
+#ifndef eulerr_helpers_
+#define eulerr_helpers_
 
 #include <RcppArmadillo.h>
 
@@ -13,9 +13,12 @@ inline arma::uvec set_intersect(const arma::uvec& x, const arma::uvec& y) {
 
 // Number of n choose k. (Credited to Ben Voigt.)
 inline arma::uword nck(arma::uword n, arma::uword k) {
-  if (k > n) return 0;
-  if (k * 2 > n) k = n - k;
-  if (k == 0) return 1;
+  if (k > n)
+    return 0;
+  if (k * 2 > n)
+    k = n - k;
+  if (k == 0)
+    return 1;
 
   arma::uword out = n;
 
@@ -49,4 +52,4 @@ inline arma::umat bit_index(arma::uword n) {
   return out;
 }
 
-#endif // HELPERS_H_
+#endif
