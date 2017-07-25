@@ -1,7 +1,8 @@
-#ifndef CONVERSIONS_H_
-#define CONVERSIONS_H_
+#ifndef eulerr_conversions_h_
+#define eulerr_conversions_h_
 
 #include "transformations.h"
+#include "constants.h"
 
 arma::mat standard_to_matrix(const arma::vec& v) {
   arma::mat::fixed<3, 3> out;
@@ -16,7 +17,7 @@ arma::mat standard_to_matrix(const arma::vec& v) {
 
   out = translate(xy).t()*rotate(theta).t()*out*rotate(theta)*translate(xy);
   out = (out + out.t())/2;
-  out(arma::find(arma::abs(out) < sqrt(arma::datum::eps))).zeros();
+  out(arma::find(arma::abs(out) < small)).zeros();
   return out;
 }
 
@@ -45,5 +46,4 @@ arma::mat standard_to_matrix(const arma::vec& v) {
 //   return arma::symmatl(out);
 // }
 
-
-#endif // CONVERSIONS_H_
+#endif

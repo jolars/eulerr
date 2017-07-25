@@ -6,6 +6,7 @@
 #include "conversions.h"
 #include "solver.h"
 #include "helpers.h"
+#include "constants.h"
 
 // #define ARMA_NO_DEBUG // For the final version
 
@@ -28,7 +29,7 @@ void split_conic(const arma::mat& A,
     if (std::real(Bii) >= 0) {
       arma::cx_mat::fixed<3, 3> C = A + skewsymmat(B.col(i)/Bii);
 
-      if (arma::any(arma::abs(arma::vectorise(C)) > sqrt(arma::datum::eps))) {
+      if (arma::any(arma::abs(arma::vectorise(C)) > small)) {
         // Extract the lines
         arma::uvec ij =
           arma::ind2sub(arma::size(3, 3),
@@ -56,7 +57,7 @@ void intersect_conic_line(const arma::mat& A,
   arma::mat::fixed<3, 3> M = skewsymmat(l);
   arma::mat::fixed<3, 3> B = M.t() * A * M;
 
-  l(arma::find(arma::abs(l)) < sqrt(arma::datum::eps)).zeros();
+  l(arma::find(arma::abs(l)) < small).zeros();
   // Pick a non-zero element of l
   if (arma::any(l != 0)) {
     arma::uword i = arma::index_max(arma::abs(l));
@@ -67,7 +68,7 @@ void intersect_conic_line(const arma::mat& A,
 
     arma::mat::fixed<3, 3> C = B + alpha*M;
 
-    if (arma::any(arma::abs(arma::vectorise(C)) > sqrt(arma::datum::eps))) {
+    if (arma::any(arma::abs(arma::vectorise(C)) > small)) {
       arma::uvec ind =
         arma::ind2sub(arma::size(3, 3),
                       arma::index_max(arma::abs(arma::vectorise(C))));
@@ -118,7 +119,7 @@ void intersect_conics(const arma::mat& A,
 
     arma::mat::fixed<3, 3> C = lambda*A + B;
 
-    C(arma::find(arma::abs(C) < sqrt(arma::datum::eps))).zeros();
+    C(arma::find(arma::abs(C) < small)).zeros();
 
     // Split the degenerate conic into lines g and h
     arma::vec::fixed<3> g, h;
@@ -135,16 +136,17 @@ void intersect_conics(const arma::mat& A,
 
 
 // See which ellipses/circles contain the given points
-arma::umat adopt(const arma::mat& points,
-                 const arma::mat& ellipses,
-                 const arma::uword n,
-                 const arma::uword i,
-                 const arma::uword j) {
-  arma::umat out(n, 4);
+void adopt(const arma::mat& points,
+           const arma::mat& ellipses,
+           const arma::uword n,
+           const arma::uword i,
+           const arma::uword j,
+           arma::subview<arma::uword>&& parents) {
+  //arma::umat out(n, 4);
 
   for (arma::uword l = 0; l < n; l++) {
     if ((l == i) | (l == j)) {
-      out.row(l).ones();
+      parents.row(l).ones();
     } else {
       arma::rowvec x = points.row(0);
       arma::rowvec y = points.row(1);
@@ -154,13 +156,13 @@ arma::umat adopt(const arma::mat& points,
 
       // Check if the points lie inside the ellipse
 
-      out.row(l) = arma::pow((x - h)*std::cos(phi) + (y - k)*std::sin(phi), 2)/
-                     pow(ellipses(2, l), 2) +
-                   arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
-                     pow(ellipses(3, l), 2) < 1;
+      parents.row(l) =
+        arma::pow((x - h)*std::cos(phi) + (y - k)*std::sin(phi), 2)/
+          pow(ellipses(2, l), 2) +
+            arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
+              pow(ellipses(3, l), 2) < 1;
     }
   }
-  return out;
 }
 
 
@@ -299,7 +301,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
     for (arma::uword j = i + 1; j < n; j++) {
       arma::uword kp3 = k + 3;
       intersect_conics(conics.slice(i), conics.slice(j), points.cols(k, kp3));
-      adopters.cols(k, kp3) = adopt(points.cols(k, kp3), ellipses, n, i, j);
+      adopt(points.cols(k, kp3), ellipses, n, i, j, adopters.cols(k, kp3));
       parents(0, arma::span(k, kp3)).fill(i);
       parents(1, arma::span(k, kp3)).fill(j);
       k += 4;
@@ -312,7 +314,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
   adopters = adopters.cols(not_na);
   parents  = parents.cols(not_na);
   // Loop over each set combination
-  arma::vec areas(n_combos, arma::fill::zeros);
+  arma::vec areas(n_combos);
   for (arma::uword i = 0; i < n_combos; i++) {
     arma::uvec ids = arma::find(id.row(i) == 1);
 
@@ -321,20 +323,20 @@ arma::vec intersect_ellipses(const arma::vec& par,
       areas(i) = ellipse_area(ellipses.col(arma::as_scalar(ids)));
     } else {
       // Two or more sets
-      arma::uvec subparents(parents.n_cols);
+      arma::uvec owners(parents.n_cols);
       for (arma::uword q = 0; q < parents.n_cols; q++) {
-        subparents(q) =
-          arma::any(parents(0, q) == ids) & arma::any(parents(1, q) == ids);
+        owners(q) = set_intersect(parents.col(q), ids).n_elem == 2;
       }
 
-      arma::uvec int_points = arma::find((arma::sum(adopters.rows(ids)).t() ==
-                                          ids.n_elem)%subparents);
+      arma::uvec int_points =
+        arma::find((arma::sum(adopters.rows(ids)).t() == ids.n_elem)%owners);
 
       if (int_points.n_elem == 0) {
         // No intersections: either disjoint or subset
         areas(i) = disjoint_or_subset(ellipses.cols(ids));
 
       } else {
+        // Compute the area of the overlap
         areas(i) = polysegments(points.cols(int_points),
                                 ellipses,
                                 parents.cols(int_points));
@@ -350,7 +352,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
       arma::accu(out(arma::find(arma::sum(subareas, 1) == subareas.n_cols)));
   }
 
-  return arma::clamp(out, 0, arma::datum::inf);
+  return arma::clamp(out, 0, out.max());
 }
 
 

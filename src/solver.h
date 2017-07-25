@@ -1,7 +1,8 @@
-#ifndef SOLVERS
-#define SOLVERS
+#ifndef eulerr_solver_h_
+#define eulerr_solver_h_
 
 #include <RcppArmadillo.h>
+#include "constants.h"
 
 // Solve a cubic polynomial
 arma::cx_vec solve_cubic(const arma::vec& v) {
@@ -22,7 +23,7 @@ arma::cx_vec solve_cubic(const arma::vec& v) {
   } else {
     double A = -copysign(1.0, R)*cbrt(std::abs(R) + sqrt(pow(R, 2) - pow(Q, 3)));
     double B;
-    if (std::abs(A - 0) < pow(arma::datum::eps, 0.95)) {
+    if (std::abs(A - 0) < small) {
       B = 0;
     } else {
       B = Q/A;
@@ -35,4 +36,4 @@ arma::cx_vec solve_cubic(const arma::vec& v) {
   return y;
 }
 
-#endif //SOLVERS
+#endif
