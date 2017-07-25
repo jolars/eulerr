@@ -26,12 +26,12 @@ void split_conic(const arma::mat& A,
     std::complex<double> Bii = sqrt(B(i, i));
 
     if (std::real(Bii) >= 0) {
-      arma::cx_mat C = A + skewsymmat(B.col(i)/Bii);
+      arma::cx_mat::fixed<3, 3> C = A + skewsymmat(B.col(i)/Bii);
 
       if (arma::any(arma::abs(arma::vectorise(C)) > sqrt(arma::datum::eps))) {
         // Extract the lines
         arma::uvec ij =
-          arma::ind2sub(arma::size(C),
+          arma::ind2sub(arma::size(3, 3),
                         arma::index_max(arma::abs(arma::vectorise(C))));
         g = arma::real(C.row(ij(0)).t());
         h = arma::real(C.col(ij(1)));
@@ -50,10 +50,9 @@ void split_conic(const arma::mat& A,
 }
 
 // Intersect a conic with two lines to return 0 to 4 intersection points.
-arma::mat intersect_conic_line(const arma::mat& A,
-                               arma::vec l) {
-  arma::mat::fixed<3, 2> out;
-
+void intersect_conic_line(const arma::mat& A,
+                          arma::vec& l,
+                          arma::subview<double>&& points) {
   arma::mat::fixed<3, 3> M = skewsymmat(l);
   arma::mat::fixed<3, 3> B = M.t() * A * M;
 
@@ -61,38 +60,38 @@ arma::mat intersect_conic_line(const arma::mat& A,
   // Pick a non-zero element of l
   if (arma::any(l != 0)) {
     arma::uword i = arma::index_max(arma::abs(l));
-    arma::uvec li = {0, 1, 2};
+    arma::uvec li = arma::linspace<arma::uvec>(0, 2, 3);
     li.shed_row(i);
 
     double alpha = sqrt(-arma::det(arma::symmatl(B.submat(li, li))))/l(i);
 
-    arma::mat C = B + alpha*M;
+    arma::mat::fixed<3, 3> C = B + alpha*M;
 
     if (arma::any(arma::abs(arma::vectorise(C)) > sqrt(arma::datum::eps))) {
       arma::uvec ind =
-        arma::ind2sub(arma::size(C),
+        arma::ind2sub(arma::size(3, 3),
                       arma::index_max(arma::abs(arma::vectorise(C))));
       arma::uword i0 = ind(0);
       arma::uword i1 = ind(1);
 
-      out.col(0) = C.row(i0).t() / C(i0, 2);
-      out.col(1) = C.col(i1)     / C(2, i1);
-      if (!out.is_finite()) {
-        out.fill(arma::datum::nan);
+      points.col(0) = C.row(i0).t() / C(i0, 2);
+      points.col(1) = C.col(i1)     / C(2, i1);
+      if (!points.is_finite()) {
+        points.fill(arma::datum::nan);
       }
     } else {
-      out.fill(arma::datum::nan);
+      points.fill(arma::datum::nan);
     }
   } else {
-    out.fill(arma::datum::nan);
+    points.fill(arma::datum::nan);
   }
-  return out;
 }
 
 
 // Intersect two conics, returning 0-4 intersection points
-arma::mat intersect_conics(const arma::mat& A,
-                           const arma::mat& B) {
+void intersect_conics(const arma::mat& A,
+                      const arma::mat& B,
+                      arma::subview<double>&& points) {
   arma::vec::fixed<4> v;
   v(0) = arma::det(A);
   v(1) = arma::det(arma::join_rows(A.cols(0, 1), B.col(2))) +
@@ -106,7 +105,6 @@ arma::mat intersect_conics(const arma::mat& A,
   // Find the cubic roots
   arma::cx_vec::fixed<3> roots = solve_cubic(v);
 
-  arma::mat::fixed<3, 4> out;
   if (arma::any(arma::imag(roots) == 0)) {
     // Select the largest real root
     double lambda = 0;
@@ -127,15 +125,12 @@ arma::mat intersect_conics(const arma::mat& A,
     split_conic(C, g, h);
 
     // Intersect one of the conics with each line to get points p q
-    out.cols(0, 1) = intersect_conic_line(A, g);
-    out.cols(2, 3) = intersect_conic_line(A, h);
-    // out = arma::join_rows(intersect_conic_line(A, g),
-    //                       intersect_conic_line(A, h));
+    intersect_conic_line(A, g, points.cols(0, 1));
+    intersect_conic_line(A, h, points.cols(2, 3));
 
   } else {
-    out.fill(arma::datum::nan);
+    points.fill(arma::datum::nan);
   }
-  return out;
 }
 
 
@@ -303,7 +298,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
   for (arma::uword i = 0, k = 0; i < n - 1; i++) {
     for (arma::uword j = i + 1; j < n; j++) {
       arma::uword kp3 = k + 3;
-      points.cols(k, kp3) = intersect_conics(conics.slice(i), conics.slice(j));
+      intersect_conics(conics.slice(i), conics.slice(j), points.cols(k, kp3));
       adopters.cols(k, kp3) = adopt(points.cols(k, kp3), ellipses, n, i, j);
       parents(0, arma::span(k, kp3)).fill(i);
       parents(1, arma::span(k, kp3)).fill(j);
