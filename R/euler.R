@@ -184,17 +184,28 @@ euler.default <- function(
                         USE.NAMES = FALSE)
 
     # Starting layout
-    initial_layout <- stats::optim(
-      par = stats::runif(n * 2L, 0L, sqrt(sum(r ^ 2L * pi))),
-      fn = optim_init_loss,
-      gr = optim_init_grad,
-      d = distances,
-      disjoint = disjoint,
-      contained = contained,
-      lower = 0L,
-      upper = sqrt(sum(r ^ 2L * pi)),
-      method = c("L-BFGS-B")
-    )
+    loss <- Inf
+    i <- 1
+
+    while (loss > sqrt(.Machine$double.eps) && i < 10) {
+      temp_layout <- stats::optim(
+        par = stats::runif(n * 2L, 0L, sqrt(sum(r ^ 2L * pi))),
+        fn = optim_init_loss,
+        gr = optim_init_grad,
+        d = distances,
+        disjoint = disjoint,
+        contained = contained,
+        lower = 0L,
+        upper = sqrt(sum(r ^ 2L * pi)),
+        method = c("L-BFGS-B")
+      )
+
+      if (temp_layout$value < loss) {
+        initial_layout <- temp_layout
+        loss <- initial_layout$value
+      }
+      i <- i + 1
+    }
 
     # Final layout
     # TO DO: Allow user customization here?
@@ -215,7 +226,7 @@ euler.default <- function(
                                circles = circle,
                                iterlim = 250)
 
-    fit <- as.vector(intersect_ellipses(final_layout$estimate, circle))
+    fit <- as.vector(intersect_ellipses(final_layout$par, circle))
 
     orig <- areas_disjoint
 
@@ -226,7 +237,7 @@ euler.default <- function(
     diag_error <- max(region_error)
 
     fpar <- matrix(
-      data = final_layout$estimate,
+      data = final_layout$par,
       ncol = if (circle) 3 else 5,
       dimnames = list(
         setnames,
