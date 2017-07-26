@@ -160,6 +160,14 @@ void adopt(const arma::mat& points,
 }
 
 
+// Ellipse sector area
+inline arma::vec sector_area(const double a,
+                             const double b,
+                             const arma::vec& theta) {
+  return 0.5*a*b*(theta - arma::atan2((b - a)*arma::sin(2*theta),
+                                      b + a + (b - a)*arma::cos(2*theta)));
+}
+
 // Compute the area of an ellipse segment.
 double ellipse_segment(const arma::vec& v,
                        arma::vec p0,
@@ -191,13 +199,11 @@ double ellipse_segment(const arma::vec& v,
   double dtheta = theta(1) - theta(0);
 
   if (dtheta <= arma::datum::pi) {
-    sector = 0.5*a*b*(theta - arma::atan2((b - a)*arma::sin(2*theta),
-                                          (b + a + (b - a)*arma::cos(2*theta))));
+    sector = sector_area(a, b, theta);
     return sector(1) - sector(0) - triangle;
   } else {
     theta(0) += 2*arma::datum::pi;
-    sector = 0.5*a*b*(theta - arma::atan2((b - a)*arma::sin(2*theta),
-                                          (b + a + (b - a)*arma::cos(2*theta))));
+    sector = sector_area(a, b, theta);
     return a*b*arma::datum::pi - sector(0) + sector(1) + triangle;
   }
 }
@@ -253,10 +259,9 @@ double disjoint_or_subset(arma::mat M) {
   arma::rowvec cosphi = arma::cos(phi);
   arma::rowvec sinphi = arma::sin(phi);
 
-  arma::urowvec is_subset = arma::pow(xmh%cosphi + ymk%sinphi, 2)/
-                              arma::pow(M.row(2), 2) +
-                            arma::pow(xmh%sinphi - ymk%cosphi, 2)/
-                              arma::pow(M.row(3), 2) < 1;
+  arma::urowvec is_subset =
+    arma::pow(xmh%cosphi + ymk%sinphi, 2)/arma::pow(M.row(2), 2) +
+    arma::pow(xmh%sinphi - ymk%cosphi, 2)/arma::pow(M.row(3), 2) < 1;
 
   return arma::all(is_subset) ? areas(i) : 0;
 }
