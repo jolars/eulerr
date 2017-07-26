@@ -226,7 +226,7 @@ euler.default <- function(
                                circles = circle,
                                iterlim = 250)
 
-    fit <- as.vector(intersect_ellipses(final_layout$par, circle))
+    fit <- as.vector(intersect_ellipses(final_layout$estimate, circle))
 
     orig <- areas_disjoint
 
@@ -237,7 +237,7 @@ euler.default <- function(
     diag_error <- max(region_error)
 
     fpar <- matrix(
-      data = final_layout$par,
+      data = final_layout$estimate,
       ncol = if (circle) 3 else 5,
       dimnames = list(
         setnames,
