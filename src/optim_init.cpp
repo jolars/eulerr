@@ -20,13 +20,13 @@ double optim_init_loss(
   for (arma::uword i = 0, k = 0; i < n; i++) {
     for (arma::uword j = i + 1; j < n; j++, k++) {
       arma::vec xycold = xy.col(i) - xy.col(j);
-      double D = arma::as_scalar(xycold.t() * xycold) - pow(d(k), 2);
+      double D = arma::as_scalar(xycold.t() * xycold) - std::pow(d(k), 2);
       if (disjoint(k) && (D >= 0)) {
         continue;
       } else if (contained(k) && (D < 0)) {
         continue;
       } else {
-        out += pow(D, 2);
+        out += std::pow(D, 2);
       }
     }
   }
@@ -35,7 +35,7 @@ double optim_init_loss(
 
 // Gradient for the initial optimizer.
 // [[Rcpp::export]]
-std::vector<double> optim_init_grad(
+SEXP optim_init_grad(
     const arma::rowvec& par,
     const arma::vec& d,
     const arma::uvec& disjoint,
@@ -59,5 +59,5 @@ std::vector<double> optim_init_grad(
       }
     }
   }
-  return arma::conv_to< std::vector<double> >::from(arma::vectorise(out, 1));
+  return Rcpp::wrap(arma::vectorise(out, 1));
 }
