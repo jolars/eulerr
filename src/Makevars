@@ -1,2 +1,7 @@
 CXX_STD = CXX11
-PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+## -- for Google Perftools profiling
+## PKG_LIBS = $(shell $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()") $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -lprofiler
+
+## -- default
+PKG_LIBS=  $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
