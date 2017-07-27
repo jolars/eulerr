@@ -22,11 +22,9 @@ Rcpp::LogicalMatrix bit_indexr(const arma::uword n) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector discdisc(
-    const Rcpp::NumericVector& r1,
-    const Rcpp::NumericVector& r2,
-    const Rcpp::NumericVector& d
-  ) {
+Rcpp::NumericVector discdisc(const Rcpp::NumericVector& r1,
+                             const Rcpp::NumericVector& r2,
+                             const Rcpp::NumericVector& d) {
   Rcpp::NumericVector r1e = Rcpp::pow(r1, 2);
   Rcpp::NumericVector r2e = Rcpp::pow(r2, 2);
   Rcpp::NumericVector de  = Rcpp::pow(d, 2);
@@ -37,20 +35,21 @@ Rcpp::NumericVector discdisc(
 }
 
 // [[Rcpp::export]]
-Rcpp::LogicalMatrix find_surrounding_sets(
-    const arma::vec& xs,
-    const arma::vec& ys,
-    const arma::vec& x,
-    const arma::vec& y,
-    const arma::vec& r
-  ) {
+Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& xs,
+                                          const arma::vec& ys,
+                                          const arma::vec& x,
+                                          const arma::vec& y,
+                                          const arma::vec& r) {
   arma::uword n1 = x.n_elem;
   arma::uword n2 = xs.n_elem;
   arma::umat out(n1, n2);
 
-  for (arma::uword i = 0; i < n1; i++)
-    for (arma::uword j = 0; j < n2; j++)
-      out(i, j) = (pow(xs(j) - x(i), 2) + pow(ys(j) - y(i), 2) <= pow(r(i), 2));
+  for (arma::uword i = 0; i < n1; i++) {
+    double r2 = std::pow(r(i), 2);
+    for (arma::uword j = 0; j < n2; j++) {
+      out(i, j) = (std::pow(xs(j) - x(i), 2) + std::pow(ys(j) - y(i), 2)) <= r2;
+    }
+  }
 
   return Rcpp::wrap(out);
 }
