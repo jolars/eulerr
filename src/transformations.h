@@ -26,8 +26,8 @@ inline arma::mat rotate(const double phi) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) =  cos(phi);
-  out(1, 0) = -sin(phi);
   out(0, 1) =  sin(phi);
+  out(1, 0) = -sin(phi);
   out(1, 1) =  cos(phi);
   return out;
 }
