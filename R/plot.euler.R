@@ -250,7 +250,6 @@ prepanel.euler <- function(
 #'
 #' @param x X coordinates for the circle centers.
 #' @param y Y coordinates for the circle centers.
-#' @param r Radii.
 #' @param subscripts A vector of subscripts (See [lattice::xyplot()]).
 #' @param fill Fill color for circles. (See [grid::gpar()].)
 #' @param lty Line type for circles. (See [grid::gpar()].)
@@ -281,7 +280,6 @@ prepanel.euler <- function(
 panel.euler <- function(
     x,
     y,
-    r = NULL,
     ra = NULL,
     rb = NULL,
     phi = NULL,
@@ -304,13 +302,13 @@ panel.euler <- function(
 
   if (is.matrix(original.values)) {
     original.values <- original.values[, lattice::packet.number()]
-    fitted.values <- fitted.values[, lattice::packet.number()]
+    fitted.values   <-   fitted.values[, lattice::packet.number()]
   }
 
-  if (!is.null(r)) {
+  if (isTRUE(all.equal(ra, rb))) {
     panel.euler.circles(x = x,
                         y = y,
-                        r = r[subscripts],
+                        r = ra[subscripts],
                         fill = fill,
                         lty = lty,
                         lwd = lwd,
@@ -334,7 +332,9 @@ panel.euler <- function(
   # if ((is.list(counts) || isTRUE(counts)) || !is.null(labels)) {
   #   panel.euler.labels(x = x,
   #                      y = y,
-  #                      r = r[subscripts],
+  #                      ra = ra[subscripts],
+  #                      rb = rb[subscripts],
+  #                      phi = phi[subscripts],
   #                      labels = labels,
   #                      counts = counts,
   #                      original.values = original.values,
@@ -490,7 +490,9 @@ panel.euler.ellipses <- function(
 panel.euler.labels <- function(
     x,
     y,
-    r,
+    ra,
+    rb,
+    phi,
     labels,
     counts = TRUE,
     original.values,
@@ -506,7 +508,9 @@ panel.euler.labels <- function(
 
   centers <- locate_centers(x = x,
                             y = y,
-                            r = r,
+                            ra = ra,
+                            rb = rb,
+                            phi = phi,
                             original.values = original.values,
                             fitted.values = fitted.values)
 
@@ -550,7 +554,13 @@ panel.euler.labels <- function(
 #' @return A data frame with centers of the circle overlaps and their
 #'   respective original counts.
 #' @keywords internal
-locate_centers <- function(x, y, r, original.values, fitted.values) {
+locate_centers <- function(x,
+                           y,
+                           ra,
+                           rb,
+                           phi,
+                           original.values,
+                           fitted.values) {
   n <- length(x)
 
   if (n > 1L) {
@@ -572,9 +582,9 @@ locate_centers <- function(x, y, r, original.values, fitted.values) {
     singles <- rowSums(id) == 1L
 
     for (i in seq_along(r)) {
-      x0 <- px * r[i] + x[i]
-      y0 <- py * r[i] + y[i]
-      in_which <- find_surrounding_sets(x0, y0, x, y, r)
+      x0 <- px*ra[i]*cos(theta)*cos(phi[i]) - rb[i]*sin(theta)*sin(phi[i]) + x[i]
+      y0 <- py*rb[i]*sin(theta)*cos(phi[i]) + ra[i]*cos(theta)*sin(phi[i]) + y[i]
+      in_which <- find_surrounding_sets(x0, y0, x, y, ra, rb, phi)
 
       for (j in seq_len(nrow(id))[id[, i]]) {
         idj <- id[j, ]
