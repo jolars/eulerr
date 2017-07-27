@@ -52,4 +52,10 @@ inline arma::umat bit_index(arma::uword n) {
   return out;
 }
 
+// Signum function
+template <typename T>
+inline int sign(T x) {
+  return (T(0) < x) - (x < T(0));
+}
+
 #endif

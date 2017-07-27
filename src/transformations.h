@@ -25,10 +25,12 @@ inline arma::mat translate(const arma::vec& xy) {
 inline arma::mat rotate(const double phi) {
   arma::mat::fixed<3, 3> out;
   out.eye();
-  out(0, 0) =  cos(phi);
-  out(0, 1) =  sin(phi);
-  out(1, 0) = -sin(phi);
-  out(1, 1) =  cos(phi);
+
+  out(0, 0) =  std::cos(phi);
+  out(1, 0) = -std::sin(phi);
+  out(0, 1) =  std::sin(phi);
+  out(1, 1) =  std::cos(phi);
+
   return out;
 }
 
@@ -62,7 +64,7 @@ inline arma::mat adjoint(const arma::mat& m) {
       temp = m;
       temp.shed_col(i);
       temp.shed_row(j);
-      out(i, j) = pow(-1, i + j + 2) * arma::det(temp);
+      out(i, j) = std::pow(-1, i + j + 2) * arma::det(temp);
     }
   }
 

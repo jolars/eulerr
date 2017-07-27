@@ -46,7 +46,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // optim_init_grad
-std::vector<double> optim_init_grad(const arma::rowvec& par, const arma::vec& d, const arma::uvec& disjoint, const arma::uvec& contained);
+SEXP optim_init_grad(const arma::rowvec& par, const arma::vec& d, const arma::uvec& disjoint, const arma::uvec& contained);
 RcppExport SEXP _eulerr_optim_init_grad(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
