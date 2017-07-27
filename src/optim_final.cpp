@@ -8,6 +8,8 @@
 #include "helpers.h"
 #include "constants.h"
 
+// #include <google/profiler.h>
+
 // #define ARMA_NO_DEBUG // For the final version
 
 inline double ellipse_area(const arma::vec& v) {
@@ -175,52 +177,17 @@ double ellipse_segment(const arma::vec& ellipse,
   double a = ellipse(2);
   double b = ellipse(3);
   double phi = ellipse(4);
-  arma::vec::fixed<2> x, y, sector;
 
   p0 = rotate(phi) * translate(-hk) * p0;
   p1 = rotate(phi) * translate(-hk) * p1;
 
+  arma::vec::fixed<2> x, y;
   x(0) = p0(0);
   x(1) = p1(0);
   y(0) = p0(1);
   y(1) = p1(1);
 
-  // x =  cos(phi)*(x - ellipse(0)) + sin(phi)*(y - ellipse(1));
-  // y = -sin(phi)*(x - ellipse(0)) + cos(phi)*(y - ellipse(1));
-
-
-  // arma::vec::fixed<2> theta;
-  //
-  // if (y(0) >= 0) {
-  //   theta(0) = std::acos(x(0)/a);
-  // } else {
-  //   theta(0) = 2*arma::datum::pi - std::acos(x(0)/a);
-  // }
-  //
-  // if (y(1) >= 0) {
-  //   theta(1) = std::acos(x(1)/a);
-  // } else {
-  //   theta(1) = 2*arma::datum::pi - std::acos(x(1)/a);
-//}
-
-
-
-  // if (theta(0) > theta(1)) {
-  //   theta(0) -= 2*arma::datum::pi;
-  // }
-  //
-  // double area = 0.5*((theta(1) - theta(0))*a*b) +
-  //   0.5*std::copysign(1.0, theta(1) - theta(0) - arma::datum::pi)*
-  //   std::abs(x(0)*y(1) - x(1)*y(0));
-  //
-  // return area;
-
-
-  // Find the angle to the points from the center of the ellipse.
-  // arma::vec theta = arma::atan2(y, x);
-
-  arma::vec theta = arma::atan2(y, x);
-  //theta(arma::find(theta < 0)) += 2*arma::datum::pi;
+  arma::vec::fixed<2> theta = arma::atan2(y, x);
 
   if (theta(1) < theta(0)) {
     theta(1) += 2*arma::datum::pi;
@@ -232,11 +199,11 @@ double ellipse_segment(const arma::vec& ellipse,
   double dtheta = theta(1) - theta(0);
 
   if (dtheta <= arma::datum::pi) {
-    sector = sector_area(a, b, theta);
+    arma::vec::fixed<2> sector = sector_area(a, b, theta);
     return sector(1) - sector(0) - triangle;
   } else {
     theta(0) += 2*arma::datum::pi;
-    sector = sector_area(a, b, theta);
+    arma::vec::fixed<2> sector = sector_area(a, b, theta);
     return a*b*arma::datum::pi - sector(0) + sector(1) + triangle;
   }
 }
@@ -249,12 +216,8 @@ double polysegments(arma::mat points,
   arma::uword n = points.n_cols;
 
   // Sort points by their angle to the centroid
-  // arma::uvec ind = arma::sort_index(arma::atan2(x_int - arma::accu(x_int)/n,
-  //                                               y_int - arma::accu(y_int)/n));
-  arma::vec ang = arma::atan2(y_int - arma::accu(y_int)/n,
-                              x_int - arma::accu(x_int)/n);
-  ang(arma::find(ang < 0)) += 2*arma::datum::pi;
-  arma::uvec ind = arma::sort_index(ang);
+  arma::uvec ind = arma::sort_index(arma::atan2(x_int - arma::accu(x_int)/n,
+                                                y_int - arma::accu(y_int)/n));
 
   // Reorder vectors and matrix based on angles to centroid
   points  = points.cols(ind);
@@ -265,15 +228,15 @@ double polysegments(arma::mat points,
 
   for (arma::uword i = 0, j = n - 1; i < n; i++) {
     // First discover which ellipses the points belong to
-    arma::uvec ii = set_intersect(parents.col(j), parents.col(i));
+    arma::uvec ii = set_intersect(parents.col(i), parents.col(j));
     arma::uword i_n = ii.n_elem;
     arma::vec areas(i_n);
 
     // Ellipse segment
     for (arma::uword k = 0; k < i_n; k++) {
       areas(k) = ellipse_segment(ellipses.col(ii(k)),
-                                 points.col(j),
-                                 points.col(i));
+                                 points.col(i),
+                                 points.col(j));
     }
 
     // Triangular segment plus ellipse segment
@@ -306,6 +269,8 @@ double disjoint_or_subset(arma::mat M) {
 // [[Rcpp::export]]
 arma::vec intersect_ellipses(const arma::vec& par,
                              const bool circles) {
+  //ProfilerStart("/tmp/eulerr.prof");
+
   arma::uword n_pars   = circles ? 3 : 5;
   arma::uword n        = par.n_elem / n_pars;
   arma::uword n_int    = 2*n*(n - 1);
@@ -351,8 +316,9 @@ arma::vec intersect_ellipses(const arma::vec& par,
   arma::vec areas(n_combos);
   for (arma::uword i = 0; i < n_combos; i++) {
     arma::uvec ids = arma::find(id.row(i) == 1);
+    arma::uword n_ids = ids.n_elem;
 
-    if (ids.n_elem == 1) {
+    if (n_ids == 1) {
       // One set
       areas(i) = ellipse_area(ellipses.col(arma::as_scalar(ids)));
     } else {
@@ -363,7 +329,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
       }
 
       arma::uvec int_points =
-        arma::find((arma::sum(adopters.rows(ids)).t() == ids.n_elem)%owners);
+        arma::find((arma::sum(adopters.rows(ids)).t() == n_ids) % owners);
 
       if (int_points.n_elem == 0) {
         // No intersections: either disjoint or subset
@@ -384,6 +350,8 @@ arma::vec intersect_ellipses(const arma::vec& par,
     out(i) = areas(i) -
       arma::accu(out(arma::find(arma::sum(subareas, 1) == subareas.n_cols)));
   }
+
+  //ProfilerStop();
 
   return arma::clamp(out, 0, out.max());
 }
