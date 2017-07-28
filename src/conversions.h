@@ -29,12 +29,15 @@ arma::mat standard_to_matrix(const arma::vec& v) {
   double phi = v(4);
   arma::mat::fixed<3, 3> out;
 
-  double A = std::pow(a, 2)*std::pow(sin(phi), 2) + std::pow(b, 2)*std::pow(cos(phi), 2);
+  double A =
+    std::pow(a, 2)*std::pow(sin(phi), 2) + std::pow(b, 2)*std::pow(cos(phi), 2);
   double B = 2*(std::pow(b, 2) - std::pow(a, 2))*std::sin(phi)*std::cos(phi);
-  double C = std::pow(a, 2)*std::pow(cos(phi), 2) + std::pow(b, 2)*std::pow(sin(phi), 2);
+  double C =
+    std::pow(a, 2)*std::pow(cos(phi), 2) + std::pow(b, 2)*std::pow(sin(phi), 2);
   double D = -2*A*h - B*k;
   double E = -B*h - 2*C*k;
-  double F = A*std::pow(h, 2) + B*h*k + C*std::pow(k, 2) - std::pow(a, 2)*std::pow(b, 2);
+  double F =
+    A*std::pow(h, 2) + B*h*k + C*std::pow(k, 2) - std::pow(a, 2)*std::pow(b, 2);
 
   out(0, 0) = A;
   out(1, 0) = B / 2;
