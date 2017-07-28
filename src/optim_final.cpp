@@ -24,18 +24,19 @@ void split_conic(const arma::mat& A,
   arma::mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
-  if (arma::any(arma::abs(B.diag()) > small)) {
-    arma::uword i = arma::index_max(arma::abs(B.diag()));
+  arma::vec::fixed<3> B_diag = arma::abs(B.diag());
+
+  if (arma::any(B_diag > small)) {
+    arma::uword i = arma::index_max(B_diag);
     std::complex<double> Bii = std::sqrt(B(i, i));
 
     if (std::real(Bii) >= 0) {
       arma::cx_mat::fixed<3, 3> C = A + skewsymmat(B.col(i)/Bii);
+      arma::vec::fixed<9> C_abs = arma::abs(arma::vectorise(C));
 
-      if (arma::any(arma::abs(arma::vectorise(C)) > small)) {
+      if (arma::any(C_abs > small)) {
         // Extract the lines
-        arma::uvec ij =
-          arma::ind2sub(arma::size(3, 3),
-                        arma::index_max(arma::abs(arma::vectorise(C))));
+        arma::uvec ij = arma::ind2sub(arma::size(3, 3), arma::index_max(C_abs));
         g = arma::real(C.row(ij(0)).t());
         h = arma::real(C.col(ij(1)));
       } else {
@@ -58,11 +59,12 @@ void intersect_conic_line(const arma::mat& A,
                           arma::subview<double>&& points) {
   arma::mat::fixed<3, 3> M = skewsymmat(l);
   arma::mat::fixed<3, 3> B = M.t() * A * M;
+  arma::vec::fixed<3> l_abs = arma::abs(l);
 
-  l(arma::find(arma::abs(l)) < small).zeros();
+  l(arma::find(l_abs < small)).zeros();
   // Pick a non-zero element of l
-  if (arma::any(arma::abs(l) > small)) {
-    arma::uword i = arma::index_max(arma::abs(l));
+  if (arma::any(l_abs > small)) {
+    arma::uword i = arma::index_max(l_abs);
     arma::uvec li = arma::linspace<arma::uvec>(0, 2, 3);
     li.shed_row(i);
 
@@ -70,10 +72,10 @@ void intersect_conic_line(const arma::mat& A,
 
     arma::mat::fixed<3, 3> C = B + alpha*M;
 
-    if (arma::any(arma::abs(arma::vectorise(C)) > small)) {
-      arma::uvec ind =
-        arma::ind2sub(arma::size(3, 3),
-                      arma::index_max(arma::abs(arma::vectorise(C))));
+    arma::vec::fixed<9> C_abs = arma::abs(arma::vectorise(C));
+
+    if (arma::any(C_abs > small)) {
+      arma::uvec ind = arma::ind2sub(arma::size(3, 3), arma::index_max(C_abs));
       arma::uword i0 = ind(0);
       arma::uword i1 = ind(1);
 
@@ -198,12 +200,14 @@ double ellipse_segment(const arma::vec& ellipse,
 
   double dtheta = theta(1) - theta(0);
 
+  arma::vec::fixed<2> sector;
+
   if (dtheta <= arma::datum::pi) {
-    arma::vec::fixed<2> sector = sector_area(a, b, theta);
+    sector = sector_area(a, b, theta);
     return sector(1) - sector(0) - triangle;
   } else {
     theta(0) += 2*arma::datum::pi;
-    arma::vec::fixed<2> sector = sector_area(a, b, theta);
+    sector = sector_area(a, b, theta);
     return a*b*arma::datum::pi - sector(0) + sector(1) + triangle;
   }
 }
