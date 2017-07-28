@@ -9,7 +9,7 @@
 #' @param r Radius of circle center
 #'
 #' @keywords internal
-dist_point_circle <- function(x, y, h, k, r) {
+dist_point_circle <- function(x, y, h, k, a, b, phi) {
   abs(sqrt((h - x) ^ 2L + (k - y) ^ 2L) - r)
 }
 

@@ -29,8 +29,8 @@ discdisc <- function(r1, r2, d) {
     .Call(`_eulerr_discdisc`, r1, r2, d)
 }
 
-find_surrounding_sets <- function(xs, ys, x, y, r) {
-    .Call(`_eulerr_find_surrounding_sets`, xs, ys, x, y, r)
+find_surrounding_sets <- function(x, y, h, k, a, b, phi) {
+    .Call(`_eulerr_find_surrounding_sets`, x, y, h, k, a, b, phi)
 }
 
 max_colmins <- function(x) {
