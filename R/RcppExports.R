@@ -41,3 +41,7 @@ venneuler_stress <- function(areas, fit) {
     .Call(`_eulerr_venneuler_stress`, areas, fit)
 }
 
+closest_point <- function(a, b, x, y) {
+    .Call(`_eulerr_closest_point`, a, b, x, y)
+}
+

@@ -72,4 +72,40 @@ double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
 }
 
 
+// [[Rcpp::export]]
+double closest_point(double a,
+                     double b,
+                     double x,
+                     double y) {
+
+  double eps = 0.1/std::max(a, b);
+
+  // Intersection of straight line from origin to p with ellipse
+  // as the first approximation:
+  double theta = std::atan2(a*y, b*x);
+
+  double delta = std::max(a, b);
+  arma::uword i = 0;
+
+  while (std::abs(delta) > eps && i < 10) {
+    // function value and derivative at phi:
+    double c = std::cos(theta);
+    double s = std::sin(theta);
+    double f0 = (std::pow(a, 2) - std::pow(b, 2))*c*s - x*a*s + y*b*c;
+    double f1 = (std::pow(a, 2) - std::pow(b, 2))*
+      (std::pow(c, 2) - std::pow(s, 2)) - x*a*c - y*b*s;
+    double delta = f0/f1;
+    theta -= delta;
+
+    ++i;
+  }
+
+  double xx = a*std::cos(theta);
+  double yy = b*std::sin(theta);
+
+  Rcpp::Rcout << xx << yy << std::endl;
+
+  return std::hypot(x - xx, y - yy);
+}
+
 
