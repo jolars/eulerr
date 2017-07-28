@@ -153,7 +153,7 @@ plot.euler <- function(
   if (is_by) {
     d <- dim(x)
     dn <- dimnames(x)
-    n <- NROW(stats::coef(x[[1]]))
+    n <- NROW(x[[1]]$coefficients)
 
     factors <- lapply(dn, as.factor)
     levels <- names(factors)
@@ -178,7 +178,9 @@ plot.euler <- function(
 
   ccall$data <- dd
   if (!is.null(dd$r)) {
-    ccall$r <- dd$r
+    ccall$ra <- dd$r
+    ccall$rb <- dd$r
+    ccall$phi <- 0
   } else {
     ccall$ra <- dd$a
     ccall$rb <- dd$b
@@ -215,41 +217,33 @@ plot.euler <- function(
 #'
 #' @return A list of `xlim` and `ylim` items.
 #' @export
-prepanel.euler <- function(
-  x,
-  y,
-  r = NULL,
-  ra = NULL,
-  rb = NULL,
-  phi = NULL,
-  subscripts,
-  ...
-) {
-  if (!is.null(r)) {
-    r <- r[subscripts]
-    out <- list(xlim = range(x + r, x - r),
-                ylim = range(y + r, y - r))
-  } else {
-    a    <- ra[subscripts]
-    b    <- rb[subscripts]
-    phi  <- phi[subscripts]
-    tx <- atan2(-b*tan(phi), a)
-    ty <- atan2(b*tan(pi/2L - phi), a)
+prepanel.euler <- function(x,
+                           y,
+                           ra,
+                           rb,
+                           phi,
+                           subscripts,
+                           ...) {
+  a   <- ra[subscripts]
+  b   <- rb[subscripts]
+  phi <- phi[subscripts]
+  tx  <- atan2(-b*tan(phi), a)
+  ty  <- atan2(b*tan(pi/2L - phi), a)
 
-    out  <- list(
-      xlim = range(x + a*cos(tx)*cos(phi) - b*sin(tx)*sin(phi),
-                   x + a*cos(tx + pi)*cos(phi) - b*sin(tx + pi)*sin(phi)),
-      ylim = range(y + b*sin(ty)*cos(phi) + a*cos(ty)*sin(phi),
-                   y + b*sin(ty + pi)*cos(phi) + a*cos(ty + pi)*sin(phi))
-    )
-  }
-  out
+  list(xlim = range(x + a*cos(tx)*cos(phi) - b*sin(tx)*sin(phi),
+                    x + a*cos(tx + pi)*cos(phi) - b*sin(tx + pi)*sin(phi)),
+       ylim = range(y + b*sin(ty)*cos(phi) + a*cos(ty)*sin(phi),
+                    y + b*sin(ty + pi)*cos(phi) + a*cos(ty + pi)*sin(phi)))
 }
 
 #' Panel Function for Euler Diagrams
 #'
 #' @param x X coordinates for the circle centers.
 #' @param y Y coordinates for the circle centers.
+#' @param ra Semi-major axes.
+#' @param rb Semi-minor axes.
+#' @param phi Rotation of the ellipse (as the counter-clockwise angle from
+#'   the positive x-axis to the semi-major axis).
 #' @param subscripts A vector of subscripts (See [lattice::xyplot()]).
 #' @param fill Fill color for circles. (See [grid::gpar()].)
 #' @param lty Line type for circles. (See [grid::gpar()].)
@@ -267,35 +261,30 @@ prepanel.euler <- function(
 #' @param original.values Original values for the disjoint set combinations.
 #' @param fitted.values Fitted values for the disjoint set combinations.
 #' @param ... Passed down to [panel.euler.circles()] and [panel.euler.labels()].
-#' @param ra Semi-major axes.
-#' @param rb Semi-minor axes.
-#' @param phi Rotation of the ellipse (as the counter-clockwise angle from
-#'   the positive x-axis to the semi-major axis).
+
 #'
 #' @seealso [grid::gpar()].
 #'
 #' @return Plots euler diagrams inside a trellis panel.
 #'
 #' @export
-panel.euler <- function(
-    x,
-    y,
-    ra = NULL,
-    rb = NULL,
-    phi = NULL,
-    subscripts,
-    fill = superpose.polygon$col,
-    lty = superpose.polygon$lty,
-    lwd = superpose.polygon$lwd,
-    border = superpose.polygon$border,
-    alpha = superpose.polygon$alpha,
-    fontface = "bold",
-    counts = TRUE,
-    labels = NULL,
-    original.values,
-    fitted.values,
-    ...
-  ) {
+panel.euler <- function(x,
+                        y,
+                        ra,
+                        rb,
+                        phi,
+                        subscripts,
+                        fill = superpose.polygon$col,
+                        lty = superpose.polygon$lty,
+                        lwd = superpose.polygon$lwd,
+                        border = superpose.polygon$border,
+                        alpha = superpose.polygon$alpha,
+                        fontface = "bold",
+                        counts = TRUE,
+                        labels = NULL,
+                        original.values,
+                        fitted.values,
+                        ...) {
   superpose.polygon <- lattice::trellis.par.get("superpose.polygon")
 
   assertthat::assert_that(assertthat::is.flag(counts) || is.list(counts))
@@ -305,6 +294,7 @@ panel.euler <- function(
     fitted.values   <-   fitted.values[, lattice::packet.number()]
   }
 
+  # Plot circles if the semi-major and semi-minor axis are all equal.
   if (isTRUE(all.equal(ra, rb))) {
     panel.euler.circles(x = x,
                         y = y,
@@ -329,19 +319,19 @@ panel.euler <- function(
                          ...)
   }
 
-  # if ((is.list(counts) || isTRUE(counts)) || !is.null(labels)) {
-  #   panel.euler.labels(x = x,
-  #                      y = y,
-  #                      ra = ra[subscripts],
-  #                      rb = rb[subscripts],
-  #                      phi = phi[subscripts],
-  #                      labels = labels,
-  #                      counts = counts,
-  #                      original.values = original.values,
-  #                      fitted.values = fitted.values,
-  #                      fontface = fontface,
-  #                      ...)
-  # }
+  if ((is.list(counts) || isTRUE(counts)) || !is.null(labels)) {
+    panel.euler.labels(x = x,
+                       y = y,
+                       ra = ra[subscripts],
+                       rb = rb[subscripts],
+                       phi = phi[subscripts],
+                       labels = labels,
+                       counts = counts,
+                       original.values = original.values,
+                       fitted.values = fitted.values,
+                       fontface = fontface,
+                       ...)
+  }
 }
 
 #' Panel Function for Circles
@@ -423,22 +413,20 @@ panel.euler.circles <- function(
 #'
 #' @return Plots ellipses inside a trellis panel.
 #' @export
-panel.euler.ellipses <- function(
-  x,
-  y,
-  ra,
-  rb,
-  phi,
-  border = "black",
-  fill = "transparent",
-  n = 200,
-  ...,
-  identifier = NULL,
-  name.type = "panel",
-  col,
-  font,
-  fontface
-) {
+panel.euler.ellipses <- function(x,
+                                 y,
+                                 ra,
+                                 rb,
+                                 phi,
+                                 border = "black",
+                                 fill = "transparent",
+                                 n = 200,
+                                 ...,
+                                 identifier = NULL,
+                                 name.type = "panel",
+                                 col,
+                                 font,
+                                 fontface) {
   if (sum(!is.na(x)) < 1)
     return()
 
@@ -565,11 +553,13 @@ locate_centers <- function(x,
 
   if (n > 1L) {
     n_samples <- 500L
-    seqn  <- seq.int(0L, n_samples - 1L, 1L)
-    theta <- seqn * pi * (3L - sqrt(5L))
-    rad   <- sqrt(seqn / n_samples)
-    px    <- rad * cos(theta)
-    py    <- rad * sin(theta)
+    seqn    <- seq.int(0L, n_samples - 1L, 1L)
+    theta   <- seqn * pi * (3L - sqrt(5L))
+    rad     <- sqrt(seqn / n_samples)
+    P       <- matrix(NA, ncol = n_samples, nrow = 3)
+    P[1, ]  <- rad * cos(theta)
+    P[2, ]  <- rad * sin(theta)
+    P[3, ]  <- 1L
 
     id <- bit_indexr(n)
     n_combos <- nrow(id)
@@ -581,10 +571,11 @@ locate_centers <- function(x,
 
     singles <- rowSums(id) == 1L
 
-    for (i in seq_along(r)) {
-      x0 <- px*ra[i]*cos(theta)*cos(phi[i]) - rb[i]*sin(theta)*sin(phi[i]) + x[i]
-      y0 <- py*rb[i]*sin(theta)*cos(phi[i]) + ra[i]*cos(theta)*sin(phi[i]) + y[i]
-      in_which <- find_surrounding_sets(x0, y0, x, y, ra, rb, phi)
+    for (i in seq_along(x)) {
+      PP <-
+        translate(x[i], y[i]) %*% rotate(phi[i]) %*% scale(ra[i], rb[i]) %*% P
+
+      in_which <- find_surrounding_sets(PP[1, ], PP[2, ], x, y, ra, rb, phi)
 
       for (j in seq_len(nrow(id))[id[, i]]) {
         idj <- id[j, ]
@@ -599,9 +590,13 @@ locate_centers <- function(x,
           if (any(locs)) {
             x1 <- x0[locs]
             y1 <- y0[locs]
-            dists <- mapply(dist_point_circle, x = x1, y = y1,
-                            MoreArgs = list(h = x, k = y, r = r),
-                            SIMPLIFY = FALSE, USE.NAMES = FALSE)
+            dists <- mapply(
+              dist_point_circle,
+              x = x1,
+              y = y1,
+              MoreArgs = list(h = x, k = y, a = ra, b = rb, phi = phi),
+              SIMPLIFY = FALSE, USE.NAMES = FALSE
+            )
             dists <- do.call(cbind, dists)
             labmax <- max_colmins(dists)
             xx[j] <- x1[labmax]
@@ -618,4 +613,30 @@ locate_centers <- function(x,
   }
 
   data.frame(x = xx, y = yy, n = original.values)
+}
+
+
+rotate <- function(phi) {
+  matrix(c(cos(phi), -sin(phi), 0,
+           sin(phi),  cos(phi), 0,
+           0,                0, 1),
+         byrow = TRUE,
+         ncol = 3)
+}
+
+
+translate <- function(x, y) {
+  matrix(c(1, 0, x,
+           0, 1, y,
+           0, 0, 1),
+         byrow = TRUE,
+         ncol = 3)
+}
+
+scale <- function(x, y) {
+  matrix(c(x, 0, 0,
+           0, y, 0,
+           0, 0, 1),
+         byrow = TRUE,
+         ncol = 3)
 }

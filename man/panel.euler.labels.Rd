@@ -4,7 +4,7 @@
 \alias{panel.euler.labels}
 \title{Panel Function for Circle Labels}
 \usage{
-panel.euler.labels(x, y, r, labels, counts = TRUE, original.values,
+panel.euler.labels(x, y, ra, rb, phi, labels, counts = TRUE, original.values,
   fitted.values, ...)
 }
 \arguments{
@@ -12,7 +12,12 @@ panel.euler.labels(x, y, r, labels, counts = TRUE, original.values,
 
 \item{y}{Y coordinates for the circle centers.}
 
-\item{r}{Radii.}
+\item{ra}{Semi-major axes.}
+
+\item{rb}{Semi-minor axes.}
+
+\item{phi}{Rotation of the ellipse (as the counter-clockwise angle from
+the positive x-axis to the semi-major axis).}
 
 \item{labels}{Labels to plot on the circles.}
 
