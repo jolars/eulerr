@@ -7,12 +7,10 @@
 
 // Loss function for the intial optimizer.
 // [[Rcpp::export]]
-double optim_init_loss(
-    const arma::vec& par,
-    const arma::vec& d,
-    const arma::uvec& disjoint,
-    const arma::uvec& contained
-  ) {
+double optim_init_loss(const arma::vec& par,
+                       const arma::vec& d,
+                       const arma::uvec& disjoint,
+                       const arma::uvec& contained) {
   arma::uword n = par.n_elem/2;
   arma::mat xy = arma::reshape(par, n, 2).t();
 
@@ -35,12 +33,10 @@ double optim_init_loss(
 
 // Gradient for the initial optimizer.
 // [[Rcpp::export]]
-SEXP optim_init_grad(
-    const arma::rowvec& par,
-    const arma::vec& d,
-    const arma::uvec& disjoint,
-    const arma::uvec& contained
-  ) {
+SEXP optim_init_grad(const arma::rowvec& par,
+                     const arma::vec& d,
+                     const arma::uvec& disjoint,
+                     const arma::uvec& contained) {
   arma::uword n = par.n_elem/2;
   arma::mat xy = arma::reshape(par, n, 2).t();
 
@@ -48,7 +44,7 @@ SEXP optim_init_grad(
   for (arma::uword i = 0, k = 0; i < n; i++) {
     for (arma::uword j = i + 1; j < n; j++, k++) {
       arma::vec xycold = xy.col(i) - xy.col(j);
-      double D = arma::as_scalar(xycold.t() * xycold) - pow(d(k), 2);
+      double D = arma::as_scalar(xycold.t() * xycold) - std::pow(d(k), 2);
       if (disjoint(k) && (D >= 0)) {
         continue;
       } else if (contained(k) && (D < 0)) {
