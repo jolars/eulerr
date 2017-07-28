@@ -95,17 +95,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_surrounding_sets
-Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& xs, const arma::vec& ys, const arma::vec& x, const arma::vec& y, const arma::vec& r);
-RcppExport SEXP _eulerr_find_surrounding_sets(SEXP xsSEXP, SEXP ysSEXP, SEXP xSEXP, SEXP ySEXP, SEXP rSEXP) {
+Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& x, const arma::vec& y, const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi);
+RcppExport SEXP _eulerr_find_surrounding_sets(SEXP xSEXP, SEXP ySEXP, SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type xs(xsSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type ys(ysSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type r(rSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_surrounding_sets(xs, ys, x, y, r));
+    Rcpp::traits::input_parameter< const arma::vec& >::type h(hSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type phi(phiSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_surrounding_sets(x, y, h, k, a, b, phi));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -141,7 +143,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_bit_indexr", (DL_FUNC) &_eulerr_bit_indexr, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 3},
-    {"_eulerr_find_surrounding_sets", (DL_FUNC) &_eulerr_find_surrounding_sets, 5},
+    {"_eulerr_find_surrounding_sets", (DL_FUNC) &_eulerr_find_surrounding_sets, 7},
     {"_eulerr_max_colmins", (DL_FUNC) &_eulerr_max_colmins, 1},
     {"_eulerr_venneuler_stress", (DL_FUNC) &_eulerr_venneuler_stress, 2},
     {NULL, NULL, 0}
