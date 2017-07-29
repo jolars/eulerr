@@ -134,6 +134,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// dist_to_ellipse
+double dist_to_ellipse(double a, double b, double x, double y);
+RcppExport SEXP _eulerr_dist_to_ellipse(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(dist_to_ellipse(a, b, x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
@@ -146,6 +160,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_find_surrounding_sets", (DL_FUNC) &_eulerr_find_surrounding_sets, 7},
     {"_eulerr_max_colmins", (DL_FUNC) &_eulerr_max_colmins, 1},
     {"_eulerr_venneuler_stress", (DL_FUNC) &_eulerr_venneuler_stress, 2},
+    {"_eulerr_dist_to_ellipse", (DL_FUNC) &_eulerr_dist_to_ellipse, 4},
     {NULL, NULL, 0}
 };
 

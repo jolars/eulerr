@@ -41,3 +41,7 @@ venneuler_stress <- function(areas, fit) {
     .Call(`_eulerr_venneuler_stress`, areas, fit)
 }
 
+dist_to_ellipse <- function(a, b, x, y) {
+    .Call(`_eulerr_dist_to_ellipse`, a, b, x, y)
+}
+

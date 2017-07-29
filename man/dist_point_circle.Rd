@@ -4,7 +4,7 @@
 \alias{dist_point_circle}
 \title{Distance from Point to Circle}
 \usage{
-dist_point_circle(x, y, h, k, r)
+dist_point_circle(x, y, h, k, a, b, phi)
 }
 \arguments{
 \item{x}{X coordinate of point}
