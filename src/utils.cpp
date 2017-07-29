@@ -34,14 +34,14 @@ Rcpp::NumericVector discdisc(const Rcpp::NumericVector& r1,
     sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
 }
 
-// [[Rcpp::export]]
-arma::uword max_colmins(const arma::mat& x) {
-  arma::uword n = x.n_cols;
-  arma::vec mins(n);
-  for (arma::uword i = 0; i < n; i++)
-    mins(i) = x.col(i).min();
-  return mins.index_max() + 1;
-}
+// // [[Rcpp::export]]
+// arma::uword max_colmins(const arma::mat& x) {
+//   arma::uword n = x.n_cols;
+//   arma::vec mins(n);
+//   for (arma::uword i = 0; i < n; i++)
+//     mins(i) = x.col(i).min();
+//   return mins.index_max() + 1;
+// }
 
 // [[Rcpp::export]]
 double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
