@@ -12,11 +12,29 @@ inline arma::mat scale(const arma::vec& xy) {
   return out;
 }
 
+inline arma::mat scale(const double x,
+                       const double y) {
+  arma::mat::fixed<3, 3> out;
+  out.eye();
+  out(0, 0) = x;
+  out(1, 1) = y;
+  return out;
+}
+
 // Produce a translation matrix
 inline arma::mat translate(const arma::vec& xy) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(arma::span(0, 1), 2) = xy;
+  return out;
+}
+
+inline arma::mat translate(const double x,
+                           const double y) {
+  arma::mat::fixed<3, 3> out;
+  out.eye();
+  out(0, 2) = x;
+  out(1, 2) = y;
   return out;
 }
 
