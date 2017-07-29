@@ -78,22 +78,20 @@
 #'
 #' # We can modify the grid layout as well
 #' plot(gridfit, layout = c(1, 4))
-plot.euler <- function(
-    x,
-    fill = qualpalr_pal,
-    fill_alpha = 0.4,
-    auto.key = FALSE,
-    counts = FALSE,
-    labels = is.logical(auto.key) && !isTRUE(auto.key),
-    fontface = "bold",
-    par.settings = list(),
-    ...,
-    default.prepanel = prepanel.euler,
-    default.scales = list(draw = FALSE),
-    panel = panel.euler,
-    outer_strips,
-    fill_opacity
-  ) {
+plot.euler <- function(x,
+                       fill = qualpalr_pal,
+                       fill_alpha = 0.4,
+                       auto.key = FALSE,
+                       counts = FALSE,
+                       labels = is.logical(auto.key) && !isTRUE(auto.key),
+                       fontface = "bold",
+                       par.settings = list(),
+                       ...,
+                       default.prepanel = prepanel.euler,
+                       default.scales = list(draw = FALSE),
+                       panel = panel.euler,
+                       outer_strips,
+                       fill_opacity) {
   assertthat::assert_that(assertthat::is.number(fill_alpha),
                           assertthat::is.flag(auto.key) || is.list(auto.key),
                           assertthat::is.flag(counts) || is.list(counts),
@@ -354,19 +352,17 @@ panel.euler <- function(x,
 #'
 #' @return Plots circles inside a trellis panel.
 #' @export
-panel.euler.circles <- function(
-  x,
-  y,
-  r,
-  border = "black",
-  fill = "transparent",
-  ...,
-  identifier = NULL,
-  name.type = "panel",
-  col,
-  font,
-  fontface
-) {
+panel.euler.circles <- function(x,
+                                y,
+                                r,
+                                border = "black",
+                                fill = "transparent",
+                                ...,
+                                identifier = NULL,
+                                name.type = "panel",
+                                col,
+                                font,
+                                fontface) {
   if (sum(!is.na(x)) < 1)
     return()
 
@@ -546,109 +542,3 @@ panel.euler.labels <- function(x,
       name.type = "panel"
     ), list(...)))
 }
-
-
-#' #' Locate Centers of Circle Overlaps
-#' #'
-#' #' @inheritParams panel.euler
-#' #'
-#' #' @return A data frame with centers of the circle overlaps and their
-#' #'   respective original counts.
-#' #' @keywords internal
-#' locate_centers2 <- function(x,
-#'                            y,
-#'                            a,
-#'                            b,
-#'                            phi,
-#'                            original.values,
-#'                            fitted.values) {
-#'   n <- length(x)
-#'
-#'   if (n > 1L) {
-#'     n_samples <- 500L
-#'     seqn    <- seq.int(0L, n_samples - 1L, 1L)
-#'     theta   <- seqn * pi * (3L - sqrt(5L))
-#'     rad     <- sqrt(seqn / n_samples)
-#'     P       <- matrix(NA, ncol = n_samples, nrow = 3)
-#'     P[1, ]  <- rad * cos(theta)
-#'     P[2, ]  <- rad * sin(theta)
-#'     P[3, ]  <- 1L
-#'
-#'     id <- eulerr:::bit_indexr(n)
-#'     n_combos <- nrow(id)
-#'
-#'     # In case the user asks for counts, compute locations for these
-#'     xx <- yy <- rep.int(NA_real_, nrow(id))
-#'
-#'     not_zero <- fitted.values > .Machine$double.eps ^ 0.25
-#'
-#'     singles <- rowSums(id) == 1L
-#'
-#'     for (i in seq_along(x)) {
-#'       PP <-
-#'         translate(x[i], y[i]) %*% rotate(phi[i]) %*% scale(a[i], b[i]) %*% P
-#'
-#'       in_which <- eulerr:::find_surrounding_sets(PP[1, ], PP[2, ], x, y, a, b, phi)
-#'
-#'       for (j in which(id[, i])) {
-#'         idj <- id[j, ]
-#'         if (all(is.na(xx[j]), idj[i])) {
-#'           if (singles[j]) {
-#'             sums <- colSums(in_which)
-#'             locs <- sums == min(sums)
-#'           } else {
-#'             locs <- colSums(in_which == idj) == nrow(in_which)
-#'           }
-#'
-#'           if (any(locs)) {
-#'             PP2 <- PP[, locs]
-#'
-#'             mm <- matrix(NA, ncol = NCOL(PP2), nrow = length(x))
-#'             for (k in seq_along(x)) {
-#'               PP3 <- rotate(-phi[k]) %*% translate(-x[k], -y[k]) %*% PP2
-#'               for (l in 1:NCOL(PP3)) {
-#'                 mm[k, l] <- eulerr:::dist_to_ellipse(a[k], b[k], PP3[1, l], PP3[2, l])
-#'               }
-#'             }
-#'             labmax <- eulerr:::max_colmins(mm)
-#'             xx[j] <- PP2[1, labmax + 1]
-#'             yy[j] <- PP2[2, labmax + 1]
-#'           }
-#'         }
-#'       }
-#'     }
-#'   } else {
-#'     # One circle, always placed in the middle
-#'     xx <- yy <- 0L
-#'     singles <- TRUE
-#'     n_combos <- 1L
-#'   }
-#'
-#'   data.frame(x = xx, y = yy, n = original.values)
-#' }
-#'
-#'
-#' rotate <- function(phi) {
-#'   matrix(c(cos(phi), -sin(phi), 0,
-#'            sin(phi),  cos(phi), 0,
-#'            0,                0, 1),
-#'          byrow = TRUE,
-#'          ncol = 3)
-#' }
-#'
-#'
-#' translate <- function(x, y) {
-#'   matrix(c(1, 0, x,
-#'            0, 1, y,
-#'            0, 0, 1),
-#'          byrow = TRUE,
-#'          ncol = 3)
-#' }
-#'
-#' scale <- function(x, y) {
-#'   matrix(c(x, 0, 0,
-#'            0, y, 0,
-#'            0, 0, 1),
-#'          byrow = TRUE,
-#'          ncol = 3)
-#' }
