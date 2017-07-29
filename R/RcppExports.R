@@ -25,6 +25,14 @@ dist_to_ellipse <- function(a, b, x, y) {
     .Call(`_eulerr_dist_to_ellipse`, a, b, x, y)
 }
 
+max_colmins <- function(x) {
+    .Call(`_eulerr_max_colmins`, x)
+}
+
+locate_centers <- function(h, k, a, b, phi, orig, fitted) {
+    .Call(`_eulerr_locate_centers`, h, k, a, b, phi, orig, fitted)
+}
+
 choose_two <- function(x) {
     .Call(`_eulerr_choose_two`, x)
 }
@@ -35,10 +43,6 @@ bit_indexr <- function(n) {
 
 discdisc <- function(r1, r2, d) {
     .Call(`_eulerr_discdisc`, r1, r2, d)
-}
-
-max_colmins <- function(x) {
-    .Call(`_eulerr_max_colmins`, x)
 }
 
 venneuler_stress <- function(areas, fit) {

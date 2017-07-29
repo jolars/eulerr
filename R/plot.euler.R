@@ -494,29 +494,29 @@ panel.euler.labels <- function(
   do_counts <- isTRUE(counts) || is.list(counts)
   do_labels <- !is.null(labels)
 
-  centers <- locate_centers(x = x,
-                            y = y,
+  centers <- locate_centers(h = x,
+                            k = y,
                             a = ra,
                             b = rb,
                             phi = phi,
-                            original.values = original.values,
-                            fitted.values = fitted.values)
+                            orig = original.values,
+                            fitted = fitted.values)
 
   # Plot counts
   if (do_counts) {
     do.call(lattice::panel.text, update_list(list(
-      x = centers$x[singles],
-      y = centers$y[singles],
-      labels = centers$n[singles],
+      x = centers[singles, 1],
+      y = centers[singles, 2],
+      labels = centers[singles, 3],
       identifier = "counts",
       offset = if (do_labels) 0.25 else NULL,
       pos = if (do_labels) 1 else NULL
     ), if (is.list(counts)) counts else list()))
 
     do.call(lattice::panel.text, update_list(list(
-      x = centers$x[!singles],
-      y = centers$y[!singles],
-      labels = centers$n[!singles],
+      x = centers[!singles, 1],
+      y = centers[!singles, 2],
+      labels = centers[!singles, 3],
       identifier = "counts"
     ), if (is.list(counts)) counts else list()))
   }
@@ -524,9 +524,9 @@ panel.euler.labels <- function(
   # Plot labels
   if (do_labels)
     do.call(lattice::panel.text, update_list(list(
-      centers$x[singles],
-      centers$y[singles],
-      labels,
+      x = centers[singles, 1],
+      y = centers[singles, 2],
+      labels = labels,
       offset = 0.25,
       pos = if (do_counts) 3L else NULL,
       identifier = "labels",
@@ -535,107 +535,107 @@ panel.euler.labels <- function(
 }
 
 
-#' Locate Centers of Circle Overlaps
+#' #' Locate Centers of Circle Overlaps
+#' #'
+#' #' @inheritParams panel.euler
+#' #'
+#' #' @return A data frame with centers of the circle overlaps and their
+#' #'   respective original counts.
+#' #' @keywords internal
+#' locate_centers2 <- function(x,
+#'                            y,
+#'                            a,
+#'                            b,
+#'                            phi,
+#'                            original.values,
+#'                            fitted.values) {
+#'   n <- length(x)
 #'
-#' @inheritParams panel.euler
+#'   if (n > 1L) {
+#'     n_samples <- 500L
+#'     seqn    <- seq.int(0L, n_samples - 1L, 1L)
+#'     theta   <- seqn * pi * (3L - sqrt(5L))
+#'     rad     <- sqrt(seqn / n_samples)
+#'     P       <- matrix(NA, ncol = n_samples, nrow = 3)
+#'     P[1, ]  <- rad * cos(theta)
+#'     P[2, ]  <- rad * sin(theta)
+#'     P[3, ]  <- 1L
 #'
-#' @return A data frame with centers of the circle overlaps and their
-#'   respective original counts.
-#' @keywords internal
-locate_centers <- function(x,
-                           y,
-                           a,
-                           b,
-                           phi,
-                           original.values,
-                           fitted.values) {
-  n <- length(x)
-
-  if (n > 1L) {
-    n_samples <- 500L
-    seqn    <- seq.int(0L, n_samples - 1L, 1L)
-    theta   <- seqn * pi * (3L - sqrt(5L))
-    rad     <- sqrt(seqn / n_samples)
-    P       <- matrix(NA, ncol = n_samples, nrow = 3)
-    P[1, ]  <- rad * cos(theta)
-    P[2, ]  <- rad * sin(theta)
-    P[3, ]  <- 1L
-
-    id <- eulerr:::bit_indexr(n)
-    n_combos <- nrow(id)
-
-    # In case the user asks for counts, compute locations for these
-    xx <- yy <- rep.int(NA_real_, nrow(id))
-
-    not_zero <- fitted.values > .Machine$double.eps ^ 0.25
-
-    singles <- rowSums(id) == 1L
-
-    for (i in seq_along(x)) {
-      PP <-
-        translate(x[i], y[i]) %*% rotate(phi[i]) %*% scale(a[i], b[i]) %*% P
-
-      in_which <- find_surrounding_sets(PP[1, ], PP[2, ], x, y, a, b, phi)
-
-      for (j in seq_len(nrow(id))[id[, i]]) {
-        idj <- id[j, ]
-        if (all(is.na(xx[j]), idj[i])) {
-          if (singles[j]) {
-            sums <- colSums(in_which)
-            locs <- sums == min(sums)
-          } else {
-            locs <- colSums(in_which == idj) == nrow(in_which)
-          }
-
-          if (any(locs)) {
-            PP2 <- PP[, locs]
-
-            mm <- matrix(NA, ncol = NCOL(PP2), nrow = length(x))
-            for (k in seq_along(x)) {
-              PP3 <- rotate(-phi[k]) %*% translate(-x[k], -y[k]) %*% PP2
-              for (l in 1:NCOL(PP3)) {
-                mm[k, l] <- dist_to_ellipse(a[k], b[k], PP3[1, l], PP3[2, l])
-              }
-            }
-            labmax <- max_colmins(mm)
-            xx[j] <- PP2[1, labmax]
-            yy[j] <- PP2[2, labmax]
-          }
-        }
-      }
-    }
-  } else {
-    # One circle, always placed in the middle
-    xx <- yy <- 0L
-    singles <- TRUE
-    n_combos <- 1L
-  }
-
-  data.frame(x = xx, y = yy, n = original.values)
-}
-
-
-rotate <- function(phi) {
-  matrix(c(cos(phi), -sin(phi), 0,
-           sin(phi),  cos(phi), 0,
-           0,                0, 1),
-         byrow = TRUE,
-         ncol = 3)
-}
-
-
-translate <- function(x, y) {
-  matrix(c(1, 0, x,
-           0, 1, y,
-           0, 0, 1),
-         byrow = TRUE,
-         ncol = 3)
-}
-
-scale <- function(x, y) {
-  matrix(c(x, 0, 0,
-           0, y, 0,
-           0, 0, 1),
-         byrow = TRUE,
-         ncol = 3)
-}
+#'     id <- eulerr:::bit_indexr(n)
+#'     n_combos <- nrow(id)
+#'
+#'     # In case the user asks for counts, compute locations for these
+#'     xx <- yy <- rep.int(NA_real_, nrow(id))
+#'
+#'     not_zero <- fitted.values > .Machine$double.eps ^ 0.25
+#'
+#'     singles <- rowSums(id) == 1L
+#'
+#'     for (i in seq_along(x)) {
+#'       PP <-
+#'         translate(x[i], y[i]) %*% rotate(phi[i]) %*% scale(a[i], b[i]) %*% P
+#'
+#'       in_which <- eulerr:::find_surrounding_sets(PP[1, ], PP[2, ], x, y, a, b, phi)
+#'
+#'       for (j in which(id[, i])) {
+#'         idj <- id[j, ]
+#'         if (all(is.na(xx[j]), idj[i])) {
+#'           if (singles[j]) {
+#'             sums <- colSums(in_which)
+#'             locs <- sums == min(sums)
+#'           } else {
+#'             locs <- colSums(in_which == idj) == nrow(in_which)
+#'           }
+#'
+#'           if (any(locs)) {
+#'             PP2 <- PP[, locs]
+#'
+#'             mm <- matrix(NA, ncol = NCOL(PP2), nrow = length(x))
+#'             for (k in seq_along(x)) {
+#'               PP3 <- rotate(-phi[k]) %*% translate(-x[k], -y[k]) %*% PP2
+#'               for (l in 1:NCOL(PP3)) {
+#'                 mm[k, l] <- eulerr:::dist_to_ellipse(a[k], b[k], PP3[1, l], PP3[2, l])
+#'               }
+#'             }
+#'             labmax <- eulerr:::max_colmins(mm)
+#'             xx[j] <- PP2[1, labmax + 1]
+#'             yy[j] <- PP2[2, labmax + 1]
+#'           }
+#'         }
+#'       }
+#'     }
+#'   } else {
+#'     # One circle, always placed in the middle
+#'     xx <- yy <- 0L
+#'     singles <- TRUE
+#'     n_combos <- 1L
+#'   }
+#'
+#'   data.frame(x = xx, y = yy, n = original.values)
+#' }
+#'
+#'
+#' rotate <- function(phi) {
+#'   matrix(c(cos(phi), -sin(phi), 0,
+#'            sin(phi),  cos(phi), 0,
+#'            0,                0, 1),
+#'          byrow = TRUE,
+#'          ncol = 3)
+#' }
+#'
+#'
+#' translate <- function(x, y) {
+#'   matrix(c(1, 0, x,
+#'            0, 1, y,
+#'            0, 0, 1),
+#'          byrow = TRUE,
+#'          ncol = 3)
+#' }
+#'
+#' scale <- function(x, y) {
+#'   matrix(c(x, 0, 0,
+#'            0, y, 0,
+#'            0, 0, 1),
+#'          byrow = TRUE,
+#'          ncol = 3)
+#' }

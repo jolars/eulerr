@@ -2,24 +2,30 @@
 // [[Rcpp::plugins(cpp11)]]
 
 #include <RcppArmadillo.h>
+#include "helpers.h"
+#include "constants.h"
+#include "transformations.h"
 
 // [[Rcpp::export]]
-Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& x,
-                                          const arma::vec& y,
-                                          const arma::vec& h,
-                                          const arma::vec& k,
-                                          const arma::vec& a,
-                                          const arma::vec& b,
-                                          const arma::vec& phi) {
+arma::umat find_surrounding_sets(const arma::rowvec& x,
+                                 const arma::rowvec& y,
+                                 const arma::vec& h,
+                                 const arma::vec& k,
+                                 const arma::vec& a,
+                                 const arma::vec& b,
+                                 const arma::vec& phi) {
   arma::uword n = h.n_elem;
-  arma::umat out(x.n_elem, n);
+  arma::umat out(n, x.n_elem);
 
-  for (arma::uword i = 0; i < n; i ++) {
-    out.col(i) = arma::square((x - h(i))*std::cos(phi(i)) + (y - k(i))*std::sin(phi(i)))/std::pow(a(i), 2) +
-                 arma::square((x - h(i))*std::sin(phi(i)) - (y - k(i))*std::cos(phi(i)))/std::pow(b(i), 2) < 1;
+  for (arma::uword i = 0; i < n; ++i) {
+    double cosphi = std::cos(phi(i));
+    double sinphi = std::sin(phi(i));
+    out.row(i) =
+      arma::square((x - h(i))*cosphi + (y - k(i))*sinphi)/std::pow(a(i), 2) +
+      arma::square((x - h(i))*sinphi - (y - k(i))*cosphi)/std::pow(b(i), 2) < 1;
   }
 
-  return Rcpp::wrap(out.t());
+  return out;
 }
 
 
@@ -32,11 +38,11 @@ const int max_it = std::numeric_limits<double>::digits -
   std::numeric_limits<double>::min_exponent;
 
 // Bisect
-double bisect(double r0,
-              double z0,
-              double z1,
+double bisect(const double r0,
+              const double z0,
+              const double z1,
               double g) {
-  double n0 = r0*z0;
+  const double n0 = r0*z0;
   double s0 = z1 - 1;
   double s1 = g < 0 ? 0 : std::hypot(n0, z1) - 1;
   double s = 0;
@@ -100,4 +106,93 @@ double dist_to_ellipse(double a,
       return std::abs(x - a);
     }
   }
+}
+
+// [[Rcpp::export]]
+arma::uword max_colmins(const arma::mat& x) {
+  arma::uword n = x.n_cols;
+  arma::vec mins(n);
+  for (arma::uword i = 0; i < n; i++)
+    mins(i) = x.col(i).min();
+  return mins.index_max();
+}
+
+// [[Rcpp::export]]
+arma::mat locate_centers(const arma::vec& h,
+                         const arma::vec& k,
+                         const arma::vec& a,
+                         const arma::vec& b,
+                         const arma::vec& phi,
+                         const arma::vec& orig,
+                         const arma::vec& fitted) {
+  arma::uword n = h.n_elem;
+  arma::mat xyn;
+
+  if (n > 1) {
+    // Evenly space points across template circle
+    arma::uword n_s = 500;
+    arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
+    arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
+    arma::rowvec rad = arma::sqrt(seqn / n_s);
+    arma::mat p0(3, n_s);
+    p0.row(0) = rad % arma::cos(theta);
+    p0.row(1) = rad % arma::sin(theta);
+    p0.row(2).ones();
+
+    arma::umat id = bit_index(n);
+    arma::uword n_combos = id.n_rows;
+
+    xyn.set_size(n_combos, 3);
+    xyn.fill(arma::datum::nan);
+
+    arma::uvec not_zero = fitted > small;
+    arma::uvec singles = arma::sum(id, 1) == 1;
+
+    for (arma::uword i = 0; i < n; i++) {
+      // Fit the sampling points to the current ellipse
+      arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
+      arma::umat in_which = find_surrounding_sets(p1.row(0),
+                                                  p1.row(1),
+                                                  h, k, a, b, phi);
+
+      arma::uvec seqr = arma::find(id.col(i));
+
+      for (auto j : seqr) {
+        arma::uvec idj = id.row(j).t();
+        if (xyn.row(j).has_nan() && idj(i)) {
+          arma::urowvec locs(in_which.n_cols);
+          if (singles(j)) {
+            arma::urowvec sums = arma::sum(in_which);
+            locs = sums == sums.min();
+          } else {
+            for (arma::uword f = 0; f < in_which.n_cols; f++) {
+              locs(f) = arma::all(in_which.col(f) == idj);
+            }
+          }
+
+          if (arma::any(locs)) {
+            arma::mat p2 = p1.cols(arma::find(locs));
+            arma::mat mm(n, p2.n_cols);
+            for (arma::uword q = 0; q < n; q++) {
+              arma::mat p3 = rotate(phi(q))*translate(-h(q), -k(q))*p2;
+              for (arma::uword r = 0; r < p2.n_cols; r++) {
+                mm(q, r) = dist_to_ellipse(a(q), b(q), p3(0, r), p3(1, r));
+              }
+            }
+            arma::uword labmax = max_colmins(mm);
+            xyn(j, 0) = p2(0, labmax);
+            xyn(j, 1) = p2(1, labmax);
+          }
+        }
+      }
+    }
+  } else {
+    // One set, always placed in the middle
+    xyn.set_size(1, 3);
+    xyn.cols(1, 2).zeros();
+  }
+
+  xyn.col(2) = orig;
+
+  return xyn;
 }

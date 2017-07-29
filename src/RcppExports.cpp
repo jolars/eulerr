@@ -60,13 +60,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_surrounding_sets
-Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& x, const arma::vec& y, const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi);
+arma::umat find_surrounding_sets(const arma::rowvec& x, const arma::rowvec& y, const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi);
 RcppExport SEXP _eulerr_find_surrounding_sets(SEXP xSEXP, SEXP ySEXP, SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type h(hSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type k(kSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
@@ -87,6 +87,34 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(dist_to_ellipse(a, b, x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// max_colmins
+arma::uword max_colmins(const arma::mat& x);
+RcppExport SEXP _eulerr_max_colmins(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(max_colmins(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// locate_centers
+arma::mat locate_centers(const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi, const arma::vec& orig, const arma::vec& fitted);
+RcppExport SEXP _eulerr_locate_centers(SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP, SEXP origSEXP, SEXP fittedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type h(hSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type orig(origSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type fitted(fittedSEXP);
+    rcpp_result_gen = Rcpp::wrap(locate_centers(h, k, a, b, phi, orig, fitted));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -125,17 +153,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// max_colmins
-arma::uword max_colmins(const arma::mat& x);
-RcppExport SEXP _eulerr_max_colmins(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(max_colmins(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // venneuler_stress
 double venneuler_stress(const arma::vec& areas, const arma::vec& fit);
 RcppExport SEXP _eulerr_venneuler_stress(SEXP areasSEXP, SEXP fitSEXP) {
@@ -156,10 +173,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
     {"_eulerr_find_surrounding_sets", (DL_FUNC) &_eulerr_find_surrounding_sets, 7},
     {"_eulerr_dist_to_ellipse", (DL_FUNC) &_eulerr_dist_to_ellipse, 4},
+    {"_eulerr_max_colmins", (DL_FUNC) &_eulerr_max_colmins, 1},
+    {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 7},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_bit_indexr", (DL_FUNC) &_eulerr_bit_indexr, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 3},
-    {"_eulerr_max_colmins", (DL_FUNC) &_eulerr_max_colmins, 1},
     {"_eulerr_venneuler_stress", (DL_FUNC) &_eulerr_venneuler_stress, 2},
     {NULL, NULL, 0}
 };
