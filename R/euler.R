@@ -117,12 +117,10 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'   Missing combinations are treated as being 0.
 #'
 #' @export
-euler.default <- function(
-    combinations,
-    input = c("disjoint", "union"),
-    shape = c("circle", "ellipse"),
-    ...
-  ) {
+euler.default <- function(combinations,
+                          input = c("disjoint", "union"),
+                          shape = c("circle", "ellipse"),
+                          ...) {
   # Assertions
   assertthat::assert_that(is.numeric(combinations),
                           assertthat::not_empty(combinations),
