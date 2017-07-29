@@ -1,18 +1,3 @@
-#' Distance from Point to Circle
-#'
-#' The function is vectorized.
-#'
-#' @param x X coordinate of point
-#' @param y Y coordinate of point
-#' @param h X coordinate of circle center
-#' @param k Y coordinate of circle center
-#' @param r Radius of circle center
-#'
-#' @keywords internal
-dist_point_circle <- function(x, y, h, k, a, b, phi) {
-  abs(sqrt((h - x) ^ 2L + (k - y) ^ 2L) - r)
-}
-
 #' Optimize Distance Between Circles Based On Overlap
 #'
 #' @param r1 Radius of circle one
