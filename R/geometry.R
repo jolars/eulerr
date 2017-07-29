@@ -23,6 +23,7 @@ dist_point_circle <- function(x, y, h, k, a, b, phi) {
 #'   area.
 #' @keywords internal
 separate_two_discs <- function(r1, r2, overlap) {
+  # TODO: Move the entire discdisc function to c++
   stats::optimize(
     function(x, r1, r2, overlap) (discdisc(r1, r2, d = x) - overlap) ^ 2L,
     interval = c(abs(r1 - r2), sum(r1, r2)),
