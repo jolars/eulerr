@@ -35,31 +35,6 @@ Rcpp::NumericVector discdisc(const Rcpp::NumericVector& r1,
 }
 
 // [[Rcpp::export]]
-Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& x,
-                                          const arma::vec& y,
-                                          const arma::vec& h,
-                                          const arma::vec& k,
-                                          const arma::vec& a,
-                                          const arma::vec& b,
-                                          const arma::vec& phi) {
-  arma::uword n1 = h.n_elem;
-  arma::uword n2 = x.n_elem;
-  arma::umat out(n1, n2);
-
-  for (arma::uword i = 0; i < n1; i++) {
-    for (arma::uword j = 0; j < n2; j++) {
-      out(i, j) =
-        std::pow((x(j) - h(i))*std::cos(phi(i)) + (y(j) - k(i))*std::sin(phi(i)), 2)/
-          std::pow(a(i), 2) +
-        std::pow((x(j) - h(i))*std::sin(phi(i)) - (y(j) - k(i))*std::cos(phi(i)), 2)/
-          std::pow(b(i), 2) < 1;
-    }
-  }
-
-  return Rcpp::wrap(out);
-}
-
-// [[Rcpp::export]]
 arma::uword max_colmins(const arma::mat& x) {
   arma::uword n = x.n_cols;
   arma::vec mins(n);

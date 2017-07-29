@@ -178,12 +178,12 @@ plot.euler <- function(
 
   ccall$data <- dd
   if (!is.null(dd$r)) {
-    ccall$ra <- dd$r
-    ccall$rb <- dd$r
-    ccall$phi <- 0
+    ccall$ra  <- dd$r
+    ccall$rb  <- dd$r
+    ccall$phi <- rep.int(0, times = length(dd$r))
   } else {
-    ccall$ra <- dd$a
-    ccall$rb <- dd$b
+    ccall$ra  <- dd$a
+    ccall$rb  <- dd$b
     ccall$phi <- dd$phi
   }
 
@@ -496,8 +496,8 @@ panel.euler.labels <- function(
 
   centers <- locate_centers(x = x,
                             y = y,
-                            ra = ra,
-                            rb = rb,
+                            a = ra,
+                            b = rb,
                             phi = phi,
                             original.values = original.values,
                             fitted.values = fitted.values)
@@ -544,8 +544,8 @@ panel.euler.labels <- function(
 #' @keywords internal
 locate_centers <- function(x,
                            y,
-                           ra,
-                           rb,
+                           a,
+                           b,
                            phi,
                            original.values,
                            fitted.values) {
@@ -561,7 +561,7 @@ locate_centers <- function(x,
     P[2, ]  <- rad * sin(theta)
     P[3, ]  <- 1L
 
-    id <- bit_indexr(n)
+    id <- eulerr:::bit_indexr(n)
     n_combos <- nrow(id)
 
     # In case the user asks for counts, compute locations for these
@@ -573,9 +573,9 @@ locate_centers <- function(x,
 
     for (i in seq_along(x)) {
       PP <-
-        translate(x[i], y[i]) %*% rotate(phi[i]) %*% scale(ra[i], rb[i]) %*% P
+        translate(x[i], y[i]) %*% rotate(phi[i]) %*% scale(a[i], b[i]) %*% P
 
-      in_which <- find_surrounding_sets(PP[1, ], PP[2, ], x, y, ra, rb, phi)
+      in_which <- find_surrounding_sets(PP[1, ], PP[2, ], x, y, a, b, phi)
 
       for (j in seq_len(nrow(id))[id[, i]]) {
         idj <- id[j, ]
@@ -588,19 +588,18 @@ locate_centers <- function(x,
           }
 
           if (any(locs)) {
-            x1 <- x0[locs]
-            y1 <- y0[locs]
-            dists <- mapply(
-              dist_point_circle,
-              x = x1,
-              y = y1,
-              MoreArgs = list(h = x, k = y, a = ra, b = rb, phi = phi),
-              SIMPLIFY = FALSE, USE.NAMES = FALSE
-            )
-            dists <- do.call(cbind, dists)
-            labmax <- max_colmins(dists)
-            xx[j] <- x1[labmax]
-            yy[j] <- y1[labmax]
+            PP2 <- PP[, locs]
+
+            mm <- matrix(NA, ncol = NCOL(PP2), nrow = length(x))
+            for (k in seq_along(x)) {
+              PP3 <- rotate(-phi[k]) %*% translate(-x[k], -y[k]) %*% PP2
+              for (l in 1:NCOL(PP3)) {
+                mm[k, l] <- dist_to_ellipse(a[k], b[k], PP3[1, l], PP3[2, l])
+              }
+            }
+            labmax <- max_colmins(mm)
+            xx[j] <- PP2[1, labmax]
+            yy[j] <- PP2[2, labmax]
           }
         }
       }

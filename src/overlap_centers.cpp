@@ -1,15 +1,35 @@
-// Much of this code is adapted from "Distance from a Point to an Ellipse, an
-// Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
-// (c) 1998-2016 - https://www.geometrictools.com/Documentation/DistancePointEllipseEllipsoid.pdf
-
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
 #include <RcppArmadillo.h>
 
+// [[Rcpp::export]]
+Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& x,
+                                          const arma::vec& y,
+                                          const arma::vec& h,
+                                          const arma::vec& k,
+                                          const arma::vec& a,
+                                          const arma::vec& b,
+                                          const arma::vec& phi) {
+  arma::uword n = h.n_elem;
+  arma::umat out(x.n_elem, n);
+
+  for (arma::uword i = 0; i < n; i ++) {
+    out.col(i) = arma::square((x - h(i))*std::cos(phi(i)) + (y - k(i))*std::sin(phi(i)))/std::pow(a(i), 2) +
+                 arma::square((x - h(i))*std::sin(phi(i)) - (y - k(i))*std::cos(phi(i)))/std::pow(b(i), 2) < 1;
+  }
+
+  return Rcpp::wrap(out.t());
+}
+
+
+// The code below code is adapted from "Distance from a Point to an Ellipse, an
+// Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
+// (c) 1998-2016
+// https://www.geometrictools.com/Documentation/DistancePointEllipseEllipsoid.pdf
+
 const int max_it = std::numeric_limits<double>::digits -
   std::numeric_limits<double>::min_exponent;
-
 
 // Bisect
 double bisect(double r0,

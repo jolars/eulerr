@@ -17,6 +17,14 @@ optim_init_grad <- function(par, d, disjoint, contained) {
     .Call(`_eulerr_optim_init_grad`, par, d, disjoint, contained)
 }
 
+find_surrounding_sets <- function(x, y, h, k, a, b, phi) {
+    .Call(`_eulerr_find_surrounding_sets`, x, y, h, k, a, b, phi)
+}
+
+dist_to_ellipse <- function(a, b, x, y) {
+    .Call(`_eulerr_dist_to_ellipse`, a, b, x, y)
+}
+
 choose_two <- function(x) {
     .Call(`_eulerr_choose_two`, x)
 }
@@ -29,19 +37,11 @@ discdisc <- function(r1, r2, d) {
     .Call(`_eulerr_discdisc`, r1, r2, d)
 }
 
-find_surrounding_sets <- function(x, y, h, k, a, b, phi) {
-    .Call(`_eulerr_find_surrounding_sets`, x, y, h, k, a, b, phi)
-}
-
 max_colmins <- function(x) {
     .Call(`_eulerr_max_colmins`, x)
 }
 
 venneuler_stress <- function(areas, fit) {
     .Call(`_eulerr_venneuler_stress`, areas, fit)
-}
-
-dist_to_ellipse <- function(a, b, x, y) {
-    .Call(`_eulerr_dist_to_ellipse`, a, b, x, y)
 }
 

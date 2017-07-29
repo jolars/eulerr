@@ -4,16 +4,12 @@
 \alias{locate_centers}
 \title{Locate Centers of Circle Overlaps}
 \usage{
-locate_centers(x, y, ra, rb, phi, original.values, fitted.values)
+locate_centers(x, y, a, b, phi, original.values, fitted.values)
 }
 \arguments{
 \item{x}{X coordinates for the circle centers.}
 
 \item{y}{Y coordinates for the circle centers.}
-
-\item{ra}{Semi-major axes.}
-
-\item{rb}{Semi-minor axes.}
 
 \item{phi}{Rotation of the ellipse (as the counter-clockwise angle from
 the positive x-axis to the semi-major axis).}

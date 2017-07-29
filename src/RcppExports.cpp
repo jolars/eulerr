@@ -59,6 +59,37 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// find_surrounding_sets
+Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& x, const arma::vec& y, const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi);
+RcppExport SEXP _eulerr_find_surrounding_sets(SEXP xSEXP, SEXP ySEXP, SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type h(hSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type phi(phiSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_surrounding_sets(x, y, h, k, a, b, phi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dist_to_ellipse
+double dist_to_ellipse(double a, double b, double x, double y);
+RcppExport SEXP _eulerr_dist_to_ellipse(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(dist_to_ellipse(a, b, x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // choose_two
 arma::umat choose_two(const arma::uvec& x);
 RcppExport SEXP _eulerr_choose_two(SEXP xSEXP) {
@@ -94,23 +125,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// find_surrounding_sets
-Rcpp::LogicalMatrix find_surrounding_sets(const arma::vec& x, const arma::vec& y, const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi);
-RcppExport SEXP _eulerr_find_surrounding_sets(SEXP xSEXP, SEXP ySEXP, SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type h(hSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type phi(phiSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_surrounding_sets(x, y, h, k, a, b, phi));
-    return rcpp_result_gen;
-END_RCPP
-}
 // max_colmins
 arma::uword max_colmins(const arma::mat& x);
 RcppExport SEXP _eulerr_max_colmins(SEXP xSEXP) {
@@ -134,33 +148,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// dist_to_ellipse
-double dist_to_ellipse(double a, double b, double x, double y);
-RcppExport SEXP _eulerr_dist_to_ellipse(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< double >::type b(bSEXP);
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(dist_to_ellipse(a, b, x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init_loss", (DL_FUNC) &_eulerr_optim_init_loss, 4},
     {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
+    {"_eulerr_find_surrounding_sets", (DL_FUNC) &_eulerr_find_surrounding_sets, 7},
+    {"_eulerr_dist_to_ellipse", (DL_FUNC) &_eulerr_dist_to_ellipse, 4},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_bit_indexr", (DL_FUNC) &_eulerr_bit_indexr, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 3},
-    {"_eulerr_find_surrounding_sets", (DL_FUNC) &_eulerr_find_surrounding_sets, 7},
     {"_eulerr_max_colmins", (DL_FUNC) &_eulerr_max_colmins, 1},
     {"_eulerr_venneuler_stress", (DL_FUNC) &_eulerr_venneuler_stress, 2},
-    {"_eulerr_dist_to_ellipse", (DL_FUNC) &_eulerr_dist_to_ellipse, 4},
     {NULL, NULL, 0}
 };
 
