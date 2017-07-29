@@ -475,21 +475,20 @@ panel.euler.ellipses <- function(x,
 #' @return Computes and plots labels or counts inside the centers of the
 #'   circles' overlaps.
 #' @export
-panel.euler.labels <- function(
-    x,
-    y,
-    ra,
-    rb,
-    phi,
-    labels,
-    counts = TRUE,
-    original.values,
-    fitted.values,
-    ...
-) {
+panel.euler.labels <- function(x,
+                               y,
+                               ra,
+                               rb,
+                               phi,
+                               labels,
+                               counts = TRUE,
+                               original.values,
+                               fitted.values,
+                               ...) {
   n <- length(x)
   id <- bit_indexr(n)
   singles <- rowSums(id) == 1L
+  empty <- abs(fitted.values) < sqrt(.Machine$double.eps)
 
   do_counts <- isTRUE(counts) || is.list(counts)
   do_labels <- !is.null(labels)
@@ -502,21 +501,35 @@ panel.euler.labels <- function(
                             orig = original.values,
                             fitted = fitted.values)
 
+  center_labels <- labels[!is.nan(centers[singles, 1])]
+  label_centers <- centers[!is.nan(centers[, 1]) & singles, , drop = FALSE]
+
+  droprows <- rep.int(TRUE, NROW(centers))
+  for (i in which(is.nan(centers[singles, 1]))) {
+    pick <- id[, i] & !empty
+    label_centers <- rbind(label_centers, centers[which(pick)[1], ])
+    center_labels <- c(center_labels, labels[i])
+    droprows[which(pick)[1]] <- FALSE
+  }
+
+  count_centers <-
+    centers[!is.nan(centers[, 1]) & !singles & droprows, , drop = FALSE]
+
   # Plot counts
   if (do_counts) {
     do.call(lattice::panel.text, update_list(list(
-      x = centers[singles, 1],
-      y = centers[singles, 2],
-      labels = centers[singles, 3],
+      x = label_centers[, 1],
+      y = label_centers[, 2],
+      labels = label_centers[, 3],
       identifier = "counts",
       offset = if (do_labels) 0.25 else NULL,
       pos = if (do_labels) 1 else NULL
     ), if (is.list(counts)) counts else list()))
 
     do.call(lattice::panel.text, update_list(list(
-      x = centers[!singles, 1],
-      y = centers[!singles, 2],
-      labels = centers[!singles, 3],
+      x = count_centers[, 1],
+      y = count_centers[, 2],
+      labels = count_centers[, 3],
       identifier = "counts"
     ), if (is.list(counts)) counts else list()))
   }
@@ -524,9 +537,9 @@ panel.euler.labels <- function(
   # Plot labels
   if (do_labels)
     do.call(lattice::panel.text, update_list(list(
-      x = centers[singles, 1],
-      y = centers[singles, 2],
-      labels = labels,
+      x = label_centers[, 1],
+      y = label_centers[, 2],
+      labels = center_labels,
       offset = 0.25,
       pos = if (do_counts) 3L else NULL,
       identifier = "labels",

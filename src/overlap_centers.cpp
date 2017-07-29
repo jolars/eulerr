@@ -163,7 +163,7 @@ arma::mat locate_centers(const arma::vec& h,
           arma::urowvec locs(in_which.n_cols);
           if (singles(j)) {
             arma::urowvec sums = arma::sum(in_which);
-            locs = sums == sums.min();
+            locs = sums == 1;
           } else {
             for (arma::uword f = 0; f < in_which.n_cols; f++) {
               locs(f) = arma::all(in_which.col(f) == idj);
