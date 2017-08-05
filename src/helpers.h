@@ -15,7 +15,7 @@ inline arma::uvec set_intersect(const arma::uvec& x, const arma::uvec& y) {
 inline arma::uword nck(arma::uword n, arma::uword k) {
   if (k > n)
     return 0;
-  if (k * 2 > n)
+  if (k*2 > n)
     k = n - k;
   if (k == 0)
     return 1;
