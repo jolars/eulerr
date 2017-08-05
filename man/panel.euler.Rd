@@ -11,9 +11,9 @@ panel.euler(x, y, ra, rb, phi, subscripts, fill = superpose.polygon$col,
   fitted.values, ...)
 }
 \arguments{
-\item{x}{X coordinates for the circle centers.}
+\item{x}{X coordinates for the centers.}
 
-\item{y}{Y coordinates for the circle centers.}
+\item{y}{Y coordinates for the centers.}
 
 \item{ra}{Semi-major axes.}
 
@@ -24,38 +24,39 @@ the positive x-axis to the semi-major axis).}
 
 \item{subscripts}{A vector of subscripts (See \code{\link[lattice:xyplot]{lattice::xyplot()}}).}
 
-\item{fill}{Fill color for circles. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
+\item{fill}{Fill color. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
-\item{lty}{Line type for circles. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
+\item{lty}{Line type. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
-\item{lwd}{Line weight for circles. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
+\item{lwd}{Line weight. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
-\item{border}{Border color for circles.}
+\item{border}{Border color.}
 
-\item{alpha}{Alpha for circles. Note that \code{\link[=plot.euler]{plot.euler()}} by default
-modifies the alpha of \code{col} instead to avoid affecting the alpha of
+\item{alpha}{Alpha (opacity) for the fill. Note that \code{\link[=plot.euler]{plot.euler()}} by
+default modifies the alpha of \code{col} to avoid affecting the alpha of
 the borders. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
-\item{fontface}{Fontface for the labels.  (See \code{\link[grid:gpar]{grid::gpar()}}.)}
+\item{fontface}{Fontface for the labels. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
 \item{counts}{Plots the original values for the disjoint set combinations
 (\code{original.values}). Can also be a list, in which the contents of the list
 will be passed on to \code{\link[lattice:panel.text]{lattice::panel.text()}} to modify the appearance of
 the counts.}
 
-\item{labels}{Labels to plot on the circles.}
+\item{labels}{Labels.}
 
 \item{original.values}{Original values for the disjoint set combinations.}
 
 \item{fitted.values}{Fitted values for the disjoint set combinations.}
 
-\item{...}{Passed down to \code{\link[=panel.euler.circles]{panel.euler.circles()}} and \code{\link[=panel.euler.labels]{panel.euler.labels()}}.}
+\item{...}{Passed down to \code{\link[=panel.euler.circles]{panel.euler.circles()}} or
+\code{\link[=panel.euler.ellipses]{panel.euler.ellipses()}} and \code{\link[=panel.euler.labels]{panel.euler.labels()}}.}
 }
 \value{
 Plots euler diagrams inside a trellis panel.
 }
 \description{
-Panel Function for Euler Diagrams
+Plots circular euler diagrams if \code{ra == rb} and elliptical such otherwise.
 }
 \seealso{
 \code{\link[grid:gpar]{grid::gpar()}}.

@@ -2,16 +2,16 @@
 % Please edit documentation in R/plot.euler.R
 \name{panel.euler.ellipses}
 \alias{panel.euler.ellipses}
-\title{Panel Function for Ellipses}
+\title{Panel Function for Euler Ellipses}
 \usage{
 panel.euler.ellipses(x, y, ra, rb, phi, border = "black",
   fill = "transparent", n = 200, ..., identifier = NULL,
   name.type = "panel", col, font, fontface)
 }
 \arguments{
-\item{x}{X coordinates for the circle centers.}
+\item{x}{X coordinates for the centers.}
 
-\item{y}{Y coordinates for the circle centers.}
+\item{y}{Y coordinates for the centers.}
 
 \item{ra}{Semi-major axes.}
 
@@ -26,7 +26,7 @@ the positive x-axis to the semi-major axis).}
 
 \item{n}{Number of vertices to draw for each ellipse.}
 
-\item{...}{Passed on to \code{\link[gridExtra:grid.ellipse]{gridExtra::grid.ellipse()}}.}
+\item{...}{Passed on to \code{\link[grid:grid.polygon]{grid::grid.polygon()}}.}
 
 \item{identifier}{A character string that is prepended to the name of the
 grob that is created.}
@@ -45,8 +45,8 @@ should have panel or strip information added to it. Typically either
 Plots ellipses inside a trellis panel.
 }
 \description{
-Panel Function for Ellipses
+Panel Function for Euler Ellipses
 }
 \seealso{
-\code{\link[gridExtra:grid.ellipse]{gridExtra::grid.ellipse()}}.
+\code{\link[grid:grid.polygon]{grid::grid.polygon()}}.
 }

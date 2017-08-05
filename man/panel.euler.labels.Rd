@@ -2,15 +2,15 @@
 % Please edit documentation in R/plot.euler.R
 \name{panel.euler.labels}
 \alias{panel.euler.labels}
-\title{Panel Function for Circle Labels}
+\title{Panel Function for Euler Diagram Labels}
 \usage{
 panel.euler.labels(x, y, ra, rb, phi, labels, counts = TRUE, original.values,
   fitted.values, ...)
 }
 \arguments{
-\item{x}{X coordinates for the circle centers.}
+\item{x}{X coordinates for the centers.}
 
-\item{y}{Y coordinates for the circle centers.}
+\item{y}{Y coordinates for the centers.}
 
 \item{ra}{Semi-major axes.}
 
@@ -19,7 +19,7 @@ panel.euler.labels(x, y, ra, rb, phi, labels, counts = TRUE, original.values,
 \item{phi}{Rotation of the ellipse (as the counter-clockwise angle from
 the positive x-axis to the semi-major axis).}
 
-\item{labels}{Labels to plot on the circles.}
+\item{labels}{Labels.}
 
 \item{counts}{Plots the original values for the disjoint set combinations
 (\code{original.values}). Can also be a list, in which the contents of the list
@@ -34,8 +34,8 @@ the counts.}
 }
 \value{
 Computes and plots labels or counts inside the centers of the
-circles' overlaps.
+ellipses' overlaps.
 }
 \description{
-Panel Function for Circle Labels
+Panel Function for Euler Diagram Labels
 }

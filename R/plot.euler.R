@@ -40,6 +40,7 @@
 #' @export
 #'
 #' @seealso [panel.euler.circles()], [panel.euler.labels()],
+#'   [panel.euler.ellipses()],
 #'   [lattice::xyplot()], [grid::gpar()], [grid::grid.circle()],
 #'   [lattice::panel.xyplot()], [euler()], [qualpalr::qualpal()]
 #'
@@ -236,29 +237,32 @@ prepanel.euler <- function(x,
 
 #' Panel Function for Euler Diagrams
 #'
-#' @param x X coordinates for the circle centers.
-#' @param y Y coordinates for the circle centers.
+#' Plots circular euler diagrams if `ra == rb` and elliptical such otherwise.
+#'
+#' @param x X coordinates for the centers.
+#' @param y Y coordinates for the centers.
 #' @param ra Semi-major axes.
 #' @param rb Semi-minor axes.
 #' @param phi Rotation of the ellipse (as the counter-clockwise angle from
 #'   the positive x-axis to the semi-major axis).
 #' @param subscripts A vector of subscripts (See [lattice::xyplot()]).
-#' @param fill Fill color for circles. (See [grid::gpar()].)
-#' @param lty Line type for circles. (See [grid::gpar()].)
-#' @param lwd Line weight for circles. (See [grid::gpar()].)
-#' @param border Border color for circles.
-#' @param alpha Alpha for circles. Note that [plot.euler()] by default
-#'   modifies the alpha of `col` instead to avoid affecting the alpha of
+#' @param fill Fill color. (See [grid::gpar()].)
+#' @param lty Line type. (See [grid::gpar()].)
+#' @param lwd Line weight. (See [grid::gpar()].)
+#' @param border Border color.
+#' @param alpha Alpha (opacity) for the fill. Note that [plot.euler()] by
+#'   default modifies the alpha of `col` to avoid affecting the alpha of
 #'   the borders. (See [grid::gpar()].)
-#' @param fontface Fontface for the labels.  (See [grid::gpar()].)
+#' @param fontface Fontface for the labels. (See [grid::gpar()].)
 #' @param counts Plots the original values for the disjoint set combinations
 #'   (`original.values`). Can also be a list, in which the contents of the list
 #'   will be passed on to [lattice::panel.text()] to modify the appearance of
 #'   the counts.
-#' @param labels Labels to plot on the circles.
+#' @param labels Labels.
 #' @param original.values Original values for the disjoint set combinations.
 #' @param fitted.values Fitted values for the disjoint set combinations.
-#' @param ... Passed down to [panel.euler.circles()] and [panel.euler.labels()].
+#' @param ... Passed down to [panel.euler.circles()] or
+#'   [panel.euler.ellipses()] and [panel.euler.labels()].
 
 #'
 #' @seealso [grid::gpar()].
@@ -332,7 +336,7 @@ panel.euler <- function(x,
   }
 }
 
-#' Panel Function for Circles
+#' Panel Function for Euler Circles
 #'
 #' @inheritParams panel.euler
 #' @param r Radius of the circle
@@ -376,7 +380,7 @@ panel.euler.circles <- function(x,
   if (hasGroupNumber())
     group <- list(...)$group.number
   else
-    group <- 0
+    group <- 0L
 
   xy <- grDevices::xy.coords(x, y, recycle = TRUE)
   grid::grid.circle(
@@ -389,13 +393,13 @@ panel.euler.circles <- function(x,
   )
 }
 
-#' Panel Function for Ellipses
+#' Panel Function for Euler Ellipses
 #'
 #' @inheritParams panel.euler
 #' @param border Border color.
 #' @param fill Ellipse fill.
 #' @param n Number of vertices to draw for each ellipse.
-#' @param ... Passed on to [gridExtra::grid.ellipse()].
+#' @param ... Passed on to [grid::grid.polygon()].
 #' @param col Ignored
 #' @param font Ignored
 #' @param fontface Ignored
@@ -405,7 +409,7 @@ panel.euler.circles <- function(x,
 #'   should have panel or strip information added to it. Typically either
 #'   `"panel"`, `"strip"`, `"strip.left"`, or `""` (for no extra information).
 #'
-#' @seealso [gridExtra::grid.ellipse()].
+#' @seealso [grid::grid.polygon()].
 #'
 #' @return Plots ellipses inside a trellis panel.
 #' @export
@@ -442,7 +446,7 @@ panel.euler.ellipses <- function(x,
   xy <- matrix(NA, nrow = n * N, ncol = 2L)
 
   for (i in seq_along(x)) {
-    theta <- seq.int(0L, 2L * pi, length.out = n)
+    theta <- seq.int(0, 2 * pi, length.out = n)
 
     j <- seq.int(((i - 1L)*n + 1L), i*n, 1L)
 
@@ -453,9 +457,11 @@ panel.euler.ellipses <- function(x,
 
   }
 
+  xy <- grDevices::xy.coords(xy)
+
   grid::grid.polygon(
-    x = xy[, 1L],
-    y = xy[, 2L],
+    x = xy$x,
+    y = xy$y,
     id.lengths = rep.int(n, N),
     default.units = "native",
     gp = grid::gpar(fill = fill, col = border),
@@ -463,13 +469,13 @@ panel.euler.ellipses <- function(x,
   )
 }
 
-#' Panel Function for Circle Labels
+#' Panel Function for Euler Diagram Labels
 #'
 #' @inheritParams panel.euler
 #' @param ... Arguments passed on to [panel.text()]
 #'
 #' @return Computes and plots labels or counts inside the centers of the
-#'   circles' overlaps.
+#'   ellipses' overlaps.
 #' @export
 panel.euler.labels <- function(x,
                                y,
@@ -483,7 +489,7 @@ panel.euler.labels <- function(x,
                                ...) {
   n <- length(x)
   id <- bit_indexr(n)
-  singles <- rowSums(id) == 1L
+  singles <- rowSums(id) == 1
   empty <- abs(fitted.values) < sqrt(.Machine$double.eps)
 
   do_counts <- isTRUE(counts) || is.list(counts)
@@ -494,38 +500,40 @@ panel.euler.labels <- function(x,
                             a = ra,
                             b = rb,
                             phi = phi,
-                            orig = original.values,
                             fitted = fitted.values)
 
-  center_labels <- labels[!is.nan(centers[singles, 1])]
-  label_centers <- centers[!is.nan(centers[, 1]) & singles, , drop = FALSE]
+  centers <- t(centers)
+  centers <- cbind(centers, original.values)
+
+  center_labels <- labels[!is.nan(centers[singles, 1L])]
+  label_centers <- centers[!is.nan(centers[, 1L]) & singles, , drop = FALSE]
 
   droprows <- rep.int(TRUE, NROW(centers))
-  for (i in which(is.nan(centers[singles, 1]))) {
-    pick <- id[, i] & !empty
-    label_centers <- rbind(label_centers, centers[which(pick)[1], ])
+  for (i in which(is.nan(centers[singles, 1L]))) {
+    pick <- id[, i] & !empty & !is.nan(centers[, 1L])
+    label_centers <- rbind(label_centers, centers[which(pick)[1L], ])
     center_labels <- c(center_labels, labels[i])
     droprows[which(pick)[1]] <- FALSE
   }
 
   count_centers <-
-    centers[!is.nan(centers[, 1]) & !singles & droprows, , drop = FALSE]
+    centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
 
   # Plot counts
   if (do_counts) {
     do.call(lattice::panel.text, update_list(list(
-      x = label_centers[, 1],
-      y = label_centers[, 2],
-      labels = label_centers[, 3],
+      x = label_centers[, 1L],
+      y = label_centers[, 2L],
+      labels = label_centers[, 3L],
       identifier = "counts",
       offset = if (do_labels) 0.25 else NULL,
-      pos = if (do_labels) 1 else NULL
+      pos = if (do_labels) 1L else NULL
     ), if (is.list(counts)) counts else list()))
 
     do.call(lattice::panel.text, update_list(list(
-      x = count_centers[, 1],
-      y = count_centers[, 2],
-      labels = count_centers[, 3],
+      x = count_centers[, 1L],
+      y = count_centers[, 2L],
+      labels = count_centers[, 3L],
       identifier = "counts"
     ), if (is.list(counts)) counts else list()))
   }
@@ -533,8 +541,8 @@ panel.euler.labels <- function(x,
   # Plot labels
   if (do_labels)
     do.call(lattice::panel.text, update_list(list(
-      x = label_centers[, 1],
-      y = label_centers[, 2],
+      x = label_centers[, 1L],
+      y = label_centers[, 2L],
       labels = center_labels,
       offset = 0.25,
       pos = if (do_counts) 3L else NULL,

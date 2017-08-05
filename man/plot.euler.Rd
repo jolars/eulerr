@@ -106,6 +106,7 @@ plot(gridfit, layout = c(1, 4))
 }
 \seealso{
 \code{\link[=panel.euler.circles]{panel.euler.circles()}}, \code{\link[=panel.euler.labels]{panel.euler.labels()}},
+\code{\link[=panel.euler.ellipses]{panel.euler.ellipses()}},
 \code{\link[lattice:xyplot]{lattice::xyplot()}}, \code{\link[grid:gpar]{grid::gpar()}}, \code{\link[grid:grid.circle]{grid::grid.circle()}},
 \code{\link[lattice:panel.xyplot]{lattice::panel.xyplot()}}, \code{\link[=euler]{euler()}}, \code{\link[qualpalr:qualpal]{qualpalr::qualpal()}}
 }

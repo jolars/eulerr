@@ -2,15 +2,15 @@
 % Please edit documentation in R/plot.euler.R
 \name{panel.euler.circles}
 \alias{panel.euler.circles}
-\title{Panel Function for Circles}
+\title{Panel Function for Euler Circles}
 \usage{
 panel.euler.circles(x, y, r, border = "black", fill = "transparent", ...,
   identifier = NULL, name.type = "panel", col, font, fontface)
 }
 \arguments{
-\item{x}{X coordinates for the circle centers.}
+\item{x}{X coordinates for the centers.}
 
-\item{y}{Y coordinates for the circle centers.}
+\item{y}{Y coordinates for the centers.}
 
 \item{r}{Radius of the circle}
 
@@ -37,7 +37,7 @@ should have panel or strip information added to it. Typically either
 Plots circles inside a trellis panel.
 }
 \description{
-Panel Function for Circles
+Panel Function for Euler Circles
 }
 \seealso{
 \code{\link[grid:grid.circle]{grid::grid.circle()}}.
