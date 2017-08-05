@@ -1,5 +1,18 @@
 # eulerr 2.0.0.9000
 ## Major changes
+* Ellipses are now supported by setting the new argument `shape = "ellipse"`
+in `euler()`. This added functionality is provided through an almost complete
+overhaul of the under-hood mechanics of the function.
+* Initial optimization routines have been ported to c++.
+* Location of overlap centers have been rewritten to handle ellipses and
+ported to c++.
+
+## Minor changes
+* Labeling is now accomplished via numerical optimization, which should provide
+slightly more accurate locations.
+
+# eulerr 2.0.0
+## Major changes
 * `eulerr()` has been replaced with `euler()` (see update 1.1.0) and made
 defunct.
 * There are two new methods for `euler`:
