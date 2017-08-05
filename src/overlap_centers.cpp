@@ -5,8 +5,8 @@
 #include "helpers.h"
 #include "constants.h"
 #include "transformations.h"
+#include "neldermead.h"
 
-// [[Rcpp::export]]
 arma::umat find_surrounding_sets(const arma::rowvec& x,
                                  const arma::rowvec& y,
                                  const arma::vec& h,
@@ -27,7 +27,6 @@ arma::umat find_surrounding_sets(const arma::rowvec& x,
 
   return out;
 }
-
 
 // The code below code is adapted from "Distance from a Point to an Ellipse, an
 // Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
@@ -65,12 +64,10 @@ double bisect(const double r0,
   return s;
 }
 
-// [[Rcpp::export]]
 double dist_to_ellipse(double a,
                        double b,
                        double x,
                        double y) {
-
   // Flip the coordinate system if semi-major axis > semi-minor axis
   if (b > a) {
     std::swap(x, y);
@@ -108,13 +105,30 @@ double dist_to_ellipse(double a,
   }
 }
 
-// [[Rcpp::export]]
-arma::uword max_colmins(const arma::mat& x) {
+inline arma::uword max_colmins(const arma::mat& x) {
   arma::uword n = x.n_cols;
   arma::vec mins(n);
   for (arma::uword i = 0; i < n; i++)
     mins(i) = x.col(i).min();
   return mins.index_max();
+}
+
+inline double dist_loss(const arma::vec& p,
+                        const arma::vec& h,
+                        const arma::vec& k,
+                        const arma::vec& a,
+                        const arma::vec& b,
+                        const arma::vec& phi) {
+  arma::uword n = h.n_elem;
+  arma::vec d(n);
+  arma::vec pp = arma::ones<arma::vec>(3);
+  pp(arma::span(0, 1)) = p;
+
+  for (arma::uword i = 0; i < n; ++i) {
+    arma::vec::fixed<3> ppp = rotate(phi(i))*translate(-h(i), -k(i))*pp;
+    d(i) = dist_to_ellipse(a(i), b(i), ppp(0), ppp(1));
+  }
+  return d.min();
 }
 
 // [[Rcpp::export]]
@@ -123,27 +137,26 @@ arma::mat locate_centers(const arma::vec& h,
                          const arma::vec& a,
                          const arma::vec& b,
                          const arma::vec& phi,
-                         const arma::vec& orig,
                          const arma::vec& fitted) {
   arma::uword n = h.n_elem;
-  arma::mat xyn;
+  arma::mat xy;
 
   if (n > 1) {
     // Evenly space points across template circle
     arma::uword n_s = 500;
     arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
     arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
-    arma::rowvec rad = arma::sqrt(seqn / n_s);
+    arma::rowvec rad = arma::sqrt(seqn/n_s);
     arma::mat p0(3, n_s);
-    p0.row(0) = rad % arma::cos(theta);
-    p0.row(1) = rad % arma::sin(theta);
+    p0.row(0) = rad%arma::cos(theta);
+    p0.row(1) = rad%arma::sin(theta);
     p0.row(2).ones();
 
     arma::umat id = bit_index(n);
     arma::uword n_combos = id.n_rows;
 
-    xyn.set_size(n_combos, 3);
-    xyn.fill(arma::datum::nan);
+    xy.set_size(2, n_combos);
+    xy.fill(arma::datum::nan);
 
     arma::uvec not_zero = fitted > small;
     arma::uvec singles = arma::sum(id, 1) == 1;
@@ -151,15 +164,14 @@ arma::mat locate_centers(const arma::vec& h,
     for (arma::uword i = 0; i < n; i++) {
       // Fit the sampling points to the current ellipse
       arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
-      arma::umat in_which = find_surrounding_sets(p1.row(0),
-                                                  p1.row(1),
+      arma::umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
                                                   h, k, a, b, phi);
 
       arma::uvec seqr = arma::find(id.col(i));
 
       for (auto j : seqr) {
         arma::uvec idj = id.row(j).t();
-        if (xyn.row(j).has_nan() && idj(i)) {
+        if (xy.col(j).has_nan() && idj(i)) {
           arma::urowvec locs(in_which.n_cols);
           if (singles(j)) {
             arma::urowvec sums = arma::sum(in_which);
@@ -169,30 +181,19 @@ arma::mat locate_centers(const arma::vec& h,
               locs(f) = arma::all(in_which.col(f) == idj);
             }
           }
-
           if (arma::any(locs)) {
-            arma::mat p2 = p1.cols(arma::find(locs));
-            arma::mat mm(n, p2.n_cols);
-            for (arma::uword q = 0; q < n; q++) {
-              arma::mat p3 = rotate(phi(q))*translate(-h(q), -k(q))*p2;
-              for (arma::uword r = 0; r < p2.n_cols; r++) {
-                mm(q, r) = dist_to_ellipse(a(q), b(q), p3(0, r), p3(1, r));
-              }
+            arma::mat p2 = p1.cols(arma::find(locs, 1));
+            if (p2.n_cols == 1) {
+              xy.col(j) = nelderMead(p2.rows(0, 1), dist_loss, h, k, a, b, phi);
             }
-            arma::uword labmax = max_colmins(mm);
-            xyn(j, 0) = p2(0, labmax);
-            xyn(j, 1) = p2(1, labmax);
           }
         }
       }
     }
   } else {
     // One set, always placed in the middle
-    xyn.set_size(1, 3);
-    xyn.cols(1, 2).zeros();
+    xy.set_size(2, 1);
+    xy.zeros();
   }
-
-  xyn.col(2) = orig;
-
-  return xyn;
+  return xy;
 }
