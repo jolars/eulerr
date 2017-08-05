@@ -16,7 +16,7 @@
 //   arma::vec xy = -v.subvec(0, 1);
 //
 //   out = translate(xy).t()*rotate(theta).t()*out*rotate(theta)*translate(xy);
-//   //out = (out + out.t())/2;
+//   out = (out + out.t())/2;
 //   out(arma::find(arma::abs(out) < small)).zeros();
 //   return out;
 // }
@@ -40,11 +40,13 @@ arma::mat standard_to_matrix(const arma::vec& v) {
     A*std::pow(h, 2) + B*h*k + C*std::pow(k, 2) - std::pow(a, 2)*std::pow(b, 2);
 
   out(0, 0) = A;
-  out(1, 0) = B / 2;
+  out(1, 0) = B/2;
   out(1, 1) = C;
-  out(2, 0) = D / 2;
-  out(2, 1) = E / 2;
+  out(2, 0) = D/2;
+  out(2, 1) = E/2;
   out(2, 2) = F;
+
+  out(arma::find(arma::abs(out) < small)).zeros();
 
   return arma::symmatl(out);
 }
