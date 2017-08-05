@@ -12,8 +12,7 @@ inline arma::mat scale(const arma::vec& xy) {
   return out;
 }
 
-inline arma::mat scale(const double x,
-                       const double y) {
+inline arma::mat scale(const double x, const double y) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = x;
@@ -29,8 +28,7 @@ inline arma::mat translate(const arma::vec& xy) {
   return out;
 }
 
-inline arma::mat translate(const double x,
-                           const double y) {
+inline arma::mat translate(const double x, const double y) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(0, 2) = x;
@@ -50,7 +48,6 @@ inline arma::mat rotate(const double phi) {
 
   return out;
 }
-
 
 // Return the adjoint (adjugate) of a matrix
 inline arma::mat adjoint(const arma::mat& m) {
