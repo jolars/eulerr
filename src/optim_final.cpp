@@ -16,7 +16,6 @@ inline double ellipse_area(const arma::vec& v) {
   return arma::datum::pi * v(2) * v(3);
 }
 
-
 // Split a degenerate conic into two lines.
 void split_conic(const arma::mat& A,
                  arma::vec& g,
@@ -138,11 +137,11 @@ void intersect_conics(const arma::mat& A,
 
 // See which ellipses/circles contain the given points
 void adopt(const arma::mat& points,
-                 const arma::mat& ellipses,
-                 const arma::uword n,
-                 const arma::uword i,
-                 const arma::uword j,
-                 arma::subview<arma::uword>&& out) {
+           const arma::mat& ellipses,
+           const arma::uword n,
+           const arma::uword i,
+           const arma::uword j,
+           arma::subview<arma::uword>&& out) {
   for (arma::uword l = 0; l < n; l++) {
     if ((l == i) | (l == j)) {
       out.row(l).ones();
@@ -156,9 +155,9 @@ void adopt(const arma::mat& points,
       // Check if the points lie inside the ellipse
 
       out.row(l) = arma::pow((x - h)*std::cos(phi) + (y - k)*std::sin(phi), 2)/
-                     std::pow(ellipses(2, l), 2) +
-                   arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
-                     std::pow(ellipses(3, l), 2) < 1;
+        std::pow(ellipses(2, l), 2) +
+          arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
+            std::pow(ellipses(3, l), 2) < 1;
     }
   }
 }
@@ -239,8 +238,8 @@ double polysegments(arma::mat points,
     // Ellipse segment
     for (arma::uword k = 0; k < i_n; k++) {
       areas(k) = ellipse_segment(ellipses.col(ii(k)),
-                                 points.col(i),
-                                 points.col(j));
+            points.col(i),
+            points.col(j));
     }
 
     // Triangular segment plus ellipse segment
@@ -301,11 +300,10 @@ arma::vec intersect_ellipses(const arma::vec& par,
 
   for (arma::uword i = 0, k = 0; i < n - 1; i++) {
     for (arma::uword j = i + 1; j < n; j++) {
-      arma::uword kp3 = k + 3;
-      intersect_conics(conics.slice(i), conics.slice(j), points.cols(k, kp3));
-      adopt(points.cols(k, kp3), ellipses, n, i, j, adopters.cols(k, kp3));
-      parents(0, arma::span(k, kp3)).fill(i);
-      parents(1, arma::span(k, kp3)).fill(j);
+      intersect_conics(conics.slice(i), conics.slice(j), points.cols(k, k + 3));
+      adopt(points.cols(k, k + 3), ellipses, n, i, j, adopters.cols(k, k + 3));
+      parents(0, arma::span(k, k + 3)).fill(i);
+      parents(1, arma::span(k, k + 3)).fill(j);
       k += 4;
     }
   }
@@ -341,8 +339,8 @@ arma::vec intersect_ellipses(const arma::vec& par,
       } else {
         // Compute the area of the overlap
         areas(i) = polysegments(points.cols(int_points),
-                                ellipses,
-                                parents.cols(int_points));
+              ellipses,
+              parents.cols(int_points));
       }
     }
   }
