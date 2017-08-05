@@ -22,31 +22,23 @@ Rcpp::LogicalMatrix bit_indexr(const arma::uword n) {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector discdisc(const Rcpp::NumericVector& r1,
-                             const Rcpp::NumericVector& r2,
-                             const Rcpp::NumericVector& d) {
-  Rcpp::NumericVector r1e = Rcpp::pow(r1, 2);
-  Rcpp::NumericVector r2e = Rcpp::pow(r2, 2);
-  Rcpp::NumericVector de  = Rcpp::pow(d, 2);
+double discdisc(double d, double r1, double r2, double overlap) {
+  double r1sq = std::pow(r1, 2);
+  double r2sq = std::pow(r2, 2);
+  double dsq  = std::pow(d, 2);
 
-  return r1e * acos((de + r1e - r2e) / (2 * d * r1)) +
-    r2e * acos((de + r2e - r1e) / (2 * d * r2)) -
-    sqrt((r1 + r2 - d) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2)) / 2;
+  double D = r1sq*std::acos((dsq + r1sq - r2sq)/(2*d*r1)) +
+    r2sq*std::acos((dsq + r2sq - r1sq)/(2*d*r2)) -
+    0.5*std::sqrt((r1 + r2 - d)*(d + r1 - r2)*(d - r1 + r2)*(d + r1 + r2));
+
+  return std::pow(D - overlap, 2);
 }
-
-// // [[Rcpp::export]]
-// arma::uword max_colmins(const arma::mat& x) {
-//   arma::uword n = x.n_cols;
-//   arma::vec mins(n);
-//   for (arma::uword i = 0; i < n; i++)
-//     mins(i) = x.col(i).min();
-//   return mins.index_max() + 1;
-// }
 
 // [[Rcpp::export]]
 double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
   double sst   = arma::accu(arma::square(fit));
-  double slope = arma::accu(areas % fit) / arma::accu(arma::square(areas));
-  double sse   = arma::accu(arma::square(fit - areas * slope));
+  double slope = arma::accu(areas%fit)/arma::accu(arma::square(areas));
+  double sse   = arma::accu(arma::square(fit - areas*slope));
   return sse / sst;
 }
+
