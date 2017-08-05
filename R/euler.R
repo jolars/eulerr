@@ -121,7 +121,6 @@ euler.default <- function(combinations,
                           input = c("disjoint", "union"),
                           shape = c("circle", "ellipse"),
                           ...) {
-  # Assertions
   assertthat::assert_that(is.numeric(combinations),
                           assertthat::not_empty(combinations),
                           all(combinations >= 0),
@@ -187,7 +186,7 @@ euler.default <- function(combinations,
 
     while (loss > sqrt(.Machine$double.eps) && i < 10) {
       temp_layout <- stats::optim(
-        par = stats::runif(n * 2L, 0L, sqrt(sum(r ^ 2L * pi))),
+        par = stats::runif(n*2L, 0L, sqrt(sum(r^2L*pi))),
         fn = optim_init_loss,
         gr = optim_init_grad,
         d = distances,
@@ -206,18 +205,16 @@ euler.default <- function(combinations,
     }
 
     # Final layout
-    # TO DO: Allow user customization here?
     circle <- match.arg(shape) == "circle"
 
-    if (circle)
+    if (circle) {
       pars <- as.vector(matrix(c(initial_layout$par, r), 3, byrow = TRUE))
-    else
+    } else {
       pars <- as.vector(rbind(matrix(initial_layout$par, 2, byrow = TRUE),
-                              r,
-                              r,
-                              0,
-                              deparse.level = 0))
+                              r, r, 0, deparse.level = 0))
+    }
 
+    # TODO: Allow user options here?
     final_layout <- stats::nlm(f = optim_final_loss,
                                p = pars,
                                areas = areas_disjoint,
