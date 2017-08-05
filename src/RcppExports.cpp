@@ -59,51 +59,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// find_surrounding_sets
-arma::umat find_surrounding_sets(const arma::rowvec& x, const arma::rowvec& y, const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi);
-RcppExport SEXP _eulerr_find_surrounding_sets(SEXP xSEXP, SEXP ySEXP, SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type h(hSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type phi(phiSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_surrounding_sets(x, y, h, k, a, b, phi));
-    return rcpp_result_gen;
-END_RCPP
-}
-// dist_to_ellipse
-double dist_to_ellipse(double a, double b, double x, double y);
-RcppExport SEXP _eulerr_dist_to_ellipse(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< double >::type b(bSEXP);
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(dist_to_ellipse(a, b, x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// max_colmins
-arma::uword max_colmins(const arma::mat& x);
-RcppExport SEXP _eulerr_max_colmins(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(max_colmins(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // locate_centers
-arma::mat locate_centers(const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi, const arma::vec& orig, const arma::vec& fitted);
-RcppExport SEXP _eulerr_locate_centers(SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP, SEXP origSEXP, SEXP fittedSEXP) {
+arma::mat locate_centers(const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi, const arma::vec& fitted);
+RcppExport SEXP _eulerr_locate_centers(SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP, SEXP fittedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -112,9 +70,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type orig(origSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type fitted(fittedSEXP);
-    rcpp_result_gen = Rcpp::wrap(locate_centers(h, k, a, b, phi, orig, fitted));
+    rcpp_result_gen = Rcpp::wrap(locate_centers(h, k, a, b, phi, fitted));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -141,15 +98,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // discdisc
-Rcpp::NumericVector discdisc(const Rcpp::NumericVector& r1, const Rcpp::NumericVector& r2, const Rcpp::NumericVector& d);
-RcppExport SEXP _eulerr_discdisc(SEXP r1SEXP, SEXP r2SEXP, SEXP dSEXP) {
+double discdisc(double d, double r1, double r2, double overlap);
+RcppExport SEXP _eulerr_discdisc(SEXP dSEXP, SEXP r1SEXP, SEXP r2SEXP, SEXP overlapSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type r1(r1SEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type r2(r2SEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(discdisc(r1, r2, d));
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type r1(r1SEXP);
+    Rcpp::traits::input_parameter< double >::type r2(r2SEXP);
+    Rcpp::traits::input_parameter< double >::type overlap(overlapSEXP);
+    rcpp_result_gen = Rcpp::wrap(discdisc(d, r1, r2, overlap));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -171,13 +129,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init_loss", (DL_FUNC) &_eulerr_optim_init_loss, 4},
     {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
-    {"_eulerr_find_surrounding_sets", (DL_FUNC) &_eulerr_find_surrounding_sets, 7},
-    {"_eulerr_dist_to_ellipse", (DL_FUNC) &_eulerr_dist_to_ellipse, 4},
-    {"_eulerr_max_colmins", (DL_FUNC) &_eulerr_max_colmins, 1},
-    {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 7},
+    {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_bit_indexr", (DL_FUNC) &_eulerr_bit_indexr, 1},
-    {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 3},
+    {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
     {"_eulerr_venneuler_stress", (DL_FUNC) &_eulerr_venneuler_stress, 2},
     {NULL, NULL, 0}
 };
