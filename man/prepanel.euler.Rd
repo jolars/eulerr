@@ -7,9 +7,9 @@
 prepanel.euler(x, y, ra, rb, phi, subscripts, ...)
 }
 \arguments{
-\item{x}{X coordinates for the circle centers.}
+\item{x}{X coordinates for the centers.}
 
-\item{y}{Y coordinates for the circle centers.}
+\item{y}{Y coordinates for the centers.}
 
 \item{ra}{Semi-major axes.}
 
