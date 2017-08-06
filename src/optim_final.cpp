@@ -170,21 +170,21 @@ inline arma::vec sector_area(const double a,
 
 // Compute the area of an ellipse segment.
 double ellipse_segment(const arma::vec& ellipse,
-                       arma::vec p0,
-                       arma::vec p1) {
+                       const arma::vec& p0,
+                       const arma::vec& p1) {
   arma::vec hk = ellipse.subvec(0, 1);
   double a = ellipse(2);
   double b = ellipse(3);
   double phi = ellipse(4);
 
-  p0 = rotate(phi) * translate(-hk) * p0;
-  p1 = rotate(phi) * translate(-hk) * p1;
+  arma::vec::fixed<3> p0b = rotate(phi) * translate(-hk) * p0;
+  arma::vec::fixed<3> p1b = rotate(phi) * translate(-hk) * p1;
 
   arma::vec::fixed<2> x, y;
-  x(0) = p0(0);
-  x(1) = p1(0);
-  y(0) = p0(1);
-  y(1) = p1(1);
+  x(0) = p0b(0);
+  x(1) = p1b(0);
+  y(0) = p0b(1);
+  y(1) = p1b(1);
 
   arma::vec::fixed<2> theta = arma::atan2(y, x);
 
