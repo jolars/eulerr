@@ -32,7 +32,6 @@ Rcpp::NumericVector optim_init(const arma::rowvec& par,
     }
   }
 
-  loss.names() = Rcpp::CharacterVector::create("grad");
   loss.attr("gradient") = Rcpp::wrap(arma::vectorise(gradMat, 1));
 
   return loss;
