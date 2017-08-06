@@ -181,12 +181,6 @@ euler.default <- function(combinations,
                         USE.NAMES = FALSE)
 
     # Starting layout
-    ff <- function(par, d, disjoint, contained) {
-      out <- optim_init_loss(par, d, disjoint, contained)
-      attr(out, "gradient") <- optim_init_grad(par, d, disjoint, contained)
-      out
-    }
-
     initial_layout <- stats::nlm(
       f = optim_init,
       p = stats::runif(n*2L, 0L, sqrt(sum(r^2L*pi))),
@@ -233,9 +227,7 @@ euler.default <- function(combinations,
     )
     stress <- venneuler_stress(orig, fit)
 
-    # Find disjoint clusters
-    # n possible clusters
-
+    # Find disjoint clusters and compress the layout
     fpar <- compress_layout(fpar, id, fit)
 
     # Center the solution on the coordinate plane
@@ -257,7 +249,7 @@ euler.default <- function(combinations,
   }
 
   # Return eulerr structure
-  f <- structure(list(coefficients = fpar,
+  structure(list(coefficients = fpar,
                  original.values = orig,
                  fitted.values = fit,
                  residuals = orig - fit,
