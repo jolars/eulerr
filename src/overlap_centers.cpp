@@ -64,10 +64,7 @@ double bisect(const double r0,
   return s;
 }
 
-double dist_to_ellipse(double a,
-                       double b,
-                       double x,
-                       double y) {
+double dist_to_ellipse(double a, double b, double x, double y) {
   // Flip the coordinate system if semi-major axis > semi-minor axis
   if (b > a) {
     std::swap(x, y);
@@ -177,7 +174,7 @@ arma::mat locate_centers(const arma::vec& h,
             arma::urowvec sums = arma::sum(in_which);
             locs = sums == 1;
           } else {
-            for (arma::uword f = 0; f < in_which.n_cols; f++) {
+            for (arma::uword f = 0; f < in_which.n_cols; ++f) {
               locs(f) = arma::all(in_which.col(f) == idj);
             }
           }
