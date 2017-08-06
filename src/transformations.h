@@ -40,12 +40,10 @@ inline arma::mat translate(const double x, const double y) {
 inline arma::mat rotate(const double phi) {
   arma::mat::fixed<3, 3> out;
   out.eye();
-
   out(0, 0) =  std::cos(phi);
   out(1, 0) = -std::sin(phi);
   out(0, 1) =  std::sin(phi);
   out(1, 1) =  std::cos(phi);
-
   return out;
 }
 
