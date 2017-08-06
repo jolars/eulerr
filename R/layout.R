@@ -15,12 +15,12 @@ shelf_pack <- function(m) {
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
   bin_w <- max(1.3*sqrt(sum(sizes)), w)
+  margin <- bin_w * 0.05
 
   ord <- order(h, decreasing = TRUE)
 
-  w <- w[ord]
-  h <- h[ord]
-  sizes <- sizes[ord]
+  w <- w[ord] + margin
+  h <- h[ord] + margin
 
   done <- FALSE
   shelves <- matrix(NA, n, n)
