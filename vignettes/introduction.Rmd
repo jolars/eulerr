@@ -11,7 +11,7 @@ vignette: >
 ---
 
 **eulerr** generates area-proportional euler diagrams that display set
-relationships (intersections, unions, and disjoints) with circles.
+relationships (intersections, unions, and disjoints) with circles or ellipses.
 [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn
 diagrams without the requirement that all set interactions be present (whether
 they are empty or not). That is, depending on input, eulerr will sometimes
@@ -28,20 +28,25 @@ some of the more prominent ones (on CRAN) are
 * [colorfulVennPlot](https://cran.r-project.org/package=colorfulVennPlot), and
 * [venneuler](https://cran.r-project.org/package=venneuler).
 
-The last of these (venneuler) serves as the primary inspiration for this package,
-along with the refinements that Ben Fredrickson has presented on his
+The last of these (venneuler) serves as the primary inspiration for this
+package, along with the refinements that Ben Fredrickson has presented on his
 [blog](http://www.benfrederickson.com/) and made available in his javascript
-[venn.js](https://github.com/benfred/venn.js).
+[venn.js](https://github.com/benfred/venn.js). The
+[eulerAPE](http://www.eulerdiagrams.org/eulerAPE/) software, which was the
+first program to uses ellipses instead of circles, has also been instrumental
+in the design of **eulerr**. Whereas **eulerAPE** only handles 3 sets (that
+all need to intersect), however, **eulerr** can (theoretically) take any number
+of sets.
 
-**venneuler**, however, is known to produce
+As for **venneuler** -- it has been known to produce 
 [imperfect output](http://benfred.github.io/venn.js/tests/venneuler_comparison/)
 for set configurations that have perfect solutions.
 
 ## Enter eulerr
 
 **eulerr** is based on the improvements to **venneuler** that Ben Fredrickson
-introduced with **venn.js** but has been recoded from scratch, uses different
-optimizers, and returns statistics featured in `venneuler` and `eulerAPE` as
+introduced with **venn.js** but has been programmed from scratch, uses different
+optimizers, and returns statistics featured in **venneuler** and **eulerAPE** as
 well as allows a range of different inputs and conditioning on additional 
 variables.
 
@@ -143,7 +148,7 @@ way to visualize our data. (I suggest the excellent
 ### Plotting
 
 No we get to the fun part: plotting our diagram. This is easy, as well as
-highly customizable, with eulerr.
+highly customizable, with **eulerr**
 
 ```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.', dev.args=list(type='cairo-png')}
 plot(fit2)
@@ -151,6 +156,10 @@ plot(fit2)
 # Remove fills, vary border type, and switch fontface.
 plot(fit2, fill = "transparent", lty = 1:3, fontface = 4)
 ```
+
+Plotting is provided through the excellent
+[lattice](https://CRAN.R-project.org/package=lattice) and interfaces all of its
+bells and whistles to allow for extensive customization of the resulting plots.
 
 eulerr's default color palette is taken from
 [qualpalr](https://cran.r-project.org/package=qualpalr) -- another
