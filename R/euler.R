@@ -181,36 +181,27 @@ euler.default <- function(combinations,
                         USE.NAMES = FALSE)
 
     # Starting layout
-    loss <- Inf
-    i <- 1
-
-    while (loss > sqrt(.Machine$double.eps) && i < 10) {
-      temp_layout <- stats::optim(
-        par = stats::runif(n*2L, 0L, sqrt(sum(r^2L*pi))),
-        fn = optim_init_loss,
-        gr = optim_init_grad,
-        d = distances,
-        disjoint = disjoint,
-        contained = contained,
-        lower = 0L,
-        upper = sqrt(sum(r ^ 2L * pi)),
-        method = c("L-BFGS-B")
-      )
-
-      if (temp_layout$value < loss) {
-        initial_layout <- temp_layout
-        loss <- initial_layout$value
-      }
-      i <- i + 1
+    ff <- function(par, d, disjoint, contained) {
+      out <- optim_init_loss(par, d, disjoint, contained)
+      attr(out, "gradient") <- optim_init_grad(par, d, disjoint, contained)
+      out
     }
+
+    initial_layout <- stats::nlm(
+      f = optim_init,
+      p = stats::runif(n*2L, 0L, sqrt(sum(r^2L*pi))),
+      d = distances,
+      disjoint = disjoint,
+      contained = contained
+    )
 
     # Final layout
     circle <- match.arg(shape) == "circle"
 
     if (circle) {
-      pars <- as.vector(matrix(c(initial_layout$par, r), 3, byrow = TRUE))
+      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3, byrow = TRUE))
     } else {
-      pars <- as.vector(rbind(matrix(initial_layout$par, 2, byrow = TRUE),
+      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2, byrow = TRUE),
                               r, r, 0, deparse.level = 0))
     }
 
@@ -242,10 +233,15 @@ euler.default <- function(combinations,
     )
     stress <- venneuler_stress(orig, fit)
 
+    # Find disjoint clusters
+    # n possible clusters
+
+    fpar <- compress_layout(fpar, id, fit)
+
     # Center the solution on the coordinate plane
     fpar <- center_ellipses(fpar)
   } else {
-    # Just one circle
+    # One set
     fpar <- matrix(
       data = c(0L, 0L, sqrt(areas / pi), sqrt(areas / pi), 0),
       ncol = if (circle) 3 else 5,
@@ -261,7 +257,7 @@ euler.default <- function(combinations,
   }
 
   # Return eulerr structure
-  structure(list(coefficients = fpar,
+  f <- structure(list(coefficients = fpar,
                  original.values = orig,
                  fitted.values = fit,
                  residuals = orig - fit,
