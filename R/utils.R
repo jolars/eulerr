@@ -35,37 +35,6 @@ rescale <- function(x, new_min, new_max) {
   (new_max - new_min) / (max(x) - min(x)) * (x - max(x)) + new_max
 }
 
-#' Center Circles
-#'
-#' @param pars A matrix or data.frame of x coordinates, y coordinates, minor
-#'   radius (a) and major radius (b).
-#'
-#' @return A centered version of `pars`.
-#' @keywords internal
-center_ellipses <- function(pars) {
-  if (NCOL(pars) == 3) {
-    x <- pars[, 1L]
-    y <- pars[, 2L]
-    r <- pars[, 3L]
-    xlim <- range(c(x + r, x - r))
-    ylim <- range(c(y + r, y - r))
-  } else {
-    x <- pars[, 1L]
-    y <- pars[, 2L]
-    a <- pars[, 3L]
-    b <- pars[, 4L]
-    phi <- pars[,]
-    cphi <- cos(phi)
-    sphi <- sin(phi)
-    xlim <- range(c(x + a*cphi, x + b*cphi, x - a*cphi, x - b*cphi))
-    ylim <- range(c(y + a*sphi, y + b*sphi, y - a*sphi, y - b*sphi))
-  }
-
-  pars[, 1L] <- x + abs(xlim[1L] - xlim[2L]) / 2L - xlim[2L]
-  pars[, 2L] <- y + abs(ylim[1L] - ylim[2L]) / 2L - ylim[2L]
-  pars
-}
-
 #' Update a List with User Input
 #'
 #' Wrapper for [utils::modifyList()].
@@ -139,4 +108,9 @@ qualpalr_pal <- function(n) {
 #' @keywords internal
 is_false <- function(x) {
   identical(x, FALSE)
+}
+
+
+colmin <- function(mat) {
+  mat[(1:ncol(mat) - 1)*nrow(mat) + max.col(t(-mat))]
 }
