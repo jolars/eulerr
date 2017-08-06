@@ -64,7 +64,7 @@ shelf_pack <- function(m) {
 #' @param id The binary index of sets.
 #'
 #' @return A modified fpar object.
-#' @kewords internal
+#' @keywords internal
 compress_layout <- function(fpar, id, fit) {
   # TODO: Port to c++
   n <- NCOL(id)
@@ -93,7 +93,7 @@ compress_layout <- function(fpar, id, fit) {
     ii <- unique_clusters[[i]]
     h <- fpar[ii, 1L]
     k <- fpar[ii, 2L]
-    if (NCOL(f$coefficients) == 3L) {
+    if (NCOL(fpar) == 3L) {
       a <- b <- fpar[ii, 3L]
       phi <- 0
     } else {

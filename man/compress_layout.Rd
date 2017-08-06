@@ -17,3 +17,4 @@ A modified fpar object.
 \description{
 Compress a Euler Layout
 }
+\keyword{internal}
