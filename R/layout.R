@@ -14,8 +14,9 @@ shelf_pack <- function(m) {
   sizes <- h*w
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
-  bin_w <- max(1.3*sqrt(sum(sizes)), w)
-  margin <- bin_w * 0.05
+
+  margin <- min(h, w) * 0.05
+  bin_w <- max(1.3*sqrt(sum(sizes)), w + margin)
 
   ord <- order(h, decreasing = TRUE)
 
@@ -23,23 +24,23 @@ shelf_pack <- function(m) {
   h <- h[ord] + margin
 
   done <- FALSE
-  shelves <- matrix(NA, n, n)
-  shelf_w <- rep(bin_w, n) # remaining shelf width
-  shelf_h <- rep(0, n) #
+  shelves <- matrix(NA, nrow = n, ncol = n)
+  shelf_w <- rep.int(bin_w, n) # remaining shelf width
+  shelf_h <- rep.int(0, n) # shelf heights
 
   x0 <- double(n)
   x1 <- double(n)
   y0 <- double(n)
   y1 <- double(n)
 
-  hcurr <- h[1L]
+  hcurr <- h[1]
 
   for (i in seq_along(sizes)) {
     j <- 1L
     repeat {
       if (shelf_w[j] - w[i] < 0) {
         j <- j + 1L
-        if (shelf_h[j] == 0L) {
+        if (shelf_h[j] == 0) {
           shelf_h[j] <- shelf_h[j - 1L] + hcurr
           hcurr <- h[i]
         }
