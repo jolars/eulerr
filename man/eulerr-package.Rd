@@ -4,12 +4,13 @@
 \name{eulerr-package}
 \alias{eulerr}
 \alias{eulerr-package}
-\title{eulerr: Area-Proportional Euler Diagrams}
+\title{eulerr: Area-Proportional Euler Diagrams with Circles or Ellipses}
 \description{
-If possible, generates exactly area-proportional Euler diagrams,
-or otherwise approximately proportional diagrams using numerical
-optimization. A Euler diagram is a generalization of a Venn diagram,
-relaxing the criterion that all interactions need to be represented.
+If possible, generates exactly area-proportional Euler diagrams
+using numerical optimization. A Euler diagram is a generalization of a Venn
+diagram,
+relaxing the criterion that all interactions need to be represented. The
+user if offered the choice between ellipses or circles.
 }
 \seealso{
 Useful links:
