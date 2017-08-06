@@ -17,9 +17,7 @@ inline double ellipse_area(const arma::vec& v) {
 }
 
 // Split a degenerate conic into two lines.
-void split_conic(const arma::mat& A,
-                 arma::vec& g,
-                 arma::vec& h) {
+void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
   arma::mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
