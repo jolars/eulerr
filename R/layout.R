@@ -14,10 +14,10 @@ skyline_pack <- function(m) {
   sizes <- h*w
 
   # Add some padding for the rectangles
-  padding <- min(h, w) * 0.05
+  padding <- min(h, w) * 0.04
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
-  bin_w <- max(1.3*sqrt(sum(sizes)), w + padding)
+  bin_w <- max(1.4*sqrt(sum(sizes)), w + padding)
 
   w <- w + padding
   h <- h + padding
@@ -29,69 +29,70 @@ skyline_pack <- function(m) {
   # Initialize the skyline
   skyline <- cbind(c(0, 0), c(bin_w, 0))
 
-  for (i in 1:n) {
+  for (i in 1L:n) {
     # Order the points by y coordinate
     ord <- order(skyline[2, ])
 
     # Start by examining the lowest rooftop on the skyline
-    j <- 1
-    k <- 2
+    j <- 1L
+    k <- 2L
 
     looking <- TRUE
     while (looking) {
       p1 <- ord[j]
       p2 <- ord[k]
 
-      left  <- skyline[2, seq(1, p1)] - skyline[2, p1] > tol
-      right <- skyline[2, seq(p2, ncol(skyline))] - skyline[2, p2] > tol
+      left  <- skyline[2L, seq(1L, p1)] - skyline[2L, p1] > tol
+      right <- skyline[2L, seq(p2, ncol(skyline))] - skyline[2L, p2] > tol
 
       if (any(left)) {
         # There is a taller rooftop on the skyline to the left
-        next_left <- tail(which(left), 1)
+        next_left <- tail(which(left), 1L)
       } else {
-        next_left <- 1
+        next_left <- 1L
       }
 
       if (any(right)) {
         # There is a taller rooftop on the skyline to the right
-        next_right <- head(which(right), 1)
+        next_right <- head(which(right), 1L)
       } else {
         next_right <- NCOL(skyline)
       }
 
       if (w[i] <= diff(skyline[1, c(next_left, next_right)])) {
         # Fit a new building in the skyline
-        m[1, i] <- skyline[1, next_left]
-        m[2, i] <- skyline[1, next_left] + w[i]
-        m[3, i] <- skyline[2, p1]
-        m[4, i] <- skyline[2, p2] + h[i]
+        m[1L, i] <- skyline[1L, next_left]
+        m[2L, i] <- skyline[1L, next_left] + w[i]
+        m[3L, i] <- skyline[2L, p1]
+        m[4L, i] <- skyline[2L, p2] + h[i]
 
         l <- ifelse(next_left == 1L, 0L, 1L)
 
-        skyline[2, next_left + l] <- skyline[2, p1] + h[i]
+        skyline[2L, next_left + l] <- skyline[2L, p1] + h[i]
 
         newcols <-
-          rbind(c(skyline[1, next_left] + w[i], skyline[1,next_left] + w[i]),
-                c(skyline[2, p2] + h[i]       , skyline[2, p2]))
+          rbind(c(skyline[1L, next_left] + w[i], skyline[1L, next_left] + w[i]),
+                c(skyline[2L, p2] + h[i]       , skyline[2L, p2]))
 
-        skyline <- cbind(skyline[, seq(1, next_left + l)],
+        skyline <- cbind(skyline[, seq(1L, next_left + l)],
                          newcols,
                          skyline[, seq(p2, NCOL(skyline))])
 
         # Check if there are any rooftops on the skyline beneath the new one
-        underneath <- skyline[1, ] > m[1, i] & skyline[1, ] < m[2, i]
+        underneath <- skyline[1L, ] > m[1L, i] & skyline[1L, ] < m[2L, i]
 
         if (any(underneath)) {
-          skyline[2, which(underneath)[1] - 1] <-
-            skyline[2, tail(which(underneath), 1)]
+          # Drop down to the lowest level
+          skyline[2L, which(underneath)[1L] - 1L] <-
+            skyline[2L, tail(which(underneath), 1L)]
           skyline <- skyline[, !underneath]
         }
 
         looking <- FALSE
       } else {
         # Examine the next rooftop
-        j <- j + 2
-        k <- k + 2
+        j <- j + 2L
+        k <- k + 2L
       }
     }
   }
