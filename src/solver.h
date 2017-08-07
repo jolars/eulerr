@@ -1,3 +1,7 @@
+// Copyright Emanuel Huber
+// This code has been ported to C++ from RConics version 1.0, which is licensed
+// under the GPL-3 license.
+
 #ifndef eulerr_solver_h_
 #define eulerr_solver_h_
 
@@ -24,17 +28,11 @@ arma::cx_vec solve_cubic(const arma::vec& v) {
   } else {
     double A =
       -sign(R)*std::cbrt(std::abs(R) + std::sqrt(pow(R, 2) - std::pow(Q, 3)));
-    double B;
-    if (std::abs(A - 0) < small) {
-      B = 0;
-    } else {
-      B = Q/A;
-    }
+    double B = std::abs(A - 0) < small ? 0 : Q/A;
     y(0) = A + B - a/3.0;
     y(1) = -0.5*(A + B) - a/3.0 + std::sqrt(3.0)*i*(A - B)/2.0;
     y(2) = -0.5*(A + B) - a/3.0 - std::sqrt(3.0)*i*(A - B)/2.0;
   }
-
   return y;
 }
 
