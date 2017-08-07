@@ -109,8 +109,3 @@ qualpalr_pal <- function(n) {
 is_false <- function(x) {
   identical(x, FALSE)
 }
-
-
-colmin <- function(mat) {
-  mat[(1:ncol(mat) - 1)*nrow(mat) + max.col(t(-mat))]
-}
