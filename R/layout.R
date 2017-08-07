@@ -82,8 +82,8 @@ skyline_pack <- function(m) {
         underneath <- skyline[1, ] > m[1, i] & skyline[1, ] < m[2, i]
 
         if (any(underneath)) {
-          skyline[2, which(underneath)[1] - 1]
-            <- skyline[2, tail(which(underneath), 1)]
+          skyline[2, which(underneath)[1] - 1] <-
+            skyline[2, tail(which(underneath), 1)]
           skyline <- skyline[, !underneath]
         }
 
