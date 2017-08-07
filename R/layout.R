@@ -7,41 +7,37 @@
 #' @keywords internal
 skyline_pack <- function(m) {
   # TODO: Add rotation to boxes as well.
-  # hh <- sample(1:100, 1)
-  # set.seed(hh)
-  # m <- matrix(runif(20), nrow = 4)
-  # m <- apply(m, 2, sort)
-
-  # plot(0:1, 0:1, type = "n")
-  #rect(m[1, ], m[3, ], m[2, ], m[4, ])
-
+  # TODO: Port to c++
   n <- NCOL(m)
   w <- (m[2L, ] - m[1L, ])
   h <- (m[4L, ] - m[3L, ])
   sizes <- h*w
 
+  # Add some padding for the rectangles
+  padding <- min(h, w) * 0.05
+
   # Pick a maximum bin width. Make sure the largest rectangle fits.
-  margin <- min(h, w) * 0.05
-  bin_w <- max(1.3*sqrt(sum(sizes)), w + margin)
+  bin_w <- max(1.3*sqrt(sum(sizes)), w + padding)
 
-  w <- w + margin
-  h <- h + margin
+  w <- w + padding
+  h <- h + padding
 
-  tol <- .Machine$double.eps
+  tol <- sqrt(.Machine$double.eps)
 
   m[] <- 0
 
+  # Initialize the skyline
   skyline <- cbind(c(0, 0), c(bin_w, 0))
 
   for (i in 1:n) {
     # Order the points by y coordinate
     ord <- order(skyline[2, ])
 
-    looking <- TRUE
-
-    # Start by examining the lowest building on the skyline
+    # Start by examining the lowest rooftop on the skyline
     j <- 1
     k <- 2
+
+    looking <- TRUE
     while (looking) {
       p1 <- ord[j]
       p2 <- ord[k]
@@ -64,7 +60,7 @@ skyline_pack <- function(m) {
       }
 
       if (w[i] <= diff(skyline[1, c(next_left, next_right)])) {
-        # Fit inside the lowest building
+        # Fit a new building in the skyline
         m[1, i] <- skyline[1, next_left]
         m[2, i] <- skyline[1, next_left] + w[i]
         m[3, i] <- skyline[2, p1]
@@ -74,10 +70,9 @@ skyline_pack <- function(m) {
 
         skyline[2, next_left + l] <- skyline[2, p1] + h[i]
 
-        newcols <- rbind(
-          c(skyline[1, next_left] + w[i], skyline[1,next_left] + w[i]),
-          c(skyline[2, p2] + h[i]       , skyline[2, p2])
-        )
+        newcols <-
+          rbind(c(skyline[1, next_left] + w[i], skyline[1,next_left] + w[i]),
+                c(skyline[2, p2] + h[i]       , skyline[2, p2]))
 
         skyline <- cbind(skyline[, seq(1, next_left + l)],
                          newcols,
@@ -87,20 +82,19 @@ skyline_pack <- function(m) {
         underneath <- skyline[1, ] > m[1, i] & skyline[1, ] < m[2, i]
 
         if (any(underneath)) {
-          skyline[2, which(underneath)[1] - 1] <- skyline[2, tail(which(underneath), 1)]
+          skyline[2, which(underneath)[1] - 1]
+            <- skyline[2, tail(which(underneath), 1)]
           skyline <- skyline[, !underneath]
         }
 
-
         looking <- FALSE
       } else {
-        # Examine the next two lowest points
+        # Examine the next rooftop
         j <- j + 2
         k <- k + 2
       }
     }
   }
-
   return(m)
 }
 
