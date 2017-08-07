@@ -148,7 +148,7 @@ euler.default <- function(combinations,
     # Decompose or collect set volumes depending on input
     if (match.arg(input) == "disjoint") {
       areas_disjoint <- areas
-      areas[] <- 0L
+      areas[] <- 0
       for (i in rev(seq_along(areas))) {
         prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
         areas[i] <- sum(areas_disjoint[prev_areas])
@@ -170,7 +170,7 @@ euler.default <- function(combinations,
     r <- sqrt(areas[ones] / pi)
 
     # Establish identities of disjoint and contained sets
-    disjoint <- areas[twos] == 0L
+    disjoint <- areas[twos] == 0
     tmp <- matrix(areas[ones][two], ncol = 2L)
     contained <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
 
@@ -181,22 +181,21 @@ euler.default <- function(combinations,
                         USE.NAMES = FALSE)
 
     # Starting layout
-    initial_layout <- stats::nlm(
-      f = optim_init,
-      p = stats::runif(n*2L, 0L, sqrt(sum(r^2L*pi))),
-      d = distances,
-      disjoint = disjoint,
-      contained = contained
-    )
+    initial_layout <- stats::nlm(f = optim_init,
+                                 p = stats::runif(n*2, 0, sqrt(sum(r^2*pi))),
+                                 d = distances,
+                                 disjoint = disjoint,
+                                 contained = contained,
+                                 check.analyticals = FALSE)
 
     # Final layout
     circle <- match.arg(shape) == "circle"
 
     if (circle) {
-      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3, byrow = TRUE))
+      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE))
     } else {
-      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2, byrow = TRUE),
-                              r, r, 0, deparse.level = 0))
+      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
+                              r, r, 0, deparse.level = 0L))
     }
 
     # TODO: Allow user options here?
@@ -204,7 +203,7 @@ euler.default <- function(combinations,
                                p = pars,
                                areas = areas_disjoint,
                                circles = circle,
-                               iterlim = 250)
+                               iterlim = 250L)
 
     fit <- as.vector(intersect_ellipses(final_layout$estimate, circle))
 
@@ -218,7 +217,7 @@ euler.default <- function(combinations,
 
     fpar <- matrix(
       data = final_layout$estimate,
-      ncol = if (circle) 3 else 5,
+      ncol = if (circle) 3L else 5L,
       dimnames = list(
         setnames,
         if (circle) c("x", "y", "r") else c("x", "y", "a", "b", "phi")
@@ -235,15 +234,15 @@ euler.default <- function(combinations,
   } else {
     # One set
     fpar <- matrix(
-      data = c(0L, 0L, sqrt(areas / pi), sqrt(areas / pi), 0),
-      ncol = if (circle) 3 else 5,
+      data = c(0, 0, sqrt(areas / pi), sqrt(areas / pi), 0),
+      ncol = if (circle) 3L else 5L,
       dimnames = list(
         setnames,
         if (circle) c("x", "y", "r") else c("x", "y", "a", "b", "phi")
       ),
       byrow = TRUE
     )
-    region_error <- diag_error <- stress <- 0L
+    region_error <- diag_error <- stress <- 0
     orig <- fit <- areas
     names(orig) <- names(fit) <- setnames
   }
