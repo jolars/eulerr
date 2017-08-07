@@ -16,11 +16,13 @@ arma::umat choose_two(const arma::uvec& x) {
   return m;
 }
 
+// Wrapper to compute a matrix of binary indices for set combinations
 // [[Rcpp::export]]
 Rcpp::LogicalMatrix bit_indexr(const arma::uword n) {
   return Rcpp::wrap(bit_index(n));
 }
 
+// Squared loss between given and desired overlap
 // [[Rcpp::export]]
 double discdisc(double d, double r1, double r2, double overlap) {
   double r1sq = std::pow(r1, 2);
