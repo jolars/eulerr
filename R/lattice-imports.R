@@ -1,5 +1,5 @@
-# The following functions have been imported (almost) ad verbatim from lattice
-# version 0.20-35 and come with the following copyright notice attached.
+# The following functions have been imported from lattice version 0.20-35, which
+# came with the following copyright notice attached.
 
 ### Copyright (C) 2001-2006  Deepayan Sarkar <Deepayan.Sarkar@R-project.org>
 ###
