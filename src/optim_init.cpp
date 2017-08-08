@@ -1,9 +1,10 @@
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
-
 // #define ARMA_NO_DEBUG // For the final version
 
+// [[Rcpp::plugins(cpp11)]]
+
 #include <RcppArmadillo.h>
+
+// [[Rcpp::depends(RcppArmadillo)]]
 
 // Loss and gradient for the initial optimizer.
 // [[Rcpp::export]]
