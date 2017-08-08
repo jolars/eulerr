@@ -1,16 +1,14 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
+// #define ARMA_NO_DEBUG // For the final version
+
 #include <RcppArmadillo.h>
 #include "transformations.h"
 #include "conversions.h"
 #include "solver.h"
 #include "helpers.h"
 #include "constants.h"
-
-// #include <google/profiler.h>
-
-// #define ARMA_NO_DEBUG // For the final version
 
 inline double ellipse_area(const arma::vec& v) {
   return arma::datum::pi * v(2) * v(3);
@@ -21,29 +19,17 @@ void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
   arma::mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
-  arma::vec::fixed<3> B_diag = arma::abs(B.diag());
+  arma::uword i = arma::index_max(arma::abs(B.diag()));
+  std::complex<double> Bii = std::sqrt(B(i, i));
 
-  if (arma::any(B_diag > small)) {
-    arma::uword i = arma::index_max(B_diag);
-    std::complex<double> Bii = std::sqrt(B(i, i));
-
-    if (std::real(Bii) >= 0) {
-      arma::cx_mat::fixed<3, 3> C = A + skewsymmat(B.col(i)/Bii);
-      arma::vec::fixed<9> C_abs = arma::abs(arma::vectorise(C));
-
-      if (arma::any(C_abs > small)) {
-        // Extract the lines
-        arma::uvec ij = arma::ind2sub(arma::size(3, 3), arma::index_max(C_abs));
-        g = arma::real(C.row(ij(0)).t());
-        h = arma::real(C.col(ij(1)));
-      } else {
-        g.fill(arma::datum::nan);
-        h.fill(arma::datum::nan);
-      }
-    } else {
-      g.fill(arma::datum::nan);
-      h.fill(arma::datum::nan);
-    }
+  if (std::real(Bii) >= 0) {
+    arma::cx_mat::fixed<3, 3> C = A + skewsymmat(B.col(i)/Bii);
+      // Extract the lines
+      arma::uvec ij =
+        arma::ind2sub(arma::size(3, 3),
+                      arma::index_max(arma::abs(arma::vectorise(C))));
+      g = arma::real(C.row(ij(0)).t());
+      h = arma::real(C.col(ij(1)));
   } else {
     g.fill(arma::datum::nan);
     h.fill(arma::datum::nan);
@@ -86,7 +72,6 @@ void intersect_conic_line(const arma::mat& A,
   }
 }
 
-
 // Intersect two conics, returning 0-4 intersection points
 void intersect_conics(const arma::mat& A,
                       const arma::mat& B,
@@ -104,32 +89,27 @@ void intersect_conics(const arma::mat& A,
   // Find the cubic roots
   arma::cx_vec::fixed<3> roots = solve_cubic(v);
 
-  if (arma::any(arma::imag(roots) == 0)) {
-    // Select the largest real root
-    double lambda = 0;
-    for (auto root : roots) {
-      if (std::imag(root) == 0) {
-        if (std::abs(std::real(root)) > lambda) {
-          lambda = std::real(root);
-        }
+  // Select the largest real root
+  double lambda = 0;
+  for (auto root : roots) {
+    if (std::imag(root) == 0) {
+      if (std::abs(std::real(root)) > lambda) {
+        lambda = std::real(root);
       }
     }
-
-    arma::mat::fixed<3, 3> C = lambda*A + B;
-
-    C(arma::find(arma::abs(C) < small)).zeros();
-
-    // Split the degenerate conic into lines g and h
-    arma::vec::fixed<3> g, h;
-    split_conic(C, g, h);
-
-    // Intersect one of the conics with each line to get points p q
-    intersect_conic_line(A, g, points.cols(0, 1));
-    intersect_conic_line(A, h, points.cols(2, 3));
-
-  } else {
-    points.fill(arma::datum::nan);
   }
+
+  arma::mat::fixed<3, 3> C = lambda*A + B;
+
+  C(arma::find(arma::abs(C) < small)).zeros();
+
+  // Split the degenerate conic into lines g and h
+  arma::vec::fixed<3> g, h;
+  split_conic(C, g, h);
+
+  // Intersect one of the conics with each line to get points p q
+  intersect_conic_line(A, g, points.cols(0, 1));
+  intersect_conic_line(A, h, points.cols(2, 3));
 }
 
 
@@ -151,7 +131,6 @@ void adopt(const arma::mat& points,
       double phi = ellipses(4, l);
 
       // Check if the points lie inside the ellipse
-
       out.row(l) = arma::pow((x - h)*std::cos(phi) + (y - k)*std::sin(phi), 2)/
         std::pow(ellipses(2, l), 2) +
           arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
@@ -160,7 +139,10 @@ void adopt(const arma::mat& points,
   }
 }
 
-// Ellipse sector area
+// The code below is adapted from "The area of intersecting ellipses" by
+// David Eberly, Geometric Tools, LLC (c) 1998-2016
+//
+// Area of a sector
 inline arma::vec sector_area(const double a,
                              const double b,
                              const arma::vec& theta) {
@@ -168,6 +150,10 @@ inline arma::vec sector_area(const double a,
                                       b + a + (b - a)*arma::cos(2*theta)));
 }
 
+// The code below is adapted from "The area of intersecting ellipses" by
+// David Eberly, Geometric Tools, LLC (c) 1998-2016
+// Area of a sector
+//
 // Compute the area of an ellipse segment.
 double ellipse_segment(const arma::vec& ellipse,
                        const arma::vec& p0,
@@ -351,11 +337,8 @@ arma::vec intersect_ellipses(const arma::vec& par,
       arma::accu(out(arma::find(arma::sum(subareas, 1) == subareas.n_cols)));
   }
 
-  //ProfilerStop();
-
   return arma::clamp(out, 0, out.max());
 }
-
 
 // [[Rcpp::export]]
 double optim_final_loss(const arma::vec& par,
