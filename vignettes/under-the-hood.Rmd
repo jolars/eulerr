@@ -9,7 +9,6 @@ colorlinks: true
 papersize: a4
 geometry:
   - margin=3.5cm
-fontfamily: xcharter
 bibliography: eulerr.bib
 vignette: >
   %\VignetteIndexEntry{eulerr under the hood}
