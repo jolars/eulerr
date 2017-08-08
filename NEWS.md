@@ -4,6 +4,11 @@
 in `euler()`. This added functionality is provided through an almost complete
 overhaul of the under-hood mechanics of the function.
 * Initial optimization routines have been ported to c++.
+* The initial optimizer has been switched from
+`stats::optim(..., method = "L-BFGS-B")` to `stats::nlm()`.
+* A packing algorithm has been introduced to stack disjoint
+clusters of ellipses/circles together (since the initial optimizer) no longer
+constrains the layout.
 * Location of overlap centers have been rewritten to handle ellipses and
 ported to c++.
 
