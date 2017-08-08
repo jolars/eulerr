@@ -48,14 +48,14 @@ skyline_pack <- function(m) {
 
       if (any(left)) {
         # There is a taller rooftop on the skyline to the left
-        next_left <- tail(which(left), 1L)
+        next_left <- utils::tail(which(left), 1L)
       } else {
         next_left <- 1L
       }
 
       if (any(right)) {
         # There is a taller rooftop on the skyline to the right
-        next_right <- head(which(right), 1L)
+        next_right <- utils::head(which(right), 1L)
       } else {
         next_right <- NCOL(skyline)
       }
@@ -85,7 +85,7 @@ skyline_pack <- function(m) {
         if (any(underneath)) {
           # Drop down to the lowest level
           skyline[2L, which(underneath)[1L] - 1L] <-
-            skyline[2L, tail(which(underneath), 1L)]
+            skyline[2L, utils::tail(which(underneath), 1L)]
           skyline <- skyline[, !underneath]
         }
 
