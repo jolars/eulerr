@@ -127,7 +127,7 @@ where $\hat{y}$ is the fitted disjoint areas.
 ### Goodness-of-fit
 
 For goodness-of-fit measures, we the stress statistic from venneuler
-(@wilkinson_exact_2012)
+[@wilkinson_2012]
 
 $$\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}$$
 where $\hat{y}_i$ is an ordinary least squares estimate from the regression of
