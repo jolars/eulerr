@@ -34,6 +34,8 @@ options(digits = 3)
 
 library(lattice)
 lattice.options(default.theme = list(fontsize = list(text = 10, points = 5)))
+
+set.seed(1)
 ```
 
 # Introduction
