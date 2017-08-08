@@ -267,6 +267,7 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
 
   if (is.null(weights))
     weights <- rep.int(1L, NROW(combinations))
+
   if (!is.null(by)) {
     vapply(by,
            function(x) assertthat::assert_that(is.factor(x) || is.character(x)),
@@ -277,6 +278,7 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
 
   out <- matrix(NA, nrow = NROW(combinations), ncol = NCOL(combinations))
   colnames(out) <- colnames(combinations)
+
   for (i in seq_along(combinations)) {
     y <- combinations[, i]
     if (is.factor(y) || is.character(y)) {

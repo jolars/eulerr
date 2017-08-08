@@ -1,6 +1,8 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
+// #define ARMA_NO_DEBUG // For the final version
+
 #include "helpers.h"
 
 // [[Rcpp::export]]

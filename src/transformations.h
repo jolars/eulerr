@@ -47,7 +47,7 @@ inline arma::mat rotate(const double phi) {
   return out;
 }
 
-// Return the adjoint (adjugate) of a matrix
+// Return the adjoint (adjugate) of a 3-by-3 matrix
 inline arma::mat adjoint(const arma::mat& m) {
   arma::mat::fixed<3, 3> out;
   double a = m(0, 0);

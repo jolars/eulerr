@@ -8,6 +8,7 @@
 skyline_pack <- function(m) {
   # TODO: Add rotation to boxes as well.
   # TODO: Port to c++
+
   n <- NCOL(m)
   w <- (m[2L, ] - m[1L, ])
   h <- (m[4L, ] - m[3L, ])
@@ -158,7 +159,6 @@ shelf_pack <- function(m) {
   return(list(xy = rbind(x0, x1, y0, y1), ord = ord))
 }
 
-
 #' Compress a Euler Layout
 #'
 #' @param fpar A Euler layout fit with [euler()]
@@ -213,8 +213,6 @@ compress_layout <- function(fpar, id, fit) {
   }
 
   new_bounds <- skyline_pack(bounds)
-  #bounds <- bounds[, new_bounds$ord, drop = FALSE]
-  #unique_clusters <- unique_clusters[new_bounds$ord]
 
   for (i in seq_along(unique_clusters)) {
     ii <- unique_clusters[[i]]

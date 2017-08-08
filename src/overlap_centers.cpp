@@ -1,6 +1,8 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
+// #define ARMA_NO_DEBUG // For the final version
+
 #include <RcppArmadillo.h>
 #include "helpers.h"
 #include "constants.h"
@@ -64,6 +66,9 @@ double bisect(const double r0,
   return s;
 }
 
+// The code below code is adapted from "Distance from a Point to an Ellipse, an
+// Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
+// (c) 1998-2016
 double dist_to_ellipse(double a, double b, double x, double y) {
   // Flip the coordinate system if semi-major axis > semi-minor axis
   if (b > a) {
