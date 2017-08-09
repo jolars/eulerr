@@ -10,7 +10,7 @@ papersize: a4
 geometry:
   - margin=3.5cm
 bibliography: eulerr.bib
-fontfamily: [newtxtext, newtxtt, newtxmath]
+fontfamily: newtxtext, newtxtt, newtxmath
 vignette: >
   %\VignetteIndexEntry{eulerr under the hood}
   %\VignetteEngine{knitr::rmarkdown}
