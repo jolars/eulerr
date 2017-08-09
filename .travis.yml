@@ -27,26 +27,26 @@ matrix:
       compiler: gcc
       r: devel
       before_install:
-        - tlmgr install fontaxes tex-gyre
+        - tlmgr install fontaxes tex-gyre newtxtt
 
     - os: linux
       dist: precise
       compiler: clang
       r: release
       before_install:
-        - tlmgr install fontaxes tex-gyre
+        - tlmgr install fontaxes tex-gyre newtxtt
 
     - os: linux
       dist: trusty
       r: devel
       compiler: clang
       before_install:
-        - tlmgr install fontaxes tex-gyre
+        - tlmgr install fontaxes tex-gyre newtxtt
 
     - os: linux
       r: oldrel
       before_install:
-        - tlmgr install fontaxes tex-gyre
+        - tlmgr install fontaxes tex-gyre newtxtt
 
     - os: osx
       r: release
