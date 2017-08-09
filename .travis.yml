@@ -3,6 +3,9 @@ sudo: false
 cache: packages
 warnings_are_errors: true
 
+before_install:
+  - tlmgr install fontaxes
+
 matrix:
   include:
     - os: linux
