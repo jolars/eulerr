@@ -40,10 +40,9 @@ set.seed(1)
 # Introduction
 
 **eulerr** relies on an extensive machinery to turn user input into a pretty
-Euler diagram. By design, little, or in fact none, of this ever requires any
-tinkering from the user. The downside of this, however, is that it
-requires eulerr to make several well-formed decisions about the 
-design of the diagram on behalf of the user.
+Euler diagram. Little, or in fact none, of this requires any
+tinkering from the user. To make that happen, however, eulerr to make several
+well-formed decisions about the design of the diagram on behalf of the user.
 
 # Input
 
@@ -112,17 +111,18 @@ r_2^2\arccos\left(\frac{d^2 + r_2^2 - r_1^2}{2dr_2}\right) - \\
 where *r~1~* and *r~2~* are the radii of the first and second circles
 respectively and *d* the distance between the circles.
 
-*r~1~* and *r~2~* are known but because *d* is not, we attempt to find it
-using one-dimensional numerical optimization. As our loss function we use
-the squared difference between *A* and the desired overlap and then optimize
-using **R**'s `optimize()`. This could look something like this.
+*r~1~* and *r~2~* are known but because *d* is not, we approximate it
+using one-dimensional numerical optimization. Our loss function is
+the squared difference between *A* and the desired overlap, which we then
+optimize using **R**'s `optimize()`, which is a "combination of golden section
+search and successive parabolic interpolation". 
 
 ```{r}
 r1 <- 0.7 #radius of set 1
 r2 <- 0.9 #radius of set 2
 overlap <- 1 #area of overlap
 
-stats::optimize(eulerr:::discdisc, #computes the squared loss mentioned above
+stats::optimize(eulerr:::discdisc, #computes the squared loss
                 interval = c(abs(r1 - r2), sum(r1, r2)),
                 r1 = r1,
                 r2 = r2,
@@ -132,23 +132,25 @@ stats::optimize(eulerr:::discdisc, #computes the squared loss mentioned above
 ```
 
 Now that we have the distances, we can proceed to the next step: computing
-an initial layout.
+an initial configuration.
 
 # Initial configuration
 
-The next step is to provide a starting layout. This can be done in a number of 
-ways; eulerr uses the primary method from Ben Fredrickson's
-[venn.js](https://github.com/benfred/venn.js/) script -- basically a constrained
-version of multi-dimensional scaling (MSD), which is also used in Leland
-Wilkinson's [venneuler](https://CRAN.R-project.org/package=venneuler) package
-[@wilkinson_2012]. However, whereas venneuler's version tries to place
-disjoint sets exactly neck-in-neck and completely contained sets at the precise
-midpoints of their parents, the version from venn.js (and eulerr) accepts any
-disjoint or contained positions as long as they are outside or inside of the
-parent sets respectively.
+Our initial layout can be setup in a number of ways; eulerr uses one of the 
+methods from Fredrickson's [venn.js](https://github.com/benfred/venn.js/), which
+features a constrained version of multi-dimensional scaling (MDS) based on that 
+of Wilkinson's R package 
+[venneuler](https://CRAN.R-project.org/package=venneuler) [@wilkinson_2012]. 
+venneuler tries to place disjoint and subset exactly neck-in-neck and at the 
+exact midpoint of the set respectively. However, since we are indifferent about
+where in the space outside (or respectively inside) the sets are placed, that
+behavior becomes problematic since it might interfere with locations of other
+sets that need to occupy some of that space.
 
-The MDS algorithm works by trying to optimize the pairwise relationsships
-between sets using the following loss and gradient functions
+The MDS algorithm from venn.js circumvents this by assigning a loss and gradient
+of 0 when, for instance, the set relationsships *and* the candidate ellipses are
+disjoint. Then, to optimize the pairwise relationsships between sets, eulerr
+uses the following loss and gradient functions.
 
 > \[\small
 > loss = \sum_i \sum_j { {\begin{cases}
@@ -165,7 +167,7 @@ between sets using the following loss and gradient functions
 >      4 {((X_{i} - X_{j})^T(X_{i} - X_{j}) - D_{ij}^2)} (X_{i} -
 >      X_{j}) & \text{otherwise} \\ 
 > \end{cases}}\]
-> *source: [Better Venn Diagrams](http://www.benfrederickson.com/better-venn-diagrams/) by Ben Fredrickson,
+> *Source: [Better Venn Diagrams](http://www.benfrederickson.com/better-venn-diagrams/) by Ben Fredrickson,
 > which also includes a nice interactive demonstration of how it works*.
 
 Fredrickson uses the Polak--Ribière Conjugate Gradient Method to optimize
