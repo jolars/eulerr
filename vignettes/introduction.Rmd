@@ -2,13 +2,40 @@
 title: "An introduction to eulerr"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: pdf_document
+toc: true
+indent: true
+colorlinks: true
+papersize: a4
+geometry:
+  - margin=3.5cm
 bibliography: eulerr.bib
+fontfamily: [newtxtext, newtxtt, newtxmath]
 vignette: >
   %\VignetteIndexEntry{An introduction to eulerr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 4,
+  fig.height = 4,
+  crop = TRUE
+)
+
+options(digits = 3)
+
+library(lattice)
+lattice.options(default.theme = list(fontsize = list(text = 10, points = 5)))
+
+set.seed(1)
+```
 
 **eulerr** generates area-proportional euler diagrams that display set
 relationships (intersections, unions, and disjoints) with circles or ellipses.
@@ -150,7 +177,7 @@ way to visualize our data. (I suggest the excellent
 No we get to the fun part: plotting our diagram. This is easy, as well as
 highly customizable, with **eulerr**
 
-```{r eulerr_plot, fig.width=4, fig.height=4, fig.show='hold', fig.cap='eulerr plots can be modified in every possible way.', dev.args=list(type='cairo-png')}
+```{r eulerr_plot, fig.width=4, fig.height=4, fig.cap='eulerr plots can be modified in every possible way.'}
 plot(fit2)
 
 # Remove fills, vary border type, and switch fontface.
