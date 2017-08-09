@@ -4,7 +4,7 @@ cache: packages
 warnings_are_errors: true
 
 before_install:
-  - tlmgr install libertine
+  - tlmgr install libertine, mweights
 
 matrix:
   include:
