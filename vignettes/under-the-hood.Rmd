@@ -2,8 +2,7 @@
 title: "eulerr under the hood"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
-output:
-  pdf_document
+output: pdf_document
 toc: true
 indent: true
 colorlinks: true
@@ -11,7 +10,7 @@ papersize: a4
 geometry:
   - margin=3.5cm
 bibliography: eulerr.bib
-fontfamily: newtxtext, newtxtt, newtxmath
+fontfamily: [newtxtext, newtxtt, newtxmath]
 vignette: >
   %\VignetteIndexEntry{eulerr under the hood}
   %\VignetteEngine{knitr::rmarkdown}
@@ -22,7 +21,7 @@ vignette: >
 knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
 
 knitr::opts_chunk$set(
-  echo = FALSE,
+  echo = TRUE,
   warning = FALSE,
   message = FALSE,
   fig.width = 4,
