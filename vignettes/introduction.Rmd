@@ -13,7 +13,7 @@ papersize: a4
 geometry:
   - margin=3.5cm
 bibliography: eulerr.bib
-fontfamily: newtxtext, newtxtt, newtxmath
+fontfamily: newtxtext, newtxtt
 vignette: >
   %\VignetteIndexEntry{An introduction to eulerr}
   %\VignetteEngine{knitr::rmarkdown}
