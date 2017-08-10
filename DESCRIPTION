@@ -23,6 +23,7 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
+    bookdown,
     testthat
 LinkingTo:
     Rcpp (>= 0.12.12),
