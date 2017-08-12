@@ -8,9 +8,8 @@
 \description{
 If possible, generates exactly area-proportional Euler diagrams
 using numerical optimization. A Euler diagram is a generalization of a Venn
-diagram,
-relaxing the criterion that all interactions need to be represented. The
-user if offered the choice between ellipses or circles.
+diagram, relaxing the criterion that all interactions need to be
+represented. The user if offered the choice between ellipses or circles.
 }
 \seealso{
 Useful links:
