@@ -3,7 +3,7 @@ title: "An introduction to eulerr"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
 output:
-  bookdown::pdf_document2:
+  pdf_document:
     number_sections: yes
     toc: yes
     fig_caption: yes

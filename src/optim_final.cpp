@@ -1,4 +1,3 @@
-// [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
 // #define ARMA_NO_DEBUG // For the final version
@@ -9,6 +8,8 @@
 #include "solver.h"
 #include "helpers.h"
 #include "constants.h"
+
+// [[Rcpp::depends(RcppArmadillo)]]
 
 // Split a degenerate conic into two lines
 void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
