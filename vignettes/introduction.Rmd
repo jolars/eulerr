@@ -2,18 +2,16 @@
 title: "An introduction to eulerr"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
-output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
-    fig_caption: yes
-indent: true
-colorlinks: true
-papersize: a4
-geometry:
-  - margin=3.5cm
+number_sections: yes
+output: komadown::scrartcl
+headings: standardclasses
+automark: yes
+colorlinks: yes
 bibliography: eulerr.bib
-fontfamily: newtxtext, newtxtt, newtxmath
+header:
+  - pos: ro
+    first: ""
+    next: An introduction to eulerr
 vignette: >
   %\VignetteIndexEntry{An introduction to eulerr}
   %\VignetteEngine{knitr::rmarkdown}
@@ -40,6 +38,8 @@ lattice.options(default.theme = list(fontsize = list(text = 10, points = 5)))
 set.seed(1)
 ```
 
+# Motivation
+
 **eulerr** generates area-proportional euler diagrams that display set
 relationships (intersections, unions, and disjoints) with circles or ellipses.
 [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn
@@ -47,8 +47,7 @@ diagrams without the requirement that all set interactions be present (whether
 they are empty or not). That is, depending on input, eulerr will sometimes
 produce Venn diagrams but sometimes not.
 
-# Motivation
-**R** features a number of packages that produce euler and/or venn diagrams;
+**R** features several packages that produce euler diagrams;
 some of the more prominent ones (on CRAN) are
 
 * [eVenn](https://cran.r-project.org/package=eVenn),
@@ -175,8 +174,8 @@ excellent [UpSetR](https://cran.r-project.org/package=UpSetR) package.)
 ## Visualization
 No we get to the fun part: plotting our diagram. This is easy, as well as
 highly customizable, with **eulerr**. The default parameters
-(Figure \ref{fig:default-plot} )) can easily be adjusted to suit anyobody's
-needs (Figure \ref{fig:custom-plot}).
+(Figure \@ref(fig:default-plot)) can easily be adjusted to suit anyobody's
+needs (Figure \@ref(fig:custom-plot)).
 
 ```{r eulerr-plot, fig.cap='The default graphical parameters.'}
 plot(fit2)
