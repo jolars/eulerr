@@ -15,10 +15,10 @@ skyline_pack <- function(m) {
   sizes <- h*w
 
   # Add some padding for the rectangles
-  padding <- min(h, w) * 0.04
+  padding <- 1.6*sqrt(sum(sizes)) * 0.015
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
-  bin_w <- max(1.4*sqrt(sum(sizes)), w + padding)
+  bin_w <- max(1.6*sqrt(sum(sizes)), w + padding)
 
   w <- w + padding
   h <- h + padding
