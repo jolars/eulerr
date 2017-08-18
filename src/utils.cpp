@@ -1,9 +1,9 @@
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
-
 // #define ARMA_NO_DEBUG // For the final version
 
 #include "helpers.h"
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::plugins(cpp11)]]
 
 // [[Rcpp::export]]
 arma::umat choose_two(const arma::uvec& x) {

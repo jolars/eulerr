@@ -1,6 +1,3 @@
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
-
 // #define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
@@ -8,6 +5,9 @@
 #include "constants.h"
 #include "transformations.h"
 #include "neldermead.h"
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::plugins(cpp11)]]
 
 arma::umat find_surrounding_sets(const arma::rowvec& x,
                                  const arma::rowvec& y,
