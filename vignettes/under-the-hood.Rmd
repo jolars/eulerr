@@ -2,22 +2,20 @@
 title: "eulerr under the hood"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
-output:
-  pdf_document:
-    fig_caption: yes
-    number_sections: yes
-    toc: yes
-indent: true
-colorlinks: true
-papersize: a4
-geometry:
-  - margin=3.5cm
+number_sections: yes
+output: komadown::scrartcl
+headings: standardclasses
+automark: yes
+colorlinks: yes
 bibliography: eulerr.bib
-fontfamily: newtxtext, newtxtt, newtxmath
+header:
+  - pos: ro
+    first: ""
+    next: An introduction to eulerr
 vignette: >
-  %\VignetteIndexEntry{eulerr under the hood}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{An introduction to eulerr}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

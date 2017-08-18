@@ -22,7 +22,8 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    komadown
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.900.2.0)
