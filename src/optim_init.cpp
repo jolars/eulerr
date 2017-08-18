@@ -1,10 +1,9 @@
 // #define ARMA_NO_DEBUG // For the final version
 
-// [[Rcpp::plugins(cpp11)]]
-
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::plugins(cpp11)]]
 
 // Loss and gradient for the initial optimizer.
 // [[Rcpp::export]]
@@ -40,7 +39,7 @@ Rcpp::NumericVector optim_init(const arma::rowvec& par,
 
 
 // // Computes the loss, gradient, and hessian
-// // Currently not working.
+// // Currently not working, perhaps because of bug in nlm (fixed in devel)?
 // // [[Rcpp::export]]
 // Rcpp::NumericVector optim_init(const arma::vec& par,
 //                                const arma::mat& d,
