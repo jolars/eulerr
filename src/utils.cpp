@@ -43,5 +43,5 @@ double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
   double sst   = arma::accu(arma::square(fit));
   double slope = arma::accu(areas%fit)/arma::accu(arma::square(areas));
   double sse   = arma::accu(arma::square(fit - areas*slope));
-  return sse / sst;
+  return sse/sst;
 }
