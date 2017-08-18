@@ -16,8 +16,8 @@ Rcpp::NumericVector optim_init(const arma::rowvec& par,
 
   Rcpp::NumericVector loss(1, 0.0);
   arma::mat gradMat(2, n, arma::fill::zeros);
-  for (arma::uword i = 0, k = 0; i < n; i++) {
-    for (arma::uword j = i + 1; j < n; j++, k++) {
+  for (arma::uword i = 0, k = 0; i < n; ++i) {
+    for (arma::uword j = i + 1; j < n; ++j, ++k) {
       arma::vec xyd = xy.col(i) - xy.col(j);
       double D = arma::as_scalar(xyd.t()*xyd) - std::pow(d(k), 2);
       if (disjoint(k) && (D >= 0)) {

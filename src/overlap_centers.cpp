@@ -110,7 +110,7 @@ double dist_to_ellipse(double a, double b, double x, double y) {
 inline arma::uword max_colmins(const arma::mat& x) {
   arma::uword n = x.n_cols;
   arma::vec mins(n);
-  for (arma::uword i = 0; i < n; i++)
+  for (arma::uword i = 0; i < n; ++i)
     mins(i) = x.col(i).min();
   return mins.index_max();
 }
@@ -163,7 +163,7 @@ arma::mat locate_centers(const arma::vec& h,
     arma::uvec not_zero = fitted > small;
     arma::uvec singles = arma::sum(id, 1) == 1;
 
-    for (arma::uword i = 0; i < n; i++) {
+    for (arma::uword i = 0; i < n; ++i) {
       // Fit the sampling points to the current ellipse
       arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
       arma::umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),

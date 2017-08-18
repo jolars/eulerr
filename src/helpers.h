@@ -34,12 +34,12 @@ inline arma::uword nck(arma::uword n, arma::uword k) {
 inline arma::umat bit_index(arma::uword n) {
   arma::uword n_combos = 0;
 
-  for (arma::uword i = 1; i < n + 1; i++)
+  for (arma::uword i = 1; i < n + 1; ++i)
     n_combos += nck(n, i);
 
   arma::umat out(n_combos, n, arma::fill::zeros);
 
-  for (arma::uword i = 1, k = 0; i < n + 1; i++) {
+  for (arma::uword i = 1, k = 0; i < n + 1; ++i) {
     std::vector<bool> v(n);
     std::fill(v.begin(), v.begin() + i, true);
     do {
