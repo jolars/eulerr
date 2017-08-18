@@ -271,7 +271,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
   }
 
   arma::cube conics(3, 3, n);
-  for (arma::uword i = 0; i < n; i++)
+  for (arma::uword i = 0; i < n; ++i)
     conics.slice(i) = standard_to_matrix(ellipses.col(i));
 
   // Collect all points of intersection
@@ -307,7 +307,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
     } else {
       // Two or more sets
       arma::uvec owners(parents.n_cols);
-      for (arma::uword q = 0; q < parents.n_cols; q++) {
+      for (arma::uword q = 0; q < parents.n_cols; ++q) {
         owners(q) = set_intersect(parents.col(q), ids).n_elem == 2;
       }
 
