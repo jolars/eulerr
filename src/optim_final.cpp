@@ -7,8 +7,11 @@
 #include "helpers.h"
 #include "constants.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
 
 // Split a degenerate conic into two lines
 void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
@@ -271,8 +274,11 @@ arma::vec intersect_ellipses(const arma::vec& par,
   }
 
   arma::cube conics(3, 3, n);
-  for (arma::uword i = 0; i < n; ++i)
+
+  #pragma omp parallel for
+  for (arma::uword i = 0; i < n; ++i) {
     conics.slice(i) = standard_to_matrix(ellipses.col(i));
+  }
 
   // Collect all points of intersection
   arma::mat  points   (3, n_int);

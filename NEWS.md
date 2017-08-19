@@ -15,6 +15,8 @@ ported to c++.
 ## Minor changes
 * Labeling is now accomplished via numerical optimization, which should provide
 slightly more accurate locations.
+* Parallel processing for Armadillo operations is enabled via OpenMP
+(on compilers that support it).
 
 # eulerr 2.0.0
 ## Major changes
