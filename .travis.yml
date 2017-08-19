@@ -26,6 +26,7 @@ matrix:
       dist: precise
       compiler: gcc
       r: devel
+      r_build_args: '--compact-vignettes=both'
       before_install:
         - tlmgr install fontaxes tex-gyre newtxtt
 
@@ -33,6 +34,7 @@ matrix:
       dist: precise
       compiler: clang
       r: release
+      r_build_args: '--compact-vignettes=both'
       before_install:
         - tlmgr install fontaxes tex-gyre newtxtt
 
@@ -40,11 +42,13 @@ matrix:
       dist: trusty
       r: devel
       compiler: clang
+      r_build_args: '--compact-vignettes=both'
       before_install:
         - tlmgr install fontaxes tex-gyre newtxtt
 
     - os: linux
       r: oldrel
+      r_build_args: '--compact-vignettes=both'
       before_install:
         - tlmgr install fontaxes tex-gyre newtxtt
 
