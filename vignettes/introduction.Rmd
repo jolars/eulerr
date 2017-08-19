@@ -3,7 +3,7 @@ title: "An introduction to eulerr"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
 number_sections: yes
-output: komadown::scrartcl
+output: bookdown::pdf_document2
 headings: standardclasses
 automark: yes
 colorlinks: yes
