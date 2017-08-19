@@ -1,16 +1,16 @@
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
-
 // #define ARMA_NO_DEBUG // For the final version
 
 #include "helpers.h"
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::plugins(cpp11)]]
 
 // [[Rcpp::export]]
 arma::umat choose_two(const arma::uvec& x) {
   arma::uword n = x.size();
   arma::umat m(n * (n - 1) / 2, 2);
-  for (arma::uword i = 0, k = 0; i < n - 1; i++) {
-    for (arma::uword j = i + 1; j < n; j++, k++) {
+  for (arma::uword i = 0, k = 0; i < n - 1; ++i) {
+    for (arma::uword j = i + 1; j < n; ++j, ++k) {
       m(k, 0) = x(i);
       m(k, 1) = x(j);
     }
@@ -43,5 +43,5 @@ double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
   double sst   = arma::accu(arma::square(fit));
   double slope = arma::accu(areas%fit)/arma::accu(arma::square(areas));
   double sse   = arma::accu(arma::square(fit - areas*slope));
-  return sse / sst;
+  return sse/sst;
 }
