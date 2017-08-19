@@ -3,7 +3,6 @@
 #include "helpers.h"
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
 
 // [[Rcpp::export]]
 arma::umat choose_two(const arma::uvec& x) {

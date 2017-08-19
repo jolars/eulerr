@@ -7,7 +7,6 @@
 #include "neldermead.h"
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
 
 arma::umat find_surrounding_sets(const arma::rowvec& x,
                                  const arma::rowvec& y,
