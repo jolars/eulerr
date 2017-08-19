@@ -3,7 +3,6 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
 
 // Loss and gradient for the initial optimizer.
 // [[Rcpp::export]]
@@ -14,8 +13,8 @@ Rcpp::NumericVector optim_init(const arma::rowvec& par,
   arma::uword n = par.n_elem/2;
   arma::mat xy = arma::reshape(par, n, 2).t();
 
-  Rcpp::NumericVector loss(1, 0.0);
   arma::mat gradMat(2, n, arma::fill::zeros);
+  double loss = 0;
   for (arma::uword i = 0, k = 0; i < n; ++i) {
     for (arma::uword j = i + 1; j < n; ++j, ++k) {
       arma::vec xyd = xy.col(i) - xy.col(j);
@@ -25,16 +24,18 @@ Rcpp::NumericVector optim_init(const arma::rowvec& par,
       } else if (contained(k) && (D < 0)) {
         continue;
       } else {
-        loss[0] += std::pow(D, 2);
+        loss += std::pow(D, 2);
         gradMat.col(i) += 4*D*xyd;
         gradMat.col(j) -= 4*D*xyd;
       }
     }
   }
 
-  loss.attr("gradient") = Rcpp::wrap(arma::vectorise(gradMat, 1));
+  Rcpp::NumericVector out(1, loss);
 
-  return loss;
+  out.attr("gradient") = Rcpp::wrap(arma::vectorise(gradMat, 1));
+
+  return out;
 }
 
 
