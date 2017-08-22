@@ -1,6 +1,7 @@
 language: r
 sudo: false
 cache: packages
+pandoc_version: 1.19.2.1
 warnings_are_errors: true
 
 matrix:
@@ -28,7 +29,7 @@ matrix:
       r: devel
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes tex-gyre newtxtt
+        - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
 
     - os: linux
       dist: precise
@@ -36,7 +37,7 @@ matrix:
       r: release
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes tex-gyre newtxtt
+       - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
 
     - os: linux
       dist: trusty
@@ -44,13 +45,13 @@ matrix:
       compiler: clang
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes tex-gyre newtxtt
+        - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
 
     - os: linux
       r: oldrel
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes tex-gyre newtxtt
+        - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
 
     - os: osx
       r: release
