@@ -3,7 +3,7 @@ title: "eulerr under the hood"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
 number_sections: yes
-output: bookdown::pdf_document2
+output: komadown::scrartcl
 headings: standardclasses
 automark: yes
 colorlinks: yes

@@ -20,10 +20,11 @@ Imports:
     lattice,
     Rcpp
 Suggests:
+    bookdown,
     knitr,
+    komadown,
     rmarkdown,
     testthat,
-    bookdown
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.900.2.0)
