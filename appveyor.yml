@@ -10,6 +10,10 @@ init:
 install:
   ps: Bootstrap
 
+environment:
+  global:
+    R_BUILD_ARGS: "--compact-vignettes=both"
+
 # Adapt as necessary starting from here
 
 environment:
