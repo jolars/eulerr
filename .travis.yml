@@ -29,7 +29,7 @@ matrix:
       r: devel
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
+        - tlmgr install fontaxes sttools mweights libertine mathalfa
 
     - os: linux
       dist: precise
@@ -37,7 +37,7 @@ matrix:
       r: release
       r_build_args: '--compact-vignettes=both'
       before_install:
-       - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
+       - tlmgr install fontaxes sttools mweights libertine mathalfa
 
     - os: linux
       dist: trusty
@@ -45,13 +45,13 @@ matrix:
       compiler: clang
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
+        - tlmgr install fontaxes sttools mweights libertine mathalfa
 
     - os: linux
       r: oldrel
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes sttools preprint mweights libertine mathalfa
+        - tlmgr install fontaxes sttools mweights libertine mathalfa
 
     - os: osx
       r: release
