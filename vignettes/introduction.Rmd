@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 number_sections: yes
 output: komadown::scrartcl
 headings: standardclasses
+fontpack-libertine: yes
 automark: yes
 colorlinks: yes
 bibliography: eulerr.bib
