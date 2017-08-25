@@ -10,15 +10,12 @@ init:
 install:
   ps: Bootstrap
 
-environment:
-  global:
-    R_BUILD_ARGS: "--compact-vignettes=both"
-
 # Adapt as necessary starting from here
 
 environment:
   global:
     WARNINGS_ARE_ERRORS: 1
+    R_BUILD_ARGS: "--compact-vignettes=both"
 
   matrix:
   - R_VERSION: devel
