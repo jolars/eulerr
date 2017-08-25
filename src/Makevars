@@ -1,9 +1,3 @@
 CXX_STD = CXX11
-CXX1X = $(shell ${R_HOME}/bin/R CMD config CXX11)
-
-ifeq ($(shell $(CXX1X) -fopenmp -E -xc++ - 2>&1 >/dev/null && echo 'true'), true)
-  PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(FLIBS) $(LAPACK_LIBS) $(BLAS_LIBS)
-  PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS)
-else
-  PKG_LIBS = $(FLIBS) $(LAPACK_LIBS) $(BLAS_LIBS)
-endif
+PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(FLIBS) $(LAPACK_LIBS) $(BLAS_LIBS)
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS)
