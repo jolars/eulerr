@@ -1,6 +1,7 @@
 ---
 title: "eulerr under the hood"
-author: "Johan Larsson"
+author:
+  - name: "Johan Larsson"
 date: "`r Sys.Date()`"
 number_sections: yes
 fontpack-libertine: yes
@@ -9,10 +10,19 @@ headings: standardclasses
 automark: yes
 colorlinks: yes
 bibliography: eulerr.bib
+classoption:
+  - DIV=calc
+  - headsepline=true
 header:
   - pos: ro
     first: ""
     next: An introduction to eulerr
+setkomafont:
+  - element: descriptionlabel
+    commands: \normalfont\scshape\bfseries
+KOMAoptions:
+  - headings=standardclasses
+  - DIV=last
 vignette: >
   %\VignetteIndexEntry{An introduction to eulerr}
   %\VignetteEngine{knitr::rmarkdown}
