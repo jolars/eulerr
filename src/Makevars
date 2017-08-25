@@ -1,5 +1,4 @@
 CXX_STD = CXX11
-
 CXX1X = $(shell ${R_HOME}/bin/R CMD config CXX11)
 
 ifeq ($(shell $(CXX1X) -fopenmp -E -xc++ - 2>&1 >/dev/null && echo 'true'), true)
