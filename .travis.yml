@@ -59,12 +59,14 @@ matrix:
 
     - os: osx
       r: release
+      osx_image: xcode8.2
       latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes --no-examples'
 
     - os: osx
       r: oldrel
+      osx_image: xcode6.4
       latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes --no-examples'
