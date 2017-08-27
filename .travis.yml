@@ -4,19 +4,6 @@ cache: packages
 pandoc_version: 1.19.2.1
 warnings_are_errors: true
 
-os:
-  - linux
-  - osx
-
-r:
-  - release
-  - devel
-  - oldrel
-
-compiler:
-  - clang
-  - gcc
-
 matrix:
   include:
     - os: linux
@@ -30,18 +17,60 @@ matrix:
       r_build_args: '--no-build-vignettes'
       env:
         - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
+
+    - os: linux
+      compiler: clang
+      r: release
+      r_build_args: '--compact-vignettes=both'
+      before_install:
+        - tlmgr install fontaxes sttools mweights libertine mathalfa
       r_github_packages:
         - jimhester/covr
       after_success:
         - Rscript -e 'covr::codecov()'
+
     - os: linux
-      r: release
+      compiler: gcc
+      r: devel
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes'
+      latex: false
+
+    - os: linux
       compiler: clang
-      before_install:
-        - tlmgr install fontaxes sttools mweights libertine mathalfa
-      r_build_args:
-        - '--compact-vignettes=both'
+      r: devel
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes'
+      latex: false
+
+    - os: linux
+      r: oldrel
+      compiler: gcc
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes'
+      latex: false
+
+    - os: linux
+      r: oldrel
+      compiler: clang
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes'
+      latex: false
+
     - os: osx
+      r: devel
+      latex: false
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes --no-examples'
+
+    - os: osx
+      r: release
+      latex: false
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes --no-examples'
+
+    - os: osx
+      r: oldrel
       latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes --no-examples'
