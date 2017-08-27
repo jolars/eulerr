@@ -97,7 +97,7 @@ dont_print <- function(x, ...) {
 #' @return A string of hex colors
 #' @keywords internal
 qualpalr_pal <- function(n) {
-  palettes[[n]]
+  palette[1:n]
 }
 
 #' Check If Object Is Strictly FALSE

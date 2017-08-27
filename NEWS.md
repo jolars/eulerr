@@ -13,6 +13,9 @@ constrains the layout.
 ported to c++.
 
 ## Minor changes
+* The default palette has been changed to a fixed palette, still adapted
+to color deficiency, but with some manual adjustments to, among other things,
+prevent the use of color unless necessary.
 * Labeling is now accomplished via numerical optimization, which should provide
 slightly more accurate locations.
 * Parallel processing for Armadillo operations is enabled via OpenMP
