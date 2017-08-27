@@ -15,8 +15,6 @@ install:
 environment:
   global:
     WARNINGS_ARE_ERRORS: 1
-    R_BUILD_ARGS: "--compact-vignettes=both"
-    R_CHECK_ARGS: "--as-cran"
 
   matrix:
   - R_VERSION: devel
@@ -27,9 +25,14 @@ environment:
     GCC_PATH: mingw_64
 
   - R_VERSION: release
+
+  - R_VERSION: release
     R_ARCH: x64
 
-  - R_VERSION: patched
+  - R_VERSION: oldrel
+
+  - R_VERSION: oldrel
+    R_ARCH: x64
 
 build_script:
   - travis-tool.sh install_deps

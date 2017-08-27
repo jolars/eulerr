@@ -9,6 +9,21 @@ matrix:
   include:
     - os: linux
       compiler: gcc
+      r: devel
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes'
+      latex: false
+
+    - os: linux
+      compiler: clang
+      r: devel
+      r_build_args: '--no-build-vignettes'
+      r_check_args: '--ignore-vignettes'
+      latex: false
+
+
+    - os: linux
+      compiler: gcc
       r: release
       addons:
         apt:
@@ -29,20 +44,6 @@ matrix:
         - jimhester/covr
       after_success:
         - Rscript -e 'covr::codecov()'
-
-    - os: linux
-      compiler: gcc
-      r: devel
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes'
-      latex: false
-
-    - os: linux
-      compiler: clang
-      r: devel
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes'
-      latex: false
 
     - os: linux
       r: oldrel
