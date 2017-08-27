@@ -3,6 +3,7 @@ sudo: false
 cache: packages
 pandoc_version: 1.19.2.1
 warnings_are_errors: true
+r_check_args: --as-cran
 
 matrix:
   include:
@@ -13,7 +14,7 @@ matrix:
         apt:
           packages:
             - valgrind
-      r_check_args: '--ignore-vignettes --as-cran --use-valgrind'
+      r_check_args: '--ignore-vignettes --use-valgrind'
       r_build_args: '--no-build-vignettes'
       env:
         - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
