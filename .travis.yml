@@ -3,7 +3,6 @@ sudo: false
 cache: packages
 pandoc_version: 1.19.2.1
 warnings_are_errors: true
-r_check_args: --as-cran
 
 matrix:
   include:
@@ -20,7 +19,6 @@ matrix:
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes'
       latex: false
-
 
     - os: linux
       compiler: gcc
@@ -58,12 +56,6 @@ matrix:
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes'
       latex: false
-
-    - os: osx
-      r: devel
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes --no-examples'
 
     - os: osx
       r: release
