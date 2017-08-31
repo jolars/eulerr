@@ -232,6 +232,7 @@ euler.default <- function(combinations,
     # Center the solution on the coordinate plane
     fpar <- center_ellipses(fpar)
   } else {
+    circle <- match.arg(shape) == "circle"
     # One set
     fpar <- matrix(
       data = c(0, 0, sqrt(areas / pi), sqrt(areas / pi), 0),
