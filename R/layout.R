@@ -212,12 +212,16 @@ compress_layout <- function(fpar, id, fit) {
               k + b*sin(ty + pi)*cos(phi) + a*cos(ty + pi)*sin(phi)))
   }
 
-  new_bounds <- skyline_pack(bounds)
+  # Skyline pack the bounding rectangles
+  # TODO: Fix occasional errors in computing the bounding boxes.
+  if (all(!is.na(bounds))) {
+    new_bounds <- skyline_pack(bounds)
 
-  for (i in seq_along(unique_clusters)) {
-    ii <- unique_clusters[[i]]
-    fpar[ii, 1L] = fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
-    fpar[ii, 2L] = fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+    for (i in seq_along(unique_clusters)) {
+      ii <- unique_clusters[[i]]
+      fpar[ii, 1L] = fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
+      fpar[ii, 2L] = fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+    }
   }
 
   fpar
