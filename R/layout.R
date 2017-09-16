@@ -214,7 +214,7 @@ compress_layout <- function(fpar, id, fit) {
 
   # Skyline pack the bounding rectangles
   # TODO: Fix occasional errors in computing the bounding boxes.
-  if (all(!is.na(bounds))) {
+  if (all(is.finite(bounds))) {
     new_bounds <- skyline_pack(bounds)
 
     for (i in seq_along(unique_clusters)) {
