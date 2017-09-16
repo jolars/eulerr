@@ -44,23 +44,23 @@ skyline_pack <- function(m) {
       p2 <- ord[k]
 
       left  <- skyline[2L, seq(1L, p1)] - skyline[2L, p1] > tol
-      right <- skyline[2L, seq(p2, ncol(skyline))] - skyline[2L, p2] > tol
+      right <- skyline[2L, seq(p2, NCOL(skyline))] - skyline[2L, p2] > tol
 
       if (any(left)) {
         # There is a taller rooftop on the skyline to the left
-        next_left <- utils::tail(which(left), 1L)
+        next_left <- which(left)[sum(left)]
       } else {
         next_left <- 1L
       }
 
       if (any(right)) {
         # There is a taller rooftop on the skyline to the right
-        next_right <- utils::head(which(right), 1L)
+        next_right <- which(right)[1L]
       } else {
         next_right <- NCOL(skyline)
       }
 
-      if (w[i] <= diff(skyline[1, c(next_left, next_right)])) {
+      if (w[i] <= abs(skyline[1L, next_left] - skyline[1L, next_right])) {
         # Fit a new building in the skyline
         m[1L, i] <- skyline[1L, next_left]
         m[2L, i] <- skyline[1L, next_left] + w[i]
