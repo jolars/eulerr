@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
 [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
+[![Research software impact](http://depsy.org/api/package/cran/eulerr/badge.svg)](http://depsy.org/package/r/eulerr)
 
 **eulerr** generates area-proportional euler diagrams that display set
 relationships (intersections, unions, and disjoints) with circles.
