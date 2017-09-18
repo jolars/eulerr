@@ -6,9 +6,9 @@
 #include "solver.h"
 #include "helpers.h"
 #include "constants.h"
+#include "areas.h"
 
 // [[Rcpp::depends(RcppArmadillo)]]
-
 // Split a degenerate conic into two lines
 void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
   arma::mat::fixed<3, 3> B = -adjoint(A);
@@ -71,18 +71,17 @@ void intersect_conic_line(const arma::mat& A,
 void intersect_conics(const arma::mat& A,
                       const arma::mat& B,
                       arma::subview<double>&& points) {
-  arma::vec::fixed<4> v;
-  v(0) = arma::det(A);
-  v(1) = arma::det(arma::join_rows(A.cols(0, 1), B.col(2))) +
+  double alpha = arma::det(A);
+  double beta = arma::det(arma::join_rows(A.cols(0, 1), B.col(2))) +
     arma::det(arma::join_rows(arma::join_rows(A.col(0), B.col(1)), A.col(2))) +
     arma::det(arma::join_rows(B.col(0), A.cols(1, 2)));
-  v(2) = arma::det(arma::join_rows(A.col(0), B.cols(1, 2))) +
+  double gamma = arma::det(arma::join_rows(A.col(0), B.cols(1, 2))) +
     arma::det(arma::join_rows(arma::join_rows(B.col(0), A.col(1)), B.col(2))) +
     arma::det(arma::join_rows(B.cols(0, 1), A.col(2)));
-  v(3) = arma::det(B);
+  double delta = arma::det(B);
 
   // Find the cubic roots
-  arma::cx_vec::fixed<3> roots = solve_cubic(v);
+  arma::cx_vec::fixed<3> roots = solve_cubic(alpha, beta, gamma, delta);
 
   // Select the largest real root
   double lambda = 0;
@@ -116,7 +115,7 @@ void adopt(const arma::mat& points,
            const arma::uword i,
            const arma::uword j,
            arma::subview<arma::uword>&& out) {
-  for (arma::uword l = 0; l < n; l++) {
+  for (arma::uword l = 0; l < n; ++l) {
     if ((l == i) | (l == j)) {
       out.row(l).ones();
     } else {
@@ -129,109 +128,10 @@ void adopt(const arma::mat& points,
       // Check if the points lie inside the ellipse
       out.row(l) = arma::pow((x - h)*std::cos(phi) + (y - k)*std::sin(phi), 2)/
         std::pow(ellipses(2, l), 2) +
-          arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
-            std::pow(ellipses(3, l), 2) < 1;
+        arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
+        std::pow(ellipses(3, l), 2) < 1;
     }
   }
-}
-
-// Area of an ellipse
-inline double ellipse_area(const arma::vec& v) {
-  return arma::datum::pi*v(2)*v(3);
-}
-
-// The code below is adapted from "The area of intersecting ellipses" by
-// David Eberly, Geometric Tools, LLC (c) 1998-2016
-//
-// Area of an ellipse sector
-inline arma::vec sector_area(const double a,
-                             const double b,
-                             const arma::vec& theta) {
-  return 0.5*a*b*(theta - arma::atan2((b - a)*arma::sin(2*theta),
-                                      b + a + (b - a)*arma::cos(2*theta)));
-}
-
-// The code below is adapted from "The area of intersecting ellipses" by
-// David Eberly, Geometric Tools, LLC (c) 1998-2016
-// Area of a sector
-//
-// Compute the area of an ellipse segment.
-double ellipse_segment(const arma::vec& ellipse,
-                       arma::vec p0,
-                       arma::vec p1) {
-  arma::vec::fixed<2> hk = ellipse.subvec(0, 1);
-  double a = ellipse(2);
-  double b = ellipse(3);
-  double phi = ellipse(4);
-
-  p0 = rotate(phi)*translate(-hk)*p0;
-  p1 = rotate(phi)*translate(-hk)*p1;
-
-  arma::vec::fixed<2> x, y;
-  x(0) = p0(0);
-  x(1) = p1(0);
-  y(0) = p0(1);
-  y(1) = p1(1);
-
-  arma::vec::fixed<2> theta = arma::atan2(y, x);
-
-  if (theta(1) < theta(0))
-    theta(1) += 2*arma::datum::pi;
-
-  // Triangle part of the sector
-  double triangle = 0.5*std::abs(x(1)*y(0) - x(0)*y(1));
-
-  double dtheta = theta(1) - theta(0);
-
-  if (dtheta <= arma::datum::pi) {
-    // Sector area
-    arma::vec::fixed<2> sector = sector_area(a, b, theta);
-    return sector(1) - sector(0) - triangle;
-  } else {
-    theta(0) += 2*arma::datum::pi;
-
-    //Sector area
-    arma::vec::fixed<2> sector = sector_area(a, b, theta);
-    return a*b*arma::datum::pi - sector(0) + sector(1) + triangle;
-  }
-}
-
-// Compute the area of a intersection of 2+ ellipses
-double polysegments(arma::mat points,
-                    const arma::mat& ellipses,
-                    arma::umat parents) {
-  arma::vec x_int = points.row(0).t();
-  arma::vec y_int = points.row(1).t();
-  arma::uword n = points.n_cols;
-
-  // Sort points by their angle to the centroid
-  arma::uvec ind = arma::sort_index(arma::atan2(x_int - arma::accu(x_int)/n,
-                                                y_int - arma::accu(y_int)/n));
-
-  // Reorder vectors and matrix based on angles to centroid
-  points  = points.cols(ind);
-  parents = parents.cols(ind);
-  x_int   = x_int(ind);
-  y_int   = y_int(ind);
-  double area = 0;
-
-  for (arma::uword i = 0, j = n - 1; i < n; ++i) {
-    // First discover which ellipses the points belong to
-    arma::uvec ii = set_intersect(parents.col(i), parents.col(j));
-    arma::uword i_n = ii.n_elem;
-    arma::vec areas(i_n);
-
-    // Ellipse segment
-    for (arma::uword k = 0; k < i_n; ++k)
-      areas(k) = ellipse_segment(ellipses.col(ii(k)),
-                                 points.col(i),
-                                 points.col(j));
-
-    // Triangular plus ellipse segment area
-    area += 0.5*((x_int(j) + x_int(i)) * (y_int(j) - y_int(i))) + areas.min();
-    j = i;
-  }
-  return area;
 }
 
 // See if a group of ellipses are completely disjoint or a russian doll
@@ -324,9 +224,15 @@ arma::vec intersect_ellipses(const arma::vec& par,
         areas(i) = disjoint_or_subset(ellipses.cols(ids));
       } else {
         // Compute the area of the overlap
+        bool failure = false;
         areas(i) = polysegments(points.cols(int_points),
                                 ellipses,
-                                parents.cols(int_points));
+                                parents.cols(int_points),
+                                failure);
+        if (failure) {
+          // Resort to approximation if exact calculation fails
+          areas(i) = montecarlo(ellipses.cols(ids));
+        }
       }
     }
   }
