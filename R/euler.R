@@ -192,15 +192,24 @@ euler.default <- function(combinations,
     circle <- match.arg(shape) == "circle"
 
     if (circle) {
-      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE))
+      pars <- matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE)
     } else {
-      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
-                              r, r, 0, deparse.level = 0L))
+      pars <- rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
+                              r, r, 0, deparse.level = 0L)
+    }
+
+    # Avoid completely overlapping circles in the initial layout
+    for (i in 1:(NCOL(pars) - 1)) {
+      for (j in (i + 1):NCOL(pars)) {
+        if (isTRUE(all.equal(pars[, i], pars[, j], tolerance = 1e-5))) {
+          pars[, i] <- pars[, i]*runif(NROW(pars), 0.99, 1)
+        }
+      }
     }
 
     # TODO: Allow user options here?
     final_layout <- stats::nlm(f = optim_final_loss,
-                               p = pars,
+                               p = as.vector(pars),
                                areas = areas_disjoint,
                                circles = circle,
                                iterlim = 250L)
