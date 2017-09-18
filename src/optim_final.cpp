@@ -41,7 +41,7 @@ void intersect_conic_line(const arma::mat& A,
 
   l(arma::find(l_abs < small)).zeros();
   // Pick a non-zero element of l
-  if (arma::any(l_abs > small)) {
+  if (arma::any(l_abs > 0)) {
     arma::uword i = arma::index_max(l_abs);
     arma::uvec li = arma::linspace<arma::uvec>(0, 2, 3);
     li.shed_row(i);
@@ -100,8 +100,12 @@ void intersect_conics(const arma::mat& A,
   split_conic(C, g, h);
 
   // Intersect one of the conics with each line to get 0 to 4 points
-  intersect_conic_line(A, g, points.cols(0, 1));
-  intersect_conic_line(A, h, points.cols(2, 3));
+  if (arma::is_finite(g) && arma::is_finite(h)) {
+    intersect_conic_line(A, g, points.cols(0, 1));
+    intersect_conic_line(A, h, points.cols(2, 3));
+  } else {
+    points.fill(arma::datum::nan);
+  }
 }
 
 
