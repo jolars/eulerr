@@ -201,7 +201,7 @@ euler.default <- function(combinations,
     # Avoid completely overlapping circles in the initial layout
     for (i in 1:(NCOL(pars) - 1)) {
       for (j in (i + 1):NCOL(pars)) {
-        if (isTRUE(all.equal(pars[, i], pars[, j], tolerance = 1e-5))) {
+        if (isTRUE(all.equal(pars[, i], pars[, j], tolerance = 1e-4))) {
           pars[, i] <- pars[, i]*runif(NROW(pars), 0.99, 1)
         }
       }
