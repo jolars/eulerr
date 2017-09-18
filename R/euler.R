@@ -198,15 +198,6 @@ euler.default <- function(combinations,
                               r, r, 0, deparse.level = 0L)
     }
 
-    # Avoid completely overlapping circles in the initial layout
-    for (i in 1:(NCOL(pars) - 1)) {
-      for (j in (i + 1):NCOL(pars)) {
-        if (isTRUE(all.equal(pars[, i], pars[, j], tolerance = 1e-4))) {
-          pars[, i] <- pars[, i]*1.1
-        }
-      }
-    }
-
     # TODO: Allow user options here?
     final_layout <- stats::nlm(f = optim_final_loss,
                                p = as.vector(pars),
