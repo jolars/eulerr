@@ -231,6 +231,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
                                 failure);
         if (failure) {
           // Resort to approximation if exact calculation fails
+          // TODO: Use a better fallback approximation
           areas(i) = montecarlo(ellipses.cols(ids));
         }
       }
