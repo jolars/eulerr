@@ -28,7 +28,7 @@ arma::cx_vec solve_cubic(const arma::vec& v) {
   } else {
     double A =
       -sign(R)*std::cbrt(std::abs(R) + std::sqrt(pow(R, 2) - std::pow(Q, 3)));
-    double B = std::abs(A - 0) < small ? 0 : Q/A;
+    double B = nearly_equal(A, 0.0) ? 0.0 : Q/A;
     y(0) = A + B - a/3.0;
     y(1) = -0.5*(A + B) - a/3.0 + std::sqrt(3.0)*i*(A - B)/2.0;
     y(2) = -0.5*(A + B) - a/3.0 - std::sqrt(3.0)*i*(A - B)/2.0;

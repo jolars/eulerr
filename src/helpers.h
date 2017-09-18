@@ -58,4 +58,11 @@ inline int sign(T x) {
   return (T(0) < x) - (x < T(0));
 }
 
+// Nearly equal
+template <typename T>
+bool nearly_equal(T a, T b) {
+  return (std::abs(a - b) <= std::numeric_limits<T>::epsilon() *
+          std::max(std::abs(a), std::abs(b)));
+}
+
 #endif
