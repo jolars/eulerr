@@ -65,4 +65,14 @@ bool nearly_equal(T a, T b) {
           std::max(std::abs(a), std::abs(b)));
 }
 
+// Max of minimums colwise
+inline arma::uword max_colmins(const arma::mat& x) {
+  arma::uword n = x.n_cols;
+  arma::vec mins(n);
+  for (arma::uword i = 0; i < n; ++i)
+    mins(i) = x.col(i).min();
+  return mins.index_max();
+}
+
+
 #endif

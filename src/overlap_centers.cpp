@@ -5,30 +5,9 @@
 #include "constants.h"
 #include "transformations.h"
 #include "neldermead.h"
+#include "geometry.h"
 
 // [[Rcpp::depends(RcppArmadillo)]]
-
-arma::umat find_surrounding_sets(const arma::rowvec& x,
-                                 const arma::rowvec& y,
-                                 const arma::vec& h,
-                                 const arma::vec& k,
-                                 const arma::vec& a,
-                                 const arma::vec& b,
-                                 const arma::vec& phi) {
-  arma::uword n = h.n_elem;
-  arma::umat out(n, x.n_elem);
-
-  for (arma::uword i = 0; i < n; ++i) {
-    double cosphi = std::cos(phi(i));
-    double sinphi = std::sin(phi(i));
-    out.row(i) =
-      arma::square((x - h(i))*cosphi + (y - k(i))*sinphi)/std::pow(a(i), 2) +
-      arma::square((x - h(i))*sinphi - (y - k(i))*cosphi)/std::pow(b(i), 2) < 1;
-  }
-
-  return out;
-}
-
 // The code below code is adapted from "Distance from a Point to an Ellipse, an
 // Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
 // (c) 1998-2016
@@ -104,14 +83,6 @@ double dist_to_ellipse(double a, double b, double x, double y) {
       return std::abs(x - a);
     }
   }
-}
-
-inline arma::uword max_colmins(const arma::mat& x) {
-  arma::uword n = x.n_cols;
-  arma::vec mins(n);
-  for (arma::uword i = 0; i < n; ++i)
-    mins(i) = x.col(i).min();
-  return mins.index_max();
 }
 
 inline double dist_loss(const arma::vec& p,
