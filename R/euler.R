@@ -184,7 +184,6 @@ euler.default <- function(combinations,
     initial_layout <- stats::nlm(f = optim_init,
                                  p = stats::runif(n*2, 0, sqrt(sum(r^2*pi))),
                                  d = distances,
-                                 steptol = 1e-5,
                                  disjoint = disjoint,
                                  contained = contained,
                                  check.analyticals = FALSE)
@@ -200,12 +199,13 @@ euler.default <- function(combinations,
     }
 
     # Avoid completely overlapping circles in the initial layout
-    # tol <- 1e-6
-    # for (i in 1:(NCOL(pars) - 1)) {
-    #   for (j in (i + 1):NCOL(pars)) {
-    #     if ()
-    #   }
-    # }
+    for (i in 1:(NCOL(pars) - 1)) {
+      for (j in (i + 1):NCOL(pars)) {
+        if (isTRUE(all.equal(pars[, i], pars[, j], tolerance = 1e-4))) {
+          pars[, i] <- pars[, i]*1.1
+        }
+      }
+    }
 
     # TODO: Allow user options here?
     final_layout <- stats::nlm(f = optim_final_loss,
