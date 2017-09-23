@@ -11,12 +11,12 @@ tally_combinations <- function(sets) {
   if (!is.matrix(sets))
     sets <- as.matrix(sets)
 
-  id <- bit_indexr(ncol(sets))
-  tally <- double(nrow(id))
+  id <- bit_indexr(NCOL(sets))
+  tally <- double(NROW(id))
 
-  for (i in 1:nrow(id)) {
+  for (i in 1:NROW(id)) {
     tally[i] <-
-      sum(as.numeric(colSums(t(sets) == id[i, ]) == ncol(sets)) * weights)
+      sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets)) * weights)
     names(tally)[i] <- paste0(colnames(sets)[id[i, ]], collapse = "&")
   }
 

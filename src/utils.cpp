@@ -6,8 +6,8 @@
 
 // [[Rcpp::export]]
 arma::umat choose_two(const arma::uvec& x) {
-  arma::uword n = x.size();
-  arma::umat m(n * (n - 1) / 2, 2);
+  arma::uword n = x.n_elem;
+  arma::umat m(n*(n - 1)/2, 2);
   for (arma::uword i = 0, k = 0; i < n - 1; ++i) {
     for (arma::uword j = i + 1; j < n; ++j, ++k) {
       m(k, 0) = x(i);
