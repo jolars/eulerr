@@ -167,7 +167,7 @@ euler.default <- function(combinations,
     ones <- id_sums == 1L
     twos <- id_sums == 2L
     two <- choose_two(1L:n)
-    r <- sqrt(areas[ones] / pi)
+    r <- sqrt(areas[ones]/pi)
 
     # Establish identities of disjoint and contained sets
     disjoint <- areas[twos] == 0
@@ -192,15 +192,15 @@ euler.default <- function(combinations,
     circle <- match.arg(shape) == "circle"
 
     if (circle) {
-      pars <- matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE)
+      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE))
     } else {
-      pars <- rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
-                              r, r, 0, deparse.level = 0L)
+      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
+                              r, r, 0, deparse.level = 0L))
     }
 
     # TODO: Allow user options here?
     final_layout <- stats::nlm(f = optim_final_loss,
-                               p = as.vector(pars),
+                               p = pars,
                                areas = areas_disjoint,
                                circles = circle,
                                iterlim = 250L)
@@ -235,7 +235,10 @@ euler.default <- function(combinations,
     circle <- match.arg(shape) == "circle"
     # One set
     fpar <- matrix(
-      data = c(0, 0, sqrt(areas / pi), sqrt(areas / pi), 0),
+      data = if (circle)
+        c(0, 0, sqrt(areas/pi))
+      else
+        c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0),
       ncol = if (circle) 3L else 5L,
       dimnames = list(
         setnames,
