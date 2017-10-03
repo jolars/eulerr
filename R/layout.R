@@ -60,7 +60,7 @@ skyline_pack <- function(m) {
         next_right <- NCOL(skyline)
       }
 
-      if (w[i] <= abs(skyline[1L, next_left] - skyline[1L, next_right])) {
+      if (w[i] < abs(skyline[1L, next_left] - skyline[1L, next_right])) {
         # Fit a new building in the skyline
         m[1L, i] <- skyline[1L, next_left]
         m[2L, i] <- skyline[1L, next_left] + w[i]
@@ -75,9 +75,9 @@ skyline_pack <- function(m) {
           rbind(c(skyline[1L, next_left] + w[i], skyline[1L, next_left] + w[i]),
                 c(skyline[2L, p2] + h[i]       , skyline[2L, p2]))
 
-        skyline <- cbind(skyline[, seq(1L, next_left + l)],
+        skyline <- cbind(skyline[, seq(1L, next_left + l), drop = FALSE],
                          newcols,
-                         skyline[, seq(p2, NCOL(skyline))])
+                         skyline[, seq(p2, NCOL(skyline)), drop = FALSE])
 
         # Check if there are any rooftops on the skyline beneath the new one
         underneath <- skyline[1L, ] > m[1L, i] & skyline[1L, ] < m[2L, i]
@@ -86,7 +86,7 @@ skyline_pack <- function(m) {
           # Drop down to the lowest level
           skyline[2L, which(underneath)[1L] - 1L] <-
             skyline[2L, utils::tail(which(underneath), 1L)]
-          skyline <- skyline[, !underneath]
+          skyline <- skyline[, !underneath, drop = FALSE]
         }
 
         looking <- FALSE
@@ -97,7 +97,7 @@ skyline_pack <- function(m) {
       }
     }
   }
-  return(m)
+  m
 }
 
 
