@@ -150,16 +150,16 @@ euler.default <- function(combinations,
       areas_disjoint <- areas
       areas[] <- 0
       for (i in rev(seq_along(areas))) {
-        prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, , drop = TRUE])
+        prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
         areas[i] <- sum(areas_disjoint[prev_areas])
       }
     } else if (match.arg(input) == "union") {
       areas_disjoint <- double(length(areas))
       for (i in rev(seq_along(areas))) {
-        prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, , drop = TRUE])
+        prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
         areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
       }
-      if (any(areas_disjoint < 0L))
+      if (any(areas_disjoint < 0))
         stop("Check your set configuration. Your specification resulted in some disjoint areas being set to 0.")
     }
 
@@ -186,6 +186,7 @@ euler.default <- function(combinations,
                                  d = distances,
                                  disjoint = disjoint,
                                  contained = contained,
+                                 iterlim = 200L,
                                  check.analyticals = FALSE)
 
     # Final layout
@@ -212,7 +213,7 @@ euler.default <- function(combinations,
     names(orig) <- names(fit) <-
       apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
 
-    regionError <- abs(fit / sum(fit) - orig / sum(orig))
+    regionError <- abs(fit/sum(fit) - orig/sum(orig))
     diagError <- max(regionError)
 
     fpar <- matrix(
@@ -224,7 +225,7 @@ euler.default <- function(combinations,
       ),
       byrow = TRUE
     )
-    stress <- venneuler_stress(orig, fit)
+    stress <- stress(orig, fit)
 
     # Find disjoint clusters and compress the layout
     fpar <- compress_layout(fpar, id, fit)
@@ -267,7 +268,8 @@ euler.default <- function(combinations,
 #'   the number of rows in `combinations`.
 #' @export
 euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
-  assertthat::assert_that(!any(grepl("&", colnames(combinations), fixed = TRUE)))
+  assertthat::assert_that(!any(grepl("&", colnames(combinations),
+                                     fixed = TRUE)))
 
   if (is.null(weights))
     weights <- rep.int(1L, NROW(combinations))

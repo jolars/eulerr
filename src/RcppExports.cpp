@@ -97,15 +97,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// venneuler_stress
-double venneuler_stress(const arma::vec& areas, const arma::vec& fit);
-RcppExport SEXP _eulerr_venneuler_stress(SEXP areasSEXP, SEXP fitSEXP) {
+// stress
+double stress(const arma::vec& areas, const arma::vec& fit);
+RcppExport SEXP _eulerr_stress(SEXP areasSEXP, SEXP fitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type fit(fitSEXP);
-    rcpp_result_gen = Rcpp::wrap(venneuler_stress(areas, fit));
+    rcpp_result_gen = Rcpp::wrap(stress(areas, fit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -118,7 +118,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_bit_indexr", (DL_FUNC) &_eulerr_bit_indexr, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
-    {"_eulerr_venneuler_stress", (DL_FUNC) &_eulerr_venneuler_stress, 2},
+    {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},
     {NULL, NULL, 0}
 };
 

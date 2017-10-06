@@ -38,7 +38,7 @@ double discdisc(double d, double r1, double r2, double overlap) {
 }
 
 // [[Rcpp::export]]
-double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
+double stress(const arma::vec& areas, const arma::vec& fit) {
   double sst   = arma::accu(arma::square(fit));
   double slope = arma::accu(areas%fit)/arma::accu(arma::square(areas));
   double sse   = arma::accu(arma::square(fit - areas*slope));

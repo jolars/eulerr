@@ -29,7 +29,7 @@ discdisc <- function(d, r1, r2, overlap) {
     .Call(`_eulerr_discdisc`, d, r1, r2, overlap)
 }
 
-venneuler_stress <- function(areas, fit) {
-    .Call(`_eulerr_venneuler_stress`, areas, fit)
+stress <- function(areas, fit) {
+    .Call(`_eulerr_stress`, areas, fit)
 }
 
