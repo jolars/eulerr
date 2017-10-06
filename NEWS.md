@@ -20,8 +20,9 @@ prevent the use of color unless necessary.
 slightly more accurate locations.
 * Parallel processing for Armadillo operations is enabled via OpenMP
 (on compilers that support it).
-* The name of the `diagError` and `regionError`metrics were changed from
-`diag_error` and `region_error` to the former better reflect the original names.
+* The names of the `diagError` and `regionError` metrics have been changed from
+`diag_error` and `region_error` to the former to reflect the original names.
+* Bounding box computations for ellipses were made simpler and more robust.
 
 # eulerr 2.0.0
 ## Major changes
