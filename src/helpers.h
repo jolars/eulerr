@@ -74,5 +74,4 @@ inline arma::uword max_colmins(const arma::mat& x) {
   return mins.index_max();
 }
 
-
 #endif
