@@ -29,8 +29,8 @@
 #' regression of the fitted areas on the original areas that are currently being
 #' explored.
 #'
-#' `euler()` also returns `diag_error` and `region_error` from
-#' *eulerAPE*. `region_error` is computed as
+#' `euler()` also returns `diagError` and `regionError` from
+#' *eulerAPE*. `regionError` is computed as
 #'
 #' \deqn{
 #'     \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
@@ -38,7 +38,7 @@
 #'     max|fit / \sum fit  - original / \sum original|.
 #'  }
 #'
-#' `diag_error` is simply the maximum of region_error.
+#' `diagError` is simply the maximum of regionError.
 #'
 #' @param combinations Set relationships as a named numeric vector, matrix, or
 #'   data.frame. (See the methods (by class) section for details.)
@@ -55,7 +55,7 @@
 #'   \item{original.values}{Set relationships provided by the user.}
 #'   \item{fitted.values}{Set relationships in the solution.}
 #'   \item{residuals}{Residuals.}
-#'   \item{diag_error}{The largest absolute residual in percentage points
+#'   \item{diagError}{The largest absolute residual in percentage points
 #'     between the original and fitted areas.}
 #'   \item{stress}{The stress of the solution, computed as the sum of squared
 #'     residuals over the total sum of squares.}
@@ -212,8 +212,8 @@ euler.default <- function(combinations,
     names(orig) <- names(fit) <-
       apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
 
-    region_error <- abs(fit / sum(fit) - orig / sum(orig))
-    diag_error <- max(region_error)
+    regionError <- abs(fit/sum(fit) - orig/sum(orig))
+    diagError <- max(regionError)
 
     fpar <- matrix(
       data = final_layout$estimate,
@@ -243,7 +243,7 @@ euler.default <- function(combinations,
       ),
       byrow = TRUE
     )
-    region_error <- diag_error <- stress <- 0
+    regionError <- diagError <- stress <- 0
     orig <- fit <- areas
     names(orig) <- names(fit) <- setnames
   }
@@ -253,8 +253,8 @@ euler.default <- function(combinations,
                  original.values = orig,
                  fitted.values = fit,
                  residuals = orig - fit,
-                 region_error = region_error,
-                 diag_error = diag_error,
+                 regionError = regionError,
+                 diagError = diagError,
                  stress = stress),
             class = c("euler", "list"))
 }

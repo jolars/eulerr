@@ -46,7 +46,7 @@ circles and their radii.}
 \item{original.values}{Set relationships provided by the user.}
 \item{fitted.values}{Set relationships in the solution.}
 \item{residuals}{Residuals.}
-\item{diag_error}{The largest absolute residual in percentage points
+\item{diagError}{The largest absolute residual in percentage points
 between the original and fitted areas.}
 \item{stress}{The stress of the solution, computed as the sum of squared
 residuals over the total sum of squares.}
@@ -82,8 +82,8 @@ where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
 regression of the fitted areas on the original areas that are currently being
 explored.
 
-\code{euler()} also returns \code{diag_error} and \code{region_error} from
-\emph{eulerAPE}. \code{region_error} is computed as
+\code{euler()} also returns \code{diagError} and \code{regionError} from
+\emph{eulerAPE}. \code{regionError} is computed as
 
 \deqn{
     \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
@@ -91,7 +91,7 @@ explored.
     max|fit / \sum fit  - original / \sum original|.
  }
 
-\code{diag_error} is simply the maximum of region_error.
+\code{diagError} is simply the maximum of regionError.
 }
 \section{Methods (by class)}{
 \itemize{
