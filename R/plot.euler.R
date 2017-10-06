@@ -226,13 +226,12 @@ prepanel.euler <- function(x,
   a   <- ra[subscripts]
   b   <- rb[subscripts]
   phi <- phi[subscripts]
-  tx  <- atan2(-b*tan(phi), a)
-  ty  <- atan2(b*tan(pi/2L - phi), a)
 
-  list(xlim = range(x + a*cos(tx)*cos(phi) - b*sin(tx)*sin(phi),
-                    x + a*cos(tx + pi)*cos(phi) - b*sin(tx + pi)*sin(phi)),
-       ylim = range(y + b*sin(ty)*cos(phi) + a*cos(ty)*sin(phi),
-                    y + b*sin(ty + pi)*cos(phi) + a*cos(ty + pi)*sin(phi)))
+  xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
+  ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+
+  list(xlim = range(xlim + x, -xlim + x),
+       ylim = range(ylim + y, -ylim + y))
 }
 
 #' Panel Function for Euler Diagrams
