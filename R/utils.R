@@ -16,7 +16,7 @@ tally_combinations <- function(sets) {
 
   for (i in 1:NROW(id)) {
     tally[i] <-
-      sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets)) * weights)
+      sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets))*weights)
     names(tally)[i] <- paste0(colnames(sets)[id[i, ]], collapse = "&")
   }
 

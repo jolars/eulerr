@@ -12,13 +12,10 @@
 #' @export
 print.euler <- function(x, round = 3, ...) {
   assertthat::assert_that(assertthat::is.number(round), round > 0L)
-
-  out <- data.frame(
-    "original" = x$original.values,
-    "fitted" = x$fitted.values,
-    "residuals" = x$residuals,
-    "regionError" = x$regionError
-  )
+  out <- data.frame("original" = x$original.values,
+                    "fitted" = x$fitted.values,
+                    "residuals" = x$residuals,
+                    "regionError" = x$regionError)
   print(round(out, digits = round), ...)
   cat("\n")
   cat("diagError: ", round(x$diagError, digits = round), "\n")
