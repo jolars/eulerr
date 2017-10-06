@@ -15,7 +15,7 @@ skyline_pack <- function(m) {
   sizes <- h*w
 
   # Add some padding for the rectangles
-  padding <- 1.6*sqrt(sum(sizes)) * 0.015
+  padding <- 1.6*sqrt(sum(sizes))*0.015
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
   bin_w <- max(1.6*sqrt(sum(sizes)), w + padding)
@@ -32,7 +32,7 @@ skyline_pack <- function(m) {
 
   for (i in 1L:n) {
     # Order the points by y coordinate
-    ord <- order(skyline[2, ])
+    ord <- order(skyline[2L, ])
 
     # Start by examining the lowest rooftop on the skyline
     j <- 1L
@@ -43,8 +43,8 @@ skyline_pack <- function(m) {
       p1 <- ord[j]
       p2 <- ord[k]
 
-      left  <- skyline[2L, seq(1L, p1)] - skyline[2L, p1] > tol
-      right <- skyline[2L, seq(p2, NCOL(skyline))] - skyline[2L, p2] > tol
+      left  <- skyline[2L, seq.int(1L, p1)] - skyline[2L, p1] > tol
+      right <- skyline[2L, seq.int(p2, NCOL(skyline))] - skyline[2L, p2] > tol
 
       if (any(left)) {
         # There is a taller rooftop on the skyline to the left
@@ -67,7 +67,7 @@ skyline_pack <- function(m) {
         m[3L, i] <- skyline[2L, p1]
         m[4L, i] <- skyline[2L, p2] + h[i]
 
-        l <- ifelse(next_left == 1L, 0L, 1L)
+        l <- if (next_left) 0L else 1L
 
         skyline[2L, next_left + l] <- skyline[2L, p1] + h[i]
 
@@ -85,7 +85,7 @@ skyline_pack <- function(m) {
         if (any(underneath)) {
           # Drop down to the lowest level
           skyline[2L, which(underneath)[1L] - 1L] <-
-            skyline[2L, utils::tail(which(underneath), 1L)]
+            skyline[2L, which(underneath)[sum(underneath)]]
           skyline <- skyline[, !underneath]
         }
 
@@ -97,7 +97,7 @@ skyline_pack <- function(m) {
       }
     }
   }
-  return(m)
+  m
 }
 
 
@@ -118,13 +118,13 @@ shelf_pack <- function(m) {
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
 
-  margin <- min(h, w) * 0.05
-  bin_w <- max(1.3*sqrt(sum(sizes)), w + margin)
+  padding <- min(h, w)*0.05
+  bin_w <- max(1.3*sqrt(sum(sizes)), w + padding)
 
   ord <- order(h, decreasing = TRUE)
 
-  w <- w[ord] + margin
-  h <- h[ord] + margin
+  w <- w[ord] + padding
+  h <- h[ord] + padding
 
   shelf_w <- rep.int(bin_w, n) # remaining shelf width
   shelf_h <- rep.int(0, n) # shelf heights
