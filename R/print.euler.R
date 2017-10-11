@@ -18,6 +18,6 @@ print.euler <- function(x, round = 3, ...) {
                     "regionError" = x$regionError)
   print(round(out, digits = round), ...)
   cat("\n")
-  cat("diagError: ", round(x$diagError, digits = round), "\n")
-  cat("stress:    ", round(x$stress, digits = round), "\n")
+  cat("diagError:", round(x$diagError, digits = round), "\n")
+  cat("stress:   ", round(x$stress, digits = round), "\n")
 }
