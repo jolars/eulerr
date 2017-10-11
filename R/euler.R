@@ -133,9 +133,10 @@ euler.default <- function(combinations,
 
   n <- length(setnames)
   id <- bit_indexr(n)
+  N <- NROW(id)
 
-  areas <- double(NROW(id))
-  for (i in 1L:NROW(id)) {
+  areas <- double(N)
+  for (i in 1L:N) {
     s <- setnames[id[i, ]]
     for (j in seq_along(combo_names)) {
       if (setequal(s, combo_names[[j]])) {
@@ -215,6 +216,7 @@ euler.default <- function(combinations,
 
     regionError <- abs(fit/sum(fit) - orig/sum(orig))
     diagError <- max(regionError)
+    stress <- stress(orig, fit)
 
     fpar <- matrix(
       data = final_layout$estimate,
@@ -225,13 +227,12 @@ euler.default <- function(combinations,
       ),
       byrow = TRUE
     )
-    stress <- stress(orig, fit)
 
     # Find disjoint clusters and compress the layout
     fpar <- compress_layout(fpar, id, fit)
 
     # Center the solution on the coordinate plane
-    fpar <- center_ellipses(fpar)
+    fpar <- center_layout(fpar)
   } else {
     circle <- match.arg(shape) == "circle"
     # One set

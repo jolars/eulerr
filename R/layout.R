@@ -226,8 +226,8 @@ compress_layout <- function(fpar, id, fit) {
 
       for (i in seq_along(unique_clusters)) {
         ii <- unique_clusters[[i]]
-        fpar[ii, 1L] = fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
-        fpar[ii, 2L] = fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+        fpar[ii, 1L] <- fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
+        fpar[ii, 2L] <- fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
       }
     }
   }
@@ -242,7 +242,7 @@ compress_layout <- function(fpar, id, fit) {
 #'
 #' @return A centered version of `pars`.
 #' @keywords internal
-center_ellipses <- function(pars) {
+center_layout <- function(pars) {
   x <- pars[, 1L]
   y <- pars[, 2L]
 
@@ -254,7 +254,7 @@ center_ellipses <- function(pars) {
     # Ellipses
     a <- pars[, 3L]
     b <- pars[, 4L]
-    phi <- pars[,]
+    phi <- pars[, ]
   }
 
   cphi <- cos(phi)
@@ -262,7 +262,7 @@ center_ellipses <- function(pars) {
   xlim <- range(c(x + a*cphi, x + b*cphi, x - a*cphi, x - b*cphi))
   ylim <- range(c(y + a*sphi, y + b*sphi, y - a*sphi, y - b*sphi))
 
-  pars[, 1L] <- x + abs(xlim[1L] - xlim[2L]) / 2L - xlim[2L]
-  pars[, 2L] <- y + abs(ylim[1L] - ylim[2L]) / 2L - ylim[2L]
+  pars[, 1L] <- x + abs(xlim[1L] - xlim[2L])/2 - xlim[2L]
+  pars[, 2L] <- y + abs(ylim[1L] - ylim[2L])/2 - ylim[2L]
   pars
 }
