@@ -97,7 +97,7 @@ dont_print <- function(x, ...) {
 #' @return A string of hex colors
 #' @keywords internal
 qualpalr_pal <- function(n) {
-  palette[1:n]
+  palette[1L:n]
 }
 
 #' Check If Object Is Strictly FALSE
@@ -108,4 +108,18 @@ qualpalr_pal <- function(n) {
 #' @keywords internal
 is_false <- function(x) {
   identical(x, FALSE)
+}
+
+#' Binary indices
+#'
+#' Wraps around bit_indexr().
+#'
+#' @param n Number of items to generate permutations from.
+#'
+#' @return A matrix of logicals
+#' @keywords internal
+bit_indexr <- function(n) {
+  m <- bit_index_cpp(n)
+  mode(m) <- "logical"
+  m
 }

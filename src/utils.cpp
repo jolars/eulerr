@@ -2,8 +2,6 @@
 
 #include "helpers.h"
 
-// [[Rcpp::depends(RcppArmadillo)]]
-
 // [[Rcpp::export]]
 arma::umat choose_two(const arma::uvec& x) {
   arma::uword n = x.n_elem;
@@ -15,12 +13,6 @@ arma::umat choose_two(const arma::uvec& x) {
     }
   }
   return m;
-}
-
-// Wrapper to compute a matrix of binary indices for set combinations
-// [[Rcpp::export]]
-Rcpp::LogicalMatrix bit_indexr(const arma::uword n) {
-  return Rcpp::wrap(bit_index(n));
 }
 
 // Squared loss between given and desired overlap
@@ -43,4 +35,9 @@ double stress(const arma::vec& areas, const arma::vec& fit) {
   double slope = arma::accu(areas%fit)/arma::accu(arma::square(areas));
   double sse   = arma::accu(arma::square(fit - areas*slope));
   return sse/sst;
+}
+
+// [[Rcpp::export]]
+arma::umat bit_index_cpp(arma::uword n) {
+  return bit_index(n);
 }

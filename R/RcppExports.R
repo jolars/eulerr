@@ -21,15 +21,15 @@ choose_two <- function(x) {
     .Call(`_eulerr_choose_two`, x)
 }
 
-bit_indexr <- function(n) {
-    .Call(`_eulerr_bit_indexr`, n)
-}
-
 discdisc <- function(d, r1, r2, overlap) {
     .Call(`_eulerr_discdisc`, d, r1, r2, overlap)
 }
 
 stress <- function(areas, fit) {
     .Call(`_eulerr_stress`, areas, fit)
+}
+
+bit_index_cpp <- function(n) {
+    .Call(`_eulerr_bit_index_cpp`, n)
 }
 
