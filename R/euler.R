@@ -133,9 +133,10 @@ euler.default <- function(combinations,
 
   n <- length(setnames)
   id <- bit_indexr(n)
+  N <- NROW(id)
 
-  areas <- double(nrow(id))
-  for (i in 1L:nrow(id)) {
+  areas <- double(N)
+  for (i in 1L:N) {
     s <- setnames[id[i, ]]
     for (j in seq_along(combo_names)) {
       if (setequal(s, combo_names[[j]])) {
@@ -159,7 +160,7 @@ euler.default <- function(combinations,
         prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
         areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
       }
-      if (any(areas_disjoint < 0L))
+      if (any(areas_disjoint < 0))
         stop("Check your set configuration. Your specification resulted in some disjoint areas being set to 0.")
     }
 
@@ -167,7 +168,7 @@ euler.default <- function(combinations,
     ones <- id_sums == 1L
     twos <- id_sums == 2L
     two <- choose_two(1L:n)
-    r <- sqrt(areas[ones] / pi)
+    r <- sqrt(areas[ones]/pi)
 
     # Establish identities of disjoint and contained sets
     disjoint <- areas[twos] == 0
@@ -186,21 +187,22 @@ euler.default <- function(combinations,
                                  d = distances,
                                  disjoint = disjoint,
                                  contained = contained,
+                                 iterlim = 200L,
                                  check.analyticals = FALSE)
 
     # Final layout
     circle <- match.arg(shape) == "circle"
 
     if (circle) {
-      pars <- matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE)
+      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE))
     } else {
-      pars <- rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
-                              r, r, 0, deparse.level = 0L)
+      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
+                              r, r, 0, deparse.level = 0L))
     }
 
     # TODO: Allow user options here?
     final_layout <- stats::nlm(f = optim_final_loss,
-                               p = as.vector(pars),
+                               p = pars,
                                areas = areas_disjoint,
                                circles = circle,
                                iterlim = 250L)
@@ -214,6 +216,7 @@ euler.default <- function(combinations,
 
     regionError <- abs(fit/sum(fit) - orig/sum(orig))
     diagError <- max(regionError)
+    stress <- stress(orig, fit)
 
     fpar <- matrix(
       data = final_layout$estimate,
@@ -224,18 +227,20 @@ euler.default <- function(combinations,
       ),
       byrow = TRUE
     )
-    stress <- venneuler_stress(orig, fit)
 
     # Find disjoint clusters and compress the layout
     fpar <- compress_layout(fpar, id, fit)
 
     # Center the solution on the coordinate plane
-    fpar <- center_ellipses(fpar)
+    fpar <- center_layout(fpar)
   } else {
     circle <- match.arg(shape) == "circle"
     # One set
     fpar <- matrix(
-      data = c(0, 0, sqrt(areas / pi), sqrt(areas / pi), 0),
+      data = if (circle)
+        c(0, 0, sqrt(areas/pi))
+      else
+        c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0),
       ncol = if (circle) 3L else 5L,
       dimnames = list(
         setnames,
@@ -264,7 +269,8 @@ euler.default <- function(combinations,
 #'   the number of rows in `combinations`.
 #' @export
 euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
-  assertthat::assert_that(!any(grepl("&", colnames(combinations), fixed = TRUE)))
+  assertthat::assert_that(!any(grepl("&", colnames(combinations),
+                                     fixed = TRUE)))
 
   if (is.null(weights))
     weights <- rep.int(1L, NROW(combinations))
@@ -328,7 +334,6 @@ euler.table <- function(combinations, ...) {
   euler(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
 }
 
-
 #' @describeIn euler A list of vectors, each vector giving the contents of
 #'   that set. Vectors in the list do not need to be named.
 #' @export
@@ -342,10 +347,10 @@ euler.list <- function(combinations, ...) {
 
   id <- bit_indexr(n)
 
-  out <- integer(nrow(id))
+  out <- integer(NROW(id))
   names(out) <- apply(id, 1L, function(x) paste(sets[x], collapse = "&"))
 
-  for (i in 1L:nrow(id))
+  for (i in 1L:NROW(id))
     out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
 
   euler(out, input = "union")

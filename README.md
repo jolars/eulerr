@@ -3,7 +3,7 @@
 eulerr
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
+[![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![codecov](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr) [![Research software impact](http://depsy.org/api/package/cran/eulerr/badge.svg)](http://depsy.org/package/r/eulerr)
 
 **eulerr** generates area-proportional euler diagrams that display set relationships (intersections, unions, and disjoints) with circles. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, **eulerr** sometimes produces venn diagrams and sometimes not.
 
@@ -42,17 +42,17 @@ We can inspect the solution
 
 ``` r
 fit
-#>       original fitted residuals region_error
-#> A           10 10.044    -0.044        0.005
-#> B            9  9.050    -0.050        0.005
-#> C            4  4.128    -0.128        0.005
-#> A&B          2  1.601     0.399        0.011
-#> A&C          3  2.719     0.281        0.007
-#> B&C          3  2.716     0.284        0.008
-#> A&B&C        2  2.324    -0.324        0.011
+#>       original fitted residuals regionError
+#> A           10 10.044    -0.044       0.005
+#> B            9  9.050    -0.050       0.005
+#> C            4  4.128    -0.128       0.005
+#> A&B          2  1.601     0.399       0.011
+#> A&C          3  2.719     0.281       0.007
+#> B&C          3  2.716     0.284       0.008
+#> A&B&C        2  2.324    -0.324       0.011
 #> 
-#> diag_error:  0.011 
-#> stress:      0.002
+#> diagError:  0.011 
+#> stress:     0.002
 ```
 
 and plot it

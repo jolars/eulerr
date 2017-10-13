@@ -2,12 +2,10 @@
 
 #include "helpers.h"
 
-// [[Rcpp::depends(RcppArmadillo)]]
-
 // [[Rcpp::export]]
 arma::umat choose_two(const arma::uvec& x) {
-  arma::uword n = x.size();
-  arma::umat m(n * (n - 1) / 2, 2);
+  arma::uword n = x.n_elem;
+  arma::umat m(n*(n - 1)/2, 2);
   for (arma::uword i = 0, k = 0; i < n - 1; ++i) {
     for (arma::uword j = i + 1; j < n; ++j, ++k) {
       m(k, 0) = x(i);
@@ -15,12 +13,6 @@ arma::umat choose_two(const arma::uvec& x) {
     }
   }
   return m;
-}
-
-// Wrapper to compute a matrix of binary indices for set combinations
-// [[Rcpp::export]]
-Rcpp::LogicalMatrix bit_indexr(const arma::uword n) {
-  return Rcpp::wrap(bit_index(n));
 }
 
 // Squared loss between given and desired overlap
@@ -38,9 +30,14 @@ double discdisc(double d, double r1, double r2, double overlap) {
 }
 
 // [[Rcpp::export]]
-double venneuler_stress(const arma::vec& areas, const arma::vec& fit) {
+double stress(const arma::vec& areas, const arma::vec& fit) {
   double sst   = arma::accu(arma::square(fit));
   double slope = arma::accu(areas%fit)/arma::accu(arma::square(areas));
   double sse   = arma::accu(arma::square(fit - areas*slope));
   return sse/sst;
+}
+
+// [[Rcpp::export]]
+arma::umat bit_index_cpp(arma::uword n) {
+  return bit_index(n);
 }

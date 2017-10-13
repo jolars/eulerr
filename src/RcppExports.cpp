@@ -72,17 +72,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// bit_indexr
-Rcpp::LogicalMatrix bit_indexr(const arma::uword n);
-RcppExport SEXP _eulerr_bit_indexr(SEXP nSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::uword >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(bit_indexr(n));
-    return rcpp_result_gen;
-END_RCPP
-}
 // discdisc
 double discdisc(double d, double r1, double r2, double overlap);
 RcppExport SEXP _eulerr_discdisc(SEXP dSEXP, SEXP r1SEXP, SEXP r2SEXP, SEXP overlapSEXP) {
@@ -97,15 +86,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// venneuler_stress
-double venneuler_stress(const arma::vec& areas, const arma::vec& fit);
-RcppExport SEXP _eulerr_venneuler_stress(SEXP areasSEXP, SEXP fitSEXP) {
+// stress
+double stress(const arma::vec& areas, const arma::vec& fit);
+RcppExport SEXP _eulerr_stress(SEXP areasSEXP, SEXP fitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type fit(fitSEXP);
-    rcpp_result_gen = Rcpp::wrap(venneuler_stress(areas, fit));
+    rcpp_result_gen = Rcpp::wrap(stress(areas, fit));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bit_index_cpp
+arma::umat bit_index_cpp(arma::uword n);
+RcppExport SEXP _eulerr_bit_index_cpp(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::uword >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(bit_index_cpp(n));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -116,9 +116,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
     {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
-    {"_eulerr_bit_indexr", (DL_FUNC) &_eulerr_bit_indexr, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
-    {"_eulerr_venneuler_stress", (DL_FUNC) &_eulerr_venneuler_stress, 2},
+    {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},
+    {"_eulerr_bit_index_cpp", (DL_FUNC) &_eulerr_bit_index_cpp, 1},
     {NULL, NULL, 0}
 };
 

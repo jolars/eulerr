@@ -107,7 +107,6 @@ void intersect_conics(const arma::mat& A,
   }
 }
 
-
 // See which ellipses contain a given set of points
 void adopt(const arma::mat& points,
            const arma::mat& ellipses,

@@ -2,7 +2,7 @@
 ## Major changes
 * Ellipses are now supported by setting the new argument `shape = "ellipse"`
 in `euler()`. This added functionality is provided through an almost complete
-overhaul of the under-hood mechanics of the function.
+overhaul of the inner workings of the function.
 * Initial optimization routines have been ported to c++.
 * The initial optimizer has been switched from
 `stats::optim(..., method = "L-BFGS-B")` to `stats::nlm()`.
@@ -18,8 +18,10 @@ to color deficiency, but with some manual adjustments to, among other things,
 prevent the use of color unless necessary.
 * Labeling is now accomplished via numerical optimization, which should provide
 slightly more accurate locations.
-* Parallel processing for Armadillo operations is enabled via OpenMP
-(on compilers that support it).
+* Detect and enable openMP support (when it is supported).
+* The names of the `diagError` and `regionError` metrics have been changed from
+`diag_error` and `region_error` to the former to reflect the original names.
+* Bounding box computations for ellipses were made simpler and more robust.
 
 # eulerr 2.0.0
 ## Major changes

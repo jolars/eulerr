@@ -11,12 +11,12 @@ tally_combinations <- function(sets) {
   if (!is.matrix(sets))
     sets <- as.matrix(sets)
 
-  id <- bit_indexr(ncol(sets))
-  tally <- double(nrow(id))
+  id <- bit_indexr(NCOL(sets))
+  tally <- double(NROW(id))
 
-  for (i in 1:nrow(id)) {
+  for (i in 1:NROW(id)) {
     tally[i] <-
-      sum(as.numeric(colSums(t(sets) == id[i, ]) == ncol(sets)) * weights)
+      sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets))*weights)
     names(tally)[i] <- paste0(colnames(sets)[id[i, ]], collapse = "&")
   }
 
@@ -32,7 +32,7 @@ tally_combinations <- function(sets) {
 #' @return Rescaled vector
 #' @keywords internal
 rescale <- function(x, new_min, new_max) {
-  (new_max - new_min) / (max(x) - min(x)) * (x - max(x)) + new_max
+  (new_max - new_min)/(max(x) - min(x))*(x - max(x)) + new_max
 }
 
 #' Update a List with User Input
@@ -97,7 +97,7 @@ dont_print <- function(x, ...) {
 #' @return A string of hex colors
 #' @keywords internal
 qualpalr_pal <- function(n) {
-  palette[1:n]
+  palette[1L:n]
 }
 
 #' Check If Object Is Strictly FALSE
@@ -108,4 +108,18 @@ qualpalr_pal <- function(n) {
 #' @keywords internal
 is_false <- function(x) {
   identical(x, FALSE)
+}
+
+#' Binary indices
+#'
+#' Wraps around bit_indexr().
+#'
+#' @param n Number of items to generate permutations from.
+#'
+#' @return A matrix of logicals
+#' @keywords internal
+bit_indexr <- function(n) {
+  m <- bit_index_cpp(n)
+  mode(m) <- "logical"
+  m
 }

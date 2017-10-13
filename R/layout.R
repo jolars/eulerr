@@ -60,7 +60,7 @@ skyline_pack <- function(m) {
         next_right <- NCOL(skyline)
       }
 
-      if (w[i] <= abs(skyline[1L, next_left] - skyline[1L, next_right])) {
+      if (w[i] < abs(skyline[1L, next_left] - skyline[1L, next_right])) {
         # Fit a new building in the skyline
         m[1L, i] <- skyline[1L, next_left]
         m[2L, i] <- skyline[1L, next_left] + w[i]
@@ -75,9 +75,9 @@ skyline_pack <- function(m) {
           rbind(c(skyline[1L, next_left] + w[i], skyline[1L, next_left] + w[i]),
                 c(skyline[2L, p2] + h[i]       , skyline[2L, p2]))
 
-        skyline <- cbind(skyline[, seq(1L, next_left + l)],
+        skyline <- cbind(skyline[, seq(1L, next_left + l), drop = FALSE],
                          newcols,
-                         skyline[, seq(p2, NCOL(skyline))])
+                         skyline[, seq(p2, NCOL(skyline)), drop = FALSE])
 
         # Check if there are any rooftops on the skyline beneath the new one
         underneath <- skyline[1L, ] > m[1L, i] & skyline[1L, ] < m[2L, i]
@@ -85,8 +85,13 @@ skyline_pack <- function(m) {
         if (any(underneath)) {
           # Drop down to the lowest level
           skyline[2L, which(underneath)[1L] - 1L] <-
+<<<<<<< HEAD
             skyline[2L, which(underneath)[sum(underneath)]]
           skyline <- skyline[, !underneath]
+=======
+            skyline[2L, utils::tail(which(underneath), 1L)]
+          skyline <- skyline[, !underneath, drop = FALSE]
+>>>>>>> f4542daa36b358cd3aa9bb1299de280e18583dae
         }
 
         looking <- FALSE
@@ -99,7 +104,6 @@ skyline_pack <- function(m) {
   }
   m
 }
-
 
 #' Shelf packing algorithm for packing rectangles in a bin.
 #'
@@ -170,7 +174,7 @@ compress_layout <- function(fpar, id, fit) {
   # TODO: Port to c++
   n <- NCOL(id)
 
-  clusters <- matrix(NA, n, n)
+  clusters <- matrix(NA, nrow = n, ncol = n)
 
   for (i in 1:n) {
     for (j in 1:n) {
@@ -187,40 +191,49 @@ compress_layout <- function(fpar, id, fit) {
   }
 
   unique_clusters <- unique(lapply(split(clusters, row(clusters)), which))
+  n_clusters <- length(unique_clusters)
 
-  bounds <- matrix(NA, ncol = length(unique_clusters), nrow = 4L)
-
-  for (i in seq_along(unique_clusters)) {
-    ii <- unique_clusters[[i]]
-    h <- fpar[ii, 1L]
-    k <- fpar[ii, 2L]
-    if (NCOL(fpar) == 3L) {
-      a <- b <- fpar[ii, 3L]
-      phi <- 0
-    } else {
-      a <- fpar[ii, 3L]
-      b <- fpar[ii, 4L]
-      phi <- fpar[ii, 5L]
-    }
-    tx <- atan2(-b*tan(phi), a)
-    ty <- atan2(b*tan(pi/2L - phi), a)
-
-    bounds[, i] <-
-      c(range(h + a*cos(tx)*cos(phi) - b*sin(tx)*sin(phi),
-              h + a*cos(tx + pi)*cos(phi) - b*sin(tx + pi)*sin(phi)),
-        range(k + b*sin(ty)*cos(phi) + a*cos(ty)*sin(phi),
-              k + b*sin(ty + pi)*cos(phi) + a*cos(ty + pi)*sin(phi)))
-  }
-
-  # Skyline pack the bounding rectangles
-  # TODO: Fix occasional errors in computing the bounding boxes.
-  if (all(is.finite(bounds))) {
-    new_bounds <- skyline_pack(bounds)
+  if (n_clusters > 1) {
+    bounds <- matrix(NA, ncol = n_clusters, nrow = 4L)
 
     for (i in seq_along(unique_clusters)) {
       ii <- unique_clusters[[i]]
-      fpar[ii, 1L] = fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
-      fpar[ii, 2L] = fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+      h <- fpar[ii, 1L]
+      k <- fpar[ii, 2L]
+      if (NCOL(fpar) == 3L) {
+        a <- b <- fpar[ii, 3L]
+        phi <- 0
+      } else {
+        a <- fpar[ii, 3L]
+        b <- fpar[ii, 4L]
+        phi <- fpar[ii, 5L]
+      }
+
+      xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
+      ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+
+      bounds[1:2, i] <- range(xlim + h, -xlim + h)
+      bounds[3:4, i] <- range(ylim + k, -ylim + k)
+
+      # tx <- atan2(-b*tan(phi), a)
+      # ty <- atan2(b*tan(pi/2 - phi), a)
+      # bounds[, i] <-
+      #   c(range(h + a*cos(tx)*cos(phi) - b*sin(tx)*sin(phi),
+      #           h + a*cos(tx + pi)*cos(phi) - b*sin(tx + pi)*sin(phi)),
+      #     range(k + b*sin(ty)*cos(phi) + a*cos(ty)*sin(phi),
+      #           k + b*sin(ty + pi)*cos(phi) + a*cos(ty + pi)*sin(phi)))
+    }
+
+    # Skyline pack the bounding rectangles
+    # TODO: Fix occasional errors in computing the bounding boxes.
+    if (all(is.finite(bounds))) {
+      new_bounds <- skyline_pack(bounds)
+
+      for (i in seq_along(unique_clusters)) {
+        ii <- unique_clusters[[i]]
+        fpar[ii, 1L] <- fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
+        fpar[ii, 2L] <- fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+      }
     }
   }
 
@@ -234,7 +247,7 @@ compress_layout <- function(fpar, id, fit) {
 #'
 #' @return A centered version of `pars`.
 #' @keywords internal
-center_ellipses <- function(pars) {
+center_layout <- function(pars) {
   x <- pars[, 1L]
   y <- pars[, 2L]
 
@@ -246,7 +259,7 @@ center_ellipses <- function(pars) {
     # Ellipses
     a <- pars[, 3L]
     b <- pars[, 4L]
-    phi <- pars[,]
+    phi <- pars[, ]
   }
 
   cphi <- cos(phi)
@@ -254,7 +267,7 @@ center_ellipses <- function(pars) {
   xlim <- range(c(x + a*cphi, x + b*cphi, x - a*cphi, x - b*cphi))
   ylim <- range(c(y + a*sphi, y + b*sphi, y - a*sphi, y - b*sphi))
 
-  pars[, 1L] <- x + abs(xlim[1L] - xlim[2L]) / 2L - xlim[2L]
-  pars[, 2L] <- y + abs(ylim[1L] - ylim[2L]) / 2L - ylim[2L]
+  pars[, 1L] <- x + abs(xlim[1L] - xlim[2L])/2 - xlim[2L]
+  pars[, 2L] <- y + abs(ylim[1L] - ylim[2L])/2 - ylim[2L]
   pars
 }

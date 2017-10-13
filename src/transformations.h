@@ -4,7 +4,8 @@
 #include <RcppArmadillo.h>
 
 // Produce a scaling matrix
-inline arma::mat scale(const arma::vec& xy) {
+inline
+arma::mat scale(const arma::vec& xy) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = xy(0);
@@ -12,7 +13,8 @@ inline arma::mat scale(const arma::vec& xy) {
   return out;
 }
 
-inline arma::mat scale(const double x, const double y) {
+inline
+arma::mat scale(const double x, const double y) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = x;
@@ -21,14 +23,16 @@ inline arma::mat scale(const double x, const double y) {
 }
 
 // Produce a translation matrix
-inline arma::mat translate(const arma::vec& xy) {
+inline
+arma::mat translate(const arma::vec& xy) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(arma::span(0, 1), 2) = xy;
   return out;
 }
 
-inline arma::mat translate(const double x, const double y) {
+inline
+arma::mat translate(const double x, const double y) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(0, 2) = x;
@@ -37,7 +41,8 @@ inline arma::mat translate(const double x, const double y) {
 }
 
 // Produce a rotation matrix
-inline arma::mat rotate(const double phi) {
+inline
+arma::mat rotate(const double phi) {
   arma::mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) =  std::cos(phi);
@@ -48,7 +53,8 @@ inline arma::mat rotate(const double phi) {
 }
 
 // Return the adjoint (adjugate) of a 3-by-3 matrix
-inline arma::mat adjoint(const arma::mat& m) {
+inline
+arma::mat adjoint(const arma::mat& m) {
   arma::mat::fixed<3, 3> out;
   double a = m(0, 0);
   double b = m(1, 0);
@@ -84,7 +90,8 @@ inline arma::mat adjoint(const arma::mat& m) {
 // }
 
 // Skew-symmetric matrix
-inline arma::cx_mat skewsymmat(const arma::cx_vec& v) {
+inline
+arma::cx_mat skewsymmat(const arma::cx_vec& v) {
   arma::cx_mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);
@@ -97,7 +104,8 @@ inline arma::cx_mat skewsymmat(const arma::cx_vec& v) {
 }
 
 // Skew-symmetric matrix for complex matrices
-inline arma::mat skewsymmat(const arma::vec& v) {
+inline
+arma::mat skewsymmat(const arma::vec& v) {
   arma::mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);
