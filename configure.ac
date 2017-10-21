@@ -1,6 +1,4 @@
-## -*- mode: autoconf; autoconf-indentation: 4; -*-
-##
-##  RcppArmadillo configure.ac
+## Adapted from configure.ac from RcppArmadillo:
 ##
 ##  'Rcpp' Integration for the 'Armadillo' Templated Linear Algebra Library
 ##

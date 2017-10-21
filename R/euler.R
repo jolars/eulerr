@@ -134,6 +134,7 @@ euler.default <- function(combinations,
   n <- length(setnames)
   id <- bit_indexr(n)
   N <- NROW(id)
+  restarts <- 10L # should this be made an argument?
 
   areas <- double(N)
   for (i in 1L:N) {
@@ -182,13 +183,27 @@ euler.default <- function(combinations,
                         USE.NAMES = FALSE)
 
     # Starting layout
-    initial_layout <- stats::nlm(f = optim_init,
-                                 p = stats::runif(n*2, 0, sqrt(sum(r^2*pi))),
-                                 d = distances,
-                                 disjoint = disjoint,
-                                 contained = contained,
-                                 iterlim = 200L,
-                                 check.analyticals = FALSE)
+    loss <- Inf
+    i <- 1L
+    initial_layouts <- vector("list", restarts)
+
+    while (loss > sqrt(.Machine$double.eps) && i <= restarts) {
+      initial_layouts[[i]] <- stats::nlm(
+        f = optim_init,
+        p = stats::runif(n*2, 0, sqrt(sum(r^2*pi))),
+        d = distances,
+        disjoint = disjoint,
+        contained = contained,
+        iterlim = 200L,
+        check.analyticals = FALSE
+      )
+      loss <- initial_layouts[[i]]$minimum
+      i <- i + 1L
+    }
+
+    # Find the best initial layout
+    best_init <- which.min(lapply(initial_layouts[1:(i - 1)], "[[", "minimum"))
+    initial_layout <- initial_layouts[[best_init]]
 
     # Final layout
     circle <- match.arg(shape) == "circle"
