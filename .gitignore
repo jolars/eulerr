@@ -4,4 +4,3 @@
 .Ruserdata
 packrat/lib*/
 inst/doc
-*.cache
