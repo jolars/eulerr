@@ -85,7 +85,7 @@ skyline_pack <- function(m) {
         if (any(underneath)) {
           # Drop down to the lowest level
           skyline[2L, which(underneath)[1L] - 1L] <-
-            skyline[2L, utils::tail(which(underneath), 1L)]
+            skyline[2L, which(underneath)[sum(underneath)]]
           skyline <- skyline[, !underneath, drop = FALSE]
         }
 
