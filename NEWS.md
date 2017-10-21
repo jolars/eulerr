@@ -13,6 +13,7 @@ constrains the layout.
 ported to c++.
 
 ## Minor changes
+* The initial layout now runs 10 restarts and picks the best of these.
 * The default palette has been changed to a fixed palette, still adapted
 to color deficiency, but with some manual adjustments to, among other things,
 prevent the use of color unless necessary.
