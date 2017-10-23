@@ -671,8 +671,7 @@ Venn and Euler Diagrams.'' \emph{IEEE Transactions on Visualization and
 Computer Graphics} 18 (2): 321--31.
 doi:\href{https://doi.org/10.1109/TVCG.2011.56}{10.1109/TVCG.2011.56}.
 
-\bibliography{eulerr}
-\bibliographystyle{unsrtnat}
+%\bibliography{eulerr}
+%\bibliographystyle{unsrtnat}
 
 \end{document}
-}
