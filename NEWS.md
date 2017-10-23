@@ -5,7 +5,9 @@ in `euler()`. This added functionality is provided through an almost complete
 overhaul of the inner workings of the function.
 * Initial optimization routines have been ported to c++.
 * The initial optimizer has been switched from
-`stats::optim(..., method = "L-BFGS-B")` to `stats::nlm()`.
+`stats::optim(..., method = "L-BFGS-B")` to `stats::nlm()'.
+* The final optimizer now falls back to `GenSA::GenSA()` when the fit from
+`nlm()` isn't good enough.
 * A packing algorithm has been introduced to stack disjoint
 clusters of ellipses/circles together (since the initial optimizer) no longer
 constrains the layout.
