@@ -18,13 +18,11 @@ Imports:
     utils,
     assertthat,
     lattice,
-    Rcpp
+    Rcpp,
+    GenSA
 Suggests:
-    bookdown,
     knitr,
-    komadown,
-    rmarkdown,
-    testthat,
+    testthat
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0)

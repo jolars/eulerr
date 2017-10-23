@@ -186,11 +186,12 @@ euler.default <- function(combinations,
     loss <- Inf
     i <- 1L
     initial_layouts <- vector("list", restarts)
+    bnd <- sqrt(sum(r^2*pi))
 
     while (loss > sqrt(.Machine$double.eps) && i <= restarts) {
       initial_layouts[[i]] <- stats::nlm(
         f = optim_init,
-        p = stats::runif(n*2, 0, sqrt(sum(r^2*pi))),
+        p = stats::runif(n*2, 0, bnd),
         d = distances,
         disjoint = disjoint,
         contained = contained,
@@ -215,26 +216,79 @@ euler.default <- function(combinations,
                               r, r, 0, deparse.level = 0L))
     }
 
-    # TODO: Allow user options here?
-    final_layout <- stats::nlm(f = optim_final_loss,
-                               p = pars,
-                               areas = areas_disjoint,
-                               circles = circle,
-                               iterlim = 250L)
-
-    fit <- as.vector(intersect_ellipses(final_layout$estimate, circle))
-
     orig <- areas_disjoint
+
+    # TODO: Allow user options here?
+
+    # Try to find a solution using nlm() first (faster)
+    nlm_solution <- stats::nlm(
+      f = optim_final_loss,
+      p = pars,
+      areas = areas_disjoint,
+      circles = circle,
+      iterlim = 1e5
+    )$estimate
+
+    nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
+    nlm_diagError <- diagError(nlm_fit, orig)
+
+    # If inadequate solution, try with GenSA (slower, better)
+    if (nlm_diagError >= 0.01) {
+      # Set bounds for the parameters
+      if (circle) {
+        lwr <- rep.int(0, 3L*n)
+        upr <- double(3L*n)
+        for (i in seq_along(r)) {
+          upr[3*(i - 1) + 1:2] <- bnd
+          upr[3*(i - 1) + 3] <- r[i]*2L
+        }
+      } else {
+        lwr <- rep.int(0, 5L*n)
+        upr <- double(3L*n)
+        for (i in seq_along(r)) {
+          upr[5*(i - 1) + 1:2] <- bnd
+          upr[5*(i - 1) + 3:4] <- r[i]*4L
+          upr[5*(i - 1) + 5] <- pi
+        }
+      }
+
+      GenSA_solution <- GenSA::GenSA(
+        par = pars,
+        fn = optim_final_loss,
+        lower = lwr,
+        upper = upr,
+        circles = circle,
+        areas = areas_disjoint,
+        control = list(threshold.stop = sqrt(.Machine$double.eps),
+                       max.call = 1e6,
+                       simple.function = TRUE)
+      )$par
+
+      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution, circle))
+      GenSA_diagError <- diagError(GenSA_fit, orig)
+
+      # Check for the best solution
+      if (GenSA_diagError < nlm_diagError) {
+        final_par <- GenSA_solution
+        fit <- GenSA_fit
+      } else {
+        final_par <- nlm_solution
+        fit <- nlm_fit
+      }
+    } else {
+      final_par <- nlm_solution
+      fit <- nlm_fit
+    }
 
     names(orig) <- names(fit) <-
       apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
 
-    regionError <- abs(fit/sum(fit) - orig/sum(orig))
-    diagError <- max(regionError)
+    regionError <- regionError(fit, orig)
+    diagError <- diagError(regionError = regionError)
     stress <- stress(orig, fit)
 
     fpar <- matrix(
-      data = final_layout$estimate,
+      data = final_par,
       ncol = if (circle) 3L else 5L,
       dimnames = list(
         setnames,
