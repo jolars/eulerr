@@ -123,3 +123,32 @@ bit_indexr <- function(n) {
   mode(m) <- "logical"
   m
 }
+
+#' regionError
+#'
+#' @param fit Fitted values
+#' @param orig Original values
+#'
+#' @return regionError
+#' @export
+#' @keywords internal
+regionError <- function(fit, orig) {
+  abs(fit/sum(fit) - orig/sum(orig))
+}
+
+#' diagError
+#'
+#' @param fit Fitted values
+#' @param orig Original values
+#' @param regionError regionError
+#'
+#' @return diagError
+#' @export
+#' @keywords internal
+diagError <- function(fit, orig, regionError = NULL) {
+  if(!is.null(regionError)) {
+    max(regionError)
+  } else {
+    max(abs(fit/sum(fit) - orig/sum(orig)))
+  }
+}
