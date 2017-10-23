@@ -233,7 +233,7 @@ euler.default <- function(combinations,
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (nlm_diagError >= 0.01) {
+    if (!circle && nlm_diagError >= 0.01) {
       # Set bounds for the parameters
       if (circle) {
         lwr <- rep.int(0, 3L*n)

@@ -1,3 +1,5 @@
+%\VignetteIndexEntry{an introduction to eulerr}
+
 \PassOptionsToPackage{usenames,fixpdftex,dvipsnames,svgnames,x11names}{xcolor}
 \PassOptionsToPackage{hyphens}{url}
 %\PassOptionsToPackage{main=swedish}{babel} % for swedish documents
@@ -8,7 +10,7 @@
   nobib
 ]{tufte-handout}
 
-\title[short title]{long title}
+\title[An Introduction to eulerr]{An Introduction to eulerr}
 \author{Johan Larsson}
 
 %\date{28 March 2010} % without \date command, current date is supplied
@@ -269,18 +271,21 @@ instead. \citep{wilkinson_2012} features a difficult combination that it manages
 to fit with a reasonably small error; with \pkg{eulerr}, however, we can get
 rid of that error entirely (Figure \cref{fig:wilkinson2012}).
 
-\begin{figure}[hbtp!]
-<<wilkinson2012>>=
+<<>>=
 wilkinson2012 <-  c(A = 4, B = 6, C = 3, D = 2, E = 7, F = 3,
                     "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
                     "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
                     "A&B&F" = 1, "B&C&D" = 1)
 fit3 <- euler(wilkinson2012, shape = "ellipse")
+@
+
+\begin{marginfigure}
+<<wilkinson2012, echo = FALSE>>=
 plot(fit3)
 @
 \caption{A difficult combination modelled with ellipses.}
 \label{fig:wilkinson2012}
-\end{figure}
+\end{marginfigure}
 
 If we still lack a good fit after having tried ellipses, we would do best to
 stop here and look for another way to visualize our data. (I suggest the
@@ -292,18 +297,24 @@ highly customizable, with \pkg{eulerr}. The default parameters
 (Figure \cref{fig:eulerr-plot}) can easily be adjusted to suit anyobody's
 needs (Figure \cref{fig:custom-plot}).
 
-\begin{marginfigure}
-<<eulerr-plot>>=
+<<eulerr-plot, eval = FALSE>>=
 plot(fit2)
+@
+
+\begin{marginfigure}
+<<eulerr-dev, ref.label = "eulerr-plot", echo = FALSE>>=
 @
 \caption{The default graphical parameters.}
 \label{fig:eulerr-plot}
 \end{marginfigure}
 
-\begin{marginfigure}
-<<custom-plot>>=
+<<custom-plot, eval = FALSE>>=
 # Remove fills, vary border type, and switch fontface.
 plot(fit2, fill = "transparent", lty = 1:3, fontface = 4)
+@
+
+\begin{marginfigure}
+<<custom-plot, ref.label = "custom-plot", echo = FALSE>>=
 @
 \caption{Adjusted graphical parameters.}
 \label{fig:custom-plot}
