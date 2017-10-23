@@ -4,3 +4,9 @@
 .Ruserdata
 packrat/lib*/
 inst/doc
+*.bbl
+*.log
+*.pdf
+*.tex
+vignettes/cache/
+vignettes/figure/
