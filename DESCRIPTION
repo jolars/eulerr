@@ -16,7 +16,6 @@ Imports:
     grid,
     stats,
     utils,
-    assertthat,
     lattice,
     Rcpp,
     GenSA

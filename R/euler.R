@@ -121,12 +121,11 @@ euler.default <- function(combinations,
                           input = c("disjoint", "union"),
                           shape = c("circle", "ellipse"),
                           ...) {
-  assertthat::assert_that(is.numeric(combinations),
-                          assertthat::not_empty(combinations),
-                          all(combinations >= 0),
-                          assertthat::has_attr(combinations, "names"),
-                          !any(names(combinations) == ""),
-                          !any(duplicated(names(combinations))))
+  stopifnot(is.numeric(combinations),
+            !any(combinations < 0),
+            !is.null(attr(combinations, "names")),
+            !any(names(combinations) == ""),
+            !any(duplicated(names(combinations))))
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
@@ -253,7 +252,7 @@ euler.default <- function(combinations,
       }
 
       GenSA_solution <- GenSA::GenSA(
-        par = pars,
+        par = nlm_solution,
         fn = optim_final_loss,
         lower = lwr,
         upper = upr,
@@ -338,21 +337,20 @@ euler.default <- function(combinations,
 #'   the number of rows in `combinations`.
 #' @export
 euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
-  assertthat::assert_that(!any(grepl("&", colnames(combinations),
-                                     fixed = TRUE)))
+  stopifnot(!any(grepl("&", colnames(combinations), fixed = TRUE)))
 
   if (is.null(weights))
-    weights <- rep.int(1L, NROW(combinations))
+    weights <- rep.int(1L, nrow(combinations))
 
   if (!is.null(by)) {
-    vapply(by,
-           function(x) assertthat::assert_that(is.factor(x) || is.character(x)),
-           FUN.VALUE = logical(1))
+    stopifnot(all(vapply(by,
+                         function(x) (is.factor(x) || is.character(x)),
+                         FUN.VALUE = logical(1))))
     if (NCOL(by) > 2L)
       stop("No more than two conditioning variables are allowed.")
   }
 
-  out <- matrix(NA, nrow = NROW(combinations), ncol = NCOL(combinations))
+  out <- matrix(NA, nrow = nrow(combinations), ncol = ncol(combinations))
   colnames(out) <- colnames(combinations)
 
   for (i in seq_along(combinations)) {
@@ -407,19 +405,19 @@ euler.table <- function(combinations, ...) {
 #'   that set. Vectors in the list do not need to be named.
 #' @export
 euler.list <- function(combinations, ...) {
-  assertthat::assert_that(assertthat::has_attr(combinations, "names"),
-                          !any(names(combinations) == ""),
-                          !any(duplicated(names(combinations))))
+  stopifnot(!is.null(attr(combinations, "names")),
+            !any(names(combinations) == ""),
+            !any(duplicated(names(combinations))))
 
   sets <- names(combinations)
   n <- length(sets)
 
   id <- bit_indexr(n)
 
-  out <- integer(NROW(id))
+  out <- integer(nrow(id))
   names(out) <- apply(id, 1L, function(x) paste(sets[x], collapse = "&"))
 
-  for (i in 1L:NROW(id))
+  for (i in 1L:nrow(id))
     out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
 
   euler(out, input = "union")

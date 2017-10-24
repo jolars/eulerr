@@ -11,7 +11,7 @@
 #'
 #' @export
 print.euler <- function(x, round = 3, ...) {
-  assertthat::assert_that(assertthat::is.number(round), round > 0L)
+  stopifnot(is.numeric(round), length(round) == 1L, round > 0)
   out <- data.frame("original" = x$original.values,
                     "fitted" = x$fitted.values,
                     "residuals" = x$residuals,

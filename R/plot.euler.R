@@ -93,10 +93,10 @@ plot.euler <- function(x,
                        panel = panel.euler,
                        outer_strips,
                        fill_opacity) {
-  assertthat::assert_that(assertthat::is.number(fill_alpha),
-                          assertthat::is.flag(auto.key) || is.list(auto.key),
-                          assertthat::is.flag(counts) || is.list(counts),
-                          is.list(par.settings))
+  stopifnot(is.numeric(fill_alpha),
+            length(fill_alpha) == 1L,
+            is.logical(auto.key) || is.list(auto.key),
+            is.logical(counts) || is.list(counts))
 
   if (!missing(fill_opacity))
     fill_alpha <- fill_opacity
@@ -286,9 +286,9 @@ panel.euler <- function(x,
                         original.values,
                         fitted.values,
                         ...) {
-  superpose.polygon <- lattice::trellis.par.get("superpose.polygon")
+  stopifnot(is.logical(counts) || is.list(counts))
 
-  assertthat::assert_that(assertthat::is.flag(counts) || is.list(counts))
+  superpose.polygon <- lattice::trellis.par.get("superpose.polygon")
 
   if (is.matrix(original.values)) {
     original.values <- original.values[, lattice::packet.number()]
