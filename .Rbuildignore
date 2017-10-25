@@ -12,7 +12,8 @@
 ^docs$
 ^vignettes/cache$
 ^vignettes/figure$
-^vignettes/*\.log
-^vignettes/*\.bbl
-^vignettes/*\.pdf
-^vignettes/*\.tex
+^vignettes/*\.log$
+^vignettes/*\.bbl$
+^vignettes/*\.pdf$
+^vignettes/*\.tex$
+^vignettes/*\.toc$

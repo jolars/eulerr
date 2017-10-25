@@ -8,5 +8,6 @@ inst/doc
 *.log
 *.pdf
 *.tex
+*.toc
 vignettes/cache/
 vignettes/figure/
