@@ -90,7 +90,7 @@ test_that("expect no errors for a variety of predefined sets", {
   expect_error(euler(s6, shape = "ellipse"), NA)
   expect_error(euler(s7, shape = "ellipse"), NA)
   expect_error(euler(s8, shape = "ellipse"), NA)
-  #expect_error(euler(s9, shape = "ellipse"), NA) #very slow
+  expect_error(euler(s9, shape = "ellipse"), NA)
   expect_error(euler(s10, shape = "ellipse"), NA)
   expect_error(euler(s11, shape = "ellipse"), NA)
   expect_error(euler(s12, shape = "ellipse"), NA)
