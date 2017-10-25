@@ -31,6 +31,7 @@
 \usepackage{multicol}
 \usepackage[header,page]{appendix}
 \usepackage{titling}
+\usepackage{marginfix}
 
 % Lists
 \usepackage[shortlabels]{enumitem}
@@ -126,6 +127,7 @@
 
 <<setup, include = FALSE>>=
 knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+knitr::knit_theme$set("default")
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -133,6 +135,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   fig.width = 2.1,
   fig.height = 2.1,
+  size = "small",
   crop = TRUE,
   fig.align = "center",
   dev = "pdf",
@@ -476,7 +479,7 @@ fit2 <- euler(combo, shape = "ellipse")
 fit2
 @
 
-\begin{marginfigure}[-5cm]
+\begin{marginfigure}
 <<ellipse-plot, echo = FALSE>>=
 plot(fit2, counts = TRUE)
 @
@@ -502,7 +505,7 @@ simply add a legend
 plot(euler(c(A = 2, B = 3, "A&B" = 1)), auto.key = TRUE)
 @
 
-\begin{marginfigure}[-7cm]
+\begin{marginfigure}
 <<legend-dev, ref.label = "legend-plot", echo = FALSE>>=
 @
 \caption{A simple plot with a legend}
@@ -516,7 +519,7 @@ counts.
 plot(euler(c(A = 2, B = 3, "A&B" = 1)), counts = TRUE)
 @
 
-\begin{marginfigure}[-2cm]
+\begin{marginfigure}
 <<counts-dev, ref.label = "counts-plot", echo = FALSE>>=
 @
 \caption{A plot with counts.}
