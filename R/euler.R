@@ -248,11 +248,13 @@ euler.default <- function(combinations,
       b   <- newpars[, 4L]
       phi <- newpars[, 5L]
 
-      xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
-      ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+      # xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
+      # ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
 
-      xbnd <- range(xlim + h, -xlim + h)
-      ybnd <- range(ylim + k, -ylim + k)
+      pmab <- pmax(a, b)
+
+      xbnd <- range(pmax(h + pmab), pmin(h - pmab))
+      ybnd <- range(pmax(k + pmab), pmin(k - pmab))
 
       lwr <- double(5L*n)
       upr <- double(5L*n)
@@ -276,7 +278,8 @@ euler.default <- function(combinations,
         circles = circle,
         areas = areas_disjoint,
         control = list(threshold.stop = 0,
-                       max.call = 1e5)
+                       smooth = TRUE,
+                       max.call = 1e6)
       )$par
 
       GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution, circle))
