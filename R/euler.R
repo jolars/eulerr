@@ -234,21 +234,38 @@ euler.default <- function(combinations,
     # If inadequate solution, try with GenSA (slower, better)
     if (!circle && nlm_diagError >= 0.01) {
       # Set bounds for the parameters
-      if (circle) {
-        lwr <- rep.int(0, 3L*n)
-        upr <- double(3L*n)
-        for (i in seq_along(r)) {
-          upr[3*(i - 1) + 1:2] <- bnd
-          upr[3*(i - 1) + 3] <- r[i]*2L
-        }
-      } else {
-        lwr <- rep.int(0, 5L*n)
-        upr <- double(3L*n)
-        for (i in seq_along(r)) {
-          upr[5*(i - 1) + 1:2] <- bnd
-          upr[5*(i - 1) + 3:4] <- r[i]*4L
-          upr[5*(i - 1) + 5] <- pi
-        }
+      newpar <- matrix(
+        data = nlm_solution,
+        ncol = 5L,
+        dimnames = list(setnames, c("x", "y", "a", "b", "phi")),
+        byrow = TRUE
+      )
+
+      newpars <- compress_layout(newpar, id, nlm_fit)
+      h   <- newpars[, 1L]
+      k   <- newpars[, 2L]
+      a   <- newpars[, 3L]
+      b   <- newpars[, 4L]
+      phi <- newpars[, 5L]
+
+      xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
+      ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+
+      xbnd <- range(xlim + h, -xlim + h)
+      ybnd <- range(ylim + k, -ylim + k)
+
+      lwr <- double(5L*n)
+      upr <- double(5L*n)
+      for (i in seq_along(r)) {
+        lwr[5*(i - 1) + 1] <- xbnd[1L]
+        lwr[5*(i - 1) + 2] <- ybnd[1L]
+        lwr[5*(i - 1) + 3:4] <- sqrt(r[i])/4
+        lwr[5*(i - 1) + 5] <- 0
+
+        upr[5*(i - 1) + 1] <- xbnd[2L]
+        upr[5*(i - 1) + 2] <- ybnd[2L]
+        upr[5*(i - 1) + 3:4] <- sqrt(r[i])*4
+        upr[5*(i - 1) + 5] <- pi
       }
 
       GenSA_solution <- GenSA::GenSA(
@@ -258,9 +275,8 @@ euler.default <- function(combinations,
         upper = upr,
         circles = circle,
         areas = areas_disjoint,
-        control = list(threshold.stop = sqrt(.Machine$double.eps),
-                       max.call = 1e6,
-                       simple.function = TRUE)
+        control = list(threshold.stop = 0,
+                       max.call = 1e5)
       )$par
 
       GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution, circle))
