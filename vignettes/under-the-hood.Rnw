@@ -127,7 +127,7 @@
 
 <<setup, include = FALSE>>=
 knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
-knitr::knit_theme$set("default")
+#knitr::knit_theme$set("default")
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -135,7 +135,6 @@ knitr::opts_chunk$set(
   message = FALSE,
   fig.width = 2.1,
   fig.height = 2.1,
-  size = "small",
   crop = TRUE,
   fig.align = "center",
   dev = "pdf",
