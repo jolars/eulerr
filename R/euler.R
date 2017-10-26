@@ -47,6 +47,13 @@
 #' @param input The type of input: disjoint class combinations
 #'   (`disjoint`) or unions (`union`).
 #' @param shape The geometric shape used in the diagram: circles or ellipses.
+#' @param extraopt_threshold The threshold, in terms of `diagError`, for when
+#'   the extra optimizer kicks in to try to improve the solution. This will
+#'   almost always slow down the process considerably. A value of 0 means
+#'   that the extra optimizer will kick in if there is *any* error. A value of
+#'   1 means that it will never kick in.
+#' @param extraopt_control A list of control parameters to pass to the
+#'   extra optimizer, such as `max.call`. See [GenSA::GenSA()].
 #' @param ... Arguments passed down to other methods.
 #'
 #' @return A list object of class 'euler' with the following parameters.
@@ -120,6 +127,8 @@ euler <- function(combinations, ...) UseMethod("euler")
 euler.default <- function(combinations,
                           input = c("disjoint", "union"),
                           shape = c("circle", "ellipse"),
+                          extraopt_threshold = 0.01,
+                          extraopt_control = list(),
                           ...) {
   stopifnot(is.numeric(combinations),
             !any(combinations < 0),
@@ -232,7 +241,7 @@ euler.default <- function(combinations,
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (!circle && nlm_diagError >= 0.01) {
+    if (!circle && nlm_diagError > extraopt_threshold) {
       # Set bounds for the parameters
       newpar <- matrix(
         data = nlm_solution,
@@ -248,26 +257,30 @@ euler.default <- function(combinations,
       b   <- newpars[, 4L]
       phi <- newpars[, 5L]
 
-      # xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
-      # ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+      xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
+      ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
 
-      pmab <- pmax(a, b)
-
-      xbnd <- range(pmax(h + pmab), pmin(h - pmab))
-      ybnd <- range(pmax(k + pmab), pmin(k - pmab))
+      if (any(!is.finite(xlim), !is.finite(ylim))) {
+        pmab <- pmax.int(a, b)
+        xbnd <- range(pmax.int(h + pmab), pmin.int(h - pmab))
+        ybnd <- range(pmax.int(k + pmab), pmin.int(k - pmab))
+      } else {
+        xbnd <- range(xlim + h, -xlim + h)
+        ybnd <- range(ylim + k, -ylim + k)
+      }
 
       lwr <- double(5L*n)
       upr <- double(5L*n)
       for (i in seq_along(r)) {
-        lwr[5*(i - 1) + 1] <- xbnd[1L]
-        lwr[5*(i - 1) + 2] <- ybnd[1L]
-        lwr[5*(i - 1) + 3:4] <- sqrt(r[i])/4
-        lwr[5*(i - 1) + 5] <- 0
+        lwr[5L*(i - 1) + 1L] <- xbnd[1L]
+        lwr[5L*(i - 1) + 2L] <- ybnd[1L]
+        lwr[5L*(i - 1) + 3L:4L] <- sqrt(r[i])/4
+        lwr[5L*(i - 1) + 5L] <- 0
 
-        upr[5*(i - 1) + 1] <- xbnd[2L]
-        upr[5*(i - 1) + 2] <- ybnd[2L]
-        upr[5*(i - 1) + 3:4] <- sqrt(r[i])*4
-        upr[5*(i - 1) + 5] <- pi
+        upr[5L*(i - 1) + 1L] <- xbnd[2L]
+        upr[5L*(i - 1) + 2L] <- ybnd[2L]
+        upr[5L*(i - 1) + 3L:4L] <- sqrt(r[i])*4
+        upr[5L*(i - 1) + 5L] <- pi
       }
 
       GenSA_solution <- GenSA::GenSA(
@@ -277,17 +290,20 @@ euler.default <- function(combinations,
         upper = upr,
         circles = circle,
         areas = areas_disjoint,
-        control = list(threshold.stop = 0,
-                       smooth = TRUE,
-                       max.call = 1e6)
-      )$par
+        control = utils::modifyList(
+          list(threshold.stop = 0,
+               smooth = TRUE,
+               max.call = 1e5),
+          extraopt_control
+        )
+      )
 
-      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution, circle))
+      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution$par, circle))
       GenSA_diagError <- diagError(GenSA_fit, orig)
 
       # Check for the best solution
       if (GenSA_diagError < nlm_diagError) {
-        final_par <- GenSA_solution
+        final_par <- GenSA_solution$par
         fit <- GenSA_fit
       } else {
         final_par <- nlm_solution
