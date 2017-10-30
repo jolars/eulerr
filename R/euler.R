@@ -241,16 +241,16 @@ euler.default <- function(combinations,
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (!circle && nlm_diagError > extraopt_threshold) {
+    if (!circle && nlm_diagError > extraopt_threshold && n < 5) {
       # Set bounds for the parameters
-      newpar <- matrix(
+      newpars <- matrix(
         data = nlm_solution,
         ncol = 5L,
         dimnames = list(setnames, c("x", "y", "a", "b", "phi")),
         byrow = TRUE
       )
 
-      newpars <- compress_layout(newpar, id, nlm_fit)
+      newpars <- compress_layout(newpars, id, nlm_fit)
       h   <- newpars[, 1L]
       k   <- newpars[, 2L]
       a   <- newpars[, 3L]
@@ -286,7 +286,7 @@ euler.default <- function(combinations,
       }
 
       GenSA_solution <- GenSA::GenSA(
-        par = nlm_solution,
+        par = as.vector(newpars),
         fn = optim_final_loss,
         lower = lwr,
         upper = upr,
