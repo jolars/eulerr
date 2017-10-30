@@ -241,7 +241,7 @@ euler.default <- function(combinations,
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (!circle && nlm_diagError > extraopt_threshold && n < 5) {
+    if (!circle && nlm_diagError >= extraopt_threshold && n < 6) {
       # Set bounds for the parameters
       newpars <- matrix(
         data = nlm_solution,
@@ -283,7 +283,7 @@ euler.default <- function(combinations,
         upr[5L*(i - 1) + 1L] <- xbnd[2L]
         upr[5L*(i - 1) + 2L] <- ybnd[2L]
         upr[5L*(i - 1) + 3L:4L] <- sqrt(r[i])*4
-        upr[5L*(i - 1) + 5L] <- pi
+        upr[5L*(i - 1) + 5L] <- 2*pi
       }
 
       GenSA_solution <- GenSA::GenSA(
@@ -296,7 +296,7 @@ euler.default <- function(combinations,
         control = utils::modifyList(
           list(threshold.stop = 0,
                smooth = TRUE,
-               max.time = 10),
+               max.call = 4e3*3L^n),
           extraopt_control
         )
       )
