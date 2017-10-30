@@ -208,11 +208,10 @@ compress_layout <- function(fpar, id, fit) {
         phi <- fpar[ii, 5L]
       }
 
-      xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
-      ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+      limits <- get_bounding_box(h, k, a, b, phi)
 
-      bounds[1:2, i] <- range(xlim + h, -xlim + h)
-      bounds[3:4, i] <- range(ylim + k, -ylim + k)
+      bounds[1L:2L, i] <- limits$xlim
+      bounds[3L:4L, i] <- limits$ylim
     }
 
     # Skyline pack the bounding rectangles

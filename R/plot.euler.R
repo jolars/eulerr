@@ -171,7 +171,7 @@ plot.euler <- function(x,
 
   # Update call
   ccall$x <- stats::as.formula(
-    paste("y ~ x",
+    paste("k ~ h",
           if (is_by) paste("|", paste(levels, collapse = " + ")) else "")
   )
 
@@ -223,15 +223,8 @@ prepanel.euler <- function(x,
                            phi,
                            subscripts,
                            ...) {
-  a   <- ra[subscripts]
-  b   <- rb[subscripts]
-  phi <- phi[subscripts]
-
-  xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
-  ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
-
-  list(xlim = range(xlim + x, -xlim + x),
-       ylim = range(ylim + y, -ylim + y))
+  get_bounding_box(h = x, k = y, a = ra[subscripts], b = rb[subscripts],
+                   phi = phi[subscripts])
 }
 
 #' Panel Function for Euler Diagrams
