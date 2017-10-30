@@ -32,7 +32,7 @@ skyline_pack <- function(m) {
   m[] <- 0
 
   # Initialize the skyline
-  skyline <- cbind(c(0, 0), c(bin_w, 0))
+  skyline <- matrix(c(0, 0, bin_w, 0), ncol = 2)
 
   for (i in 1L:n) {
     # Order the points by y coordinate
@@ -43,13 +43,13 @@ skyline_pack <- function(m) {
 
     looking <- TRUE
     while (looking) {
-      j <- which(ord == (1 + 2*k) | ord == (2 + 2*k))[1]
+      j <- which(ord == (1L + 2L*k) | ord == (2L + 2L*k))[1L]
 
       p1 <- ord[ord == j]
-      p2 <- ord[ord == j + 1]
+      p2 <- ord[ord == j + 1L]
 
-      left  <- skyline[2L, 1L:p1] > skyline[2L, p1]
-      right <- skyline[2L, p2:NCOL(skyline)] > skyline[2L, p2]
+      left  <- skyline[2L, 1L:p1] - skyline[2L, p1] > tol
+      right <- skyline[2L, p2:NCOL(skyline)] - skyline[2L, p2] > tol
 
       if (any(left)) {
         # There is a taller rooftop on the skyline to the left
@@ -65,14 +65,14 @@ skyline_pack <- function(m) {
         next_right <- NCOL(skyline)
       }
 
-      if (w[i] < abs(skyline[1L, next_left] - skyline[1L, next_right])) {
-        # Fit a new building in the skyline
+      if (w[i] <= skyline[1L, next_right] - skyline[1L, next_left]) {
+        # Build a new building on the skyline
         m[1L, i] <- skyline[1L, next_left]
         m[2L, i] <- skyline[1L, next_left] + w[i]
         m[3L, i] <- skyline[2L, p1]
         m[4L, i] <- skyline[2L, p2] + h[i]
 
-        l <- if (next_left) 0L else 1L
+        l <- if (next_left == 1) 0 else 1
 
         skyline[2L, next_left + l] <- skyline[2L, p1] + h[i]
 
