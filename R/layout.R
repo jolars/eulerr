@@ -39,13 +39,14 @@ skyline_pack <- function(m) {
     ord <- order(skyline[2L, ])
 
     # Start by examining the lowest rooftop on the skyline
-    j <- which(ord < 3)[1]
-    k <- j + 1L
+    k <- 0L
 
     looking <- TRUE
     while (looking) {
+      j <- which(ord == (1 + 2*k) | ord == (2 + 2*k))[1]
+
       p1 <- ord[ord == j]
-      p2 <- ord[ord == k]
+      p2 <- ord[ord == j + 1]
 
       left  <- skyline[2L, 1L:p1] > skyline[2L, p1]
       right <- skyline[2L, p2:NCOL(skyline)] > skyline[2L, p2]
@@ -96,8 +97,7 @@ skyline_pack <- function(m) {
         looking <- FALSE
       } else {
         # Examine the next rooftop
-        j <- j + 2L
-        k <- k + 2L
+        k <- k + 1L
       }
     }
   }
