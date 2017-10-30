@@ -154,9 +154,11 @@ arma::mat locate_centers(const arma::vec& h,
             }
           }
           if (arma::any(locs)) {
-            arma::mat p2 = p1.cols(arma::find(locs, 1));
-            if (p2.n_cols == 1) {
-              xy.col(j) = nelderMead(p2.rows(0, 1), dist_loss, h, k, a, b, phi);
+            arma::mat p2 = p1.cols(arma::find(locs));
+            if (p2.n_cols != 0) {
+              arma::uword midpos = std::ceil(p2.n_cols/2);
+              xy.col(j) = nelderMead(p2(arma::span(0, 1), midpos),
+                                     dist_loss, h, k, a, b, phi);
             }
           }
         }
