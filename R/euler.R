@@ -246,7 +246,7 @@ euler.default <- function(combinations,
       newpars <- matrix(
         data = nlm_solution,
         ncol = 5L,
-        dimnames = list(setnames, c("x", "y", "a", "b", "phi")),
+        dimnames = list(setnames, c("h", "k", "a", "b", "phi")),
         byrow = TRUE
       )
 
@@ -328,7 +328,7 @@ euler.default <- function(combinations,
       ncol = if (circle) 3L else 5L,
       dimnames = list(
         setnames,
-        if (circle) c("x", "y", "r") else c("x", "y", "a", "b", "phi")
+        if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
       ),
       byrow = TRUE
     )
@@ -349,7 +349,7 @@ euler.default <- function(combinations,
       ncol = if (circle) 3L else 5L,
       dimnames = list(
         setnames,
-        if (circle) c("x", "y", "r") else c("x", "y", "a", "b", "phi")
+        if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
       ),
       byrow = TRUE
     )

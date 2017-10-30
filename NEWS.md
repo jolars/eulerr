@@ -1,29 +1,31 @@
 # eulerr 2.0.0.9000
 ## Major changes
 * Ellipses are now supported by setting the new argument `shape = "ellipse"`
-in `euler()`. This added functionality is provided through an almost complete
-overhaul of the inner workings of the function.
+in `euler()`. This functionality is accompanies an overhaul of the
+innards of the function.
 * Initial optimization routines have been ported to c++.
 * The initial optimizer has been switched from
 `stats::optim(..., method = "L-BFGS-B")` to `stats::nlm()'.
 * The final optimizer now falls back to `GenSA::GenSA()` when the fit from
 `nlm()` isn't good enough.
 * A packing algorithm has been introduced to stack disjoint
-clusters of ellipses/circles together (since the initial optimizer) no longer
-constrains the layout.
-* Location of overlap centers have been rewritten to handle ellipses and
-ported to c++.
+clusters of ellipses/circles together (since the initial optimizer no longer
+constrains the layout).
+* The label placement algorithm has been rewritten to handle ellipses and
+ported to C++.
 
 ## Minor changes
 * The initial layout now runs 10 restarts and picks the best of these.
 * The default palette has been changed to a fixed palette, still adapted
 to color deficiency, but with some manual adjustments to, among other things,
-prevent the use of color unless necessary.
-* Labeling is now accomplished via numerical optimization, which should provide
-slightly more accurate locations.
-* Detect and enable openMP support (when it is supported).
+avoid unnecessary use of color.
+* Labeling is now accomplished via numerical optimization routines, which should
+provide slightly more accurate locations.
+* OpenMP is enabled by default (if supported).
 * The names of the `diagError` and `regionError` metrics have been changed from
-`diag_error` and `region_error` to the former to reflect the original names.
+`diag_error` and `region_error` to reflect the original names.
+* The coordinates for the centers are now called *h* and *k* instead of
+*x* and *y*, respectively.
 * Bounding box computations for ellipses were made simpler and more robust.
 
 # eulerr 2.0.0
