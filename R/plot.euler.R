@@ -223,17 +223,8 @@ prepanel.euler <- function(x,
                            phi,
                            subscripts,
                            ...) {
-  h   <- x
-  k   <- y
-  a   <- ra[subscripts]
-  b   <- rb[subscripts]
-  phi <- phi[subscripts]
-
-  xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
-  ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
-
-  list(xlim = range(xlim + h, -xlim + h),
-       ylim = range(ylim + k, -ylim + k))
+  get_bounding_box(h = x, k = y, a = ra[subscripts], b = rb[subscripts],
+                   phi = phi[subscripts])
 }
 
 #' Panel Function for Euler Diagrams
