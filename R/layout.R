@@ -10,15 +10,19 @@ skyline_pack <- function(m) {
   # TODO: Port to c++
 
   n <- NCOL(m)
-  w <- (m[2L, ] - m[1L, ])
-  h <- (m[4L, ] - m[3L, ])
+  w <- m[2L, ] - m[1L, ]
+  h <- m[4L, ] - m[3L, ]
   sizes <- h*w
 
   # Add some padding for the rectangles
-  padding <- 1.6*sqrt(sum(sizes))*0.015
+  #padding <- 1.6*sqrt(sum(sizes))*0.015
+  padding <- sum(w, na.rm = TRUE)*0.8*0.015
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
-  bin_w <- max(1.6*sqrt(sum(sizes)), w + padding)
+  #bin_w <- max(1.6*sqrt(sum(sizes)), w + padding)
+  bin_w <- max(sum(w, na.rm = TRUE)*0.8,
+               sum(w[order(w, decreasing = TRUE)][1:2] + 2*padding),
+               w + padding)
 
   w <- w + padding
   h <- h + padding
@@ -35,16 +39,17 @@ skyline_pack <- function(m) {
     ord <- order(skyline[2L, ])
 
     # Start by examining the lowest rooftop on the skyline
-    j <- 1L
-    k <- 2L
+    k <- 0L
 
     looking <- TRUE
     while (looking) {
-      p1 <- ord[j]
-      p2 <- ord[k]
+      j <- which(ord == (1 + 2*k) | ord == (2 + 2*k))[1]
 
-      left  <- skyline[2L, seq.int(1L, p1)] - skyline[2L, p1] > tol
-      right <- skyline[2L, seq.int(p2, NCOL(skyline))] - skyline[2L, p2] > tol
+      p1 <- ord[ord == j]
+      p2 <- ord[ord == j + 1]
+
+      left  <- skyline[2L, 1L:p1] > skyline[2L, p1]
+      right <- skyline[2L, p2:NCOL(skyline)] > skyline[2L, p2]
 
       if (any(left)) {
         # There is a taller rooftop on the skyline to the left
@@ -73,7 +78,7 @@ skyline_pack <- function(m) {
 
         newcols <-
           rbind(c(skyline[1L, next_left] + w[i], skyline[1L, next_left] + w[i]),
-                c(skyline[2L, p2] + h[i]       , skyline[2L, p2]))
+                c(skyline[2L, p2] + h[i], skyline[2L, p2]))
 
         skyline <- cbind(skyline[, seq(1L, next_left + l), drop = FALSE],
                          newcols,
@@ -92,8 +97,7 @@ skyline_pack <- function(m) {
         looking <- FALSE
       } else {
         # Examine the next rooftop
-        j <- j + 2L
-        k <- k + 2L
+        k <- k + 1L
       }
     }
   }

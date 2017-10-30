@@ -12,7 +12,8 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), ...)
+  shape = c("circle", "ellipse"), extraopt_threshold = 0.01,
+  extraopt_control = list(), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
 
@@ -32,6 +33,15 @@ data.frame. (See the methods (by class) section for details.)}
 (\code{disjoint}) or unions (\code{union}).}
 
 \item{shape}{The geometric shape used in the diagram: circles or ellipses.}
+
+\item{extraopt_threshold}{The threshold, in terms of \code{diagError}, for when
+the extra optimizer kicks in to try to improve the solution. This will
+almost always slow down the process considerably. A value of 0 means
+that the extra optimizer will kick in if there is \emph{any} error. A value of
+1 means that it will never kick in.}
+
+\item{extraopt_control}{A list of control parameters to pass to the
+extra optimizer, such as \code{max.call}. See \code{\link[GenSA:GenSA]{GenSA::GenSA()}}.}
 
 \item{weights}{A numeric vector of weights of the same length as \code{by} and
 the number of rows in \code{combinations}.}

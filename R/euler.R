@@ -269,21 +269,20 @@ euler.default <- function(combinations,
         ybnd <- range(ylim + k, -ylim + k)
       }
 
-      # lwr <- rep.int(0, n*5L)
-      # upr <- rep.int(c(rep.int(bnd, 4L), pi), n)
-
       lwr <- double(5L*n)
       upr <- double(5L*n)
       for (i in seq_along(r)) {
-        lwr[5L*(i - 1) + 1L] <- xbnd[1L]
-        lwr[5L*(i - 1) + 2L] <- ybnd[1L]
-        lwr[5L*(i - 1) + 3L:4L] <- sqrt(r[i])/4
-        lwr[5L*(i - 1) + 5L] <- 0
+        ii <- 5L*(i - 1L)
 
-        upr[5L*(i - 1) + 1L] <- xbnd[2L]
-        upr[5L*(i - 1) + 2L] <- ybnd[2L]
-        upr[5L*(i - 1) + 3L:4L] <- sqrt(r[i])*4
-        upr[5L*(i - 1) + 5L] <- 2*pi
+        lwr[ii + 1L] <- xbnd[1L]
+        lwr[ii + 2L] <- ybnd[1L]
+        lwr[ii + 3L:4L] <- sqrt(r[i])/4
+        lwr[ii + 5L] <- 0
+
+        upr[ii + 1L] <- xbnd[2L]
+        upr[ii + 2L] <- ybnd[2L]
+        upr[ii + 3L:4L] <- sqrt(r[i])*4
+        upr[ii + 5L] <- pi
       }
 
       GenSA_solution <- GenSA::GenSA(

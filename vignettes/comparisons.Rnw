@@ -1,0 +1,502 @@
+\PassOptionsToPackage{usenames,fixpdftex,dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{hyphens}{url}
+%\PassOptionsToPackage{main=swedish}{babel} % for swedish documents
+
+\documentclass[oneside]{scrartcl}
+%\usepackage{showframe}
+\usepackage{placeins}
+\usepackage{sidenotes}
+\usepackage{kantlipsum}
+\usepackage[
+  a4paper,
+  left=24.8mm,
+  top=27.4mm,
+  headsep=2\baselineskip,
+  textwidth=107mm,
+  marginparsep=8.2mm,
+  marginparwidth=49.4mm,
+  textheight=49\baselineskip,
+  headheight=\baselineskip
+]{geometry}
+
+\usepackage[automark,headsepline=false]{scrlayer-scrpage}
+\clearpairofpagestyles
+
+\setheadwidth{textwithmarginpar}
+\setfootwidth{textwithmarginpar}
+\rofoot[\pagemark]{\pagemark}
+\lohead{\headmark}
+
+\title{Comparisons}
+\author{Johan larsson}
+
+%\VignetteIndexEntry{eulerr under the hood}
+
+%\date{28 March 2010} % without \date command, current date is supplied
+
+%\geometry{showframe} % display margins for debugging page layout
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[square,numbers,sort&compress]{natbib}
+
+\usepackage{graphicx} % allow embedded images
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{graphics/}}
+
+\usepackage{booktabs}
+\usepackage{units}
+\usepackage{xspace}
+\usepackage{multicol}
+\usepackage[header,page]{appendix}
+\usepackage{titling}
+
+% Ragged right-justification
+%\usepackage[document]{ragged2e}
+%\setlength{\RaggedRightParindent}{\parindent}
+
+% Lists
+\usepackage[shortlabels]{enumitem}
+\setlist{listparindent=\parindent, parsep=0pt plus 1pt}
+
+\setlength{\droptitle}{-5em}
+\pretitle{\begin{flushleft}\LARGE\bfseries}
+\posttitle{\end{flushleft}}
+\preauthor{\begin{flushleft}\Large}
+\postauthor{\end{flushleft}}
+\predate{\begin{flushleft}\large\itshape}
+\postdate{\end{flushleft}}
+
+% Fonts
+\usepackage[lining]{libertine}
+\usepackage{textcomp}
+\usepackage[varqu,varl,scaled=0.93]{inconsolata}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[libertine,vvarbb,libaltvw,liby]{newtxmath}
+\usepackage[scr=rsfso]{mathalfa}
+\usepackage{bm}
+\useosf
+\usepackage{microtype}
+\usepackage{marginfix}
+%\usepackage{parskip}
+\usepackage{ragged2e}
+\setlength{\RaggedRightParindent}{\parindent}
+
+% Cross-referencing
+\usepackage[noabbrev,capitalize,nameinlink]{cleveref}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{linkcolor=SteelBlue4,
+            citecolor=SteelBlue4,
+            urlcolor=SteelBlue4,
+            colorlinks=true}
+
+%\usepackage{babel}
+\usepackage{morefloats}
+
+% Provide fullwidth environment
+\usepackage{changepage}
+
+\newlength{\overhang}
+\setlength{\overhang}{\marginparwidth}
+\addtolength{\overhang}{\marginparsep}
+\makeatother
+
+\newenvironment{fullwidth}{
+  \begin{addmargin*}[0em]{-\overhang}
+  }{
+  \end{addmargin*}
+}
+
+% Extended verbatim environments
+\usepackage{fancyvrb}
+\fvset{fontsize=\normalsize}% default font size for fancy-verbatim environments
+
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+%\usepackage{blindtext} % for dummy text
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% Theorems and definitions
+\newtheorem{mydef}{Definition}
+
+% Math operators
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Pois}{Pois}
+\DeclareMathOperator{\B}{Bin}
+\DeclareMathOperator{\V}{Var}
+\DeclareMathOperator{\Exp}{Exp}
+
+% Caption styles
+\DeclareCaptionStyle{caption}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{sidecaption}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{marginfigure}{labelfont=bf,labelsep=period,font=small}
+
+\setlength{\RaggedRightParindent}{1em}
+
+\begin{document}
+\RaggedRight
+
+
+<<setup, include = FALSE>>=
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 2.1,
+  fig.height = 2.1,
+  crop = TRUE,
+  fig.align = "center",
+  dev = "pdf",
+  dev.args = list(family = "sans", pointsize = 8),
+  cache = TRUE,
+  fig.path = "figure/graphics-",
+  cache.path = "cache/graphics-"
+)
+library(lattice)
+lattice.options(default.theme = list(fontsize = list(text = 8, points = 4)))
+@
+
+\maketitle
+
+% Always avoid colored links in TOC
+%{\hypersetup{linkcolor=black}
+\tableofcontents
+%}
+
+\section{Introduction}\label{introduction}
+
+\textbf{eulerr} relies on an extensive machinery to turn user input into
+a pretty Euler diagram. Little, or in fact none, of this requires any
+tinkering from the user. To make that happen, however, \textbf{eulerr}
+needs to make several well-formed decisions about the design of the
+diagram on behalf of the user, which is not a trivial task.
+
+This document outlines the implementation of \textbf{eulerr} from input
+to output. It is designed to an up-to-date paper on the innards of the
+program and is therefore likely to evolve as time goes on.
+
+\section{Input}\label{input}
+
+The main function of \textbf{eulerr} is \texttt{euler()}. To start with,
+we need input in the form of
+
+\begin{itemize}
+\item
+  a named numeric vector, such as
+  \texttt{c(A\ =\ 10,\ B\ =\ 5,\ "A\&B"\ =\ 3)}, where ampersands define
+  disjoint set combinations or unions, depending on the argument
+  \texttt{input},
+\item
+a \texttt{data.frame} or \texttt{matrix} of logicals or binary indices
+where each row denotes the set relationships of
+\begin{itemize}
+\item
+either a single observation
+<<>>=
+matrix(sample(c(TRUE, FALSE), 12, replace = TRUE),
+       ncol = 3,
+       dimnames = list(NULL, c("A", "B", "C")))
+@
+\item
+or of a unique set combination if a numeric vector is supplied to the
+argument \texttt{weights},
+<<>>=
+matrix(c(TRUE, FALSE, FALSE,
+         TRUE, TRUE, FALSE,
+         FALSE, FALSE, TRUE),
+       ncol = 3,
+       dimnames = list(NULL, c("A", "B", "C")))
+@
+\end{itemize}
+\item
+a \texttt{table} (max 3 dimensions),
+<<>>=
+as.table(apply(Titanic, 2:4, sum))
+@
+\item
+or a list of sample spaces, such as
+<<>>=
+list(A = c("x", "xy", "xyz"),
+     B = c("xy"),
+     C = c("x", "xyz"))
+@
+\end{itemize}
+
+\noindent If the \texttt{data.frame} or \texttt{matrix} form is used, the user
+additionally has the option to split the data set by a factor and
+compute separate euler diagrams for each split. This is accomplished by
+supplying a factor variable to the \texttt{by} arguments (see the
+documentation in \texttt{?base::by}).
+
+\section{Pre-processing}\label{pre-processing}
+
+\textbf{eulerr} organizes the input of the user into a matrix of binary
+indexes, which in \textbf{R} is represented as a matrix of logicals. For
+a three set configuration, this looks like this,
+
+<<>>=
+library(eulerr)
+eulerr:::bit_indexr(3)
+@
+
+and is accompanied by a vector of the \emph{disjoint} areas of the set
+combinations.
+
+To provide a starting configuration, we work exclusively with circles
+and, given these areas, we figure out the required pairwise distance
+between the sets to achieve a circle--circle overlap that matches the
+set intersection between the sets. We do this numerically, using the
+formula for a circle--circle overlap,
+\begin{multline}
+A = r_1^2\arccos\left(\frac{d^2 + r_1^2 - r_2^2}{2dr_1}\right) +
+r_2^2\arccos\left(\frac{d^2 + r_2^2 - r_1^2}{2dr_2}\right) - \\
+\frac{1}{2}\sqrt{(-d + r_1 + r_2)(d + r_1 - r_2)(d - r_1 + r_2)(d + r_1 + r_2)},
+\end{multline}
+where \emph{r\textsubscript{1}} and \emph{r\textsubscript{2}} are the
+radii of the first and second circles respectively and \emph{d} the
+distance between the circles.
+
+\emph{r\textsubscript{1}} and \emph{r\textsubscript{2}} are known but
+because \emph{d} is not, we approximate it using one-dimensional
+numerical optimization. Our loss function is the squared difference
+between \emph{A} and the desired overlap, which we then optimize using
+\textbf{R}'s \texttt{optimize()}, which is a ``combination of golden
+section search and successive parabolic interpolation''.
+
+<<>>=
+r1 <- 0.7 #radius of set 1
+r2 <- 0.9 #radius of set 2
+overlap <- 1 #area of overlap
+
+stats::optimize(eulerr:::discdisc, #computes the squared loss
+                interval = c(abs(r1 - r2), sum(r1, r2)),
+                r1 = r1,
+                r2 = r2,
+                overlap = overlap)
+
+# minimum is our required distance
+@
+
+\noindent Now that we have the distances, we can proceed to the next step:
+computing an initial configuration.
+
+\section{Initial configuration}\label{initial-configuration}
+
+Our initial layout can be setup in a number of ways; \textbf{eulerr}
+uses one of the methods from Fredrickson's
+\href{https://github.com/benfred/venn.js/}{venn.js}, which features a
+constrained version of multi-dimensional scaling (MDS) based on that of
+Wilkinson's \textbf{R} package
+\href{https://CRAN.R-project.org/package=venneuler}{venneuler}
+(Wilkinson 2012). \textbf{venneuler} tries to place disjoint and subset
+exactly neck-in-neck and at the exact midpoint of the set respectively.
+However, since we are indifferent about where in the space outside (or
+respectively inside) the sets are placed, that behavior becomes
+problematic since it might interfere with locations of other sets that
+need to occupy some of that space.
+
+The MDS algorithm from \textbf{venn.js} circumvents this by assigning a
+loss and gradient of 0 when, for instance, the set relationsships
+\emph{and} the candidate ellipses are disjoint. Then, to optimize the
+pairwise relationsships between sets, \textbf{eulerr} uses the following
+loss and gradient functions.
+
+\begin{quote}
+\[\small
+\text{loss} = \sum_i \sum_j { {\begin{cases}
+    0 & \text{disjoint}(i, j)\\
+    0 & \text{subset}(i, j)\\
+    ((X_{i} - X_{j})^T(X_{i} - X_{j}) - D_{ij}^2) ^2  & \text{otherwise} \\
+\end{cases}}}
+\]
+
+\[\small
+\nabla f(X_{i}) = \sum_j {\begin{cases}
+     \vec{0} & \text{disjoint}(i, j)\\
+     \vec{0} & \text{subset}(i, j)\\
+     4 {((X_{i} - X_{j})^T(X_{i} - X_{j}) - D_{ij}^2)} (X_{i} -
+     X_{j}) & \text{otherwise} \\
+\end{cases}}\] \emph{Source:
+\href{http://www.benfrederickson.com/better-venn-diagrams/}{Better Venn
+Diagrams} by Ben Fredrickson, which includes a nice interactive
+demonstration.}
+\end{quote}
+
+Fredrickson uses the \emph{Polak--Ribiére Conjugate Gradient Method} to
+optimize the initial layout. In our experience this method occasionally
+ends up in local minima, which is why we have opted to use
+\texttt{nlm()} from the \textbf{R} core package \texttt{stats}, which is
+a translation from FORTRAN code developed by Schnabel, Koonatz, and
+Weiss (1985) and uses a mixture of algorithms (Newton and Quasi-Newton).
+
+This initial configuration will work perfectly for any 1--2 set
+combinations and as well as possible with 3 sets if we use circles but
+for all other combinations there is usually a need to fine tune the
+configuration.
+
+\section{Final configuration}\label{final-configuration}
+
+In order to finalize the configuration we need to be able to compute the
+areas of the overlaps of the sets, which as it turns out, is \emph{not}
+trivial. In fact, most of methods rely on approximations of the areas
+by, for instance, quad-tree binning (\textbf{venneuler}) or polygon
+intersections (\textbf{VennMaster} (Kestler et al. 2008)). These methods
+yield reasonable estimates but, given that the computation may have to
+run for a vast number of iterations, are usually prohibitive in terms of
+performance.
+
+\textbf{venn.js} and \textbf{eulerAPE} both, however, use exact
+algorithms. Based on the fact that any intersection of ellipses can be
+represented as a convex polygon with elliptical segments on the fringes,
+it is possible to arrive at exact area calculations.
+
+\subsection{Intersections}\label{intersections}
+
+Finding the areas of the overlaps exactly requires that we first know
+the points at which the different ellipses intersect. \textbf{eulerr}'s
+approach to this is based on a method outlined by Richter-Gebert (2011).
+\textbf{eulerr} owes significant debt to the \textbf{R} package
+\textbf{RConics} (Huber 2014), which has been tremendously helpful in
+developing and, especially, debugging the algorithm. Some parts of the
+code are in fact straight-up translations to C++ from the code in
+\textbf{RConics}.
+
+The method is based in \emph{projective geometry} (rather than
+euclidean). To find the intersection points, the algorithm first
+
+\begin{itemize}
+\item
+  converts the two ellipses from canonical form to matrix notation. The
+  canonical form of a rotated ellipse is given by \[
+  \frac{((x-h)\cos(\phi)+(y-k)\sin(\phi))^2}{a^2}+\frac{((x-h) \sin(A)-(y-k)
+    \cos(\phi))^2}{b^2} = 1,
+  \] where \emph{phi} is the counter-clockwise angle from the positive x
+  axis to the semi-major axis \emph{a}. \emph{b} is the semi-minor axis
+  whilst \emph{(h, k)} is the center of the ellipse. This is then
+  converted to the matrix form \[
+  E = \begin{bmatrix}A & B/2 & D/2 \\
+                 B/2 & C & E/2 \\
+                 D/2 & E/2 & F
+  \end{bmatrix},
+  \] which may be used to represent any conic. We then
+\item
+  split one of the ellipses (conics) into a pencil of two lines, and
+  subsequently
+\item
+  intersect the remaining conic with these two lines, which will yield
+  between 0 and 4 intersection points.
+\end{itemize}
+
+\subsection{Areas}\label{areas}
+
+The next step is to calculate the area of overlap between all the
+possible combinations of ellipses. The solution to this was discovered,
+as far as I know, by Fredrickson who explains it beautifully in a
+\href{http://www.benfrederickson.com/calculating-the-intersection-of-3-or-more-circles/}{blog
+post}. It relies on finding all the intersection points between the
+currently examined sets that are also within these sets. It is then
+trivial to find the area of the convex polygon that these vertices make
+up. Finding the rest of the area, which is made up of the ellipse
+segments between subsequent points, requires a bit of trigonometry.
+
+Here, we have used an algorithm from Eberly (2016), which computes
+circle integral between the points on the ellipse minus the area of the
+triangle made up of the center of the ellipse: \[
+A(\theta_0, \theta_1) = F(\theta_1) - F(\theta_1) -
+\frac{1}{2}|x_1y_0 - x_0y_1|,
+\] \[
+\text{where } F(\theta) = \frac{a}{b}\left[ \theta -
+\arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}
+\right]
+\]
+
+As our loss function, we use the sum of squared differences between the
+disjoint set intersections and the areas we have computed and again use
+the \texttt{nlm()} optimizer to layout the set.
+
+This optimization step is the bottleneck of the overall computations in
+terms of performance, being that we're optimizing over 5 parameters for
+every ellipse (or 3 in the case of circles) -- nevertheless, we're
+profitting immensely from the implementation in the C++ programming
+language through \textbf{Rcpp} (Eddelbuettel and François 2011) and its
+plugin for the linear algebra library \textbf{Armadillo} (Eddelbuettel
+and Sanderson 2014) which ends up making the code much faster than the
+java-based \textbf{venneuler}.
+
+\section{Layout}\label{layout}
+
+Since the optimization steps are unconstrained, we run the risk of
+ending up with dispersed layouts. To fix this, we use the SKYLINE-BL
+rectangle packing algorithm (Jylänki 2010) to pack the disjoint clusters
+of ellipses (in case there are any) into a heuristically chosen bin.
+
+At the time of writing this algorithm is crudely implemented -- for
+instance, it does not attempt to rotate the rectangles (boundaries for
+the ellipses) or attempt to use. Since we're dealing with a rather
+simple version of the rectangle packing problem, however, it seems to do
+the trick.
+
+\section{Output}\label{output}
+
+Before we get to plotting the solution, it is useful to know how well
+the fit from \textbf{eulerr} matches the input. Sometimes euler diagrams
+are just not feasible, particular for combinations with many sets, in
+which case we should stop here and look for another design to visualize
+the set relationships.
+
+It is not, however, obvious what it means for a euler diagram to ``fit
+well''. \textbf{venneuler} uses a metric called \emph{stress}, which is
+defined as \[
+\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2}
+\] where \(\hat{y}_i\) is an ordinary least squares estimate from the
+regression of the fitted areas on the original areas that is being
+explored during optimization.
+
+Meanwhile, \textbf{eulerAPE} (Micallef and Rodgers 2014--17AD) uses
+\emph{diagError}: \[
+\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
+  \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
+\]
+
+Both metrics are given the user after the diagram has been fit, together
+with a table of residuals.
+
+<<>>=
+combo <- c("A" = 1, "B" = 1, "C" = 1,
+           "A&B" = 0.5, "A&C" = 0.5, "C&B" = 0.5)
+
+fit1 <- euler(combo)
+fit1
+@
+
+\begin{marginfigure}
+<<circle-plot, echo = FALSE>>=
+plot(fit1, counts = TRUE)
+@
+\caption{\label{fig:circle-plot}A plot with circles.}
+\end{marginfigure}
+
+\begin{marginfigure}%
+\includegraphics[width=\marginparwidth]{example-image-a}
+\caption{My caption}
+\end{marginfigure}
+
+\begin{figure}
+\sidecaption{My caption}
+\includegraphics[width=\textwidth]{example-image-a}
+\end{figure}
+
+\begin{figure*}
+\sidecaption{My caption}
+\includegraphics[width=\linewidth]{example-image-a}
+\end{figure*}
+
+\end{document}
