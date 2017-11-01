@@ -13,7 +13,7 @@ euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
   shape = c("circle", "ellipse"), extraopt = n_sets(combinations) == 3 &&
-  match.arg(shape) == circle, extraopt_threshold = 0.001,
+  match.arg(shape) == "circle", extraopt_threshold = 0.001,
   extraopt_control = list(), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
