@@ -130,7 +130,7 @@ euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
-  extraopt = n_sets(combinations) == 3 && match.arg(shape) == "circle",
+  extraopt = n_sets(combinations) == 3L && match.arg(shape) == "ellipse",
   extraopt_threshold = 0.001,
   extraopt_control = list(),
   ...
@@ -140,6 +140,8 @@ euler.default <- function(
             !is.null(attr(combinations, "names")),
             !any(names(combinations) == ""),
             !any(duplicated(names(combinations))))
+
+  print(n_sets(combinations))
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
@@ -245,7 +247,7 @@ euler.default <- function(
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (!circle && extraopt && nlm_diagError > extraopt_treshold) {
+    if (extraopt && nlm_diagError > extraopt_threshold) {
       # Set bounds for the parameters
       newpars <- matrix(
         data = nlm_solution,
