@@ -241,7 +241,7 @@ euler.default <- function(combinations,
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (!circle && nlm_diagError >= extraopt_threshold && n < 6) {
+    if (!circle && nlm_diagError > 0.001 && n == 3L) {
       # Set bounds for the parameters
       newpars <- matrix(
         data = nlm_solution,
@@ -298,14 +298,14 @@ euler.default <- function(combinations,
                max.call = 4e3*3L^n),
           extraopt_control
         )
-      )
+      )$par
 
-      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution$par, circle))
+      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution, circle))
       GenSA_diagError <- diagError(GenSA_fit, orig)
 
       # Check for the best solution
       if (GenSA_diagError < nlm_diagError) {
-        final_par <- GenSA_solution$par
+        final_par <- GenSA_solution
         fit <- GenSA_fit
       } else {
         final_par <- nlm_solution
