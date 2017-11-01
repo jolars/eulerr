@@ -141,8 +141,6 @@ euler.default <- function(
             !any(names(combinations) == ""),
             !any(duplicated(names(combinations))))
 
-  print(n_sets(combinations))
-
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
 
