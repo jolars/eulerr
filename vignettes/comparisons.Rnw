@@ -45,10 +45,10 @@
 \graphicspath{{graphics/}}
 
 \usepackage{booktabs}
-\usepackage{units}
-\usepackage{xspace}
-\usepackage{multicol}
-\usepackage[header,page]{appendix}
+%\usepackage{units}
+%\usepackage{xspace}
+%\usepackage{multicol}
+%\usepackage[header,page]{appendix}
 \usepackage{titling}
 
 % Ragged right-justification
@@ -79,9 +79,9 @@
 \useosf
 \usepackage{microtype}
 \usepackage{marginfix}
-%\usepackage{parskip}
-\usepackage{ragged2e}
-\setlength{\RaggedRightParindent}{\parindent}
+\usepackage{parskip}
+\usepackage[document]{ragged2e}
+%\setlength{\RaggedRightParindent}{\parindent}
 
 % Cross-referencing
 \usepackage[noabbrev,capitalize,nameinlink]{cleveref}
@@ -96,8 +96,6 @@
 \usepackage{morefloats}
 
 % Provide fullwidth environment
-\usepackage{changepage}
-
 \newlength{\overhang}
 \setlength{\overhang}{\marginparwidth}
 \addtolength{\overhang}{\marginparsep}
@@ -111,7 +109,7 @@
 
 % Extended verbatim environments
 \usepackage{fancyvrb}
-\fvset{fontsize=\normalsize}% default font size for fancy-verbatim environments
+\fvset{fontsize=\small}% default font size for fancy-verbatim environments
 
 \newcommand{\proglang}[1]{\textsf{#1}}
 \newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
@@ -137,11 +135,7 @@
 \DeclareCaptionStyle{sidecaption}{labelfont=bf,labelsep=period,font=small}
 \DeclareCaptionStyle{marginfigure}{labelfont=bf,labelsep=period,font=small}
 
-\setlength{\RaggedRightParindent}{1em}
-
 \begin{document}
-\RaggedRight
-
 
 <<setup, include = FALSE>>=
 knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
