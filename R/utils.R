@@ -152,3 +152,15 @@ diagError <- function(fit, orig, regionError = NULL) {
     max(abs(fit/sum(fit) - orig/sum(orig)))
   }
 }
+
+#' Get the number of sets in he input
+#'
+#' @param combinations A vector of combinations (see [euler()]).
+#'
+#' @return The number of sets in the input
+#' @export
+#' @keywords internal
+n_sets <- function(combinations) {
+  combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
+  length(unique(unlist(combo_names, use.names = FALSE)))
+}
