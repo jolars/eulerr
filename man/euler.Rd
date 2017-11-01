@@ -12,7 +12,8 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), extraopt_threshold = 0.01,
+  shape = c("circle", "ellipse"), extraopt = n_sets(combinations) == 3 &&
+  match.arg(shape) == circle, extraopt_threshold = 0.001,
   extraopt_control = list(), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
@@ -34,8 +35,11 @@ data.frame. (See the methods (by class) section for details.)}
 
 \item{shape}{The geometric shape used in the diagram: circles or ellipses.}
 
+\item{extraopt}{Should the more thorough optimizer (currently
+\code{\link[GenSA:GenSA]{GenSA::GenSA()}}) kick in (provided \code{extraopt_threshold} is exceeded)?}
+
 \item{extraopt_threshold}{The threshold, in terms of \code{diagError}, for when
-the extra optimizer kicks in to try to improve the solution. This will
+the extra optimizer kicks. This will
 almost always slow down the process considerably. A value of 0 means
 that the extra optimizer will kick in if there is \emph{any} error. A value of
 1 means that it will never kick in.}

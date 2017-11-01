@@ -47,8 +47,10 @@
 #' @param input The type of input: disjoint class combinations
 #'   (`disjoint`) or unions (`union`).
 #' @param shape The geometric shape used in the diagram: circles or ellipses.
+#' @param extraopt Should the more thorough optimizer (currently
+#'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)?
 #' @param extraopt_threshold The threshold, in terms of `diagError`, for when
-#'   the extra optimizer kicks in to try to improve the solution. This will
+#'   the extra optimizer kicks. This will
 #'   almost always slow down the process considerably. A value of 0 means
 #'   that the extra optimizer will kick in if there is *any* error. A value of
 #'   1 means that it will never kick in.
@@ -124,12 +126,15 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'   Missing combinations are treated as being 0.
 #'
 #' @export
-euler.default <- function(combinations,
-                          input = c("disjoint", "union"),
-                          shape = c("circle", "ellipse"),
-                          extraopt_threshold = 0.01,
-                          extraopt_control = list(),
-                          ...) {
+euler.default <- function(
+  combinations,
+  input = c("disjoint", "union"),
+  shape = c("circle", "ellipse"),
+  extraopt = n_sets(combinations) == 3 && match.arg(shape) == circle,
+  extraopt_threshold = 0.001,
+  extraopt_control = list(),
+  ...
+) {
   stopifnot(is.numeric(combinations),
             !any(combinations < 0),
             !is.null(attr(combinations, "names")),
@@ -226,9 +231,8 @@ euler.default <- function(combinations,
 
     orig <- areas_disjoint
 
-    # TODO: Allow user options here?
-
     # Try to find a solution using nlm() first (faster)
+    # TODO: Allow user options here?
     nlm_solution <- stats::nlm(
       f = optim_final_loss,
       p = pars,
@@ -241,7 +245,7 @@ euler.default <- function(combinations,
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (!circle && nlm_diagError > 0.001 && n == 3L) {
+    if (!circle && extraopt && nlm_diagError > extraopt_treshold) {
       # Set bounds for the parameters
       newpars <- matrix(
         data = nlm_solution,
