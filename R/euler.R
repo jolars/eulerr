@@ -443,12 +443,13 @@ euler.table <- function(combinations, ...) {
 }
 
 #' @describeIn euler A list of vectors, each vector giving the contents of
-#'   that set. Vectors in the list do not need to be named.
+#'   that set (with no duplicates). Vectors in the list do not need to be named.
 #' @export
 euler.list <- function(combinations, ...) {
   stopifnot(!is.null(attr(combinations, "names")),
             !any(names(combinations) == ""),
-            !any(duplicated(names(combinations))))
+            !any(duplicated(names(combinations))),
+            all(sapply(combinations, anyDuplicated) == 0))
 
   sets <- names(combinations)
   n <- length(sets)
