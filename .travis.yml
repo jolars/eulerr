@@ -37,7 +37,7 @@ matrix:
       r: release
       r_build_args: '--compact-vignettes=both'
       before_install:
-        - tlmgr install fontaxes sttools mweights libertine mathalfa units sidenotes
+        - tlmgr install fontaxes sttools mweights libertine mathalfa units sidenotes marginnote
       r_github_packages:
         - jimhester/covr
       after_success:
