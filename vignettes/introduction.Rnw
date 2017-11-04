@@ -150,7 +150,7 @@
 
 <<setup, include = FALSE>>=
 knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
-knit_hooks$set(document = function(x) {
+knitr::knit_hooks$set(document = function(x) {
   sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)
 })
 
