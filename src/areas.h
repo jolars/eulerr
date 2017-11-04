@@ -53,9 +53,10 @@ double montecarlo(arma::mat ellipses) {
 // David Eberly, Geometric Tools, LLC (c) 1998-2016
 //
 // Area of an ellipse sector
-inline arma::vec sector_area(const double a,
-                             const double b,
-                             const arma::vec& theta) {
+inline
+arma::vec sector_area(const double a,
+                      const double b,
+                      const arma::vec& theta) {
   return 0.5*a*b*(theta - arma::atan2((b - a)*arma::sin(2*theta),
                                       b + a + (b - a)*arma::cos(2*theta)));
 }
@@ -65,6 +66,7 @@ inline arma::vec sector_area(const double a,
 // Area of a sector
 //
 // Compute the area of an ellipse segment.
+inline
 double ellipse_segment(const arma::vec& ellipse,
                        arma::vec p0,
                        arma::vec p1) {
@@ -85,7 +87,7 @@ double ellipse_segment(const arma::vec& ellipse,
   arma::vec::fixed<2> theta = arma::atan2(y, x);
 
   if (theta(1) < theta(0))
-    theta(1) += 2*arma::datum::pi;
+    theta(1) += 2.0*arma::datum::pi;
 
   // Triangle part of the sector
   double triangle = 0.5*std::abs(x(1)*y(0) - x(0)*y(1));
@@ -97,7 +99,7 @@ double ellipse_segment(const arma::vec& ellipse,
     arma::vec::fixed<2> sector = sector_area(a, b, theta);
     return sector(1) - sector(0) - triangle;
   } else {
-    theta(0) += 2*arma::datum::pi;
+    theta(0) += 2.0*arma::datum::pi;
 
     //Sector area
     arma::vec::fixed<2> sector = sector_area(a, b, theta);
@@ -123,7 +125,7 @@ double polysegments(arma::mat points,
   parents = parents.cols(ind);
   x_int   = x_int(ind);
   y_int   = y_int(ind);
-  double area = 0;
+  double area = 0.0;
 
   for (arma::uword i = 0, j = n - 1; i < n; ++i) {
     // First discover which ellipses the points belong to
