@@ -4,9 +4,6 @@
 #ifndef eulerr_neldermead_h_
 #define eulerr_neldermead_h_
 
-// [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
-
 #include <RcppArmadillo.h>
 
 template <class Fun, class...Pars>

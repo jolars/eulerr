@@ -3,7 +3,6 @@
 
 #include <RcppArmadillo.h>
 
-// [[Rcpp::depends(RcppArmadillo)]]
 inline
 arma::umat find_surrounding_sets(const arma::rowvec& x,
                                  const arma::rowvec& y,

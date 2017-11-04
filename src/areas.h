@@ -5,7 +5,6 @@
 #include "transformations.h"
 #include "geometry.h"
 
-// [[Rcpp::depends(RcppArmadillo)]]
 // Area of an ellipse
 inline double ellipse_area(const arma::vec& v) {
   return arma::datum::pi*v(2)*v(3);

@@ -2,8 +2,6 @@
 
 #include <RcppArmadillo.h>
 
-// [[Rcpp::depends(RcppArmadillo)]]
-
 // Loss and gradient for the initial optimizer.
 // [[Rcpp::export]]
 Rcpp::NumericVector optim_init(const arma::rowvec& par,

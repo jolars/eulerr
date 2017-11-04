@@ -7,7 +7,6 @@
 #include "neldermead.h"
 #include "geometry.h"
 
-// [[Rcpp::depends(RcppArmadillo)]]
 // The code below code is adapted from "Distance from a Point to an Ellipse, an
 // Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
 // (c) 1998-2016
