@@ -2,44 +2,97 @@
 
 \PassOptionsToPackage{usenames,fixpdftex,dvipsnames,svgnames,x11names}{xcolor}
 \PassOptionsToPackage{hyphens}{url}
-%\PassOptionsToPackage{main=swedish}{babel} % for swedish documents
+\PassOptionsToPackage{font=small,labelfont=bf,labelsep=period}{caption}
 
 \documentclass[
-  11pt,
+  numbers=noendperiod,
+  bibliography=totoc
+]{scrartcl}
+
+% Page layout
+\usepackage[
   a4paper,
-  nofonts,
-  nobib
-]{tufte-handout}
+  left=23mm,
+  top=27.4mm,
+  bottom=27.4mm,
+  textwidth=107mm,
+  marginparsep=8mm,
+  marginparwidth=49mm,
+]{geometry}
+\usepackage{multicol}
 
-\title[eulerr under the hood]{eulerr under the hood}
-\author{Johan Larsson}
+% Margin paragraph
+\usepackage{sidenotes}
+\usepackage{marginfix}
 
-%\date{28 March 2010} % without \date command, current date is supplied
+% Headers and footers
+\usepackage[
+  automark,
+  headsepline=false,
+  headwidth=textwithmarginpar,
+  footwidth=head
+]{scrlayer-scrpage}
 
-%\geometry{showframe} % display margins for debugging page layout
+\clearpairofpagestyles
+\rofoot[\pagemark]{\pagemark}
+\lohead{\headmark}
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[square,numbers,sort&compress]{natbib}
+% Title page
+\title{eulerr under the hood}
+\author{Johan larsson}
+\date{\today}
 
-\usepackage{graphicx} % allow embedded images
+\usepackage{titling}
+\setlength{\droptitle}{-5em}
+\pretitle{\begin{flushleft}\LARGE\bfseries}
+\posttitle{\end{flushleft}}
+\preauthor{\begin{flushleft}\Large}
+\postauthor{\end{flushleft}}
+\predate{\begin{flushleft}\large\itshape}
+\postdate{\end{flushleft}}
+
+% Graphics
+\usepackage[font=footnotesize]{subcaption}
+\usepackage{graphicx}
 \setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
 \graphicspath{{graphics/}}
 
 \usepackage{booktabs}
-\usepackage{units}
-\usepackage{xspace}
-\usepackage{multicol}
-\usepackage[header,page]{appendix}
-%\usepackage{titling}
-\usepackage{marginfix}
-\usepackage{parskip}
+
+% Text justification and parskip
+%\usepackage[document]{ragged2e}
 
 % Lists
 \usepackage[shortlabels]{enumitem}
-\setlist{listparindent=\parindent, parsep=0pt plus 1pt}
+
+% Algorithms
+\usepackage[vlined]{algorithm2e}
+
+% Bibliography
+\usepackage[square,numbers,sort&compress]{natbib}
+
+% Floats
+\DeclareCaptionType[fileext=alg,name=Algorithm]{alg}
+
+% Extended verbatim environments
+\usepackage{fancyvrb}
+\fvset{fontsize=\small}% default font size for fancy-verbatim environments
+
+% Provide fullwidth environment
+\newlength{\overhang}
+\setlength{\overhang}{\marginparwidth}
+\addtolength{\overhang}{\marginparsep}
+\makeatother
+
+\newenvironment{fullwidth}{
+  \begin{addmargin*}[0em]{-\overhang}
+  }{
+  \end{addmargin*}
+}
 
 % Fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[lining]{libertine}
 \usepackage{textcomp}
 \usepackage[varqu,varl,scaled=0.93]{inconsolata}
@@ -51,51 +104,47 @@
 \useosf
 \usepackage{microtype}
 
-% Cross-referencing
-\usepackage[noabbrev,capitalize,nameinlink]{cleveref}
-\hypersetup{linkcolor=SteelBlue4,
-            citecolor=SteelBlue4,
-            urlcolor=SteelBlue4,
-            colorlinks=true}
-
-%\usepackage{babel}
-\usepackage{morefloats}
-
-% Extended verbatim environments
-\usepackage{fancyvrb}
-\fvset{fontsize=\normalsize}% default font size for fancy-verbatim environments
-
 \newcommand{\proglang}[1]{\textsf{#1}}
 \newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
 \newcommand{\code}[1]{\texttt{#1}}
 
-% Custom headers and footers
-%\fancyhead[RE, RO]{\small{\itshape{\rightmark}}}%
-%\fancyfoot[LE,LO]{\thepage}
-%\fancyfoot[RE,RO]{}
-%\fancyfoot[C]{\thepage}
-%\cfoot{\nouppercase{\thepage}}
-
-% \fancypagestyle{plain}{
-%   \fancyhf{}
-%   \fancyfoot[LE,LO]{\thepage} % same placement as with page style "fancy"
-%   \renewcommand{\headrulewidth}{0pt}
-% }
-
-%\usepackage{blindtext} % for dummy text
-
-\usepackage{algorithm}
-\usepackage{algorithmic}
-
-% Theorems and definitions
-\newtheorem{mydef}{Definition}
-
-% Math operators
+% Custom operators
 \DeclareMathOperator{\E}{E}
 \DeclareMathOperator{\Pois}{Pois}
 \DeclareMathOperator{\B}{Bin}
 \DeclareMathOperator{\V}{Var}
 \DeclareMathOperator{\Exp}{Exp}
+
+% Caption styles (caption package is loaded with sidenotes)
+\DeclareCaptionStyle{sidecaption}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{marginfigure}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{margintable}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{widefigure}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{widetable}{labelfont=bf,labelsep=period,font=small}
+
+% Cross-referencing and colors
+\usepackage{hyperref}
+\usepackage[noabbrev,capitalize,nameinlink]{cleveref}
+\usepackage{xcolor}
+\hypersetup{linkcolor=SteelBlue4,
+            citecolor=SteelBlue4,
+            urlcolor=SteelBlue4,
+            colorlinks=true}
+
+% Change fontsize in sidenotes
+\makeatletter
+\ExplSyntaxOn
+\RenewDocumentCommand \sidenotetext { o o +m }
+{
+  \IfNoValueOrEmptyTF{#1}
+    {
+      \@sidenotes@placemarginal{#2}{\textsuperscript{\thesidenote}{}\small~#3}
+  \refstepcounter{sidenote}
+}
+    {\@sidenotes@placemarginal{#2}{\textsuperscript{#1}\small~#3}}
+}
+\ExplSyntaxOff
+\makeatother
 
 \begin{document}
 
@@ -357,8 +406,8 @@ euclidean). To find the intersection points, the algorithm first
 \subsection{Areas}\label{areas}
 
 The next step is to calculate the area of overlap between all the
-possible combinations of ellipses. The solution to this was discovered,
-as far as I know, by Fredrickson who explains it beautifully in a
+possible combinations of ellipses. A solution for this, albeit only for circles,
+was first published by Fredrickson in a
 \href{http://www.benfrederickson.com/calculating-the-intersection-of-3-or-more-circles/}{blog
 post}. It relies on finding all the intersection points between the
 currently examined sets that are also within these sets. It is then
@@ -381,13 +430,25 @@ As our loss function, we use the sum of squared differences between the disjoint
 set intersections and the areas we have computed and again use the
 \texttt{nlm()} optimizer to layout the set.
 
+In \emph{rare} instances, the algorithm breaks down because of numerical precision
+errors that might, for instance, lead to some intersection points being
+left out. In these cases, we rely instead on a approximation by sampling
+points inside the ellipses and comptuting the area of the required overlap
+as the proportion of points inside that overlap to those in the ellipse
+multiplied with the ellipse's area.
+
 This optimization step is the bottleneck of the overall computations in terms of
-performance, being that we're optimizing over 5 parameters for every ellipse
-(or 3 in the case of circles) -- nevertheless, we're profitting immensely from
+performance, being that we're optimizing over five parameters for every ellipse
+(or 3 in the case of circles)---nevertheless, we're profitting from
 the implementation in the \proglang{C++} programming language through
 \pkg{Rcpp}~\citep{eddelbuettel_2011} and its plugin for the linear algebra
-library \pkg{Armadillo}~\citep{eddelbuettel_2014} which ends up making the
-code much faster than the java-based \pkg{venneuler}.
+library \pkg{Armadillo}~\citep{eddelbuettel_2014}. When the number of sets
+is low, \pkg{eulerr} outperforms \pkg{venneuler}, whereas the
+relationship reverses as the number of sets increase (around seven), when
+the sheer number of overlaps that \pkg{eulerr} has to examine bogs it down.
+
+In a future version, it is possible that a alternative, approximative method
+will be introduced to deal with relationships with large numbers of sets.
 
 \section{Layout}\label{layout}
 

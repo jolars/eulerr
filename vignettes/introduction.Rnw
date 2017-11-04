@@ -1,41 +1,48 @@
-%\VignetteIndexEntry{an introduction to eulerr}
+%\VignetteIndexEntry{Introducing eulerr}
 
 \PassOptionsToPackage{usenames,fixpdftex,dvipsnames,svgnames,x11names}{xcolor}
 \PassOptionsToPackage{hyphens}{url}
-%\PassOptionsToPackage{main=swedish}{babel} % for swedish documents
+\PassOptionsToPackage{font=small,labelfont=bf,labelsep=period}{caption}
 
 \documentclass[
+  numbers=noendperiod,
+  bibliography=totoc
+]{scrartcl}
+
+% Page layout
+\usepackage[
   a4paper,
-  nofonts,
-  nobib
-]{tufte-handout}
-
-\title[An Introduction to eulerr]{An Introduction to eulerr}
-\author{Johan Larsson}
-
-%\date{28 March 2010} % without \date command, current date is supplied
-
-%\geometry{showframe} % display margins for debugging page layout
-
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[square,numbers,sort&compress]{natbib}
-
-\usepackage{graphicx} % allow embedded images
-\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
-\graphicspath{{graphics/}}
-
-\usepackage{booktabs}
-\usepackage{units}
-\usepackage{xspace}
+  left=23mm,
+  top=27.4mm,
+  bottom=27.4mm,
+  textwidth=107mm,
+  marginparsep=8mm,
+  marginparwidth=49mm,
+]{geometry}
 \usepackage{multicol}
-\usepackage[header,page]{appendix}
+
+% Margin paragraph
+\usepackage{sidenotes}
+\usepackage{marginfix}
+
+% Headers and footers
+\usepackage[
+  automark,
+  headsepline=false,
+  headwidth=textwithmarginpar,
+  footwidth=head
+]{scrlayer-scrpage}
+
+\clearpairofpagestyles
+\rofoot[\pagemark]{\pagemark}
+\lohead{\headmark}
+
+% Title page
+\title{Introducing eulerr}
+\author{Johan larsson}
+\date{\today}
+
 \usepackage{titling}
-
-% Lists
-\usepackage[shortlabels]{enumitem}
-\setlist{listparindent=\parindent, parsep=0pt plus 1pt}
-
 \setlength{\droptitle}{-5em}
 \pretitle{\begin{flushleft}\LARGE\bfseries}
 \posttitle{\end{flushleft}}
@@ -44,7 +51,48 @@
 \predate{\begin{flushleft}\large\itshape}
 \postdate{\end{flushleft}}
 
+% Graphics
+\usepackage[font=footnotesize]{subcaption}
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{graphics/}}
+
+\usepackage{booktabs}
+
+% Text justification and parskip
+%\usepackage[document]{ragged2e}
+
+% Lists
+\usepackage[shortlabels]{enumitem}
+
+% Algorithms
+\usepackage[vlined]{algorithm2e}
+
+% Bibliography
+\usepackage[square,numbers,sort&compress]{natbib}
+
+% Floats
+\DeclareCaptionType[fileext=alg,name=Algorithm]{alg}
+
+% Extended verbatim environments
+\usepackage{fancyvrb}
+\fvset{fontsize=\small}% default font size for fancy-verbatim environments
+
+% Provide fullwidth environment
+\newlength{\overhang}
+\setlength{\overhang}{\marginparwidth}
+\addtolength{\overhang}{\marginparsep}
+\makeatother
+
+\newenvironment{fullwidth}{
+  \begin{addmargin*}[0em]{-\overhang}
+  }{
+  \end{addmargin*}
+}
+
 % Fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[lining]{libertine}
 \usepackage{textcomp}
 \usepackage[varqu,varl,scaled=0.93]{inconsolata}
@@ -56,76 +104,55 @@
 \useosf
 \usepackage{microtype}
 
-% Cross-referencing
-\usepackage[noabbrev,capitalize,nameinlink]{cleveref}
-\hypersetup{linkcolor=SteelBlue4,
-            citecolor=SteelBlue4,
-            urlcolor=SteelBlue4,
-            colorlinks=true}
-
-%\usepackage{babel}
-\usepackage{morefloats}
-
-% Extended verbatim environments
-\usepackage{fancyvrb}
-\fvset{fontsize=\normalsize}% default font size for fancy-verbatim environments
-
 \newcommand{\proglang}[1]{\textsf{#1}}
 \newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
 \newcommand{\code}[1]{\texttt{#1}}
 
-\titleformat{\section}{\normalfont\bfseries\Large}{\thesection}{1em}{}
-\titleformat{\subsection}{\normalfont\bfseries\large}{\thesubsection}{1em}{}
-\titleformat{\chapter}{\normalfont\bfseries\LARGE}{\thechapter}{1em}{}
-
-% Modify caption formatting (bold format and period sep)
-\makeatletter
-\long\def\@caption#1[#2]#3{%
-  \par
-  \addcontentsline{\csname ext@#1\endcsname}{#1}%
-    {\protect\numberline{\csname the#1\endcsname}{\ignorespaces #2}}%
-  \begingroup
-    \@parboxrestore
-    \if@minipage
-      \@setminipage
-    \fi
-    \@tufte@caption@font\@tufte@caption@justification
-    \bfseries\noindent\csname fnum@#1\endcsname. \normalfont\ignorespaces#3\par
-  \endgroup}
-\makeatother
-
-% Custom headers and footers
-%\fancyhead[RE, RO]{\small{\itshape{\rightmark}}}%
-%\fancyfoot[LE,LO]{\thepage}
-%\fancyfoot[RE,RO]{}
-%\fancyfoot[C]{\thepage}
-%\cfoot{\nouppercase{\thepage}}
-
-% \fancypagestyle{plain}{
-%   \fancyhf{}
-%   \fancyfoot[LE,LO]{\thepage} % same placement as with page style "fancy"
-%   \renewcommand{\headrulewidth}{0pt}
-% }
-
-%\usepackage{blindtext} % for dummy text
-
-\usepackage{algorithm}
-\usepackage{algorithmic}
-
-% Theorems and definitions
-\newtheorem{mydef}{Definition}
-
-% Math operators
+% Custom operators
 \DeclareMathOperator{\E}{E}
 \DeclareMathOperator{\Pois}{Pois}
 \DeclareMathOperator{\B}{Bin}
 \DeclareMathOperator{\V}{Var}
 \DeclareMathOperator{\Exp}{Exp}
 
+% Caption styles (caption package is loaded with sidenotes)
+\DeclareCaptionStyle{sidecaption}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{marginfigure}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{margintable}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{widefigure}{labelfont=bf,labelsep=period,font=small}
+\DeclareCaptionStyle{widetable}{labelfont=bf,labelsep=period,font=small}
+
+% Cross-referencing and colors
+\usepackage{hyperref}
+\usepackage[noabbrev,capitalize,nameinlink]{cleveref}
+\usepackage{xcolor}
+\hypersetup{linkcolor=SteelBlue4,
+            citecolor=SteelBlue4,
+            urlcolor=SteelBlue4,
+            colorlinks=true}
+
+% Change fontsize in sidenotes
+\makeatletter
+\ExplSyntaxOn
+\RenewDocumentCommand \sidenotetext { o o +m }
+{
+  \IfNoValueOrEmptyTF{#1}
+    {
+      \@sidenotes@placemarginal{#2}{\textsuperscript{\thesidenote}{}\small~#3}
+  \refstepcounter{sidenote}
+}
+    {\@sidenotes@placemarginal{#2}{\textsuperscript{#1}\small~#3}}
+}
+\ExplSyntaxOff
+\makeatother
+
 \begin{document}
 
 <<setup, include = FALSE>>=
 knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+knit_hooks$set(document = function(x) {
+  sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)
+})
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -134,6 +161,7 @@ knitr::opts_chunk$set(
   fig.width = 2.1,
   fig.height = 2.1,
   crop = TRUE,
+  size = "small",
   fig.align = "center",
   dev = "pdf",
   dev.args = list(family = "sans", pointsize = 8),
@@ -172,25 +200,37 @@ some of the more prominent ones (on CRAN) are
 \item \href{https://cran.r-project.org/package=colorfulVennPlot}{colorfulVennPlot}, and
 \item \href{https://cran.r-project.org/package=venneuler}{venneuler}.
 \end{itemize}
-The last of these (\pkg{venneuler}) was the primary inspiration for this package, along with the refinements that Fredrickson has presented on his \href{http://www.benfrederickson.com/}{blog} and made available in his javascript \href{https://github.com/benfred/venn.js}{venn.js}. \href{http://www.eulerdiagrams.org/eulerAPE/}{eulerAPE}, which was the first program to uses ellipses instead of circles, has also been instrumental in the design of \pkg{eulerr}. The downside to \pkg{eulerAPE} is that it only handles three sets that all need to intersect.
+The last of these (\pkg{venneuler}) was the primary inspiration for this
+package, along with the refinements that Fredrickson has presented on his
+\href{http://www.benfrederickson.com/}{blog} and made available in his
+javascript \href{https://github.com/benfred/venn.js}{venn.js}.
+\href{http://www.eulerdiagrams.org/eulerAPE/}{eulerAPE}, which was the first
+program to uses ellipses instead of circles, has also been instrumental in the
+design of \pkg{eulerr}. The downside to \pkg{eulerAPE} is that it only handles
+three sets that all need to intersect.
 
-\emph{enneuler}, on the other hand, will take any number of sets (in theory), yet has been known to produce \href{http://benfred.github.io/venn.js/tests/venneuler_comparison/}{imperfect solutions} for set configurations that have perfect such. And unlike \pkg{eulerAPE}, it is restricted to circles (as is \pkg{venn.js}).
+\emph{enneuler}, on the other hand, will take any number of sets (in theory),
+yet has been known to produce
+\href{http://benfred.github.io/venn.js/tests/venneuler_comparison/}{imperfect solutions}
+for set configurations that have perfect such. And unlike \pkg{eulerAPE}, it is
+restricted to circles (as is \pkg{venn.js}).
 
 \section{Enter eulerr}
 \pkg{eulerr} is based on the improvements to venneuler that Ben Fredrickson
 introduced with \pkg{venn.js} but has been programmed from scratch, uses different
-optimizers, and returns statistics featured in \pkg{venneuler} and \pkg{eulerAPE} as
-well as allows a range of different inputs and conditioning on additional
-variables. Moreover, it can model set relationships with ellipses for any
-number of sets involed.
+optimizers, and returns statistics featured in \pkg{venneuler} and
+\pkg{eulerAPE} as well as allows a range of different inputs and conditioning on
+additional variables. Moreover, it can model set relationships with ellipses for
+any number of sets involed.
 
 \subsection{Input}
-At the time of writing, it is possible to provide input to \pkg{eulerr} as either
+At the time of writing, it is possible to provide input to \pkg{eulerr} as
+either
 \begin{itemize}
 \item a named numeric vector with set combinations as disjoint set combinations
 or unions (depending on how the argument \code{type} is set),
-\item a matrix or data frame of logicals with columns representing sets and rows the
-set relationships for each observation, or
+\item a matrix or data frame of logicals with columns representing sets and rows
+the set relationships for each observation, or
 \item a list of sample spaces.
 \end{itemize}
 
@@ -206,9 +246,9 @@ fit1 <- euler(c("A" = 25, "B" = 5, "C" = 5,
 # Input as a matrix of logicals
 set.seed(1)
 mat <- cbind(
-  A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-  B = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
-  C = sample(c(TRUE, FALSE, FALSE, FALSE), size = 50, replace = TRUE)
+  A = sample(c(TRUE, TRUE, FALSE), 50, TRUE),
+  B = sample(c(TRUE, FALSE), 50, TRUE),
+  C = sample(c(TRUE, FALSE, FALSE, FALSE), 50, TRUE)
 )
 fit2 <- euler(mat)
 @
@@ -220,7 +260,7 @@ We inspect our results by printing the eulerr object
 fit2
 @
 
-\noindent or directly access and plot the residuals.
+or directly access and plot the residuals.
 
 <<residual-plot, eval = FALSE>>=
 # Cleveland dot plot of the residuals
@@ -234,7 +274,7 @@ lattice::dotplot(resid(fit2), xlab = "",
 \begin{marginfigure}
 <<residual-dev,  ref.label='residual-plot', echo = FALSE>>=
 @
-\caption{Residuals for the eulerr fit}
+\caption{Residuals for the fit diagram.}
 \label{fig:residual-plot}
 \end{marginfigure}
 
@@ -252,13 +292,13 @@ coef(fit2)
 
 \subsection{Goodness-of-fit}
 To tell if we can trust our solution, we use two goodness-of-fit measures: the
-stress statistic from venneuler \citet{wilkinson_2012},
+stress statistic from venneuler \cite{wilkinson_2012},
 $$\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}$$
 where $\hat{y}_i$ is an ordinary least squares estimate from the regression of
 the fitted areas on the original areas that is being explored during
 optimization,
 
-and the \emph{diagError} statistic from \pkg{eulerAPE} \citet{micallef2014}:
+and the \emph{diagError} statistic from \pkg{eulerAPE} \cite{micallef2014}:
 
 $$\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
 \frac{\hat{y}_i}{\sum \hat{y}_i} \right|$$
@@ -267,9 +307,9 @@ stress is \Sexpr{fit2$stress}, suggesting that the fit is accurate.
 
 We can now be confident that eulerr provides a reasonable representation of
 our input using circles. Were it otherwise, we might try to use ellipses
-instead. \citep{wilkinson_2012} features a difficult combination that it manages
+instead. \citet{wilkinson_2012} features a difficult combination that it manages
 to fit with a reasonably small error; with \pkg{eulerr}, however, we can get
-rid of that error entirely (Figure \cref{fig:wilkinson2012}).
+rid of that error entirely~(\cref{fig:wilkinson2012}).
 
 <<>>=
 wilkinson2012 <-  c(A = 4, B = 6, C = 3, D = 2, E = 7, F = 3,
@@ -279,13 +319,12 @@ wilkinson2012 <-  c(A = 4, B = 6, C = 3, D = 2, E = 7, F = 3,
 fit3 <- euler(wilkinson2012, shape = "ellipse")
 @
 
-\begin{marginfigure}
-<<wilkinson2012, echo = FALSE>>=
+\begin{figure}
+\sidecaption{A difficult combination modelled with ellipses.\label{fig:wilkinson2012}}
+<<wilkinson2012, echo = FALSE, fig.width = 3.4, fig.height = 2.5>>=
 plot(fit3)
 @
-\caption{A difficult combination modelled with ellipses.}
-\label{fig:wilkinson2012}
-\end{marginfigure}
+\end{figure}
 
 If we still lack a good fit after having tried ellipses, we would do best to
 stop here and look for another way to visualize our data. (I suggest the
@@ -293,9 +332,9 @@ excellent \href{https://cran.r-project.org/package=UpSetR}{UpSetR} package.)
 
 \subsection{Visualization}
 No we get to the fun part: plotting our diagram. This is easy, as well as
-highly customizable, with \pkg{eulerr}. The default parameters
-(Figure \cref{fig:eulerr-plot}) can easily be adjusted to suit anyobody's
-needs (Figure \cref{fig:custom-plot}).
+highly customizable, with \pkg{eulerr}. The default
+parameters~(\cref{fig:eulerr-plot}) can easily be adjusted to suit anyobody's
+needs~(\cref{fig:custom-plot}).
 
 <<eulerr-plot, eval = FALSE>>=
 plot(fit2)
@@ -321,9 +360,14 @@ plot(fit2, fill = "transparent", lty = 1:3, fontface = 4)
 \end{marginfigure}
 
 Plotting is provided through the excellent
-\href{https://CRAN.R-project.org/package=lattice}{lattice} and interfaces all of its bells and whistles to allow for extensive customization of the resulting plots.
+\href{https://CRAN.R-project.org/package=lattice}{lattice} and interfaces all of
+its bells and whistles to allow for extensive customization of the resulting
+plots.
 
-\pkg{eulerr}'s default color palette is taken from \href{https://cran.r-project.org/package=qualpalr}{qualpalr} -- another package that I have developed -- which uses color difference algorithms to generate distinct qualitative color palettes.
+\pkg{eulerr}'s default color palette is taken from
+\href{https://cran.r-project.org/package=qualpalr}{qualpalr}---another package
+that I have developed---which uses color difference algorithms to generate
+distinct qualitative color palettes.
 
 \section{Acknowledgements}
 
