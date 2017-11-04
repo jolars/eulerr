@@ -1,5 +1,3 @@
-// #define ARMA_NO_DEBUG // For the final version
-
 #include <RcppArmadillo.h>
 #include "helpers.h"
 #include "transformations.h"
