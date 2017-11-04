@@ -1,4 +1,4 @@
-// #define ARMA_NO_DEBUG // For the final version
+#define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
 

@@ -1,4 +1,4 @@
-// #define ARMA_NO_DEBUG // For the final version
+#define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
 #include "transformations.h"
@@ -232,6 +232,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
           // Resort to approximation if exact calculation fails
           // TODO: Use a better fallback approximation
           areas(i) = montecarlo(ellipses.cols(ids));
+          Rcpp::Rcout << "well" << std::endl;
         }
       }
     }
