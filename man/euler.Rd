@@ -12,9 +12,9 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), n_threads = 1,
-  extraopt = n_sets(combinations) == 3 && match.arg(shape) == "ellipse",
-  extraopt_threshold = 0.001, extraopt_control = list(), ...)
+  shape = c("circle", "ellipse"), extraopt = n_sets(combinations) == 3 &&
+  match.arg(shape) == "ellipse", extraopt_threshold = 0.001,
+  extraopt_control = list(), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
 
@@ -34,11 +34,6 @@ data.frame. (See the methods (by class) section for details.)}
 (\code{disjoint}) or unions (\code{union}).}
 
 \item{shape}{The geometric shape used in the diagram: circles or ellipses.}
-
-\item{n_threads}{The number of threads to use if OpenMP is supported (and
-the package was compiled with it). Can be either set to an integer
-or, if set to '"auto"', will be automatically detected using
-\code{\link[future:availableCores]{future::availableCores()}}.}
 
 \item{extraopt}{Should the more thorough optimizer (currently
 \code{\link[GenSA:GenSA]{GenSA::GenSA()}}) kick in (provided \code{extraopt_threshold} is exceeded)?}

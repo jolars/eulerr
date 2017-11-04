@@ -8,10 +8,6 @@
 #include "constants.h"
 #include "areas.h"
 
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
-
 // Split a degenerate conic into two lines
 void split_conic(const arma::mat& A, arma::vec& g, arma::vec& h) {
   arma::mat::fixed<3, 3> B = -adjoint(A);
@@ -152,16 +148,15 @@ double disjoint_or_subset(arma::mat M) {
 
   arma::urowvec is_subset =
     arma::pow(xmh%cosphi + ymk%sinphi, 2)/arma::pow(M.row(2), 2) +
-    arma::pow(xmh%sinphi - ymk%cosphi, 2)/arma::pow(M.row(3), 2) < 1;
+    arma::pow(xmh%sinphi - ymk%cosphi, 2)/arma::pow(M.row(3), 2) < 1.0;
 
-  return arma::all(is_subset) ? areas(i) : 0;
+  return arma::all(is_subset) ? areas(i) : 0.0;
 }
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
 arma::vec intersect_ellipses(const arma::vec& par,
-                             const bool circles,
-                             arma::uword n_threads = 1) {
+                             const bool circles) {
   arma::uword n_pars   = circles ? 3 : 5;
   arma::uword n        = par.n_elem/n_pars;
   arma::uword n_int    = 2*n*(n - 1);
@@ -202,13 +197,11 @@ arma::vec intersect_ellipses(const arma::vec& par,
   points   = points.cols(not_na);
   adopters = adopters.cols(not_na);
   parents  = parents.cols(not_na);
+  arma::uvec owners(parents.n_cols);
 
   // Loop over each set combination
   arma::vec areas(n_combos);
 
-  #ifdef _OPENMP
-    #pragma omp parallel for num_threads(n_threads)
-  #endif
   for (arma::uword i = 0; i < n_combos; ++i) {
     arma::uvec ids = arma::find(id.row(i) == 1);
     arma::uword n_ids = ids.n_elem;
@@ -218,7 +211,6 @@ arma::vec intersect_ellipses(const arma::vec& par,
       areas(i) = ellipse_area(ellipses.col(arma::as_scalar(ids)));
     } else {
       // Two or more sets
-      arma::uvec owners(parents.n_cols);
       for (arma::uword q = 0; q < parents.n_cols; ++q) {
         owners(q) = set_intersect(parents.col(q), ids).n_elem == 2;
       }
@@ -233,9 +225,9 @@ arma::vec intersect_ellipses(const arma::vec& par,
         // Compute the area of the overlap
         bool failure = false;
         areas(i) = polysegments(points.cols(int_points),
-              ellipses,
-              parents.cols(int_points),
-              failure);
+                                ellipses,
+                                parents.cols(int_points),
+                                failure);
         if (failure) {
           // Resort to approximation if exact calculation fails
           // TODO: Use a better fallback approximation
@@ -260,9 +252,6 @@ arma::vec intersect_ellipses(const arma::vec& par,
 // [[Rcpp::export]]
 double optim_final_loss(const arma::vec& par,
                         const arma::vec& areas,
-                        const bool circles,
-                        const arma::uword n_threads = 1) {
-  return arma::accu(arma::square(areas - intersect_ellipses(par,
-                                                            circles,
-                                                            n_threads)));
+                        const bool circles) {
+  return arma::accu(arma::square(areas - intersect_ellipses(par, circles)));
 }

@@ -7,29 +7,27 @@
 using namespace Rcpp;
 
 // intersect_ellipses
-arma::vec intersect_ellipses(const arma::vec& par, const bool circles, arma::uword n_threads);
-RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circlesSEXP, SEXP n_threadsSEXP) {
+arma::vec intersect_ellipses(const arma::vec& par, const bool circles);
+RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circlesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
     Rcpp::traits::input_parameter< const bool >::type circles(circlesSEXP);
-    Rcpp::traits::input_parameter< arma::uword >::type n_threads(n_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circles, n_threads));
+    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circles));
     return rcpp_result_gen;
 END_RCPP
 }
 // optim_final_loss
-double optim_final_loss(const arma::vec& par, const arma::vec& areas, const bool circles, const arma::uword n_threads);
-RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circlesSEXP, SEXP n_threadsSEXP) {
+double optim_final_loss(const arma::vec& par, const arma::vec& areas, const bool circles);
+RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circlesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const bool >::type circles(circlesSEXP);
-    Rcpp::traits::input_parameter< const arma::uword >::type n_threads(n_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circles, n_threads));
+    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circles));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -113,8 +111,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
-    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 4},
+    {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
+    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
     {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
