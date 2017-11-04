@@ -13,6 +13,8 @@ clusters of ellipses/circles together (since the initial optimizer no longer
 constrains the layout).
 * The label placement algorithm has been rewritten to handle ellipses and
 ported to C++.
+* eulerr is now compiled with OpenMP on platforms that support it. An argument,
+`n_threads` has been added to `euler()` to set the number of threads to use.
 
 ## Minor changes
 * The initial layout now runs 10 restarts and picks the best of these.
@@ -21,7 +23,6 @@ to color deficiency, but with some manual adjustments to, among other things,
 avoid unnecessary use of color.
 * Labeling is now accomplished via numerical optimization routines, which should
 provide slightly more accurate locations.
-* OpenMP is enabled by default (if supported).
 * The names of the `diagError` and `regionError` metrics have been changed from
 `diag_error` and `region_error` to reflect the original names.
 * The coordinates for the centers are now called *h* and *k* instead of

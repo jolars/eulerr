@@ -18,7 +18,8 @@ Imports:
     utils,
     lattice,
     Rcpp,
-    GenSA
+    GenSA,
+    future
 Suggests:
     knitr,
     testthat

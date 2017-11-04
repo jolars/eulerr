@@ -47,6 +47,10 @@
 #' @param input The type of input: disjoint class combinations
 #'   (`disjoint`) or unions (`union`).
 #' @param shape The geometric shape used in the diagram: circles or ellipses.
+#' @param n_threads The number of threads to use if OpenMP is supported (and
+#'   the package was compiled with it). Can be either set to an integer
+#'   or, if set to '"auto"', will be automatically detected using
+#'   [future::availableCores()].
 #' @param extraopt Should the more thorough optimizer (currently
 #'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)?
 #' @param extraopt_threshold The threshold, in terms of `diagError`, for when
@@ -130,16 +134,20 @@ euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
-  extraopt = n_sets(combinations) == 3L && match.arg(shape) == "ellipse",
+  n_threads = 1,
+  extraopt = n_sets(combinations) == 3 && match.arg(shape) == "ellipse",
   extraopt_threshold = 0.001,
   extraopt_control = list(),
   ...
 ) {
-  stopifnot(is.numeric(combinations),
-            !any(combinations < 0),
-            !is.null(attr(combinations, "names")),
-            !any(names(combinations) == ""),
-            !any(duplicated(names(combinations))))
+  stopifnot(
+    is.numeric(combinations),
+    !any(combinations < 0),
+    !is.null(attr(combinations, "names")),
+    !any(names(combinations) == ""),
+    !any(duplicated(names(combinations))),
+    is.character(n_threads) || (is.numeric(n_threads) && n_threads >= 0)
+  )
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
@@ -148,6 +156,9 @@ euler.default <- function(
   id <- bit_indexr(n)
   N <- NROW(id)
   restarts <- 10L # should this be made an argument?
+
+  if (n_threads == "auto")
+    n_threads <- future::availableCores()
 
   areas <- double(N)
   for (i in 1L:N) {
@@ -238,10 +249,11 @@ euler.default <- function(
       p = pars,
       areas = areas_disjoint,
       circles = circle,
+      n_threads = n_threads,
       iterlim = 1e5
     )$estimate
 
-    nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
+    nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle, n_threads))
     nlm_diagError <- diagError(nlm_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
@@ -296,6 +308,7 @@ euler.default <- function(
         upper = upr,
         circles = circle,
         areas = areas_disjoint,
+        n_threads = n_threads,
         control = utils::modifyList(
           list(threshold.stop = 0,
                smooth = TRUE,
@@ -304,7 +317,9 @@ euler.default <- function(
         )
       )$par
 
-      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution, circle))
+      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution,
+                                                circle,
+                                                n_threads))
       GenSA_diagError <- diagError(GenSA_fit, orig)
 
       # Check for the best solution
