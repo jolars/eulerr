@@ -147,7 +147,7 @@ euler.default <- function(
   n <- length(setnames)
   id <- bit_indexr(n)
   N <- NROW(id)
-  restarts <- 10L # should this be made an argument?
+  n_restarts <- 10L # should this be made an argument?
 
   areas <- double(N)
   for (i in 1L:N) {
@@ -198,18 +198,19 @@ euler.default <- function(
     # Starting layout
     loss <- Inf
     i <- 1L
-    initial_layouts <- vector("list", restarts)
+    initial_layouts <- vector("list", n_restarts)
     bnd <- sqrt(sum(r^2*pi))
+    tol <- 1e-20
 
-    while (loss > sqrt(.Machine$double.eps) && i <= restarts) {
+    while (loss > tol && i <= n_restarts) {
       initial_layouts[[i]] <- stats::nlminb(
-        start = stats::runif(n*2, 0, bnd),
+        start = stats::runif(n*2, 0 + bnd*0.01, bnd*0.99),
         objective = optim_init_loss,
         gradient = optim_init_grad,
         d = distances,
         disjoint = disjoint,
         contained = contained,
-        control = list(abs.tol = 1e-20),
+        control = list(abs.tol = tol),
         lower = rep.int(0, 3L),
         upper = rep.int(bnd, 3L)
       )
@@ -218,7 +219,9 @@ euler.default <- function(
     }
 
     # Find the best initial layout
-    best_init <- which.min(lapply(initial_layouts[1:(i - 1)], "[[", "objective"))
+    best_init <- which.min(lapply(initial_layouts[1L:(i - 1L)],
+                                  "[[",
+                                  "objective"))
     initial_layout <- initial_layouts[[best_init]]
 
     # Final layout
@@ -227,11 +230,11 @@ euler.default <- function(
     if (circle) {
       pars <- as.vector(matrix(c(initial_layout$par, r), 3L, byrow = TRUE))
       lwr <- rep.int(0, 3L)
-      upr <- c(0, 0, bnd)
+      upr <- c(bnd, bnd, bnd)
     } else {
       pars <- as.vector(rbind(matrix(initial_layout$par, 2L, byrow = TRUE),
                               r, r, 0, deparse.level = 0L))
-      lwr <- c(rep.int(0, 4), -2*pi)
+      lwr <- c(rep.int(0, 4L), -2*pi)
       upr <- c(bnd, bnd, bnd, bnd, 2*pi)
     }
 
