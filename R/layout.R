@@ -190,6 +190,9 @@ compress_layout <- function(fpar, id, fit) {
   }
 
   unique_clusters <- unique(lapply(split(clusters, row(clusters)), which))
+
+  # Drop clusters that contain no elements (usually shapes without area)
+  unique_clusters <- unique_clusters[lengths(unique_clusters) > 0L]
   n_clusters <- length(unique_clusters)
 
   if (n_clusters > 1) {
