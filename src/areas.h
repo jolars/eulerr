@@ -19,7 +19,7 @@ double montecarlo(arma::mat ellipses) {
   arma::vec phi = ellipses.row(4).t();
 
   // Sample points using Vogel's method
-  arma::uword n_s = 2000;
+  arma::uword n_s = 10000;
   arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
   arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
   arma::rowvec rad = arma::sqrt(seqn/n_s);
