@@ -85,4 +85,10 @@ arma::uword max_colmins(const arma::mat& x) {
   return mins.index_max();
 }
 
+// Convert armadillo vector to rcpp vector
+template <typename T>
+Rcpp::NumericVector arma_to_rcpp(const T& x) {
+  return Rcpp::NumericVector(x.begin(), x.end());
+}
+
 #endif
