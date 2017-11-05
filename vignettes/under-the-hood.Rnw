@@ -339,11 +339,13 @@ demonstration.}
 \end{quote}
 
 Fredrickson uses the \emph{Polak--Ribiére Conjugate Gradient Method} to
-optimize the initial layout. In our experience this method occasionally
-ends up in local minima, which is why we have opted to use
-\texttt{nlm()} from the R core package \pkg{stats}, which is
-a translation from \proglang{FORTRAN} code developed by~\citet{schnabel_1985}
-and uses a mixture of algorithms (Newton and Quasi-Newton).
+optimize the initial layout. In our experience, this method occasionally
+encounters local minima, which is why we have opted to use
+\texttt{nlminb()} from the R core package \pkg{stats}, which is
+a translation from \proglang{FORTRAN} code developed by~\citet{gray_1990}
+and ported to R by Douglas Bates and Deepayan Sarkar, and,
+although it is a piece of complicated code, performs well for the
+difficult problem of aligning Euler diagrams.
 
 This initial configuration will work perfectly for any 1--2 set
 combinations and as well as possible with 3 sets if we use circles but
