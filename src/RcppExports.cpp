@@ -31,9 +31,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// optim_init
-Rcpp::NumericVector optim_init(const arma::rowvec& par, const arma::vec& d, const arma::uvec& disjoint, const arma::uvec& contained);
-RcppExport SEXP _eulerr_optim_init(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP) {
+// optim_init_loss
+double optim_init_loss(const arma::rowvec& par, const arma::vec& d, const arma::uvec& disjoint, const arma::uvec& contained);
+RcppExport SEXP _eulerr_optim_init_loss(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type d(dSEXP);
     Rcpp::traits::input_parameter< const arma::uvec& >::type disjoint(disjointSEXP);
     Rcpp::traits::input_parameter< const arma::uvec& >::type contained(containedSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_init(par, d, disjoint, contained));
+    rcpp_result_gen = Rcpp::wrap(optim_init_loss(par, d, disjoint, contained));
+    return rcpp_result_gen;
+END_RCPP
+}
+// optim_init_grad
+Rcpp::NumericVector optim_init_grad(const arma::rowvec& par, const arma::vec& d, const arma::uvec& disjoint, const arma::uvec& contained);
+RcppExport SEXP _eulerr_optim_init_grad(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP containedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec& >::type disjoint(disjointSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec& >::type contained(containedSEXP);
+    rcpp_result_gen = Rcpp::wrap(optim_init_grad(par, d, disjoint, contained));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -113,7 +127,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
-    {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
+    {"_eulerr_optim_init_loss", (DL_FUNC) &_eulerr_optim_init_loss, 4},
+    {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
     {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},

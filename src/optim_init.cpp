@@ -1,39 +1,56 @@
 #define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
+#include "helpers.h"
 
 // Loss and gradient for the initial optimizer.
 // [[Rcpp::export]]
-Rcpp::NumericVector optim_init(const arma::rowvec& par,
-                               const arma::vec& d,
-                               const arma::uvec& disjoint,
-                               const arma::uvec& contained) {
+double optim_init_loss(const arma::rowvec& par,
+                       const arma::vec& d,
+                       const arma::uvec& disjoint,
+                       const arma::uvec& contained) {
   arma::uword n = par.n_elem/2;
   arma::mat xy = arma::reshape(par, n, 2).t();
 
-  arma::mat gradMat(2, n, arma::fill::zeros);
   double loss = 0;
   for (arma::uword i = 0, k = 0; i < n; ++i) {
     for (arma::uword j = i + 1; j < n; ++j, ++k) {
       arma::vec xyd = xy.col(i) - xy.col(j);
       double D = arma::as_scalar(xyd.t()*xyd) - std::pow(d(k), 2);
-      if (disjoint(k) && (D >= 0)) {
-        continue;
-      } else if (contained(k) && (D < 0)) {
-        continue;
+      if ((disjoint(k) && (D >= 0)) || (contained(k) && (D < 0))) {
       } else {
-        loss += std::pow(D, 2);
-        gradMat.col(i) += 4*D*xyd;
-        gradMat.col(j) -= 4*D*xyd;
+        loss += D*D;
       }
     }
   }
+  return loss;
+}
 
-  Rcpp::NumericVector out(1, loss);
+// Gradient for the initial optimizer
+// [[Rcpp::export]]
+Rcpp::NumericVector optim_init_grad(const arma::rowvec& par,
+                                    const arma::vec& d,
+                                    const arma::uvec& disjoint,
+                                    const arma::uvec& contained) {
+  arma::uword n = par.n_elem/2;
+  arma::mat xy = arma::reshape(par, n, 2).t();
 
-  out.attr("gradient") = Rcpp::wrap(arma::vectorise(gradMat, 1));
+  arma::mat grad_mat(2, n, arma::fill::zeros);
+  for (arma::uword i = 0, k = 0; i < n; ++i) {
+    for (arma::uword j = i + 1; j < n; ++j, ++k) {
+      arma::vec xyd = xy.col(i) - xy.col(j);
+      double D = arma::as_scalar(xyd.t()*xyd) - std::pow(d(k), 2);
+      if ((disjoint(k) && (D >= 0)) || (contained(k) && (D < 0))) {
+        continue;
+      } else {
+        grad_mat.col(i) += 4*D*xyd;
+        grad_mat.col(j) -= 4*D*xyd;
+      }
+    }
+  }
+  arma::vec out = arma::vectorise(grad_mat, 1);
 
-  return out;
+  return arma_to_rcpp(out);
 }
 
 

@@ -9,8 +9,12 @@ optim_final_loss <- function(par, areas, circles) {
     .Call(`_eulerr_optim_final_loss`, par, areas, circles)
 }
 
-optim_init <- function(par, d, disjoint, contained) {
-    .Call(`_eulerr_optim_init`, par, d, disjoint, contained)
+optim_init_loss <- function(par, d, disjoint, contained) {
+    .Call(`_eulerr_optim_init_loss`, par, d, disjoint, contained)
+}
+
+optim_init_grad <- function(par, d, disjoint, contained) {
+    .Call(`_eulerr_optim_init_grad`, par, d, disjoint, contained)
 }
 
 locate_centers <- function(h, k, a, b, phi, fitted) {

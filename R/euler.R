@@ -202,59 +202,69 @@ euler.default <- function(
     bnd <- sqrt(sum(r^2*pi))
 
     while (loss > sqrt(.Machine$double.eps) && i <= restarts) {
-      initial_layouts[[i]] <- stats::nlm(
-        f = optim_init,
-        p = stats::runif(n*2, 0, bnd),
+      initial_layouts[[i]] <- stats::nlminb(
+        start = stats::runif(n*2, 0, bnd),
+        objective = optim_init_loss,
+        gradient = optim_init_grad,
         d = distances,
         disjoint = disjoint,
         contained = contained,
-        iterlim = 200L,
-        check.analyticals = FALSE
+        control = list(abs.tol = 1e-20),
+        lower = rep.int(0, 3L),
+        upper = rep.int(bnd, 3L)
       )
-      loss <- initial_layouts[[i]]$minimum
+      loss <- initial_layouts[[i]]$objective
       i <- i + 1L
     }
 
     # Find the best initial layout
-    best_init <- which.min(lapply(initial_layouts[1:(i - 1)], "[[", "minimum"))
+    best_init <- which.min(lapply(initial_layouts[1:(i - 1)], "[[", "objective"))
     initial_layout <- initial_layouts[[best_init]]
 
     # Final layout
     circle <- match.arg(shape) == "circle"
 
     if (circle) {
-      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE))
+      pars <- as.vector(matrix(c(initial_layout$par, r), 3L, byrow = TRUE))
+      lwr <- rep.int(0, 3L)
+      upr <- c(0, 0, bnd)
     } else {
-      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
+      pars <- as.vector(rbind(matrix(initial_layout$par, 2L, byrow = TRUE),
                               r, r, 0, deparse.level = 0L))
+      lwr <- c(rep.int(0, 4), -2*pi)
+      upr <- c(bnd, bnd, bnd, bnd, 2*pi)
     }
 
     orig <- areas_disjoint
 
     # Try to find a solution using nlm() first (faster)
     # TODO: Allow user options here?
-    nlm_solution <- stats::nlm(
-      f = optim_final_loss,
-      p = pars,
+    nlminb_solution <- stats::nlminb(
+      start = pars,
+      objective = optim_final_loss,
       areas = areas_disjoint,
       circles = circle,
-      iterlim = 1e5
-    )$estimate
+      lower = lwr,
+      upper = upr,
+      control = list(eval.max = 1000L,
+                     iter.max = 500L,
+                     abs.tol = 1e-20)
+    )$par
 
-    nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
-    nlm_diagError <- diagError(nlm_fit, orig)
+    nlminb_fit <- as.vector(intersect_ellipses(nlminb_solution, circle))
+    nlminb_diagError <- diagError(nlminb_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (extraopt && nlm_diagError > extraopt_threshold) {
+    if (extraopt && nlminb_diagError > extraopt_threshold) {
       # Set bounds for the parameters
       newpars <- matrix(
-        data = nlm_solution,
+        data = nlminb_solution,
         ncol = 5L,
         dimnames = list(setnames, c("h", "k", "a", "b", "phi")),
         byrow = TRUE
       )
 
-      newpars <- compress_layout(newpars, id, nlm_fit)
+      newpars <- compress_layout(newpars, id, nlminb_fit)
       h   <- newpars[, 1L]
       k   <- newpars[, 2L]
       a   <- newpars[, 3L]
@@ -308,16 +318,16 @@ euler.default <- function(
       GenSA_diagError <- diagError(GenSA_fit, orig)
 
       # Check for the best solution
-      if (GenSA_diagError < nlm_diagError) {
+      if (GenSA_diagError < nlminb_diagError) {
         final_par <- GenSA_solution
         fit <- GenSA_fit
       } else {
-        final_par <- nlm_solution
-        fit <- nlm_fit
+        final_par <- nlminb_solution
+        fit <- nlminb_fit
       }
     } else {
-      final_par <- nlm_solution
-      fit <- nlm_fit
+      final_par <- nlminb_solution
+      fit <- nlminb_fit
     }
 
     names(orig) <- names(fit) <-
