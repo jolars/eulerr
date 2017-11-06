@@ -70,28 +70,25 @@ arma::mat optim_init_hess(const arma::vec& par,
     for (arma::uword j = i + 1; j < n; ++j) {
       double xd = x(j) - x(i);
       double yd = y(j) - y(i);
-      double xd2 = xd*xd;
-      double yd2 = yd*yd;
-      double xyd8 = 8.0*xd*yd;
-      double D = xd2 + yd2 - std::pow(d(j, i), 2);
+      double D = xd*xd + yd*yd - std::pow(d(j, i), 2);
       if ((disjoint(j, i) && (D >= 0.0)) || (subset(j, i) && (D < 0.0))) {
         continue;
       } else {
         // Upper left
-        hess(j, j) += 4.0*D + 8.0*xd2;
-        hess(i, i) += 4.0*D + 8.0*xd2;
-        hess(i, j) -= 4.0*D + 8.0*xd2;
+        hess(j, j) += 4.0*D + 8.0*xd*xd;
+        hess(i, i) += 4.0*D + 8.0*xd*xd;
+        hess(i, j) -= 4.0*D + 8.0*xd*xd;
 
         // Lower right
-        hess(j + n, j + n) += 4.0*D + 8.0*yd2;
-        hess(i + n, i + n) += 4.0*D + 8.0*yd2;
-        hess(i + n, j + n) -= 4.0*D + 8.0*yd2;
+        hess(j + n, j + n) += 4.0*D + 8.0*yd*yd;
+        hess(i + n, i + n) += 4.0*D + 8.0*yd*yd;
+        hess(i + n, j + n) -= 4.0*D + 8.0*yd*yd;
 
         // Lower left
-        hess(j + n, j) += xyd8;
-        hess(i + n, i) += xyd8;
-        hess(j + n, i) -= xyd8;
-        hess(i + n, j) -= xyd8;
+        hess(j + n, j) += 8.0*xd*yd;
+        hess(i + n, i) += 8.0*xd*yd;
+        hess(j + n, i) -= 8.0*xd*yd;
+        hess(i + n, j) -= 8.0*xd*yd;
       }
     }
   }
