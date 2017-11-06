@@ -145,7 +145,7 @@ euler.default <- function(
   setnames <- unique(unlist(combo_names, use.names = FALSE))
 
   n <- length(setnames)
-  id <- eulerr:::bit_indexr(n)
+  id <- bit_indexr(n)
   N <- NROW(id)
   n_restarts <- 10L # should this be made an argument?
 
@@ -181,7 +181,7 @@ euler.default <- function(
     id_sums <- rowSums(id)
     ones <- id_sums == 1L
     twos <- id_sums == 2L
-    two <- eulerr:::choose_two(1L:n)
+    two <- choose_two(1L:n)
     r <- sqrt(areas[ones]/pi)
 
     # Establish identities of disjoint and subset sets
@@ -194,7 +194,7 @@ euler.default <- function(
 
     subset[lwrtri] <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
     disjoint[lwrtri] <- areas[twos] == 0
-    distances[lwrtri] <- mapply(eulerr:::separate_two_discs,
+    distances[lwrtri] <- mapply(separate_two_discs,
                                 r1 = r[two[, 1L]],
                                 r2 = r[two[, 2L]],
                                 overlap = areas[twos],
