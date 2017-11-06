@@ -3,29 +3,31 @@
 * Ellipses are now supported by setting the new argument `shape = "ellipse"`
 in `euler()`. This functionality is accompanies an overhaul of the
 innards of the function.
-* Initial optimization routines have been ported to c++.
+* Initial optimization function and gradient have been ported to C++.
 * The initial optimizer has been switched from
-`stats::optim(..., method = "L-BFGS-B")` to `stats::nlm()'.
+`stats::optim(..., method = "L-BFGS-B")` to `stats::nlminb()`.
 * The final optimizer now falls back to `GenSA::GenSA()` when the fit from
-`nlm()` isn't good enough.
-* A packing algorithm has been introduced to stack disjoint
-clusters of ellipses/circles together (since the initial optimizer no longer
-constrains the layout).
+`nlminb()` isn't good enough.
+* A packing algorithm has been introduced to arrange disjoint clusters of
+ellipses/circles.
 * The label placement algorithm has been rewritten to handle ellipses and
-ported to C++.
+been ported to C++. It now uses numerical optimization, which should
+provide slightly more accurate locations.
+* The initial optimizer now uses an analytical Hessian in addition to
+gradient.
 
 ## Minor changes
-* The initial layout now runs 10 restarts and picks the best of these.
+* The initial optimizer now restarts up to 10 times and picks the best
+fit (unless it is perfect somewhere along the way).
 * The default palette has been changed to a fixed palette, still adapted
 to color deficiency, but with some manual adjustments to, among other things,
 avoid unnecessary use of color.
-* Labeling is now accomplished via numerical optimization routines, which should
-provide slightly more accurate locations.
 * The names of the `diagError` and `regionError` metrics have been changed from
 `diag_error` and `region_error` to reflect the original names.
 * The coordinates for the centers are now called *h* and *k* instead of
 *x* and *y*, respectively.
-* Bounding box computations for ellipses were made simpler and more robust.
+* Bounding box computations for ellipses have been simplified and are now more
+robust.
 
 # eulerr 2.0.0
 ## Major changes

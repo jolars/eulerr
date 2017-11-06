@@ -145,7 +145,7 @@ euler.default <- function(
   setnames <- unique(unlist(combo_names, use.names = FALSE))
 
   n <- length(setnames)
-  id <- bit_indexr(n)
+  id <- eulerr:::bit_indexr(n)
   N <- NROW(id)
   n_restarts <- 10L # should this be made an argument?
 
@@ -181,36 +181,41 @@ euler.default <- function(
     id_sums <- rowSums(id)
     ones <- id_sums == 1L
     twos <- id_sums == 2L
-    two <- choose_two(1L:n)
+    two <- eulerr:::choose_two(1L:n)
     r <- sqrt(areas[ones]/pi)
 
-    # Establish identities of disjoint and contained sets
-    disjoint <- areas[twos] == 0
-    tmp <- matrix(areas[ones][two], ncol = 2L)
-    contained <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
+    # Establish identities of disjoint and subset sets
+    subset <- disjoint <- matrix(FALSE, ncol = n, nrow = n)
+    distances <- area_mat <- matrix(0, ncol = n, nrow = n)
 
-    distances <- mapply(separate_two_discs,
-                        r1 = r[two[, 1L]],
-                        r2 = r[two[, 2L]],
-                        overlap = areas[twos],
-                        USE.NAMES = FALSE)
+    lwrtri <- lower.tri(subset)
+
+    tmp <- matrix(areas[ones][two], ncol = 2L)
+
+    subset[lwrtri] <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
+    disjoint[lwrtri] <- areas[twos] == 0
+    distances[lwrtri] <- mapply(eulerr:::separate_two_discs,
+                                r1 = r[two[, 1L]],
+                                r2 = r[two[, 2L]],
+                                overlap = areas[twos],
+                                USE.NAMES = FALSE)
 
     # Starting layout
     loss <- Inf
-    i <- 1L
     initial_layouts <- vector("list", n_restarts)
     bnd <- sqrt(sum(r^2*pi))
-    tol <- 1e-20
 
-    while (loss > tol && i <= n_restarts) {
+    i <- 1L
+    while (loss > 1e-20 && i <= n_restarts) {
       initial_layouts[[i]] <- stats::nlminb(
         start = stats::runif(n*2, 0 + bnd*0.01, bnd*0.99),
         objective = optim_init_loss,
         gradient = optim_init_grad,
+        hessian = optim_init_hess,
         d = distances,
         disjoint = disjoint,
-        contained = contained,
-        control = list(abs.tol = tol),
+        subset = subset,
+        control = list(abs.tol = 1e-20),
         lower = rep.int(0, 3L),
         upper = rep.int(bnd, 3L)
       )
@@ -249,9 +254,7 @@ euler.default <- function(
       circles = circle,
       lower = lwr,
       upper = upr,
-      control = list(eval.max = 1000L,
-                     iter.max = 500L,
-                     abs.tol = 1e-20)
+      control = list(eval.max = 1000L, iter.max = 500L, abs.tol = 1e-20)
     )$par
 
     nlminb_fit <- as.vector(intersect_ellipses(nlminb_solution, circle))
@@ -310,9 +313,7 @@ euler.default <- function(
         circles = circle,
         areas = areas_disjoint,
         control = utils::modifyList(
-          list(threshold.stop = 0,
-               smooth = TRUE,
-               max.call = 4e3*3L^n),
+          list(threshold.stop = 1e-20, smooth = TRUE, max.call = 4e3*3L^n),
           extraopt_control
         )
       )$par
