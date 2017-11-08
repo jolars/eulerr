@@ -207,37 +207,34 @@ euler.default <- function(
 
     i <- 1L
     while (loss > 1e-20 && i <= n_restarts) {
-      initial_layouts[[i]] <- stats::nlminb(
-        start = stats::runif(n*2, 0 + bnd*0.01, bnd*0.99),
-        objective = optim_init_loss,
-        gradient = optim_init_grad,
-        hessian = optim_init_hess,
+      initial_layouts[[i]] <- stats::nlm(
+        f = optim_init,
+        p = stats::runif(n*2, 0, bnd),
         d = distances,
         disjoint = disjoint,
         subset = subset,
-        control = list(abs.tol = 1e-20),
-        lower = rep.int(0, 3L),
-        upper = rep.int(bnd, 3L)
+        iterlim = 200,
+        check.analyticals = FALSE
       )
-      loss <- initial_layouts[[i]]$objective
+      loss <- initial_layouts[[i]]$minimum
       i <- i + 1L
     }
 
     # Find the best initial layout
     best_init <- which.min(lapply(initial_layouts[1L:(i - 1L)],
                                   "[[",
-                                  "objective"))
+                                  "minimum"))
     initial_layout <- initial_layouts[[best_init]]
 
     # Final layout
     circle <- match.arg(shape) == "circle"
 
     if (circle) {
-      pars <- as.vector(matrix(c(initial_layout$par, r), 3L, byrow = TRUE))
+      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE))
       lwr <- rep.int(0, 3L)
       upr <- c(bnd, bnd, bnd)
     } else {
-      pars <- as.vector(rbind(matrix(initial_layout$par, 2L, byrow = TRUE),
+      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
                               r, r, 0, deparse.level = 0L))
       lwr <- c(rep.int(0, 4L), -2*pi)
       upr <- c(bnd, bnd, bnd, bnd, 2*pi)
@@ -247,15 +244,13 @@ euler.default <- function(
 
     # Try to find a solution using nlm() first (faster)
     # TODO: Allow user options here?
-    nlminb_solution <- stats::nlminb(
-      start = pars,
-      objective = optim_final_loss,
+    nlminb_solution <- stats::nlm(
+      f = optim_final_loss,
+      p = pars,
       areas = areas_disjoint,
       circles = circle,
-      lower = lwr,
-      upper = upr,
-      control = list(eval.max = 1000L, iter.max = 500L, abs.tol = 1e-20)
-    )$par
+      iterlim = 1000
+    )$estimate
 
     nlminb_fit <- as.vector(intersect_ellipses(nlminb_solution, circle))
     nlminb_diagError <- diagError(nlminb_fit, orig)
@@ -269,6 +264,9 @@ euler.default <- function(
         dimnames = list(setnames, c("h", "k", "a", "b", "phi")),
         byrow = TRUE
       )
+
+      newpars[, 3:4] <- abs(newpars[, 3:4])
+      newpars[, 5] <- atan2(sin(newpars[, 5]), cos(newpars[, 5]))
 
       newpars <- compress_layout(newpars, id, nlminb_fit)
       h   <- newpars[, 1L]
@@ -350,6 +348,13 @@ euler.default <- function(
       ),
       byrow = TRUE
     )
+
+    if (circle) {
+      fpar[, 3] <- abs(fpar[, 3])
+    } else {
+      fpar[, 3:4] <- abs(fpar[, 3:4])
+      fpar[, 5] <- atan2(sin(fpar[, 5]), cos(fpar[, 5]))
+    }
 
     # Find disjoint clusters and compress the layout
     fpar <- compress_layout(fpar, id, fit)
