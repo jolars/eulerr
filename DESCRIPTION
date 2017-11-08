@@ -9,7 +9,7 @@ Description: If possible, generates exactly area-proportional Euler diagrams
     diagram, relaxing the criterion that all interactions need to be
     represented. The user if offered the choice between ellipses or circles.
 Depends:
-    R (>= 3.3.3)
+    R (>= 3.4.2)
 Imports:
     graphics,
     grDevices,
