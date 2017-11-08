@@ -171,6 +171,12 @@ arma::vec intersect_ellipses(const arma::vec& par,
     ellipses.insert_rows(4, 1);
   }
 
+  // Make sure semiaxes are > 0 and angle in [-pi, pi]
+  ellipses.rows(2, 3).transform([] (double x) {return std::abs(x);});
+  ellipses.row(4).transform([] (double x) {
+    return std::atan2(std::sin(x), std::cos(x));
+  });
+
   arma::cube conics(3, 3, n);
 
   for (arma::uword i = 0; i < n; ++i) {
