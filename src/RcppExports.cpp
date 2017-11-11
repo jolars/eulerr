@@ -61,6 +61,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// quad_tree
+arma::vec quad_tree(arma::mat ellipses, arma::umat id);
+RcppExport SEXP _eulerr_quad_tree(SEXP ellipsesSEXP, SEXP idSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type ellipses(ellipsesSEXP);
+    Rcpp::traits::input_parameter< arma::umat >::type id(idSEXP);
+    rcpp_result_gen = Rcpp::wrap(quad_tree(ellipses, id));
+    return rcpp_result_gen;
+END_RCPP
+}
 // choose_two
 arma::umat choose_two(const arma::uvec& x);
 RcppExport SEXP _eulerr_choose_two(SEXP xSEXP) {
@@ -115,6 +127,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
     {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
+    {"_eulerr_quad_tree", (DL_FUNC) &_eulerr_quad_tree, 2},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
     {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},

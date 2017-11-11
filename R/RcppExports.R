@@ -17,6 +17,10 @@ locate_centers <- function(h, k, a, b, phi, fitted) {
     .Call(`_eulerr_locate_centers`, h, k, a, b, phi, fitted)
 }
 
+quad_tree <- function(ellipses, id) {
+    .Call(`_eulerr_quad_tree`, ellipses, id)
+}
+
 choose_two <- function(x) {
     .Call(`_eulerr_choose_two`, x)
 }

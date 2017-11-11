@@ -106,32 +106,6 @@ void intersect_conics(const arma::mat& A,
   }
 }
 
-// See which ellipses contain a given set of points
-void adopt(const arma::mat& points,
-           const arma::mat& ellipses,
-           const arma::uword n,
-           const arma::uword i,
-           const arma::uword j,
-           arma::subview<arma::uword>&& out) {
-  for (arma::uword l = 0; l < n; ++l) {
-    if ((l == i) | (l == j)) {
-      out.row(l).ones();
-    } else {
-      arma::rowvec x = points.row(0);
-      arma::rowvec y = points.row(1);
-      double h = ellipses(0, l);
-      double k = ellipses(1, l);
-      double phi = ellipses(4, l);
-
-      // Check if the points lie inside the ellipse
-      out.row(l) = arma::pow((x - h)*std::cos(phi) + (y - k)*std::sin(phi), 2)/
-        std::pow(ellipses(2, l), 2) +
-        arma::pow((x - h)*std::sin(phi) - (y - k)*std::cos(phi), 2)/
-        std::pow(ellipses(3, l), 2) < 1;
-    }
-  }
-}
-
 // See if a group of ellipses are completely disjoint or a russian doll
 double disjoint_or_subset(arma::mat M) {
   arma::rowvec areas = M.row(2)%M.row(3)*arma::datum::pi;
