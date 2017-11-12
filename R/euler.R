@@ -215,7 +215,9 @@ euler.default <- function(
         d = distances,
         disjoint = disjoint,
         subset = subset,
-        control = list(abs.tol = 1e-20)
+        control = list(abs.tol = 1e-20),
+        lower = rep.int(0, 3L),
+        upper = rep.int(bnd, 3L)
       )
       loss <- initial_layouts[[i]]$objective
       i <- i + 1L
