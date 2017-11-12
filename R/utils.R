@@ -164,3 +164,45 @@ n_sets <- function(combinations) {
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   length(unique(unlist(combo_names, use.names = FALSE)))
 }
+
+
+#' Set up constraints for optimization
+#'
+#' @param newpars Parameters from the first optimizer.
+#'
+#' @return A list of lower and upper constraints
+#' @export
+#' @keywords internal
+get_constraints <- function(newpars) {
+  h   <- newpars[, 1L]
+  k   <- newpars[, 2L]
+  a   <- newpars[, 3L]
+  b   <- newpars[, 4L]
+  phi <- newpars[, 5L]
+
+  n <- length(h)
+
+  xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
+  ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+  xbnd <- range(xlim + h, -xlim + h)
+  ybnd <- range(ylim + k, -ylim + k)
+
+  lwr <- upr <- double(5L*n)
+
+  for (i in seq_along(h)) {
+    ii <- 5L*(i - 1L)
+
+    lwr[ii + 1L] <- xbnd[1L]
+    lwr[ii + 2L] <- ybnd[1L]
+    lwr[ii + 3L] <- a[i]/4
+    lwr[ii + 4L] <- b[i]/4
+    lwr[ii + 5L] <- -pi
+
+    upr[ii + 1L] <- xbnd[2L]
+    upr[ii + 2L] <- ybnd[2L]
+    upr[ii + 3L] <- a[i]*4
+    upr[ii + 4L] <- b[i]*4
+    upr[ii + 5L] <- pi
+  }
+  list(lwr = lwr, upr = upr)
+}
