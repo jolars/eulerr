@@ -27,16 +27,16 @@ montecarlo(arma::mat ellipses) {
   arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
   arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
   arma::rowvec rad = arma::sqrt(seqn/n_s);
-  arma::mat p0(2, n_s);
+  arma::mat p0(3, n_s);
   p0.row(0) = rad%arma::cos(theta);
   p0.row(1) = rad%arma::sin(theta);
+  p0.row(2).ones();
 
   arma::vec areas(n);
 
   for (arma::uword i = 0; i < n; ++i) {
     // Fit the sampling points to the current ellipse
-    arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*
-      arma::affmul(scale(a(i), b(i)), p0);
+    arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
     arma::umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
                                                 h, k, a, b, phi);
 
@@ -133,8 +133,7 @@ polysegments(arma::mat&& points,
 
   for (arma::uword i = 0, j = n - 1; i < n; ++i) {
     // First discover which ellipses the points belong to
-    arma::uvec ii = arma::intersect(parents.unsafe_col(i),
-                                    parents.unsafe_col(j));
+    arma::uvec ii = set_intersect(parents.unsafe_col(i), parents.unsafe_col(j));
     arma::uword i_n = ii.n_elem;
 
     if (i_n > 0) {

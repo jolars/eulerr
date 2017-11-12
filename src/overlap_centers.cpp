@@ -95,11 +95,13 @@ dist_loss(const arma::vec& p,
           const arma::rowvec& phi) {
   arma::uword n = h.n_elem;
   arma::vec d(n);
+  arma::vec::fixed<3> pp;
+  pp(arma::span(0, 1)) = p;
+  pp(2) = 1;
 
   for (arma::uword i = 0; i < n; ++i) {
-    arma::vec::fixed<3> pp =
-      rotate(phi(i))*arma::affmul(translate(-h(i), -k(i)), p);
-    d(i) = dist_to_ellipse(a(i), b(i), pp(0), pp(1));
+    arma::vec::fixed<3> ppp = rotate(phi(i))*translate(-h(i), -k(i))*pp;
+    d(i) = dist_to_ellipse(a(i), b(i), ppp(0), ppp(1));
   }
   return d.min();
 }
@@ -121,9 +123,10 @@ locate_centers(const arma::rowvec& h,
     arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
     arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
     arma::rowvec rad = arma::sqrt(seqn/n_s);
-    arma::mat p0(2, n_s);
+    arma::mat p0(3, n_s);
     p0.row(0) = rad%arma::cos(theta);
     p0.row(1) = rad%arma::sin(theta);
+    p0.row(2).ones();
 
     arma::umat id = bit_index(n);
     arma::uword n_combos = id.n_rows;
@@ -136,8 +139,7 @@ locate_centers(const arma::rowvec& h,
 
     for (arma::uword i = 0; i < n; ++i) {
       // Fit the sampling points to the current ellipse
-      arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*
-        arma::affmul(scale(a(i), b(i)), p0);
+      arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
       arma::umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
                                                   h, k, a, b, phi);
 

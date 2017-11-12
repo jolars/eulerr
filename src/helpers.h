@@ -3,6 +3,15 @@
 
 #include <RcppArmadillo.h>
 
+inline
+arma::uvec
+set_intersect(const arma::uvec& x, const arma::uvec& y) {
+  std::vector<int> out;
+  std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
+                        std::back_inserter(out));
+  return arma::conv_to<arma::uvec>::from(out);
+}
+
 // Number of intersections
 inline
 arma::uword
