@@ -21,7 +21,9 @@
 //   return out;
 // }
 
-arma::mat standard_to_matrix(const arma::vec& v) {
+inline
+arma::mat
+standard_to_matrix(const arma::vec& v) {
   double h   = v(0);
   double k   = v(1);
   double a   = v(2);
@@ -29,21 +31,18 @@ arma::mat standard_to_matrix(const arma::vec& v) {
   double phi = v(4);
   arma::mat::fixed<3, 3> out;
 
-  double A =
-    std::pow(a, 2)*std::pow(sin(phi), 2) + std::pow(b, 2)*std::pow(cos(phi), 2);
-  double B = 2*(std::pow(b, 2) - std::pow(a, 2))*std::sin(phi)*std::cos(phi);
-  double C =
-    std::pow(a, 2)*std::pow(cos(phi), 2) + std::pow(b, 2)*std::pow(sin(phi), 2);
+  double A = a*a*std::pow(std::sin(phi), 2) + b*b*std::pow(std::cos(phi), 2);
+  double B = 2*(b*b - a*a)*std::sin(phi)*std::cos(phi);
+  double C = a*a*std::pow(cos(phi), 2) + b*b*std::pow(std::sin(phi), 2);
   double D = -2*A*h - B*k;
   double E = -B*h - 2*C*k;
-  double F =
-    A*std::pow(h, 2) + B*h*k + C*std::pow(k, 2) - std::pow(a, 2)*std::pow(b, 2);
+  double F = A*h*h + B*h*k + C*k*k - a*a*b*b;
 
   out(0, 0) = A;
-  out(1, 0) = B/2;
+  out(1, 0) = B*0.5;
   out(1, 1) = C;
-  out(2, 0) = D/2;
-  out(2, 1) = E/2;
+  out(2, 0) = D*0.5;
+  out(2, 1) = E*0.5;
   out(2, 2) = F;
 
   out(arma::find(arma::abs(out) < small)).zeros();

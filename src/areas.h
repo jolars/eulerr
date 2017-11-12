@@ -4,35 +4,39 @@
 #include "geometry.h"
 
 // Area of an ellipse
-inline double ellipse_area(const arma::vec& v) {
+inline
+double
+ellipse_area(const arma::vec& v) {
   return arma::datum::pi*v(2)*v(3);
 }
 
-double montecarlo(arma::mat ellipses) {
+inline
+double
+montecarlo(arma::mat ellipses) {
   double n = ellipses.n_cols;
 
   // Get bounding box for all the ellipses
-  arma::vec h = ellipses.row(0).t();
-  arma::vec k = ellipses.row(1).t();
-  arma::vec a = ellipses.row(2).t();
-  arma::vec b = ellipses.row(3).t();
-  arma::vec phi = ellipses.row(4).t();
+  arma::rowvec h = ellipses.row(0);
+  arma::rowvec k = ellipses.row(1);
+  arma::rowvec a = ellipses.row(2);
+  arma::rowvec b = ellipses.row(3);
+  arma::rowvec phi = ellipses.row(4);
 
   // Sample points using Vogel's method
   arma::uword n_s = 10000;
   arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
   arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
   arma::rowvec rad = arma::sqrt(seqn/n_s);
-  arma::mat p0(3, n_s);
+  arma::mat p0(2, n_s);
   p0.row(0) = rad%arma::cos(theta);
   p0.row(1) = rad%arma::sin(theta);
-  p0.row(2).ones();
 
   arma::vec areas(n);
 
   for (arma::uword i = 0; i < n; ++i) {
     // Fit the sampling points to the current ellipse
-    arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
+    arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*
+      arma::affmul(scale(a(i), b(i)), p0);
     arma::umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
                                                 h, k, a, b, phi);
 
@@ -52,11 +56,12 @@ double montecarlo(arma::mat ellipses) {
 //
 // Area of an ellipse sector
 inline
-arma::vec sector_area(const double a,
-                      const double b,
-                      const arma::vec& theta) {
-  return 0.5*a*b*(theta - arma::atan2((b - a)*arma::sin(2*theta),
-                                      b + a + (b - a)*arma::cos(2*theta)));
+double
+sector_area(const double a,
+            const double b,
+            const double theta) {
+  return 0.5*a*b*(theta - std::atan2((b - a)*std::sin(2.0*theta),
+                                      b + a + (b - a)*std::cos(2.0*theta)));
 }
 
 // The code below is adapted from "The area of intersecting ellipses" by
@@ -65,51 +70,52 @@ arma::vec sector_area(const double a,
 //
 // Compute the area of an ellipse segment.
 inline
-double ellipse_segment(const arma::vec& ellipse,
-                       arma::vec p0,
-                       arma::vec p1) {
+double
+ellipse_segment(const arma::vec& ellipse,
+                const arma::vec& pa,
+                const arma::vec& pb) {
   arma::vec::fixed<2> hk = ellipse.subvec(0, 1);
   double a = ellipse(2);
   double b = ellipse(3);
   double phi = ellipse(4);
 
-  p0 = rotate(phi)*translate(-hk)*p0;
-  p1 = rotate(phi)*translate(-hk)*p1;
+  arma::vec::fixed<3> p0 = rotate(phi)*translate(-hk)*pa;
+  arma::vec::fixed<3> p1 = rotate(phi)*translate(-hk)*pb;
 
-  arma::vec::fixed<2> x, y;
-  x(0) = p0(0);
-  x(1) = p1(0);
-  y(0) = p0(1);
-  y(1) = p1(1);
+  double x0 = p0(0);
+  double x1 = p1(0);
+  double y0 = p0(1);
+  double y1 = p1(1);
 
-  arma::vec::fixed<2> theta = arma::atan2(y, x);
+  double theta0 = std::atan2(y0, x0);
+  double theta1 = std::atan2(y1, x1);
 
-  if (theta(1) < theta(0))
-    theta(1) += 2.0*arma::datum::pi;
+  if (theta1 < theta0)
+    theta1 += 2.0*arma::datum::pi;
 
   // Triangle part of the sector
-  double triangle = 0.5*std::abs(x(1)*y(0) - x(0)*y(1));
+  double triangle = 0.5*std::abs(x1*y0 - x0*y1);
 
-  double dtheta = theta(1) - theta(0);
+  double dtheta = theta1 - theta0;
 
   if (dtheta <= arma::datum::pi) {
     // Sector area
-    arma::vec::fixed<2> sector = sector_area(a, b, theta);
-    return sector(1) - sector(0) - triangle;
+    return sector_area(a, b, theta1) - sector_area(a, b, theta0) - triangle;
   } else {
-    theta(0) += 2.0*arma::datum::pi;
-
+    theta0 += 2.0*arma::datum::pi;
     //Sector area
-    arma::vec::fixed<2> sector = sector_area(a, b, theta);
-    return a*b*arma::datum::pi - sector(0) + sector(1) + triangle;
+    return a*b*arma::datum::pi - sector_area(a, b, theta0) +
+      sector_area(a, b, theta1) + triangle;
   }
 }
 
 // Compute the area of a intersection of 2+ ellipses
-double polysegments(arma::mat points,
-                    const arma::mat& ellipses,
-                    arma::umat parents,
-                    bool& failure) {
+inline
+double
+polysegments(arma::mat&& points,
+             const arma::mat& ellipses,
+             arma::umat&& parents,
+             bool& failure) {
   arma::vec x_int = points.row(0).t();
   arma::vec y_int = points.row(1).t();
   arma::uword n = points.n_cols;
@@ -127,7 +133,8 @@ double polysegments(arma::mat points,
 
   for (arma::uword i = 0, j = n - 1; i < n; ++i) {
     // First discover which ellipses the points belong to
-    arma::uvec ii = set_intersect(parents.col(i), parents.col(j));
+    arma::uvec ii = arma::intersect(parents.unsafe_col(i),
+                                    parents.unsafe_col(j));
     arma::uword i_n = ii.n_elem;
 
     if (i_n > 0) {
@@ -135,12 +142,12 @@ double polysegments(arma::mat points,
 
       // Ellipse segment
       for (arma::uword k = 0; k < i_n; ++k)
-        areas(k) = ellipse_segment(ellipses.col(ii(k)),
-                                   points.col(i),
-                                   points.col(j));
+        areas(k) = ellipse_segment(ellipses.unsafe_col(ii(k)),
+                                   points.unsafe_col(i),
+                                   points.unsafe_col(j));
 
       // Triangular plus ellipse segment area
-      area += 0.5*((x_int(j) + x_int(i)) * (y_int(j) - y_int(i))) + areas.min();
+      area += 0.5*((x_int(j) + x_int(i))*(y_int(j) - y_int(i))) + areas.min();
     } else {
       // Emergency exit (and fallback) when algorithm fails
       failure = true;

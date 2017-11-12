@@ -31,45 +31,61 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// optim_init
-Rcpp::NumericVector optim_init(const arma::vec& par, const arma::mat& d, const arma::umat& disjoint, const arma::umat& subset);
-RcppExport SEXP _eulerr_optim_init(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
+// optim_init_loss
+double optim_init_loss(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
+RcppExport SEXP _eulerr_optim_init_loss(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< const arma::umat& >::type disjoint(disjointSEXP);
-    Rcpp::traits::input_parameter< const arma::umat& >::type subset(subsetSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_init(par, d, disjoint, subset));
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type disjoint(disjointSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type subset(subsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(optim_init_loss(par, d, disjoint, subset));
+    return rcpp_result_gen;
+END_RCPP
+}
+// optim_init_grad
+Rcpp::NumericVector optim_init_grad(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
+RcppExport SEXP _eulerr_optim_init_grad(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type disjoint(disjointSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type subset(subsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(optim_init_grad(par, d, disjoint, subset));
+    return rcpp_result_gen;
+END_RCPP
+}
+// optim_init_hess
+Rcpp::NumericMatrix optim_init_hess(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
+RcppExport SEXP _eulerr_optim_init_hess(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type disjoint(disjointSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type subset(subsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(optim_init_hess(par, d, disjoint, subset));
     return rcpp_result_gen;
 END_RCPP
 }
 // locate_centers
-arma::mat locate_centers(const arma::vec& h, const arma::vec& k, const arma::vec& a, const arma::vec& b, const arma::vec& phi, const arma::vec& fitted);
+arma::mat locate_centers(const arma::rowvec& h, const arma::rowvec& k, const arma::rowvec& a, const arma::rowvec& b, const arma::rowvec& phi, const arma::colvec& fitted);
 RcppExport SEXP _eulerr_locate_centers(SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP, SEXP fittedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type h(hSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type fitted(fittedSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type h(hSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type b(bSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type fitted(fittedSEXP);
     rcpp_result_gen = Rcpp::wrap(locate_centers(h, k, a, b, phi, fitted));
-    return rcpp_result_gen;
-END_RCPP
-}
-// quad_tree
-arma::vec quad_tree(arma::mat ellipses, arma::umat id);
-RcppExport SEXP _eulerr_quad_tree(SEXP ellipsesSEXP, SEXP idSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type ellipses(ellipsesSEXP);
-    Rcpp::traits::input_parameter< arma::umat >::type id(idSEXP);
-    rcpp_result_gen = Rcpp::wrap(quad_tree(ellipses, id));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -125,9 +141,10 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
-    {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
+    {"_eulerr_optim_init_loss", (DL_FUNC) &_eulerr_optim_init_loss, 4},
+    {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
+    {"_eulerr_optim_init_hess", (DL_FUNC) &_eulerr_optim_init_hess, 4},
     {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
-    {"_eulerr_quad_tree", (DL_FUNC) &_eulerr_quad_tree, 2},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
     {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},

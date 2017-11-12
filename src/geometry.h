@@ -3,15 +3,38 @@
 
 #include <RcppArmadillo.h>
 
+// See if a group of ellipses are completely disjoint or a russian doll
+inline
+double
+disjoint_or_subset(arma::mat M) {
+  arma::rowvec areas = M.row(2)%M.row(3)*arma::datum::pi;
+  arma::uword i = areas.index_min();
+  double x = M(0, i);
+  double y = M(1, i);
+  M.shed_col(i);
+
+  arma::rowvec xmh    = x - M.row(0);
+  arma::rowvec ymk    = y - M.row(1);
+  arma::rowvec phi    = M.row(4);
+  arma::rowvec cosphi = arma::cos(phi);
+  arma::rowvec sinphi = arma::sin(phi);
+
+  arma::urowvec is_subset =
+    arma::pow(xmh%cosphi + ymk%sinphi, 2)/arma::pow(M.row(2), 2) +
+    arma::pow(xmh%sinphi - ymk%cosphi, 2)/arma::pow(M.row(3), 2) < 1.0;
+
+  return arma::all(is_subset) ? areas(i) : 0.0;
+}
+
 inline
 arma::umat
 find_surrounding_sets(const arma::rowvec& x,
                       const arma::rowvec& y,
-                      const arma::vec& h,
-                      const arma::vec& k,
-                      const arma::vec& a,
-                      const arma::vec& b,
-                      const arma::vec& phi) {
+                      const arma::rowvec& h,
+                      const arma::rowvec& k,
+                      const arma::rowvec& a,
+                      const arma::rowvec& b,
+                      const arma::rowvec& phi) {
   arma::uword n = h.n_elem;
   arma::umat out(n, x.n_elem);
 
@@ -22,7 +45,6 @@ find_surrounding_sets(const arma::rowvec& x,
       arma::square((x - h(i))*cosphi + (y - k(i))*sinphi)/std::pow(a(i), 2) +
       arma::square((x - h(i))*sinphi - (y - k(i))*cosphi)/std::pow(b(i), 2) < 1;
   }
-
   return out;
 }
 
@@ -53,6 +75,5 @@ adopt(const arma::mat& points,
     }
   }
 }
-
 
 #endif
