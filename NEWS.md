@@ -1,7 +1,7 @@
 # eulerr 2.0.0.9000
 ## Major changes
 * Ellipses are now supported by setting the new argument `shape = "ellipse"`
-in `euler()`. This functionality is accompanies an overhaul of the
+in `euler()`. This functionality accompanies an overhaul of the
 innards of the function.
 * Initial optimization function and gradient have been ported to C++.
 * The initial optimizer has been switched from
@@ -26,8 +26,6 @@ avoid unnecessary use of color.
 `diag_error` and `region_error` to reflect the original names.
 * The coordinates for the centers are now called *h* and *k* instead of
 *x* and *y*, respectively.
-* Bounding box computations for ellipses have been simplified and are now more
-robust.
 
 # eulerr 2.0.0
 ## Major changes
