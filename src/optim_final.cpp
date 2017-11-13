@@ -1,4 +1,4 @@
-//#define ARMA_NO_DEBUG // For the final version
+#define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
 #include "transformations.h"
@@ -41,7 +41,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
   for (arma::uword i = 0, k = 0; i < n - 1; ++i) {
     for (arma::uword j = i + 1; j < n; ++j) {
       intersect_conics(conics.slice(i), conics.slice(j), points.cols(k, k + 3));
-      adopt(points.cols(k, k + 3), ellipses, n, i, j, adopters.cols(k, k + 3));
+      adopt(points.cols(k, k + 3), ellipses, i, j, adopters.cols(k, k + 3));
       parents(0, arma::span(k, k + 3)).fill(i);
       parents(1, arma::span(k, k + 3)).fill(j);
       k += 4;
@@ -51,19 +51,18 @@ arma::vec intersect_ellipses(const arma::vec& par,
   // Shed points that are NA
   arma::uvec not_na = arma::find_finite(points.row(0));
   points   = points.cols(not_na);
-  adopters = adopters.cols(not_na).t();
+  adopters = adopters.cols(not_na);
   parents  = parents.cols(not_na);
   arma::uword n_parents = parents.n_cols;
-  arma::uvec owners(parents.n_cols);
+  arma::urowvec owners(n_parents);
 
   // Loop over each set combination
   arma::vec areas(n_combos);
 
   for (arma::uword i = 0; i < n_combos; ++i) {
-    arma::uvec ids = arma::find(id.row(i) == 1);
-    arma::uword n_ids = ids.n_elem;
+    arma::uvec ids = arma::find(id.row(i));
 
-    if (n_ids == 1) {
+    if (ids.n_elem == 1) {
       // One set
       areas(i) = ellipse_area(ellipses.unsafe_col(ids(0)));
     } else {
@@ -72,8 +71,7 @@ arma::vec intersect_ellipses(const arma::vec& par,
         owners(q) = n_intersections(parents.unsafe_col(q), ids) == 2;
       }
 
-      arma::uvec int_points =
-        arma::find((arma::sum(adopters.cols(ids), 1) == n_ids)%owners);
+      arma::uvec int_points = arma::find(arma::all(adopters.rows(ids))%owners);
 
       if (int_points.n_elem == 0) {
         // No intersections: either disjoint or subset
@@ -97,9 +95,8 @@ arma::vec intersect_ellipses(const arma::vec& par,
   arma::vec out(n_combos, arma::fill::zeros);
 
   for (arma::uword i = n_combos; i-- > 0;) {
-    arma::umat subareas = id.cols(arma::find(id.row(i) == 1));
-    out(i) = areas(i) -
-      arma::accu(out(arma::find(arma::sum(subareas, 1) == subareas.n_cols)));
+    arma::umat subareas = id.cols(arma::find(id.row(i)));
+    out(i) = areas(i) - arma::accu(out(arma::find(arma::all(subareas, 1))));
   }
 
   return arma::clamp(out, 0.0, out.max());
