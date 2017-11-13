@@ -146,6 +146,11 @@
 \ExplSyntaxOff
 \makeatother
 
+
+% Fix vdots and ddots for smallmatrix
+\newcommand{\svdots}{\raisebox{3pt}{$\scalebox{.75}{\vdots}$}}
+\newcommand{\sddots}{\raisebox{3pt}{$\scalebox{.75}{$\ddots$}$}}
+
 \begin{document}
 
 <<setup, include = FALSE>>=
@@ -315,28 +320,53 @@ The MDS algorithm from \pkg{venn.js} circumvents this by assigning a
 loss and gradient of 0 when, for instance, the set relationsships
 \emph{and} the candidate ellipses are disjoint. Then, to optimize the
 pairwise relationsships between sets, \pkg{eulerr} uses the following
-loss and gradient functions.
-
-\begin{quote}
-\[\small
-\text{loss} = \sum_i \sum_j { {\begin{cases}
-    0 & \text{disjoint}(i, j)\\
-    0 & \text{subset}(i, j)\\
-    ((X_{i} - X_{j})^T(X_{i} - X_{j}) - D_{ij}^2) ^2  & \text{otherwise} \\
-\end{cases}}}
-\]
-
-\[\small
-\nabla f(X_{i}) = \sum_j {\begin{cases}
-     \vec{0} & \text{disjoint}(i, j)\\
-     \vec{0} & \text{subset}(i, j)\\
-     4 {((X_{i} - X_{j})^T(X_{i} - X_{j}) - D_{ij}^2)} (X_{i} -
-     X_{j}) & \text{otherwise} \\
-\end{cases}}\] \emph{Source:
-\href{http://www.benfrederickson.com/better-venn-diagrams/}{Better Venn
-Diagrams} by Ben Fredrickson, which includes a nice interactive
-demonstration.}
-\end{quote}
+loss, gradient, and Hessian functions:
+\begin{fullwidth}
+\begin{equation}
+  \mathcal{L}(h,k) = \displaystyle\smashoperator[l]{\sum_{0\leq i<j\leq N}}
+  \begin{cases}
+    0 & F_i \cap F_j = \emptyset \text{ and } O_{ij} = \emptyset\\
+    0 & (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=\emptyset\\
+   \left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)^2  & \text{otherwise} \\
+  \end{cases}. \label{eq:initLoss}
+\end{equation}
+\end{fullwidth}
+The analytical gradient~\eqref{eq:initGrad} is retrieved as usual by
+taking the derivative of the loss function:
+\begin{fullwidth}
+\begin{equation}
+  \vec{\nabla} f(h_i) = \sum_{j=1}^N
+  \begin{cases}
+    \vec{0} & F_i \cap F_j = \emptyset \text{ and } O_{ij} = \emptyset\\
+    \vec{0} & (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=\emptyset\\
+    4\left(h_i-h_j\right)\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right) & \text{otherwise}, \\
+  \end{cases} \label{eq:initGrad}
+\end{equation}
+\end{fullwidth}
+where $\vec{\nabla} f(k_i)$ is found as in~\eqref{eq:initGrad} with $h_i$
+swapped for $k_i$ (and vice versa), $F$ are the various sets in the
+input, $\Omega$ are the pairwise overlaps between circles. Because it speeds up
+convergence, we also
+compute the Hessian matrix~\eqref{eq:initHess}. (In our implementation, we only
+actually use the lower triangle.)
+\begin{fullwidth}
+\begin{equation}
+  \bm{H} = \smashoperator[l]{\sum_{0\leq i<j\leq N}}
+  \begin{bsmallmatrix}
+    4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(h_i-h_j\right)^2 &
+    \cdots &
+    8\left(h_i-h_j\right)\left(k_i-k_j\right)\\
+    \svdots & \sddots & \svdots \\
+    8\left(k_i-k_j\right)\left(h_i-h_j\right) &
+    \cdots &
+    4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(k_i-k_j\right)^2
+  \end{bsmallmatrix}.
+\label{eq:initHess}
+\end{equation}
+\end{fullwidth}
+Note that the constraints given in~\eqref{eq:initLoss} and \eqref{eq:initGrad}
+still apply to each element of~\eqref{eq:initHess} and have been omitted for
+practical reasons only.
 
 Fredrickson uses the \emph{Polak--Ribiére Conjugate Gradient Method} to
 optimize the initial layout. In our experience, this method occasionally
