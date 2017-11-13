@@ -1,8 +1,8 @@
 #' Area-Proportional Euler Diagrams
 #'
-#' Fit euler diagrams (a generalization of venn diagrams) using numerical
+#' Fit Euler diagrams (a generalization of Venn diagrams) using numerical
 #' optimization to find exact or approximate solutions to a specification of set
-#' relationships.
+#' relationships. The shape of the diagram may be a circle or an ellipse.
 #'
 #' If the input is a matrix or data frame and argument `by` is specified,
 #' the function returns a list of euler diagrams.
@@ -46,21 +46,25 @@
 #'   split the data.frame or matrix of set combinations.
 #' @param input The type of input: disjoint class combinations
 #'   (`disjoint`) or unions (`union`).
-#' @param shape The geometric shape used in the diagram: circles or ellipses.
-#' @param extraopt Should the more thorough optimizer (currently
-#'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)?
-#' @param extraopt_threshold The threshold, in terms of `diagError`, for when
-#'   the extra optimizer kicks. This will
-#'   almost always slow down the process considerably. A value of 0 means
+#' @param shape The geometric shape used in the diagram: `circle` or `ellipse`.
+#' @param control A list of control parameters.
+#'   * `extraopt`: Should the more thorough optimizer (currently
+#'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
+#'   default is `TRUE` for ellipses and three sets and `FALSE` otherwise.
+#'   * `extraopt_threshold`: The threshold, in terms of `diagError`, for when
+#'   the extra optimizer kicks in. This will almost always slow down the
+#'   process considerably. A value of 0 means
 #'   that the extra optimizer will kick in if there is *any* error. A value of
-#'   1 means that it will never kick in.
-#' @param extraopt_control A list of control parameters to pass to the
+#'   1 means that it will never kick in. The default is `0.001`.
+#'   * `extraopt_control`: A list of control parameters to pass to the
 #'   extra optimizer, such as `max.call`. See [GenSA::GenSA()].
 #' @param ... Arguments passed down to other methods.
 #'
-#' @return A list object of class 'euler' with the following parameters.
-#'   \item{coefficients}{A matrix of x and y coordinates for the centers of the
-#'     circles and their radii.}
+#' @return A list object of class `'euler'` with the following parameters.
+#'   \item{coefficients}{A matrix of `h` and `k` (x and y-coordinates for the
+#'     centers of the
+#'     shapes) and, for circles, `r` for radii or, for ellipses, semiaxes `a`
+#'     and `b` and rotation angle `phi`.}
 #'   \item{original.values}{Set relationships provided by the user.}
 #'   \item{fitted.values}{Set relationships in the solution.}
 #'   \item{residuals}{Residuals.}
@@ -130,9 +134,7 @@ euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
-  extraopt = n_sets(combinations) == 3 && match.arg(shape) == "ellipse",
-  extraopt_threshold = 0.001,
-  extraopt_control = list(),
+  control = list(),
   ...
 ) {
   stopifnot(is.numeric(combinations),
@@ -148,6 +150,12 @@ euler.default <- function(
   id <- bit_indexr(n)
   N <- NROW(id)
   n_restarts <- 10L # should this be made an argument?
+
+  control <- utils::modifyList(
+    list(extraopt = n == 3 && match.arg(shape) == "ellipse",
+         extraopt_threshold = 0.001,
+         extraopt_control = list()),
+    control)
 
   areas <- double(N)
   for (i in 1L:N) {
@@ -263,7 +271,7 @@ euler.default <- function(
     nlminb_diagError <- diagError(nlminb_fit, orig)
 
     # If inadequate solution, try with GenSA (slower, better)
-    if (extraopt && nlminb_diagError > extraopt_threshold) {
+    if (control$extraopt && nlminb_diagError > control$extraopt_threshold) {
       # Set bounds for the parameters
       newpars <- matrix(
         data = nlminb_solution,
@@ -285,7 +293,7 @@ euler.default <- function(
         control = utils::modifyList(
           list(threshold.stop = 1e-20,
                max.call = 5e3*3L^n),
-          extraopt_control
+          control$extraopt_control
         )
       )$par
 

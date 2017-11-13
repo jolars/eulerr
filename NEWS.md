@@ -7,7 +7,8 @@ innards of the function.
 * The initial optimizer has been switched from
 `stats::optim(..., method = "L-BFGS-B")` to `stats::nlminb()`.
 * The final optimizer now falls back to `GenSA::GenSA()` when the fit from
-`nlminb()` isn't good enough.
+`nlminb()` isn't good enough, by default for 3 sets and ellipses, but 
+this behavior can be controlled via a new argument `control`.
 * A packing algorithm has been introduced to arrange disjoint clusters of
 ellipses/circles.
 * The label placement algorithm has been rewritten to handle ellipses and

@@ -12,9 +12,7 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), extraopt = n_sets(combinations) == 3 &&
-  match.arg(shape) == "ellipse", extraopt_threshold = 0.001,
-  extraopt_control = list(), ...)
+  shape = c("circle", "ellipse"), control = list(), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
 
@@ -33,19 +31,21 @@ data.frame. (See the methods (by class) section for details.)}
 \item{input}{The type of input: disjoint class combinations
 (\code{disjoint}) or unions (\code{union}).}
 
-\item{shape}{The geometric shape used in the diagram: circles or ellipses.}
+\item{shape}{The geometric shape used in the diagram: \code{circle} or \code{ellipse}.}
 
-\item{extraopt}{Should the more thorough optimizer (currently
-\code{\link[GenSA:GenSA]{GenSA::GenSA()}}) kick in (provided \code{extraopt_threshold} is exceeded)?}
-
-\item{extraopt_threshold}{The threshold, in terms of \code{diagError}, for when
-the extra optimizer kicks. This will
-almost always slow down the process considerably. A value of 0 means
+\item{control}{A list of control parameters.
+\itemize{
+\item \code{extraopt}: Should the more thorough optimizer (currently
+\code{\link[GenSA:GenSA]{GenSA::GenSA()}}) kick in (provided \code{extraopt_threshold} is exceeded)? The
+default is \code{TRUE} for ellipses and three sets and \code{FALSE} otherwise.
+\item \code{extraopt_threshold}: The threshold, in terms of \code{diagError}, for when
+the extra optimizer kicks in. This will almost always slow down the
+process considerably. A value of 0 means
 that the extra optimizer will kick in if there is \emph{any} error. A value of
-1 means that it will never kick in.}
-
-\item{extraopt_control}{A list of control parameters to pass to the
-extra optimizer, such as \code{max.call}. See \code{\link[GenSA:GenSA]{GenSA::GenSA()}}.}
+1 means that it will never kick in. The default is \code{0.001}.
+\item \code{extraopt_control}: A list of control parameters to pass to the
+extra optimizer, such as \code{max.call}. See \code{\link[GenSA:GenSA]{GenSA::GenSA()}}.
+}}
 
 \item{weights}{A numeric vector of weights of the same length as \code{by} and
 the number of rows in \code{combinations}.}
@@ -54,9 +54,11 @@ the number of rows in \code{combinations}.}
 split the data.frame or matrix of set combinations.}
 }
 \value{
-A list object of class 'euler' with the following parameters.
-\item{coefficients}{A matrix of x and y coordinates for the centers of the
-circles and their radii.}
+A list object of class \code{'euler'} with the following parameters.
+\item{coefficients}{A matrix of \code{h} and \code{k} (x and y-coordinates for the
+centers of the
+shapes) and, for circles, \code{r} for radii or, for ellipses, semiaxes \code{a}
+and \code{b} and rotation angle \code{phi}.}
 \item{original.values}{Set relationships provided by the user.}
 \item{fitted.values}{Set relationships in the solution.}
 \item{residuals}{Residuals.}
@@ -66,9 +68,9 @@ between the original and fitted areas.}
 residuals over the total sum of squares.}
 }
 \description{
-Fit euler diagrams (a generalization of venn diagrams) using numerical
+Fit Euler diagrams (a generalization of Venn diagrams) using numerical
 optimization to find exact or approximate solutions to a specification of set
-relationships.
+relationships. The shape of the diagram may be a circle or an ellipse.
 }
 \details{
 If the input is a matrix or data frame and argument \code{by} is specified,
