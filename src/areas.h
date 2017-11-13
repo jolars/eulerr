@@ -23,8 +23,8 @@ montecarlo(arma::mat ellipses) {
   arma::rowvec phi = ellipses.row(4);
 
   // Sample points using Vogel's method
-  arma::uword n_s = 10000;
-  arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
+  arma::uword n_s = 1e4;
+  arma::rowvec seqn = arma::regspace<arma::rowvec>(0, n_s - 1);
   arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
   arma::rowvec rad = arma::sqrt(seqn/n_s);
   arma::mat p0(3, n_s);
