@@ -19,6 +19,7 @@ environment:
   matrix:
   - R_VERSION: devel
   - R_VERSION: release
+  - R_VERSION: patched
   - R_VERSION: oldrel
 
 build_script:
