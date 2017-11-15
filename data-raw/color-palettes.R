@@ -1,17 +1,18 @@
 # Generate a set of qualitative color palettes using qualpalr -------------
 
-palette <- qualpalr::autopal(15,
-                             cvd = "deutan",
-                             colorspace = "pretty")$hex
+pal <- qualpalr::autopal(15,
+                         cvd = "deutan",
+                         colorspace = "pretty")$hex
 
 # Make manual adjustments -------------------------------------------------
 
-palette[10] <- palette[4]
-palette[4]  <- palette[1]
-palette[2]  <- "white"
-palette[1]  <- "grey"
-palette[3]  <- "steelblue4"
-palette[7]  <- "grey30"
+palette[1] <- "grey70"
+palette[2] <- "white"
+palette[3] <- "steelblue4"
+palette[4] <- pal[1]
+palette[7] <- "grey30"
+palette[8] <- pal[4]
+palette[10] <- pal[8]
 
 # Save as a data file to be used inside eulerr ----------------------------
 
