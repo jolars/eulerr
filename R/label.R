@@ -29,7 +29,7 @@ label <- function(x, labels = NULL) {
   if (ncol(coefs) == 3) {
     # Circles
     a <- b <- coefs[, 3L]
-    phi <- rep.int(0, NROW)
+    phi <- rep.int(0, length(a))
   } else {
     # Ellipses
     a <- coefs[, 3L]
