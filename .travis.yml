@@ -1,7 +1,6 @@
 language: r
 sudo: false
 cache: packages
-pandoc_version: 1.19.2.1
 warnings_are_errors: true
 
 matrix:
@@ -9,9 +8,9 @@ matrix:
     - os: linux
       compiler: gcc
       r: devel
+      latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes'
-      latex: false
 
     - os: linux
       compiler: clang
@@ -23,14 +22,13 @@ matrix:
     - os: linux
       compiler: gcc
       r: release
-      addons:
-        apt:
-          packages:
-            - valgrind
-      r_check_args: '--ignore-vignettes --use-valgrind'
+      latex: false
       r_build_args: '--no-build-vignettes'
-      env:
-        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
+      r_check_args: '--ignore-vignettes'
+      r_github_packages:
+        - jimhester/covr
+      after_success:
+        - Rscript -e 'covr::codecov()'
 
     - os: linux
       compiler: clang
@@ -38,24 +36,20 @@ matrix:
       r_build_args: '--compact-vignettes=both'
       before_install:
         - tlmgr install fontaxes sttools mweights libertine mathalfa units sidenotes marginnote marginfix
-      r_github_packages:
-        - jimhester/covr
-      after_success:
-        - Rscript -e 'covr::codecov()'
 
     - os: linux
-      r: oldrel
       compiler: gcc
+      r: oldrel
+      latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes'
-      latex: false
 
     - os: linux
-      r: oldrel
       compiler: clang
+      r: oldrel
+      latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes'
-      latex: false
 
     - os: osx
       r: release
