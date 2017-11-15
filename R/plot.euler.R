@@ -21,7 +21,7 @@
 #'   the number of colors to generate, or a sequence of colors.
 #' @param fill_alpha Alpha for the fill.
 #' @param auto.key Plot a legend for the sets.
-#' @param counts Plot counts.
+#' @param quantities Plot quantities.
 #' @param labels A list or character vector of labels.
 #' @param fontface Fontface for the labels. (See [grid::gpar()]).
 #' @param default.scales Default scales. Turns off
@@ -34,6 +34,7 @@
 #'   them down to [panel.euler.circles()] and [panel.euler.labels()].
 #' @param outer_strips Deprecated
 #' @param fill_opacity Deprecated
+#' @param counts Deprecated
 #'
 #' @inherit lattice::levelplot return
 #'
@@ -56,11 +57,11 @@
 #'      border = "transparent",
 #'      fontface = "bold.italic")
 #'
-#' # Add counts to the plot
-#' plot(fit, counts = TRUE)
+#' # Add quantities to the plot
+#' plot(fit, quantities = TRUE)
 #'
-#' # Add a custom legend and retain counts
-#' plot(fit, counts = TRUE, auto.key = list(space = "bottom", columns = 2))
+#' # Add a custom legend and retain quantities
+#' plot(fit, quantities = TRUE, auto.key = list(space = "bottom", columns = 2))
 #'
 #' # Plot without fills and distinguish sets with border types instead
 #' plot(fit, lty = c("solid", "dotted"), fill = "transparent", cex = 2,
@@ -83,7 +84,7 @@ plot.euler <- function(x,
                        fill = qualpalr_pal,
                        fill_alpha = 0.4,
                        auto.key = FALSE,
-                       counts = FALSE,
+                       quantities = FALSE,
                        labels = is.logical(auto.key) && !isTRUE(auto.key),
                        fontface = "bold",
                        par.settings = list(),
@@ -92,17 +93,23 @@ plot.euler <- function(x,
                        default.scales = list(draw = FALSE),
                        panel = panel.euler,
                        outer_strips,
-                       fill_opacity) {
+                       fill_opacity,
+                       counts) {
   stopifnot(is.numeric(fill_alpha),
             length(fill_alpha) == 1L,
             is.logical(auto.key) || is.list(auto.key),
-            is.logical(counts) || is.list(counts))
+            is.logical(quantities) || is.list(quantities))
 
   if (!missing(fill_opacity))
     fill_alpha <- fill_opacity
 
   if (!missing(outer_strips)) {
     warning("'outer_strips' is deprecated; try latticeExtra::useOuterStrips() for the same functionality.")
+  }
+
+  if (!missing(counts)) {
+    warning("'counts' is deprecated; use 'quantities' instead")
+    quantities <- counts
   }
 
   is_by <- inherits(x, "by")
@@ -189,7 +196,7 @@ plot.euler <- function(x,
   ccall$groups <- quote(set)
   ccall$panel <- panel
   ccall$default.prepanel <- default.prepanel
-  ccall$counts <- counts
+  ccall$quantities <- quantities
   ccall$aspect <- "iso"
   ccall$labels <- labels
   ccall$original.values <- orig
@@ -246,10 +253,10 @@ prepanel.euler <- function(x,
 #'   default modifies the alpha of `col` to avoid affecting the alpha of
 #'   the borders. (See [grid::gpar()].)
 #' @param fontface Fontface for the labels. (See [grid::gpar()].)
-#' @param counts Plots the original values for the disjoint set combinations
+#' @param quantities Plots the original values for the disjoint set combinations
 #'   (`original.values`). Can also be a list, in which the contents of the list
 #'   will be passed on to [lattice::panel.text()] to modify the appearance of
-#'   the counts.
+#'   the quantity labels.
 #' @param labels Labels.
 #' @param original.values Original values for the disjoint set combinations.
 #' @param fitted.values Fitted values for the disjoint set combinations.
@@ -274,12 +281,12 @@ panel.euler <- function(x,
                         border = superpose.polygon$border,
                         alpha = superpose.polygon$alpha,
                         fontface = "bold",
-                        counts = TRUE,
+                        quantities = FALSE,
                         labels = NULL,
                         original.values,
                         fitted.values,
                         ...) {
-  stopifnot(is.logical(counts) || is.list(counts))
+  stopifnot(is.logical(quantities) || is.list(quantities))
 
   superpose.polygon <- lattice::trellis.par.get("superpose.polygon")
 
@@ -313,14 +320,14 @@ panel.euler <- function(x,
                          ...)
   }
 
-  if ((is.list(counts) || isTRUE(counts)) || !is.null(labels)) {
+  if ((is.list(quantities) || isTRUE(quantities)) || !is.null(labels)) {
     panel.euler.labels(x = x,
                        y = y,
                        ra = ra[subscripts],
                        rb = rb[subscripts],
                        phi = phi[subscripts],
                        labels = labels,
-                       counts = counts,
+                       quantities = quantities,
                        original.values = original.values,
                        fitted.values = fitted.values,
                        fontface = fontface,
@@ -466,7 +473,7 @@ panel.euler.ellipses <- function(x,
 #' @inheritParams panel.euler
 #' @param ... Arguments passed on to [panel.text()]
 #'
-#' @return Computes and plots labels or counts inside the centers of the
+#' @return Computes and plots labels or quantities inside the centers of the
 #'   ellipses' overlaps.
 #' @export
 panel.euler.labels <- function(x,
@@ -475,16 +482,22 @@ panel.euler.labels <- function(x,
                                rb,
                                phi,
                                labels,
-                               counts = TRUE,
+                               quantities = FALSE,
                                original.values,
                                fitted.values,
-                               ...) {
+                               ...,
+                               counts) {
+  if (!missing(counts)) {
+    warning("'counts' is deprecated; use 'quantities' instead")
+    quantities <- counts
+  }
+
   n <- length(x)
   id <- bit_indexr(n)
   singles <- rowSums(id) == 1
   empty <- abs(fitted.values) < sqrt(.Machine$double.eps)
 
-  do_counts <- isTRUE(counts) || is.list(counts)
+  do_quantities <- isTRUE(quantities) || is.list(quantities)
   do_labels <- !is.null(labels)
 
   centers <- locate_centers(h = x,
@@ -511,23 +524,23 @@ panel.euler.labels <- function(x,
   count_centers <-
     centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
 
-  # Plot counts
-  if (do_counts) {
+  # Plot quantities
+  if (do_quantities) {
     do.call(lattice::panel.text, update_list(list(
       x = label_centers[, 1L],
       y = label_centers[, 2L],
       labels = label_centers[, 3L],
-      identifier = "counts",
+      identifier = "quantities",
       offset = if (do_labels) 0.25 else NULL,
       pos = if (do_labels) 1L else NULL
-    ), if (is.list(counts)) counts else list()))
+    ), if (is.list(quantities)) quantities else list()))
 
     do.call(lattice::panel.text, update_list(list(
       x = count_centers[, 1L],
       y = count_centers[, 2L],
       labels = count_centers[, 3L],
-      identifier = "counts"
-    ), if (is.list(counts)) counts else list()))
+      identifier = "quantities"
+    ), if (is.list(quantities)) quantities else list()))
   }
 
   # Plot labels
@@ -537,7 +550,7 @@ panel.euler.labels <- function(x,
       y = label_centers[, 2L],
       labels = center_labels,
       offset = 0.25,
-      pos = if (do_counts) 3L else NULL,
+      pos = if (do_quantities) 3L else NULL,
       identifier = "labels",
       name.type = "panel"
     ), list(...)))

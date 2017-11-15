@@ -4,8 +4,8 @@
 \alias{panel.euler.labels}
 \title{Panel Function for Euler Diagram Labels}
 \usage{
-panel.euler.labels(x, y, ra, rb, phi, labels, counts = TRUE, original.values,
-  fitted.values, ...)
+panel.euler.labels(x, y, ra, rb, phi, labels, quantities = FALSE,
+  original.values, fitted.values, ..., counts)
 }
 \arguments{
 \item{x}{X coordinates for the centers.}
@@ -21,10 +21,10 @@ the positive x-axis to the semi-major axis).}
 
 \item{labels}{Labels.}
 
-\item{counts}{Plots the original values for the disjoint set combinations
+\item{quantities}{Plots the original values for the disjoint set combinations
 (\code{original.values}). Can also be a list, in which the contents of the list
 will be passed on to \code{\link[lattice:panel.text]{lattice::panel.text()}} to modify the appearance of
-the counts.}
+the quantity labels.}
 
 \item{original.values}{Original values for the disjoint set combinations.}
 
@@ -33,7 +33,7 @@ the counts.}
 \item{...}{Arguments passed on to \code{\link[=panel.text]{panel.text()}}}
 }
 \value{
-Computes and plots labels or counts inside the centers of the
+Computes and plots labels or quantities inside the centers of the
 ellipses' overlaps.
 }
 \description{

@@ -18,7 +18,7 @@ test_that("normal plotting works without errors", {
   ), NA)
 
   expect_error(dont_plot(f1), NA)
-  expect_error(dont_plot(f1, auto.key = TRUE, counts = TRUE), NA)
+  expect_error(dont_plot(f1, auto.key = TRUE, quantities = TRUE), NA)
   expect_error(dont_plot(f1, labels = c("asdf", "qwer")), NA)
 
   dat <- data.frame(

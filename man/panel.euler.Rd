@@ -7,7 +7,7 @@
 panel.euler(x, y, ra, rb, phi, subscripts, fill = superpose.polygon$col,
   lty = superpose.polygon$lty, lwd = superpose.polygon$lwd,
   border = superpose.polygon$border, alpha = superpose.polygon$alpha,
-  fontface = "bold", counts = TRUE, labels = NULL, original.values,
+  fontface = "bold", quantities = FALSE, labels = NULL, original.values,
   fitted.values, ...)
 }
 \arguments{
@@ -38,10 +38,10 @@ the borders. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
 \item{fontface}{Fontface for the labels. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
-\item{counts}{Plots the original values for the disjoint set combinations
+\item{quantities}{Plots the original values for the disjoint set combinations
 (\code{original.values}). Can also be a list, in which the contents of the list
 will be passed on to \code{\link[lattice:panel.text]{lattice::panel.text()}} to modify the appearance of
-the counts.}
+the quantity labels.}
 
 \item{labels}{Labels.}
 
