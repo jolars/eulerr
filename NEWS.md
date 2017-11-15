@@ -1,3 +1,8 @@
+# eulerr 3.0.1
+## Bug fixes
+* Added the missing %\\VignetteEngine{knitr::knitr} to both vignettes. It had 
+mistakenly been left out, which had mangled the resulting vignettes.
+
 # eulerr 3.0.0
 ## Major changes
 * Ellipses are now supported by setting the new argument `shape = "ellipse"`

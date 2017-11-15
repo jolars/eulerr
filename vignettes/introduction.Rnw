@@ -1,4 +1,5 @@
 %\VignetteIndexEntry{Introducing eulerr}
+%\VignetteEngine{knitr::knitr}
 
 \PassOptionsToPackage{usenames,fixpdftex,dvipsnames,svgnames,x11names}{xcolor}
 \PassOptionsToPackage{hyphens}{url}
@@ -164,11 +165,7 @@ knitr::opts_chunk$set(
   size = "small",
   fig.align = "center",
   dev = "pdf",
-  dev.args = list(family = "sans", pointsize = 8),
-  cache = TRUE,
-  fig.path = "figure/graphics-",
-  cache.path = "cache/graphics-",
-  autodep = TRUE
+  dev.args = list(family = "sans", pointsize = 8)
 )
 library(lattice)
 lattice.options(default.theme = list(fontsize = list(text = 8, points = 4)))
@@ -176,11 +173,6 @@ lattice.options(default.theme = list(fontsize = list(text = 8, points = 4)))
 @
 
 \maketitle
-
-% Always avoid colored links in TOC
-% {\hypersetup{linkcolor=black}
-% \tableofcontents
-% }
 
 \section{Motivation}
 
