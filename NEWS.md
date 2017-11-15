@@ -27,6 +27,8 @@ avoid unnecessary use of color.
 `diag_error` and `region_error` to reflect the original names.
 * The coordinates for the centers are now called *h* and *k* instead of
 *x* and *y*, respectively.
+* A new `label()` function has been added to extract locations for the overlaps
+for third party plotting. #10
 
 # eulerr 2.0.0
 ## Major changes
