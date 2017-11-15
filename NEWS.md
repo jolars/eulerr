@@ -1,4 +1,4 @@
-# eulerr 2.0.0.9000
+# eulerr 3.0.0
 ## Major changes
 * Ellipses are now supported by setting the new argument `shape = "ellipse"`
 in `euler()`. This functionality accompanies an overhaul of the
