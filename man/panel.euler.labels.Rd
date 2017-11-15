@@ -31,6 +31,8 @@ the quantity labels.}
 \item{fitted.values}{Fitted values for the disjoint set combinations.}
 
 \item{...}{Arguments passed on to \code{\link[=panel.text]{panel.text()}}}
+
+\item{counts}{Deprecated}
 }
 \value{
 Computes and plots labels or quantities inside the centers of the
