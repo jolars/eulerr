@@ -271,13 +271,11 @@ lattice::dotplot(resid(fit2), xlab = "",
                  })
 @
 
-\begin{marginfigure}
-<<residual-dev,  ref.label='residual-plot', echo = FALSE>>=
+\begin{figure}[hbtp]
+\sidecaption{Residuals for the fit diagram.\label{fig:residual-plot}}
+<<residual-dev, ref.label='residual-plot', echo = FALSE, fig.width = 3.5>>=
 @
-\caption{Residuals for the fit diagram.}
-\label{fig:residual-plot}
-\end{marginfigure}
-
+\end{figure}
 
 This shows us that the \code{A\&C} intersection is somewhat overrepresented in
 \code{fit2}. Given that these residuals are on the scale of the original
