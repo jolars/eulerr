@@ -18,19 +18,8 @@ environment:
 
   matrix:
   - R_VERSION: devel
-
-  - R_VERSION: devel
-    R_ARCH: x64
-
   - R_VERSION: release
-
-  - R_VERSION: release
-    R_ARCH: x64
-
   - R_VERSION: oldrel
-
-  - R_VERSION: oldrel
-    R_ARCH: x64
 
 build_script:
   - travis-tool.sh install_deps
