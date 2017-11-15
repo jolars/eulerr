@@ -29,6 +29,8 @@ avoid unnecessary use of color.
 *x* and *y*, respectively.
 * A new `label()` function has been added to extract locations for the overlaps
 for third party plotting. #10
+* The `counts` argument to `plot.euler()` and `panel.euler.labels()` have
+been deprecated in favor of the more appropriate `quantities`.
 
 # eulerr 2.0.0
 ## Major changes
