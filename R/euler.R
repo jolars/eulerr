@@ -114,7 +114,7 @@
 #'
 #' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
 #'   Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
-#'   Graphics (Internet). 2012 Feb (cited 2016 Apr 9);18(2):321–31. Available
+#'   Graphics (Internet). 2012 Feb (cited 2016 Apr 9);18(2):321-31. Available
 #'   from:
 #'   [http://doi.org/10.1109/TVCG.2011.56](http://doi.org/10.1109/TVCG.2011.56)
 #'
