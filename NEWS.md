@@ -28,9 +28,12 @@ avoid unnecessary use of color.
 * The coordinates for the centers are now called *h* and *k* instead of
 *x* and *y*, respectively.
 * A new `label()` function has been added to extract locations for the overlaps
-for third party plotting. #10
+for third party plotting (#10).
 * The `counts` argument to `plot.euler()` and `panel.euler.labels()` have
 been deprecated in favor of the more appropriate `quantities`.
+* Argument `fill_opacity` in `plot.euler()` that was deprecated in 
+[v2.0.0](https://github.com/jolars/eulerr/releases/tag/v2.0.0) has been made
+defunct.
 
 # eulerr 2.0.0
 ## Major changes

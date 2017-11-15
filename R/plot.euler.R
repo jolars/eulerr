@@ -33,7 +33,6 @@
 #' @param ... Arguments to pass down to [panel.euler()], which in turn passes
 #'   them down to [panel.euler.circles()] and [panel.euler.labels()].
 #' @param outer_strips Deprecated
-#' @param fill_opacity Deprecated
 #' @param counts Deprecated
 #'
 #' @inherit lattice::levelplot return
@@ -93,15 +92,11 @@ plot.euler <- function(x,
                        default.scales = list(draw = FALSE),
                        panel = panel.euler,
                        outer_strips,
-                       fill_opacity,
                        counts) {
   stopifnot(is.numeric(fill_alpha),
             length(fill_alpha) == 1L,
             is.logical(auto.key) || is.list(auto.key),
             is.logical(quantities) || is.list(quantities))
-
-  if (!missing(fill_opacity))
-    fill_alpha <- fill_opacity
 
   if (!missing(outer_strips)) {
     warning("'outer_strips' is deprecated; try latticeExtra::useOuterStrips() for the same functionality.")
@@ -262,7 +257,6 @@ prepanel.euler <- function(x,
 #' @param fitted.values Fitted values for the disjoint set combinations.
 #' @param ... Passed down to [panel.euler.circles()] or
 #'   [panel.euler.ellipses()] and [panel.euler.labels()].
-
 #'
 #' @seealso [grid::gpar()].
 #'
@@ -472,7 +466,7 @@ panel.euler.ellipses <- function(x,
 #'
 #' @inheritParams panel.euler
 #' @param ... Arguments passed on to [panel.text()]
-#'
+#' @param counts Deprecated
 #' @return Computes and plots labels or quantities inside the centers of the
 #'   ellipses' overlaps.
 #' @export

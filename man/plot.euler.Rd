@@ -8,7 +8,7 @@
   auto.key = FALSE, quantities = FALSE, labels = is.logical(auto.key) &&
   !isTRUE(auto.key), fontface = "bold", par.settings = list(), ...,
   default.prepanel = prepanel.euler, default.scales = list(draw = FALSE),
-  panel = panel.euler, outer_strips, fill_opacity, counts)
+  panel = panel.euler, outer_strips, counts)
 }
 \arguments{
 \item{x}{An object of class \code{euler}.}
@@ -40,8 +40,6 @@ untouched.}
 \item{panel}{The panel function. Should usually be left untouched.}
 
 \item{outer_strips}{Deprecated}
-
-\item{fill_opacity}{Deprecated}
 
 \item{counts}{Deprecated}
 }
