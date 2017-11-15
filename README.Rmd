@@ -51,27 +51,32 @@ devtools::install_github("jolars/eulerr")
 ### Shiny app
 
 eulerr is also available as a shiny app hosted at
-[jolars.co/shiny/eulerr](http://jolars.co/shiny/eulerr/).
+[jolars.co/eulerr](http://jolars.co/eulerr/).
 
 ## Usage
 
 ```{r specification}
 library(eulerr)
-fit <- euler(c("A" = 10, "B" = 9, "C" = 4,
-               "A&B" = 2, "A&C" = 3, "B&C" = 3,
-               "A&B&C" = 2))
+# From Wilkinson 2012
+fit <- euler(c("A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
+               "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
+               "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+               "A&B&F" = 1, "B&C&D" = 1),
+             shape = "ellipse")
 ```
 
-We can inspect the solution
+We can inspect the goodness-of-fit metrics *diagError* and *stress*
+for the solution
 
 ```{r}
-fit
+fit$stress
+fit$diagError
 ```
 
 and plot it
 
 ```{r plot_method}
-plot(fit, labels = c("PubMed", "Scopus", "Embase"), main = "Databases")
+plot(fit)
 ```
 
 Please see the [introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/Introduction.html)

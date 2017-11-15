@@ -26,39 +26,34 @@ devtools::install_github("jolars/eulerr")
 
 ### Shiny app
 
-eulerr is also available as a shiny app hosted at [jolars.co/shiny/eulerr](http://jolars.co/shiny/eulerr/).
+eulerr is also available as a shiny app hosted at [jolars.co/eulerr](http://jolars.co/eulerr/).
 
 Usage
 -----
 
 ``` r
 library(eulerr)
-fit <- euler(c("A" = 10, "B" = 9, "C" = 4,
-               "A&B" = 2, "A&C" = 3, "B&C" = 3,
-               "A&B&C" = 2))
+# From Wilkinson 2012
+fit <- euler(c("A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
+               "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
+               "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+               "A&B&F" = 1, "B&C&D" = 1),
+             shape = "ellipse")
 ```
 
-We can inspect the solution
+We can inspect the goodness-of-fit metrics *diagError* and *stress* for the solution
 
 ``` r
-fit
-#>       original fitted residuals regionError
-#> A           10 10.044    -0.044       0.005
-#> B            9  9.050    -0.050       0.005
-#> C            4  4.128    -0.128       0.005
-#> A&B          2  1.601     0.399       0.011
-#> A&C          3  2.719     0.281       0.007
-#> B&C          3  2.716     0.284       0.008
-#> A&B&C        2  2.324    -0.324       0.011
-#> 
-#> diagError:  0.011 
-#> stress:     0.002
+fit$stress
+#> [1] 2.698483e-18
+fit$diagError
+#> [1] 4.915473e-10
 ```
 
 and plot it
 
 ``` r
-plot(fit, labels = c("PubMed", "Scopus", "Embase"), main = "Databases")
+plot(fit)
 ```
 
 ![](tools/README-plot_method-1.png)
