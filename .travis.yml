@@ -15,9 +15,15 @@ matrix:
     - os: linux
       compiler: clang
       r: devel
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes'
       latex: false
+      addons:
+        apt:
+          packages:
+            - valgrind
+      r_check_args: '--ignore-vignettes --use-valgrind'
+      r_build_args: '--no-build-vignettes'
+      env:
+        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
 
     - os: linux
       compiler: gcc
