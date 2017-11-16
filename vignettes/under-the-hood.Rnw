@@ -528,7 +528,7 @@ fit1
 
 \begin{marginfigure}
 <<circle-plot, echo = FALSE>>=
-plot(fit1, counts = TRUE)
+plot(fit1, quantities = TRUE)
 @
 \caption{\label{fig:circle-plot}A plot with circles.}
 \end{marginfigure}
@@ -544,7 +544,7 @@ fit2
 
 \begin{marginfigure}
 <<ellipse-plot, echo = FALSE>>=
-plot(fit2, counts = TRUE)
+plot(fit2, quantities = TRUE)
 @
 \caption{\label{fig:ellipse-plot}A plot with ellipses.}
 \end{marginfigure}
@@ -576,17 +576,17 @@ plot(euler(c(A = 2, B = 3, "A&B" = 1)), auto.key = TRUE)
 \end{marginfigure}
 
 but many will want to label their diagrams directly, perhaps also adding
-counts.
+quantities.
 
-<<counts-plot, eval = FALSE>>=
-plot(euler(c(A = 2, B = 3, "A&B" = 1)), counts = TRUE)
+<<quantities-plot, eval = FALSE>>=
+plot(euler(c(A = 2, B = 3, "A&B" = 1)), quantities = TRUE)
 @
 
 \begin{marginfigure}
-<<counts-dev, ref.label = "counts-plot", echo = FALSE>>=
+<<quantities-dev, ref.label = "quantities-plot", echo = FALSE>>=
 @
-\caption{A plot with counts.}
-\label{fig:counts-plot}
+\caption{A plot with quantities.}
+\label{fig:quantities-plot}
 \end{marginfigure}
 
 In this case, laying out the diagram becomes considerably more involved.
@@ -595,7 +595,7 @@ itself to an easy solution if the shape of the intersection has a
 center-of-gravity inside ellipse, in which case an average of some of
 the points might suffice. This is often not the case, however, and we
 need a better solution. Specifically, what we need is a method to find
-the point inside the circle overlap for the counts and circle complement
+the point inside the circle overlap for the quantities and circle complement
 to the intersection for our labels.
 
 So far, we have not been able to derive at an analyitcal solution for

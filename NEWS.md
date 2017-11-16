@@ -1,5 +1,9 @@
 # eulerr 3.0.1.9000
 
+## Bug fixes
+* Fix warnings resulting from the deprecated `counts` argument in one
+of the vignettes.
+
 # eulerr 3.0.1
 ## Bug fixes
 * Added the missing %\\VignetteEngine{knitr::knitr} to both vignettes. It had 
