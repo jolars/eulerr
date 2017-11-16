@@ -1,3 +1,5 @@
+# eulerr 3.0.1.9000
+
 # eulerr 3.0.1
 ## Bug fixes
 * Added the missing %\\VignetteEngine{knitr::knitr} to both vignettes. It had 
