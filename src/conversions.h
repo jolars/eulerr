@@ -4,50 +4,43 @@
 #include "transformations.h"
 #include "constants.h"
 
-// arma::mat standard_to_matrix(const arma::vec& v) {
-//   arma::mat::fixed<3, 3> out;
-//   out.zeros();
-//
-//   out(0, 0) = std::pow(v(2), -2);
-//   out(1, 1) = std::pow(v(3), -2);
-//   out(2, 2) = -1;
-//
-//   double theta = v(4);
-//   arma::vec xy = -v.subvec(0, 1);
-//
-//   out = translate(xy).t()*rotate(theta).t()*out*rotate(theta)*translate(xy);
-//   out = (out + out.t())/2;
-//   out(arma::find(arma::abs(out) < small)).zeros();
-//   return out;
-// }
+using namespace arma;
 
 inline
-arma::mat
-standard_to_matrix(const arma::vec& v) {
-  double h   = v(0);
-  double k   = v(1);
-  double a   = v(2);
-  double b   = v(3);
-  double phi = v(4);
-  arma::mat::fixed<3, 3> out;
+arma::cube
+standard_to_matrix(const mat& m) {
+  rowvec h = m.row(0);
+  rowvec k = m.row(1);
+  rowvec a = m.row(2);
+  rowvec b = m.row(3);
+  rowvec phi = m.row(4);
 
-  double A = a*a*std::pow(std::sin(phi), 2) + b*b*std::pow(std::cos(phi), 2);
-  double B = 2*(b*b - a*a)*std::sin(phi)*std::cos(phi);
-  double C = a*a*std::pow(cos(phi), 2) + b*b*std::pow(std::sin(phi), 2);
-  double D = -2*A*h - B*k;
-  double E = -B*h - 2*C*k;
-  double F = A*h*h + B*h*k + C*k*k - a*a*b*b;
+  rowvec A = square(a)%square(sin(phi)) + square(b)%square(cos(phi));
+  rowvec B = 2.0*(square(b) - square(a))%sin(phi)%cos(phi);
+  rowvec C = square(a)%square(cos(phi)) + square(b)%square(sin(phi));
+  rowvec D = -2.0*A%h - B%k;
+  rowvec E = -B%h - 2.0*C%k;
+  rowvec F = A%square(h) + B%h%k + C%square(k) - square(a)%square(b);
 
-  out(0, 0) = A;
-  out(1, 0) = B*0.5;
-  out(1, 1) = C;
-  out(2, 0) = D*0.5;
-  out(2, 1) = E*0.5;
-  out(2, 2) = F;
+  B *= 0.5;
+  D *= 0.5;
+  E *= 0.5;
 
-  out(arma::find(arma::abs(out) < small)).zeros();
+  cube out(3, 3, m.n_cols);
 
-  return arma::symmatl(out);
+  out.tube(0, 0) = A;
+  out.tube(0, 1) = B;
+  out.tube(0, 2) = D;
+  out.tube(1, 0) = B;
+  out.tube(1, 1) = C;
+  out.tube(1, 2) = E;
+  out.tube(2, 0) = D;
+  out.tube(2, 1) = E;
+  out.tube(2, 2) = F;
+
+  out(find(abs(out) < small)).zeros();
+
+  return out;
 }
 
 #endif

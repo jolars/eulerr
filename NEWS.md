@@ -1,8 +1,9 @@
 # eulerr 3.0.1.9000
 
 ## Bug fixes
-* Fix warnings resulting from the deprecated `counts` argument in one
+* Fixed warnings resulting from the deprecated `counts` argument in one
 of the vignettes.
+* Fixed memcheck errors in the final optimizer..
 
 # eulerr 3.0.1
 ## Bug fixes
