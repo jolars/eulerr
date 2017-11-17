@@ -16,16 +16,17 @@ const int max_it = std::numeric_limits<double>::digits -
   std::numeric_limits<double>::min_exponent;
 
 // Bisect
-double bisect(const double r0,
-              const double z0,
-              const double z1,
-              double g) {
+double
+bisect(const double r0,
+       const double z0,
+       const double z1,
+       double g) {
   const double n0 = r0*z0;
   double s0 = z1 - 1;
   double s1 = g < 0 ? 0 : std::hypot(n0, z1) - 1;
   double s = 0;
 
-  for (arma::uword i = 0; i < max_it; ++i) {
+  for (uword i = 0; i < max_it; ++i) {
     s = (s0 + s1) / 2;
     if (s == s0 || s == s1) {
       break;
@@ -85,7 +86,6 @@ dist_to_ellipse(double a, double b, double x, double y) {
   }
 }
 
-inline
 double
 dist_loss(const arma::vec& p,
           const arma::rowvec& h,
@@ -93,14 +93,14 @@ dist_loss(const arma::vec& p,
           const arma::rowvec& a,
           const arma::rowvec& b,
           const arma::rowvec& phi) {
-  arma::uword n = h.n_elem;
-  arma::vec d(n);
-  arma::vec::fixed<3> pp;
-  pp(arma::span(0, 1)) = p;
+  uword n = h.n_elem;
+  vec d(n);
+  vec::fixed<3> pp;
+  pp(span(0, 1)) = p;
   pp(2) = 1;
 
-  for (arma::uword i = 0; i < n; ++i) {
-    arma::vec::fixed<3> ppp = rotate(phi(i))*translate(-h(i), -k(i))*pp;
+  for (uword i = 0; i < n; ++i) {
+    vec::fixed<3> ppp = rotate(phi(i))*translate(-h(i), -k(i))*pp;
     d(i) = dist_to_ellipse(a(i), b(i), ppp(0), ppp(1));
   }
   return d.min();
@@ -114,54 +114,54 @@ locate_centers(const arma::rowvec& h,
                const arma::rowvec& b,
                const arma::rowvec& phi,
                const arma::colvec& fitted) {
-  arma::uword n = h.n_elem;
-  arma::mat xy;
+  uword n = h.n_elem;
+  mat xy;
 
   if (n > 1) {
     // Evenly space points across template circle
-    arma::uword n_s = 1e3;
-    arma::rowvec seqn = arma::linspace<arma::rowvec>(0, n_s - 1, n_s);
-    arma::rowvec theta = seqn*(arma::datum::pi*(3 - std::sqrt(5)));
-    arma::rowvec rad = arma::sqrt(seqn/n_s);
-    arma::mat p0(3, n_s);
-    p0.row(0) = rad%arma::cos(theta);
-    p0.row(1) = rad%arma::sin(theta);
+    uword n_s = 1e3;
+    rowvec seqn = linspace<rowvec>(0, n_s - 1, n_s);
+    rowvec theta = seqn*(datum::pi*(3 - std::sqrt(5)));
+    rowvec rad = sqrt(seqn/n_s);
+    mat p0(3, n_s);
+    p0.row(0) = rad%cos(theta);
+    p0.row(1) = rad%sin(theta);
     p0.row(2).ones();
 
-    arma::umat id = bit_index(n);
-    arma::uword n_combos = id.n_rows;
+    umat id = bit_index(n);
+    uword n_combos = id.n_rows;
 
     xy.set_size(2, n_combos);
-    xy.fill(arma::datum::nan);
+    xy.fill(datum::nan);
 
-    arma::uvec not_zero = fitted > small;
-    arma::uvec singles = arma::sum(id, 1) == 1;
+    uvec not_zero = fitted > small;
+    uvec singles = sum(id, 1) == 1;
 
-    for (arma::uword i = 0; i < n; ++i) {
+    for (uword i = 0; i < n; ++i) {
       // Fit the sampling points to the current ellipse
-      arma::mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
-      arma::umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
+      mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
+      umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
                                                   h, k, a, b, phi);
 
-      arma::uvec seqr = arma::find(id.unsafe_col(i));
+      uvec seqr = find(id.unsafe_col(i));
 
       for (auto j : seqr) {
-        arma::uvec idj = id.row(j).t();
+        uvec idj = id.row(j).t();
         if (xy.col(j).has_nan() && idj(i)) {
-          arma::urowvec locs(in_which.n_cols);
+          urowvec locs(in_which.n_cols);
           if (singles(j)) {
-            arma::urowvec sums = arma::sum(in_which);
+            urowvec sums = sum(in_which);
             locs = sums == 1;
           } else {
-            for (arma::uword f = 0; f < in_which.n_cols; ++f) {
-              locs(f) = arma::all(in_which.unsafe_col(f) == idj);
+            for (uword f = 0; f < in_which.n_cols; ++f) {
+              locs(f) = all(in_which.unsafe_col(f) == idj);
             }
           }
-          if (arma::any(locs)) {
-            arma::mat p2 = p1.cols(arma::find(locs));
+          if (any(locs)) {
+            mat p2 = p1.cols(find(locs));
             if (p2.n_cols != 0) {
-              arma::uword midpos = std::ceil(p2.n_cols/2);
-              xy.col(j) = nelderMead(p2(arma::span(0, 1), midpos),
+              uword midpos = std::ceil(p2.n_cols/2);
+              xy.col(j) = nelderMead(p2(span(0, 1), midpos),
                                      dist_loss, h, k, a, b, phi);
             }
           }

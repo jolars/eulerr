@@ -54,12 +54,12 @@ find_surrounding_sets(const rowvec& x,
 
 // See which ellipses contain a given set of points
 inline
-arma::umat
+umat
 adopt(const mat& points,
       const mat& ellipses,
       const uword i,
       const uword j) {
-  arma::umat out(ellipses.n_cols, 4);
+  umat out(ellipses.n_cols, 4);
   for (uword l = 0; l < ellipses.n_cols; ++l) {
     if ((l == i) || (l == j)) {
       out.row(l).ones();

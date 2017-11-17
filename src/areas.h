@@ -6,13 +6,11 @@
 using namespace arma;
 
 // Area of an ellipse
-inline
 double
 ellipse_area(const arma::vec& v) {
   return datum::pi*v(2)*v(3);
 }
 
-inline
 double
 montecarlo(arma::mat ellipses) {
   double n = ellipses.n_cols;
@@ -71,7 +69,6 @@ sector_area(const double a,
 // Area of a sector
 //
 // Compute the area of an ellipse segment.
-inline
 double
 ellipse_segment(const arma::vec& ellipse,
                 const arma::vec& pa,
@@ -112,7 +109,6 @@ ellipse_segment(const arma::vec& ellipse,
 }
 
 // Compute the area of a intersection of 2+ ellipses
-inline
 double
 polysegments(arma::mat&& points,
              const arma::mat& ellipses,

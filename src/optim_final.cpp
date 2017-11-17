@@ -108,3 +108,13 @@ optim_final_loss(const arma::vec& par,
                  const bool circles) {
   return accu(square(areas - intersect_ellipses(par, circles)));
 }
+
+typedef SEXP (*funcPtr)(int, double);
+//
+// // [[Rcpp::export]]
+// double
+// optim_final_loss_xptr(const arma::vec& par,
+//                       const arma::vec& areas,
+//                       const bool circles) {
+//   return accu(square(areas - intersect_ellipses(par, circles)));
+// }
