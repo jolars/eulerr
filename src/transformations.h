@@ -3,11 +3,13 @@
 
 #include <RcppArmadillo.h>
 
+using namespace arma;
+
 // Scaling matrix
 inline
 arma::mat
 scale(const arma::vec& xy) {
-  arma::mat::fixed<3, 3> out;
+  mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = xy(0);
   out(1, 1) = xy(1);
@@ -17,7 +19,7 @@ scale(const arma::vec& xy) {
 inline
 arma::mat
 scale(const double x, const double y) {
-  arma::mat::fixed<3, 3> out;
+  mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = x;
   out(1, 1) = y;
@@ -28,16 +30,16 @@ scale(const double x, const double y) {
 inline
 arma::mat
 translate(const arma::vec& xy) {
-  arma::mat::fixed<3, 3> out;
+  mat::fixed<3, 3> out;
   out.eye();
-  out(arma::span(0, 1), 2) = xy;
+  out(span(0, 1), 2) = xy;
   return out;
 }
 
 inline
 arma::mat
 translate(const double x, const double y) {
-  arma::mat::fixed<3, 3> out;
+  mat::fixed<3, 3> out;
   out.eye();
   out(0, 2) = x;
   out(1, 2) = y;
@@ -48,7 +50,7 @@ translate(const double x, const double y) {
 inline
 arma::mat
 rotate(const double phi) {
-  arma::mat::fixed<3, 3> out;
+  mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) =  std::cos(phi);
   out(1, 0) = -std::sin(phi);
@@ -61,7 +63,7 @@ rotate(const double phi) {
 inline
 arma::mat
 adjoint(const arma::mat& m) {
-  arma::mat::fixed<3, 3> out;
+  mat::fixed<3, 3> out;
   const double a = m(0, 0);
   const double b = m(1, 0);
   const double c = m(1, 1);
@@ -76,14 +78,14 @@ adjoint(const arma::mat& m) {
   out(2, 1) = b*d - a*e;
   out(2, 2) = a*c - b*b;
 
-  return arma::symmatl(out);
+  return symmatl(out);
 }
 
-// Skew-symmetric matrix  for complex matrices
+// Skew-symmetric matrix for complex matrices
 inline
 arma::cx_mat
 skewsymmat(const arma::cx_vec& v) {
-  arma::cx_mat::fixed<3, 3> out;
+  cx_mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);
   out(0, 2) = -v(1);
@@ -98,7 +100,7 @@ skewsymmat(const arma::cx_vec& v) {
 inline
 arma::mat
 skewsymmat(const arma::vec& v) {
-  arma::mat::fixed<3, 3> out;
+  mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);
   out(0, 2) = -v(1);

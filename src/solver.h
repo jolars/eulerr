@@ -17,7 +17,7 @@ solve_cubic(const double alpha,
             const double gamma,
             const double delta) {
   std::complex<double> i(0.0, 1.0);
-  arma::cx_vec::fixed<3> y;
+  cx_vec::fixed<3> y;
 
   double a = beta/alpha;
   double b = gamma/alpha;
@@ -28,10 +28,10 @@ solve_cubic(const double alpha,
   if (R*R < Q*Q*Q) {
     double theta = std::acos(R/std::sqrt(Q*Q*Q));
     y(0) = -2.0*std::sqrt(Q)*std::cos(theta/3.0) -  a/3.0;
-    y(1) = -2.0*std::sqrt(Q)*std::cos((theta + 2.0*arma::datum::pi)/3.0) - a/3.0;
-    y(2) = -2.0*std::sqrt(Q)*std::cos((theta - 2.0*arma::datum::pi)/3.0) - a/3.0;
+    y(1) = -2.0*std::sqrt(Q)*std::cos((theta + 2.0*datum::pi)/3.0) - a/3.0;
+    y(2) = -2.0*std::sqrt(Q)*std::cos((theta - 2.0*datum::pi)/3.0) - a/3.0;
   } else {
-    double A = -sign(R)*std::cbrt(std::abs(R) + std::sqrt(R*R - Q*Q*Q));
+    double A = -signum(R)*std::cbrt(std::abs(R) + std::sqrt(R*R - Q*Q*Q));
     double B = nearly_equal(A, 0.0) ? 0.0 : Q/A;
     y(0) = A + B - a/3.0;
     y(1) = -0.5*(A + B) - a/3.0 + std::sqrt(3.0)*i*(A - B)/2.0;
