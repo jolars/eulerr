@@ -3,7 +3,9 @@ Title: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
 Version: 3.0.1.9000
 Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     role = c("aut", "cre")),
-             person("A. Jonathan R.", "Godfrey", role = "ctb"))
+             person("A. Jonathan R.", "Godfrey", role = "ctb"),
+             person("Tim", "Kelley", role = "ctb", 
+                    comment = "Original Nelder-Mead code"))
 Description: If possible, generates exactly area-proportional Euler diagrams
     using numerical optimization. A Euler diagram is a generalization of a Venn
     diagram, relaxing the criterion that all interactions need to be
@@ -19,7 +21,7 @@ Imports:
     utils,
     lattice,
     Rcpp,
-    GenSA
+    RcppDE
 Suggests:
     knitr,
     testthat
