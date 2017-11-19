@@ -15,8 +15,8 @@ using namespace arma;
 // [[Rcpp::export]]
 arma::vec
 intersect_ellipses(const arma::vec& par,
-                   const bool circles) {
-  uword n_pars   = circles ? 3 : 5;
+                   const bool circle) {
+  uword n_pars   = circle ? 3 : 5;
   uword n        = par.n_elem/n_pars;
   uword n_int    = 2*n*(n - 1);
   umat  id       = bit_index(n);
@@ -25,10 +25,15 @@ intersect_ellipses(const arma::vec& par,
   // Set up a matrix of the ellipses in standard form and a cube of conics
   mat ellipses = reshape(par, n_pars, n);
 
-  if (circles) {
+  if (circle) {
     ellipses.insert_rows(3, ellipses.row(2));
     ellipses.insert_rows(4, 1);
   }
+
+  // Constrain semiaxes to be positive and angle to [-pi, pi)
+  // Necessary if optimizer is unbounded
+  ellipses.rows(2, 3).for_each([](mat::elem_type& x) {x = std::abs(x);});
+  ellipses.row(4).for_each([](mat::elem_type& x) {x = normalize_angle(x);});
 
   cube conics = standard_to_matrix(ellipses);
 
@@ -105,16 +110,22 @@ intersect_ellipses(const arma::vec& par,
 double
 optim_final_loss(const arma::vec& par,
                  const arma::vec& areas,
-                 const bool circles) {
-  return accu(square(areas - intersect_ellipses(par, circles)));
+                 const bool circle) {
+  return accu(square(areas - intersect_ellipses(par, circle)));
 }
 
-typedef SEXP (*funcPtr)(int, double);
+// double
+// optim_final_loss_ptr(arma::vec par, Rcpp::Environment env) {
+//   //Rcpp::Environment e(env);
+//   vec areas = Rcpp::as<arma::vec>(env["areas"]);
+//   //vec pars = Rcpp::as<arma::vec>(par);
+//   bool circle = env["circle"];
+//   return optim_final_loss(par, areas, circle);
+// }
 //
 // // [[Rcpp::export]]
-// double
-// optim_final_loss_xptr(const arma::vec& par,
-//                       const arma::vec& areas,
-//                       const bool circles) {
-//   return accu(square(areas - intersect_ellipses(par, circles)));
+// SEXP
+// optim_final_ptr() {
+//   typedef double (*funcPtr)(arma::vec, Rcpp::Environment);
+//   return Rcpp::XPtr<funcPtr>(new funcPtr(&optim_final_loss_ptr));
 // }
