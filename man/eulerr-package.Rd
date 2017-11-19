@@ -26,6 +26,8 @@ Useful links:
 Other contributors:
 \itemize{
   \item A. Jonathan R. Godfrey [contributor]
+  \item Tim Kelley (Original Nelder-Mead code) [contributor]
+  \item David H. Eberly (Geometric algorithms) [contributor]
 }
 
 }
