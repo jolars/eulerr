@@ -1,5 +1,9 @@
 # eulerr 3.0.1.9000
 
+## Major changes
+* The last-ditch optimizer switched from `GenSA::GenSA()` to
+`RcppDE::DEoptim()`.
+
 ## Bug fixes
 * Fixed warnings resulting from the deprecated `counts` argument in one
 of the vignettes.

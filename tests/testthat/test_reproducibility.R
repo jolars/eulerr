@@ -83,33 +83,33 @@ test_that("expect no errors for a variety of predefined sets", {
   expect_error(euler(s14), NA)
   expect_error(euler(s15), NA)
   expect_error(euler(s1, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s2, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s3, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s4, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s5, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s6, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s7, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s8, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s9, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s10, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s11, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s12, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s13, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s14, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
   expect_error(euler(s15, shape = "ellipse",
-                     control = list(extraopt_control = list(max.time = 5)), NA))
+                     control = list(extraopt_control = list(itermax = 200)), NA))
 })

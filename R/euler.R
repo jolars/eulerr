@@ -49,7 +49,7 @@
 #' @param shape The geometric shape used in the diagram: `circle` or `ellipse`.
 #' @param control A list of control parameters.
 #'   * `extraopt`: Should the more thorough optimizer (currently
-#'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
+#'   [RcppDE::DEoptim()]) kick in (provided `extraopt_threshold` is exceeded)? The
 #'   default is `TRUE` for ellipses and three sets and `FALSE` otherwise.
 #'   * `extraopt_threshold`: The threshold, in terms of `diagError`, for when
 #'   the extra optimizer kicks in. This will almost always slow down the
@@ -57,7 +57,7 @@
 #'   that the extra optimizer will kick in if there is *any* error. A value of
 #'   1 means that it will never kick in. The default is `0.001`.
 #'   * `extraopt_control`: A list of control parameters to pass to the
-#'   extra optimizer, such as `max.call`. See [GenSA::GenSA()].
+#'   extra optimizer, such as `itermax`. See [RcppDE::DEoptim.control()].
 #' @param ... Arguments passed down to other methods.
 #'
 #' @return A list object of class `'euler'` with the following parameters.
@@ -247,19 +247,19 @@ euler.default <- function(
     } else {
       pars <- as.vector(rbind(matrix(initial_layout$par, 2L, byrow = TRUE),
                               r, r, 0, deparse.level = 0L))
-      lwr <- c(rep.int(0, 4L), -pi)
-      upr <- c(rep.int(bnd, 4L), pi)
+      lwr <- c(rep.int(0, 4L), -2*pi)
+      upr <- c(rep.int(bnd, 4L), 2*pi)
     }
 
     orig <- areas_disjoint
 
-    # Try to find a solution using nlm() first (faster)
+    # Try to find a solution using nlminb() first (faster)
     # TODO: Allow user options here?
     nlminb_solution <- stats::nlminb(
       start = pars,
       objective = optim_final_loss,
       areas = areas_disjoint,
-      circles = circle,
+      circle = circle,
       control = list(eval.max = 1500,
                      iter.max = 1000,
                      abs.tol = 1e-20),
@@ -270,8 +270,9 @@ euler.default <- function(
     nlminb_fit <- as.vector(intersect_ellipses(nlminb_solution, circle))
     nlminb_diagError <- diagError(nlminb_fit, orig)
 
-    # If inadequate solution, try with GenSA (slower, better)
-    if (control$extraopt && nlminb_diagError > control$extraopt_threshold) {
+    # If inadequate solution, try with a second optimizer (slower, better)
+    if (!circle && control$extraopt &&
+        nlminb_diagError > control$extraopt_threshold) {
       # Set bounds for the parameters
       newpars <- matrix(
         data = nlminb_solution,
@@ -283,27 +284,81 @@ euler.default <- function(
       newpars <- compress_layout(newpars, id, nlminb_fit)
       constraints <- get_constraints(newpars)
 
-      GenSA_solution <- GenSA::GenSA(
-        par = as.vector(newpars),
+      newvec <- as.vector(t(newpars))
+      len <- length(newvec)
+
+      # TODO: Set up initial population in some clever fashion.
+
+      deopt <- RcppDE::DEoptim(
         fn = optim_final_loss,
         lower = constraints$lwr,
         upper = constraints$upr,
-        circles = circle,
+        control = RcppDE::DEoptim.control(
+          VTR = 1e-8,
+          trace = FALSE,
+          itermax = 1000,
+          NP = len*10
+        ),
         areas = areas_disjoint,
-        control = utils::modifyList(
-          list(threshold.stop = 1e-20,
-               max.call = 5e3*3L^n),
-          control$extraopt_control
+        circle = circle
+      )$optim$bestmem
+
+      last_ditch_effort <- stats::nlminb(
+        objective = optim_final_loss,
+        start = deopt,
+        areas = areas_disjoint,
+        circle = circle,
+        control = list(
+          eval.max = 1500,
+          iter.max = 1000,
+          abs.tol = 1e-20
         )
       )$par
 
-      GenSA_fit <- as.vector(intersect_ellipses(GenSA_solution, circle))
-      GenSA_diagError <- diagError(GenSA_fit, orig)
+      # # Try with Rmalschains
+      # env <- new.env()
+      # env[["circle"]] <- circle
+      # env[["areas"]] <- areas_disjoint
+      #
+      # last_ditch_effort <- Rmalschains::malschains(
+      #   fn = optim_final_ptr(),
+      #   lower = constraints$lwr,
+      #   upper = constraints$upr,
+      #   maxEvals = 5e3*3L^n,
+      #   verbosity = 0,
+      #   control = Rmalschains::malschains.control(
+      #     ls = "cmaes",
+      #     istep = 300,
+      #     alpha = 0.8,
+      #     optimum = 0,
+      #     popsize = len*10
+      #   ),
+      #   env = env
+      # )$sol
+
+      # # Try with GenSA
+      # last_ditch_effort <- GenSA::GenSA(
+      #   par = newvec,
+      #   fn = optim_final_loss,
+      #   lower = constraints$lwr,
+      #   upper = constraints$upr,
+      #   circle = circle,
+      #   areas = areas_disjoint,
+      #   control = utils::modifyList(
+      #     list(threshold.stop = 1e-20,
+      #          max.call = 5e3*3L^n,
+      #          smooth = FALSE),
+      #     control$extraopt_control
+      #   )
+      # )$par
+
+      last_ditch_fit <- as.vector(intersect_ellipses(last_ditch_effort, circle))
+      last_ditch_diagError <- diagError(last_ditch_fit, orig)
 
       # Check for the best solution
-      if (GenSA_diagError < nlminb_diagError) {
-        final_par <- GenSA_solution
-        fit <- GenSA_fit
+      if (last_ditch_diagError < nlminb_diagError) {
+        final_par <- last_ditch_effort
+        fit <- last_ditch_fit
       } else {
         final_par <- nlminb_solution
         fit <- nlminb_fit
@@ -320,7 +375,7 @@ euler.default <- function(
     diagError <- diagError(regionError = regionError)
     stress <- stress(orig, fit)
 
-    fpar <- matrix(
+    fpar <- as.data.frame(matrix(
       data = final_par,
       ncol = if (circle) 3L else 5L,
       dimnames = list(
@@ -328,7 +383,10 @@ euler.default <- function(
         if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
       ),
       byrow = TRUE
-    )
+    ))
+
+    # Normalize semiaxes and rotation
+    fpar <- normalize_pars(fpar)
 
     # Find disjoint clusters and compress the layout
     fpar <- compress_layout(fpar, id, fit)
@@ -338,7 +396,7 @@ euler.default <- function(
   } else {
     circle <- match.arg(shape) == "circle"
     # One set
-    fpar <- matrix(
+    fpar <- as.data.frame(matrix(
       data = if (circle)
         c(0, 0, sqrt(areas/pi))
       else
@@ -349,7 +407,7 @@ euler.default <- function(
         if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
       ),
       byrow = TRUE
-    )
+    ))
     regionError <- diagError <- stress <- 0
     orig <- fit <- areas
     names(orig) <- names(fit) <- setnames

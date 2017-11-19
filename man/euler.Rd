@@ -36,7 +36,7 @@ data.frame. (See the methods (by class) section for details.)}
 \item{control}{A list of control parameters.
 \itemize{
 \item \code{extraopt}: Should the more thorough optimizer (currently
-\code{\link[GenSA:GenSA]{GenSA::GenSA()}}) kick in (provided \code{extraopt_threshold} is exceeded)? The
+\code{\link[RcppDE:DEoptim]{RcppDE::DEoptim()}}) kick in (provided \code{extraopt_threshold} is exceeded)? The
 default is \code{TRUE} for ellipses and three sets and \code{FALSE} otherwise.
 \item \code{extraopt_threshold}: The threshold, in terms of \code{diagError}, for when
 the extra optimizer kicks in. This will almost always slow down the
@@ -44,7 +44,7 @@ process considerably. A value of 0 means
 that the extra optimizer will kick in if there is \emph{any} error. A value of
 1 means that it will never kick in. The default is \code{0.001}.
 \item \code{extraopt_control}: A list of control parameters to pass to the
-extra optimizer, such as \code{max.call}. See \code{\link[GenSA:GenSA]{GenSA::GenSA()}}.
+extra optimizer, such as \code{itermax}. See \code{\link[RcppDE:DEoptim.control]{RcppDE::DEoptim.control()}}.
 }}
 
 \item{weights}{A numeric vector of weights of the same length as \code{by} and
