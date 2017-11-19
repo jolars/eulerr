@@ -18,7 +18,8 @@ scale(const arma::vec& xy) {
 
 inline
 arma::mat
-scale(const double x, const double y) {
+scale(const double x,
+      const double y) {
   mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = x;
@@ -38,7 +39,8 @@ translate(const arma::vec& xy) {
 
 inline
 arma::mat
-translate(const double x, const double y) {
+translate(const double x,
+          const double y) {
   mat::fixed<3, 3> out;
   out.eye();
   out(0, 2) = x;

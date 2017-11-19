@@ -2,6 +2,7 @@
 #define eulerr_helpers_
 
 #include <RcppArmadillo.h>
+#include "constants.h"
 
 using namespace arma;
 
@@ -77,6 +78,14 @@ template <typename T>
 Rcpp::NumericVector
 arma_to_rcpp(const T& x) {
   return Rcpp::NumericVector(x.begin(), x.end());
+}
+
+// Normalize angle
+template <typename T>
+T
+normalize_angle(T& x) {
+  T a = std::fmod(x + datum::pi, two_pi);
+  return a >= 0 ? (a - datum::pi) : (a + datum::pi);
 }
 
 #endif

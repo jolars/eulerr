@@ -7,27 +7,27 @@
 using namespace Rcpp;
 
 // intersect_ellipses
-arma::vec intersect_ellipses(const arma::vec& par, const bool circles);
-RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circlesSEXP) {
+arma::vec intersect_ellipses(const arma::vec& par, const bool circle);
+RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< const bool >::type circles(circlesSEXP);
-    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circles));
+    Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
+    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circle));
     return rcpp_result_gen;
 END_RCPP
 }
 // optim_final_loss
-double optim_final_loss(const arma::vec& par, const arma::vec& areas, const bool circles);
-RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circlesSEXP) {
+double optim_final_loss(const arma::vec& par, const arma::vec& areas, const bool circle);
+RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type areas(areasSEXP);
-    Rcpp::traits::input_parameter< const bool >::type circles(circlesSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circles));
+    Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
+    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle));
     return rcpp_result_gen;
 END_RCPP
 }

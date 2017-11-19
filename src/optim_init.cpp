@@ -26,7 +26,7 @@ optim_init_loss(const Rcpp::NumericVector& par,
 }
 
 // [[Rcpp::export]]
-NumericVector
+Rcpp::NumericVector
 optim_init_grad(const Rcpp::NumericVector& par,
                 const Rcpp::NumericMatrix& d,
                 const Rcpp::LogicalMatrix& disjoint,

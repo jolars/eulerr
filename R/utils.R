@@ -194,15 +194,45 @@ get_constraints <- function(newpars) {
 
     lwr[ii + 1L] <- xbnd[1L]
     lwr[ii + 2L] <- ybnd[1L]
-    lwr[ii + 3L] <- a[i]/4
-    lwr[ii + 4L] <- b[i]/4
-    lwr[ii + 5L] <- -pi
+    lwr[ii + 3L] <- a[i]/3
+    lwr[ii + 4L] <- b[i]/3
+    lwr[ii + 5L] <- 0
 
     upr[ii + 1L] <- xbnd[2L]
     upr[ii + 2L] <- ybnd[2L]
-    upr[ii + 3L] <- a[i]*4
-    upr[ii + 4L] <- b[i]*4
+    upr[ii + 3L] <- a[i]*3
+    upr[ii + 4L] <- b[i]*3
     upr[ii + 5L] <- pi
   }
   list(lwr = lwr, upr = upr)
+}
+
+#' Normalize an angle to [-pi, pi)
+#'
+#' @param x Angle in radians
+#'
+#' @return A normalized angle.
+#' @export
+#' @keywords internal
+normalize_angle <- function(x) {
+  a <- (x + pi) %% (2*pi)
+  ifelse(a >= 0, a - pi, a + pi)
+}
+
+#' Normalize parameters (semiaxes and rotation)
+#'
+#' @param m pars
+#'
+#' @return m, normalized
+#' @export
+#' @keywords internal
+normalize_pars <- function(m) {
+  n <- ncol(m)
+  if (n == 3L) {
+    m[, 3L] <- abs(m[, 3L])
+  } else {
+    m[, 3L:4L] <- abs(m[, 3L:4L])
+    m[, 5L] <- normalize_angle(m[, 5L])
+  }
+  m
 }

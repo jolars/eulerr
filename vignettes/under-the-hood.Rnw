@@ -403,9 +403,7 @@ the points at which the different ellipses intersect. \pkg{eulerr}'s
 approach to this is based on a method outlined by \citep{richter-gebert_2011}.
 \pkg{eulerr} owes significant debt to the R package
 \pkg{RConics}~\citep{huber_2014}, which has been tremendously helpful in
-developing and, especially, debugging the algorithm. Some parts of the
-code are in fact straight-up translations to \proglang{C++} from the code in
-\pkg{RConics}.
+developing and, especially, debugging the algorithm.
 
 The method is based in \emph{projective geometry} (rather than
 euclidean). To find the intersection points, the algorithm first

@@ -18,9 +18,8 @@ disjoint_or_subset(const arma::mat& M) {
   rowvec cosphi = cos(phi);
   rowvec sinphi = sin(phi);
 
-  urowvec is_subset =
-    square(xmh%cosphi + ymk%sinphi)/square(M.row(2)) +
-    square(xmh%sinphi - ymk%cosphi)/square(M.row(3)) < 1.0;
+  urowvec is_subset = square(xmh%cosphi + ymk%sinphi)/square(M.row(2)) +
+                      square(xmh%sinphi - ymk%cosphi)/square(M.row(3)) < 1.0;
 
   is_subset.shed_col(i);
 
@@ -28,7 +27,7 @@ disjoint_or_subset(const arma::mat& M) {
 }
 
 inline
-umat
+arma::umat
 find_surrounding_sets(const rowvec& x,
                       const rowvec& y,
                       const rowvec& h,
@@ -54,7 +53,7 @@ find_surrounding_sets(const rowvec& x,
 
 // See which ellipses contain a given set of points
 inline
-umat
+arma::umat
 adopt(const mat& points,
       const mat& ellipses,
       const uword i,

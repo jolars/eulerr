@@ -10,7 +10,7 @@
 using namespace arma;
 
 // Split a degenerate conic into two lines
-mat
+arma::mat
 split_conic(const mat& A) {
   mat::fixed<3, 3> B = -adjoint(A);
 
@@ -33,7 +33,7 @@ split_conic(const mat& A) {
 }
 
 // Intersect a conic with two lines to return 0 to 4 intersection points
-mat
+arma::mat
 intersect_conic_line(const arma::mat& A, const arma::vec& l) {
   mat::fixed<3, 3> M = skewsymmat(l);
   mat::fixed<3, 3> B = M.t()*A*M;
@@ -69,7 +69,7 @@ intersect_conic_line(const arma::mat& A, const arma::vec& l) {
 }
 
 // Intersect two conics, returning 0-4 intersection points
-mat
+arma::mat
 intersect_conics(const arma::mat& A,
                  const arma::mat& B) {
   double alpha = det(A);
