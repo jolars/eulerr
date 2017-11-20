@@ -296,11 +296,14 @@ euler.default <- function(
         fn = get_final_loss_ptr(),
         lower = constraints$lwr,
         upper = constraints$upr,
-        control = RcppDE::DEoptim.control(
-          VTR = 1e-8,
-          trace = FALSE,
-          itermax = 1000,
-          NP = len*10
+        control = utils::modifyList(
+          RcppDE::DEoptim.control(
+            VTR = 0,
+            trace = FALSE,
+            itermax = 1000,
+            NP = len*10
+          ),
+          control$extraopt_control
         )
       )$optim$bestmem
 
