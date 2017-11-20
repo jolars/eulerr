@@ -4,6 +4,9 @@
 * The last-ditch optimizer switched from `GenSA::GenSA()` to
 `RcppDE::DEoptim()`.
 
+## Minor changes
+* Last-ditch optimizer now uses `Rcpp::Xptr` for a small performance boost.
+
 ## Bug fixes
 * Fixed warnings resulting from the deprecated `counts` argument in one
 of the vignettes.
