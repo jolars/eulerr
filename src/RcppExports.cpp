@@ -31,6 +31,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// target_function_ptr
+SEXP target_function_ptr(SEXP par_in);
+RcppExport SEXP _eulerr_target_function_ptr(SEXP par_inSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type par_in(par_inSEXP);
+    rcpp_result_gen = Rcpp::wrap(target_function_ptr(par_in));
+    return rcpp_result_gen;
+END_RCPP
+}
+// init_final_loss_fun
+SEXP init_final_loss_fun(SEXP areas_in, bool circle);
+RcppExport SEXP _eulerr_init_final_loss_fun(SEXP areas_inSEXP, SEXP circleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type areas_in(areas_inSEXP);
+    Rcpp::traits::input_parameter< bool >::type circle(circleSEXP);
+    rcpp_result_gen = Rcpp::wrap(init_final_loss_fun(areas_in, circle));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_final_loss_ptr
+SEXP get_final_loss_ptr();
+RcppExport SEXP _eulerr_get_final_loss_ptr() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(get_final_loss_ptr());
+    return rcpp_result_gen;
+END_RCPP
+}
 // optim_init_loss
 double optim_init_loss(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
 RcppExport SEXP _eulerr_optim_init_loss(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
@@ -141,6 +174,9 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
+    {"_eulerr_target_function_ptr", (DL_FUNC) &_eulerr_target_function_ptr, 1},
+    {"_eulerr_init_final_loss_fun", (DL_FUNC) &_eulerr_init_final_loss_fun, 2},
+    {"_eulerr_get_final_loss_ptr", (DL_FUNC) &_eulerr_get_final_loss_ptr, 0},
     {"_eulerr_optim_init_loss", (DL_FUNC) &_eulerr_optim_init_loss, 4},
     {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
     {"_eulerr_optim_init_hess", (DL_FUNC) &_eulerr_optim_init_hess, 4},

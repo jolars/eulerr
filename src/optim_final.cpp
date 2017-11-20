@@ -20,7 +20,6 @@ intersect_ellipses(const arma::vec& par,
   uword n        = par.n_elem/n_pars;
   uword n_int    = 2*n*(n - 1);
   umat  id       = bit_index(n);
-  uword n_combos = id.n_rows;
 
   // Set up a matrix of the ellipses in standard form and a cube of conics
   mat ellipses = reshape(par, n_pars, n);
@@ -61,9 +60,9 @@ intersect_ellipses(const arma::vec& par,
   urowvec owners(parents.n_cols);
 
   // Loop over each set combination
-  vec areas(n_combos);
+  vec areas(id.n_rows);
 
-  for (uword i = 0; i < n_combos; ++i) {
+  for (uword i = 0; i < id.n_rows; ++i) {
     uvec ids = find(id.row(i));
 
     if (ids.n_elem == 1) {
@@ -96,9 +95,9 @@ intersect_ellipses(const arma::vec& par,
     }
   }
 
-  vec out(n_combos, fill::zeros);
+  vec out(id.n_rows, fill::zeros);
 
-  for (uword i = n_combos; i-- > 0;) {
+  for (uword i = id.n_rows; i-- > 0;) {
     out(i) = areas(i) - accu(out(find(all(id.cols(find(id.row(i))), 1))));
   }
 
@@ -114,18 +113,73 @@ optim_final_loss(const arma::vec& par,
   return accu(square(areas - intersect_ellipses(par, circle)));
 }
 
-// double
-// optim_final_loss_ptr(arma::vec par, Rcpp::Environment env) {
-//   //Rcpp::Environment e(env);
-//   vec areas = Rcpp::as<arma::vec>(env["areas"]);
-//   //vec pars = Rcpp::as<arma::vec>(par);
-//   bool circle = env["circle"];
-//   return optim_final_loss(par, areas, circle);
-// }
-//
-// // [[Rcpp::export]]
-// SEXP
-// optim_final_ptr() {
-//   typedef double (*funcPtr)(arma::vec, Rcpp::Environment);
-//   return Rcpp::XPtr<funcPtr>(new funcPtr(&optim_final_loss_ptr));
-// }
+// Set up a Xptr to optim_final_lass for the last-ditch optimizer
+// Adapted from http://lists.r-forge.r-project.org/pipermail/rcpp-devel/2013-April/005744.html
+class target_function {
+private:
+  static target_function *target_function_singleton;
+  vec areas;
+  bool circle;
+  double loss;
+
+public:
+  void eval(vec& par) {
+    this -> loss = optim_final_loss(par, areas, circle);
+  };
+
+  void init(vec& areas_in, bool circle) {
+    this -> areas = areas_in;
+    this -> circle = circle;
+  };
+
+  static target_function* get_target_function_singleton() {
+    if (target_function_singleton == 0)
+      target_function_singleton = new target_function();
+    return target_function_singleton;
+  };
+
+  static void delete_target_function_singleton(){
+    if (target_function_singleton == 0) {
+      return;
+    } else {
+      delete target_function_singleton;
+      target_function_singleton = 0;
+    }
+    return;
+  };
+
+  double get_loss() {
+    return loss;
+  };
+};
+
+target_function* target_function::target_function_singleton = 0;
+
+// [[Rcpp::export]]
+SEXP
+target_function_ptr(SEXP par_in) {
+  vec par = Rcpp::as<arma::vec>(par_in);
+
+  target_function* sp = target_function::get_target_function_singleton();
+
+  sp -> eval(par);
+
+  return Rcpp::wrap(sp -> get_loss());
+}
+
+// [[Rcpp::export]]
+SEXP
+init_final_loss_fun(SEXP areas_in, bool circle) {
+  target_function::delete_target_function_singleton();
+  target_function* sp = target_function::get_target_function_singleton();
+  vec areas = Rcpp::as<arma::vec>(areas_in);
+  sp -> init(areas, circle);
+  return R_NilValue;
+}
+
+// [[Rcpp::export]]
+SEXP
+get_final_loss_ptr() {
+  typedef SEXP (*fun_ptr)(SEXP);
+  return (Rcpp::XPtr<fun_ptr>(new fun_ptr(&target_function_ptr)));
+}

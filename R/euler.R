@@ -289,8 +289,11 @@ euler.default <- function(
 
       # TODO: Set up initial population in some clever fashion.
 
+      init_final_loss_fun(areas = areas_disjoint,
+                          circle = circle)
+
       deopt <- RcppDE::DEoptim(
-        fn = optim_final_loss,
+        fn = get_final_loss_ptr(),
         lower = constraints$lwr,
         upper = constraints$upr,
         control = RcppDE::DEoptim.control(
@@ -298,9 +301,7 @@ euler.default <- function(
           trace = FALSE,
           itermax = 1000,
           NP = len*10
-        ),
-        areas = areas_disjoint,
-        circle = circle
+        )
       )$optim$bestmem
 
       last_ditch_effort <- stats::nlminb(
@@ -314,43 +315,6 @@ euler.default <- function(
           abs.tol = 1e-20
         )
       )$par
-
-      # # Try with Rmalschains
-      # env <- new.env()
-      # env[["circle"]] <- circle
-      # env[["areas"]] <- areas_disjoint
-      #
-      # last_ditch_effort <- Rmalschains::malschains(
-      #   fn = optim_final_ptr(),
-      #   lower = constraints$lwr,
-      #   upper = constraints$upr,
-      #   maxEvals = 5e3*3L^n,
-      #   verbosity = 0,
-      #   control = Rmalschains::malschains.control(
-      #     ls = "cmaes",
-      #     istep = 300,
-      #     alpha = 0.8,
-      #     optimum = 0,
-      #     popsize = len*10
-      #   ),
-      #   env = env
-      # )$sol
-
-      # # Try with GenSA
-      # last_ditch_effort <- GenSA::GenSA(
-      #   par = newvec,
-      #   fn = optim_final_loss,
-      #   lower = constraints$lwr,
-      #   upper = constraints$upr,
-      #   circle = circle,
-      #   areas = areas_disjoint,
-      #   control = utils::modifyList(
-      #     list(threshold.stop = 1e-20,
-      #          max.call = 5e3*3L^n,
-      #          smooth = FALSE),
-      #     control$extraopt_control
-      #   )
-      # )$par
 
       last_ditch_fit <- as.vector(intersect_ellipses(last_ditch_effort, circle))
       last_ditch_diagError <- diagError(last_ditch_fit, orig)

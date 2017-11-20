@@ -9,6 +9,18 @@ optim_final_loss <- function(par, areas, circle) {
     .Call(`_eulerr_optim_final_loss`, par, areas, circle)
 }
 
+target_function_ptr <- function(par_in) {
+    .Call(`_eulerr_target_function_ptr`, par_in)
+}
+
+init_final_loss_fun <- function(areas_in, circle) {
+    .Call(`_eulerr_init_final_loss_fun`, areas_in, circle)
+}
+
+get_final_loss_ptr <- function() {
+    .Call(`_eulerr_get_final_loss_ptr`)
+}
+
 optim_init_loss <- function(par, d, disjoint, subset) {
     .Call(`_eulerr_optim_init_loss`, par, d, disjoint, subset)
 }
