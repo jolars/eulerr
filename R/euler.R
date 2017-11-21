@@ -243,7 +243,7 @@ euler.default <- function(
     if (circle) {
       pars <- as.vector(matrix(c(initial_layout$par, r), 3L, byrow = TRUE))
       lwr <- rep.int(0, 3L)
-      upr <- c(bnd, bnd, bnd)
+      upr <- rep.int(bnd, 3L)
     } else {
       pars <- as.vector(rbind(matrix(initial_layout$par, 2L, byrow = TRUE),
                               r, r, 0, deparse.level = 0L))
@@ -260,8 +260,8 @@ euler.default <- function(
       objective = optim_final_loss,
       areas = areas_disjoint,
       circle = circle,
-      control = list(eval.max = 1500,
-                     iter.max = 1000,
+      control = list(eval.max = 20000L,
+                     iter.max = 15000L,
                      abs.tol = 1e-20),
       lower = lwr,
       upper = upr
@@ -284,39 +284,35 @@ euler.default <- function(
       newpars <- compress_layout(newpars, id, nlminb_fit)
       constraints <- get_constraints(newpars)
 
-      newvec <- as.vector(t(newpars))
-      len <- length(newvec)
-
       # TODO: Set up initial population in some clever fashion.
 
-      init_final_loss_fun(areas = areas_disjoint,
-                          circle = circle)
-
-      deopt <- RcppDE::DEoptim(
-        fn = get_final_loss_ptr(),
+      deoptim <- RcppDE::DEoptim(
+        fn = optim_final_loss,
         lower = constraints$lwr,
         upper = constraints$upr,
-        control = utils::modifyList(
-          RcppDE::DEoptim.control(
-            VTR = 0,
-            trace = FALSE,
-            itermax = 1000,
-            NP = len*10
-          ),
-          control$extraopt_control
-        )
-      )$optim$bestmem
+        control = do.call(
+          RcppDE::DEoptim.control,
+          utils::modifyList(
+            list(VTR = 0,
+                 trace = FALSE,
+                 NP = length(newpars)*10,
+                 itermax = 800L),
+            control$extraopt_control
+          )
+        ),
+        areas = areas_disjoint,
+        circle = circle
+      )
 
+      # Fine tune the fit from DEoptim
       last_ditch_effort <- stats::nlminb(
         objective = optim_final_loss,
-        start = deopt,
+        start = deoptim$optim$bestmem,
         areas = areas_disjoint,
         circle = circle,
-        control = list(
-          eval.max = 1500,
-          iter.max = 1000,
-          abs.tol = 1e-20
-        )
+        control = list(eval.max = 20000L,
+                       iter.max = 15000L,
+                       abs.tol = 1e-20)
       )$par
 
       last_ditch_fit <- as.vector(intersect_ellipses(last_ditch_effort, circle))
