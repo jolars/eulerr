@@ -20,7 +20,11 @@ choose_two(const arma::uvec& x) {
 
 // Squared loss between given and desired overlap
 // [[Rcpp::export]]
-double discdisc(double d, double r1, double r2, double overlap) {
+double
+discdisc(double d,
+         double r1,
+         double r2,
+         double overlap) {
   double r1sq = r1*r1;
   double r2sq = r2*r2;
   double dsq  = d*d;
@@ -30,15 +34,6 @@ double discdisc(double d, double r1, double r2, double overlap) {
     0.5*std::sqrt((r1 + r2 - d)*(d + r1 - r2)*(d - r1 + r2)*(d + r1 + r2));
 
   return std::pow(D - overlap, 2);
-}
-
-// [[Rcpp::export]]
-double
-stress(const arma::vec& areas, const arma::vec& fit) {
-  double sst   = accu(square(fit));
-  double slope = accu(areas%fit)/accu(square(areas));
-  double sse   = accu(square(fit - areas*slope));
-  return sse/sst;
 }
 
 // [[Rcpp::export]]
