@@ -30,9 +30,9 @@ intersect_ellipses(const arma::vec& par,
   }
 
   // Constrain semiaxes to be positive and angle to [-pi, pi)
-  // Necessary if optimizer is unbounded
+  // Necessary if optimizer is unconstrained
   ellipses.rows(2, 3).for_each([](mat::elem_type& x) {x = std::abs(x);});
-  ellipses.row(4).for_each([](mat::elem_type& x) {x = normalize_angle(x);});
+  ellipses.row(4).for_each([](mat::elem_type& x) {normalize_angle(x);});
 
   cube conics = standard_to_matrix(ellipses);
 
@@ -104,82 +104,22 @@ intersect_ellipses(const arma::vec& par,
   return clamp(out, 0.0, out.max());
 }
 
+// [[Rcpp::export]]
+double
+stress(const arma::vec& orig,
+       const arma::vec& fit) {
+  double sst   = accu(square(fit));
+  double slope = accu(orig%fit)/accu(square(orig));
+  double sse   = accu(square(fit - orig*slope));
+  return sse/sst;
+}
+
 // Compute the sums of squares between the actual and desired areas
 // [[Rcpp::export]]
 double
 optim_final_loss(const arma::vec& par,
                  const arma::vec& areas,
                  const bool circle) {
-  return accu(square(areas - intersect_ellipses(par, circle)));
-}
-
-// Set up a Xptr to optim_final_lass for the last-ditch optimizer
-// Adapted from http://lists.r-forge.r-project.org/pipermail/rcpp-devel/2013-April/005744.html
-class target_function {
-private:
-  static target_function *target_function_singleton;
-  vec areas;
-  bool circle;
-  double loss;
-
-public:
-  void eval(vec& par) {
-    this -> loss = optim_final_loss(par, areas, circle);
-  };
-
-  void init(vec& areas_in, bool circle) {
-    this -> areas = areas_in;
-    this -> circle = circle;
-  };
-
-  static target_function* get_target_function_singleton() {
-    if (target_function_singleton == 0)
-      target_function_singleton = new target_function();
-    return target_function_singleton;
-  };
-
-  static void delete_target_function_singleton(){
-    if (target_function_singleton == 0) {
-      return;
-    } else {
-      delete target_function_singleton;
-      target_function_singleton = 0;
-    }
-    return;
-  };
-
-  double get_loss() {
-    return loss;
-  };
-};
-
-target_function* target_function::target_function_singleton = 0;
-
-// [[Rcpp::export]]
-SEXP
-target_function_ptr(SEXP par_in) {
-  vec par = Rcpp::as<arma::vec>(par_in);
-
-  target_function* sp = target_function::get_target_function_singleton();
-
-  sp -> eval(par);
-
-  return Rcpp::wrap(sp -> get_loss());
-}
-
-// [[Rcpp::export]]
-SEXP
-init_final_loss_fun(SEXP areas_in, bool circle) {
-  target_function::delete_target_function_singleton();
-  target_function* sp = target_function::get_target_function_singleton();
-  vec areas = Rcpp::as<arma::vec>(areas_in);
-  sp -> init(areas, circle);
-  return R_NilValue;
-}
-
-// [[Rcpp::export]]
-SEXP
-get_final_loss_ptr() {
-  typedef SEXP (*fun_ptr)(SEXP);
-  return (Rcpp::XPtr<fun_ptr>(new fun_ptr(&target_function_ptr)));
+  return stress(areas, intersect_ellipses(par, circle));
+  //return accu(square(areas - intersect_ellipses(par, circle)));
 }
