@@ -5,20 +5,12 @@ intersect_ellipses <- function(par, circle) {
     .Call(`_eulerr_intersect_ellipses`, par, circle)
 }
 
+stress <- function(orig, fit) {
+    .Call(`_eulerr_stress`, orig, fit)
+}
+
 optim_final_loss <- function(par, areas, circle) {
     .Call(`_eulerr_optim_final_loss`, par, areas, circle)
-}
-
-target_function_ptr <- function(par_in) {
-    .Call(`_eulerr_target_function_ptr`, par_in)
-}
-
-init_final_loss_fun <- function(areas_in, circle) {
-    .Call(`_eulerr_init_final_loss_fun`, areas_in, circle)
-}
-
-get_final_loss_ptr <- function() {
-    .Call(`_eulerr_get_final_loss_ptr`)
 }
 
 optim_init_loss <- function(par, d, disjoint, subset) {
@@ -43,10 +35,6 @@ choose_two <- function(x) {
 
 discdisc <- function(d, r1, r2, overlap) {
     .Call(`_eulerr_discdisc`, d, r1, r2, overlap)
-}
-
-stress <- function(areas, fit) {
-    .Call(`_eulerr_stress`, areas, fit)
 }
 
 bit_index_cpp <- function(n) {

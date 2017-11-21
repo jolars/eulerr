@@ -18,6 +18,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// stress
+double stress(const arma::vec& orig, const arma::vec& fit);
+RcppExport SEXP _eulerr_stress(SEXP origSEXP, SEXP fitSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type orig(origSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type fit(fitSEXP);
+    rcpp_result_gen = Rcpp::wrap(stress(orig, fit));
+    return rcpp_result_gen;
+END_RCPP
+}
 // optim_final_loss
 double optim_final_loss(const arma::vec& par, const arma::vec& areas, const bool circle);
 RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP) {
@@ -28,39 +40,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
     rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle));
-    return rcpp_result_gen;
-END_RCPP
-}
-// target_function_ptr
-SEXP target_function_ptr(SEXP par_in);
-RcppExport SEXP _eulerr_target_function_ptr(SEXP par_inSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type par_in(par_inSEXP);
-    rcpp_result_gen = Rcpp::wrap(target_function_ptr(par_in));
-    return rcpp_result_gen;
-END_RCPP
-}
-// init_final_loss_fun
-SEXP init_final_loss_fun(SEXP areas_in, bool circle);
-RcppExport SEXP _eulerr_init_final_loss_fun(SEXP areas_inSEXP, SEXP circleSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type areas_in(areas_inSEXP);
-    Rcpp::traits::input_parameter< bool >::type circle(circleSEXP);
-    rcpp_result_gen = Rcpp::wrap(init_final_loss_fun(areas_in, circle));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_final_loss_ptr
-SEXP get_final_loss_ptr();
-RcppExport SEXP _eulerr_get_final_loss_ptr() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(get_final_loss_ptr());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -147,18 +126,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// stress
-double stress(const arma::vec& areas, const arma::vec& fit);
-RcppExport SEXP _eulerr_stress(SEXP areasSEXP, SEXP fitSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type areas(areasSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type fit(fitSEXP);
-    rcpp_result_gen = Rcpp::wrap(stress(areas, fit));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bit_index_cpp
 arma::umat bit_index_cpp(arma::uword n);
 RcppExport SEXP _eulerr_bit_index_cpp(SEXP nSEXP) {
@@ -173,17 +140,14 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
+    {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
-    {"_eulerr_target_function_ptr", (DL_FUNC) &_eulerr_target_function_ptr, 1},
-    {"_eulerr_init_final_loss_fun", (DL_FUNC) &_eulerr_init_final_loss_fun, 2},
-    {"_eulerr_get_final_loss_ptr", (DL_FUNC) &_eulerr_get_final_loss_ptr, 0},
     {"_eulerr_optim_init_loss", (DL_FUNC) &_eulerr_optim_init_loss, 4},
     {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
     {"_eulerr_optim_init_hess", (DL_FUNC) &_eulerr_optim_init_hess, 4},
     {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
-    {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},
     {"_eulerr_bit_index_cpp", (DL_FUNC) &_eulerr_bit_index_cpp, 1},
     {NULL, NULL, 0}
 };
