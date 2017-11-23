@@ -294,9 +294,11 @@ euler.default <- function(
           RcppDE::DEoptim.control,
           utils::modifyList(
             list(VTR = 0,
-                 trace = FALSE,
                  NP = length(newpars)*10,
-                 itermax = 800L),
+                 CR = 0.6,
+                 F = 0.2,
+                 itermax = 800L,
+                 trace = FALSE),
             control$extraopt_control
           )
         ),
