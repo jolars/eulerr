@@ -43,9 +43,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// optim_init_loss
-double optim_init_loss(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
-RcppExport SEXP _eulerr_optim_init_loss(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
+// optim_init
+Rcpp::NumericVector optim_init(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
+RcppExport SEXP _eulerr_optim_init(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -53,35 +53,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type d(dSEXP);
     Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type disjoint(disjointSEXP);
     Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type subset(subsetSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_init_loss(par, d, disjoint, subset));
-    return rcpp_result_gen;
-END_RCPP
-}
-// optim_init_grad
-Rcpp::NumericVector optim_init_grad(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
-RcppExport SEXP _eulerr_optim_init_grad(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type disjoint(disjointSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type subset(subsetSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_init_grad(par, d, disjoint, subset));
-    return rcpp_result_gen;
-END_RCPP
-}
-// optim_init_hess
-Rcpp::NumericMatrix optim_init_hess(const Rcpp::NumericVector& par, const Rcpp::NumericMatrix& d, const Rcpp::LogicalMatrix& disjoint, const Rcpp::LogicalMatrix& subset);
-RcppExport SEXP _eulerr_optim_init_hess(SEXP parSEXP, SEXP dSEXP, SEXP disjointSEXP, SEXP subsetSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type disjoint(disjointSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::LogicalMatrix& >::type subset(subsetSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_init_hess(par, d, disjoint, subset));
+    rcpp_result_gen = Rcpp::wrap(optim_init(par, d, disjoint, subset));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -142,9 +114,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
     {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
-    {"_eulerr_optim_init_loss", (DL_FUNC) &_eulerr_optim_init_loss, 4},
-    {"_eulerr_optim_init_grad", (DL_FUNC) &_eulerr_optim_init_grad, 4},
-    {"_eulerr_optim_init_hess", (DL_FUNC) &_eulerr_optim_init_hess, 4},
+    {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
     {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},

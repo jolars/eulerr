@@ -3,6 +3,8 @@
 ## Major changes
 * The last-ditch optimizer switched from `GenSA::GenSA()` to
 `RcppDE::DEoptim()`.
+* The optimizer used in all the remaining cases, including all circular
+diagrams and initial layouts, was switched back to `stats::nlm()` again.
 
 ## Bug fixes
 * Fixed warnings resulting from the deprecated `counts` argument in one
