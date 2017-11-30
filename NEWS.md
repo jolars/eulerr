@@ -8,6 +8,9 @@ diagrams and initial layouts, was switched back to `stats::nlm()` again.
 * In final optimization, we now use *stress* instead of residual sums
 of squares as a target for our optimizer.
 
+## Minor changes
+* `label` is now a proper generic with an appropriate method (`label.euler()`).
+
 ## Bug fixes
 * Fixed warnings resulting from the deprecated `counts` argument in one
 of the vignettes.
