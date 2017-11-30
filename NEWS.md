@@ -5,6 +5,8 @@
 `RcppDE::DEoptim()`.
 * The optimizer used in all the remaining cases, including all circular
 diagrams and initial layouts, was switched back to `stats::nlm()` again.
+* In final optimization, we now use *stress* instead of residual sums
+of squares as a target for our optimizer.
 
 ## Bug fixes
 * Fixed warnings resulting from the deprecated `counts` argument in one
