@@ -9,7 +9,9 @@ diagrams and initial layouts, was switched back to `stats::nlm()` again.
 ## Bug fixes
 * Fixed warnings resulting from the deprecated `counts` argument in one
 of the vignettes.
-* Fixed memcheck errors in the final optimizer..
+* Fixed memcheck errors in the final optimizer.
+* Corrected erroneous labeling when `auto.key = TRUE` and labels were
+*not* in alphabetic order. (#15)
 
 # eulerr 3.0.1
 ## Bug fixes

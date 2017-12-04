@@ -110,7 +110,7 @@ plot.euler <- function(x,
   is_by <- inherits(x, "by")
 
   if (is.function(fill))
-    fill <- fill(if (is_by) nrow(x[[1]]$coefficients) else nrow(x$coefficients))
+    fill <- fill(if (is_by) NROW(x[[1]]$coefficients) else NROW(x$coefficients))
 
   fill <- grDevices::adjustcolor(fill, fill_alpha)
 
@@ -135,9 +135,6 @@ plot.euler <- function(x,
     ))
   }
 
-  par.settings <- update_list(par.settings,
-                              list(superpose.polygon = list(col = fill)))
-
   if (isTRUE(auto.key) || is.list(auto.key)) {
     auto.key <- update_list(list(
       rectangles = TRUE, points = FALSE
@@ -146,10 +143,15 @@ plot.euler <- function(x,
     auto.key <- FALSE
   }
 
-  setnames <- factor(rownames(dd))
+  setnames <- as.factor(rownames(dd))
   rownames(dd) <- NULL
   dd <- as.data.frame(dd)
   dd$set <- setnames
+
+  par.settings <- update_list(
+      par.settings,
+      list(superpose.polygon = list(col = fill[order(as.character(setnames))]))
+    )
 
   if (is_by) {
     d <- dim(x)
@@ -325,6 +327,7 @@ panel.euler <- function(x,
                        original.values = original.values,
                        fitted.values = fitted.values,
                        fontface = fontface,
+                       identifier = "euler",
                        ...)
   }
 }
