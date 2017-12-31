@@ -26,6 +26,9 @@ Imports:
     RcppDE
 Suggests:
     knitr,
+    pBrackets,
+    RConics,
+    tactile,
     testthat
 LinkingTo:
     Rcpp (>= 0.12.12),
