@@ -153,7 +153,7 @@ euler.default <- function(
   small <- sqrt(.Machine$double.eps)
 
   control <- utils::modifyList(
-    list(extraopt = n == 3 && match.arg(shape) == "ellipse",
+    list(extraopt = (n == 3) && (match.arg(shape) == "ellipse"),
          extraopt_threshold = 0.001,
          extraopt_control = list()),
     control)
@@ -299,7 +299,7 @@ euler.default <- function(
         control = do.call(
           RcppDE::DEoptim.control,
           utils::modifyList(
-            list(VTR = 0,
+            list(VTR = -Inf,
                  NP = length(newpars)*10,
                  CR = 0.6,
                  F = 0.2,
