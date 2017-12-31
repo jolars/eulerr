@@ -7,16 +7,7 @@
 #' If the input is a matrix or data frame and argument `by` is specified,
 #' the function returns a list of euler diagrams.
 #'
-#' The function minimizes the sums of squared errors between the disjoint areas
-#' in the euler diagram and the user's input, namely
-#'
-#' \deqn{\sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2,}{\sum (orig - fit) ^ 2,}
-#'
-#' where \eqn{\hat{y}}{fit} are estimates of \eqn{y} that are currently being
-#' explored.
-#'
-#' The stress statistic from \pkg{venneuler} is returned to give an indication
-#' of the goodness of the fit:
+#' The function minimizes the *stress* statistic from \pkg{venneuler},
 #'
 #' \deqn{
 #'   \frac{
@@ -27,7 +18,8 @@
 #'
 #' where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
 #' regression of the fitted areas on the original areas that are currently being
-#' explored.
+#' explored. The stress statistic can also be used as a goodness of fit
+#' measure.
 #'
 #' `euler()` also returns `diagError` and `regionError` from
 #' *eulerAPE*. `regionError` is computed as
