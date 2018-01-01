@@ -17,3 +17,4 @@
 ^vignettes/*\.pdf$
 ^vignettes/*\.tex$
 ^vignettes/*\.toc$
+^codecov\.yml$
