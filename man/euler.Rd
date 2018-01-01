@@ -119,16 +119,21 @@ that set (with no duplicates). Vectors in the list do not need to be named.
 }}
 
 \examples{
-# First fit the euler specification
-fit <- euler(c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2))
+# Fit a diagram with circles
+combo <- c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2, "A&B&C" = 0.1)
+fit1 <- euler(combo)
 
-# Then plot it
-plot(fit)
+# Investigate the fit
+fit1
 
-# Same result as above
-euler(c("A" = 1, "B" = 0.4, "C" = 3,
-        "A&B" = 0.2, "A&C" = 0, "B&C" = 0,
-        "A&B&C" = 0))
+# Refit using ellipses instead
+fit2 <- euler(combo, shape = "ellipse")
+
+# Investigate the fit again (which is now exact)
+fit2
+
+# Plot it
+plot(fit2)
 
 # A euler diagram from a list of sample spaces (the list method)
 euler(list(A = c("a", "ab", "ac", "abc"),
