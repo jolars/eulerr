@@ -1,6 +1,6 @@
 Package: eulerr
 Title: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-Version: 3.0.1.9000
+Version: 3.1.0
 Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     role = c("aut", "cre")),
              person("A. Jonathan R.", "Godfrey", role = "ctb"),
