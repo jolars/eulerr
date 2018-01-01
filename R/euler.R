@@ -69,7 +69,7 @@
 #'
 #' @examples
 #' # Fit a diagram with circles
-#' combo <- c("A" = 1, "B" = 0.4, "C" = 3, "A&B" = 0.2, "A&B&C" = 0.1)
+#' combo <- c(A = 2, B = 2, C = 2, "A&B" = 1, "A&C" = 1, "B&C" = 1)
 #' fit1 <- euler(combo)
 #'
 #' # Investigate the fit
