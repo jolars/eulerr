@@ -8,7 +8,7 @@ Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-c
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
 [![Coverage
-status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/github/jolars/eulerr?branch=master)
+status](https://coveralls.io/repos/github/jolars/eulerr/badge.svg)](https://coveralls.io/r/jolars/eulerr?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 [![Research software
 impact](http://depsy.org/api/package/cran/eulerr/badge.svg)](http://depsy.org/package/r/eulerr)
@@ -63,9 +63,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 1.166332e-11
+#> [1] 6.824336e-12
 fit$diagError
-#> [1] 8.167421e-07
+#> [1] 7.122999e-07
 ```
 
 and plot it
