@@ -6,15 +6,8 @@ warnings_are_errors: true
 matrix:
   include:
     - os: linux
-      compiler: gcc
       r: devel
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes'
-
-    - os: linux
       compiler: clang
-      r: devel
       latex: false
       addons:
         apt:
@@ -26,33 +19,17 @@ matrix:
         - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
 
     - os: linux
-      compiler: gcc
       r: release
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes'
-      r_github_packages:
-        - jimhester/covr
+      compiler: gcc
+      r_build_args: '--compact-vignettes=both'
+      before_install:
+        - tlmgr install fontaxes sttools mweights libertine mathalfa units sidenotes marginnote marginfix algorithmicx
       after_success:
         - Rscript -e 'covr::codecov()'
 
     - os: linux
-      compiler: clang
-      r: release
-      r_build_args: '--compact-vignettes=both'
-      before_install:
-        - tlmgr install fontaxes sttools mweights libertine mathalfa units sidenotes marginnote marginfix algorithmicx
-
-    - os: linux
+      r: oldrel
       compiler: gcc
-      r: oldrel
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes'
-
-    - os: linux
-      compiler: clang
-      r: oldrel
       latex: false
       r_build_args: '--no-build-vignettes'
       r_check_args: '--ignore-vignettes'
