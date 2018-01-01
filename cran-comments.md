@@ -13,11 +13,3 @@
 ## Reverse dependencies
 
 * eulerr has no reverse dependencies.
-
-## Hot fix
-
-This is a hot fix for a mistake I made in 3.0.0 wherein I had omitted 
-VignetteEngine{knitr::knitr} from both the vignettes, which mangled
-the output (see https://cran.r-project.org/package=eulerr/vignettes/introduction.pdf
-for instance). Please accept my apologies for the inconvenience and consider
-this small quick fix.
