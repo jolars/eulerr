@@ -1,4 +1,4 @@
-# eulerr 3.0.1.9000
+# eulerr 3.1.0
 
 ## Major changes
 * The last-ditch optimizer switched from `GenSA::GenSA()` to
