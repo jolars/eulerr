@@ -96,5 +96,8 @@ test_that("expect no errors for a variety of predefined sets", {
   expect_error(euler(s12, shape = "ellipse"), NA)
   expect_error(euler(s13, shape = "ellipse"), NA)
   expect_error(euler(s14, shape = "ellipse"), NA)
-  expect_error(euler(s15, shape = "ellipse"), NA)
+  expect_error(euler(s15,
+                     shape = "ellipse",
+                     control = list(extraopt_control = list(itermax = 50))),
+               NA)
 })
