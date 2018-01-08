@@ -14,7 +14,7 @@ Description: Generate area-proportional Euler diagrams
     represented. Diagrams may be fit with ellipses and circles via
     a wide range of inputs and can be visualized in numerous ways.
 Depends:
-    R (>= 3.3.1)
+    R (>= 3.3.0)
 Imports:
     graphics,
     grDevices,
