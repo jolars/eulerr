@@ -7,8 +7,9 @@
 panel.euler(x, y, ra, rb, phi, subscripts, fill = superpose.polygon$col,
   lty = superpose.polygon$lty, lwd = superpose.polygon$lwd,
   border = superpose.polygon$border, alpha = superpose.polygon$alpha,
-  fontface = "bold", quantities = FALSE, labels = NULL, original.values,
-  fitted.values, ...)
+  fill_alpha = 0.4, fontface = "bold", quantities = FALSE,
+  labels = NULL, original.values, fitted.values, mode = c("split",
+  "overlay"), ...)
 }
 \arguments{
 \item{x}{X coordinates for the centers.}
@@ -32,9 +33,9 @@ the positive x-axis to the semi-major axis).}
 
 \item{border}{Border color.}
 
-\item{alpha}{Alpha (opacity) for the fill. Note that \code{\link[=plot.euler]{plot.euler()}} by
-default modifies the alpha of \code{col} to avoid affecting the alpha of
-the borders. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
+\item{alpha}{Alpha (opacity) for the lines.}
+
+\item{fill_alpha}{Alpha (opacity) for the fill. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
 \item{fontface}{Fontface for the labels. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
@@ -48,6 +49,11 @@ the quantity labels.}
 \item{original.values}{Original values for the disjoint set combinations.}
 
 \item{fitted.values}{Fitted values for the disjoint set combinations.}
+
+\item{mode}{"\code{split}", the default, splits up the diagram into individual
+polygons and blends the colors of the overlapping shapes using
+color averaging in the CIELAB color space. "\code{overlay}" superposes
+sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
 
 \item{...}{Passed down to \code{\link[=panel.euler.circles]{panel.euler.circles()}} or
 \code{\link[=panel.euler.ellipses]{panel.euler.ellipses()}} and \code{\link[=panel.euler.labels]{panel.euler.labels()}}.}

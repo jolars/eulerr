@@ -8,7 +8,7 @@
   auto.key = FALSE, quantities = FALSE, labels = is.logical(auto.key) &&
   !isTRUE(auto.key), fontface = "bold", par.settings = list(), ...,
   default.prepanel = prepanel.euler, default.scales = list(draw = FALSE),
-  panel = panel.euler, outer_strips, counts)
+  panel = panel.euler, mode = c("split", "overlay"), outer_strips, counts)
 }
 \arguments{
 \item{x}{An object of class \code{euler}.}
@@ -38,6 +38,11 @@ untouched.}
 \item{default.scales}{Default scales. Turns off}
 
 \item{panel}{The panel function. Should usually be left untouched.}
+
+\item{mode}{"\code{split}", the default, splits up the diagram into individual
+polygons and blends the colors of the overlapping shapes using
+color averaging in the CIELAB color space. "\code{overlay}" superposes
+sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
 
 \item{outer_strips}{Deprecated}
 
@@ -70,7 +75,10 @@ vision deficiencies based on \code{\link[qualpalr:qualpal]{qualpalr::qualpal()}}
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
-plot(fit, labels = c("foo", "bar"), fill_alpha = 0.7)
+
+# eulerr provides two modes for plotting the diagram
+plot(fit, mode = "split")
+plot(fit, mode = "overlay")
 
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,

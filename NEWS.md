@@ -1,8 +1,20 @@
 # eulerr 3.1.0.9000
 
+## Major changes
+
+* A new argument, `mode`, has been added to `plot.euler()`. It provides
+a new method, `mode = "split"` (that is enabled by default),
+for plotting the Euler diagram. Using this method, the diagram is
+split into polygons via use of the **polyclip** package,
+which is now imported by **eulerr** and computes colors for the overlaps
+by blending the involved sets in the CIELab color space and taking averages.
+Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
+(#16)
+
 # eulerr 3.1.0
 
 ## Major changes
+
 * The last-ditch optimizer switched from `GenSA::GenSA()` to
 `RcppDE::DEoptim()`.
 * The optimizer used in all the remaining cases, including all circular
@@ -11,10 +23,12 @@ diagrams and initial layouts, was switched back to `stats::nlm()` again.
 of squares as a target for our optimizer.
 
 ## Minor changes
+
 * `label` is now a proper generic with an appropriate method (`label.euler()`).
 * The **eulerr under the hood** vignette has received a substantial update.
 
 ## Bug fixes
+
 * Fixed warnings resulting from the deprecated `counts` argument in one
 of the vignettes.
 * Fixed memcheck errors in the final optimizer.
@@ -22,12 +36,16 @@ of the vignettes.
 *not* in alphabetic order. (#15)
 
 # eulerr 3.0.1
+
 ## Bug fixes
+
 * Added the missing %\\VignetteEngine{knitr::knitr} to both vignettes. It had 
 mistakenly been left out, which had mangled the resulting vignettes.
 
 # eulerr 3.0.0
+
 ## Major changes
+
 * Ellipses are now supported by setting the new argument `shape = "ellipse"`
 in `euler()`. This functionality accompanies an overhaul of the
 innards of the function.
@@ -46,6 +64,7 @@ provide slightly more accurate locations.
 gradient.
 
 ## Minor changes
+
 * The initial optimizer now restarts up to 10 times and picks the best
 fit (unless it is perfect somewhere along the way).
 * The default palette has been changed to a fixed palette, still adapted
@@ -64,7 +83,9 @@ been deprecated in favor of the more appropriate `quantities`.
 defunct.
 
 # eulerr 2.0.0
+
 ## Major changes
+
 * `eulerr()` has been replaced with `euler()` (see update 1.1.0) and made
 defunct.
 * There are two new methods for `euler`:
@@ -78,6 +99,7 @@ as smooth as possible and should not make much of a difference to *most* users.
 made defunct.
 
 ## Minor changes
+
 * `plot.euler()` handles conflicting arguments better.
 * c++ routines in `eulerr` now use registration.
 * `euler()` now allows single sets (#9).
@@ -90,10 +112,13 @@ argument is used in `lattice::xyplot()` (which `plot.euler()` relies on).
 `fill_alpha` for consistency with other lattice functions.
 
 ## Bug fixes
+
 * `border` argument in `plot.euler()` works again (#7).
 
 # eulerr 1.1.0
+
 ## Major changes
+
 * `eulerr()` and its related methods been deprecated and are being replaced by
 `euler()`, which takes slightly different input. Notably, the default is
 now to provide input in the form of disjoint class combinations, rather
@@ -104,6 +129,7 @@ lattice. As a result, arguments `polygon_args`, `mar`, and `text_args` have been
 deprecated.
 
 ## Minor changes
+
 * Added a `counts` argument to `plot.eulerr`, which intersections and
 complements with counts from the original set specificiation (#6).
 * Added a `key` argument to `plot.eulerr` that prints a legend next to the
@@ -122,6 +148,7 @@ adaptation is relaxed to make sure that colors are kept visually distinct.
 its final optimization.
 
 ## Bug fixes
+
 * The previous algorithm incorrectly computed loss from unions of sets. It now
 computes loss from disjoint class combinations.
 * Added missing row breaks in `print.eulerr`.
@@ -129,6 +156,7 @@ computes loss from disjoint class combinations.
 # eulerr 1.0.0
 
 ## New features
+
 * Final optimization routines have been completely rewritten in C++ using Rcpp
 and RcppArmadillo.
 * Switched to the cost function from EulerAPE for the default optimization
@@ -141,6 +169,7 @@ in a grid arrangement via a new plot method.
 instead of means to calculate label centers.
 
 ## Bug fixes and minor improvements
+
 * Cleaned up typos and grammar errors in the _Introduction to eulerr_ vignette.
 * Added `mar` argument to `plot.eulerr` with a default that produces
 symmetric margins.
@@ -151,4 +180,5 @@ symmetric margins.
 * Updated vignette to cover new features and changes.
 
 # eulerr 0.1.0
+
 * The first release.

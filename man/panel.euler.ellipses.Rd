@@ -4,9 +4,10 @@
 \alias{panel.euler.ellipses}
 \title{Panel Function for Euler Ellipses}
 \usage{
-panel.euler.ellipses(x, y, ra, rb, phi, border = "black",
-  fill = "transparent", n = 200, ..., identifier = NULL,
-  name.type = "panel", col, font, fontface)
+panel.euler.ellipses(x, y, ra, rb, phi, fill = "transparent",
+  fill_alpha = 0.4, border = "black", mode = c("split", "overlay"),
+  identifier = NULL, n = 200, fitted.values, ..., name.type = "panel",
+  col, font, fontface)
 }
 \arguments{
 \item{x}{X coordinates for the centers.}
@@ -20,16 +21,25 @@ panel.euler.ellipses(x, y, ra, rb, phi, border = "black",
 \item{phi}{Rotation of the ellipse (as the counter-clockwise angle from
 the positive x-axis to the semi-major axis).}
 
-\item{border}{Border color.}
-
 \item{fill}{Ellipse fill.}
 
-\item{n}{Number of vertices to draw for each ellipse.}
+\item{fill_alpha}{Alpha (opacity) for the fill. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
-\item{...}{Passed on to \code{\link[grid:grid.polygon]{grid::grid.polygon()}}.}
+\item{border}{Border color.}
+
+\item{mode}{"\code{split}", the default, splits up the diagram into individual
+polygons and blends the colors of the overlapping shapes using
+color averaging in the CIELAB color space. "\code{overlay}" superposes
+sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
 
 \item{identifier}{A character string that is prepended to the name of the
 grob that is created.}
+
+\item{n}{Number of vertices to draw for each ellipse.}
+
+\item{fitted.values}{Fitted values for the disjoint set combinations.}
+
+\item{...}{Passed on to \code{\link[grid:grid.polygon]{grid::grid.polygon()}}.}
 
 \item{name.type}{A character value indicating whether the name of the grob
 should have panel or strip information added to it. Typically either

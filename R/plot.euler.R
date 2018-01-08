@@ -22,6 +22,10 @@
 #' @param fill_alpha Alpha for the fill.
 #' @param auto.key Plot a legend for the sets.
 #' @param quantities Plot quantities.
+#' @param mode "`split`", the default, splits up the diagram into individual
+#'   polygons and blends the colors of the overlapping shapes using
+#'   color averaging in the CIELAB color space. "`overlay`" superposes
+#'   sets and should be used in conjunction with a suitable `fill_alpha` value.
 #' @param labels A list or character vector of labels.
 #' @param fontface Fontface for the labels. (See [grid::gpar()]).
 #' @param default.scales Default scales. Turns off
@@ -46,7 +50,10 @@
 #'
 #' @examples
 #' fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
-#' plot(fit, labels = c("foo", "bar"), fill_alpha = 0.7)
+#'
+#' # eulerr provides two modes for plotting the diagram
+#' plot(fit, mode = "split")
+#' plot(fit, mode = "overlay")
 #'
 #' # Customize colors, remove borders, bump alpha, color labels white
 #' plot(fit,
@@ -91,12 +98,14 @@ plot.euler <- function(x,
                        default.prepanel = prepanel.euler,
                        default.scales = list(draw = FALSE),
                        panel = panel.euler,
+                       mode = c("split", "overlay"),
                        outer_strips,
                        counts) {
   stopifnot(is.numeric(fill_alpha),
             length(fill_alpha) == 1L,
             is.logical(auto.key) || is.list(auto.key),
-            is.logical(quantities) || is.list(quantities))
+            is.logical(quantities) || is.list(quantities),
+            all(is.character(mode)))
 
   if (!missing(outer_strips)) {
     warning("'outer_strips' is deprecated; try latticeExtra::useOuterStrips() for the same functionality.")
@@ -111,8 +120,6 @@ plot.euler <- function(x,
 
   if (is.function(fill))
     fill <- fill(if (is_by) NROW(x[[1]]$coefficients) else NROW(x$coefficients))
-
-  fill <- grDevices::adjustcolor(fill, fill_alpha)
 
   if (is_by) {
     dd <- do.call(rbind, lapply(x, "[[", "coefficients"))
@@ -148,10 +155,11 @@ plot.euler <- function(x,
   dd <- as.data.frame(dd)
   dd$set <- setnames
 
+  key_col <- grDevices::adjustcolor(fill, fill_alpha)
   par.settings <- update_list(
-      par.settings,
-      list(superpose.polygon = list(col = fill[order(as.character(setnames))]))
-    )
+    par.settings,
+    list(superpose.polygon = list(col = key_col[order(as.character(setnames))]))
+  )
 
   if (is_by) {
     d <- dim(x)
@@ -205,6 +213,8 @@ plot.euler <- function(x,
   ccall$ylab <- ""
   ccall$auto.key <- auto.key
   ccall$fill <- fill
+  ccall$mode <- match.arg(mode)
+  ccall$fill_alpha <- fill_alpha
 
   # Make the call
   ccall[[1]] <- quote(lattice::xyplot)
@@ -220,13 +230,7 @@ plot.euler <- function(x,
 #'
 #' @return A list of `xlim` and `ylim` items.
 #' @export
-prepanel.euler <- function(x,
-                           y,
-                           ra,
-                           rb,
-                           phi,
-                           subscripts,
-                           ...) {
+prepanel.euler <- function(x, y, ra, rb, phi, subscripts, ...) {
   get_bounding_box(h = x, k = y, a = ra[subscripts], b = rb[subscripts],
                    phi = phi[subscripts])
 }
@@ -246,9 +250,12 @@ prepanel.euler <- function(x,
 #' @param lty Line type. (See [grid::gpar()].)
 #' @param lwd Line weight. (See [grid::gpar()].)
 #' @param border Border color.
-#' @param alpha Alpha (opacity) for the fill. Note that [plot.euler()] by
-#'   default modifies the alpha of `col` to avoid affecting the alpha of
-#'   the borders. (See [grid::gpar()].)
+#' @param alpha Alpha (opacity) for the lines.
+#' @param mode "`split`", the default, splits up the diagram into individual
+#'   polygons and blends the colors of the overlapping shapes using
+#'   color averaging in the CIELAB color space. "`overlay`" superposes
+#'   sets and should be used in conjunction with a suitable `fill_alpha` value.
+#' @param fill_alpha Alpha (opacity) for the fill. (See [grid::gpar()].)
 #' @param fontface Fontface for the labels. (See [grid::gpar()].)
 #' @param quantities Plots the original values for the disjoint set combinations
 #'   (`original.values`). Can also be a list, in which the contents of the list
@@ -276,11 +283,13 @@ panel.euler <- function(x,
                         lwd = superpose.polygon$lwd,
                         border = superpose.polygon$border,
                         alpha = superpose.polygon$alpha,
+                        fill_alpha = 0.4,
                         fontface = "bold",
                         quantities = FALSE,
                         labels = NULL,
                         original.values,
                         fitted.values,
+                        mode = c("split", "overlay"),
                         ...) {
   stopifnot(is.logical(quantities) || is.list(quantities))
 
@@ -292,11 +301,13 @@ panel.euler <- function(x,
   }
 
   # Plot circles if the semi-major and semi-minor axis are all equal.
-  if (isTRUE(all.equal(ra, rb))) {
+  if (isTRUE(all.equal(ra, rb)) && match.arg(mode) == "overlay") {
     panel.euler.circles(x = x,
                         y = y,
                         r = ra[subscripts],
                         fill = fill,
+                        fill_alpha = fill_alpha,
+                        alpha = alpha,
                         lty = lty,
                         lwd = lwd,
                         border = border,
@@ -309,10 +320,14 @@ panel.euler <- function(x,
                          rb = rb[subscripts],
                          phi = phi[subscripts],
                          fill = fill,
+                         fill_alpha = fill_alpha,
+                         alpha = alpha,
                          lty = lty,
                          lwd = lwd,
                          border = border,
+                         mode = mode,
                          identifier = "euler",
+                         fitted.values = fitted.values,
                          ...)
   }
 
@@ -357,6 +372,7 @@ panel.euler.circles <- function(x,
                                 r,
                                 border = "black",
                                 fill = "transparent",
+                                fill_alpha = 0.4,
                                 ...,
                                 identifier = NULL,
                                 name.type = "panel",
@@ -384,7 +400,8 @@ panel.euler.circles <- function(x,
     y = xy$y,
     r = r,
     default.units = "native",
-    gp = grid::gpar(fill = fill, col = border, ...),
+    gp = grid::gpar(fill = grDevices::adjustcolor(fill, fill_alpha),
+                    col = border, ...),
     name = primName("circles", identifier, name.type, group)
   )
 }
@@ -414,11 +431,14 @@ panel.euler.ellipses <- function(x,
                                  ra,
                                  rb,
                                  phi,
-                                 border = "black",
                                  fill = "transparent",
-                                 n = 200,
-                                 ...,
+                                 fill_alpha = 0.4,
+                                 border = "black",
+                                 mode = c("split", "overlay"),
                                  identifier = NULL,
+                                 n = 200,
+                                 fitted.values,
+                                 ...,
                                  name.type = "panel",
                                  col,
                                  font,
@@ -439,30 +459,82 @@ panel.euler.ellipses <- function(x,
     group <- 0L
 
   N <- length(x)
-  xy <- matrix(NA, nrow = n * N, ncol = 2L)
+  e <- ellipse(x, y, ra, rb, phi, n = n)
 
-  for (i in seq_along(x)) {
-    theta <- seq.int(0, 2 * pi, length.out = n)
+  if (mode == "overlay" || identical(N, 1L)) {
+    grid::grid.polygon(
+      x = c(lapply(e, "[[", "x"), recursive = TRUE),
+      y = c(lapply(e, "[[", "y"), recursive = TRUE),
+      id.lengths = rep.int(n, N),
+      default.units = "native",
+      gp = grid::gpar(fill = grDevices::adjustcolor(fill, fill_alpha),
+                      col = border),
+      name = primName("ellipse", identifier, name.type, group)
+    )
+  } else {
+    id <- bit_indexr(N)
+    m <- NROW(id)
 
-    j <- seq.int(((i - 1L)*n + 1L), i*n, 1L)
+    pieces <- vector("list", m)
+    for (i in rev(seq_len(m))) {
+      idx <- which(id[i, ])
+      n_idx <- length(idx)
+      if (n_idx == 1L) {
+        pieces[[i]] <- e[[idx[1]]]
+      } else {
+        pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
+        if (n_idx > 2L) {
+          for (j in 3L:n_idx) {
+            pieces[[i]] <- poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
+          }
+        }
+      }
+      for (k in which(!id[i, ])) {
+        pieces[[i]] <- poly_clip(pieces[[i]], e[[k]], "minus")
+      }
+      if (i > N) {
+        fill[i] <- mix_colors(fill[idx])
+      }
+    }
 
-    xy[j, 1L] <-
-      x[i] + ra[i]*cos(theta)*cos(phi[i]) - rb[i]*sin(theta)*sin(phi[i])
-    xy[j, 2L] <-
-      y[i] + rb[i]*sin(theta)*cos(phi[i]) + ra[i]*cos(theta)*sin(phi[i])
+    # honor users' color choices if appropriate length
+    if (length(fill) != m && length(fill) >= N) {
+      fill <- fill[seq_len(N)]
+    }
+    fill <- grDevices::adjustcolor(fill, fill_alpha)
 
+    for (i in seq_along(pieces)) {
+      if (is.null(pieces[[i]]$x)) {
+        x0 <- lapply(pieces[[i]], "[[", "x")
+        y0 <- lapply(pieces[[i]], "[[", "y")
+        len <- lengths(x0)
+      } else {
+        x0 <- pieces[[i]]$x
+        y0 <- pieces[[i]]$y
+        len <- length(x0)
+      }
+
+      if (length(x0) > 0) {
+        grid::grid.path(
+          x = c(x0, recursive = TRUE),
+          y = c(y0, recursive = TRUE),
+          default.units = "native",
+          id.lengths = len,
+          gp = grid::gpar(fill = fill[i], col = "transparent"),
+          name = primName("subset", identifier, name.type, group)
+        )
+      }
+    }
+
+    grid::grid.polygon(
+      x = c(lapply(e, "[[", "x"), recursive = TRUE),
+      y = c(lapply(e, "[[", "y"), recursive = TRUE),
+      id.lengths = rep.int(n, N),
+      default.units = "native",
+      gp = grid::gpar(fill = "transparent", col = border),
+      name = primName("ellipse", identifier, name.type, group)
+    )
   }
-
-  xy <- grDevices::xy.coords(xy)
-
-  grid::grid.polygon(
-    x = xy$x,
-    y = xy$y,
-    id.lengths = rep.int(n, N),
-    default.units = "native",
-    gp = grid::gpar(fill = fill, col = border),
-    name = primName("circles", identifier, name.type, group)
-  )
 }
 
 #' Panel Function for Euler Diagram Labels

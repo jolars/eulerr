@@ -19,17 +19,18 @@ Imports:
     graphics,
     grDevices,
     grid,
+    lattice,
+    polyclip,
+    Rcpp,
+    RcppDE,
     stats,
     utils,
-    lattice,
-    Rcpp,
-    RcppDE
 Suggests: 
+    covr,
     knitr,
     pBrackets,
     RConics,
-    testthat,
-    covr
+    testthat
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0)

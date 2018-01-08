@@ -236,3 +236,17 @@ normalize_pars <- function(m) {
   }
   m
 }
+
+#' Blend (Average) Colors for Use in Euler Diagrams
+#'
+#' @param rcol_in A vector of R colors
+#'
+#' @return A single R color
+#' @keywords internal
+mix_colors <- function(rcol_in) {
+  rgb_in <- t(grDevices::col2rgb(rcol_in))
+  lab_in <- grDevices::convertColor(rgb_in, "sRGB", "Lab", scale.in = 255)
+  mean_col <- colMeans(lab_in)
+  rgb_out <- grDevices::convertColor(mean_col, "Lab", "sRGB", scale.out = 1)
+  grDevices::rgb(rgb_out)
+}

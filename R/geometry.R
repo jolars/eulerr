@@ -39,3 +39,63 @@ get_bounding_box <- function(h, k, a, b = NULL, phi = NULL) {
   list(xlim = range(xlim + h, -xlim + h),
        ylim = range(ylim + k, -ylim + k))
 }
+
+#' Plotting Coordinates for an Ellipse
+#'
+#' @param h x coordinates
+#' @param k y coordinates
+#' @param a semimajor axis
+#' @param b semiminor axis
+#' @param phi rotation
+#' @param n number of plotting points
+#'
+#' @return A list of matrices of coordinates for the ellipses
+#' @keywords internal
+ellipse <- function(h, k, a, b = a, phi = 0, n = 200L) {
+  theta <- seq.int(0, 2*pi, length.out = n)
+  m <- length(h)
+  out <- vector("list", m)
+  for (i in seq_along(h)) {
+    out[[i]]$x <-
+      h[i] + a[i]*cos(theta)*cos(phi[i]) - b[i]*sin(theta)*sin(phi[i])
+    out[[i]]$y <-
+      k[i] + b[i]*sin(theta)*cos(phi[i]) + a[i]*cos(theta)*sin(phi[i])
+  }
+  out
+}
+
+#' Polygon Clipping
+#'
+#' This function is provided to efficiently and safely handle clipping
+#' operations. It wraps around [polyclip::polyclip()], which is an
+#' interface to the **Clipper** C++ library.
+#'
+#' @param x polygon
+#' @param y polygon
+#' @param op operation
+#'
+#' @return list of lists
+#' @keywords internal
+poly_clip <- function(a, b, op = c("intersection", "union", "minus", "xor")) {
+  op <- match.arg(op)
+  a0 <- identical(length(a), 0L)
+  b0 <- identical(length(b), 0L)
+
+  if (op == "intersection") {
+    if (a0 || b0)
+      return(list())
+  } else if (op == "union") {
+    if (a0 && !b0)
+      return(b)
+    else if (!a0 && b0)
+      return(a)
+    else
+      return(list())
+  } else if (op == "minus") {
+    if (!a0 && b0)
+      return(a)
+    else if (a0)
+      return(list())
+  }
+  polyclip::polyclip(a, b, op = op)
+}

@@ -4,8 +4,9 @@
 \alias{panel.euler.circles}
 \title{Panel Function for Euler Circles}
 \usage{
-panel.euler.circles(x, y, r, border = "black", fill = "transparent", ...,
-  identifier = NULL, name.type = "panel", col, font, fontface)
+panel.euler.circles(x, y, r, border = "black", fill = "transparent",
+  fill_alpha = 0.4, ..., identifier = NULL, name.type = "panel", col,
+  font, fontface)
 }
 \arguments{
 \item{x}{X coordinates for the centers.}
@@ -17,6 +18,8 @@ panel.euler.circles(x, y, r, border = "black", fill = "transparent", ...,
 \item{border}{Border color.}
 
 \item{fill}{Circle fill.}
+
+\item{fill_alpha}{Alpha (opacity) for the fill. (See \code{\link[grid:gpar]{grid::gpar()}}.)}
 
 \item{...}{Passed on to \code{\link[grid:grid.circle]{grid::grid.circle()}}.}
 
