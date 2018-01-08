@@ -1,15 +1,18 @@
+year <- substr(Sys.Date(), 1, 4)
+note <- paste("R package version", utils::packageVersion("eulerr"))
+
 citHeader("To cite eulerr in publications, please use")
 
 citEntry(entry = "Manual",
   title        = "{eulerr}: Area-Proportional {Euler} and {Venn} Diagrams with Ellipses",
   author       = personList(as.person("Johan Larsson")),
-  year         = "2017",
-  note         = "R package version 4.0.0",
+  year         = year,
+  note         = note,
   url          = "https://cran.r-project.org/package=eulerr",
-
-  textVersion  =
-  paste("Johan Larsson (2017).",
-        "eulerr: Area-Proportional Euler and Venn Diagrams with Ellipses",
-        "R package version 4.0.0",
-        "URL https://cran.r-project.org/package=eulerr")
+  textVersion  = paste(
+    paste0("Johan Larsson (", year, ")."),
+    "eulerr: Area-Proportional Euler and Venn Diagrams with Ellipses",
+    note,
+    "URL https://cran.r-project.org/package=eulerr
+  )
 )
