@@ -11,6 +11,10 @@ by blending the involved sets in the CIELab color space and taking averages.
 Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
 (#16)
 
+## Minor changes
+* `panel.euler.circles()` was deprecated in favor of using
+`panel.euler.circles()` as a one-stop solution for all the diagrams.
+
 # eulerr 3.1.0
 
 ## Major changes

@@ -264,8 +264,7 @@ prepanel.euler <- function(x, y, ra, rb, phi, subscripts, ...) {
 #' @param labels Labels.
 #' @param original.values Original values for the disjoint set combinations.
 #' @param fitted.values Fitted values for the disjoint set combinations.
-#' @param ... Passed down to [panel.euler.circles()] or
-#'   [panel.euler.ellipses()] and [panel.euler.labels()].
+#' @param ... Passed down to [panel.euler.ellipses()] and [panel.euler.labels()].
 #'
 #' @seealso [grid::gpar()].
 #'
@@ -301,35 +300,21 @@ panel.euler <- function(x,
   }
 
   # Plot circles if the semi-major and semi-minor axis are all equal.
-  if (isTRUE(all.equal(ra, rb)) && match.arg(mode) == "overlay") {
-    panel.euler.circles(x = x,
-                        y = y,
-                        r = ra[subscripts],
-                        fill = fill,
-                        fill_alpha = fill_alpha,
-                        alpha = alpha,
-                        lty = lty,
-                        lwd = lwd,
-                        border = border,
-                        identifier = "euler",
-                        ...)
-  } else {
-    panel.euler.ellipses(x = x,
-                         y = y,
-                         ra = ra[subscripts],
-                         rb = rb[subscripts],
-                         phi = phi[subscripts],
-                         fill = fill,
-                         fill_alpha = fill_alpha,
-                         alpha = alpha,
-                         lty = lty,
-                         lwd = lwd,
-                         border = border,
-                         mode = mode,
-                         identifier = "euler",
-                         fitted.values = fitted.values,
-                         ...)
-  }
+  panel.euler.ellipses(x = x,
+                       y = y,
+                       ra = ra[subscripts],
+                       rb = rb[subscripts],
+                       phi = phi[subscripts],
+                       fill = fill,
+                       fill_alpha = fill_alpha,
+                       alpha = alpha,
+                       lty = lty,
+                       lwd = lwd,
+                       border = border,
+                       mode = mode,
+                       identifier = "euler",
+                       fitted.values = fitted.values,
+                       ...)
 
   if ((is.list(quantities) || isTRUE(quantities)) || !is.null(labels)) {
     panel.euler.labels(x = x,
@@ -347,7 +332,7 @@ panel.euler <- function(x,
   }
 }
 
-#' Panel Function for Euler Circles
+#' Panel Function for Euler Circles (deprecated)
 #'
 #' @inheritParams panel.euler
 #' @param r Radius of the circle
@@ -379,6 +364,7 @@ panel.euler.circles <- function(x,
                                 col,
                                 font,
                                 fontface) {
+  .Deprecated("panel.euler.ellipses")
   if (sum(!is.na(x)) < 1)
     return()
 

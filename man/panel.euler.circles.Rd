@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{panel.euler.circles}
 \alias{panel.euler.circles}
-\title{Panel Function for Euler Circles}
+\title{Panel Function for Euler Circles (deprecated)}
 \usage{
 panel.euler.circles(x, y, r, border = "black", fill = "transparent",
   fill_alpha = 0.4, ..., identifier = NULL, name.type = "panel", col,
@@ -40,7 +40,7 @@ should have panel or strip information added to it. Typically either
 Plots circles inside a trellis panel.
 }
 \description{
-Panel Function for Euler Circles
+Panel Function for Euler Circles (deprecated)
 }
 \seealso{
 \code{\link[grid:grid.circle]{grid::grid.circle()}}.
