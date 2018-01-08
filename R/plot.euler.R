@@ -36,8 +36,6 @@
 #'   untouched.
 #' @param ... Arguments to pass down to [panel.euler()], which in turn passes
 #'   them down to [panel.euler.circles()] and [panel.euler.labels()].
-#' @param outer_strips Deprecated
-#' @param counts Deprecated
 #'
 #' @inherit lattice::levelplot return
 #'
@@ -98,23 +96,12 @@ plot.euler <- function(x,
                        default.prepanel = prepanel.euler,
                        default.scales = list(draw = FALSE),
                        panel = panel.euler,
-                       mode = c("split", "overlay"),
-                       outer_strips,
-                       counts) {
+                       mode = c("split", "overlay")) {
   stopifnot(is.numeric(fill_alpha),
             length(fill_alpha) == 1L,
             is.logical(auto.key) || is.list(auto.key),
             is.logical(quantities) || is.list(quantities),
             all(is.character(mode)))
-
-  if (!missing(outer_strips)) {
-    warning("'outer_strips' is deprecated; try latticeExtra::useOuterStrips() for the same functionality.")
-  }
-
-  if (!missing(counts)) {
-    warning("'counts' is deprecated; use 'quantities' instead")
-    quantities <- counts
-  }
 
   is_by <- inherits(x, "by")
 
@@ -527,7 +514,6 @@ panel.euler.ellipses <- function(x,
 #'
 #' @inheritParams panel.euler
 #' @param ... Arguments passed on to [panel.text()]
-#' @param counts Deprecated
 #' @return Computes and plots labels or quantities inside the centers of the
 #'   ellipses' overlaps.
 #' @export
@@ -540,13 +526,7 @@ panel.euler.labels <- function(x,
                                quantities = FALSE,
                                original.values,
                                fitted.values,
-                               ...,
-                               counts) {
-  if (!missing(counts)) {
-    warning("'counts' is deprecated; use 'quantities' instead")
-    quantities <- counts
-  }
-
+                               ...) {
   n <- length(x)
   id <- bit_indexr(n)
   singles <- rowSums(id) == 1

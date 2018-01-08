@@ -5,7 +5,7 @@
 \title{Panel Function for Euler Diagram Labels}
 \usage{
 panel.euler.labels(x, y, ra, rb, phi, labels, quantities = FALSE,
-  original.values, fitted.values, ..., counts)
+  original.values, fitted.values, ...)
 }
 \arguments{
 \item{x}{X coordinates for the centers.}
@@ -31,8 +31,6 @@ the quantity labels.}
 \item{fitted.values}{Fitted values for the disjoint set combinations.}
 
 \item{...}{Arguments passed on to \code{\link[=panel.text]{panel.text()}}}
-
-\item{counts}{Deprecated}
 }
 \value{
 Computes and plots labels or quantities inside the centers of the

@@ -8,7 +8,7 @@
   auto.key = FALSE, quantities = FALSE, labels = is.logical(auto.key) &&
   !isTRUE(auto.key), fontface = "bold", par.settings = list(), ...,
   default.prepanel = prepanel.euler, default.scales = list(draw = FALSE),
-  panel = panel.euler, mode = c("split", "overlay"), outer_strips, counts)
+  panel = panel.euler, mode = c("split", "overlay"))
 }
 \arguments{
 \item{x}{An object of class \code{euler}.}
@@ -43,10 +43,6 @@ untouched.}
 polygons and blends the colors of the overlapping shapes using
 color averaging in the CIELAB color space. "\code{overlay}" superposes
 sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
-
-\item{outer_strips}{Deprecated}
-
-\item{counts}{Deprecated}
 }
 \value{
 An object of class \code{"trellis"}. The

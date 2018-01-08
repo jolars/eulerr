@@ -14,6 +14,7 @@ Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
 ## Minor changes
 * `panel.euler.circles()` was deprecated in favor of using
 `panel.euler.circles()` as a one-stop solution for all the diagrams.
+* Arguments `counts` and `outer_strips` were removed.
 
 # eulerr 3.1.0
 
