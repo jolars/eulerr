@@ -55,8 +55,7 @@ polygons and blends the colors of the overlapping shapes using
 color averaging in the CIELAB color space. "\code{overlay}" superposes
 sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
 
-\item{...}{Passed down to \code{\link[=panel.euler.circles]{panel.euler.circles()}} or
-\code{\link[=panel.euler.ellipses]{panel.euler.ellipses()}} and \code{\link[=panel.euler.labels]{panel.euler.labels()}}.}
+\item{...}{Passed down to \code{\link[=panel.euler.ellipses]{panel.euler.ellipses()}} and \code{\link[=panel.euler.labels]{panel.euler.labels()}}.}
 }
 \value{
 Plots euler diagrams inside a trellis panel.
