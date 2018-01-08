@@ -1,15 +1,15 @@
 citHeader("To cite eulerr in publications, please use")
 
 citEntry(entry = "Manual",
-  title        = "{eulerr}: Area-Proportional {Euler} and {Venn} Diagrams with Circles or Ellipses",
+  title        = "{eulerr}: Area-Proportional {Euler} and {Venn} Diagrams with Ellipses",
   author       = personList(as.person("Johan Larsson")),
   year         = "2017",
-  note         = "R package version 3.0.1",
+  note         = "R package version 4.0.0",
   url          = "https://cran.r-project.org/package=eulerr",
 
   textVersion  =
   paste("Johan Larsson (2017).",
-        "eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses",
-        "R package version 3.0.1",
+        "eulerr: Area-Proportional Euler and Venn Diagrams with Ellipses",
+        "R package version 4.0.0",
         "URL https://cran.r-project.org/package=eulerr")
 )
