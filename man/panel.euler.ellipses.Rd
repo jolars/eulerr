@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{panel.euler.ellipses}
 \alias{panel.euler.ellipses}
-\title{Panel Function for Euler Ellipses}
+\title{Panel function for Euler ellipses}
 \usage{
 panel.euler.ellipses(x, y, ra, rb, phi, fill = "transparent",
   fill_alpha = 0.4, border = "black", mode = c("split", "overlay"),
@@ -55,7 +55,7 @@ should have panel or strip information added to it. Typically either
 Plots ellipses inside a trellis panel.
 }
 \description{
-Panel Function for Euler Ellipses
+Panel function for Euler ellipses
 }
 \seealso{
 \code{\link[grid:grid.polygon]{grid::grid.polygon()}}.

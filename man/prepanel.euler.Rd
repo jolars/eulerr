@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{prepanel.euler}
 \alias{prepanel.euler}
-\title{Prepanel Function for Euler Diagrams}
+\title{Prepanel function for Euler diagrams}
 \usage{
 prepanel.euler(x, y, ra, rb, phi, subscripts, ...)
 }
@@ -26,5 +26,5 @@ the positive x-axis to the semi-major axis).}
 A list of \code{xlim} and \code{ylim} items.
 }
 \description{
-Prepanel Function for Euler Diagrams
+Prepanel function for Euler diagrams
 }

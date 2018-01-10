@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{rescale}
 \alias{rescale}
-\title{Rescale Values to a New Range}
+\title{Rescale values to new range}
 \usage{
 rescale(x, new_min, new_max)
 }
@@ -17,6 +17,6 @@ rescale(x, new_min, new_max)
 Rescaled vector
 }
 \description{
-Rescale Values to a New Range
+Rescale values to new range
 }
 \keyword{internal}

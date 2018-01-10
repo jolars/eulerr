@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{panel.euler.labels}
 \alias{panel.euler.labels}
-\title{Panel Function for Euler Diagram Labels}
+\title{Panel function for Euler diagram labels}
 \usage{
 panel.euler.labels(x, y, ra, rb, phi, labels, quantities = FALSE,
   original.values, fitted.values, ...)
@@ -37,5 +37,5 @@ Computes and plots labels or quantities inside the centers of the
 ellipses' overlaps.
 }
 \description{
-Panel Function for Euler Diagram Labels
+Panel function for Euler diagram labels
 }

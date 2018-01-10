@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{mix_colors}
 \alias{mix_colors}
-\title{Blend (Average) Colors for Use in Euler Diagrams}
+\title{Blend (average) colors}
 \usage{
 mix_colors(rcol_in)
 }
@@ -13,6 +13,6 @@ mix_colors(rcol_in)
 A single R color
 }
 \description{
-Blend (Average) Colors for Use in Euler Diagrams
+Blend (average) colors
 }
 \keyword{internal}

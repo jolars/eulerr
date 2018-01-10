@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{panel.euler}
 \alias{panel.euler}
-\title{Panel Function for Euler Diagrams}
+\title{Panel function for Euler diagrams}
 \usage{
 panel.euler(x, y, ra, rb, phi, subscripts, fill = superpose.polygon$col,
   lty = superpose.polygon$lty, lwd = superpose.polygon$lwd,

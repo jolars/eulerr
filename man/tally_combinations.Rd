@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{tally_combinations}
 \alias{tally_combinations}
-\title{Tally Set Relationships}
+\title{Tally set relationships}
 \usage{
 tally_combinations(sets)
 }
@@ -14,6 +14,6 @@ Calls \code{\link[=euler]{euler()}} after the set relationships have been coerce
 named numeric vector.
 }
 \description{
-Tally Set Relationships
+Tally set relationships
 }
 \keyword{internal}

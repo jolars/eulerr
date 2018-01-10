@@ -1,3 +1,19 @@
+# eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
+# Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #' Plot Area-Proportional Euler Diagrams
 #'
 #' Plot Euler diagrams with trellis graphics from \pkg{lattice}. This function
@@ -210,7 +226,7 @@ plot.euler <- function(x,
   ans
 }
 
-#' Prepanel Function for Euler Diagrams
+#' Prepanel function for Euler diagrams
 #'
 #' @inheritParams panel.euler
 #' @param ... Ignored.
@@ -222,7 +238,7 @@ prepanel.euler <- function(x, y, ra, rb, phi, subscripts, ...) {
                    phi = phi[subscripts])
 }
 
-#' Panel Function for Euler Diagrams
+#' Panel function for Euler diagrams
 #'
 #' Plots circular euler diagrams if `ra == rb` and elliptical such otherwise.
 #'
@@ -319,7 +335,7 @@ panel.euler <- function(x,
   }
 }
 
-#' Panel Function for Euler Circles (deprecated)
+#' Panel function for Euler circles (deprecated)
 #'
 #' @inheritParams panel.euler
 #' @param r Radius of the circle
@@ -379,7 +395,7 @@ panel.euler.circles <- function(x,
   )
 }
 
-#' Panel Function for Euler Ellipses
+#' Panel function for Euler ellipses
 #'
 #' @inheritParams panel.euler
 #' @param border Border color.
@@ -504,13 +520,13 @@ panel.euler.ellipses <- function(x,
       y = c(lapply(e, "[[", "y"), recursive = TRUE),
       id.lengths = rep.int(n, N),
       default.units = "native",
-      gp = grid::gpar(fill = "transparent", col = border),
+      gp = grid::gpar(fill = "transparent", col = border, lty = lty, lwd = lwd),
       name = primName("ellipse", identifier, name.type, group)
     )
   }
 }
 
-#' Panel Function for Euler Diagram Labels
+#' Panel function for Euler diagram labels
 #'
 #' @inheritParams panel.euler
 #' @param ... Arguments passed on to [panel.text()]
