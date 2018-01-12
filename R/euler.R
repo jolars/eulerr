@@ -341,15 +341,14 @@ euler.default <- function(
     diagError <- diagError(regionError = regionError)
     stress <- stress(orig, fit)
 
-    fpar <- as.data.frame(matrix(
-      data = final_par,
-      ncol = if (circle) 3L else 5L,
-      dimnames = list(
-        setnames,
-        if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
-      ),
-      byrow = TRUE
-    ))
+    fpar <- matrix(data = final_par,
+                   ncol = if (circle) 3L else 5L,
+                   byrow = TRUE)
+
+    if (circle)
+      fpar <- cbind(fpar, fpar[, 3L], 0)
+
+    dimnames(fpar) <- list(setnames, c("h", "k", "a", "b", "phi"))
 
     # Normalize semiaxes and rotation
     fpar <- normalize_pars(fpar)
@@ -360,27 +359,17 @@ euler.default <- function(
     # Center the solution on the coordinate plane
     fpar <- center_layout(fpar)
   } else {
-    circle <- match.arg(shape) == "circle"
     # One set
-    fpar <- as.data.frame(matrix(
-      data = if (circle)
-        c(0, 0, sqrt(areas/pi))
-      else
-        c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0),
-      ncol = if (circle) 3L else 5L,
-      dimnames = list(
-        setnames,
-        if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
-      ),
-      byrow = TRUE
-    ))
+    fpar <- matrix(data = c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0),
+                   ncol = 5L,
+                   dimnames = list(setnames, c("h", "k", "a", "b", "phi")))
     regionError <- diagError <- stress <- 0
     orig <- fit <- areas
     names(orig) <- names(fit) <- setnames
   }
 
   # Return eulerr structure
-  structure(list(coefficients = fpar,
+  structure(list(coefficients = as.data.frame(fpar),
                  original.values = orig,
                  fitted.values = fit,
                  residuals = orig - fit,

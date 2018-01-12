@@ -10,6 +10,8 @@ which is now imported by **eulerr** and computes colors for the overlaps
 by blending the involved sets in the CIELab color space and taking averages.
 Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
 (#16)
+* `euler()` now always returns a coefficients item with columns `h`, `k`,
+`a`, `b`, and `phi`, regardless of which shape is used.
 
 ## Minor changes
 * `panel.euler.circles()` was deprecated in favor of using
