@@ -250,3 +250,39 @@ mix_colors <- function(rcol_in) {
   rgb_out <- grDevices::convertColor(mean_col, "Lab", "sRGB", scale.out = 1)
   grDevices::rgb(rgb_out)
 }
+
+#' Setup gpars
+#'
+#' @param x input
+#'
+#' @return a list or FALSE
+#' @export
+#' @keywords internal
+setup_gpar <- function(x, n = 1, optional = list(), required = list()) {
+  do_arg <- !(identical(x, FALSE) || is.null(x) || is.na(x))
+  if (do_arg) {
+    if (!is.list(x))
+      x <- list()
+    # set up gpars
+    gpar_defaults <- grid::get.gpar()
+    x_gpar <- names(x) %in% names(gpar_defaults)
+    gpar <- update_list(update_list(update_list(gpar_defaults, optional),
+                                    x[x_gpar]),
+                        required)
+    out <- x[!x_gpar]
+    out$gp <- do.call(grid::gpar, lapply(gpar, rep_len, n))
+  } else {
+    out <- FALSE
+  }
+  out
+}
+
+#' Test if x should be run
+#'
+#' @param x argument
+#'
+#' @return boolean
+#' @keywords internale
+do_arg <- function(x) {
+  !(identical(x, FALSE) || is.null(x) || is.na(x))
+}

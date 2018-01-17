@@ -2,6 +2,9 @@
 
 ## Major changes
 
+* `plot.euler()` has been rewritten completely from scratch, now using
+grid graphics directly. As a consequence, all `panel.*()` functions
+have been deprecated.
 * A new argument, `mode`, has been added to `plot.euler()`. It provides
 a new method, `mode = "split"` (that is enabled by default),
 for plotting the Euler diagram. Using this method, the diagram is

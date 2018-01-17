@@ -2,72 +2,60 @@
 % Please edit documentation in R/plot.euler.R
 \name{plot.euler}
 \alias{plot.euler}
-\title{Plot Area-Proportional Euler Diagrams}
+\title{Plot area-proportional Euler diagrams}
 \usage{
-\method{plot}{euler}(x, fill = qualpalr_pal, fill_alpha = 0.4,
-  auto.key = FALSE, quantities = FALSE, labels = is.logical(auto.key) &&
-  !isTRUE(auto.key), fontface = "bold", par.settings = list(), ...,
-  default.prepanel = prepanel.euler, default.scales = list(draw = FALSE),
-  panel = panel.euler, mode = c("split", "overlay"))
+\method{plot}{euler}(x, mode = c("split", "overlay"), legend = FALSE,
+  fills = TRUE, edges = TRUE, labels = identical(legend, FALSE),
+  quantities = FALSE, n = 200, ..., fill, fill_alpha, auto.key, fontface,
+  par.settings, default.prepanel, default.scales, panel)
 }
 \arguments{
-\item{x}{An object of class \code{euler}.}
-
-\item{fill}{Fill color. Either a function that takes as its first argument
-the number of colors to generate, or a sequence of colors.}
-
-\item{fill_alpha}{Alpha for the fill.}
-
-\item{auto.key}{Plot a legend for the sets.}
-
-\item{quantities}{Plot quantities.}
-
-\item{labels}{A list or character vector of labels.}
-
-\item{fontface}{Fontface for the labels. (See \code{\link[grid:gpar]{grid::gpar()}}).}
-
-\item{par.settings}{Graphical parameters for trellis displays. See
-\code{\link[lattice:trellis.par.get]{lattice::trellis.par.get()}}.}
-
-\item{...}{Arguments to pass down to \code{\link[=panel.euler]{panel.euler()}}, which in turn passes
-them down to \code{\link[=panel.euler.circles]{panel.euler.circles()}} and \code{\link[=panel.euler.labels]{panel.euler.labels()}}.}
-
-\item{default.prepanel}{Default prepanel function. Should usually be left
-untouched.}
-
-\item{default.scales}{Default scales. Turns off}
-
-\item{panel}{The panel function. Should usually be left untouched.}
+\item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
 
 \item{mode}{"\code{split}", the default, splits up the diagram into individual
 polygons and blends the colors of the overlapping shapes using
 color averaging in the CIELAB color space. "\code{overlay}" superposes
 sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
+
+\item{legend}{draw a legend}
+
+\item{fills}{draw fills, either a logical or a list}
+
+\item{edges}{draw edges, either a logical or a list}
+
+\item{labels}{draw labels, either a logical scalar, a character vector, or a
+list}
+
+\item{quantities}{draw quantities, either a logical scalar or a list}
+
+\item{n}{number of vertices for the ellipses}
+
+\item{...}{ignored}
+
+\item{fill}{deprecated}
+
+\item{fill_alpha}{deprecated}
+
+\item{auto.key}{deprecated}
+
+\item{fontface}{deprecated}
+
+\item{par.settings}{deprecated}
+
+\item{default.prepanel}{deprecated}
+
+\item{default.scales}{deprecated}
+
+\item{panel}{deprecated}
 }
 \value{
-An object of class \code{"trellis"}. The
-  \code{\link[lattice:update.trellis]{update}} method can be used to
-  update components of the object and the
-  \code{\link[lattice:print.trellis]{print}} method (usually called by
-  default) will plot it on an appropriate plotting device.
+Provides an \code{'euler_diagram'} object, which is a description of
+the diagram to be drawn. \code{\link[=print.euler_diagram]{print.euler_diagram()}} does the actual plotting
+of the diagram and is usually called automatically when the object is
+printed to screen.
 }
 \description{
-Plot Euler diagrams with trellis graphics from \pkg{lattice}. This function
-calls \code{\link[lattice:xyplot]{lattice::xyplot()}} under the hood, allowing plots of
-both individual euler diagrams as well as grids of diagrams
-in case the \code{by} argument was used in the call to \code{\link[=euler]{euler()}}.
-}
-\details{
-Almost all of the relevant functionality for \code{\link[lattice:xyplot]{lattice::xyplot()}} is
-available here. For instance, providing specifications to
-\code{par.settings} will have an effect on many aspects of the plot. Moreover,
-arguments that are given here will trickle down to the panel function
-\code{\link[=panel.euler]{panel.euler()}} and subsequently to \code{\link[=panel.euler.circles]{panel.euler.circles()}} and
-\code{\link[=panel.euler.labels]{panel.euler.labels()}}, which do the actual plotting.
-
-The default value for \code{fill} causes, \pkg{eulerr} to choose color palettes
-based on the number of sets, trying to provide palettes adapted to color
-vision deficiencies based on \code{\link[qualpalr:qualpal]{qualpalr::qualpal()}}.
+Hello
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
@@ -78,6 +66,10 @@ plot(fit, mode = "overlay")
 
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,
+     fills = list(fill = c("red", "steelblue4"), alpha = 0.5),
+     edges = FALSE,
+     labels = list(col = "white", font = 4))
+
      fill_alpha = 0.5,
      fill = c("red", "steelblue4"),
      col = "white",
@@ -88,29 +80,9 @@ plot(fit,
 plot(fit, quantities = TRUE)
 
 # Add a custom legend and retain quantities
-plot(fit, quantities = TRUE, auto.key = list(space = "bottom", columns = 2))
+plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 
 # Plot without fills and distinguish sets with border types instead
-plot(fit, lty = c("solid", "dotted"), fill = "transparent", cex = 2,
-     fontface = 2, labels = c("foo", "bar"))
+plot(fit, fills = FALSE, edges = list(lty = 1:2))
 
-# Plot a grid of euler plots
-dat <- data.frame(
-  A      = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-  B      = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-  gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-  nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-)
-
-gridfit <- euler(dat[, 1:2], by = dat[, 3:4])
-plot(gridfit, auto.key = TRUE)
-
-# We can modify the grid layout as well
-plot(gridfit, layout = c(1, 4))
-}
-\seealso{
-\code{\link[=panel.euler.circles]{panel.euler.circles()}}, \code{\link[=panel.euler.labels]{panel.euler.labels()}},
-\code{\link[=panel.euler.ellipses]{panel.euler.ellipses()}},
-\code{\link[lattice:xyplot]{lattice::xyplot()}}, \code{\link[grid:gpar]{grid::gpar()}}, \code{\link[grid:grid.circle]{grid::grid.circle()}},
-\code{\link[lattice:panel.xyplot]{lattice::panel.xyplot()}}, \code{\link[=euler]{euler()}}, \code{\link[qualpalr:qualpal]{qualpalr::qualpal()}}
 }
