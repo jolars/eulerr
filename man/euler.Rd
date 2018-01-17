@@ -7,7 +7,7 @@
 \alias{euler.matrix}
 \alias{euler.table}
 \alias{euler.list}
-\title{Area-Proportional Euler Diagrams}
+\title{Area-proportional Euler diagrams}
 \usage{
 euler(combinations, ...)
 

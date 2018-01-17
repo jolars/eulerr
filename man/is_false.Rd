@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{is_false}
 \alias{is_false}
-\title{Check If Object Is Strictly FALSE}
+\title{Check if object is strictly FALSE}
 \usage{
 is_false(x)
 }
@@ -13,6 +13,6 @@ is_false(x)
 Logical.
 }
 \description{
-Check If Object Is Strictly FALSE
+Check if object is strictly FALSE
 }
 \keyword{internal}

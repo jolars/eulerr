@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{qualpalr_pal}
 \alias{qualpalr_pal}
-\title{Set up a Qualitative Color Palette}
+\title{Set up a qualitative color palette}
 \usage{
 qualpalr_pal(n)
 }

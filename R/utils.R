@@ -1,4 +1,20 @@
-#' Tally Set Relationships
+# eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
+# Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#' Tally set relationships
 #'
 #' @param sets A data.frame with set relationships and weights.
 #'
@@ -23,7 +39,7 @@ tally_combinations <- function(sets) {
   euler(tally)
 }
 
-#' Rescale Values to a New Range
+#' Rescale values to new range
 #'
 #' @param x Numeric vector
 #' @param new_min New min
@@ -35,7 +51,7 @@ rescale <- function(x, new_min, new_max) {
   (new_max - new_min)/(max(x) - min(x))*(x - max(x)) + new_max
 }
 
-#' Update a List with User Input
+#' Update list with input
 #'
 #' Wrapper for [utils::modifyList()].
 #'
@@ -55,7 +71,7 @@ update_list <- function(x, val) {
   utils::modifyList(x, val)
 }
 
-#' Suppress Plotting
+#' Suppress plotting
 #'
 #' @param x Object to call [graphics::plot()] on.
 #' @param ... Arguments to pass to `x`.
@@ -72,7 +88,7 @@ dont_plot <- function(x, ...) {
   invisible(p)
 }
 
-#' Suppress Printing
+#' Suppress printing
 #'
 #' @param x Object to (not) print.
 #' @param ... Arguments to `x`.
@@ -84,9 +100,7 @@ dont_print <- function(x, ...) {
   invisible(y)
 }
 
-# Set up qualitative color palette ----------------------------------------
-
-#' Set up a Qualitative Color Palette
+#' Set up a qualitative color palette
 #'
 #' Uses a custom color palette generated from [qualpalr::qualpal()],
 #' which tries to provide distinct color palettes adapted to color vision
@@ -100,7 +114,7 @@ qualpalr_pal <- function(n) {
   palette[1L:n]
 }
 
-#' Check If Object Is Strictly FALSE
+#' Check if object is strictly FALSE
 #'
 #' @param x Object to check.
 #'
@@ -237,7 +251,7 @@ normalize_pars <- function(m) {
   m
 }
 
-#' Blend (Average) Colors for Use in Euler Diagrams
+#' Blend (average) colors
 #'
 #' @param rcol_in A vector of R colors
 #'

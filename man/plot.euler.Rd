@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{plot.euler}
 \alias{plot.euler}
-\title{Plot area-proportional Euler diagrams}
+\title{Plot Area-Proportional Euler Diagrams}
 \usage{
 \method{plot}{euler}(x, mode = c("split", "overlay"), legend = FALSE,
   fills = TRUE, edges = TRUE, labels = identical(legend, FALSE),
@@ -55,7 +55,7 @@ of the diagram and is usually called automatically when the object is
 printed to screen.
 }
 \description{
-Hello
+Plot Area-Proportional Euler Diagrams
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))

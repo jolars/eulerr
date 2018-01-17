@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{dont_print}
 \alias{dont_print}
-\title{Suppress Printing}
+\title{Suppress printing}
 \usage{
 dont_print(x, ...)
 }
@@ -15,6 +15,6 @@ dont_print(x, ...)
 Nothing, which is the point.
 }
 \description{
-Suppress Printing
+Suppress printing
 }
 \keyword{internal}

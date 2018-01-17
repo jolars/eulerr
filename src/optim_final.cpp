@@ -1,3 +1,19 @@
+// eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
+// Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
@@ -97,6 +113,7 @@ intersect_ellipses(const arma::vec& par,
 
   vec out(id.n_rows, fill::zeros);
 
+  // hierarchically decompose combination to get disjoint subsets
   for (uword i = id.n_rows; i-- > 0;) {
     out(i) = areas(i) - accu(out(find(all(id.cols(find(id.row(i))), 1))));
   }
@@ -104,6 +121,7 @@ intersect_ellipses(const arma::vec& par,
   return clamp(out, 0.0, out.max());
 }
 
+// stress metric from venneuler (Wilkinson 2012)
 // [[Rcpp::export]]
 double
 stress(const arma::vec& orig,
@@ -114,7 +132,7 @@ stress(const arma::vec& orig,
   return sse/sst;
 }
 
-// Compute the sums of squares between the actual and desired areas
+// compute loss between the actual and desired areas
 // [[Rcpp::export]]
 double
 optim_final_loss(const arma::vec& par,

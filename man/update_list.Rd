@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{update_list}
 \alias{update_list}
-\title{Update a List with User Input}
+\title{Update list with input}
 \usage{
 update_list(x, val)
 }

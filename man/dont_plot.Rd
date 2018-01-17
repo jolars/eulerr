@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{dont_plot}
 \alias{dont_plot}
-\title{Suppress Plotting}
+\title{Suppress plotting}
 \usage{
 dont_plot(x, ...)
 }
@@ -16,6 +16,6 @@ Invisibly returns whatever \code{plot(x)} would normally returns, but
 does not plot anything (which is the point).
 }
 \description{
-Suppress Plotting
+Suppress plotting
 }
 \keyword{internal}
