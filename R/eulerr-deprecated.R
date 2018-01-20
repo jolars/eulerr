@@ -1,12 +1,58 @@
+# eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
+# Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#' @title Deprecated functions in package \pkg{eulerr}.
+#' @description The functions listed below are deprecated and will be defunct in
+#'   the near future. When possible, alternative functions with similar
+#'   functionality are also mentioned. Help pages for deprecated functions are
+#'   available at \code{help("-deprecated")}.
+#' @name eulerr-deprecated
+#' @keywords internal
+NULL
+
 #' Prepanel Function for Euler Diagrams (deprecated)
 #'
 #' @inheritParams panel.euler
-#' @param ... Ignored.
+#' @param x X coordinates for the centers.
+#' @param y Y coordinates for the centers.
+#' @param ra Semi-major axes.
+#' @param rb Semi-minor axes.
+#' @param phi Rotation of the ellipse (as the counter-clockwise angle from
+#'   the positive x-axis to the semi-major axis).
 #'
 #' @return A list of `xlim` and `ylim` items.
+#'
+#' @name prepanel.euler-deprecated
+#' @usage prepanel.euler(x, y, ra, rb, phi, subscripts, ...)
+#' @seealso [eulerr-deprecated]
+#' @keywords internal
+NULL
+
+#' @rdname eulerr-deprecated
+#' @section `prepanel.euler`:
+#' For `prepanel.euler()`, use [plot.euler()].
+#'
 #' @export
-prepanel.euler <- function(x, y, ra, rb, phi, subscripts, ...) {
-  .Deprecated("plot.euler")
+prepanel.euler <- function(x,
+                           y,
+                           ra,
+                           rb,
+                           phi,
+                           subscripts,
+                           ...) {
   get_bounding_box(h = x, k = y, a = ra[subscripts], b = rb[subscripts],
                    phi = phi[subscripts])
 }
@@ -45,6 +91,18 @@ prepanel.euler <- function(x, y, ra, rb, phi, subscripts, ...) {
 #' @seealso [grid::gpar()].
 #'
 #' @return Plots euler diagrams inside a trellis panel.
+#'
+#' @name panel.euler-deprecated
+#' @usage panel.euler(x, y, ra, rb, phi, subscripts, fill,
+#'   lty, lwd, border, alpha, fill_alpha, fontface, quantities,
+#'   labels, original.values,  fitted.values, mode, ...)
+#' @seealso [eulerr-deprecated]
+#' @keywords internal
+NULL
+
+#' @rdname eulerr-deprecated
+#' @section `panel.euler`:
+#' For `panel.euler()`, use [plot.euler()].
 #'
 #' @export
 panel.euler <- function(x,
@@ -111,10 +169,12 @@ panel.euler <- function(x,
 
 #' Panel Function for Euler Circles (deprecated)
 #'
-#' @inheritParams panel.euler
+#' @param x X coordinates for the centers.
+#' @param y Y coordinates for the centers.
 #' @param r Radius of the circle
 #' @param border Border color.
 #' @param fill Circle fill.
+#' @param fill_alpha Fill opacity
 #' @param ... Passed on to [grid::grid.circle()].
 #' @param col Ignored
 #' @param font Ignored
@@ -128,6 +188,18 @@ panel.euler <- function(x,
 #' @seealso [grid::grid.circle()].
 #'
 #' @return Plots circles inside a trellis panel.
+#'
+#' @name panel.euler.circles-deprecated
+#' @usage panel.euler.circles(x, y, r, border, fill, fill_alpha, ...,
+#'   identifier, name.type, col, font, fontface)
+#' @seealso [eulerr-deprecated]
+#' @keywords internal
+NULL
+
+#' @rdname eulerr-deprecated
+#' @section `panel.euler.circles`:
+#' For `panel.euler.circles()`, use [plot.euler()].
+#'
 #' @export
 panel.euler.circles <- function(x,
                                 y,
@@ -171,7 +243,12 @@ panel.euler.circles <- function(x,
 
 #' Panel Function for Euler Ellipses (deprecated)
 #'
-#' @inheritParams panel.euler
+#' @param x X coordinates for the centers.
+#' @param y Y coordinates for the centers.
+#' @param ra Semi-major axes.
+#' @param rb Semi-minor axes.
+#' @param phi Rotation of the ellipse (as the counter-clockwise angle from
+#'   the positive x-axis to the semi-major axis).
 #' @param border Border color.
 #' @param fill Ellipse fill.
 #' @param n Number of vertices to draw for each ellipse.
@@ -184,10 +261,28 @@ panel.euler.circles <- function(x,
 #' @param name.type A character value indicating whether the name of the grob
 #'   should have panel or strip information added to it. Typically either
 #'   `"panel"`, `"strip"`, `"strip.left"`, or `""` (for no extra information).
+#' @param mode "`split`", the default, splits up the diagram into individual
+#'   polygons and blends the colors of the overlapping shapes using
+#'   color averaging in the CIELAB color space. "`overlay`" superposes
+#'   sets and should be used in conjunction with a suitable `fill_alpha` value.
+#' @param original.values Original values for the disjoint set combinations.
+#' @param fitted.values Fitted values for the disjoint set combinations.
 #'
 #' @seealso [grid::grid.polygon()].
 #'
 #' @return Plots ellipses inside a trellis panel.
+#'
+#' @name panel.euler.ellipses-deprecated
+#' @usage panel.euler.ellipses(x, y, ra, rb, phi, fill, fill_alpha, border, ...,
+#'   mode, identifier, n, fitted.values, ..., name.type, col, font, fontface)
+#' @seealso [eulerr-deprecated]
+#' @keywords internal
+NULL
+
+#' @rdname eulerr-deprecated
+#' @section `panel.euler.ellipses`:
+#' For `panel.euler.ellipses()`, use [plot.euler()].
+#'
 #' @export
 panel.euler.ellipses <- function(x,
                                  y,
@@ -305,10 +400,22 @@ panel.euler.ellipses <- function(x,
 
 #' Panel Function for Euler Diagram Labels (deprecated)
 #'
-#' @inheritParams panel.euler
+#' @inheritParams panel.euler-deprecated
 #' @param ... Arguments passed on to [panel.text()]
 #' @return Computes and plots labels or quantities inside the centers of the
 #'   ellipses' overlaps.
+#'
+#' @name panel.euler.labels-deprecated
+#' @usage panel.euler.labels(x, y, ra, rb, phi, labels, quantities, original.values,
+#'   fitted.values, ...)
+#' @seealso [eulerr-deprecated]
+#' @keywords internal
+NULL
+
+#' @rdname eulerr-deprecated
+#' @section `panel.euler.labels`:
+#' For `panel.euler.labels()`, use [plot.euler()].
+#'
 #' @export
 panel.euler.labels <- function(x,
                                y,
@@ -384,3 +491,107 @@ panel.euler.labels <- function(x,
       name.type = "panel"
     ), list(...)))
 }
+
+#' Compute Locations for Overlaps (deprecated)
+#'
+#' Runs the same algorithm as in [plot.euler()] / [panel.euler.labels()] to
+#' label the overlaps in the Euler diagram. This is useful if you want to
+#' use your own solution to plot the final diagram.
+#'
+#' In the cases where `x` is a list of Euler diagrams (if the `by` argument
+#' was used in the call to [euler()]), this function returns a list of
+#' matrices with coordinates.
+#'
+#' @param x An object of class 'euler'
+#' @param labels An optional character vector of labels for the diagram.
+#'
+#' @return A numeric matrix of x and y coordinates for the labels, as well as
+#'   the quantities and proportions for the overlaps depicted in the labels.
+#'
+#' @examples
+#' fit <- euler(c(A = 1, B = 3, "A&B" = 0.9))
+#' label(fit)
+#'
+#' @name label-deprecated
+#' @usage label(x, labels)
+#' @seealso [eulerr-deprecated]
+#' @keywords internal
+NULL
+
+#' @rdname eulerr-deprecated
+#' @section `label.euler`:
+#' For `label.euler()`, use [plot.euler()].
+#'
+#' @export
+label <- function(x, labels = NULL) UseMethod("label")
+
+#' @rdname eulerr-deprecated
+#' @export
+label.euler <- function(x, labels = NULL) {
+  .Deprecated("plot.euler")
+  if (inherits(x, "by")) {
+    out <- lapply(x, label)
+
+    d <- dim(x)
+    dn <- dimnames(x)
+    dnn <- names(dn)
+    gg <- lapply(seq_along(x), function(i, x) {
+      ii <- i - 1L
+      nms <- character(length(dn))
+      for (j in seq_along(dn)) {
+        iii <- ii%%d[j] + 1L
+        ii <- ii%/%d[j]
+
+        nms[j] <- dn[[j]][iii]
+      }
+      paste(nms, collapse = "_")
+    }, x)
+    names(out) <- unlist(gg)
+
+    out
+  } else {
+    coefs <- x$coefficients
+    fitted.values <- x$fitted.values
+    quantity <- x$original.values
+
+    h <- coefs[, 1L]
+    k <- coefs[, 2L]
+
+    if (ncol(coefs) == 3L) {
+      # Circles
+      a <- b <- coefs[, 3L]
+      phi <- rep.int(0, length(a))
+    } else {
+      # Ellipses
+      a <- coefs[, 3L]
+      b <- coefs[, 4L]
+      phi <- coefs[, 5L]
+    }
+
+    n <- length(h)
+    id <- bit_indexr(n)
+    singles <- rowSums(id) == 1
+    empty <- abs(fitted.values) < sqrt(.Machine$double.eps)
+
+    if (is.null(labels))
+      labels <- names(quantity)
+
+    stopifnot(length(labels) == nrow(id))
+
+    centers <- locate_centers(h = h,
+                              k = k,
+                              a = a,
+                              b = b,
+                              phi = phi,
+                              fitted = fitted.values)
+
+    centers <- t(centers)
+    dimnames(centers) <- list(labels, c("x", "y"))
+
+    centers <- cbind(centers, quantity)
+
+    out <- stats::na.omit(centers)
+    cbind(out, proportion = out[, 3L]/sum(quantity))
+  }
+}
+

@@ -89,6 +89,10 @@ plot.euler <- function(x,
                        default.prepanel,
                        default.scales,
                        panel) {
+  mode <- match.arg(mode)
+
+  stopifnot(n > 0, is.numeric(n) && length(n) == 1)
+
   if (!missing(fill)) {
     warning("'fill' is deprecated; please use 'fills' instead")
     fills <- update_list(fills, list(col = fill))
@@ -120,8 +124,6 @@ plot.euler <- function(x,
     warning("'default.scales' is deprecated")
   if (!missing(panel))
     warning("'panel' is deprecated")
-
-  mode <- match.arg(mode)
 
   # extract parameters from euler diagram
   # if (is_by) {

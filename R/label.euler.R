@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#' Compute Locations for Overlaps
+#' Compute Locations for Overlaps (deprecated)
 #'
 #' Runs the same algorithm as in [plot.euler()] / [panel.euler.labels()] to
 #' label the overlaps in the Euler diagram. This is useful if you want to
