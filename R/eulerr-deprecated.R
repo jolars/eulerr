@@ -273,8 +273,10 @@ panel.euler.circles <- function(x,
 #' @return Plots ellipses inside a trellis panel.
 #'
 #' @name panel.euler.ellipses-deprecated
-#' @usage panel.euler.ellipses(x, y, ra, rb, phi, fill, fill_alpha, border, ...,
-#'   mode, identifier, n, fitted.values, ..., name.type, col, font, fontface)
+#' @usage panel.euler.ellipses(x, y, ra, rb, phi, fill = "transparent",
+#'   fill_alpha = 0.4, border = "black", mode = c("split", "overlay"),
+#'   identifier = NULL, n = 200, fitted.values, ..., name.type = "panel",
+#'   col, font, fontface)
 #' @seealso [eulerr-deprecated]
 #' @keywords internal
 NULL
@@ -507,10 +509,6 @@ panel.euler.labels <- function(x,
 #'
 #' @return A numeric matrix of x and y coordinates for the labels, as well as
 #'   the quantities and proportions for the overlaps depicted in the labels.
-#'
-#' @examples
-#' fit <- euler(c(A = 1, B = 3, "A&B" = 0.9))
-#' label(fit)
 #'
 #' @name label-deprecated
 #' @usage label(x, labels)

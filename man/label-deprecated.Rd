@@ -25,11 +25,6 @@ In the cases where \code{x} is a list of Euler diagrams (if the \code{by} argume
 was used in the call to \code{\link[=euler]{euler()}}), this function returns a list of
 matrices with coordinates.
 }
-\examples{
-fit <- euler(c(A = 1, B = 3, "A&B" = 0.9))
-label(fit)
-
-}
 \seealso{
 \link{eulerr-deprecated}
 }

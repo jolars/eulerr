@@ -4,8 +4,10 @@
 \alias{panel.euler.ellipses-deprecated}
 \title{Panel Function for Euler Ellipses (deprecated)}
 \usage{
-panel.euler.ellipses(x, y, ra, rb, phi, fill, fill_alpha, border, ...,
-  mode, identifier, n, fitted.values, ..., name.type, col, font, fontface)
+panel.euler.ellipses(x, y, ra, rb, phi, fill = "transparent",
+  fill_alpha = 0.4, border = "black", mode = c("split", "overlay"),
+  identifier = NULL, n = 200, fitted.values, ..., name.type = "panel",
+  col, font, fontface)
 }
 \arguments{
 \item{x}{X coordinates for the centers.}

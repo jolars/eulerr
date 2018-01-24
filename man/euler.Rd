@@ -23,35 +23,35 @@ euler(combinations, ...)
 \method{euler}{list}(combinations, ...)
 }
 \arguments{
-\item{combinations}{Set relationships as a named numeric vector, matrix, or
-data.frame. (See the methods (by class) section for details.)}
+\item{combinations}{set relationships as a named numeric vector, matrix, or
+data.frame (see \strong{methods (by class)})}
 
-\item{...}{Arguments passed down to other methods.}
+\item{...}{arguments passed down to other methods}
 
-\item{input}{The type of input: disjoint class combinations
-(\code{disjoint}) or unions (\code{union}).}
+\item{input}{type of input: disjoint identities
+(\code{'disjoint'}) or unions (\code{'union'}).}
 
-\item{shape}{The geometric shape used in the diagram: \code{circle} or \code{ellipse}.}
+\item{shape}{geometric shape used in the diagram}
 
-\item{control}{A list of control parameters.
+\item{control}{a list of control parameters.
 \itemize{
-\item \code{extraopt}: Should the more thorough optimizer (currently
+\item \code{extraopt}: should the more thorough optimizer (currently
 \code{\link[RcppDE:DEoptim]{RcppDE::DEoptim()}}) kick in (provided \code{extraopt_threshold} is exceeded)? The
 default is \code{TRUE} for ellipses and three sets and \code{FALSE} otherwise.
-\item \code{extraopt_threshold}: The threshold, in terms of \code{diagError}, for when
+\item \code{extraopt_threshold}: threshold, in terms of \code{diagError}, for when
 the extra optimizer kicks in. This will almost always slow down the
 process considerably. A value of 0 means
 that the extra optimizer will kick in if there is \emph{any} error. A value of
 1 means that it will never kick in. The default is \code{0.001}.
-\item \code{extraopt_control}: A list of control parameters to pass to the
+\item \code{extraopt_control}: a list of control parameters to pass to the
 extra optimizer, such as \code{itermax}. See \code{\link[RcppDE:DEoptim.control]{RcppDE::DEoptim.control()}}.
 }}
 
-\item{weights}{A numeric vector of weights of the same length as \code{by} and
+\item{weights}{a numeric vector of weights of the same length as \code{by} and
 the number of rows in \code{combinations}.}
 
-\item{by}{A factor or character matrix to be used in \code{\link[base:by]{base::by()}} to
-split the data.frame or matrix of set combinations.}
+\item{by}{a factor or character matrix to be used in \code{\link[base:by]{base::by()}} to
+split the data.frame or matrix of set combinations}
 }
 \value{
 A list object of class \code{'euler'} with the following parameters.
@@ -90,8 +90,8 @@ regression of the fitted areas on the original areas that are currently being
 explored. The stress statistic can also be used as a goodness of fit
 measure.
 
-\code{euler()} also returns \code{diagError} and \code{regionError} from
-\emph{eulerAPE}. \code{regionError} is computed as
+\code{\link[=euler]{euler()}} also returns \code{diagError} and \code{regionError} from
+\pkg{eulerAPE}. \code{regionError} is computed as
 
 \deqn{
     \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
@@ -103,18 +103,18 @@ measure.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: A named numeric vector, with
+\item \code{default}: a named numeric vector, with
 combinations separated by an ampersand, for instance \code{A&B = 10}.
 Missing combinations are treated as being 0.
 
-\item \code{data.frame}: A data.frame of logicals, two-level factors (see examples).
+\item \code{data.frame}: a data.frame of logicals, two-level factors (see examples).
 
-\item \code{matrix}: A matrix that can be converted to a data.frame of logicals
+\item \code{matrix}: a matrix that can be converted to a data.frame of logicals
 (as in the description above) via \code{\link[base:as.data.frame.matrix]{base::as.data.frame.matrix()}}.
 
 \item \code{table}: A table with \code{max(dim(x)) < 3}.
 
-\item \code{list}: A list of vectors, each vector giving the contents of
+\item \code{list}: a list of vectors, each vector giving the contents of
 that set (with no duplicates). Vectors in the list do not need to be named.
 }}
 
@@ -135,17 +135,12 @@ fit2
 # Plot it
 plot(fit2)
 
-# A euler diagram from a list of sample spaces (the list method)
-euler(list(A = c("a", "ab", "ac", "abc"),
-           B = c("b", "ab", "bc", "abc"),
-           C = c("c", "ac", "bc", "abc")))
+# A set with no perfect solution
+euler(c("a" = 3491, "b" = 3409, "c" = 3503,
+        "a&b" = 120, "a&c" = 114, "b&c" = 132,
+        "a&b&c" = 50))
 
-# Using the matrix method
-mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-             B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-euler(mat)
-
-# Using grouping via the 'by' argument
+# Using grouping via the 'by' argument through the data.frame method
 dat <- data.frame(
   A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
   B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
@@ -153,15 +148,17 @@ dat <- data.frame(
   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
 )
 
-euler(dat[, 1:2], by = dat[, 3:4])
-
-# A set with no perfect solution
-euler(c("a" = 3491, "b" = 3409, "c" = 3503,
-        "a&b" = 120, "a&c" = 114, "b&c" = 132,
-        "a&b&c" = 50))
-
+euler(dat, by = list(gender, nation))
+# Using the matrix method
+mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
+             B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
+euler(mat)
 # The table method
 plot(euler(as.table(apply(Titanic, 2:4, sum))))
+# A euler diagram from a list of sample spaces (the list method)
+euler(list(A = c("a", "ab", "ac", "abc"),
+           B = c("b", "ab", "bc", "abc"),
+           C = c("c", "ac", "bc", "abc")))
 }
 \references{
 Wilkinson L. Exact and Approximate Area-Proportional Circular

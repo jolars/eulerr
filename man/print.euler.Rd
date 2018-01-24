@@ -4,17 +4,21 @@
 \alias{print.euler}
 \title{Print Euler fits}
 \usage{
-\method{print}{euler}(x, round = 3, ...)
+\method{print}{euler}(x, round = 3, vsep = strrep("-", 0.75 *
+  getOption("width")), ...)
 }
 \arguments{
-\item{x}{Euler diagram specification from \code{\link[=euler]{euler()}}.}
+\item{x}{Euler diagram specification from \code{\link[=euler]{euler()}}}
 
-\item{round}{Number of decimal places to round to.}
+\item{round}{number of decimal places to round to}
 
-\item{...}{Arguments passed to \code{\link[base:print.data.frame]{base::print.data.frame()}}.}
+\item{vsep}{character string to paste in between \code{euler} objects
+when \code{x} is a nested \code{euler} object.}
+
+\item{...}{arguments passed to \code{\link[base:print.data.frame]{base::print.data.frame()}}}
 }
 \value{
-Prints the results of the fit.
+The result of the fitted Euler diagram is printed to the console.
 }
 \description{
 Prints a data frame of the original set relationships and the fitted

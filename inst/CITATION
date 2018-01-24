@@ -13,6 +13,6 @@ citEntry(entry = "Manual",
     paste0("Johan Larsson (", year, ")."),
     "eulerr: Area-Proportional Euler and Venn Diagrams with Ellipses",
     note,
-    "URL https://cran.r-project.org/package=eulerr
+    "URL https://cran.r-project.org/package=eulerr"
   )
 )

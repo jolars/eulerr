@@ -251,8 +251,8 @@ compress_layout <- function(fpar, id, fit) {
 
 #' Center Circles
 #'
-#' @param pars A matrix or data.frame of x coordinates, y coordinates, minor
-#'   radius (a) and major radius (b).
+#' @param pars a matrix or data.frame of x coordinates, y coordinates, minor
+#'   radius (a) and major radius (b)
 #'
 #' @return A centered version of `pars`.
 #' @keywords internal
@@ -260,7 +260,7 @@ center_layout <- function(pars) {
   x <- pars[, 1L]
   y <- pars[, 2L]
 
-  if (NCOL(pars) == 3) {
+  if (NCOL(pars) == 3L) {
     # Circles
     a <- b <- pars[, 3L]
     phi <- 0
@@ -268,7 +268,7 @@ center_layout <- function(pars) {
     # Ellipses
     a <- pars[, 3L]
     b <- pars[, 4L]
-    phi <- pars[, ]
+    phi <- pars[, 5L]
   }
 
   cphi <- cos(phi)

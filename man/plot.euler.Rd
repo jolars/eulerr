@@ -6,8 +6,8 @@
 \usage{
 \method{plot}{euler}(x, mode = c("split", "overlay"), legend = FALSE,
   fills = TRUE, edges = TRUE, labels = identical(legend, FALSE),
-  quantities = FALSE, n = 200, ..., fill, fill_alpha, auto.key, fontface,
-  par.settings, default.prepanel, default.scales, panel)
+  quantities = FALSE, n = 200, strips = NULL, ..., fill, fill_alpha,
+  auto.key, fontface, par.settings, default.prepanel, default.scales, panel)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
@@ -17,18 +17,39 @@ polygons and blends the colors of the overlapping shapes using
 color averaging in the CIELAB color space. "\code{overlay}" superposes
 sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
 
-\item{legend}{draw a legend}
+\item{legend}{draw a legend using \code{\link[grid:grid.legend]{grid::grid.legend()}}. If a list,
+the item \code{side} can be used to set the location of the legend.}
 
-\item{fills}{draw fills, either a logical or a list}
+\item{fills}{draw fills. Character or integer vectors are assumed to be
+colors to fill the shapes in the diagram. If a list, values
+\code{fill} and \code{alpha} are accepted. If \code{mode == 'split'}, colors of
+intersecting overlaps will be mixed. Fills are drawn using
+\code{\link[grid:grid.polygon]{grid::grid.polygon()}}.}
 
-\item{edges}{draw edges, either a logical or a list}
+\item{edges}{draw edges. Vectors are assumed to be
+colors for edges of the ellipses. If a list, values
+\code{col}, \code{alpha}, \code{lty}, \code{lwd}, \code{lex}, \code{lineend}, \code{linejoin} and \code{linemitre}
+are accepted. Edges are drawn using \code{\link[grid:grid.polygon]{grid::grid.polygon()}} if
+\code{mode == 'overlay'} and \code{\link[grid:grid.polyline]{grid::grid.polyline()}} if \code{mode == 'split'}.}
 
-\item{labels}{draw labels, either a logical scalar, a character vector, or a
-list}
+\item{labels}{draw labels. Vectors are assumed
+to be a character or an expression vector. If a list, values \code{labels},
+\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
+\code{lineheight}, and \code{font} are accepted. Labels are drawn using
+\code{\link[grid:grid.text]{grid::grid.text()}}.}
 
-\item{quantities}{draw quantities, either a logical scalar or a list}
+\item{quantities}{draw quantities. If a vector, the values in it will replace
+those of the default. If a list, values \code{labels},
+\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
+\code{lineheight}, and \code{font} are accepted. Quantities are drawn using
+\code{\link[grid:grid.text]{grid::grid.text()}}.}
 
 \item{n}{number of vertices for the ellipses}
+
+\item{strips}{a list of options for the strips, which are drawn if
+\code{x} is a list of \code{euler} objects and ignored otherwise. Arguments
+\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
+\code{lineheight}, and \code{font} are accepted.}
 
 \item{...}{ignored}
 
@@ -51,11 +72,17 @@ list}
 \value{
 Provides an \code{'euler_diagram'} object, which is a description of
 the diagram to be drawn. \code{\link[=print.euler_diagram]{print.euler_diagram()}} does the actual plotting
-of the diagram and is usually called automatically when the object is
-printed to screen.
+of the diagram and is usually called automatically after this function
+is called.
 }
 \description{
-Plot Area-Proportional Euler Diagrams
+Most of the arguments to this function accept either a logical, a vector, or
+a list. Logical values set the attribute on or off. The behavior when the
+value is a vector depends on the
+argument (see the individual parameters). Detailed control can be
+achieved by specifying a list; for graphical parameters, the available
+options are those given by \code{\link[grid:gpar]{grid::gpar()}}, whilst there might be
+other custom options depending on the argument.
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
@@ -70,12 +97,6 @@ plot(fit,
      edges = FALSE,
      labels = list(col = "white", font = 4))
 
-     fill_alpha = 0.5,
-     fill = c("red", "steelblue4"),
-     col = "white",
-     border = "transparent",
-     fontface = "bold.italic")
-
 # Add quantities to the plot
 plot(fit, quantities = TRUE)
 
@@ -85,4 +106,6 @@ plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 # Plot without fills and distinguish sets with border types instead
 plot(fit, fills = FALSE, edges = list(lty = 1:2))
 
+# save plot parameters to plot using some other method
+diagram_description <- plot(fit)
 }

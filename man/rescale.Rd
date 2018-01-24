@@ -7,11 +7,11 @@
 rescale(x, new_min, new_max)
 }
 \arguments{
-\item{x}{Numeric vector}
+\item{x}{numeric vector}
 
-\item{new_min}{New min}
+\item{new_min}{new min}
 
-\item{new_max}{New max}
+\item{new_max}{new max}
 }
 \value{
 Rescaled vector

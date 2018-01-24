@@ -2,8 +2,7 @@ context("Test plot functions")
 
 test_that("erroneous input to plot.euler return errors", {
   f <- euler(c(A = 5, B = 2))
-  expect_error(dont_plot(f, fills = "f"))
-  expect_error(dont_plot(f, edges = "c"))
+  expect_error(dont_plot(f, n = -1))
 })
 
 test_that("normal plotting works without errors", {
@@ -11,7 +10,6 @@ test_that("normal plotting works without errors", {
 
   expect_silent(dont_plot(f1,
                           fills = list(fill = c("black", "blue"), alpha = 0.3),
-                          labels = c("yes", "no"),
                           labels = list(font = 4)))
 
   expect_silent(dont_plot(f1))
@@ -27,14 +25,14 @@ test_that("normal plotting works without errors", {
     Nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
   )
 
-  f2 <- euler(dat[, 1:2], by = dat[, 3:4])
-  f3 <- euler(dat[, 1:2], by = dat[, 3, drop = FALSE])
+  f2 <- euler(dat, by = list(Gender))
+  f3 <- euler(dat, by = list(Gender, Nation))
 
   expect_silent(dont_plot(f2,
                           fills = list(fill = "transparent",
                                        lty = c(1, 2),
                                        lwd = c(1, 2))))
-  expect_silent(dont_plot(f3))
+  expect_silent(dont_print(dont_plot(f3)))
 })
 
 

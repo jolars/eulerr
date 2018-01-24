@@ -7,8 +7,8 @@
 center_layout(pars)
 }
 \arguments{
-\item{pars}{A matrix or data.frame of x coordinates, y coordinates, minor
-radius (a) and major radius (b).}
+\item{pars}{a matrix or data.frame of x coordinates, y coordinates, minor
+radius (a) and major radius (b)}
 }
 \value{
 A centered version of \code{pars}.

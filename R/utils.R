@@ -16,34 +16,32 @@
 
 #' Tally set relationships
 #'
-#' @param sets A data.frame with set relationships and weights.
+#' @param sets a data.frame with set relationships and weights
+#' @param weights a numeric vector
 #'
 #' @return Calls [euler()] after the set relationships have been coerced to a
 #'   named numeric vector.
 #' @keywords internal
-tally_combinations <- function(sets) {
-  weights <- sets$weights
-  sets <- sets[, !(colnames(sets) == "weights")]
+tally_combinations <- function(sets, weights) {
   if (!is.matrix(sets))
     sets <- as.matrix(sets)
 
   id <- bit_indexr(NCOL(sets))
   tally <- double(NROW(id))
 
-  for (i in 1:NROW(id)) {
+  for (i in seq_len(NROW(id))) {
     tally[i] <-
       sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets))*weights)
     names(tally)[i] <- paste0(colnames(sets)[id[i, ]], collapse = "&")
   }
-
-  euler(tally)
+  tally
 }
 
 #' Rescale values to new range
 #'
-#' @param x Numeric vector
-#' @param new_min New min
-#' @param new_max New max
+#' @param x numeric vector
+#' @param new_min new min
+#' @param new_max new max
 #'
 #' @return Rescaled vector
 #' @keywords internal
@@ -280,10 +278,12 @@ setup_gpar <- function(x, n = 1, optional = list(), required = list()) {
     # set up gpars
     gpar_defaults <- grid::get.gpar()
     x_gpar <- names(x) %in% names(gpar_defaults)
-    gpar <- update_list(update_list(update_list(gpar_defaults, optional),
+    optional_gpar <- names(optional) %in% names(gpar_defaults)
+    gpar <- update_list(update_list(update_list(gpar_defaults,
+                                                optional[optional_gpar]),
                                     x[x_gpar]),
                         required)
-    out <- x[!x_gpar]
+    out <- update_list(optional[!optional_gpar], x[!x_gpar])
     out$gp <- do.call(grid::gpar, lapply(gpar, rep_len, n))
   } else {
     out <- FALSE
@@ -300,3 +300,4 @@ setup_gpar <- function(x, n = 1, optional = list(), required = list()) {
 do_arg <- function(x) {
   !(identical(x, FALSE) || is.null(x) || is.na(x))
 }
+

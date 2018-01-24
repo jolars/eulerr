@@ -231,8 +231,9 @@ knitr::opts_chunk$set(
   fig.height = 2.1,
   crop = TRUE,
   fig.align = "center",
-  dev = "pdf",
-  dev.args = list(family = "sans", pointsize = 8)
+  dev = if (capabilities("cairo"))
+    "cairo_pdf"
+  else "pdf"
 )
 
 library(grid)
@@ -240,7 +241,8 @@ library(RConics)
 library(eulerr)
 library(lattice)
 
-lattice.options(default.theme = list(fontsize = list(text = 8, points = 6)))
+lattice::lattice.options(default.theme = list(fontsize = list(text = 8,
+                                                              points = 6)))
 
 pal <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
          "#0072B2", "#D55E00", "#CC79A7")
@@ -811,17 +813,24 @@ for (i in 1:nrow(pp)) {
   j <- i
 }
 
+els <- eulerr:::ellipse(x, y, ra, rb, phi)
+x0 <- c(lapply(els, "[[", "x"), recursive = TRUE)
+y0 <- c(lapply(els, "[[", "y"), recursive = TRUE)
+
 xyplot(
   y ~ x, data = ee, asp = "iso",
   xlim = extendrange(xlim, f = 0.01), ylim = extendrange(ylim, f = 0.01),
   scales = list(draw = FALSE), xlab = NULL, ylab = NULL,
   par.settings = list(axis.line = list(col = "transparent")),
   panel = function(x, y, ...) {
-    panel.euler.ellipses(x, y, ra, rb, phi, ...)
+    grid.polygon(x0, y0,  id.lengths = rep(200, 3),
+                 default.units = "native",
+                 gp = grid::gpar(fill = "transparent"))
     panel.polygon(seglines, col = "slategray2")
     panel.polygon(pp[, 1:2], col = "grey90")
     panel.points(mid, pch = 4, col = 1, cex = 1.5)
-    panel.points(pp[, 1:2, drop = FALSE], col = 1, pch = 21, fill = "white", cex = 1.5)
+    panel.points(pp[, 1:2, drop = FALSE], col = 1, pch = 21, fill = "white",
+                 cex = 1.5)
   }
 )
 @
@@ -1253,7 +1262,7 @@ set.seed(2)
 con <- c(A = 1, B = 1, C = 1, D = 1, E = 1, F = 1, G = 1, H = 1,
          "A&B" = 0.2, "B&C" = 0.2, "C&D" = 0.2, "D&E" = 0.2, "E&F" = 0.2,
          "F&G" = 0.2, "G&H" = 0.2)
-plot(euler(con), labels = as.character(1:8), auto.key = F)
+plot(euler(con), labels = as.character(1:8))
 @
 \end{figure}
 

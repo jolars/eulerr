@@ -3,8 +3,12 @@
 ## Major changes
 
 * `plot.euler()` has been rewritten completely from scratch, now using
-grid graphics directly. As a consequence, all `panel.*()` functions
-have been deprecated.
+grid graphics directly. 
+* Arguments `fill`, `fill_alpha`, `auto.key`, `fontface`, `par.settings`,
+`default.prepanel`, `default.scales`, and `panel` of `plot.euler()` have
+been deprecated.
+* All `panel.*()` and `label()` have been deprecated. Their functionality
+is in almost all regards available replaced by `plot.euler()`.
 * A new argument, `mode`, has been added to `plot.euler()`. It provides
 a new method, `mode = "split"` (that is enabled by default),
 for plotting the Euler diagram. Using this method, the diagram is
@@ -17,9 +21,7 @@ Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
 `a`, `b`, and `phi`, regardless of which shape is used.
 
 ## Minor changes
-* `panel.euler.circles()` was deprecated in favor of using
-`panel.euler.circles()` as a one-stop solution for all the diagrams.
-* Arguments `counts` and `outer_strips` were removed.
+* Arguments `counts` and `outer_strips` to `plot.euler()` are now defunct.
 
 # eulerr 3.1.0
 

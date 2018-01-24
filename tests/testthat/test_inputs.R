@@ -22,10 +22,10 @@ test_that("erroneous input using by argument return errors", {
     z = sample(c("asdf", "qwer", size = 100, replace = TRUE))
   )
 
-  expect_error(euler(dat[, 1:2], by = dat[, 3:5]))
-  expect_error(euler(dat[, 1:2], by = dat[1:50, 3]))
-  expect_error(euler(dat[, 1:2], by = list(dat[, 2])))
-  expect_error(euler(dat[, 1:2], by = 1:100))
+  expect_error(euler(dat, by = list(x, y, z)))
+  expect_error(euler(dat, by = dat[1:50, 3]))
+  expect_error(euler(dat, by = list(dat[, 2])))
+  expect_error(euler(dat, by = 1:100))
 })
 
 test_that("arguments to print.euler are specified correctly", {
@@ -45,10 +45,10 @@ test_that("normal use returns no errors", {
     x = sample(c("Men", "Women"), size = 100, replace = TRUE)
   )
 
-  expect_error(euler(dat[, 1:2]), NA)
+  expect_error(euler(dat), NA)
   expect_error(euler(as.matrix(dat[, 1:2])), NA)
-  expect_error(euler(dat[, 1:2], by = dat[, 3]), NA)
-  expect_error(dont_print(euler(dat[, 1:2], by = dat[, 3])), NA)
+  expect_error(euler(dat, by = x), NA)
+  expect_error(dont_print(euler(dat, by = x)), NA)
 })
 
 test_that("impossible configurations throw errors", {

@@ -4,10 +4,12 @@
 \alias{tally_combinations}
 \title{Tally set relationships}
 \usage{
-tally_combinations(sets)
+tally_combinations(sets, weights)
 }
 \arguments{
-\item{sets}{A data.frame with set relationships and weights.}
+\item{sets}{a data.frame with set relationships and weights}
+
+\item{weights}{a numeric vector}
 }
 \value{
 Calls \code{\link[=euler]{euler()}} after the set relationships have been coerced to a
