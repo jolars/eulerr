@@ -7,7 +7,7 @@
 \method{print}{euler_diagram}(x, ...)
 }
 \arguments{
-\item{x}{an object of class \code{'euler_diagram'} -- usually the output of
+\item{x}{an object of class \code{'euler_diagram'}, usually the output of
 \code{\link[=plot.euler]{plot.euler()}}.}
 
 \item{...}{ignored}
@@ -16,11 +16,14 @@
 A plot is drawn on the current device using \code{\link[grid:Grid]{grid::Grid()}}.
 }
 \description{
-This method for \code{\link[=print]{print()}} is responsible for the actual plotting of
+This function is responsible for the actual plotting of
 \code{'euler_diagram'} objects created through \code{\link[=plot.euler]{plot.euler()}} and is usually
 called automatically after an \code{'euler'} object is printed on the screen.
 }
 \examples{
 p <- plot(euler(c(A = 1, B = 3, "A&B" = 0.5)))
 print(p)
+}
+\seealso{
+\code{\link[=plot.euler]{plot.euler()}}, \code{\link[=euler]{euler()}}
 }

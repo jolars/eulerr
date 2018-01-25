@@ -76,13 +76,30 @@ of the diagram and is usually called automatically after this function
 is called.
 }
 \description{
+Plot Euler diagrams fit with \code{\link[=euler]{euler()}} using \code{\link[grid:Grid]{grid::Grid()}} graphics. This
+function sets up all the necessary plot paramters and computes
+the geometry of the diagram. \code{\link[=print.euler_diagram]{print.euler_diagram()}}, meanwhile,
+does the actual plotting of the diagram.
+}
+\details{
 Most of the arguments to this function accept either a logical, a vector, or
-a list. Logical values set the attribute on or off. The behavior when the
-value is a vector depends on the
-argument (see the individual parameters). Detailed control can be
-achieved by specifying a list; for graphical parameters, the available
-options are those given by \code{\link[grid:gpar]{grid::gpar()}}, whilst there might be
-other custom options depending on the argument.
+a list where
+\itemize{
+\item logical values set the attribute on or off,
+\item vectors are shortcuts to commonly used options (see the individual
+parameters), and
+\item lists enable fine-grained control and may include the graphical
+parameters given by \code{\link[grid:gpar]{grid::gpar()}} in addition to control
+arguments that are specific to each argument.
+}
+
+If the diagram has been fit using the data.frame or matrix methods
+and using the \code{by} argument, the plot area will be split into panels for
+each combination of the one to two factors.
+
+For users who are looking to plot their diagram using another package,
+all the necessary parameters can be collected if the result of this
+function is assigned to a variable (rather than printed to screen).
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
@@ -108,4 +125,9 @@ plot(fit, fills = FALSE, edges = list(lty = 1:2))
 
 # save plot parameters to plot using some other method
 diagram_description <- plot(fit)
+}
+\seealso{
+\code{\link[=euler]{euler()}}, \code{\link[=print.euler_diagram]{print.euler_diagram()}}, \code{\link[grid:gpar]{grid::gpar()}},
+\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[=grid.polyline]{grid.polyline()}},
+\code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }

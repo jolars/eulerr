@@ -16,13 +16,28 @@
 
 #' Plot Area-Proportional Euler Diagrams
 #'
+#' Plot Euler diagrams fit with [euler()] using [grid::Grid()] graphics. This
+#' function sets up all the necessary plot paramters and computes
+#' the geometry of the diagram. [print.euler_diagram()], meanwhile,
+#' does the actual plotting of the diagram.
+#'
 #' Most of the arguments to this function accept either a logical, a vector, or
-#' a list. Logical values set the attribute on or off. The behavior when the
-#' value is a vector depends on the
-#' argument (see the individual parameters). Detailed control can be
-#' achieved by specifying a list; for graphical parameters, the available
-#' options are those given by [grid::gpar()], whilst there might be
-#' other custom options depending on the argument.
+#' a list where
+#'
+#' * logical values set the attribute on or off,
+#' * vectors are shortcuts to commonly used options (see the individual
+#' parameters), and
+#' * lists enable fine-grained control, including graphical
+#' parameters as described in [grid::gpar()] and control
+#' arguments that are specific to each argument.
+#'
+#' If the diagram has been fit using the `data.frame` or `matrix` methods
+#' and using the `by` argument, the plot area will be split into panels for
+#' each combination of the one to two factors.
+#'
+#' For users who are looking to plot their diagram using another package,
+#' all the necessary parameters can be collected if the result of this
+#' function is assigned to a variable (rather than printed to screen).
 #'
 #' @param x an object of class `'euler'`, generated from [euler()]
 #' @param mode "`split`", the default, splits up the diagram into individual
@@ -65,6 +80,10 @@
 #' @param default.prepanel deprecated
 #' @param default.scales deprecated
 #' @param panel deprecated
+#'
+#' @seealso [euler()], [print.euler_diagram()], [grid::gpar()],
+#'   [grid::grid.polygon()], [grid::grid.polyline()],
+#'   [grid::grid.legend()], [grid::grid.text()]
 #'
 #' @return Provides an `'euler_diagram'` object, which is a description of
 #'   the diagram to be drawn. [print.euler_diagram()] does the actual plotting
@@ -383,15 +402,16 @@ plot.euler <- function(x,
 
 #' Print (plot) Euler diagram
 #'
-#' This method for [print()] is responsible for the actual plotting of
+#' This function is responsible for the actual plotting of
 #' `'euler_diagram'` objects created through [plot.euler()] and is usually
 #' called automatically after an `'euler'` object is printed on the screen.
 #'
-#' @param x an object of class `'euler_diagram'` -- usually the output of
+#' @param x an object of class `'euler_diagram'`, usually the output of
 #'   [plot.euler()].
 #' @param ... ignored
 #'
 #' @return A plot is drawn on the current device using [grid::Grid()].
+#' @seealso [plot.euler()], [euler()]
 #' @export
 #'
 #' @examples
