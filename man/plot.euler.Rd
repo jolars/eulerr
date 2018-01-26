@@ -88,12 +88,12 @@ a list where
 \item logical values set the attribute on or off,
 \item vectors are shortcuts to commonly used options (see the individual
 parameters), and
-\item lists enable fine-grained control and may include the graphical
-parameters given by \code{\link[grid:gpar]{grid::gpar()}} in addition to control
+\item lists enable fine-grained control, including graphical
+parameters as described in \code{\link[grid:gpar]{grid::gpar()}} and control
 arguments that are specific to each argument.
 }
 
-If the diagram has been fit using the data.frame or matrix methods
+If the diagram has been fit using the \code{data.frame} or \code{matrix} methods
 and using the \code{by} argument, the plot area will be split into panels for
 each combination of the one to two factors.
 
@@ -128,6 +128,6 @@ diagram_description <- plot(fit)
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[=print.euler_diagram]{print.euler_diagram()}}, \code{\link[grid:gpar]{grid::gpar()}},
-\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[=grid.polyline]{grid.polyline()}},
+\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[grid:grid.polyline]{grid::grid.polyline()}},
 \code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }
