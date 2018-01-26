@@ -69,6 +69,10 @@ update_list <- function(x, val) {
   utils::modifyList(x, val)
 }
 
+replace_list <- function(x, val) {
+  update_list(x, val[names(val) %in% names(x)])
+}
+
 #' Suppress plotting
 #'
 #' @param x Object to call [graphics::plot()] on.
@@ -266,29 +270,22 @@ mix_colors <- function(rcol_in) {
 #' Setup gpars
 #'
 #' @param x input
+#' @param n required number of items
+#' @param default default values
+#' @param user user-inputted values
 #'
 #' @return a list or FALSE
 #' @export
 #' @keywords internal
-setup_gpar <- function(x, n = 1, optional = list(), required = list()) {
-  do_arg <- !(identical(x, FALSE) || is.null(x) || is.na(x))
-  if (do_arg) {
-    if (!is.list(x))
-      x <- list()
-    # set up gpars
-    gpar_defaults <- grid::get.gpar()
-    x_gpar <- names(x) %in% names(gpar_defaults)
-    optional_gpar <- names(optional) %in% names(gpar_defaults)
-    gpar <- update_list(update_list(update_list(gpar_defaults,
-                                                optional[optional_gpar]),
-                                    x[x_gpar]),
-                        required)
-    out <- update_list(optional[!optional_gpar], x[!x_gpar])
-    out$gp <- do.call(grid::gpar, lapply(gpar, rep_len, n))
+setup_gpar <- function(default = list(), user = list(), n) {
+  # set up gpars
+  if (is.list(user)) {
+    ii <- names(default) %in% names(user)
+    gp <- update_list(default, user[ii])
   } else {
-    out <- FALSE
+    gp <- default
   }
-  out
+  lapply(gp, rep_len, n)
 }
 
 #' Test if x should be run

@@ -172,197 +172,258 @@ plot.euler <- function(x,
 
   groups <- attr(x, "groups")
   do_groups <- !is.null(groups)
-  do_labels <- is.list(labels) || isTRUE(labels) || is.character(labels) || is.expression(labels)
-  do_quantities <- is.list(quantities) || isTRUE(labels) || is.character(quantities) || is.expression(quantities)
-  do_edges <- is.list(edges) || isTRUE(edges) || is.numeric(edges) || is.character(edges)
-  do_fills <- is.list(fills) || isTRUE(fills) || is.numeric(edges) || is.character(edges)
+  do_labels <-
+    is.list(labels) ||
+    isTRUE(labels) || is.character(labels) || is.expression(labels)
+  do_quantities <-
+    is.list(quantities) ||
+    isTRUE(labels) ||
+    is.character(quantities) || is.expression(quantities)
+  do_edges <-
+    is.list(edges) ||
+    isTRUE(edges) || is.numeric(edges) || is.character(edges)
+  do_fills <-
+    is.list(fills) ||
+    isTRUE(fills) || is.numeric(edges) || is.character(edges)
   do_legend <- is.list(legend) || isTRUE(legend)
   do_strips <- !is.null(groups)
 
-  args <- list(x = x, do_fills = do_fills, do_edges = do_edges,
-               do_labels = do_labels, do_quantities = do_quantieis,
-               mode = mode, n = n)
-
-  xx <- setup_geometry(x, do_fills, do_edges, do_labels, do_quantities, mode, n)
-
-  # recurse if list
   if (do_groups) {
-    out <- lapply(x, do_fills, do_edges, do_labels, do_quantities, mode, n)
-    # setup strips
-    if (!is.list(strips))
-      strips <- TRUE
-
-    n_levels <- sum(vapply(groups, function(y) max(as.numeric(y)),
-                           FUN.VALUE = numeric(1)))
-
-    strips <- setup_gpar(strips,
-                         n = n_levels,
-                         optional = list(col = "black",
-                                         cex = 1,
-                                         fontsize = 12,
-                                         lineheight= 1.2,
-                                         font = 4,
-                                         fontfamily = "",
-                                         alpha = 1,
-                                         groups = as.list(groups)))
-
-    attr(out, "strips") <- strips
-    attr(out, "groups") <- groups
-    class(out) <- c("euler_diagram")
-    return(out)
+    data <-
+      lapply(
+        x,
+        do_fills = do_fills,
+        do_edges = do_edges,
+        do_labels = do_labels,
+        do_quantities = do_quantities,
+        mode = mode,
+        n = n
+      )
+  } else {
+    data <-
+      setup_geometry(x, do_fills, do_edges, do_labels, do_quantities, mode, n)
   }
 
-  dd <- x$coefficients
-  orig <- x$original.values
-  fitted <- x$fitted.values
-
+  # dd <- x$coefficients
+  # orig <- x$original.values
+  # fitted <- x$fitted.values
+  #
   setnames <- rownames(dd)
+  #
+  # h <- dd$h
+  # k <- dd$k
+  # a <- dd$a
+  # b <- dd$b
+  # phi <- dd$phi
+  #
+  # n_e <- length(h)
+  # n_id <- 2^n_e - 1
+  # id <- bit_indexr(n_e)
+  #
+  # e <- ellipse(h, k, a, b, phi, n = n)
+  # e_x <- c(lapply(e, "[[", "x"), recursive = TRUE)
+  # e_y <- c(lapply(e, "[[", "y"), recursive = TRUE)
 
-  h <- dd$h
-  k <- dd$k
-  a <- dd$a
-  b <- dd$b
-  phi <- dd$phi
+  # limits <- get_bounding_box(h, k, a, b, phi)
+  # if (is.list(edges))
+  #   edges$data <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
+  #
+  # # setup fills
+  # if (is.list(fills))
+  #   if (is.function(fills$gp$fill))
+  #     fills$gp$fill <- fills$gp$fill(ifelse(mode == "overlay", n_e, n_id))
+  #
+  # fills <- setup_gpar(fills,
+  #                     n = if (mode == "overlay") n_e else n_id,
+  #                     optional = list(fill = qualpalr_pal(n_e), alpha = 0.4),
+  #                     required = list(col = "transparent"))
+  #
+  # if (is.list(fills)) {
+  #   # overlay ellipses on top of each other
+  #   if (mode == "overlay" || n_e == 1) {
+  #     fills <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
+  #   } else {
+  #     # split fills into smaller polygons and mix colors
+  #     fills$gp$fill <- rep_len(fills$gp$fill, n_id)
+  #     pieces <- fills$data <- vector("list", n_id)
+  #     for (i in rev(seq_len(n_id))) {
+  #       idx <- which(id[i, ])
+  #       n_idx <- length(idx)
+  #       if (n_idx == 1L) {
+  #         pieces[[i]] <- e[[idx[1]]]
+  #       } else {
+  #         pieces[[i]] <- eulerr:::poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
+  #         if (n_idx > 2L) {
+  #           for (j in 3L:n_idx) {
+  #             pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
+  #           }
+  #         }
+  #       }
+  #       for (ii in which(!id[i, ])) {
+  #         pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[ii]], "minus")
+  #       }
+  #       if (i > n_e) {
+  #         fills$gp$fill[i] <- mix_colors(fills$gp$fill[idx])
+  #       }
+  #     }
+  #
+  #     for (i in seq_along(pieces)) {
+  #       if (is.null(pieces[[i]]$x)) {
+  #         x0 <- lapply(pieces[[i]], "[[", "x")
+  #         y0 <- lapply(pieces[[i]], "[[", "y")
+  #       } else {
+  #         x0 <- pieces[[i]]$x
+  #         y0 <- pieces[[i]]$y
+  #       }
+  #       if (length(x0) > 0L) {
+  #         fills$data[[i]]$x <- c(x0, recursive = TRUE)
+  #         fills$data[[i]]$y <- c(y0, recursive = TRUE)
+  #         fills$data[[i]]$id.lengths <- lengths(x0)
+  #       }
+  #     }
+  #     not_empty <- !vapply(fills$data, is.null, logical(1))
+  #     fills$data <- fills$data[not_empty]
+  #     fills$gp$fill <- fills$gp$fill[not_empty]
+  #     fills$gp$alpha <- fills$gp$alpha[not_empty]
+  #   }
+  # }
+  #
+  # # setup quantities
+  # if (is.character(quantities) || is.expression(quantities))
+  #   quantities <- list(quantities = quantities)
+  # quantities <- setup_gpar(quantities,
+  #                          n = n_id,
+  #                          optional = list(col = "black",
+  #                                          cex = 1,
+  #                                          fontsize = 12,
+  #                                          lineheight= 1.2,
+  #                                          font = 1,
+  #                                          fontfamily = "",
+  #                                          alpha = 1))
+  #
+  # # setup labels
+  # if (is.character(labels) || is.expression(labels))
+  #   labels <- list(labels = labels)
+  # labels <- setup_gpar(labels,
+  #                      n = n_e,
+  #                      optional = list(font = 2))
+  # if (is.list(labels))
+  #   if (is.null(labels$labels))
+  #     labels$labels <- setnames
+  #
+  # if (is.list(labels) || is.list(quantities)) {
+  #   singles <- rowSums(id) == 1
+  #   empty <- abs(fitted) < sqrt(.Machine$double.eps)
+  #
+  #   centers <- cbind(t(locate_centers(h, k, a, b, phi, fitted)), orig)
+  #   if (is.list(labels))
+  #     center_labels <- labels$labels[!is.nan(centers[singles, 1L])]
+  #   labels_centers <- centers[!is.nan(centers[, 1L]) & singles, , drop = FALSE]
+  #
+  #   droprows <- rep.int(TRUE, NROW(centers))
+  #   for (i in which(is.nan(centers[singles, 1L]))) {
+  #     pick <- id[, i] & !empty & !is.nan(centers[, 1L])
+  #     labels_centers <- rbind(labels_centers, centers[which(pick)[1L], ])
+  #     if (is.list(labels))
+  #       center_labels <- c(center_labels, labels$labels[i])
+  #     droprows[which(pick)[1]] <- FALSE
+  #   }
+  #
+  #   if (is.list(quantities)) {
+  #     quantities_centers <-
+  #       centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
+  #     quantities_centers <- rbind(quantities_centers, labels_centers)
+  #     quantities$data <- list(x = quantities_centers[, 1L],
+  #                             y = quantities_centers[, 2L])
+  #     if (is.null(quantities$labels))
+  #       quantities$labels <- quantities_centers[, 3L]
+  #   }
+  #
+  #   if (is.list(labels)) {
+  #     labels$data <- list(x = labels_centers[, 1L],
+  #                         y = labels_centers[, 2L])
+  #     labels$labels <- center_labels
+  #   }
+  # }
 
-  n_e <- length(h)
-  n_id <- 2^n_e - 1
-  id <- bit_indexr(n_e)
-
-  e <- ellipse(h, k, a, b, phi, n = n)
-  e_x <- c(lapply(e, "[[", "x"), recursive = TRUE)
-  e_y <- c(lapply(e, "[[", "y"), recursive = TRUE)
-
-  limits <- get_bounding_box(h, k, a, b, phi)
-
+  # setup fills
   if (is.list(fills))
     if (is.function(fills$fill))
       fills$fill <- fills$fill(n_e)
 
   # setup edges
-  edges <- setup_gpar(edges,
-                      n = n_e,
-                      optional = list(),
-                      required = list(fill = "transparent"))
-  if (is.list(edges))
-    edges$data <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
+  if (do_edges) {
+    if (is.character(edges) || is.numeric(edges))
+      edges <- list(col = edges)
 
-  # setup fills
-  if (is.list(fills))
-    if (is.function(fills$gp$fill))
-      fills$gp$fill <- fills$gp$fill(ifelse(mode == "overlay", n_e, n_id))
-
-  fills <- setup_gpar(fills,
-                      n = if (mode == "overlay") n_e else n_id,
-                      optional = list(fill = qualpalr_pal(n_e), alpha = 0.4),
-                      required = list(col = "transparent"))
-
-  if (is.list(fills)) {
-    # overlay ellipses on top of each other
-    if (mode == "overlay" || n_e == 1) {
-      fills <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
-    } else {
-      # split fills into smaller polygons and mix colors
-      fills$gp$fill <- rep_len(fills$gp$fill, n_id)
-      pieces <- fills$data <- vector("list", n_id)
-      for (i in rev(seq_len(n_id))) {
-        idx <- which(id[i, ])
-        n_idx <- length(idx)
-        if (n_idx == 1L) {
-          pieces[[i]] <- e[[idx[1]]]
-        } else {
-          pieces[[i]] <- eulerr:::poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
-          if (n_idx > 2L) {
-            for (j in 3L:n_idx) {
-              pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
-            }
-          }
-        }
-        for (ii in which(!id[i, ])) {
-          pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[ii]], "minus")
-        }
-        if (i > n_e) {
-          fills$gp$fill[i] <- mix_colors(fills$gp$fill[idx])
-        }
-      }
-
-      for (i in seq_along(pieces)) {
-        if (is.null(pieces[[i]]$x)) {
-          x0 <- lapply(pieces[[i]], "[[", "x")
-          y0 <- lapply(pieces[[i]], "[[", "y")
-        } else {
-          x0 <- pieces[[i]]$x
-          y0 <- pieces[[i]]$y
-        }
-        if (length(x0) > 0L) {
-          fills$data[[i]]$x <- c(x0, recursive = TRUE)
-          fills$data[[i]]$y <- c(y0, recursive = TRUE)
-          fills$data[[i]]$id.lengths <- lengths(x0)
-        }
-      }
-      not_empty <- !vapply(fills$data, is.null, logical(1))
-      fills$data <- fills$data[not_empty]
-      fills$gp$fill <- fills$gp$fill[not_empty]
-      fills$gp$alpha <- fills$gp$alpha[not_empty]
-    }
+    edges <- setup_gpar(list(col = 1L,
+                             lty = "solid",
+                             lwd = 1,
+                             alpha = 1,
+                             lineend = "round",
+                             linejoin = "round",
+                             linemitre = 10,
+                             lex = 10),
+                        edges,
+                        n_e)
+  } else {
+    edges <- NULL
   }
 
-  # setup quantities
-  if (is.character(quantities) || is.expression(quantities))
-    quantities <- list(quantities = quantities)
-  quantities <- setup_gpar(quantities,
-                           n = n_id,
-                           optional = list(col = "black",
-                                           cex = 1,
-                                           fontsize = 12,
-                                           lineheight= 1.2,
-                                           font = 1,
-                                           fontfamily = "",
-                                           alpha = 1))
+  # setup strips
+  if (do_groups) {
+    n_levels <- sum(vapply(groups, function(y) max(as.numeric(y)), numeric(1)))
 
-  # setup labels
-  if (is.character(labels) || is.expression(labels))
-    labels <- list(labels = labels)
-  labels <- setup_gpar(labels,
-                       n = n_e,
-                       optional = list(font = 2))
-  if (is.list(labels))
-    if (is.null(labels$labels))
-      labels$labels <- setnames
+    if (!is.list(strips))
+      strips <- list()
 
-  if (is.list(labels) || is.list(quantities)) {
-    singles <- rowSums(id) == 1
-    empty <- abs(fitted) < sqrt(.Machine$double.eps)
+    strips <- replace_list(
+      list(labels = setnames,
+           byrow = FALSE,
+           do.lines = FALSE,
+           lines.first = TRUE,
+           hgap = grid::unit(1, "lines"),
+           vgap = grid::unit(0.5, "lines"),
+           default.units = "lines",
+           pch = 21),
+      strips
+    )
+    strips$gp <- setup_gpar(list(col = "black",
+                                 cex = 1,
+                                 fontsize = 12,
+                                 lineheight = 1.2,
+                                 font = 4,
+                                 fontfamily = "",
+                                 alpha = 1),
+                            strips,
+                            n_levels)
 
-    centers <- cbind(t(locate_centers(h, k, a, b, phi, fitted)), orig)
-    if (is.list(labels))
-      center_labels <- labels$labels[!is.nan(centers[singles, 1L])]
-    labels_centers <- centers[!is.nan(centers[, 1L]) & singles, , drop = FALSE]
-
-    droprows <- rep.int(TRUE, NROW(centers))
-    for (i in which(is.nan(centers[singles, 1L]))) {
-      pick <- id[, i] & !empty & !is.nan(centers[, 1L])
-      labels_centers <- rbind(labels_centers, centers[which(pick)[1L], ])
-      if (is.list(labels))
-        center_labels <- c(center_labels, labels$labels[i])
-      droprows[which(pick)[1]] <- FALSE
-    }
-
-    if (is.list(quantities)) {
-      quantities_centers <-
-        centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
-      quantities_centers <- rbind(quantities_centers, labels_centers)
-      quantities$data <- list(x = quantities_centers[, 1L],
-                              y = quantities_centers[, 2L])
-      if (is.null(quantities$labels))
-        quantities$labels <- quantities_centers[, 3L]
-    }
-
-    if (is.list(labels)) {
-      labels$data <- list(x = labels_centers[, 1L],
-                          y = labels_centers[, 2L])
-      labels$labels <- center_labels
-    }
   }
+
+  if (!is.list(strips))
+    strips <- TRUE
+
+
+
+  strips <- setup_gpar(
+    strips,
+    n = n_levels,
+    optional = list(
+      col = "black",
+      cex = 1,
+      fontsize = 12,
+      lineheight = 1.2,
+      font = 4,
+      fontfamily = "",
+      alpha = 1,
+      groups = as.list(groups)
+    )
+  )
+
+  attr(out, "strips") <- strips
+  attr(out, "groups") <- groups
+  class(out) <- c("euler_diagram")
+  return(out)
 
   # setup legend
   legend <- setup_gpar(legend,
@@ -534,8 +595,6 @@ setup_geometry <- function(x,
   dd <- x$coefficients
   orig <- x$original.values
   fitted <- x$fitted.values
-
-  #setnames <- rownames(dd)
 
   h <- dd$h
   k <- dd$k
