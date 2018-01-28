@@ -25,6 +25,8 @@ default grahical parameters for the diagrams.
 ## Minor changes
 
 * Arguments `counts` and `outer_strips` to `plot.euler()` are now defunct.
+* The two first colors of the default palette, white and grey, swapped
+places.
 
 ## Bug fixes
 
