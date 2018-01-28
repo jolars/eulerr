@@ -278,6 +278,8 @@ setup_gpar <- function(default = list(), user = list(), n) {
   } else {
     gp <- default
   }
+  gp <- lapply(gp, function(x) if (is.function(x)) x(n) else x)
+
   do.call(grid::gpar, lapply(gp, rep_len, n))
 }
 
