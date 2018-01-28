@@ -1,5 +1,12 @@
-year <- substr(Sys.Date(), 1, 4)
-note <- paste("R package version", utils::packageVersion("eulerr"))
+# year
+i <- regexpr("(?<=\\s{1})\\d{4}(?=-{1})", meta$Built, perl = TRUE)
+year <- substring(meta$Built, i, i + 3)
+
+# version
+vers <- meta$Version
+if(is.null(vers))
+  vers <- packageVersion("eulerr")
+note <- paste("R package version", vers)
 
 citHeader("To cite eulerr in publications, please use")
 
