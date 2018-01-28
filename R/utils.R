@@ -146,7 +146,6 @@ bit_indexr <- function(n) {
 #' @param orig Original values
 #'
 #' @return regionError
-#' @export
 #' @keywords internal
 regionError <- function(fit, orig) {
   abs(fit/sum(fit) - orig/sum(orig))
@@ -159,7 +158,6 @@ regionError <- function(fit, orig) {
 #' @param regionError regionError
 #'
 #' @return diagError
-#' @export
 #' @keywords internal
 diagError <- function(fit, orig, regionError = NULL) {
   if(!is.null(regionError)) {
@@ -187,7 +185,6 @@ n_sets <- function(combinations) {
 #' @param newpars Parameters from the first optimizer.
 #'
 #' @return A list of lower and upper constraints
-#' @export
 #' @keywords internal
 get_constraints <- function(newpars) {
   h   <- newpars[, 1L]
@@ -228,7 +225,6 @@ get_constraints <- function(newpars) {
 #' @param x Angle in radians
 #'
 #' @return A normalized angle.
-#' @export
 #' @keywords internal
 normalize_angle <- function(x) {
   a <- (x + pi) %% (2*pi)
@@ -240,10 +236,9 @@ normalize_angle <- function(x) {
 #' @param m pars
 #'
 #' @return m, normalized
-#' @export
 #' @keywords internal
 normalize_pars <- function(m) {
-  n <- ncol(m)
+  n <- NCOL(m)
   if (n == 3L) {
     m[, 3L] <- abs(m[, 3L])
   } else {
@@ -274,8 +269,7 @@ mix_colors <- function(rcol_in) {
 #' @param default default values
 #' @param user user-inputted values
 #'
-#' @return a list or FALSE
-#' @export
+#' @return a `gpar` object
 #' @keywords internal
 setup_gpar <- function(default = list(), user = list(), n) {
   # set up gpars
@@ -285,16 +279,6 @@ setup_gpar <- function(default = list(), user = list(), n) {
   } else {
     gp <- default
   }
-  lapply(gp, rep_len, n)
-}
-
-#' Test if x should be run
-#'
-#' @param x argument
-#'
-#' @return boolean
-#' @keywords internale
-do_arg <- function(x) {
-  !(identical(x, FALSE) || is.null(x) || is.na(x))
+  do.call(grid::gpar, lapply(gp, rep_len, n))
 }
 
