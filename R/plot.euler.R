@@ -200,19 +200,33 @@ plot.euler <- function(x,
   # setup fills
   if (do_fills) {
     if (isTRUE(fills)) {
-      fills <- list()
-    } else if (!is.list(fills)) {
-      fills <- list(fill = fills)
+      fills <- list(fill = qualpalr_pal(n_e))
+    } else if (is.list(fills)) {
+      if (is.function(fills$fill))
+        fills$fill <- fills$fill(n_e)
+      else if (is.null(fills$fill))
+        fills$fill <- opar$fills$fill(n_e)
+      else
+        fills$fill <- fills$fill
+    } else {
+      if (is.function(fills))
+        fills <- list(fill = fills(n_e))
+      else
+        fills <- list(fill = fills)
     }
 
     if (mode == "overlay") {
-      fills$gp <- setup_gpar(opar$fills, fills, n_e)
+      fills$gp <- setup_gpar(list(fill = fills$fill,
+                                  alpha = opar$fills$alpha),
+                             fills, n_e)
     } else {
-      n_fills <- max(length(fills$fill), n_e)
-      fills$gp <- setup_gpar(opar$fills, fills, n_id)
+      n_fills <- length(fills$fill)
       if (n_fills < n_id)
         for (i in (n_fills + 1L):n_id)
-          fills$gp$fill[i] <- mix_colors(fills$gp$fill[id[i, ]])
+          fills$fill[i] <- mix_colors(fills$fill[id[i, ]])
+        fills$gp <- setup_gpar(list(fill = fills$fill,
+                                    alpha = opar$fills$alpha),
+                               fills, n_id)
     }
   } else {
     fills <- NULL
@@ -220,10 +234,10 @@ plot.euler <- function(x,
 
   # setup edges
   if (do_edges) {
-    if (is.character(edges) || is.numeric(edges))
-      edges <- list(col = edges)
-    else if (!is.list(edges))
+    if (isTRUE(edges))
       edges <- list()
+    else if (!is.list(edges))
+      edges <- list(col = edges)
 
     edges$gp <- setup_gpar(opar$edges, edges, n_e)
   } else {

@@ -273,8 +273,7 @@ mix_colors <- function(rcol_in) {
 setup_gpar <- function(default = list(), user = list(), n) {
   # set up gpars
   if (is.list(user)) {
-    ii <- names(default) %in% names(user)
-    gp <- update_list(default, user[ii])
+    gp <- replace_list(default, user)
   } else {
     gp <- default
   }
