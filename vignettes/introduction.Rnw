@@ -169,7 +169,6 @@ knitr::opts_chunk$set(
 )
 library(lattice)
 lattice.options(default.theme = list(fontsize = list(text = 8, points = 4)))
-
 @
 
 \maketitle
@@ -228,6 +227,7 @@ the set relationships for each observation, or
 
 <<input>>=
 library(eulerr)
+eulerr_options(pointsize = 8)
 options(digits = 4)
 
 # Input in the form of a named numeric vector
@@ -256,11 +256,11 @@ or directly access and plot the residuals.
 
 <<residual-plot, eval = FALSE>>=
 # Cleveland dot plot of the residuals
-lattice::dotplot(resid(fit2), xlab = "",
-                 panel = function(...) {
-                   panel.abline(v = 0, lty = 2)
-                   panel.dotplot(...)
-                 })
+dotplot(resid(fit2), xlab = "",
+        panel = function(...) {
+          panel.abline(v = 0, lty = 2)
+          panel.dotplot(...)
+        })
 @
 
 \begin{figure}[hbtp]
@@ -288,7 +288,7 @@ where $\hat{y}_i$ is an ordinary least squares estimate from the regression of
 the fitted areas on the original areas that is being explored during
 optimization,
 
-and the \emph{diagError} statistic from \pkg{eulerAPE} \cite{micallef2014}:
+and the \emph{diagError} statistic from \pkg{eulerAPE} \cite{Micallef_2014a}:
 
 $$\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
 \frac{\hat{y}_i}{\sum \hat{y}_i} \right|$$
@@ -339,7 +339,10 @@ plot(fit2)
 
 <<custom-plot, eval = FALSE>>=
 # Remove fills, vary border type, and switch fontface.
-plot(fit2, fills = FALSE, edges = list(lty = 1:3), labels = list(font = 4))
+plot(fit2,
+     fills = FALSE,
+     edges = list(lty = 1:3),
+     labels = list(font = 4))
 @
 
 \begin{marginfigure}
