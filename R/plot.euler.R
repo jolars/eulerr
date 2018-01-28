@@ -122,8 +122,8 @@ plot.euler <- function(x,
                        edges = TRUE,
                        labels = identical(legend, FALSE),
                        quantities = FALSE,
-                       n = 200,
                        strips = NULL,
+                       n = 200,
                        ...,
                        fill,
                        fill_alpha,
@@ -169,6 +169,8 @@ plot.euler <- function(x,
   if (!missing(panel))
     warning("'panel' is deprecated")
 
+  opar <- eulerr_options()
+
   groups <- attr(x, "groups")
   do_groups <- !is.null(groups)
   do_labels <-
@@ -198,29 +200,19 @@ plot.euler <- function(x,
   # setup fills
   if (do_fills) {
     if (isTRUE(fills)) {
-      fills <- list(fill = qualpalr_pal(n_e))
-    } else if (is.list(fills)) {
-      if (is.function(fills$fill))
-        fills$fill <- fills$fill(n_e)
-      else if (is.null(fills$fill))
-        fills$fill <- qualpalr_pal(n_e)
-      else
-        fills$fill <- fills$fill
-    } else {
-      if (is.function(fills))
-        fills <- list(fill = fills(n_e))
-      else
-        fills <- list(fill = fills)
+      fills <- list()
+    } else if (!is.list(fills)) {
+      fills <- list(fill = fills)
     }
 
     if (mode == "overlay") {
-      fills$gp <- setup_gpar(list(fill = fills$fill, alpha = 0.4), fills, n_e)
+      fills$gp <- setup_gpar(opar$fills, fills, n_e)
     } else {
-      n_fills <- length(fills$fill)
+      n_fills <- max(length(fills$fill), n_e)
+      fills$gp <- setup_gpar(opar$fills, fills, n_id)
       if (n_fills < n_id)
         for (i in (n_fills + 1L):n_id)
-          fills$fill[i] <- mix_colors(fills$fill[id[i, ]])
-      fills$gp <- setup_gpar(list(fill = fills$fill, alpha = 0.4), fills, n_id)
+          fills$gp$fill[i] <- mix_colors(fills$gp$fill[id[i, ]])
     }
   } else {
     fills <- NULL
@@ -233,16 +225,7 @@ plot.euler <- function(x,
     else if (!is.list(edges))
       edges <- list()
 
-    edges$gp <- setup_gpar(list(col = 1L,
-                                lty = "solid",
-                                lwd = 1,
-                                alpha = 1,
-                                lineend = "round",
-                                linejoin = "round",
-                                linemitre = 10,
-                                lex = 1),
-                           edges,
-                           n_e)
+    edges$gp <- setup_gpar(opar$edges, edges, n_e)
   } else {
     edges <- NULL
   }
@@ -252,27 +235,12 @@ plot.euler <- function(x,
     group_names <- lapply(groups, levels)
     n_levels <- sum(lengths(group_names))
 
-    if (is.list(strips)) {
-      strips <- list(labels = unlist(strips))
-    } else {
+    if (isTRUE(strips)) {
       strips <- list()
     }
 
     strips$groups <- groups
-
-    strips$gp <- setup_gpar(
-      list(
-        col = "black",
-        cex = 1,
-        fontsize = 12,
-        lineheight = 1.2,
-        font = 4,
-        fontfamily = "",
-        alpha = 1
-      ),
-      strips,
-      n_levels
-    )
+    strips$gp <- setup_gpar(opar$strips, strips, n_levels)
   } else {
     strips <- NULL
   }
@@ -288,15 +256,7 @@ plot.euler <- function(x,
       labels <- list(labels = labels)
     }
 
-    labels$gp <- setup_gpar(list(col = "black",
-                                 cex = 1,
-                                 fontsize = 12,
-                                 lineheight = 1.2,
-                                 font = 2,
-                                 fontfamily = "",
-                                 alpha = 1),
-                            labels,
-                            n_e)
+    labels$gp <- setup_gpar(opar$labels, labels, n_e)
   } else {
     labels <- NULL
   }
@@ -307,15 +267,7 @@ plot.euler <- function(x,
       quantities <- list(labels = NULL)
     }
 
-    quantities$gp <- setup_gpar(list(col = "black",
-                                     cex = 1,
-                                     fontsize = 12,
-                                     lineheight = 1.2,
-                                     font = 1,
-                                     fontfamily = "",
-                                     alpha = 1),
-                                quantities,
-                                n_id)
+    quantities$gp <- setup_gpar(opar$quantities, quantities, n_id)
   } else {
     quantities <- NULL
   }
@@ -341,21 +293,10 @@ plot.euler <- function(x,
         legend <- list(labels = rownames(x$coefficients))
       }
     }
+    opar$legend$ncol <- 1L
+    opar$legend$nrow <- n_e
 
-    legend <- replace_list(
-      list(side = "right",
-           labels = NULL,
-           ncol = 1L,
-           nrow = n_e,
-           byrow = FALSE,
-           do.lines = FALSE,
-           lines.first = TRUE,
-           hgap = grid::unit(1, "lines"),
-           vgap = grid::unit(0.25, "lines"),
-           default.units = "lines",
-           pch = 21),
-      legend
-    )
+    legend <- replace_list(opar$legend, legend)
 
     legend$gp <- setup_gpar(
       list(
@@ -364,8 +305,8 @@ plot.euler <- function(x,
                  col = fills$gp$fill,
                  alpha.f = fills$gp$alpha)
         else "transparent",
-        cex = 1.2,
-        fontsize = 12/1.2,
+        cex = legend$cex,
+        fontsize = legend$fontsize/legend$cex,
         col = if (do_edges)
           mapply(grDevices::adjustcolor,
                  col = edges$gp$col,
@@ -681,6 +622,8 @@ print.euler_diagram <- function(x, ...) {
   strips <- x$strips
   groups <- strips$groups
 
+  opar <- eulerr_options()
+
   do_legend <- !is.null(legend)
   do_groups <- !is.null(strips)
 
@@ -819,7 +762,8 @@ print.euler_diagram <- function(x, ...) {
                                                       widths = widths,
                                                       heights = heights,
                                                       respect = TRUE),
-                           name = "canvas")
+                           name = "canvas",
+                           gp = grid::gpar(fontsize = opar$fontsize))
 
   panel_layout <- grid::grid.layout(nrow = layout[1L],
                                     ncol = layout[2L],

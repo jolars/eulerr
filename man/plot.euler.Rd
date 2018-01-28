@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{euler}(x, mode = c("split", "overlay"), legend = FALSE,
   fills = TRUE, edges = TRUE, labels = identical(legend, FALSE),
-  quantities = FALSE, n = 200, strips = NULL, ..., fill, fill_alpha,
+  quantities = FALSE, strips = NULL, n = 200, ..., fill, fill_alpha,
   auto.key, fontface, par.settings, default.prepanel, default.scales, panel)
 }
 \arguments{
@@ -44,12 +44,12 @@ those of the default. If a list, values \code{labels},
 \code{lineheight}, and \code{font} are accepted. Quantities are drawn using
 \code{\link[grid:grid.text]{grid::grid.text()}}.}
 
-\item{n}{number of vertices for the ellipses}
-
 \item{strips}{a list of options for the strips, which are drawn if
 \code{x} is a list of \code{euler} objects and ignored otherwise. Arguments
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
 \code{lineheight}, and \code{font} are accepted.}
+
+\item{n}{number of vertices for the ellipses}
 
 \item{...}{ignored}
 

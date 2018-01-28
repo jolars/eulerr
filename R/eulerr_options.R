@@ -1,0 +1,108 @@
+# eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
+# Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#' Get or set global graphical parameters for eulerr
+#'
+#' This function a means to set the global graphical parameters for plots
+#' produced by [plot.euler()]. Query [eulerr_options()] (without any
+#' argument) to see all the available options.
+#'
+#' @param ... a list of graphical parameters.
+#'
+#' @return This function gets or sets updates in the global environment
+#'   that are used in [plot.euler()].
+#' @export
+#'
+#' @examples
+#' eulerr_options(edges = list(col = "blue"), fontsize = 10)
+eulerr_options <- function(...) {
+  new <- list(...)
+  if (is.null(names(new)) && length(new) == 1L && is.list(new[[1L]]))
+    new <- new[[1L]]
+  old <- .eulerr_env$options
+  if (length(new) == 0L)
+    return(old)
+  nm <- names(new)
+  if (is.null(nm))
+    return(old[unlist(new)])
+  is_named <- nm != ""
+  if (any(!is_named))
+    nm[!is_named] <- unlist(new[!is_named])
+  out <- old[nm]
+  names(out) <- nm
+  nm <- nm[is_named]
+  .eulerr_env$options <- update_list(old, new[nm])
+  fontsize <- new$fontsize
+  if (!is.null(fontsize))
+    .eulerr_env$options <- update_list(
+      .eulerr_env$options,
+      list(labels = list(fontsize = fontsize),
+           quantities = list(fontsize = fontsize),
+           strips = list(fontsize = fontsize),
+           legend = list(fontsize = fontsize))
+    )
+  invisible(out)
+}
+
+
+#' Default options for eulerr
+#'
+#' @return default options for eulerr
+#' @keywords internal
+eulerr_default_options <- function() {
+  list(fontsize = 12,
+       fills = list(fill = qualpalr_pal,
+                    alpha = 0.4),
+       edges = list(col = 1L,
+                    alpha = 1,
+                    lty = 1L,
+                    lwd = 1,
+                    lex = 1,
+                    lineend = "round",
+                    linejoin = "round",
+                    linemitre = 10),
+       labels = list(col = 1L,
+                     alpha = 1,
+                     fontsize = 12,
+                     fontfamily = "",
+                     lineheight = 1.2,
+                     font = 2),
+       quantities = list(col = 1L,
+                         alpha = 1,
+                         fontsize = 12,
+                         fontfamily = "",
+                         lineheight = 1.2,
+                         font = 1),
+       strips = list(col = 1L,
+                     alpha = 1,
+                     fontsize = 12,
+                     fontfamily = "",
+                     lineheight = 1.2,
+                     font = 4),
+       legend = list(side = "right",
+                     cex = 1,
+                     fontsize = 12,
+                     labels = NULL,
+                     byrow = FALSE,
+                     do.lines = FALSE,
+                     lines.first = TRUE,
+                     hgap = grid::unit(1, "lines"),
+                     vgap = grid::unit(0.25, "lines"),
+                     default.units = "lines",
+                     pch = 21))
+}
+
+

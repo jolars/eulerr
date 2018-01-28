@@ -19,6 +19,8 @@ Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
 (#16)
 * `euler()` now always returns a coefficients item with columns `h`, `k`,
 `a`, `b`, and `phi`, regardless of which shape is used.
+* A new function `eulerr_options()` have been provided in order to set
+default grahical parameters for the diagrams.
 
 ## Minor changes
 
