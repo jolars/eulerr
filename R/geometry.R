@@ -41,7 +41,6 @@ separate_two_discs <- function(r1, r2, overlap) {
 #' @param phi rotation
 #'
 #' @return The bounding box as a list with xlim and ylim
-#' @export
 #' @keywords internal
 get_bounding_box <- function(h, k, a, b = NULL, phi = NULL) {
   if (is.null(b))

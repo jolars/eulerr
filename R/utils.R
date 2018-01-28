@@ -172,7 +172,6 @@ diagError <- function(fit, orig, regionError = NULL) {
 #' @param combinations A vector of combinations (see [euler()]).
 #'
 #' @return The number of sets in the input
-#' @export
 #' @keywords internal
 n_sets <- function(combinations) {
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
