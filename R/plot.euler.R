@@ -14,12 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#' Plot Area-Proportional Euler Diagrams
+#' Plot area-proportional Euler diagrams
 #'
 #' Plot Euler diagrams fit with [euler()] using [grid::Grid()] graphics. This
-#' function sets up all the necessary plot paramters and computes
-#' the geometry of the diagram. [print.euler_diagram()], meanwhile,
-#' does the actual plotting of the diagram.
+#' function sets up all the necessary plot parameters and computes
+#' the geometry of the diagram. [print.euler()], meanwhile,
+#' does the actual plotting of the diagram. Please see the **Details** section
+#' to learn about the individual settings for each argument.
 #'
 #' Most of the arguments to this function accept either a logical, a vector, or
 #' a list where
@@ -31,6 +32,24 @@
 #' parameters as described in [grid::gpar()] and control
 #' arguments that are specific to each argument.
 #'
+#' The various [grid::gpar()] values that are available for each argument
+#' are:
+#'
+#' \tabular{lcccccc}{
+#'              \tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \cr
+#'   col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   fill       \tab x     \tab       \tab        \tab            \tab        \tab        \cr
+#'   alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   lty        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
+#'   lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
+#'   lex        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
+#'   fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+#'   cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+#'   fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+#'   lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+#'   font       \tab       \tab       \tab x      \tab x          \tab x      \tab x
+#' }
+#'
 #' If the diagram has been fit using the `data.frame` or `matrix` methods
 #' and using the `by` argument, the plot area will be split into panels for
 #' each combination of the one to two factors.
@@ -40,37 +59,28 @@
 #' function is assigned to a variable (rather than printed to screen).
 #'
 #' @param x an object of class `'euler'`, generated from [euler()]
-#' @param mode "`split`", the default, splits up the diagram into individual
+#' @param mode `'split'`, the default, splits up the diagram into individual
 #'   polygons and blends the colors of the overlapping shapes using
 #'   color averaging in the CIELAB color space. "`overlay`" superposes
 #'   sets and should be used in conjunction with a suitable `fill_alpha` value.
-#' @param legend draw a legend using [grid::grid.legend()]. If a list,
-#'   the item `side` can be used to set the location of the legend.
-#' @param labels draw labels. Vectors are assumed
-#'   to be a character or an expression vector. If a list, values `labels`,
-#'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
-#'   `lineheight`, and `font` are accepted. Labels are drawn using
+#' @param legend a logical scalar or list. If a list,
+#'   the item `side` can be used to set the location of the legend. See
+#'   [grid::grid.legend()].
+#' @param labels a logical, vector, or list. Vectors are assumed to be
+#'   text for the labels. See [grid::grid.text()].
+#' @param quantities a logical, vector, or list. Vectors are assumed to be
+#'   text for the quantities' labels, which by
+#'   default are the original values in the input to [euler()]. See
 #'   [grid::grid.text()].
-#' @param quantities draw quantities. If a vector, the values in it will replace
-#'   those of the default. If a list, values `labels`,
-#'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
-#'   `lineheight`, and `font` are accepted. Quantities are drawn using
-#'   [grid::grid.text()].
-#' @param edges draw edges. Vectors are assumed to be
-#'   colors for edges of the ellipses. If a list, values
-#'   `col`, `alpha`, `lty`, `lwd`, `lex`, `lineend`, `linejoin` and `linemitre`
-#'   are accepted. Edges are drawn using [grid::grid.polygon()] if
-#'   `mode == 'overlay'` and [grid::grid.polyline()] if `mode ==  'split'`.
-#' @param fills draw fills. Character or integer vectors are assumed to be
-#'   colors to fill the shapes in the diagram. If a list, values
-#'   `fill` and `alpha` are accepted. If `mode == 'split'`, colors of
-#'   intersecting overlaps will be mixed. Fills are drawn using
-#'   [grid::grid.polygon()].
+#' @param edges a logical, vector, or list. Vectors are assumed to be
+#'   colors for edges of the ellipses. See [grid::grid.polyline()].
+#' @param fills a logical, vector, or list. Vectors are assumed to be
+#'   colors to fill the shapes in the diagram. If `mode == 'split'`, colors of
+#'   intersecting overlaps will be mixed. See [grid::grid.polygon()] and
+#'   [grid::grid.path()].
 #' @param n number of vertices for the ellipses
-#' @param strips a list of options for the strips, which are drawn if
-#'   `x` is a list of `euler` objects and ignored otherwise. Arguments
-#'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
-#'   `lineheight`, and `font` are accepted.
+#' @param strips a list. Will be ignored unless the `'by'` argument
+#'   was used in [euler()].
 #' @param ... ignored
 #' @param fill deprecated
 #' @param fill_alpha deprecated
@@ -81,16 +91,15 @@
 #' @param default.scales deprecated
 #' @param panel deprecated
 #'
-#' @seealso [euler()], [print.euler_diagram()], [grid::gpar()],
-#'   [grid::grid.polygon()], [grid::grid.polyline()],
+#' @seealso [euler()], [print.euler()], [grid::gpar()],
+#'   [grid::grid.polygon()], [grid::grid.polyline()], [grid::gird.path()],
 #'   [grid::grid.legend()], [grid::grid.text()]
 #'
-#' @return Provides an `'euler_diagram'` object, which is a description of
-#'   the diagram to be drawn. [print.euler_diagram()] does the actual plotting
-#'   of the diagram and is usually called automatically after this function
-#'   is called.
+#' @return Provides an object of class `'euler', 'diagram'` , which is a
+#'   description of the diagram to be drawn. [print.euler()] does the actual
+#'   plotting of the diagram and is usually called automatically after this
+#'   function is called.
 #' @export
-#'
 #' @examples
 #' fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
 #'
@@ -363,7 +372,7 @@ plot.euler <- function(x,
                  strips = strips,
                  legend = legend,
                  data = data),
-            class = "euler_diagram")
+            class = c("euler", "diagram"))
 }
 #' Grobify Euler objects
 #'
@@ -612,21 +621,13 @@ setup_geometry <- function(x,
 #' Print (plot) Euler diagram
 #'
 #' This function is responsible for the actual plotting of
-#' `'euler_diagram'` objects created through [plot.euler()] and is usually
-#' called automatically after an `'euler'` object is printed on the screen.
+#' `'euler_diagram'` objects created through [plot.euler()].
 #'
-#' @param x an object of class `'euler_diagram'`, usually the output of
+#' @param x an object of class `'euler'`, usually the output of
 #'   [plot.euler()].
-#' @param ... ignored
 #'
 #' @return A plot is drawn on the current device using [grid::Grid()].
-#' @seealso [plot.euler()], [euler()]
-#' @export
-#'
-#' @examples
-#' p <- plot(euler(c(A = 1, B = 3, "A&B" = 0.5)))
-#' print(p)
-print.euler_diagram <- function(x, ...) {
+print_diagram <- function(x) {
   mode <- x$mode
   legend <- x$legend
   edges <- x$edges

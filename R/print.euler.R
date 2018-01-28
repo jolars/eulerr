@@ -14,18 +14,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#' Print Euler fits
+#' Print and plot Euler objects
 #'
-#' Prints a data frame of the original set relationships and the fitted
-#' values as well as `diagError` and `stress` statistics.
+#' This function is responsible both for printing fits from [euler()] as
+#' well as the actual plotting of diagrams created by [plot.euler()]. It
+#' is normally called automatically if the result is printed to console.
 #'
-#' @param x Euler diagram specification from [euler()]
+#' @section Fits: Prints a data frame of the original set relationships and the
+#' fitted values as well as `diagError` and `stress` statistics.
+#'
+#' @section Diagrams: When `x` is generated from [plot.euler()], this function
+#' will plot the object.
+#'
+#' @param x fitted `'euler'` object from [euler()] or diagram from
+#'   [plot.euler()]
 #' @param round number of decimal places to round to
 #' @param vsep character string to paste in between `euler` objects
-#'   when `x` is a nested `euler` object.
+#'   when `x` is a nested `euler` object
 #' @param ... arguments passed to [base::print.data.frame()]
 #'
-#' @return The result of the fitted Euler diagram is printed to the console.
+#' @return Summary statistics of the fitted Euler diagram is printed to
+#' screen or a plot is generated.
+#' @seealso [euler()], [plot.euler()], [base::print.data.frame()]
 #'
 #' @export
 print.euler <- function(
@@ -36,22 +46,26 @@ print.euler <- function(
 ) {
   stopifnot(is.numeric(round), length(round) == 1L, round > 0)
 
-  if (!is.null(attr(x, "groups"))) {
-    for (i in seq_along(x)) {
-      if (i != 1L && !is.null(vsep))
-        cat(vsep, "\n")
-      cat(names(x)[i], "\n")
-      print(x[[i]], round = round, ...)
-    }
+  if (inherits(x, "diagram")) {
+    print_diagram(x)
   } else {
-    print(round(data.frame("original" = x$original.values,
-                           "fitted" = x$fitted.values,
-                           "residuals" = x$residuals,
-                           "regionError" = x$regionError),
-                digits = round), ...)
-    cat("\n")
-    cat("diagError:", round(x$diagError, digits = round), "\n")
-    cat("stress:   ", round(x$stress, digits = round), "\n")
+    if (!is.null(attr(x, "groups"))) {
+      for (i in seq_along(x)) {
+        if (i != 1L && !is.null(vsep))
+          cat(vsep, "\n")
+        cat(names(x)[i], "\n")
+        print(x[[i]], round = round, ...)
+      }
+    } else {
+      print(round(data.frame("original" = x$original.values,
+                             "fitted" = x$fitted.values,
+                             "residuals" = x$residuals,
+                             "regionError" = x$regionError),
+                  digits = round), ...)
+      cat("\n")
+      cat("diagError:", round(x$diagError, digits = round), "\n")
+      cat("stress:   ", round(x$stress, digits = round), "\n")
+    }
+    invisible(x)
   }
-  invisible(x)
 }

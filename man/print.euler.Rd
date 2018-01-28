@@ -2,25 +2,41 @@
 % Please edit documentation in R/print.euler.R
 \name{print.euler}
 \alias{print.euler}
-\title{Print Euler fits}
+\title{Print and plot Euler objects}
 \usage{
 \method{print}{euler}(x, round = 3, vsep = strrep("-", 0.75 *
   getOption("width")), ...)
 }
 \arguments{
-\item{x}{Euler diagram specification from \code{\link[=euler]{euler()}}}
+\item{x}{fitted \code{'euler'} object from \code{\link[=euler]{euler()}} or diagram from
+\code{\link[=plot.euler]{plot.euler()}}}
 
 \item{round}{number of decimal places to round to}
 
 \item{vsep}{character string to paste in between \code{euler} objects
-when \code{x} is a nested \code{euler} object.}
+when \code{x} is a nested \code{euler} object}
 
 \item{...}{arguments passed to \code{\link[base:print.data.frame]{base::print.data.frame()}}}
 }
 \value{
-The result of the fitted Euler diagram is printed to the console.
+Summary statistics of the fitted Euler diagram is printed to
+screen or a plot is generated.
 }
 \description{
-Prints a data frame of the original set relationships and the fitted
-values as well as \code{diagError} and \code{stress} statistics.
+This function is responsible both for printing fits from \code{\link[=euler]{euler()}} as
+well as the actual plotting of diagrams created by \code{\link[=plot.euler]{plot.euler()}}. It
+is normally called automatically if the result is printed to console.
+}
+\section{Fits}{
+ Prints a data frame of the original set relationships and the
+fitted values as well as \code{diagError} and \code{stress} statistics.
+}
+
+\section{Diagrams}{
+ When \code{x} is generated from \code{\link[=plot.euler]{plot.euler()}}, this function
+will plot the object.
+}
+
+\seealso{
+\code{\link[=euler]{euler()}}, \code{\link[=plot.euler]{plot.euler()}}, \code{\link[base:print.data.frame]{base::print.data.frame()}}
 }

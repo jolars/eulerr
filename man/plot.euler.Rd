@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{plot.euler}
 \alias{plot.euler}
-\title{Plot Area-Proportional Euler Diagrams}
+\title{Plot area-proportional Euler diagrams}
 \usage{
 \method{plot}{euler}(x, mode = c("split", "overlay"), legend = FALSE,
   fills = TRUE, edges = TRUE, labels = identical(legend, FALSE),
@@ -12,42 +12,33 @@
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
 
-\item{mode}{"\code{split}", the default, splits up the diagram into individual
+\item{mode}{\code{'split'}, the default, splits up the diagram into individual
 polygons and blends the colors of the overlapping shapes using
 color averaging in the CIELAB color space. "\code{overlay}" superposes
 sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
 
-\item{legend}{draw a legend using \code{\link[grid:grid.legend]{grid::grid.legend()}}. If a list,
-the item \code{side} can be used to set the location of the legend.}
+\item{legend}{a logical scalar or list. If a list,
+the item \code{side} can be used to set the location of the legend. See
+\code{\link[grid:grid.legend]{grid::grid.legend()}}.}
 
-\item{fills}{draw fills. Character or integer vectors are assumed to be
-colors to fill the shapes in the diagram. If a list, values
-\code{fill} and \code{alpha} are accepted. If \code{mode == 'split'}, colors of
-intersecting overlaps will be mixed. Fills are drawn using
-\code{\link[grid:grid.polygon]{grid::grid.polygon()}}.}
+\item{fills}{a logical, vector, or list. Vectors are assumed to be
+colors to fill the shapes in the diagram. If \code{mode == 'split'}, colors of
+intersecting overlaps will be mixed. See \code{\link[grid:grid.polygon]{grid::grid.polygon()}} and
+\code{\link[grid:grid.path]{grid::grid.path()}}.}
 
-\item{edges}{draw edges. Vectors are assumed to be
-colors for edges of the ellipses. If a list, values
-\code{col}, \code{alpha}, \code{lty}, \code{lwd}, \code{lex}, \code{lineend}, \code{linejoin} and \code{linemitre}
-are accepted. Edges are drawn using \code{\link[grid:grid.polygon]{grid::grid.polygon()}} if
-\code{mode == 'overlay'} and \code{\link[grid:grid.polyline]{grid::grid.polyline()}} if \code{mode == 'split'}.}
+\item{edges}{a logical, vector, or list. Vectors are assumed to be
+colors for edges of the ellipses. See \code{\link[grid:grid.polyline]{grid::grid.polyline()}}.}
 
-\item{labels}{draw labels. Vectors are assumed
-to be a character or an expression vector. If a list, values \code{labels},
-\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
-\code{lineheight}, and \code{font} are accepted. Labels are drawn using
+\item{labels}{a logical, vector, or list. Vectors are assumed to be
+text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
+
+\item{quantities}{a logical, vector, or list. Vectors are assumed to be
+text for the quantities' labels, which by
+default are the original values in the input to \code{\link[=euler]{euler()}}. See
 \code{\link[grid:grid.text]{grid::grid.text()}}.}
 
-\item{quantities}{draw quantities. If a vector, the values in it will replace
-those of the default. If a list, values \code{labels},
-\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
-\code{lineheight}, and \code{font} are accepted. Quantities are drawn using
-\code{\link[grid:grid.text]{grid::grid.text()}}.}
-
-\item{strips}{a list of options for the strips, which are drawn if
-\code{x} is a list of \code{euler} objects and ignored otherwise. Arguments
-\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
-\code{lineheight}, and \code{font} are accepted.}
+\item{strips}{a list. Will be ignored unless the \code{'by'} argument
+was used in \code{\link[=euler]{euler()}}.}
 
 \item{n}{number of vertices for the ellipses}
 
@@ -70,16 +61,17 @@ those of the default. If a list, values \code{labels},
 \item{panel}{deprecated}
 }
 \value{
-Provides an \code{'euler_diagram'} object, which is a description of
-the diagram to be drawn. \code{\link[=print.euler_diagram]{print.euler_diagram()}} does the actual plotting
-of the diagram and is usually called automatically after this function
-is called.
+Provides an object of class \code{'euler', 'diagram'} , which is a
+description of the diagram to be drawn. \code{\link[=print.euler]{print.euler()}} does the actual
+plotting of the diagram and is usually called automatically after this
+function is called.
 }
 \description{
 Plot Euler diagrams fit with \code{\link[=euler]{euler()}} using \code{\link[grid:Grid]{grid::Grid()}} graphics. This
-function sets up all the necessary plot paramters and computes
-the geometry of the diagram. \code{\link[=print.euler_diagram]{print.euler_diagram()}}, meanwhile,
-does the actual plotting of the diagram.
+function sets up all the necessary plot parameters and computes
+the geometry of the diagram. \code{\link[=print.euler]{print.euler()}}, meanwhile,
+does the actual plotting of the diagram. Please see the \strong{Details} section
+to learn about the individual settings for each argument.
 }
 \details{
 Most of the arguments to this function accept either a logical, a vector, or
@@ -91,6 +83,24 @@ parameters), and
 \item lists enable fine-grained control, including graphical
 parameters as described in \code{\link[grid:gpar]{grid::gpar()}} and control
 arguments that are specific to each argument.
+}
+
+The various \code{\link[grid:gpar]{grid::gpar()}} values that are available for each argument
+are:
+
+\tabular{lcccccc}{
+\tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \cr
+col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+fill       \tab x     \tab       \tab        \tab            \tab        \tab        \cr
+alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+lty        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
+lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
+lex        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
+fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
+font       \tab       \tab       \tab x      \tab x          \tab x      \tab x
 }
 
 If the diagram has been fit using the \code{data.frame} or \code{matrix} methods
@@ -127,7 +137,7 @@ plot(fit, fills = FALSE, edges = list(lty = 1:2))
 diagram_description <- plot(fit)
 }
 \seealso{
-\code{\link[=euler]{euler()}}, \code{\link[=print.euler_diagram]{print.euler_diagram()}}, \code{\link[grid:gpar]{grid::gpar()}},
-\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[grid:grid.polyline]{grid::grid.polyline()}},
+\code{\link[=euler]{euler()}}, \code{\link[=print.euler]{print.euler()}}, \code{\link[grid:gpar]{grid::gpar()}},
+\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:gird.path]{grid::gird.path()}},
 \code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }
