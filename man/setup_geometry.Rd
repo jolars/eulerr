@@ -4,10 +4,12 @@
 \alias{setup_geometry}
 \title{Compute geometries and label locations}
 \usage{
-setup_geometry(x, do_fills, do_edges, do_labels, do_quantities, mode, n)
+setup_geometry(x, fills, edges, labels, quantities, mode, n, id)
 }
 \arguments{
 \item{x}{an object of class 'euler'}
+
+\item{mode}{mode}
 
 \item{do_fills}{do fills?}
 
@@ -16,8 +18,6 @@ setup_geometry(x, do_fills, do_edges, do_labels, do_quantities, mode, n)
 \item{do_labels}{do labels?}
 
 \item{do_quantities}{do quantities?}
-
-\item{mode}{mode}
 }
 \value{
 a list object with slots for the various objects

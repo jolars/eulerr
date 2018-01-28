@@ -135,8 +135,7 @@ plot.euler <- function(x,
                        panel) {
   mode <- match.arg(mode)
 
-  stopifnot(n > 0,
-            is.numeric(n) && length(n) == 1)
+  stopifnot(n > 0, is.numeric(n) && length(n) == 1)
 
   if (!missing(fill)) {
     warning("'fill' is deprecated; please use 'fills' instead")
@@ -177,7 +176,7 @@ plot.euler <- function(x,
     isTRUE(labels) || is.character(labels) || is.expression(labels)
   do_quantities <-
     is.list(quantities) ||
-    isTRUE(labels) ||
+    isTRUE(quantities) ||
     is.character(quantities) || is.expression(quantities)
   do_edges <-
     is.list(edges) ||
@@ -188,280 +187,227 @@ plot.euler <- function(x,
   do_legend <- is.list(legend) || isTRUE(legend)
   do_strips <- !is.null(groups)
 
-  if (do_groups) {
-    data <-
-      lapply(
-        x,
-        do_fills = do_fills,
-        do_edges = do_edges,
-        do_labels = do_labels,
-        do_quantities = do_quantities,
-        mode = mode,
-        n = n
-      )
-  } else {
-    data <-
-      setup_geometry(x, do_fills, do_edges, do_labels, do_quantities, mode, n)
-  }
+  ellipses <- if (do_strips) x[[1L]]$coefficients else x$coefficients
 
-  # dd <- x$coefficients
-  # orig <- x$original.values
-  # fitted <- x$fitted.values
-  #
-  setnames <- rownames(dd)
-  #
-  # h <- dd$h
-  # k <- dd$k
-  # a <- dd$a
-  # b <- dd$b
-  # phi <- dd$phi
-  #
-  # n_e <- length(h)
-  # n_id <- 2^n_e - 1
-  # id <- bit_indexr(n_e)
-  #
-  # e <- ellipse(h, k, a, b, phi, n = n)
-  # e_x <- c(lapply(e, "[[", "x"), recursive = TRUE)
-  # e_y <- c(lapply(e, "[[", "y"), recursive = TRUE)
+  n_e <- NROW(ellipses)
+  n_id <- 2^n_e - 1
+  id <- bit_indexr(n_e)
 
-  # limits <- get_bounding_box(h, k, a, b, phi)
-  # if (is.list(edges))
-  #   edges$data <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
-  #
-  # # setup fills
-  # if (is.list(fills))
-  #   if (is.function(fills$gp$fill))
-  #     fills$gp$fill <- fills$gp$fill(ifelse(mode == "overlay", n_e, n_id))
-  #
-  # fills <- setup_gpar(fills,
-  #                     n = if (mode == "overlay") n_e else n_id,
-  #                     optional = list(fill = qualpalr_pal(n_e), alpha = 0.4),
-  #                     required = list(col = "transparent"))
-  #
-  # if (is.list(fills)) {
-  #   # overlay ellipses on top of each other
-  #   if (mode == "overlay" || n_e == 1) {
-  #     fills <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
-  #   } else {
-  #     # split fills into smaller polygons and mix colors
-  #     fills$gp$fill <- rep_len(fills$gp$fill, n_id)
-  #     pieces <- fills$data <- vector("list", n_id)
-  #     for (i in rev(seq_len(n_id))) {
-  #       idx <- which(id[i, ])
-  #       n_idx <- length(idx)
-  #       if (n_idx == 1L) {
-  #         pieces[[i]] <- e[[idx[1]]]
-  #       } else {
-  #         pieces[[i]] <- eulerr:::poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
-  #         if (n_idx > 2L) {
-  #           for (j in 3L:n_idx) {
-  #             pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
-  #           }
-  #         }
-  #       }
-  #       for (ii in which(!id[i, ])) {
-  #         pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[ii]], "minus")
-  #       }
-  #       if (i > n_e) {
-  #         fills$gp$fill[i] <- mix_colors(fills$gp$fill[idx])
-  #       }
-  #     }
-  #
-  #     for (i in seq_along(pieces)) {
-  #       if (is.null(pieces[[i]]$x)) {
-  #         x0 <- lapply(pieces[[i]], "[[", "x")
-  #         y0 <- lapply(pieces[[i]], "[[", "y")
-  #       } else {
-  #         x0 <- pieces[[i]]$x
-  #         y0 <- pieces[[i]]$y
-  #       }
-  #       if (length(x0) > 0L) {
-  #         fills$data[[i]]$x <- c(x0, recursive = TRUE)
-  #         fills$data[[i]]$y <- c(y0, recursive = TRUE)
-  #         fills$data[[i]]$id.lengths <- lengths(x0)
-  #       }
-  #     }
-  #     not_empty <- !vapply(fills$data, is.null, logical(1))
-  #     fills$data <- fills$data[not_empty]
-  #     fills$gp$fill <- fills$gp$fill[not_empty]
-  #     fills$gp$alpha <- fills$gp$alpha[not_empty]
-  #   }
-  # }
-  #
-  # # setup quantities
-  # if (is.character(quantities) || is.expression(quantities))
-  #   quantities <- list(quantities = quantities)
-  # quantities <- setup_gpar(quantities,
-  #                          n = n_id,
-  #                          optional = list(col = "black",
-  #                                          cex = 1,
-  #                                          fontsize = 12,
-  #                                          lineheight= 1.2,
-  #                                          font = 1,
-  #                                          fontfamily = "",
-  #                                          alpha = 1))
-  #
-  # # setup labels
-  # if (is.character(labels) || is.expression(labels))
-  #   labels <- list(labels = labels)
-  # labels <- setup_gpar(labels,
-  #                      n = n_e,
-  #                      optional = list(font = 2))
-  # if (is.list(labels))
-  #   if (is.null(labels$labels))
-  #     labels$labels <- setnames
-  #
-  # if (is.list(labels) || is.list(quantities)) {
-  #   singles <- rowSums(id) == 1
-  #   empty <- abs(fitted) < sqrt(.Machine$double.eps)
-  #
-  #   centers <- cbind(t(locate_centers(h, k, a, b, phi, fitted)), orig)
-  #   if (is.list(labels))
-  #     center_labels <- labels$labels[!is.nan(centers[singles, 1L])]
-  #   labels_centers <- centers[!is.nan(centers[, 1L]) & singles, , drop = FALSE]
-  #
-  #   droprows <- rep.int(TRUE, NROW(centers))
-  #   for (i in which(is.nan(centers[singles, 1L]))) {
-  #     pick <- id[, i] & !empty & !is.nan(centers[, 1L])
-  #     labels_centers <- rbind(labels_centers, centers[which(pick)[1L], ])
-  #     if (is.list(labels))
-  #       center_labels <- c(center_labels, labels$labels[i])
-  #     droprows[which(pick)[1]] <- FALSE
-  #   }
-  #
-  #   if (is.list(quantities)) {
-  #     quantities_centers <-
-  #       centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
-  #     quantities_centers <- rbind(quantities_centers, labels_centers)
-  #     quantities$data <- list(x = quantities_centers[, 1L],
-  #                             y = quantities_centers[, 2L])
-  #     if (is.null(quantities$labels))
-  #       quantities$labels <- quantities_centers[, 3L]
-  #   }
-  #
-  #   if (is.list(labels)) {
-  #     labels$data <- list(x = labels_centers[, 1L],
-  #                         y = labels_centers[, 2L])
-  #     labels$labels <- center_labels
-  #   }
-  # }
+  setnames <- rownames(ellipses)
 
   # setup fills
-  if (is.list(fills))
-    if (is.function(fills$fill))
-      fills$fill <- fills$fill(n_e)
+  if (do_fills) {
+    if (isTRUE(fills)) {
+      fills <- list(fill = qualpalr_pal(n_e))
+    } else if (is.list(fills)) {
+      if (is.function(fills$fill))
+        fills$fill <- fills$fill(n_e)
+      else if (is.null(fills$fill))
+        fills$fill <- qualpalr_pal(n_e)
+      else
+        fills$fill <- fills$fill
+    } else {
+      if (is.function(fills))
+        fills <- list(fill = fills(n_e))
+      else
+        fills <- list(fill = fills)
+    }
+
+    if (mode == "overlay") {
+      fills$gp <- setup_gpar(list(fill = fills$fill, alpha = 0.4), fills, n_e)
+    } else {
+      n_fills <- length(fills$fill)
+      if (n_fills < n_id)
+        for (i in (n_fills + 1L):n_id)
+          fills$fill[i] <- mix_colors(fills$fill[id[i, ]])
+      fills$gp <- setup_gpar(list(fill = fills$fill, alpha = 0.4), fills, n_id)
+    }
+  } else {
+    fills <- NULL
+  }
 
   # setup edges
   if (do_edges) {
     if (is.character(edges) || is.numeric(edges))
       edges <- list(col = edges)
+    else if (!is.list(edges))
+      edges <- list()
 
-    edges <- setup_gpar(list(col = 1L,
-                             lty = "solid",
-                             lwd = 1,
-                             alpha = 1,
-                             lineend = "round",
-                             linejoin = "round",
-                             linemitre = 10,
-                             lex = 10),
-                        edges,
-                        n_e)
+    edges$gp <- setup_gpar(list(col = 1L,
+                                lty = "solid",
+                                lwd = 1,
+                                alpha = 1,
+                                lineend = "round",
+                                linejoin = "round",
+                                linemitre = 10,
+                                lex = 1),
+                           edges,
+                           n_e)
   } else {
     edges <- NULL
   }
 
   # setup strips
   if (do_groups) {
-    n_levels <- sum(vapply(groups, function(y) max(as.numeric(y)), numeric(1)))
+    group_names <- lapply(groups, levels)
+    n_levels <- sum(lengths(group_names))
 
-    if (!is.list(strips))
+    if (is.list(strips)) {
+      strips <- list(labels = unlist(strips))
+    } else {
       strips <- list()
+    }
 
-    strips <- replace_list(
-      list(labels = setnames,
+    strips$groups <- groups
+
+    strips$gp <- setup_gpar(
+      list(
+        col = "black",
+        cex = 1,
+        fontsize = 12,
+        lineheight = 1.2,
+        font = 4,
+        fontfamily = "",
+        alpha = 1
+      ),
+      strips,
+      n_levels
+    )
+  } else {
+    strips <- NULL
+  }
+
+  # setup labels
+  if (do_labels) {
+    if (is.list(labels)) {
+      if (is.null(labels$labels))
+        labels$labels <- setnames
+    } else if (isTRUE(labels)) {
+      labels <- list(labels = setnames)
+    } else {
+      labels <- list(labels = labels)
+    }
+
+    labels$gp <- setup_gpar(list(col = "black",
+                                 cex = 1,
+                                 fontsize = 12,
+                                 lineheight = 1.2,
+                                 font = 2,
+                                 fontfamily = "",
+                                 alpha = 1),
+                            labels,
+                            n_e)
+  } else {
+    labels <- NULL
+  }
+
+  # setup quantities
+  if (do_quantities) {
+    if (!is.list(quantities)) {
+      quantities <- list(labels = NULL)
+    }
+
+    quantities$gp <- setup_gpar(list(col = "black",
+                                     cex = 1,
+                                     fontsize = 12,
+                                     lineheight = 1.2,
+                                     font = 1,
+                                     fontfamily = "",
+                                     alpha = 1),
+                                quantities,
+                                n_id)
+  } else {
+    quantities <- NULL
+  }
+
+  # setup legend
+  if (do_legend) {
+    if (is.list(legend)) {
+      if (is.null(legend$labels)) {
+        if (is.list(labels)) {
+          if (!is.null(labels$labels)) {
+            legend$labels <- labels$labels
+          }
+        } else {
+          legend$labels <- setnames
+        }
+      } else {
+        legend$labels <- legend$labels
+      }
+    } else {
+      if (do_groups) {
+        legend <- list(labels = rownames(x[[1L]]$coefficients))
+      } else {
+        legend <- list(labels = rownames(x$coefficients))
+      }
+    }
+
+    legend <- replace_list(
+      list(side = "right",
+           labels = NULL,
+           ncol = 1L,
+           nrow = n_e,
            byrow = FALSE,
            do.lines = FALSE,
            lines.first = TRUE,
            hgap = grid::unit(1, "lines"),
-           vgap = grid::unit(0.5, "lines"),
+           vgap = grid::unit(0.25, "lines"),
            default.units = "lines",
            pch = 21),
-      strips
+      legend
     )
-    strips$gp <- setup_gpar(list(col = "black",
-                                 cex = 1,
-                                 fontsize = 12,
-                                 lineheight = 1.2,
-                                 font = 4,
-                                 fontfamily = "",
-                                 alpha = 1),
-                            strips,
-                            n_levels)
 
+    legend$gp <- setup_gpar(
+      list(
+        fill = if (do_fills)
+          mapply(grDevices::adjustcolor,
+                 col = fills$gp$fill,
+                 alpha.f = fills$gp$alpha)
+        else "transparent",
+        cex = 1.2,
+        fontsize = 12/1.2,
+        col = if (do_edges)
+          mapply(grDevices::adjustcolor,
+                 col = edges$gp$col,
+                 alpha.f = edges$gp$alpha)
+        else "transparent"),
+      legend,
+      n_e
+    )
+  } else {
+    legend <- NULL
   }
 
-  if (!is.list(strips))
-    strips <- TRUE
-
-
-
-  strips <- setup_gpar(
-    strips,
-    n = n_levels,
-    optional = list(
-      col = "black",
-      cex = 1,
-      fontsize = 12,
-      lineheight = 1.2,
-      font = 4,
-      fontfamily = "",
-      alpha = 1,
-      groups = as.list(groups)
-    )
-  )
-
-  attr(out, "strips") <- strips
-  attr(out, "groups") <- groups
-  class(out) <- c("euler_diagram")
-  return(out)
-
-  # setup legend
-  legend <- setup_gpar(legend,
-                       n = n_e,
-                       optional = list(fill = mapply(grDevices::adjustcolor,
-                                                     col = fills$gp$fill,
-                                                     alpha.f = fills$gp$alpha),
-                                       cex = 1.2,
-                                       fontsize = 12/1.2,
-                                       side = "right",
-                                       col = mapply(grDevices::adjustcolor,
-                                                    col = edges$gp$col,
-                                                    alpha.f = edges$gp$alpha)))
-  if (is.list(legend)) {
-    if (is.null(legend$labels)) {
-      if (is.list(labels)) {
-        if (!is.null(labels$labels)) {
-          legend$labels <- labels$labels
-        }
-      } else {
-        legend$labels <- setnames
-      }
-    }
-    if (is.null(legend$pch)) legend$pch <- 21
-    if (is.null(legend$vgap)) legend$vgap <- grid::unit(0.25, "lines")
-    legend$do.lines <- FALSE
+  if (do_groups) {
+    data <- lapply(x,
+                   setup_geometry,
+                   fills = fills,
+                   edges = edges,
+                   labels = labels,
+                   quantities = quantities,
+                   mode = mode,
+                   n = n,
+                   id = id)
+  } else {
+    data <- setup_geometry(x,
+                           fills,
+                           edges,
+                           labels,
+                           quantities,
+                           mode,
+                           n,
+                           id)
   }
 
-  structure(list(ellipses = dd,
+  structure(list(ellipses = ellipses,
                  mode = mode,
-                 legend = legend,
                  fills = fills,
                  edges = edges,
                  labels = labels,
                  quantities = quantities,
-                 original.values = orig,
-                 fitted.values = fitted,
-                 limits = limits),
+                 strips = strips,
+                 legend = legend,
+                 data = data),
             class = "euler_diagram")
 }
 #' Grobify Euler objects
@@ -470,107 +416,101 @@ plot.euler <- function(x,
 #'
 #' @return A [grid::gList()] is returned.
 #' @keywords internal
-#'
-grobify <- function(x) {
-  if (!is.null(attr(x, "groups"))) {
-    out <- lapply(x[!(names(x) %in% "strips")], grobify)
+setup_grobs <- function(x,
+                        mode,
+                        gp_labels,
+                        gp_edges,
+                        gp_fills,
+                        gp_quantities) {
+  labels <- x$labels
+  edges <- x$edges
+  fills <- x$fills
+  quantities <- x$quantities
+
+  do_labels <- !is.null(labels)
+  do_edges <- !is.null(edges)
+  do_fills <- !is.null(fills)
+  do_quantities <- !is.null(quantities)
+
+  n_e <- nrow(x$ellipses)
+  n_id <- 2L^n_e - 1L
+  id <- bit_indexr(n_e)
+
+  #edges
+  if (do_edges) {
+    # edges
+    edges_grob <- grid::polylineGrob(edges$x,
+                                     edges$y,
+                                     id.lengths = edges$id.lengths,
+                                     default.units = "native",
+                                     gp = gp_edges)
   } else {
-    ellipses <- x$ellipses
-    mode <- x$mode
-    legend <- x$legend
-    labels <- x$labels
-    edges <- x$edges
-    fills <- x$fills
-    quantities <- x$quantities
-
-    n_e <- nrow(ellipses)
-    n_id <- 2L^n_e - 1L
-    id <- bit_indexr(n_e)
-
-    #edges
-    if (is.list(edges)) {
-      # edges
-      edges_grob <- grid::polylineGrob(edges$data$x,
-                                       edges$data$y,
-                                       id.lengths = edges$data$id.lengths,
-                                       default.units = "native",
-                                       gp = do.call(grid::gpar, edges$gp))
-    } else {
-      edges_grob <- grid::nullGrob()
-    }
-
-    # fills
-    if (is.list(fills)) {
-      if (mode == "overlay" || n_e == 1L) {
-        fills_grob <- grid::polygonGrob(fills$data$x,
-                                        fills$data$y,
-                                        id.lengths = fills$data$id.lengths,
-                                        default.units = "native",
-                                        gp = do.call(grid::gpar, fills$gp))
-
-      } else {
-        fills_grob <- list()
-        for (i in seq_along(fills$data)) {
-          fills_grob[[i]] <- grid::pathGrob(
-            fills$data[[i]]$x,
-            fills$data[[i]]$y,
-            id.lengths = fills$data[[i]]$id.lengths,
-            default.units = "native",
-            gp = grid::gpar(fill = fills$gp$fill[i],
-                            alpha = fills$gp$alpha[i],
-                            col = "transparent")
-          )
-        }
-        fills_grob <- do.call(grid::gList, fills_grob)
-      }
-    } else {
-      fills_grob <- grid::nullGrob()
-    }
-
-    if (is.list(quantities))  {
-      quantities_id <- rep.int(FALSE, length(quantities$data$x))
-      if (is.list(labels))
-        quantities_id[names(quantities$data$x) %in% names(labels$data$x)] <- TRUE
-      lab_id <- quantities_id
-    }
-
-    # quantities
-    if (is.list(quantities)) {
-      quantities_grob <- grid::textGrob(
-        label = quantities$labels,
-        x = quantities$data$x,
-        y = quantities$data$y,
-        vjust = ifelse(lab_id & is.list(labels), 1, 0.5),
-        name = "quantities",
-        default.units = "native",
-        gp = do.call(grid::gpar, quantities$gp)
-      )
-    } else {
-      quantities_grob <- grid::nullGrob()
-    }
-
-    # labels
-    if (is.list(labels)) {
-      labels_grob <- grid::textGrob(
-        label = labels$labels,
-        x = labels$data$x,
-        y = labels$data$y,
-        vjust = if (is.list(quantities)) -0.5 else 0.5,
-        name = "labels",
-        default.units = "native",
-        gp = do.call(grid::gpar, labels$gp)
-      )
-    } else {
-      labels_grob <- grid::nullGrob()
-    }
-
-    out <- grid::grobTree(fills_grob, edges_grob, labels_grob, quantities_grob)
+    edges_grob <- grid::nullGrob()
   }
 
-  if (inherits(out, "gTree"))
-    out <- list(out)
+  # fills
+  if (do_fills) {
+    if (mode == "overlay") {
+      fills_grob <- grid::polygonGrob(fills$x,
+                                      fills$y,
+                                      id.lengths = fills$id.lengths,
+                                      default.units = "native",
+                                      gp = gp_fills)
 
-  do.call(grid::gList, out)
+    } else {
+      fills_grob <- vector("list", n_id)
+      for (i in seq_len(n_id)) {
+        if (is.null(fills[[i]]))
+          fills_grob[[i]] <- grid::nullGrob()
+        else
+          fills_grob[[i]] <- grid::pathGrob(
+            fills[[i]]$x,
+            fills[[i]]$y,
+            id.lengths = fills[[i]]$id.lengths,
+            default.units = "native",
+            gp = gp_fills[i]
+          )
+      }
+      fills_grob <- do.call(grid::gList, fills_grob)
+    }
+  } else {
+    fills_grob <- grid::nullGrob()
+  }
+
+  if (do_quantities)  {
+    quantities_id <- rep.int(FALSE, length(quantities$x))
+    if (do_labels)
+      quantities_id[names(quantities$x) %in% names(labels$x)] <- TRUE
+    lab_id <- quantities_id
+
+    quantities_grob <- grid::textGrob(
+      label = quantities$labels,
+      x = quantities$x,
+      y = quantities$y,
+      vjust = ifelse(lab_id & do_labels, 1, 0.5),
+      name = "quantities",
+      default.units = "native",
+      gp = gp_quantities
+    )
+  } else {
+    quantities_grob <- grid::nullGrob()
+  }
+
+  # labels
+  if (do_labels) {
+    labels_grob <- grid::textGrob(
+      label = labels$labels,
+      x = labels$x,
+      y = labels$y,
+      vjust = if (do_quantities) -0.5 else 0.5,
+      name = "labels",
+      default.units = "native",
+      gp = gp_labels
+    )
+  } else {
+    labels_grob <- grid::nullGrob()
+  }
+  out <- grid::grobTree(fills_grob, edges_grob, labels_grob, quantities_grob)
 }
 
 #' Compute geometries and label locations
@@ -583,18 +523,23 @@ grobify <- function(x) {
 #' @param mode mode
 #'
 #' @return a list object with slots for the various objects
-#' @export
 #' @keywords internal
 setup_geometry <- function(x,
-                           do_fills,
-                           do_edges,
-                           do_labels,
-                           do_quantities,
+                           fills,
+                           edges,
+                           labels,
+                           quantities,
                            mode,
-                           n) {
+                           n,
+                           id) {
   dd <- x$coefficients
   orig <- x$original.values
   fitted <- x$fitted.values
+
+  do_fills <- !is.null(fills)
+  do_edges <- !is.null(edges)
+  do_labels <- !is.null(labels)
+  do_quantities <- !is.null(quantities)
 
   h <- dd$h
   k <- dd$k
@@ -604,13 +549,12 @@ setup_geometry <- function(x,
 
   n_e <- NROW(dd)
   n_id <- 2^n_e - 1
-  id <- eulerr:::bit_indexr(n_e)
 
-  e <- eulerr:::ellipse(h, k, a, b, phi, n)
+  e <- ellipse(h, k, a, b, phi, n)
   e_x <- c(lapply(e, "[[", "x"), recursive = TRUE)
   e_y <- c(lapply(e, "[[", "y"), recursive = TRUE)
 
-  limits <- eulerr:::get_bounding_box(h, k, a, b, phi)
+  limits <- get_bounding_box(h, k, a, b, phi)
 
   # setup edges
   if (do_edges)
@@ -628,15 +572,15 @@ setup_geometry <- function(x,
         if (n_idx == 1L) {
           pieces[[i]] <- e[[idx[1]]]
         } else {
-          pieces[[i]] <- eulerr:::poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
+          pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
           if (n_idx > 2L) {
             for (j in 3L:n_idx) {
-              pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
+              pieces[[i]] <- poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
             }
           }
         }
         for (ii in which(!id[i, ])) {
-          pieces[[i]] <- eulerr:::poly_clip(pieces[[i]], e[[ii]], "minus")
+          pieces[[i]] <- poly_clip(pieces[[i]], e[[ii]], "minus")
         }
       }
 
@@ -661,10 +605,12 @@ setup_geometry <- function(x,
     singles <- rowSums(id) == 1
     empty <- abs(fitted) < sqrt(.Machine$double.eps)
 
-    centers <- cbind(t(eulerr:::locate_centers(h, k, a, b, phi, fitted)), orig)
+    centers <- cbind(t(locate_centers(h, k, a, b, phi, fitted)),
+                     seq_len(n_id))
+    rownames(centers) <- names(orig)
+
     if (do_labels) {
-      labels <- list()
-      labels$labels <- seq_len(n_e)
+      labels <- list(labels = labels$labels)
       center_labels <- labels$labels[!is.nan(centers[singles, 1L])]
     }
 
@@ -676,16 +622,17 @@ setup_geometry <- function(x,
       labels_centers <- rbind(labels_centers, centers[which(pick)[1L], ])
       if (do_labels)
         center_labels <- c(center_labels, labels$labels[i])
-      droprows[which(pick)[1]] <- FALSE
+      droprows[which(pick)[1L]] <- FALSE
     }
 
     if (do_quantities) {
-      quantities <- list()
-      quantities$labels <- integer(n_id)
       quantities_centers <-
         centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
       quantities_centers <- rbind(quantities_centers, labels_centers)
-      quantities$labels <- quantities_centers[, 3L]
+      if (!is.null(quantities$labels))
+        quantities <- list(labels = quantities$labels[quantities_centers[, 3L]])
+      else
+        quantities <- list(labels = orig[quantities_centers[, 3L]])
       quantities$x <- quantities_centers[, 1L]
       quantities$y <- quantities_centers[, 2L]
     }
@@ -725,30 +672,48 @@ setup_geometry <- function(x,
 #' p <- plot(euler(c(A = 1, B = 3, "A&B" = 0.5)))
 #' print(p)
 print.euler_diagram <- function(x, ...) {
+  mode <- x$mode
+  legend <- x$legend
+  edges <- x$edges
+  labels <- x$labels
+  quantities <- x$quantities
+  data <- x$data
+  strips <- x$strips
+  groups <- strips$groups
 
-  euler_grob <- grobify(x)
-
-  groups <- attr(x, "groups")
-  do_groups <- !is.null(groups)
+  do_legend <- !is.null(legend)
+  do_groups <- !is.null(strips)
 
   if (do_groups) {
-    legend <- x[[1L]]$legend
-    pos <- sapply(groups, as.numeric)
+    euler_grob <- lapply(
+      data,
+      setup_grobs,
+      gp_fills = x$fills$gp,
+      gp_edges = x$edges$gp,
+      gp_labels = x$labels$gp,
+      gp_quantities = x$quantities$gp,
+      mode = mode
+    )
+    euler_grob <- do.call(grid::gList, euler_grob)
+    pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
     layout <- lengths(lapply(groups, unique))
     if (length(layout) == 1L)
       layout <- c(1L, layout)
-    xlim <- range(unlist(lapply(x, "[[", c("limits", "xlim"))))
-    ylim <- range(unlist(lapply(x, "[[", c("limits", "ylim"))))
+    xlim <- range(unlist(lapply(data, "[[", "xlim")))
+    ylim <- range(unlist(lapply(data, "[[", "ylim")))
   } else {
-    pos <- cbind(1L, 1L)
-    legend <- x$legend
+    euler_grob <- setup_grobs(data,
+                              mode = mode,
+                              gp_fills = x$fills$gp,
+                              gp_edges = x$edges$gp,
+                              gp_labels = x$labels$gp,
+                              gp_quantities = x$quantities$gp)
     euler_grob <- grid::gList(euler_grob)
-    xlim <- x$limits$xlim
-    ylim <- x$limits$ylim
+    xlim <- data$xlim
+    ylim <- data$ylim
+    pos <- c(1L, 1L)
     layout <- c(1L, 1L)
   }
-
-  strips <- attr(x, "strips")
 
   xlim <- grDevices::extendrange(xlim, f = 0.01)
   ylim <- grDevices::extendrange(ylim, f = 0.01)
@@ -760,7 +725,6 @@ print.euler_diagram <- function(x, ...) {
   do_strip_left <- layout[1L] > 1L
   do_strip_top <- layout[2L] > 1L
   do_strips <- do_strip_left || do_strip_top
-  do_legend <- is.list(legend)
 
   strip_top_row <- strip_top_col <- strip_left_row <- strip_left_col <- 1
 
@@ -787,14 +751,21 @@ print.euler_diagram <- function(x, ...) {
   }
 
   if (do_legend) {
-    legend_side <- legend$side
-    do_legend <- TRUE
-    legend <- legend[names(legend) != "side"]
-    legend_grob <- do.call(grid::legendGrob, legend)
+    legend_grob <- grid::legendGrob(
+      labels = legend$labels,
+      do.lines = legend$do.lines,
+      ncol = legend$ncol,
+      nrow = legend$nrow,
+      hgap = legend$hgap,
+      vgap = legend$vgap,
+      default.units = legend$default.units,
+      pch = legend$pch,
+      gp = legend$gp
+    )
     if (do_strip_top)
       legend_row <- 2
 
-    if (legend_side == "right") {
+    if (legend$side == "right") {
       # legend on right (default)
       ncol <- ncol + 2L
       legend_row <- nrow
@@ -802,7 +773,7 @@ print.euler_diagram <- function(x, ...) {
       widths <- grid::unit.c(widths, grid::unit(c(1, 1),
                                                 c("lines", "grobwidth"),
                                                 list(NULL, legend_grob)))
-    } else if (legend_side == "left") {
+    } else if (legend$side == "left") {
       # legend on left
       ncol <- ncol + 2L
       legend_row <- if (do_strip_top) 2L else 1L
@@ -815,7 +786,7 @@ print.euler_diagram <- function(x, ...) {
       widths <- grid::unit.c(grid::unit(c(1, 1),
                                         c("grobwidth", "lines"),
                                         list(legend_grob, NULL)), widths)
-    } else if (legend_side == "top") {
+    } else if (legend$side == "top") {
       # legend on top
       nrow <- nrow + 2L
       legend_row <- 1
@@ -893,7 +864,7 @@ print.euler_diagram <- function(x, ...) {
   # draw diagram
   grid::downViewport("diagram")
   for (i in seq_along(euler_grob)) {
-    if (ncol(pos) == 2L) {
+    if (NCOL(pos) == 2L) {
       j <- pos[i, 1L]
       k <- pos[i, 2L]
     } else {

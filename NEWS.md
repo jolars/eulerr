@@ -21,7 +21,13 @@ Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
 `a`, `b`, and `phi`, regardless of which shape is used.
 
 ## Minor changes
+
 * Arguments `counts` and `outer_strips` to `plot.euler()` are now defunct.
+
+## Bug fixes
+
+* Providing custom labels to `quantities` and `labels` arguments of
+`plot.euler()` now works correctly (#20).
 
 # eulerr 3.1.0
 

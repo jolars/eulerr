@@ -4,13 +4,19 @@
 \alias{setup_gpar}
 \title{Setup gpars}
 \usage{
-setup_gpar(x, n = 1, optional = list(), required = list())
+setup_gpar(default = list(), user = list(), n)
 }
 \arguments{
+\item{default}{default values}
+
+\item{user}{user-inputted values}
+
+\item{n}{required number of items}
+
 \item{x}{input}
 }
 \value{
-a list or FALSE
+a \code{gpar} object
 }
 \description{
 Setup gpars
