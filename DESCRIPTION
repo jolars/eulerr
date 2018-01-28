@@ -29,6 +29,7 @@ Imports:
 Suggests: 
     covr,
     knitr,
+    lattice,
     pBrackets,
     RConics,
     testthat
