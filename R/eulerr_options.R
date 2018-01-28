@@ -45,14 +45,15 @@ eulerr_options <- function(...) {
   names(out) <- nm
   nm <- nm[is_named]
   .eulerr_env$options <- update_list(old, new[nm])
-  fontsize <- new$fontsize
-  if (!is.null(fontsize))
+  pointsize <- new$pointsize
+  if (!is.null(pointsize))
     .eulerr_env$options <- update_list(
       .eulerr_env$options,
-      list(labels = list(fontsize = fontsize),
-           quantities = list(fontsize = fontsize),
-           strips = list(fontsize = fontsize),
-           legend = list(fontsize = fontsize))
+      list(labels = list(fontsize = pointsize),
+           quantities = list(fontsize = pointsize),
+           strips = list(fontsize = pointsize),
+           legend = list(fontsize = pointsize),
+           pointsize = pointsize)
     )
   invisible(out)
 }
@@ -63,7 +64,7 @@ eulerr_options <- function(...) {
 #' @return default options for eulerr
 #' @keywords internal
 eulerr_default_options <- function() {
-  list(fontsize = 12,
+  list(pointsize = 12,
        fills = list(fill = qualpalr_pal,
                     alpha = 0.4),
        edges = list(col = 1L,
