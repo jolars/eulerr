@@ -138,6 +138,6 @@ diagram_description <- plot(fit)
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[=print.euler]{print.euler()}}, \code{\link[grid:gpar]{grid::gpar()}},
-\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:gird.path]{grid::gird.path()}},
+\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
 \code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }

@@ -92,7 +92,7 @@
 #' @param panel deprecated
 #'
 #' @seealso [euler()], [print.euler()], [grid::gpar()],
-#'   [grid::grid.polygon()], [grid::grid.polyline()], [grid::gird.path()],
+#'   [grid::grid.polygon()], [grid::grid.polyline()], [grid::grid.path()],
 #'   [grid::grid.legend()], [grid::grid.text()]
 #'
 #' @return Provides an object of class `'euler', 'diagram'` , which is a

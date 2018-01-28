@@ -7,8 +7,8 @@ grid graphics directly.
 * Arguments `fill`, `fill_alpha`, `auto.key`, `fontface`, `par.settings`,
 `default.prepanel`, `default.scales`, and `panel` of `plot.euler()` have
 been deprecated.
-* All `panel.*()` and `label()` have been deprecated. Their functionality
-is in almost all regards available replaced by `plot.euler()`.
+* All `panel.*()` functions and `label()` have been deprecated. Their
+functionality is in almost all regards available replaced by `plot.euler()`.
 * A new argument, `mode`, has been added to `plot.euler()`. It provides
 a new method, `mode = "split"` (that is enabled by default),
 for plotting the Euler diagram. Using this method, the diagram is

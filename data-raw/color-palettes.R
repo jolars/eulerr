@@ -6,8 +6,9 @@ pal <- qualpalr::autopal(15,
 
 # Make manual adjustments -------------------------------------------------
 
-palette[1] <- "grey70"
-palette[2] <- "white"
+palette <- pal
+palette[1] <- "white"
+palette[2] <- "grey70"
 palette[3] <- "steelblue4"
 palette[4] <- pal[1]
 palette[7] <- "grey30"
