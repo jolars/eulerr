@@ -7,12 +7,12 @@
 dont_plot(x, ...)
 }
 \arguments{
-\item{x}{Object to call \code{\link[graphics:plot]{graphics::plot()}} on.}
+\item{x}{object to call \code{\link[graphics:plot]{graphics::plot()}} on}
 
-\item{...}{Arguments to pass to \code{x}.}
+\item{...}{arguments to pass to \code{x}}
 }
 \value{
-Invisibly returns whatever \code{plot(x)} would normally returns, but
+Invisibly returns whatever \code{plot(x)} would normally return, but
 does not plot anything (which is the point).
 }
 \description{

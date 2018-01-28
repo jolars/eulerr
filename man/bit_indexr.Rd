@@ -7,7 +7,7 @@
 bit_indexr(n)
 }
 \arguments{
-\item{n}{Number of items to generate permutations from.}
+\item{n}{number of items to generate permutations from}
 }
 \value{
 A matrix of logicals

@@ -7,7 +7,7 @@
 n_sets(combinations)
 }
 \arguments{
-\item{combinations}{A vector of combinations (see \code{\link[=euler]{euler()}}).}
+\item{combinations}{a vector of combinations (see \code{\link[=euler]{euler()}})}
 }
 \value{
 The number of sets in the input

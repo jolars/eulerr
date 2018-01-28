@@ -16,15 +16,38 @@
 
 #' Get or set global graphical parameters for eulerr
 #'
-#' This function a means to set the global graphical parameters for plots
+#' This function provides a means to set default parameters for plots
 #' produced by [plot.euler()]. Query [eulerr_options()] (without any
-#' argument) to see all the available options.
+#' argument) to see all the available options and read more about
+#' them in [grid::gpar()] and [graphics::par()].
 #'
-#' @param ... a list of graphical parameters.
+#' Currently, the following items will be considered:
+#' \describe{
+#'   \item{pointsize}{size in pts to be used as basis for fontsizes and
+#'   some margin sizes in the resulting plot}
+#'   \item{fills}{a list of items `fill` and `alpha`}
+#'   \item{edges}{a list of items `col`, `alpha`, `lty`, `lwd`, `lex`,
+#'   `lineend`, `linejoin` and `linemitre`}
+#'   \item{labels}{a list of items `labels`,
+#'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
+#'   `lineheight`, and `font`}
+#'   \item{quantities}{a list of items `labels`,
+#'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
+#'   `lineheight`, and `font`}
+#'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
+#'   `lineheight`, and `font`}
+#'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
+#'   `fontsize`, `cex`, `fontfamily`, `fontface`,
+#'   `lineheight`, and `font`}
+#' }
+#'
+#' @param ... objects to update the global graphical parameters for \pkg{eulerr}
+#'   with.
 #'
 #' @return This function gets or sets updates in the global environment
 #'   that are used in [plot.euler()].
 #' @export
+#' @seealso [plot.euler()], [grid::gpar()], [graphics::par()]
 #'
 #' @examples
 #' eulerr_options(edges = list(col = "blue"), fontsize = 10)
@@ -58,7 +81,6 @@ eulerr_options <- function(...) {
   invisible(out)
 }
 
-
 #' Default options for eulerr
 #'
 #' @return default options for eulerr
@@ -71,10 +93,7 @@ eulerr_default_options <- function() {
                     alpha = 1,
                     lty = 1L,
                     lwd = 1,
-                    lex = 1,
-                    lineend = "round",
-                    linejoin = "round",
-                    linemitre = 10),
+                    lex = 1),
        labels = list(col = 1L,
                      alpha = 1,
                      fontsize = 12,
@@ -105,5 +124,4 @@ eulerr_default_options <- function() {
                      default.units = "lines",
                      pch = 21))
 }
-
 

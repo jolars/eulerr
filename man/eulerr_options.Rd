@@ -7,17 +7,43 @@
 eulerr_options(...)
 }
 \arguments{
-\item{...}{a list of graphical parameters.}
+\item{...}{objects to update the global graphical parameters for \pkg{eulerr}
+with.}
 }
 \value{
 This function gets or sets updates in the global environment
 that are used in \code{\link[=plot.euler]{plot.euler()}}.
 }
 \description{
-This function a means to set the global graphical parameters for plots
+This function provides a means to set default parameters for plots
 produced by \code{\link[=plot.euler]{plot.euler()}}. Query \code{\link[=eulerr_options]{eulerr_options()}} (without any
-argument) to see all the available options.
+argument) to see all the available options and read more about
+them in \code{\link[grid:gpar]{grid::gpar()}} and \code{\link[graphics:par]{graphics::par()}}.
+}
+\details{
+Currently, the following items will be considered:
+\describe{
+\item{pointsize}{size in pts to be used as basis for fontsizes and
+some margin sizes in the resulting plot}
+\item{fills}{a list of items \code{fill} and \code{alpha}}
+\item{edges}{a list of items \code{col}, \code{alpha}, \code{lty}, \code{lwd}, \code{lex},
+\code{lineend}, \code{linejoin} and \code{linemitre}}
+\item{labels}{a list of items \code{labels},
+\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
+\code{lineheight}, and \code{font}}
+\item{quantities}{a list of items \code{labels},
+\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
+\code{lineheight}, and \code{font}}
+\item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
+\code{lineheight}, and \code{font}}
+\item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},
+\code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
+\code{lineheight}, and \code{font}}
+}
 }
 \examples{
 eulerr_options(edges = list(col = "blue"), fontsize = 10)
+}
+\seealso{
+\code{\link[=plot.euler]{plot.euler()}}, \code{\link[grid:gpar]{grid::gpar()}}, \code{\link[graphics:par]{graphics::par()}}
 }

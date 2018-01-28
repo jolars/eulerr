@@ -4,18 +4,19 @@
 \alias{update_list}
 \title{Update list with input}
 \usage{
-update_list(x, val)
+update_list(old, new)
 }
 \arguments{
-\item{x}{A list to be updated.}
+\item{x}{a list to be updated}
 
-\item{val}{Stuff to update \code{x} with.}
+\item{val}{stuff to update \code{x} with}
 }
 \value{
 Returns an updated list.
 }
 \description{
-Wrapper for \code{\link[utils:modifyList]{utils::modifyList()}}.
+A wrapper for \code{\link[utils:modifyList]{utils::modifyList()}} that attempts to coerce non-lists to
+lists before updating.
 }
 \seealso{
 \code{\link[utils:modifyList]{utils::modifyList()}}

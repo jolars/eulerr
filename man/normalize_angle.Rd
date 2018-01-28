@@ -7,7 +7,7 @@
 normalize_angle(x)
 }
 \arguments{
-\item{x}{Angle in radians}
+\item{x}{angle in radians}
 }
 \value{
 A normalized angle.

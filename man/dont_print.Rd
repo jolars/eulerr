@@ -7,12 +7,12 @@
 dont_print(x, ...)
 }
 \arguments{
-\item{x}{Object to (not) print.}
+\item{x}{object to (not) print}
 
-\item{...}{Arguments to \code{x}.}
+\item{...}{arguments to \code{x}}
 }
 \value{
-Nothing, which is the point.
+Invisibly returns the output of running print on \code{x}.
 }
 \description{
 Suppress printing

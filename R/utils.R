@@ -51,34 +51,45 @@ rescale <- function(x, new_min, new_max) {
 
 #' Update list with input
 #'
-#' Wrapper for [utils::modifyList()].
+#' A wrapper for [utils::modifyList()] that attempts to coerce non-lists to
+#' lists before updating.
 #'
-#' @param x A list to be updated.
-#' @param val Stuff to update `x` with.
+#' @param x a list to be updated
+#' @param val stuff to update `x` with
 #'
 #' @seealso [utils::modifyList()]
 #' @return Returns an updated list.
 #' @keywords internal
-update_list <- function(x, val) {
-  if (is.null(x))
-    x <- list()
-  if (!is.list(val))
-    tryCatch(val <- as.list(val))
-  if (!is.list(x))
-    tryCatch(x <- as.list(x))
-  utils::modifyList(x, val)
+update_list <- function(old, new) {
+  if (is.null(old))
+    old <- list()
+  if (!is.list(new))
+    tryCatch(new <- as.list(new))
+  if (!is.list(old))
+    tryCatch(old <- as.list(old))
+  utils::modifyList(old, new)
 }
 
-replace_list <- function(x, val) {
-  update_list(x, val[names(val) %in% names(x)])
+#' Replace (refresh) a list
+#'
+#' Unlike `update_list`, this function only modifies, and does not add,
+#' items in the list.
+#'
+#' @param old the original list
+#' @param new the things to update `old` with
+#'
+#' @return A refreshed list.
+#' @keywords internal
+replace_list <- function(old, new) {
+  update_list(old, new[names(new) %in% names(old)])
 }
 
 #' Suppress plotting
 #'
-#' @param x Object to call [graphics::plot()] on.
-#' @param ... Arguments to pass to `x`.
+#' @param x object to call [graphics::plot()] on
+#' @param ... arguments to pass to `x`
 #'
-#' @return Invisibly returns whatever `plot(x)` would normally returns, but
+#' @return Invisibly returns whatever `plot(x)` would normally return, but
 #'   does not plot anything (which is the point).
 #' @keywords internal
 dont_plot <- function(x, ...) {
@@ -92,10 +103,10 @@ dont_plot <- function(x, ...) {
 
 #' Suppress printing
 #'
-#' @param x Object to (not) print.
-#' @param ... Arguments to `x`.
+#' @param x object to (not) print
+#' @param ... arguments to `x`
 #'
-#' @return Nothing, which is the point.
+#' @return Invisibly returns the output of running print on `x`.
 #' @keywords internal
 dont_print <- function(x, ...) {
   utils::capture.output(y <- print(x, ...))
@@ -108,9 +119,9 @@ dont_print <- function(x, ...) {
 #' which tries to provide distinct color palettes adapted to color vision
 #' deficiency.
 #'
-#' @param n Number of Colors to Generate
+#' @param n number of colors to generate
 #'
-#' @return A string of hex colors
+#' @return A string of hex colors.
 #' @keywords internal
 qualpalr_pal <- function(n) {
   palette[1L:n]
@@ -118,9 +129,9 @@ qualpalr_pal <- function(n) {
 
 #' Check if object is strictly FALSE
 #'
-#' @param x Object to check.
+#' @param x object to check
 #'
-#' @return Logical.
+#' @return A logical.
 #' @keywords internal
 is_false <- function(x) {
   identical(x, FALSE)
@@ -130,7 +141,7 @@ is_false <- function(x) {
 #'
 #' Wraps around bit_indexr().
 #'
-#' @param n Number of items to generate permutations from.
+#' @param n number of items to generate permutations from
 #'
 #' @return A matrix of logicals
 #' @keywords internal
@@ -142,8 +153,8 @@ bit_indexr <- function(n) {
 
 #' regionError
 #'
-#' @param fit Fitted values
-#' @param orig Original values
+#' @param fit fitted values
+#' @param orig original values
 #'
 #' @return regionError
 #' @keywords internal
@@ -153,8 +164,8 @@ regionError <- function(fit, orig) {
 
 #' diagError
 #'
-#' @param fit Fitted values
-#' @param orig Original values
+#' @param fit fitted values
+#' @param orig original values
 #' @param regionError regionError
 #'
 #' @return diagError
@@ -169,7 +180,7 @@ diagError <- function(fit, orig, regionError = NULL) {
 
 #' Get the number of sets in he input
 #'
-#' @param combinations A vector of combinations (see [euler()]).
+#' @param combinations a vector of combinations (see [euler()])
 #'
 #' @return The number of sets in the input
 #' @keywords internal
@@ -181,7 +192,7 @@ n_sets <- function(combinations) {
 
 #' Set up constraints for optimization
 #'
-#' @param newpars Parameters from the first optimizer.
+#' @param newpars parameters from the first optimizer
 #'
 #' @return A list of lower and upper constraints
 #' @keywords internal
@@ -221,7 +232,7 @@ get_constraints <- function(newpars) {
 
 #' Normalize an angle to [-pi, pi)
 #'
-#' @param x Angle in radians
+#' @param x angle in radians
 #'
 #' @return A normalized angle.
 #' @keywords internal
@@ -234,7 +245,7 @@ normalize_angle <- function(x) {
 #'
 #' @param m pars
 #'
-#' @return m, normalized
+#' @return `m`, normalized
 #' @keywords internal
 normalize_pars <- function(m) {
   n <- NCOL(m)
@@ -249,7 +260,7 @@ normalize_pars <- function(m) {
 
 #' Blend (average) colors
 #'
-#' @param rcol_in A vector of R colors
+#' @param rcol_in a vector of R colors
 #'
 #' @return A single R color
 #' @keywords internal

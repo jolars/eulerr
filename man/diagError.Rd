@@ -7,9 +7,9 @@
 diagError(fit, orig, regionError = NULL)
 }
 \arguments{
-\item{fit}{Fitted values}
+\item{fit}{fitted values}
 
-\item{orig}{Original values}
+\item{orig}{original values}
 
 \item{regionError}{regionError}
 }

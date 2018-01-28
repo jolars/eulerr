@@ -7,10 +7,10 @@
 qualpalr_pal(n)
 }
 \arguments{
-\item{n}{Number of Colors to Generate}
+\item{n}{number of colors to generate}
 }
 \value{
-A string of hex colors
+A string of hex colors.
 }
 \description{
 Uses a custom color palette generated from \code{\link[qualpalr:qualpal]{qualpalr::qualpal()}},

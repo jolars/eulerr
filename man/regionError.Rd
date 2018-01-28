@@ -7,9 +7,9 @@
 regionError(fit, orig)
 }
 \arguments{
-\item{fit}{Fitted values}
+\item{fit}{fitted values}
 
-\item{orig}{Original values}
+\item{orig}{original values}
 }
 \value{
 regionError

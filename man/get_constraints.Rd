@@ -7,7 +7,7 @@
 get_constraints(newpars)
 }
 \arguments{
-\item{newpars}{Parameters from the first optimizer.}
+\item{newpars}{parameters from the first optimizer}
 }
 \value{
 A list of lower and upper constraints

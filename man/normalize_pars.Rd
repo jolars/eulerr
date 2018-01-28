@@ -10,7 +10,7 @@ normalize_pars(m)
 \item{m}{pars}
 }
 \value{
-m, normalized
+\code{m}, normalized
 }
 \description{
 Normalize parameters (semiaxes and rotation)

@@ -7,10 +7,10 @@
 is_false(x)
 }
 \arguments{
-\item{x}{Object to check.}
+\item{x}{object to check}
 }
 \value{
-Logical.
+A logical.
 }
 \description{
 Check if object is strictly FALSE

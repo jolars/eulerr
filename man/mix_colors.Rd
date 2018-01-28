@@ -7,7 +7,7 @@
 mix_colors(rcol_in)
 }
 \arguments{
-\item{rcol_in}{A vector of R colors}
+\item{rcol_in}{a vector of R colors}
 }
 \value{
 A single R color
