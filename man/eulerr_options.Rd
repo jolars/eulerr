@@ -2,20 +2,22 @@
 % Please edit documentation in R/eulerr_options.R
 \name{eulerr_options}
 \alias{eulerr_options}
-\title{Get or set default graphical parameters for eulerr}
+\title{Get or set global graphical parameters for eulerr}
 \usage{
 eulerr_options(...)
 }
 \arguments{
-\item{...}{various graphical parameters}
+\item{...}{a list of graphical parameters.}
 }
 \value{
 This function gets or sets updates in the global environment
 that are used in \code{\link[=plot.euler]{plot.euler()}}.
 }
 \description{
-Get or set default graphical parameters for eulerr
+This function a means to set the global graphical parameters for plots
+produced by \code{\link[=plot.euler]{plot.euler()}}. Query \code{\link[=eulerr_options]{eulerr_options()}} (without any
+argument) to see all the available options.
 }
 \examples{
-eulerr_options(edges = list(col = "blue"), n = 300)
+eulerr_options(edges = list(col = "blue"), fontsize = 10)
 }
