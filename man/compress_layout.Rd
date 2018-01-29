@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout.R
 \name{compress_layout}
 \alias{compress_layout}
-\title{Compress a Euler Layout}
+\title{Compress an Euler layout}
 \usage{
 compress_layout(fpar, id, fit)
 }
@@ -15,6 +15,6 @@ compress_layout(fpar, id, fit)
 A modified fpar object.
 }
 \description{
-Compress a Euler Layout
+Compress an Euler layout
 }
 \keyword{internal}

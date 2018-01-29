@@ -2,7 +2,7 @@
 % Please edit documentation in R/layout.R
 \name{center_layout}
 \alias{center_layout}
-\title{Center Circles}
+\title{Center ellipses}
 \usage{
 center_layout(pars)
 }
@@ -14,6 +14,6 @@ radius (a) and major radius (b)}
 A centered version of \code{pars}.
 }
 \description{
-Center Circles
+Center ellipses
 }
 \keyword{internal}

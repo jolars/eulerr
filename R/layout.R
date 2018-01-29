@@ -16,7 +16,7 @@
 
 #' Skyline packing algorithm
 #'
-#' @param m A matrix of vertices for the rectangles.
+#' @param m a matrix of vertices for the rectangles
 #'
 #' @return A matrix with updated vertices for the rectangles.
 #'
@@ -120,7 +120,7 @@ skyline_pack <- function(m) {
   m
 }
 
-#' Compress a Euler Layout
+#' Compress an Euler layout
 #'
 #' @param fpar an Euler layout fit with [euler()]
 #' @param id the binary index of sets
@@ -187,11 +187,10 @@ compress_layout <- function(fpar, id, fit) {
       }
     }
   }
-
   fpar
 }
 
-#' Center Circles
+#' Center ellipses
 #'
 #' @param pars a matrix or data.frame of x coordinates, y coordinates, minor
 #'   radius (a) and major radius (b)
@@ -201,17 +200,9 @@ compress_layout <- function(fpar, id, fit) {
 center_layout <- function(pars) {
   x <- pars[, 1L]
   y <- pars[, 2L]
-
-  if (NCOL(pars) == 3L) {
-    # Circles
-    a <- b <- pars[, 3L]
-    phi <- 0
-  } else {
-    # Ellipses
-    a <- pars[, 3L]
-    b <- pars[, 4L]
-    phi <- pars[, 5L]
-  }
+  a <- pars[, 3L]
+  b <- pars[, 4L]
+  phi <- pars[, 5L]
 
   cphi <- cos(phi)
   sphi <- sin(phi)

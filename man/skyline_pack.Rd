@@ -7,7 +7,7 @@
 skyline_pack(m)
 }
 \arguments{
-\item{m}{A matrix of vertices for the rectangles.}
+\item{m}{a matrix of vertices for the rectangles}
 }
 \value{
 A matrix with updated vertices for the rectangles.
