@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = file.path("tools", "README-"),
-  dev = "CairoPNG"
+  dev = "png"
 )
 ```
 
