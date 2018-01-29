@@ -7,9 +7,9 @@
 compress_layout(fpar, id, fit)
 }
 \arguments{
-\item{fpar}{A Euler layout fit with \code{\link[=euler]{euler()}}}
+\item{fpar}{an Euler layout fit with \code{\link[=euler]{euler()}}}
 
-\item{id}{The binary index of sets.}
+\item{id}{the binary index of sets}
 }
 \value{
 A modified fpar object.
