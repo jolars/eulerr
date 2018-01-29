@@ -45,12 +45,28 @@ test_that("normal use returns no errors", {
     x = sample(c("Men", "Women"), size = 100, replace = TRUE)
   )
 
-  expect_error(euler(dat), NA)
+  expect_is(euler(dat), "euler")
   expect_error(euler(as.matrix(dat[, 1:2])), NA)
-  expect_error(euler(dat, by = x), NA)
+  expect_is(euler(dat, by = x), "euler")
   expect_error(dont_print(euler(dat, by = x)), NA)
 })
 
 test_that("impossible configurations throw errors", {
   expect_error(euler(c(A = 10, B = 14, "A&B" = 15), input = "union"))
+})
+
+
+test_that("using weights works", {
+  dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
+                     B = c(FALSE, TRUE, TRUE, FALSE))
+  expect_is(euler(dat2, weights = c(3, 2, 1, 1)), "euler")
+})
+
+test_that("errors are thrown for incorrect input to table method", {
+  expect_error(euler(as.table(apply(Titanic, 1:4, sum))))
+})
+
+test_that("errors are thrown for incorrect input to list method", {
+  expect_error(euler(list(c("a", "b"), c("a", "c"))))
+  expect_error(euler(list(b = c(1, 2), b = c(1, 3))))
 })

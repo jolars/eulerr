@@ -374,7 +374,7 @@ euler.default <- function(
 }
 
 #' @describeIn euler a data.frame of logicals, two-level factors (see examples).
-#' @param weights a numeric vector of weights of the same length as `by` and
+#' @param weights a numeric vector of weights of the same length as
 #'   the number of rows in `combinations`.
 #' @export
 #' @examples
@@ -387,6 +387,12 @@ euler.default <- function(
 #' )
 #'
 #' euler(dat, by = list(gender, nation))
+#'
+#'
+#' dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
+#'                    B = c(FALSE, TRUE, TRUE, FALSE))
+#' euler(dat2, weights = c(3, 2, 1, 1))
+#'
 euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
   stopifnot(!any(grepl("&", colnames(combinations), fixed = TRUE)))
 

@@ -33,6 +33,7 @@ test_that("normal plotting works without errors", {
                                        lty = c(1, 2),
                                        lwd = c(1, 2))))
   expect_silent(dont_print(dont_plot(f3)))
+  expect_error(euler(dat, by = list(Gender, Nation, Gender)))
 })
 
 

@@ -47,7 +47,7 @@ that the extra optimizer will kick in if there is \emph{any} error. A value of
 extra optimizer, such as \code{itermax}. See \code{\link[RcppDE:DEoptim.control]{RcppDE::DEoptim.control()}}.
 }}
 
-\item{weights}{a numeric vector of weights of the same length as \code{by} and
+\item{weights}{a numeric vector of weights of the same length as
 the number of rows in \code{combinations}.}
 
 \item{by}{a factor or character matrix to be used in \code{\link[base:by]{base::by()}} to
@@ -147,6 +147,12 @@ dat <- data.frame(
 )
 
 euler(dat, by = list(gender, nation))
+
+
+dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
+                   B = c(FALSE, TRUE, TRUE, FALSE))
+euler(dat2, weights = c(3, 2, 1, 1))
+
 # Using the matrix method
 mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
