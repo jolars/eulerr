@@ -1027,8 +1027,8 @@ $\omega$ to the respective unique area of the diagram.
 \label{sec:plotting}
 
 Once we have ascertained that our Euler diagram fits well, we can turn to
-visualizing the solution. For this purpose, \pkg{eulerr} leverages the
-\pkg{Lattice} graphics system~\citep{Sarkar_2008} for R to offer intuitive and
+visualizing the solution. For this purpose, \pkg{eulerr} relies on the
+\pkg{grid} graphics system~\citep{RCT_2017} and offers intuitive and
 granular control over the output.
 
 Plotting the ellipses is straightforward using the parametrization of a rotated

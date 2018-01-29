@@ -352,15 +352,9 @@ plot(fit2,
 \label{fig:custom-plot}
 \end{marginfigure}
 
-Plotting is provided through the excellent
-\href{https://CRAN.R-project.org/package=lattice}{lattice} and interfaces all of
-its bells and whistles to allow for extensive customization of the resulting
-plots.
-
-\pkg{eulerr}'s default color palette is taken from
-\href{https://cran.r-project.org/package=qualpalr}{qualpalr}---another package
-that I have developed---which uses color difference algorithms to generate
-distinct qualitative color palettes.
+Plotting is provided through a custom plotting method built on top of the
+excellent facilities made avaiable by the core R package \pkg{grid}.
+\pkg{eulerr}'s default color palette is chosen to be color deficiency-friendly.
 
 \section{Acknowledgements}
 
