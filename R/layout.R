@@ -120,68 +120,10 @@ skyline_pack <- function(m) {
   m
 }
 
-#' Shelf packing algorithm for packing rectangles in a bin.
-#'
-#' @param m A matrix of vertices for the rectangles.
-#'
-#' @return A list with new vertices and the new order of the rectangles.
-#'
-#' @keywords internal
-shelf_pack <- function(m) {
-  # TODO(jlarsson): Introduce a better algorithm to do this, such as skyline.
-  # TODO(jlarsson): Port to c++
-  n <- ncol(m)
-  w <- (m[2L, ] - m[1L, ])
-  h <- (m[4L, ] - m[3L, ])
-  sizes <- h*w
-
-  # Pick a maximum bin width. Make sure the largest rectangle fits.
-
-  padding <- min(h, w)*0.05
-  bin_w <- max(1.3*sqrt(sum(sizes)), w + padding)
-
-  ord <- order(h, decreasing = TRUE)
-
-  w <- w[ord] + padding
-  h <- h[ord] + padding
-
-  shelf_w <- rep.int(bin_w, n) # remaining shelf width
-  shelf_h <- rep.int(0, n) # shelf heights
-
-  x0 <- double(n)
-  x1 <- double(n)
-  y0 <- double(n)
-  y1 <- double(n)
-
-  hcurr <- h[1]
-
-  for (i in seq_along(sizes)) {
-    j <- 1L
-    repeat {
-      if (shelf_w[j] - w[i] < 0) {
-        j <- j + 1L
-        if (shelf_h[j] == 0) {
-          shelf_h[j] <- shelf_h[j - 1L] + hcurr
-          hcurr <- h[i]
-        }
-      } else {
-        x0[i] <- bin_w - shelf_w[j]
-        x1[i] <- x0[i] + w[i]
-        y0[i] <- shelf_h[j]
-        y1[i] <- y0[i] + h[i]
-
-        shelf_w[j] <- shelf_w[j] - w[i]
-        break;
-      }
-    }
-  }
-  return(list(xy = rbind(x0, x1, y0, y1), ord = ord))
-}
-
 #' Compress a Euler Layout
 #'
-#' @param fpar A Euler layout fit with [euler()]
-#' @param id The binary index of sets.
+#' @param fpar an Euler layout fit with [euler()]
+#' @param id the binary index of sets
 #'
 #' @return A modified fpar object.
 #' @keywords internal
