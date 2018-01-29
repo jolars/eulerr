@@ -3,30 +3,24 @@
 ## Major changes
 
 * `plot.euler()` has been rewritten completely from scratch, now using
-grid graphics directly. 
-* Arguments `fill`, `fill_alpha`, `auto.key`, `fontface`, `par.settings`,
-`default.prepanel`, `default.scales`, and `panel` of `plot.euler()` have
-been deprecated.
-* All `panel.*()` functions and `label()` have been deprecated. Their
-functionality is in almost all regards available replaced by `plot.euler()`.
-* A new argument, `mode`, has been added to `plot.euler()`. It provides
-a new method, `mode = "split"` (that is enabled by default),
-for plotting the Euler diagram. Using this method, the diagram is
-split into polygons via use of the **polyclip** package,
-which is now imported by **eulerr** and computes colors for the overlaps
-by blending the involved sets in the CIELab color space and taking averages.
-Use `mode = "overlay"` to have shapes in the diagram be superposed as before.
-(#16)
+a custom grid-based implementation rather than lattice. As a result,
+all `panel.*()` functions and `label()` have been deprecated as well
+as arguments `fill`, `fill_alpha`, `auto.key`, `fontface`, `par.settings`,
+`default.prepanel`, `default.scales`, and `panel`. The 
+method for plotting diagrams has also changed---rather than overlaying
+shapes on top of each other, the diagram is now split into separate polygons
+using the **polyclip** package. Instead of relying on semi-transparent fills,
+the colors of the fills are now blended in the CIELab color space (#16).
+* The default color palette has been resdesigned from scratch to suit the
+new plot method.
 * `euler()` now always returns a coefficients item with columns `h`, `k`,
-`a`, `b`, and `phi`, regardless of which shape is used.
+`a`, `b`, and `phi`, regardless of which shape (circles or ellipses) is used.
 * A new function `eulerr_options()` have been provided in order to set
 default grahical parameters for the diagrams.
 
 ## Minor changes
 
 * Arguments `counts` and `outer_strips` to `plot.euler()` are now defunct.
-* The two first colors of the default palette, white and grey, swapped
-places.
 
 ## Bug fixes
 

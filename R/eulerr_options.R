@@ -87,8 +87,8 @@ eulerr_options <- function(...) {
 #' @keywords internal
 eulerr_default_options <- function() {
   list(pointsize = 12,
-       fills = list(fill = qualpalr_pal,
-                    alpha = 0.4),
+       fills = list(fill = eulerr_pal,
+                    alpha = 1),
        edges = list(col = 1L,
                     alpha = 1,
                     lty = 1L,

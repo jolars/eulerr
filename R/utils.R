@@ -123,8 +123,10 @@ dont_print <- function(x, ...) {
 #'
 #' @return A string of hex colors.
 #' @keywords internal
-qualpalr_pal <- function(n) {
-  palette[1L:n]
+eulerr_pal <- function(n) {
+  c("white", "grey85", "lightblue", "lightcoral", "lemonchiffon",
+    "plum3", "aquamarine2", "grey55", "steelblue2", "lightsalmon", "lightpink",
+    "lightgoldenrod")[seq_len(n)]
 }
 
 #' Check if object is strictly FALSE

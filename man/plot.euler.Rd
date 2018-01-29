@@ -4,27 +4,20 @@
 \alias{plot.euler}
 \title{Plot area-proportional Euler diagrams}
 \usage{
-\method{plot}{euler}(x, mode = c("split", "overlay"), legend = FALSE,
-  fills = TRUE, edges = TRUE, labels = identical(legend, FALSE),
-  quantities = FALSE, strips = NULL, n = 200, ..., fill, fill_alpha,
-  auto.key, fontface, par.settings, default.prepanel, default.scales, panel)
+\method{plot}{euler}(x, legend = FALSE, fills = TRUE, edges = TRUE,
+  labels = identical(legend, FALSE), quantities = FALSE, strips = NULL,
+  n = 200, ..., fill, fill_alpha, auto.key, fontface, par.settings,
+  default.prepanel, default.scales, panel)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
-
-\item{mode}{\code{'split'}, the default, splits up the diagram into individual
-polygons and blends the colors of the overlapping shapes using
-color averaging in the CIELAB color space. "\code{overlay}" superposes
-sets and should be used in conjunction with a suitable \code{fill_alpha} value.}
 
 \item{legend}{a logical scalar or list. If a list,
 the item \code{side} can be used to set the location of the legend. See
 \code{\link[grid:grid.legend]{grid::grid.legend()}}.}
 
 \item{fills}{a logical, vector, or list. Vectors are assumed to be
-colors to fill the shapes in the diagram. If \code{mode == 'split'}, colors of
-intersecting overlaps will be mixed. See \code{\link[grid:grid.polygon]{grid::grid.polygon()}} and
-\code{\link[grid:grid.path]{grid::grid.path()}}.}
+colors to fill the shapes in the diagram. See \code{\link[grid:grid.path]{grid::grid.path()}}.}
 
 \item{edges}{a logical, vector, or list. Vectors are assumed to be
 colors for edges of the ellipses. See \code{\link[grid:grid.polyline]{grid::grid.polyline()}}.}
@@ -116,10 +109,6 @@ function is assigned to a variable (rather than printed to screen).
 }
 \examples{
 fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
-
-# eulerr provides two modes for plotting the diagram
-plot(fit, mode = "split")
-plot(fit, mode = "overlay")
 
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,
