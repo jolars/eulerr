@@ -16,9 +16,9 @@
 
 #' Optimize Distance Between Circles Based On Overlap
 #'
-#' @param r1 Radius of circle one
-#' @param r2 Radius of circle two
-#' @param overlap Overlap (area) of the two circles
+#' @param r1 radius of circle one
+#' @param r2 radius of circle two
+#' @param overlap overlap (area) of the two circles
 #'
 #' @return The necessary distance between sets to achieve the desired overlap
 #'   area.
@@ -55,7 +55,7 @@ get_bounding_box <- function(h, k, a, b = NULL, phi = NULL) {
        ylim = range(ylim + k, -ylim + k))
 }
 
-#' Plotting Coordinates for an Ellipse
+#' Plotting coordinates for an ellipse
 #'
 #' @param h x coordinates
 #' @param k y coordinates
@@ -64,7 +64,7 @@ get_bounding_box <- function(h, k, a, b = NULL, phi = NULL) {
 #' @param phi rotation
 #' @param n number of plotting points
 #'
-#' @return A list of matrices of coordinates for the ellipses
+#' @return A list of matrices of coordinates for the ellipses.
 #' @keywords internal
 ellipse <- function(h, k, a, b = a, phi = 0, n = 200L) {
   theta <- seq.int(0, 2*pi, length.out = n)
@@ -89,7 +89,7 @@ ellipse <- function(h, k, a, b = a, phi = 0, n = 200L) {
 #' @param y polygon
 #' @param op operation
 #'
-#' @return list of lists
+#' @return A list of lists.
 #' @keywords internal
 poly_clip <- function(a, b, op = c("intersection", "union", "minus", "xor")) {
   op <- match.arg(op)

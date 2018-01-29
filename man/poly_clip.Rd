@@ -14,7 +14,7 @@ poly_clip(a, b, op = c("intersection", "union", "minus", "xor"))
 \item{y}{polygon}
 }
 \value{
-list of lists
+A list of lists.
 }
 \description{
 This function is provided to efficiently and safely handle clipping

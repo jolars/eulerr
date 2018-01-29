@@ -18,8 +18,8 @@
 #' @description The functions listed below are deprecated and will be defunct in
 #'   the near future. When possible, alternative functions with similar
 #'   functionality are also mentioned. Help pages for deprecated functions are
-#'   available at \code{help("-deprecated")}.
-#' @name eulerr-deprecated
+#'   available at \code{help("_deprecated")}.
+#' @name eulerr_deprecated
 #' @keywords internal
 NULL
 
@@ -35,13 +35,13 @@ NULL
 #'
 #' @return A list of `xlim` and `ylim` items.
 #'
-#' @name prepanel.euler-deprecated
+#' @name prepanel.euler_deprecated
 #' @usage prepanel.euler(x, y, ra, rb, phi, subscripts, ...)
-#' @seealso [eulerr-deprecated]
+#' @seealso [eulerr_deprecated]
 #' @keywords internal
 NULL
 
-#' @rdname eulerr-deprecated
+#' @rdname eulerr_deprecated
 #' @section `prepanel.euler`:
 #' For `prepanel.euler()`, use [plot.euler()].
 #'
@@ -92,15 +92,15 @@ prepanel.euler <- function(x,
 #'
 #' @return Plots euler diagrams inside a trellis panel.
 #'
-#' @name panel.euler-deprecated
+#' @name panel.euler_deprecated
 #' @usage panel.euler(x, y, ra, rb, phi, subscripts, fill,
 #'   lty, lwd, border, alpha, fill_alpha, fontface, quantities,
 #'   labels, original.values,  fitted.values, mode, ...)
-#' @seealso [eulerr-deprecated]
+#' @seealso [eulerr_deprecated]
 #' @keywords internal
 NULL
 
-#' @rdname eulerr-deprecated
+#' @rdname eulerr_deprecated
 #' @section `panel.euler`:
 #' For `panel.euler()`, use [plot.euler()].
 #'
@@ -189,14 +189,14 @@ panel.euler <- function(x,
 #'
 #' @return Plots circles inside a trellis panel.
 #'
-#' @name panel.euler.circles-deprecated
+#' @name panel.euler.circles_deprecated
 #' @usage panel.euler.circles(x, y, r, border, fill, fill_alpha, ...,
 #'   identifier, name.type, col, font, fontface)
-#' @seealso [eulerr-deprecated]
+#' @seealso [eulerr_deprecated]
 #' @keywords internal
 NULL
 
-#' @rdname eulerr-deprecated
+#' @rdname eulerr_deprecated
 #' @section `panel.euler.circles`:
 #' For `panel.euler.circles()`, use [plot.euler()].
 #'
@@ -272,16 +272,16 @@ panel.euler.circles <- function(x,
 #'
 #' @return Plots ellipses inside a trellis panel.
 #'
-#' @name panel.euler.ellipses-deprecated
+#' @name panel.euler.ellipses_deprecated
 #' @usage panel.euler.ellipses(x, y, ra, rb, phi, fill = "transparent",
 #'   fill_alpha = 0.4, border = "black", mode = c("split", "overlay"),
 #'   identifier = NULL, n = 200, fitted.values, ..., name.type = "panel",
 #'   col, font, fontface)
-#' @seealso [eulerr-deprecated]
+#' @seealso [eulerr_deprecated]
 #' @keywords internal
 NULL
 
-#' @rdname eulerr-deprecated
+#' @rdname eulerr_deprecated
 #' @section `panel.euler.ellipses`:
 #' For `panel.euler.ellipses()`, use [plot.euler()].
 #'
@@ -402,19 +402,19 @@ panel.euler.ellipses <- function(x,
 
 #' Panel Function for Euler Diagram Labels (deprecated)
 #'
-#' @inheritParams panel.euler-deprecated
+#' @inheritParams panel.euler_deprecated
 #' @param ... Arguments passed on to [panel.text()]
 #' @return Computes and plots labels or quantities inside the centers of the
 #'   ellipses' overlaps.
 #'
-#' @name panel.euler.labels-deprecated
+#' @name panel.euler.labels_deprecated
 #' @usage panel.euler.labels(x, y, ra, rb, phi, labels, quantities, original.values,
 #'   fitted.values, ...)
-#' @seealso [eulerr-deprecated]
+#' @seealso [eulerr_deprecated]
 #' @keywords internal
 NULL
 
-#' @rdname eulerr-deprecated
+#' @rdname eulerr_deprecated
 #' @section `panel.euler.labels`:
 #' For `panel.euler.labels()`, use [plot.euler()].
 #'
@@ -510,20 +510,20 @@ panel.euler.labels <- function(x,
 #' @return A numeric matrix of x and y coordinates for the labels, as well as
 #'   the quantities and proportions for the overlaps depicted in the labels.
 #'
-#' @name label-deprecated
+#' @name label_deprecated
 #' @usage label(x, labels)
-#' @seealso [eulerr-deprecated]
+#' @seealso [eulerr_deprecated]
 #' @keywords internal
 NULL
 
-#' @rdname eulerr-deprecated
+#' @rdname eulerr_deprecated
 #' @section `label.euler`:
 #' For `label.euler()`, use [plot.euler()].
 #'
 #' @export
 label <- function(x, labels = NULL) UseMethod("label")
 
-#' @rdname eulerr-deprecated
+#' @rdname eulerr_deprecated
 #' @export
 label.euler <- function(x, labels = NULL) {
   .Deprecated("plot.euler")

@@ -17,3 +17,4 @@ A plot is drawn on the current device using \code{\link[grid:Grid]{grid::Grid()}
 This function is responsible for the actual plotting of
 \code{'euler_diagram'} objects created through \code{\link[=plot.euler]{plot.euler()}}.
 }
+\keyword{internal}

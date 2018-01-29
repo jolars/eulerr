@@ -2,7 +2,7 @@
 % Please edit documentation in R/geometry.R
 \name{ellipse}
 \alias{ellipse}
-\title{Plotting Coordinates for an Ellipse}
+\title{Plotting coordinates for an ellipse}
 \usage{
 ellipse(h, k, a, b = a, phi = 0, n = 200L)
 }
@@ -20,9 +20,9 @@ ellipse(h, k, a, b = a, phi = 0, n = 200L)
 \item{n}{number of plotting points}
 }
 \value{
-A list of matrices of coordinates for the ellipses
+A list of matrices of coordinates for the ellipses.
 }
 \description{
-Plotting Coordinates for an Ellipse
+Plotting coordinates for an ellipse
 }
 \keyword{internal}

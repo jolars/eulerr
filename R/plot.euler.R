@@ -499,8 +499,8 @@ setup_geometry <- function(x,
 #'
 #' @param x an object of class `'euler'`, usually the output of
 #'   [plot.euler()].
-#'
 #' @return A plot is drawn on the current device using [grid::Grid()].
+#' @keywords internal
 print_diagram <- function(x) {
   legend <- x$legend
   edges <- x$edges

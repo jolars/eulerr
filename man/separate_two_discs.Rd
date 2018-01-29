@@ -7,11 +7,11 @@
 separate_two_discs(r1, r2, overlap)
 }
 \arguments{
-\item{r1}{Radius of circle one}
+\item{r1}{radius of circle one}
 
-\item{r2}{Radius of circle two}
+\item{r2}{radius of circle two}
 
-\item{overlap}{Overlap (area) of the two circles}
+\item{overlap}{overlap (area) of the two circles}
 }
 \value{
 The necessary distance between sets to achieve the desired overlap
