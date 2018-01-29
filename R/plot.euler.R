@@ -50,6 +50,9 @@
 #'   font       \tab       \tab       \tab x      \tab x          \tab x      \tab x
 #' }
 #'
+#' Defaults for these values, as well as other parameters of the plots, can
+#' be set globally using [eulerr_options()].
+#'
 #' If the diagram has been fit using the `data.frame` or `matrix` methods
 #' and using the `by` argument, the plot area will be split into panels for
 #' each combination of the one to two factors.

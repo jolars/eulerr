@@ -69,17 +69,15 @@
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.
-#'   \item{coefficients}{A matrix of `h` and `k` (x and y-coordinates for the
-#'     centers of the
-#'     shapes) and, for circles, `r` for radii or, for ellipses, semiaxes `a`
-#'     and `b` and rotation angle `phi`.}
-#'   \item{original.values}{Set relationships provided by the user.}
-#'   \item{fitted.values}{Set relationships in the solution.}
-#'   \item{residuals}{Residuals.}
-#'   \item{diagError}{The largest absolute residual in percentage points
-#'     between the original and fitted areas.}
-#'   \item{stress}{The stress of the solution, computed as the sum of squared
-#'     residuals over the total sum of squares.}
+#'   \item{coefficients}{a matrix of `h` and `k` (x and y-coordinates for the
+#'     centers of the shapes), semiaxes `a` and `b`, and rotation angle `phi`}
+#'   \item{original.values}{set relationships in the input}
+#'   \item{fitted.values}{set relationships in the solution}
+#'   \item{residuals}{residuals}
+#'   \item{regionError}{the difference in percentage points between each
+#'     disjoint subset in the input and the respective area in the output}
+#'   \item{diagError}{the largest `regionError`}
+#'   \item{stress}{normalized residual sums of squares}
 #'
 #' @seealso [plot.euler()], [print.euler()]
 #'

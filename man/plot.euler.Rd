@@ -103,6 +103,9 @@ lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x 
 font       \tab       \tab       \tab x      \tab x          \tab x      \tab x
 }
 
+Defaults for these values, as well as other parameters of the plots, can
+be set globally using \code{\link[=eulerr_options]{eulerr_options()}}.
+
 If the diagram has been fit using the \code{data.frame} or \code{matrix} methods
 and using the \code{by} argument, the plot area will be split into panels for
 each combination of the one to two factors.
