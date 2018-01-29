@@ -3,7 +3,7 @@
 ## Major changes
 
 * `plot.euler()` has been rewritten completely from scratch, now using
-a custom grid-based implementation rather than lattice. As a result,
+a custom **grid**-based implementation rather than **lattice**. As a result,
 all `panel.*()` functions and `label()` have been deprecated as well
 as arguments `fill`, `fill_alpha`, `auto.key`, `fontface`, `par.settings`,
 `default.prepanel`, `default.scales`, and `panel`. The 
