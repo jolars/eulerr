@@ -45,9 +45,9 @@ We can inspect the goodness-of-fit metrics *diagError* and *stress* for the solu
 
 ``` r
 fit$stress
-#> [1] 8.800249e-13
+#> [1] 3.762385e-12
 fit$diagError
-#> [1] 1.977544e-07
+#> [1] 3.944839e-07
 ```
 
 and plot it

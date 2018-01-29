@@ -222,7 +222,9 @@ plot.euler <- function(x,
       }
     }
 
-    fills$gp <- setup_gpar(list(fill = fills$fill, alpha = opar$fills$alpha),
+    fills$gp <- setup_gpar(list(fill = fills$fill,
+                                alpha = opar$fills$alpha,
+                                col = "transparent"),
                            fills, n_id)
   } else {
     fills <- NULL
