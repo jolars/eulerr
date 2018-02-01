@@ -113,22 +113,6 @@ dont_print <- function(x, ...) {
   invisible(y)
 }
 
-#' Set up a qualitative color palette
-#'
-#' Uses a custom color palette generated from [qualpalr::qualpal()],
-#' which tries to provide distinct color palettes adapted to color vision
-#' deficiency.
-#'
-#' @param n number of colors to generate
-#'
-#' @return A string of hex colors.
-#' @keywords internal
-eulerr_pal <- function(n) {
-  c("white", "grey85", "lightblue", "lightcoral", "lemonchiffon",
-    "plum3", "aquamarine2", "grey55", "steelblue2", "lightsalmon", "lightpink",
-    "lightgoldenrod")[seq_len(n)]
-}
-
 #' Check if object is strictly FALSE
 #'
 #' @param x object to check
