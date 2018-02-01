@@ -10,7 +10,7 @@ bit_indexr(n)
 \item{n}{number of items to generate permutations from}
 }
 \value{
-A matrix of logicals
+A matrix of logicals.
 }
 \description{
 Wraps around bit_indexr().

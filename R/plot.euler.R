@@ -102,7 +102,6 @@
 #' # Customize colors, remove borders, bump alpha, color labels white
 #' plot(fit,
 #'      shapes = list(fill = c("red", "steelblue4"), alpha = 0.5),
-#'      edges = FALSE,
 #'      labels = list(col = "white", font = 4))
 #'
 #' # Add quantities to the plot
@@ -123,7 +122,6 @@ plot.euler <- function(x,
                        quantities = FALSE,
                        strips = NULL,
                        ...,
-                       fill,
                        fill_alpha,
                        auto.key,
                        fontface,
@@ -158,8 +156,10 @@ plot.euler <- function(x,
   if (!missing(panel))
     warning("'panel' is deprecated")
 
-  opar <- eulerr_options()
+  stopifnot(is.list(shapes))
 
+  # retrieve default options
+  opar <- eulerr_options()
 
   groups <- attr(x, "groups")
   do_labels <- !identical(labels, FALSE) && !is.null(labels) && !is.na(labels)
@@ -777,7 +777,8 @@ setup_grobs <- function(x,
         idx <- id[i, ]
         n_idx <- sum(idx)
         sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
-        next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, , drop = FALSE]))
+        next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, ,
+                                   drop = FALSE]))
         next_level <- rowSums(id) == next_num & sub_id
         if (any(next_level)) {
           fill_id[next_level] <- fill_id[i]

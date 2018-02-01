@@ -129,7 +129,7 @@ is_false <- function(x) {
 #'
 #' @param n number of items to generate permutations from
 #'
-#' @return A matrix of logicals
+#' @return A matrix of logicals.
 #' @keywords internal
 bit_indexr <- function(n) {
   m <- bit_index_cpp(n)
