@@ -62,6 +62,10 @@
 #' function is assigned to a variable (rather than printed to screen).
 #'
 #' @param x an object of class `'euler'`, generated from [euler()]
+#' @param shapes a list of graphical parameters for the shapes (ellipses)
+#'   in the diagram. The item `n` sets the number of vertices to be used for
+#'   each ellipse. Edges are plotted with [grid::grid.polyline()] and
+#'   fills with [grid::grid.path()].
 #' @param legend a logical scalar or list. If a list,
 #'   the item `side` can be used to set the location of the legend. See
 #'   [grid::grid.legend()].
@@ -71,15 +75,10 @@
 #'   text for the quantities' labels, which by
 #'   default are the original values in the input to [euler()]. See
 #'   [grid::grid.text()].
-#' @param edges a logical, vector, or list. Vectors are assumed to be
-#'   colors for edges of the ellipses. See [grid::grid.polyline()].
-#' @param fills a logical, vector, or list. Vectors are assumed to be
-#'   colors to fill the shapes in the diagram. See [grid::grid.path()].
-#' @param n number of vertices for the ellipses
 #' @param strips a list. Will be ignored unless the `'by'` argument
 #'   was used in [euler()].
-#' @param ... ignored
-#' @param fill deprecated
+#' @param ... parameters to update `shapes` with and thereby a shortcut
+#'   to set these parameters.
 #' @param fill_alpha deprecated
 #' @param auto.key deprecated
 #' @param fontface deprecated
@@ -89,7 +88,7 @@
 #' @param panel deprecated
 #'
 #' @seealso [euler()], [print.euler()], [grid::gpar()],
-#'   [grid::grid.polygon()], [grid::grid.polyline()], [grid::grid.path()],
+#'   [grid::grid.polyline()], [grid::grid.path()],
 #'   [grid::grid.legend()], [grid::grid.text()]
 #'
 #' @return Provides an object of class `'euler', 'diagram'` , which is a
@@ -102,7 +101,7 @@
 #'
 #' # Customize colors, remove borders, bump alpha, color labels white
 #' plot(fit,
-#'      fills = list(fill = c("red", "steelblue4"), alpha = 0.5),
+#'      shapes = list(fill = c("red", "steelblue4"), alpha = 0.5),
 #'      edges = FALSE,
 #'      labels = list(col = "white", font = 4))
 #'
@@ -113,18 +112,16 @@
 #' plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 #'
 #' # Plot without fills and distinguish sets with border types instead
-#' plot(fit, fills = FALSE, edges = list(lty = 1:2))
+#' plot(fit, fill = "transparent", lty = 1:2)
 #'
 #' # save plot parameters to plot using some other method
 #' diagram_description <- plot(fit)
 plot.euler <- function(x,
+                       shapes = list(),
                        legend = FALSE,
-                       fills = TRUE,
-                       edges = TRUE,
                        labels = identical(legend, FALSE),
                        quantities = FALSE,
                        strips = NULL,
-                       n = 200,
                        ...,
                        fill,
                        fill_alpha,
@@ -134,22 +131,14 @@ plot.euler <- function(x,
                        default.prepanel,
                        default.scales,
                        panel) {
-
-  stopifnot(n > 0, is.numeric(n) && length(n) == 1)
-
-  if (!missing(fill)) {
-    warning("'fill' is deprecated; please use 'fills' instead")
-    fills <- update_list(fills, list(col = fill))
-  }
-
   if (!missing(fill_alpha)) {
-    warning("'fill_alpha' is deprecated; please use 'fills' instead")
-    fills <- update_list(fills, list(alpha = fill_alpha))
+    warning("'fill_alpha' is deprecated; please use 'shapes'")
+    shapes <- update_list(shapes, list(alpha = fill_alpha))
   }
 
   if (!missing(auto.key)) {
     warning("'auto.key' is deprecated; please use 'legend'")
-    legend <- isTRUE(auto.key)
+    legend <- !identical(auto.key, FALSE)
   }
 
   if (!missing(fontface)) {
@@ -171,23 +160,13 @@ plot.euler <- function(x,
 
   opar <- eulerr_options()
 
+
   groups <- attr(x, "groups")
-  do_groups <- !is.null(groups)
-  do_labels <-
-    is.list(labels) ||
-    isTRUE(labels) || is.character(labels) || is.expression(labels)
-  do_quantities <-
-    is.list(quantities) ||
-    isTRUE(quantities) ||
-    is.character(quantities) || is.expression(quantities)
-  do_edges <-
-    is.list(edges) ||
-    isTRUE(edges) || is.numeric(edges) || is.character(edges)
-  do_fills <-
-    is.list(fills) ||
-    isTRUE(fills) || is.numeric(fills) || is.character(fills)
-  do_legend <- is.list(legend) || isTRUE(legend)
-  do_strips <- !is.null(groups)
+  do_labels <- !identical(labels, FALSE) && !is.null(labels) && !is.na(labels)
+  do_quantities <- !identical(quantities, FALSE) && !is.null(quantities) && !is.na(quantities)
+
+  do_legend <- !identical(legend, FALSE) && !is.null(legend) && !is.na(legend)
+  do_strips <- do_groups <- !is.null(groups)
 
   ellipses <- if (do_strips) x[[1L]]$coefficients else x$coefficients
 
@@ -195,49 +174,48 @@ plot.euler <- function(x,
   n_id <- 2^n_e - 1
   id <- bit_indexr(n_e)
 
+  shapes <- update_list(opar$shapes, update_list(list(...), shapes))
+  if (is.function(shapes$fill))
+    shapes$fill <- shapes$fill(n_e)
+
+  do_edges <- !all(shapes$col == "transparent" | is.na(shapes$col)) ||
+    !all(shapes$lwd == 0) || !all(shapes$lex == 0)
+  do_fills <- !all(shapes$fill == "transparent" | is.na(shapes$fill)) ||
+    !is.null(shapes$fill) | is.na(shapes$fill) || !all(shapes$alpha == 0)
+
   setnames <- rownames(ellipses)
+
+  n <- shapes$n
+
+  stopifnot(n > 0, is.numeric(n) && length(n) == 1)
 
   # setup fills
   if (do_fills) {
-    if (isTRUE(fills)) {
-      fills <- list(fill = eulerr_pal(n_e))
-    } else if (is.list(fills)) {
-      if (is.function(fills$fill))
-        fills$fill <- fills$fill(n_e)
-      else if (is.null(fills$fill))
-        fills$fill <- opar$fills$fill(n_e)
-      else
-        fills$fill <- fills$fill
-    } else {
-      if (is.function(fills))
-        fills <- list(fill = fills(n_e))
-      else
-        fills <- list(fill = fills)
-    }
-
-    n_fills <- length(fills$fill)
+    n_fills <- length(shapes$fill)
     if (n_fills < n_id) {
       for (i in (n_fills + 1L):n_id) {
-        fills$fill[i] <- mix_colors(fills$fill[which(id[i, ])])
+        shapes$fill[i] <- mix_colors(shapes$fill[which(id[i, ])])
       }
     }
-
-    fills$gp <- setup_gpar(list(fill = fills$fill,
+    fills <- list()
+    fills$gp <- setup_gpar(list(fill = shapes$fill,
                                 alpha = opar$fills$alpha,
                                 col = "transparent"),
-                           fills, n_id)
+                           list(alpha = shapes$alpha), n_id)
   } else {
     fills <- NULL
   }
 
   # setup edges
   if (do_edges) {
-    if (isTRUE(edges))
-      edges <- list()
-    else if (!is.list(edges))
-      edges <- list(col = edges)
-
-    edges$gp <- setup_gpar(opar$edges, edges, n_e)
+    edges <- list()
+    edges$gp <- setup_gpar(list(col = opar$shapes$col,
+                                alpha = opar$shapes$alpha,
+                                lex = opar$shapes$lex,
+                                lwd = opar$shapes$lwd,
+                                lty = opar$shapes$lty),
+                           shapes,
+                           n_e)
   } else {
     edges <- NULL
   }
@@ -793,19 +771,17 @@ setup_grobs <- function(x,
   if (do_fills) {
     fills_grob <- vector("list", n_id)
     fill_id <- seq_len(n_id)
-    for (i in rev(seq_len(n_id))) {
-      idx <- id[i, ]
-      n_idx <- sum(idx)
-      sub_id <- colSums(t(id)[idx, , drop = FALSE]) == n_idx
-      comeone <- rowSums(id[rowSums(id) > n_idx & sub_id & fitted > sqrt(.Machine$double.eps), , drop = FALSE])
-      if (NROW(comeone) > 0) {
-        nextup <- min(comeone)
-        j <- which(rowSums(id) == nextup & sub_id & fitted > sqrt(.Machine$double.eps))
-      } else {
-        j <- i
-      }
-      if (is.null(fills[[i]])) {
-        fill_id[j] <- fill_id[i]
+    empty <- fitted < sqrt(.Machine$double.eps)
+    for (i in 1:n_e) {
+      if (empty[i]) {
+        idx <- id[i, ]
+        n_idx <- sum(idx)
+        sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
+        next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, , drop = FALSE]))
+        next_level <- rowSums(id) == next_num & sub_id
+        if (any(next_level)) {
+          fill_id[next_level] <- fill_id[i]
+        }
       }
     }
 
@@ -819,7 +795,6 @@ setup_grobs <- function(x,
           id.lengths = fills[[i]]$id.lengths,
           default.units = "native",
           gp = gp_fills[fill_id[i]]
-          #gp = gp_fills[i]
         )
     }
     fills_grob <- do.call(grid::gList, fills_grob)

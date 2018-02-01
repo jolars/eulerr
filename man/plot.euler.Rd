@@ -4,23 +4,22 @@
 \alias{plot.euler}
 \title{Plot area-proportional Euler diagrams}
 \usage{
-\method{plot}{euler}(x, legend = FALSE, fills = TRUE, edges = TRUE,
+\method{plot}{euler}(x, shapes = list(), legend = FALSE,
   labels = identical(legend, FALSE), quantities = FALSE, strips = NULL,
-  n = 200, ..., fill, fill_alpha, auto.key, fontface, par.settings,
-  default.prepanel, default.scales, panel)
+  ..., fill, fill_alpha, auto.key, fontface, par.settings, default.prepanel,
+  default.scales, panel)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
 
+\item{shapes}{a list of graphical parameters for the shapes (ellipses)
+in the diagram. The item \code{n} sets the number of vertices to be used for
+each ellipse. Edges are plotted with \code{\link[grid:grid.polyline]{grid::grid.polyline()}} and
+fills with \code{\link[grid:grid.path]{grid::grid.path()}}.}
+
 \item{legend}{a logical scalar or list. If a list,
 the item \code{side} can be used to set the location of the legend. See
 \code{\link[grid:grid.legend]{grid::grid.legend()}}.}
-
-\item{fills}{a logical, vector, or list. Vectors are assumed to be
-colors to fill the shapes in the diagram. See \code{\link[grid:grid.path]{grid::grid.path()}}.}
-
-\item{edges}{a logical, vector, or list. Vectors are assumed to be
-colors for edges of the ellipses. See \code{\link[grid:grid.polyline]{grid::grid.polyline()}}.}
 
 \item{labels}{a logical, vector, or list. Vectors are assumed to be
 text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
@@ -33,11 +32,8 @@ default are the original values in the input to \code{\link[=euler]{euler()}}. S
 \item{strips}{a list. Will be ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}.}
 
-\item{n}{number of vertices for the ellipses}
-
-\item{...}{ignored}
-
-\item{fill}{deprecated}
+\item{...}{parameters to update \code{shapes} with and thereby a shortcut
+to set these parameters.}
 
 \item{fill_alpha}{deprecated}
 
@@ -112,7 +108,7 @@ fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
 
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,
-     fills = list(fill = c("red", "steelblue4"), alpha = 0.5),
+     shapes = list(fill = c("red", "steelblue4"), alpha = 0.5),
      edges = FALSE,
      labels = list(col = "white", font = 4))
 
@@ -123,13 +119,13 @@ plot(fit, quantities = TRUE)
 plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 
 # Plot without fills and distinguish sets with border types instead
-plot(fit, fills = FALSE, edges = list(lty = 1:2))
+plot(fit, fill = "transparent", lty = 1:2)
 
 # save plot parameters to plot using some other method
 diagram_description <- plot(fit)
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[=print.euler]{print.euler()}}, \code{\link[grid:gpar]{grid::gpar()}},
-\code{\link[grid:grid.polygon]{grid::grid.polygon()}}, \code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
+\code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
 \code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }

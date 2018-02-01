@@ -25,9 +25,8 @@ Currently, the following items will be considered:
 \describe{
 \item{pointsize}{size in pts to be used as basis for fontsizes and
 some margin sizes in the resulting plot}
-\item{fills}{a list of items \code{fill} and \code{alpha}}
-\item{edges}{a list of items \code{col}, \code{alpha}, \code{lty}, \code{lwd}, \code{lex},
-\code{lineend}, \code{linejoin} and \code{linemitre}}
+\item{shapes}{a list of items \code{fill}, \code{alpha}, \code{col}, \code{alpha}, \code{lty},
+\code{lwd}, and \code{lex}}
 \item{labels}{a list of items \code{labels},
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
 \code{lineheight}, and \code{font}}

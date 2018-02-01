@@ -25,9 +25,8 @@
 #' \describe{
 #'   \item{pointsize}{size in pts to be used as basis for fontsizes and
 #'   some margin sizes in the resulting plot}
-#'   \item{fills}{a list of items `fill` and `alpha`}
-#'   \item{edges}{a list of items `col`, `alpha`, `lty`, `lwd`, `lex`,
-#'   `lineend`, `linejoin` and `linemitre`}
+#'   \item{shapes}{a list of items `fill`, `alpha`, `col`, `alpha`, `lty`,
+#'     `lwd`, and `lex`}
 #'   \item{labels}{a list of items `labels`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
 #'   `lineheight`, and `font`}
@@ -87,13 +86,13 @@ eulerr_options <- function(...) {
 #' @keywords internal
 eulerr_default_options <- function() {
   list(pointsize = 12,
-       fills = list(fill = eulerr_pal,
-                    alpha = 1),
-       edges = list(col = 1L,
-                    alpha = 1,
-                    lty = 1L,
-                    lwd = 1,
-                    lex = 1),
+       shapes = list(fill = eulerr_pal,
+                     col = 1L,
+                     alpha = 1,
+                     lty = 1L,
+                     lwd = 1,
+                     lex = 1,
+                     n = 200),
        labels = list(col = 1L,
                      alpha = 1,
                      fontsize = 12,
