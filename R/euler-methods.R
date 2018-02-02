@@ -23,7 +23,7 @@
 #' @export
 #' @return fitted values
 fitted.euler <- function(object, ...) {
-  euler$fitted.values
+  object$fitted.values
 }
 
 #' Return ellipses from the euler object
