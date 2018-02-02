@@ -168,7 +168,7 @@ plot.euler <- function(x,
   do_legend <- !identical(legend, FALSE) && !is.null(legend) && !is.na(legend)
   do_strips <- do_groups <- !is.null(groups)
 
-  ellipses <- if (do_strips) x[[1L]]$coefficients else x$coefficients
+  ellipses <- if (do_strips) x[[1L]]$ellipses else x$ellipses
 
   n_e <- NROW(ellipses)
   n_id <- 2^n_e - 1
@@ -277,9 +277,9 @@ plot.euler <- function(x,
       }
     } else {
       if (do_groups) {
-        legend <- list(labels = rownames(x[[1L]]$coefficients))
+        legend <- list(labels = rownames(x[[1L]]$ellipses))
       } else {
-        legend <- list(labels = rownames(x$coefficients))
+        legend <- list(labels = rownames(x$ellipses))
       }
     }
     opar$legend$ncol <- 1L
@@ -354,7 +354,7 @@ setup_geometry <- function(x,
                            quantities,
                            n,
                            id) {
-  dd <- x$coefficients
+  dd <- x$ellipses
   orig <- x$original.values
   fitted <- x$fitted.values
 
