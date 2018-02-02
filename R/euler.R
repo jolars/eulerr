@@ -365,7 +365,7 @@ euler.default <- function(
   }
 
   # Return eulerr structure
-  structure(list(coefficients = as.data.frame(fpar),
+  structure(list(ellipses = as.data.frame(fpar),
                  original.values = orig,
                  fitted.values = fit,
                  residuals = orig - fit,

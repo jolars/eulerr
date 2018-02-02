@@ -168,7 +168,7 @@ plot.euler <- function(x,
   do_legend <- !identical(legend, FALSE) && !is.null(legend) && !is.na(legend)
   do_strips <- do_groups <- !is.null(groups)
 
-  ellipses <- if (do_strips) x[[1L]]$coefficients else x$coefficients
+  ellipses <- if (do_strips) x[[1L]]$ellipses else x$ellipses
 
   n_e <- NROW(ellipses)
   n_id <- 2^n_e - 1
@@ -277,9 +277,9 @@ plot.euler <- function(x,
       }
     } else {
       if (do_groups) {
-        legend <- list(labels = rownames(x[[1L]]$coefficients))
+        legend <- list(labels = rownames(x[[1L]]$ellipses))
       } else {
-        legend <- list(labels = rownames(x$coefficients))
+        legend <- list(labels = rownames(x$ellipses))
       }
     }
     opar$legend$ncol <- 1L
@@ -354,7 +354,7 @@ setup_geometry <- function(x,
                            quantities,
                            n,
                            id) {
-  dd <- x$coefficients
+  dd <- x$ellipses
   orig <- x$original.values
   fitted <- x$fitted.values
 
@@ -769,36 +769,45 @@ setup_grobs <- function(x,
 
   # fills
   if (do_fills) {
-    fills_grob <- vector("list", n_id)
-    fill_id <- seq_len(n_id)
-    empty <- fitted < sqrt(.Machine$double.eps)
-    for (i in 1:n_e) {
-      if (empty[i]) {
-        idx <- id[i, ]
-        n_idx <- sum(idx)
-        sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
-        next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, ,
-                                   drop = FALSE]))
-        next_level <- rowSums(id) == next_num & sub_id
-        if (any(next_level)) {
-          fill_id[next_level] <- fill_id[i]
+    if (n_e == 1) {
+      fills_grob <- grid::gList(grid::polygonGrob(
+        fills[[1]]$x,
+        fills[[1]]$y,
+        default.units = "native",
+        gp = gp_fills[1]
+      ))
+    } else {
+      fills_grob <- vector("list", n_id)
+      fill_id <- seq_len(n_id)
+      empty <- fitted < sqrt(.Machine$double.eps)
+      for (i in 1:n_e) {
+        if (empty[i]) {
+          idx <- id[i, ]
+          n_idx <- sum(idx)
+          sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
+          next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, ,
+                                     drop = FALSE]))
+          next_level <- rowSums(id) == next_num & sub_id
+          if (any(next_level)) {
+            fill_id[next_level] <- fill_id[i]
+          }
         }
       }
-    }
 
-    for (i in seq_len(n_id)) {
-      if (is.null(fills[[i]])) {
-        fills_grob[[i]] <- grid::nullGrob()
-      } else
-        fills_grob[[i]] <- grid::pathGrob(
-          fills[[i]]$x,
-          fills[[i]]$y,
-          id.lengths = fills[[i]]$id.lengths,
-          default.units = "native",
-          gp = gp_fills[fill_id[i]]
-        )
+      for (i in seq_len(n_id)) {
+        if (is.null(fills[[i]])) {
+          fills_grob[[i]] <- grid::nullGrob()
+        } else
+          fills_grob[[i]] <- grid::pathGrob(
+            fills[[i]]$x,
+            fills[[i]]$y,
+            id.lengths = fills[[i]]$id.lengths,
+            default.units = "native",
+            gp = gp_fills[fill_id[i]]
+          )
+      }
+      fills_grob <- do.call(grid::gList, fills_grob)
     }
-    fills_grob <- do.call(grid::gList, fills_grob)
   } else {
     fills_grob <- grid::nullGrob()
   }

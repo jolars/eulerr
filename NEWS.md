@@ -5,7 +5,7 @@
 * `plot.euler()` has been rewritten completely from scratch, now using
 a custom **grid**-based implementation rather than **lattice**. As a result,
 all `panel.*()` functions and `label()` have been deprecated as well
-as arguments `fill`, `fill_alpha`, `auto.key`, `fontface`, `par.settings`,
+as arguments `fill_alpha`, `auto.key`, `fontface`, `par.settings`,
 `default.prepanel`, `default.scales`, and `panel`. The 
 method for plotting diagrams has also changed---rather than overlaying
 shapes on top of each other, the diagram is now split into separate polygons
@@ -13,14 +13,16 @@ using the **polyclip** package. Instead of relying on semi-transparent fills,
 the colors of the fills are now blended in the CIELab color space (#16).
 * The default color palette has been resdesigned from scratch to suit the
 new plot method.
-* `euler()` now always returns a coefficients item with columns `h`, `k`,
-`a`, `b`, and `phi`, regardless of which shape (circles or ellipses) is used.
 * A new function `eulerr_options()` have been provided in order to set
 default grahical parameters for the diagrams.
 
 ## Minor changes
 
 * Arguments `counts` and `outer_strips` to `plot.euler()` are now defunct.
+* `euler()` now always returns parameters suitable for ellipses,
+with columns `h`, `k`, `a`, `b`, and `phi`, regardless of which shape is used.
+This item was previously named "coefficients", but it now called
+"ellipses" instead.
 
 ## Bug fixes
 
