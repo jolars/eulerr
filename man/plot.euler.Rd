@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{euler}(x, shapes = list(), legend = FALSE,
   labels = identical(legend, FALSE), quantities = FALSE, strips = NULL,
-  ..., fill, fill_alpha, auto.key, fontface, par.settings, default.prepanel,
+  ..., fill_alpha, auto.key, fontface, par.settings, default.prepanel,
   default.scales, panel)
 }
 \arguments{
@@ -109,7 +109,6 @@ fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,
      shapes = list(fill = c("red", "steelblue4"), alpha = 0.5),
-     edges = FALSE,
      labels = list(col = "white", font = 4))
 
 # Add quantities to the plot
