@@ -160,16 +160,30 @@ compress_layout <- function(fpar, id, fit) {
       ii <- unique_clusters[[i]]
       h <- fpar[ii, 1L]
       k <- fpar[ii, 2L]
+
       if (NCOL(fpar) == 3L) {
         a <- b <- fpar[ii, 3L]
-        phi <- 0
+        phi <- rep.int(0, length(a))
       } else {
         a <- fpar[ii, 3L]
         b <- fpar[ii, 4L]
         phi <- fpar[ii, 5L]
       }
 
+      # normalize rotation by setting rotation angle between two largest
+      # ellipses to 0
+      o <- rev(order(a*b))
+      ang <- atan2(k[o[1]] - k[o[2]], h[o[1]] - h[o[2]])
+
+      h <- cos(ang)*(h - h[o[1]]) - sin(ang)*(k - k[o[1]]) + h[o[1]]
+      k <- sin(ang)*(h - h[o[1]]) + cos(ang)*(k - k[o[1]]) + k[o[1]]
+      phi <- phi + ang
+
       limits <- get_bounding_box(h, k, a, b, phi)
+
+      fpar[ii, 1] <- h
+      fpar[ii, 2] <- k
+      fpar[ii, 5] <- phi
 
       bounds[1L:2L, i] <- limits$xlim
       bounds[3L:4L, i] <- limits$ylim
@@ -212,4 +226,14 @@ center_layout <- function(pars) {
   pars[, 1L] <- x + abs(xlim[1L] - xlim[2L])/2 - xlim[2L]
   pars[, 2L] <- y + abs(ylim[1L] - ylim[2L])/2 - ylim[2L]
   pars
+}
+
+normalize_rotation <- function(pars) {
+  x <- pars[, 1L]
+  y <- pars[, 2L]
+  a <- pars[, 3L]
+  b <- pars[, 4L]
+  phi <- pars[, 5L]
+
+  size_order <- order(a*b)
 }

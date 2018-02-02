@@ -260,6 +260,8 @@ euler.default <- function(
       ),
       byrow = TRUE
     ))
+    if (circle)
+      tpar <- cbind(tpar, tpar[, 3L], 0)
 
     # Normalize layout
     nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
