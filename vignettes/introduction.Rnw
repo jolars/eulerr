@@ -340,8 +340,8 @@ plot(fit2)
 <<custom-plot, eval = FALSE>>=
 # Remove fills, vary border type, and switch fontface.
 plot(fit2,
-     fills = FALSE,
-     edges = list(lty = 1:3),
+     fill = "transparent",
+     lty = 1:3,
      labels = list(font = 4))
 @
 
