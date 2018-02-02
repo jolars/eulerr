@@ -1,4 +1,4 @@
-context("Test inputs to euler")
+context("Inputs")
 
 test_that("erroneous named numeric vectors returns errors", {
   expect_error(euler(c(1, 2, 3)))

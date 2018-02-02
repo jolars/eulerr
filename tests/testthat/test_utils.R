@@ -1,4 +1,4 @@
-context("Utlity functions and other stuff")
+context("Utlities and misc")
 #
 test_that("getting options works", {
   expect_type(eulerr_options(), "list")

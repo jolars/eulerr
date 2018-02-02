@@ -1,4 +1,4 @@
-context("Test plot functions")
+context("Plotting")
 
 test_that("erroneous input to plot.euler return errors", {
   f <- euler(c(A = 5, B = 2))
@@ -32,6 +32,7 @@ test_that("normal plotting works without errors", {
                           fills = list(fill = "transparent",
                                        lty = c(1, 2),
                                        lwd = c(1, 2))))
+  expect_silent(dont_plot(f2, fill = "black", lwd = 0))
   expect_silent(dont_print(dont_plot(f3)))
   expect_error(euler(dat, by = list(Gender, Nation, Gender)))
 })
