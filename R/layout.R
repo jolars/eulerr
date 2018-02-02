@@ -153,7 +153,7 @@ compress_layout <- function(fpar, id, fit) {
   unique_clusters <- unique_clusters[lengths(unique_clusters) > 0L]
   n_clusters <- length(unique_clusters)
 
-  if (n_clusters > 1) {
+  if (n_clusters > 0) {
     bounds <- matrix(NA, ncol = n_clusters, nrow = 4L)
 
     for (i in seq_along(unique_clusters)) {
@@ -170,34 +170,49 @@ compress_layout <- function(fpar, id, fit) {
         phi <- fpar[ii, 5L]
       }
 
-      # normalize rotation by setting rotation angle between two largest
+      # normalize rotation by setting rotation angle between two first
       # ellipses to 0
-      o <- rev(order(a*b))
-      ang <- atan2(k[o[1]] - k[o[2]], h[o[1]] - h[o[2]])
+      o <- seq_len(length(h))
+      if (length(o) > 1) {
+        ang <- atan2(k[o[2]] - k[o[1]], h[o[2]] - h[o[1]])
 
-      h <- cos(ang)*(h - h[o[1]]) - sin(ang)*(k - k[o[1]]) + h[o[1]]
-      k <- sin(ang)*(h - h[o[1]]) + cos(ang)*(k - k[o[1]]) + k[o[1]]
-      phi <- phi + ang
+        h0 <- cos(-ang)*(h - h[o[1]]) - sin(-ang)*(k - k[o[1]]) + h[o[1]]
+        k0 <- sin(-ang)*(h - h[o[1]]) + cos(-ang)*(k - k[o[1]]) + k[o[1]]
+        phi0 <- phi - ang
+
+        fpar[ii, 1] <- h <- h0
+        fpar[ii, 2] <- k <- k0
+        fpar[ii, 5] <- phi <- phi0
+
+        # mirror across y axis if first shape is not at bottom
+        if ((k[1] > mean(k))) {
+          fpar[ii, 2] <- -fpar[ii, 2]
+          fpar[ii, 5] <- -fpar[ii, 5] + pi
+        }
+
+        # mirro across x axis if first set is not furthest to the left
+        if (h[1] > mean(h)) {
+          fpar[ii, 1] <- -fpar[ii, 1]
+          fpar[ii, 5] <- -fpar[ii, 5] + pi
+        }
+      }
 
       limits <- get_bounding_box(h, k, a, b, phi)
-
-      fpar[ii, 1] <- h
-      fpar[ii, 2] <- k
-      fpar[ii, 5] <- phi
 
       bounds[1L:2L, i] <- limits$xlim
       bounds[3L:4L, i] <- limits$ylim
     }
 
-    # Skyline pack the bounding rectangles
-    # TODO: Fix occasional errors in computing the bounding boxes.
-    if (all(is.finite(bounds))) {
-      new_bounds <- skyline_pack(bounds)
-
-      for (i in seq_along(unique_clusters)) {
-        ii <- unique_clusters[[i]]
-        fpar[ii, 1L] <- fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
-        fpar[ii, 2L] <- fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+    if (n_clusters > 1) {
+      # Skyline pack the bounding rectangles
+      # TODO: Fix occasional errors in computing the bounding boxes.
+      if (all(is.finite(bounds))) {
+        new_bounds <- skyline_pack(bounds)
+        for (i in seq_along(unique_clusters)) {
+          ii <- unique_clusters[[i]]
+          fpar[ii, 1L] <- fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
+          fpar[ii, 2L] <- fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+        }
       }
     }
   }

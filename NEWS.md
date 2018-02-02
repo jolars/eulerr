@@ -23,6 +23,8 @@ default grahical parameters for the diagrams.
 with columns `h`, `k`, `a`, `b`, and `phi`, regardless of which shape is used.
 This item was previously named "coefficients", but it now called
 "ellipses" instead.
+* Layouts are now partially normalized so that diagrams will look
+approximately the same even with different random seeds.
 
 ## Bug fixes
 
