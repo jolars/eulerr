@@ -33,7 +33,7 @@ default are the original values in the input to \code{\link[=euler]{euler()}}. S
 was used in \code{\link[=euler]{euler()}}.}
 
 \item{...}{parameters to update \code{shapes} with and thereby a shortcut
-to set these parameters.}
+to set these parameters}
 
 \item{fill_alpha}{deprecated}
 
@@ -78,18 +78,18 @@ The various \code{\link[grid:gpar]{grid::gpar()}} values that are available for 
 are:
 
 \tabular{lcccccc}{
-\tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \cr
-col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
-fill       \tab x     \tab       \tab        \tab            \tab        \tab        \cr
-alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \cr
-lty        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-lex        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-font       \tab       \tab       \tab x      \tab x          \tab x      \tab x
+\tab shapes \tab labels \tab quantities \tab strips \tab legend \cr
+col        \tab x      \tab x      \tab x          \tab x      \tab x      \cr
+fill       \tab x      \tab        \tab            \tab        \tab        \cr
+alpha      \tab x      \tab x      \tab x          \tab x      \tab x      \cr
+lty        \tab x      \tab        \tab            \tab        \tab        \cr
+lwd        \tab x      \tab        \tab            \tab        \tab        \cr
+lex        \tab x      \tab        \tab            \tab        \tab        \cr
+fontsize   \tab        \tab x      \tab x          \tab x      \tab x      \cr
+cex        \tab        \tab x      \tab x          \tab x      \tab x      \cr
+fontfamily \tab        \tab x      \tab x          \tab x      \tab x      \cr
+lineheight \tab        \tab x      \tab x          \tab x      \tab x      \cr
+font       \tab        \tab x      \tab x          \tab x      \tab x
 }
 
 Defaults for these values, as well as other parameters of the plots, can

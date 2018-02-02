@@ -769,35 +769,44 @@ setup_grobs <- function(x,
 
   # fills
   if (do_fills) {
-    fills_grob <- vector("list", n_id)
-    fill_id <- seq_len(n_id)
-    empty <- fitted < sqrt(.Machine$double.eps)
-    for (i in 1:n_e) {
-      if (empty[i]) {
-        idx <- id[i, ]
-        n_idx <- sum(idx)
-        sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
-        next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, , drop = FALSE]))
-        next_level <- rowSums(id) == next_num & sub_id
-        if (any(next_level)) {
-          fill_id[next_level] <- fill_id[i]
+    if (n_e == 1) {
+       fills_grob <- grid::gList(grid::polygonGrob(
+         fills[[1]]$x,
+         fills[[1]]$y,
+         default.units = "native",
+         gp = gp_fills[1]
+       ))
+    } else {
+      fills_grob <- vector("list", n_id)
+      fill_id <- seq_len(n_id)
+      empty <- fitted < sqrt(.Machine$double.eps)
+      for (i in 1:n_e) {
+        if (empty[i]) {
+          idx <- id[i, ]
+          n_idx <- sum(idx)
+          sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
+          next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, , drop = FALSE]))
+          next_level <- rowSums(id) == next_num & sub_id
+          if (any(next_level)) {
+            fill_id[next_level] <- fill_id[i]
+          }
         }
       }
-    }
 
-    for (i in seq_len(n_id)) {
-      if (is.null(fills[[i]])) {
-        fills_grob[[i]] <- grid::nullGrob()
-      } else
-        fills_grob[[i]] <- grid::pathGrob(
-          fills[[i]]$x,
-          fills[[i]]$y,
-          id.lengths = fills[[i]]$id.lengths,
-          default.units = "native",
-          gp = gp_fills[fill_id[i]]
-        )
+      for (i in seq_len(n_id)) {
+        if (is.null(fills[[i]])) {
+          fills_grob[[i]] <- grid::nullGrob()
+        } else
+          fills_grob[[i]] <- grid::pathGrob(
+            fills[[i]]$x,
+            fills[[i]]$y,
+            id.lengths = fills[[i]]$id.lengths,
+            default.units = "native",
+            gp = gp_fills[fill_id[i]]
+          )
+      }
+      fills_grob <- do.call(grid::gList, fills_grob)
     }
-    fills_grob <- do.call(grid::gList, fills_grob)
   } else {
     fills_grob <- grid::nullGrob()
   }
