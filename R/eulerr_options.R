@@ -25,19 +25,18 @@
 #' \describe{
 #'   \item{pointsize}{size in pts to be used as basis for fontsizes and
 #'   some margin sizes in the resulting plot}
-#'   \item{shapes}{a list of items `fill`, `alpha`, `col`, `alpha`, `lty`,
-#'     `lwd`, and `lex`}
-#'   \item{labels}{a list of items `labels`,
+#'   \item{fills}{a list of items `fill` and `alpha`}
+#'   \item{edges}{a list of items `col`, `alpha`, `lex`, `lwd`, and `lty`}
+#'   \item{labels}{a list of items `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
 #'   `lineheight`, and `font`}
-#'   \item{quantities}{a list of items `labels`,
+#'   \item{quantities}{a list of items `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
-#'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
+#'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
-#'   `fontsize`, `cex`, `fontfamily`, `fontface`,
-#'   `lineheight`, and `font`}
+#'   `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`}
 #' }
 #'
 #' @param ... objects to update the global graphical parameters for \pkg{eulerr}
@@ -87,7 +86,7 @@ eulerr_options <- function(...) {
 eulerr_default_options <- function() {
   list(
     pointsize = 12,
-    shapes = list(
+    fills = list(
       fill = function(n) {
         c("white",
           "grey85",
@@ -102,25 +101,31 @@ eulerr_default_options <- function() {
           "lightpink",
           "lightgoldenrod")[seq_len(n)]
       },
+      alpha = 1
+    ),
+    edges = list(
       col = 1L,
       alpha = 1,
       lty = 1L,
       lwd = 1,
-      lex = 1,
-      n = 200L
+      lex = 1
     ),
     labels = list(
+      rot = 0,
       col = 1L,
       alpha = 1,
       fontsize = 12,
+      cex = 1,
       fontfamily = "",
       lineheight = 1.2,
       font = 2
     ),
     quantities = list(
+      rot = 0,
       col = 1L,
       alpha = 1,
       fontsize = 12,
+      cex = 1,
       fontfamily = "",
       lineheight = 1.2,
       font = 1
@@ -137,6 +142,8 @@ eulerr_default_options <- function() {
       side = "right",
       cex = 1,
       fontsize = 12,
+      font = 1,
+      fontfamily = "",
       labels = NULL,
       byrow = FALSE,
       do.lines = FALSE,

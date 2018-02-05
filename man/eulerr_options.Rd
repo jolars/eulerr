@@ -25,19 +25,18 @@ Currently, the following items will be considered:
 \describe{
 \item{pointsize}{size in pts to be used as basis for fontsizes and
 some margin sizes in the resulting plot}
-\item{shapes}{a list of items \code{fill}, \code{alpha}, \code{col}, \code{alpha}, \code{lty},
-\code{lwd}, and \code{lex}}
-\item{labels}{a list of items \code{labels},
+\item{fills}{a list of items \code{fill} and \code{alpha}}
+\item{edges}{a list of items \code{col}, \code{alpha}, \code{lex}, \code{lwd}, and \code{lty}}
+\item{labels}{a list of items \code{rot},
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
 \code{lineheight}, and \code{font}}
-\item{quantities}{a list of items \code{labels},
+\item{quantities}{a list of items \code{rot},
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
-\item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
+\item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},
-\code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
-\code{lineheight}, and \code{font}}
+\code{fontsize}, \code{cex}, \code{fontfamily}, \code{lineheight}, and \code{font}}
 }
 }
 \examples{

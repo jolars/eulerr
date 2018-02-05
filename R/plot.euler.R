@@ -18,7 +18,7 @@
 #'
 #' Plot Euler diagrams fit with [euler()] using [grid::Grid()] graphics. This
 #' function sets up all the necessary plot parameters and computes
-#' the geometry of the diagram. [print.euler()], meanwhile,
+#' the geometry of the diagram. [plot.eulergram()], meanwhile,
 #' does the actual plotting of the diagram. Please see the **Details** section
 #' to learn about the individual settings for each argument.
 #'
@@ -35,19 +35,19 @@
 #' The various [grid::gpar()] values that are available for each argument
 #' are:
 #'
-#' \tabular{lcccccc}{
-#'              \tab shapes \tab labels \tab quantities \tab strips \tab legend \cr
-#'   col        \tab x      \tab x      \tab x          \tab x      \tab x      \cr
-#'   fill       \tab x      \tab        \tab            \tab        \tab        \cr
-#'   alpha      \tab x      \tab x      \tab x          \tab x      \tab x      \cr
-#'   lty        \tab x      \tab        \tab            \tab        \tab        \cr
-#'   lwd        \tab x      \tab        \tab            \tab        \tab        \cr
-#'   lex        \tab x      \tab        \tab            \tab        \tab        \cr
-#'   fontsize   \tab        \tab x      \tab x          \tab x      \tab x      \cr
-#'   cex        \tab        \tab x      \tab x          \tab x      \tab x      \cr
-#'   fontfamily \tab        \tab x      \tab x          \tab x      \tab x      \cr
-#'   lineheight \tab        \tab x      \tab x          \tab x      \tab x      \cr
-#'   font       \tab        \tab x      \tab x          \tab x      \tab x
+#' \tabular{lccccccc}{
+#'              \tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \cr
+#'   col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   fill       \tab x     \tab       \tab        \tab            \tab        \tab        \cr
+#'   alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   lty        \tab       \tab       \tab        \tab            \tab        \tab        \cr
+#'   lwd        \tab       \tab       \tab        \tab            \tab        \tab        \cr
+#'   lex        \tab       \tab       \tab        \tab            \tab        \tab        \cr
+#'   fontsize   \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   cex        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   fontfamily \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   lineheight \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+#'   font       \tab       \tab x     \tab x      \tab x          \tab x      \tab x
 #' }
 #'
 #' Defaults for these values, as well as other parameters of the plots, can
@@ -62,10 +62,12 @@
 #' function is assigned to a variable (rather than printed to screen).
 #'
 #' @param x an object of class `'euler'`, generated from [euler()]
-#' @param shapes a list of graphical parameters for the shapes (ellipses)
-#'   in the diagram. The item `n` sets the number of vertices to be used for
-#'   each ellipse. Edges are plotted with [grid::grid.polyline()] and
-#'   fills with [grid::grid.path()].
+#' @param fills a logical, vector, or list of graphical parameters for the fills
+#'   in the diagram. Vectors are assumed to be colors for the fills.
+#'   See [grid::grid.path()].
+#' @param edges a logical, vector, or list of graphical parameters for the edges
+#'   in the diagram. Vectors are assumed to be colors for the edges.
+#'   See [grid::grid.polyline()].
 #' @param legend a logical scalar or list. If a list,
 #'   the item `side` can be used to set the location of the legend. See
 #'   [grid::grid.legend()].
@@ -75,9 +77,10 @@
 #'   text for the quantities' labels, which by
 #'   default are the original values in the input to [euler()]. See
 #'   [grid::grid.text()].
-#' @param strips a list. Will be ignored unless the `'by'` argument
-#'   was used in [euler()].
-#' @param ... parameters to update `shapes` with and thereby a shortcut
+#' @param strips a list, ignored unless the `'by'` argument
+#'   was used in [euler()]
+#' @param n number of vertices for the `edges` and `fills`
+#' @param ... parameters to update `fills` and `edges` with and thereby a shortcut
 #'   to set these parameters
 #' @param fill_alpha deprecated
 #' @param auto.key deprecated
@@ -87,7 +90,7 @@
 #' @param default.scales deprecated
 #' @param panel deprecated
 #'
-#' @seealso [euler()], [print.euler()], [grid::gpar()],
+#' @seealso [euler()], [plot.eulergram()], [grid::gpar()],
 #'   [grid::grid.polyline()], [grid::grid.path()],
 #'   [grid::grid.legend()], [grid::grid.text()]
 #'
@@ -101,7 +104,7 @@
 #'
 #' # Customize colors, remove borders, bump alpha, color labels white
 #' plot(fit,
-#'      shapes = list(fill = c("red", "steelblue4"), alpha = 0.5),
+#'      fills = list(fill = c("red", "steelblue4"), alpha = 0.5),
 #'      labels = list(col = "white", font = 4))
 #'
 #' # Add quantities to the plot
@@ -116,11 +119,13 @@
 #' # save plot parameters to plot using some other method
 #' diagram_description <- plot(fit)
 plot.euler <- function(x,
-                       shapes = list(),
+                       fills = TRUE,
+                       edges = TRUE,
                        legend = FALSE,
                        labels = identical(legend, FALSE),
                        quantities = FALSE,
                        strips = NULL,
+                       n = 200L,
                        ...,
                        fill_alpha,
                        auto.key,
@@ -130,8 +135,8 @@ plot.euler <- function(x,
                        default.scales,
                        panel) {
   if (!missing(fill_alpha)) {
-    warning("'fill_alpha' is deprecated; please use 'shapes'")
-    shapes <- update_list(shapes, list(alpha = fill_alpha))
+    warning("'fill_alpha' is deprecated; please use 'fills'")
+    fills <- update_list(fills, list(alpha = fill_alpha))
   }
 
   if (!missing(auto.key)) {
@@ -156,8 +161,6 @@ plot.euler <- function(x,
   if (!missing(panel))
     warning("'panel' is deprecated")
 
-  stopifnot(is.list(shapes))
-
   if (inherits(x, "diagram"))
     return(print(x))
 
@@ -165,10 +168,13 @@ plot.euler <- function(x,
   opar <- eulerr_options()
 
   groups <- attr(x, "groups")
-  do_labels <- !identical(labels, FALSE) && !is.null(labels) && !is.na(labels)
-  do_quantities <- !identical(quantities, FALSE) && !is.null(quantities) && !is.na(quantities)
+  dots <- list(...)
 
-  do_legend <- !identical(legend, FALSE) && !is.null(legend) && !is.na(legend)
+  do_fills <- !identical(fills, FALSE) && !is.null(fills)
+  do_edges <- !identical(edges, FALSE) && !is.null(edges)
+  do_labels <- !identical(labels, FALSE) && !is.null(labels)
+  do_quantities <- !identical(quantities, FALSE) && !is.null(quantities)
+  do_legend <- !identical(legend, FALSE) && !is.null(legend)
   do_strips <- do_groups <- !is.null(groups)
 
   ellipses <- if (do_strips) x[[1L]]$ellipses else x$ellipses
@@ -177,47 +183,56 @@ plot.euler <- function(x,
   n_id <- 2^n_e - 1
   id <- bit_indexr(n_e)
 
-  shapes <- update_list(opar$shapes, update_list(list(...), shapes))
-  if (is.function(shapes$fill))
-    shapes$fill <- shapes$fill(n_e)
-
-  do_edges <- !all(shapes$col == "transparent" | is.na(shapes$col)) ||
-    !all(shapes$lwd == 0) || !all(shapes$lex == 0)
-  do_fills <- !all(shapes$fill == "transparent" | is.na(shapes$fill)) ||
-    !is.null(shapes$fill) | is.na(shapes$fill) || !all(shapes$alpha == 0)
-
   setnames <- rownames(ellipses)
-
-  n <- shapes$n
 
   stopifnot(n > 0, is.numeric(n) && length(n) == 1)
 
   # setup fills
   if (do_fills) {
-    n_fills <- length(shapes$fill)
+    fills_out <- replace_list(
+      list(fill = opar$fills$fill,
+           alpha = opar$fills$alpha),
+      if (is.list(fills))
+        fills
+      else if (isTRUE(fills))
+        list()
+      else
+        list(fill = fills)
+    )
+    fills_out <- replace_list(fills_out, dots)
+    fills_out$col <- "transparent"
+
+    if (is.function(fills_out$fill))
+      fills_out$fill <- fills_out$fill(n_e)
+
+    n_fills <- length(fills_out$fill)
     if (n_fills < n_id) {
       for (i in (n_fills + 1L):n_id) {
-        shapes$fill[i] <- mix_colors(shapes$fill[which(id[i, ])])
+        fills_out$fill[i] <- mix_colors(fills_out$fill[which(id[i, ])])
       }
     }
     fills <- list()
-    fills$gp <- setup_gpar(list(fill = shapes$fill,
-                                alpha = opar$fills$alpha,
-                                col = "transparent"),
-                           list(alpha = shapes$alpha), n_id)
+    fills$gp <- setup_gpar(fills_out, list(), n_id)
   } else {
     fills <- NULL
   }
 
   # setup edges
   if (do_edges) {
+    if (isTRUE(edges))
+      edges_out <- list()
+    else if (!is.list(edges))
+      edges_out <- list(col = edges)
+    else
+      edges_out <- edges
+
     edges <- list()
-    edges$gp <- setup_gpar(list(col = opar$shapes$col,
-                                alpha = opar$shapes$alpha,
-                                lex = opar$shapes$lex,
-                                lwd = opar$shapes$lwd,
-                                lty = opar$shapes$lty),
-                           shapes,
+    edges$gp <- setup_gpar(list(col = opar$edges$col,
+                                alpha = opar$edges$alpha,
+                                lex = opar$edges$lex,
+                                lwd = opar$edges$lwd,
+                                lty = opar$edges$lty),
+                           update_list(edges_out, dots),
                            n_e)
   } else {
     edges <- NULL
@@ -241,69 +256,90 @@ plot.euler <- function(x,
   # setup labels
   if (do_labels) {
     if (is.list(labels)) {
-      if (is.null(labels$labels))
-        labels$labels <- setnames
+      labels <- update_list(list(labels = setnames,
+                                 rot = opar$labels$rot),
+                            labels)
     } else if (isTRUE(labels)) {
-      labels <- list(labels = setnames)
+      labels <- list(labels = setnames,
+                     rot = opar$labels$rot)
     } else {
-      labels <- list(labels = labels)
+      labels <- list(labels = labels,
+                     rot = opar$labels$rot)
     }
 
-    labels$gp <- setup_gpar(opar$labels, labels, n_e)
+    labels$gp <- setup_gpar(list(col = opar$labels$col,
+                                 alpha = opar$labels$alpha,
+                                 fontsize = opar$labels$fontsize,
+                                 cex = opar$labels$cex,
+                                 fontfamily = opar$labels$fontfamily,
+                                 lineheight = opar$labels$lineheight,
+                                 font = opar$labels$font),
+                            labels,
+                            n_e)
   } else {
     labels <- NULL
   }
 
   # setup quantities
   if (do_quantities) {
-    if (!is.list(quantities)) {
-      quantities <- list(labels = NULL)
+    if (is.list(quantities)) {
+      quantities <- update_list(list(labels = NULL,
+                                     rot = opar$quantities$rot),
+                                quantities)
+    } else if (isTRUE(quantities)) {
+      quantities <- list(labels = NULL, rot = opar$quantities$rot)
+    } else {
+      quantities <- list(labels = quantities, rot = opar$quantities$rot)
     }
-    quantities$gp <- setup_gpar(opar$quantities, quantities, n_id)
+
+    quantities$gp <- setup_gpar(list(col = opar$quantities$col,
+                                     alpha = opar$quantities$alpha,
+                                     fontsize = opar$quantities$fontsize,
+                                     cex = opar$quantities$cex,
+                                     fontfamily = opar$quantities$fontfamily,
+                                     lineheight = opar$quantities$lineheight,
+                                     font = opar$quantities$font),
+                                quantities,
+                                n_e)
   } else {
     quantities <- NULL
   }
 
   # setup legend
   if (do_legend) {
-    if (is.list(legend)) {
-      if (is.null(legend$labels)) {
-        if (is.list(labels)) {
-          if (!is.null(labels$labels)) {
-            legend$labels <- labels$labels
-          }
-        } else {
-          legend$labels <- setnames
-        }
-      } else {
-        legend$labels <- legend$labels
-      }
-    } else {
-      if (do_groups) {
-        legend <- list(labels = rownames(x[[1L]]$ellipses))
-      } else {
-        legend <- list(labels = rownames(x$ellipses))
-      }
-    }
-    opar$legend$ncol <- 1L
-    opar$legend$nrow <- n_e
+    # TODO: create a better, custom legend
 
-    legend <- replace_list(opar$legend, legend)
+    legend <- update_list(
+      list(labels = if (do_labels) labels$labels else setnames,
+           side = opar$legend$side,
+           nrow = n_e,
+           ncol = 1L,
+           byrow = opar$legend$byrow,
+           do.lines = opar$legend$do.lines,
+           lines.first = opar$legend$lines.first,
+           hgap = opar$legend$hgap,
+           vgap = opar$legend$vgap,
+           default.units = opar$legend$default.units,
+           pch = opar$legend$pch),
+      legend
+    )
 
     legend$gp <- setup_gpar(
       list(
-        fill = if (do_fills)
-          mapply(grDevices::adjustcolor,
-                 col = fills$gp$fill,
-                 alpha.f = fills$gp$alpha)
-        else "transparent",
-        cex = legend$cex,
-        fontsize = legend$fontsize/legend$cex,
-        col = if (do_edges)
-          mapply(grDevices::adjustcolor,
-                 col = edges$gp$col,
-                 alpha.f = edges$gp$alpha)
-        else "transparent"),
+        fill = if (do_fills) fills$gp$fill else "transparent",
+        alpha = if (do_fills)
+          fills$gp$alpha
+        else if (do_edges)
+          edges$gp$alpha
+        else
+          "transparent",
+        cex = opar$legend$cex,
+        fontsize = opar$legend$fontsize/opar$legend$cex,
+        font = opar$legend$font,
+        fontfamily = opar$legend$fontfamily,
+        lwd = if (do_edges) edges$gp$lwd else "transparent",
+        lex = if (do_edges) edges$gp$lex else "transparent",
+        col = if (do_edges) edges$gp$col else "transparent"),
       legend,
       n_e
     )
@@ -479,24 +515,18 @@ setup_geometry <- function(x,
 #'
 #' This function is responsible for the actual drawing of
 #' `'eulergram'` objects created through [plot.euler()]. [print.eulergram()]
-#' is simply an alias for [plot.eulergram()].
+#' is an alias for [plot.eulergram()], which has been provided so that
+#' [plot.euler()] gets called automatically.
 #'
 #' @param x an object of class `'eulergram'`, usually the output of
-#'   [plot.euler()].
-#' @newpage if `TRUE`, opens a new page via [grid.newpage()] to draw on.
+#'   [plot.euler()]
+#' @param newpage if `TRUE`, opens a new page via [grid.newpage()] to draw on
 #' @param ... ignored
-#' @return A plot is drawn on the current device using [grid::Grid()] graphics
-#' and a [grid::gTree()] object is returned invisibly.
+#' @return A plot is drawn on the current device using [grid::Grid()] graphics.
 #' @export
-#' @examples
-#' # save the plot as a gTree
-#' grob <- print(plot(euler(c(A = 1))))
-#'
-#' if (require(gridExtra)) {
-#'   grid.arrange(grob, grob)
-#' }
 plot.eulergram <- function(x, newpage = TRUE, ...) {
   legend <- x$legend
+  fills <- x$fills
   edges <- x$edges
   labels <- x$labels
   quantities <- x$quantities
@@ -513,10 +543,10 @@ plot.eulergram <- function(x, newpage = TRUE, ...) {
     euler_grob <- lapply(
       data,
       setup_grobs,
-      gp_fills = x$fills$gp,
-      gp_edges = x$edges$gp,
-      gp_labels = x$labels$gp,
-      gp_quantities = x$quantities$gp
+      fills = fills,
+      edges = edges,
+      labels = labels,
+      quantities = quantities
     )
     euler_grob <- do.call(grid::gList, euler_grob)
     pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
@@ -527,10 +557,10 @@ plot.eulergram <- function(x, newpage = TRUE, ...) {
     ylim <- range(unlist(lapply(data, "[[", "ylim")))
   } else {
     euler_grob <- setup_grobs(data,
-                              gp_fills = x$fills$gp,
-                              gp_edges = x$edges$gp,
-                              gp_labels = x$labels$gp,
-                              gp_quantities = x$quantities$gp)
+                              fills = fills,
+                              edges = edges,
+                              labels = labels,
+                              quantities = quantities)
     euler_grob <- grid::gList(euler_grob)
     xlim <- data$xlim
     ylim <- data$ylim
@@ -574,7 +604,7 @@ plot.eulergram <- function(x, newpage = TRUE, ...) {
   }
 
   if (do_legend) {
-    legend_grob <- grid::grob(grid::legendGrob(
+    legend_grob <- grid::legendGrob(
       labels = legend$labels,
       do.lines = legend$do.lines,
       ncol = legend$ncol,
@@ -584,7 +614,8 @@ plot.eulergram <- function(x, newpage = TRUE, ...) {
       default.units = legend$default.units,
       pch = legend$pch,
       gp = legend$gp
-    ), name = "legend.grob")
+    )
+    legend_grob$name <- "legend.grob"
     if (do_strip_top)
       legend_row <- 2
 
@@ -700,7 +731,7 @@ plot.eulergram <- function(x, newpage = TRUE, ...) {
                                       layout.pos.col = k,
                                       xscale = xlim,
                                       yscale = ylim,
-                                      name = paste0("panel.", j, ".", k)))
+                                      name = paste0("panel.vp.", j, ".", k)))
     grid::grid.draw(euler_grob[[i]])
     grid::upViewport()
   }
@@ -744,12 +775,14 @@ plot.eulergram <- function(x, newpage = TRUE, ...) {
   }
   grid::upViewport()
   invisible(x)
+
+  # TODO: return a grob or gTree with suitable methods
 }
 
-#' @rdname print.eulergram
+#' @rdname plot.eulergram
 #' @export
 print.eulergram <- function(x, ...) {
-  plot(x, ...)
+  graphics::plot(x, ...)
 }
 
 #' Grobify Euler objects
@@ -758,21 +791,17 @@ print.eulergram <- function(x, ...) {
 #'
 #' @return A [grid::gList()] is returned.
 #' @keywords internal
-setup_grobs <- function(x,
-                        gp_labels,
-                        gp_edges,
-                        gp_fills,
-                        gp_quantities) {
-  labels <- x$labels
-  edges <- x$edges
-  fills <- x$fills
-  quantities <- x$quantities
+setup_grobs <- function(x, fills, edges, labels, quantities) {
+  data_labels <- x$labels
+  data_edges <- x$edges
+  data_fills <- x$fills
+  data_quantities <- x$quantities
   fitted <- x$fitted.values
 
-  do_labels <- !is.null(labels)
-  do_edges <- !is.null(edges)
-  do_fills <- !is.null(fills)
-  do_quantities <- !is.null(quantities)
+  do_labels <- !is.null(data_labels)
+  do_edges <- !is.null(data_edges)
+  do_fills <- !is.null(data_fills)
+  do_quantities <- !is.null(data_quantities)
 
   n_e <- nrow(x$ellipses)
   n_id <- 2L^n_e - 1L
@@ -781,23 +810,23 @@ setup_grobs <- function(x,
   #edges
   if (do_edges) {
     # edges
-    edges_grob <- grid::polylineGrob(edges$x,
-                                     edges$y,
-                                     id.lengths = edges$id.lengths,
+    edges_grob <- grid::polylineGrob(data_edges$x,
+                                     data_edges$y,
+                                     id.lengths = data_edges$id.lengths,
                                      default.units = "native",
                                      name = "edges.grob",
-                                     gp = gp_edges)
+                                     gp = edges$gp)
   }
 
   # fills
   if (do_fills) {
     if (n_e == 1) {
       fills_grob <- grid::gList(grid::polygonGrob(
-        fills[[1]]$x,
-        fills[[1]]$y,
+        data_fills[[1]]$x,
+        data_fills[[1]]$y,
         default.units = "native",
         name = "fills.grob",
-        gp = gp_fills[1]
+        gp = fills$gp[1L]
       ))
     } else {
       fills_grob <- vector("list", n_id)
@@ -818,56 +847,58 @@ setup_grobs <- function(x,
       }
 
       for (i in seq_len(n_id)) {
-        if (is.null(fills[[i]])) {
+        if (is.null(data_fills[[i]])) {
           fills_grob[[i]] <- grid::nullGrob(name = paste0("fills.grob.", i))
         } else
           fills_grob[[i]] <- grid::pathGrob(
-            fills[[i]]$x,
-            fills[[i]]$y,
-            id.lengths = fills[[i]]$id.lengths,
+            data_fills[[i]]$x,
+            data_fills[[i]]$y,
+            id.lengths = data_fills[[i]]$id.lengths,
             default.units = "native",
             name = paste0("fills.grob.", i),
-            gp = gp_fills[fill_id[i]]
+            gp = fills$gp[fill_id[i]]
           )
       }
       fills_grob <- do.call(grid::gList, fills_grob)
     }
   }
 
+  # quantities
   if (do_quantities)  {
-    quantities_id <- rep.int(FALSE, length(quantities$x))
+    quantities_id <- rep.int(FALSE, length(data_quantities$x))
     if (do_labels)
-      quantities_id[names(quantities$x) %in% names(labels$x)] <- TRUE
+      quantities_id[names(data_quantities$x) %in% names(data_labels$x)] <- TRUE
     lab_id <- quantities_id
 
     quantities_grob <- grid::textGrob(
-      label = quantities$labels,
-      x = quantities$x,
-      y = quantities$y,
+      label = data_quantities$labels,
+      x = data_quantities$x,
+      y = data_quantities$y,
+      rot = quantities$rot,
       vjust = ifelse(lab_id & do_labels, 1, 0.5),
       name = "quantities.grob",
       default.units = "native",
-      gp = gp_quantities
+      gp = quantities$gp
     )
   }
 
   # labels
   if (do_labels) {
     labels_grob <- grid::textGrob(
-      label = labels$labels,
-      x = labels$x,
-      y = labels$y,
+      label = data_labels$labels,
+      x = data_labels$x,
+      y = data_labels$y,
+      rot = labels$rot,
       vjust = if (do_quantities) -0.5 else 0.5,
       name = "labels.grob",
       default.units = "native",
-      gp = gp_labels
+      gp = labels$gp
     )
   }
 
-  out <- grid::grobTree(
-    fills_grob,
-    if (do_edges) edges_grob,
-    if (do_labels) labels_grob,
-    if (do_quantities) quantities_grob,
-    name = "diagram.grobtree")
+  out <- grid::grobTree(if (do_fills) fills_grob,
+                        if (do_edges) edges_grob,
+                        if (do_labels) labels_grob,
+                        if (do_quantities) quantities_grob,
+                        name = "diagram.grob")
 }

@@ -4,18 +4,21 @@
 \alias{plot.euler}
 \title{Plot area-proportional Euler diagrams}
 \usage{
-\method{plot}{euler}(x, shapes = list(), legend = FALSE,
+\method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = FALSE, strips = NULL,
-  ..., fill_alpha, auto.key, fontface, par.settings, default.prepanel,
-  default.scales, panel)
+  n = 200L, ..., fill_alpha, auto.key, fontface, par.settings,
+  default.prepanel, default.scales, panel)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
 
-\item{shapes}{a list of graphical parameters for the shapes (ellipses)
-in the diagram. The item \code{n} sets the number of vertices to be used for
-each ellipse. Edges are plotted with \code{\link[grid:grid.polyline]{grid::grid.polyline()}} and
-fills with \code{\link[grid:grid.path]{grid::grid.path()}}.}
+\item{fills}{a logical, vector, or list of graphical parameters for the fills
+in the diagram. Vectors are assumed to be colors for the fills.
+See \code{\link[grid:grid.path]{grid::grid.path()}}.}
+
+\item{edges}{a logical, vector, or list of graphical parameters for the edges
+in the diagram. Vectors are assumed to be colors for the edges.
+See \code{\link[grid:grid.polyline]{grid::grid.polyline()}}.}
 
 \item{legend}{a logical scalar or list. If a list,
 the item \code{side} can be used to set the location of the legend. See
@@ -29,10 +32,12 @@ text for the quantities' labels, which by
 default are the original values in the input to \code{\link[=euler]{euler()}}. See
 \code{\link[grid:grid.text]{grid::grid.text()}}.}
 
-\item{strips}{a list. Will be ignored unless the \code{'by'} argument
-was used in \code{\link[=euler]{euler()}}.}
+\item{strips}{a list, ignored unless the \code{'by'} argument
+was used in \code{\link[=euler]{euler()}}}
 
-\item{...}{parameters to update \code{shapes} with and thereby a shortcut
+\item{n}{number of vertices for the \code{edges} and \code{fills}}
+
+\item{...}{parameters to update \code{fills} and \code{edges} with and thereby a shortcut
 to set these parameters}
 
 \item{fill_alpha}{deprecated}
@@ -58,7 +63,7 @@ function is called.
 \description{
 Plot Euler diagrams fit with \code{\link[=euler]{euler()}} using \code{\link[grid:Grid]{grid::Grid()}} graphics. This
 function sets up all the necessary plot parameters and computes
-the geometry of the diagram. \code{\link[=print.euler]{print.euler()}}, meanwhile,
+the geometry of the diagram. \code{\link[=plot.eulergram]{plot.eulergram()}}, meanwhile,
 does the actual plotting of the diagram. Please see the \strong{Details} section
 to learn about the individual settings for each argument.
 }
@@ -77,19 +82,19 @@ arguments that are specific to each argument.
 The various \code{\link[grid:gpar]{grid::gpar()}} values that are available for each argument
 are:
 
-\tabular{lcccccc}{
-\tab shapes \tab labels \tab quantities \tab strips \tab legend \cr
-col        \tab x      \tab x      \tab x          \tab x      \tab x      \cr
-fill       \tab x      \tab        \tab            \tab        \tab        \cr
-alpha      \tab x      \tab x      \tab x          \tab x      \tab x      \cr
-lty        \tab x      \tab        \tab            \tab        \tab        \cr
-lwd        \tab x      \tab        \tab            \tab        \tab        \cr
-lex        \tab x      \tab        \tab            \tab        \tab        \cr
-fontsize   \tab        \tab x      \tab x          \tab x      \tab x      \cr
-cex        \tab        \tab x      \tab x          \tab x      \tab x      \cr
-fontfamily \tab        \tab x      \tab x          \tab x      \tab x      \cr
-lineheight \tab        \tab x      \tab x          \tab x      \tab x      \cr
-font       \tab        \tab x      \tab x          \tab x      \tab x
+\tabular{lccccccc}{
+\tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \cr
+col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+fill       \tab x     \tab       \tab        \tab            \tab        \tab        \cr
+alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+lty        \tab       \tab       \tab        \tab            \tab        \tab        \cr
+lwd        \tab       \tab       \tab        \tab            \tab        \tab        \cr
+lex        \tab       \tab       \tab        \tab            \tab        \tab        \cr
+fontsize   \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+cex        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+fontfamily \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+lineheight \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
+font       \tab       \tab x     \tab x      \tab x          \tab x      \tab x
 }
 
 Defaults for these values, as well as other parameters of the plots, can
@@ -108,7 +113,7 @@ fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
 
 # Customize colors, remove borders, bump alpha, color labels white
 plot(fit,
-     shapes = list(fill = c("red", "steelblue4"), alpha = 0.5),
+     fills = list(fill = c("red", "steelblue4"), alpha = 0.5),
      labels = list(col = "white", font = 4))
 
 # Add quantities to the plot
@@ -124,7 +129,7 @@ plot(fit, fill = "transparent", lty = 1:2)
 diagram_description <- plot(fit)
 }
 \seealso{
-\code{\link[=euler]{euler()}}, \code{\link[=print.euler]{print.euler()}}, \code{\link[grid:gpar]{grid::gpar()}},
+\code{\link[=euler]{euler()}}, \code{\link[=plot.eulergram]{plot.eulergram()}}, \code{\link[grid:gpar]{grid::gpar()}},
 \code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
 \code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }

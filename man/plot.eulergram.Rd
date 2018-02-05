@@ -2,30 +2,27 @@
 % Please edit documentation in R/plot.euler.R
 \name{plot.eulergram}
 \alias{plot.eulergram}
+\alias{print.eulergram}
 \title{Print (plot) Euler diagram}
 \usage{
 \method{plot}{eulergram}(x, newpage = TRUE, ...)
+
+\method{print}{eulergram}(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{'eulergram'}, usually the output of
-\code{\link[=plot.euler]{plot.euler()}}.}
+\code{\link[=plot.euler]{plot.euler()}}}
+
+\item{newpage}{if \code{TRUE}, opens a new page via \code{\link[=grid.newpage]{grid.newpage()}} to draw on}
 
 \item{...}{ignored}
 }
 \value{
-A plot is drawn on the current device using \code{\link[grid:Grid]{grid::Grid()}} graphics
-and a \code{\link[grid:gTree]{grid::gTree()}} object is returned invisibly.
+A plot is drawn on the current device using \code{\link[grid:Grid]{grid::Grid()}} graphics.
 }
 \description{
 This function is responsible for the actual drawing of
 \code{'eulergram'} objects created through \code{\link[=plot.euler]{plot.euler()}}. \code{\link[=print.eulergram]{print.eulergram()}}
-is simply an alias for \code{\link[=plot.eulergram]{plot.eulergram()}}.
-}
-\examples{
-# save the plot as a gTree
-grob <- print(plot(euler(c(A = 1))))
-
-if (require(gridExtra)) {
-  grid.arrange(grob, grob)
-}
+is an alias for \code{\link[=plot.eulergram]{plot.eulergram()}}, which has been provided so that
+\code{\link[=plot.euler]{plot.euler()}} gets called automatically.
 }
