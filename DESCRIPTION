@@ -5,10 +5,12 @@ Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     role = c("aut", "cre")),
              person("A. Jonathan R.", "Godfrey", role = "ctb"),
              person("Tim", "Kelley", role = "ctb", 
-                    comment = "Original Nelder-Mead code"),
+                    comment = "original Nelder-Mead code"),
              person("David H.", "Eberly", role = "ctb",
-                    comment = "Geometric algorithms"),
-             person("Peter", "Gustafsson", role = "ctb"))
+                    comment = "geometric algorithms"),
+             person("Peter", "Gustafsson", role = "ctb"),
+             person("Emanuel", "Huber", role = "ctb",
+                    comment = "root solver code"))
 Description: Generate area-proportional Euler diagrams
     using numerical optimization. An Euler diagram is a generalization of a Venn
     diagram, relaxing the criterion that all interactions need to be
