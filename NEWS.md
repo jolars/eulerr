@@ -19,10 +19,11 @@ default grahical parameters for the diagrams.
 ## Minor changes
 
 * Arguments `counts` and `outer_strips` to `plot.euler()` are now defunct.
-* `euler()` now always returns parameters suitable for ellipses,
+* `euler()` now always returns ellipse-based parameters
 with columns `h`, `k`, `a`, `b`, and `phi`, regardless of which shape is used.
 This item was previously named "coefficients", but it now called
-"ellipses" instead.
+"ellipses" instead and a custom `coef.euler()` method has been added to
+make cure that `coef()` still works.
 * Layouts are now partially normalized so that diagrams will look
 approximately the same even with different random seeds.
 
