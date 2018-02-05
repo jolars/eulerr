@@ -50,8 +50,8 @@ to set these parameters}
 \item{panel}{deprecated}
 }
 \value{
-Provides an object of class \code{'euler', 'diagram'} , which is a
-description of the diagram to be drawn. \code{\link[=print.euler]{print.euler()}} does the actual
+Provides an object of class \code{'eulergram'} , which is a
+description of the diagram to be drawn. \code{\link[=print.eulergram]{print.eulergram()}} does the actual
 plotting of the diagram and is usually called automatically after this
 function is called.
 }
