@@ -26,9 +26,10 @@ Useful links:
 Other contributors:
 \itemize{
   \item A. Jonathan R. Godfrey [contributor]
-  \item Tim Kelley (Original Nelder-Mead code) [contributor]
-  \item David H. Eberly (Geometric algorithms) [contributor]
+  \item Tim Kelley (original Nelder-Mead code) [contributor]
+  \item David H. Eberly (geometric algorithms) [contributor]
   \item Peter Gustafsson [contributor]
+  \item Emanuel Huber (root solver code) [contributor]
 }
 
 }

@@ -56,9 +56,8 @@ to set these parameters}
 }
 \value{
 Provides an object of class \code{'eulergram'} , which is a
-description of the diagram to be drawn. \code{\link[=print.eulergram]{print.eulergram()}} does the actual
-plotting of the diagram and is usually called automatically after this
-function is called.
+description of the diagram to be drawn. \code{\link[=plot.eulergram]{plot.eulergram()}} does the actual
+drawing of the diagram.
 }
 \description{
 Plot Euler diagrams fit with \code{\link[=euler]{euler()}} using \code{\link[grid:Grid]{grid::Grid()}} graphics. This

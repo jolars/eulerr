@@ -95,9 +95,8 @@
 #'   [grid::grid.legend()], [grid::grid.text()]
 #'
 #' @return Provides an object of class `'eulergram'` , which is a
-#'   description of the diagram to be drawn. [print.eulergram()] does the actual
-#'   plotting of the diagram and is usually called automatically after this
-#'   function is called.
+#'   description of the diagram to be drawn. [plot.eulergram()] does the actual
+#'   drawing of the diagram.
 #' @export
 #' @examples
 #' fit <- euler(c("A" = 10, "B" = 5, "A&B" = 3))
