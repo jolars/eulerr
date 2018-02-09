@@ -7,7 +7,17 @@
 setup_grobs(x, fills, edges, labels, quantities, number)
 }
 \arguments{
-\item{x}{an \code{euler} object}
+\item{x}{geometry data}
+
+\item{fills}{fills params}
+
+\item{edges}{edges params}
+
+\item{labels}{labels params}
+
+\item{quantities}{quantities params}
+
+\item{number}{current diagram number}
 }
 \value{
 A \code{\link[grid:gList]{grid::gList()}} is returned.

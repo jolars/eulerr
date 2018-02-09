@@ -11,6 +11,11 @@ produces by `plot.euler()`. The downside is that the plot parameters for
 people who prefer to plot the diagrams using other software is
 somewhat harder to extract.
 
+## Bug fixes
+
+* The **grid** parameters available for *edges* are now correctly specified in
+the manual for `plot.euler()`.
+
 # eulerr 4.0.0
 
 ## Major changes
