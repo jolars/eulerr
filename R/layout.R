@@ -227,28 +227,19 @@ compress_layout <- function(fpar, id, fit) {
 #' @return A centered version of `pars`.
 #' @keywords internal
 center_layout <- function(pars) {
-  x <- pars[, 1L]
-  y <- pars[, 2L]
+  h <- pars[, 1L]
+  k <- pars[, 2L]
   a <- pars[, 3L]
   b <- pars[, 4L]
   phi <- pars[, 5L]
 
   cphi <- cos(phi)
   sphi <- sin(phi)
-  xlim <- range(c(x + a*cphi, x + b*cphi, x - a*cphi, x - b*cphi))
-  ylim <- range(c(y + a*sphi, y + b*sphi, y - a*sphi, y - b*sphi))
+  xlim <- range(c(h + a*cphi, h + b*cphi, h - a*cphi, h - b*cphi))
+  ylim <- range(c(k + a*sphi, k + b*sphi, k - a*sphi, k - b*sphi))
 
-  pars[, 1L] <- x + abs(xlim[1L] - xlim[2L])/2 - xlim[2L]
-  pars[, 2L] <- y + abs(ylim[1L] - ylim[2L])/2 - ylim[2L]
+  pars[, 1L] <- h + abs(xlim[1L] - xlim[2L])/2 - xlim[2L]
+  pars[, 2L] <- k + abs(ylim[1L] - ylim[2L])/2 - ylim[2L]
   pars
 }
 
-normalize_rotation <- function(pars) {
-  x <- pars[, 1L]
-  y <- pars[, 2L]
-  a <- pars[, 3L]
-  b <- pars[, 4L]
-  phi <- pars[, 5L]
-
-  size_order <- order(a*b)
-}
