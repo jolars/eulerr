@@ -365,14 +365,305 @@ plot.euler <- function(x,
                            id)
   }
 
-  structure(list(fills = fills,
-                 edges = edges,
-                 labels = labels,
-                 quantities = quantities,
-                 strips = strips,
-                 legend = legend,
-                 data = data),
-            class = c("eulergram"))
+
+  x <- list(fills = fills,
+            edges = edges,
+            labels = labels,
+            quantities = quantities,
+            strips = strips,
+            legend = legend,
+            data = data)
+
+  legend <- x$legend
+  fills <- x$fills
+  edges <- x$edges
+  labels <- x$labels
+  quantities <- x$quantities
+  data <- x$data
+  strips <- x$strips
+  groups <- strips$groups
+
+  opar <- eulerr_options()
+
+  do_legend <- !is.null(legend)
+  do_groups <- !is.null(strips)
+
+  if (do_groups) {
+    #euler_grob <- grid::grobTree()
+    n_groups <- length(data)
+    euler_grob_children <- lapply(
+      data,
+      setup_grobs,
+      fills = fills,
+      edges = edges,
+      labels = labels,
+      quantities = quantities
+    )
+    euler_grob_children <- grid::gList()
+    for (i in seq_len(n_groups)) {
+      euler_grob_children[[i]] <- setup_grobs(data, fills = fills[i])
+    }
+    euler_grob_children <- do.call(grid::gList, euler_grob_children)
+    #euler_grob <- grid::setChildren(euler_grob, euler_grob_children)
+    euler_grob <- grid::gTree(grid::nullGrob(),
+                              children = euler_grob_children)
+    pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
+    layout <- lengths(lapply(groups, unique))
+    if (length(layout) == 1L)
+      layout <- c(1L, layout)
+    xlim <- range(unlist(lapply(data, "[[", "xlim")))
+    ylim <- range(unlist(lapply(data, "[[", "ylim")))
+  } else {
+    euler_grob <- setup_grobs(data,
+                              fills = fills,
+                              edges = edges,
+                              labels = labels,
+                              quantities = quantities)
+    euler_grob <- grid::grobTree(euler_grob)
+    xlim <- data$xlim
+    ylim <- data$ylim
+    pos <- c(1L, 1L)
+    layout <- c(1L, 1L)
+  }
+
+  xlim <- grDevices::extendrange(xlim, f = 0.01)
+  ylim <- grDevices::extendrange(ylim, f = 0.01)
+  xrng <- abs(xlim[1L] - xlim[2L])
+  yrng <- abs(ylim[1L] - ylim[2L])
+  ar <- xrng/yrng
+  adjust <- layout[1L]/layout[2]
+
+  do_strip_left <- layout[1L] > 1L
+  do_strip_top <- layout[2L] > 1L
+  do_strips <- do_strip_left || do_strip_top
+
+  strip_top_row <- strip_top_col <- strip_left_row <- strip_left_col <- 1
+
+  nrow <- ncol <- 1
+  heights <- grid::unit(1, "null")
+  widths <- grid::unit(1*ar*layout[2]/layout[1], "null")
+  diagram_col <- 1L
+  diagram_row <- 1L
+
+  if (do_strip_left) {
+    widths <- grid::unit.c(grid::unit(1.5, "lines"), widths)
+    diagram_col <- diagram_col + 1L
+    ncol <- ncol + 1L
+  }
+  if (do_strip_top) {
+    heights <- grid::unit.c(grid::unit(1.5, "lines"), heights)
+    diagram_row <- diagram_row + 1L
+    nrow <- nrow + 1L
+  }
+
+  if (do_strip_left && do_strip_top) {
+    strip_top_col <- strip_top_col + 1L
+    strip_left_row <- strip_left_row + 1L
+  }
+
+  if (do_legend) {
+    legend_grob <- grid::legendGrob(
+      labels = legend$labels,
+      do.lines = legend$do.lines,
+      ncol = legend$ncol,
+      nrow = legend$nrow,
+      hgap = legend$hgap,
+      vgap = legend$vgap,
+      default.units = legend$default.units,
+      pch = legend$pch,
+      gp = legend$gp
+    )
+    legend_grob$name <- "legend.grob"
+    if (do_strip_top)
+      legend_row <- 2
+
+    if (legend$side == "right") {
+      # legend on right (default)
+      ncol <- ncol + 2L
+      legend_row <- nrow
+      legend_col <- ncol
+      widths <- grid::unit.c(widths, grid::unit(c(1, 1),
+                                                c("lines", "grobwidth"),
+                                                list(NULL, legend_grob)))
+    } else if (legend$side == "left") {
+      # legend on left
+      ncol <- ncol + 2L
+      legend_row <- if (do_strip_top) 2L else 1L
+      legend_col <- 1
+      diagram_col <- diagram_col + 2L
+      if (do_strip_left)
+        strip_left_col <- strip_left_col + 2L
+      if (do_strip_top)
+        strip_top_col <- strip_top_col + 2L
+      widths <- grid::unit.c(grid::unit(c(1, 1),
+                                        c("grobwidth", "lines"),
+                                        list(legend_grob, NULL)), widths)
+    } else if (legend$side == "top") {
+      # legend on top
+      nrow <- nrow + 2L
+      legend_row <- 1L
+      legend_col <- if (do_strip_left) 2L else 1L
+      diagram_row <- diagram_row + 2L
+      if (do_strip_top)
+        strip_top_row <- strip_top_row + 2L
+      if (do_strip_left)
+        strip_left_row <- strip_left_row + 2L
+      heights <- grid::unit.c(grid::unit(c(1, 1),
+                                         c("grobheight", "lines"),
+                                         list(legend_grob, NULL)),
+                              heights)
+    } else {
+      # legend on bottom
+      nrow <- nrow + 2L
+      legend_row <- nrow
+      legend_col <- if (do_strip_left) 2L else 1L
+      heights <- grid::unit.c(heights,
+                              grid::unit(c(1, 1),
+                                         c("lines", "grobheight"),
+                                         list(NULL, legend_grob)))
+    }
+    legend_grob$vp <- grid::viewport(layout.pos.row = legend_row,
+                                     layout.pos.col = legend_col,
+                                     name = "legend.vp")
+  }
+
+  canvas_vp <- grid::viewport(
+    layout.pos.row = diagram_row,
+    layout.pos.col = diagram_col,
+    name = "canvas.vp",
+    layout = grid::grid.layout(nrow = layout[1L],
+                               ncol = layout[2L],
+                               widths = rep(1/ar, layout[1L]),
+                               heights = rep(1, layout[2L]))
+  )
+
+  if (do_strip_top) {
+    strip_top_vp <- grid::viewport(
+      layout.pos.row = strip_top_row,
+      layout.pos.col = strip_top_col,
+      name = "strip.top.vp",
+      layout = grid::grid.layout(nrow = 1L, ncol = layout[2L])
+    )
+  }
+
+  if (do_strip_left) {
+    strip_left_vp <- grid::viewport(
+      layout.pos.row = strip_left_row,
+      layout.pos.col = strip_left_col,
+      name = "strip.left.vp",
+      layout = grid::grid.layout(nrow = layout[1L], ncol = 1L)
+    )
+  }
+
+  # if (newpage)
+  #   grid::grid.newpage()
+  # grid::pushViewport(grid::vpTree(parent, children))
+  # grid::upViewport()
+
+  # draw diagram
+  #grid::downViewport("canvas.vp")
+
+  # for (i in pos[, 1L]) {
+  #   for (j in pos[, 2L]) {
+  #     euler_grob$children[[i]]$vp <- grid::viewport(layout.pos.row = i,
+  #                                                   layout.pos.col = j,
+  #                                                   xscale = xlim,
+  #                                                   yscale = ylim,
+  #                                                   name = paste0("panel.vp.", i, ".", j))
+  #   }
+  # }
+
+  for (i in seq_along(euler_grob$children)) {
+    if (NCOL(pos) == 2L) {
+      j <- pos[i, 1L]
+      k <- pos[i, 2L]
+    } else {
+      j <- 1L
+      k <- pos[i]
+    }
+    # grid::pushViewport(grid::viewport(layout.pos.row = j,
+    #                                   layout.pos.col = k,
+    #                                   xscale = xlim,
+    #                                   yscale = ylim,
+    #                                   name = paste0("panel.vp.", j, ".", k)))
+    euler_grob$children[[i]]$vp <- grid::viewport(layout.pos.row = j,
+                                                  layout.pos.col = k,
+                                                  xscale = xlim,
+                                                  yscale = ylim,
+                                                  name = paste0("panel.vp.", j, ".", k))
+
+    #grid::grid.draw(euler_grob[[i]])
+    #grid::upViewport()
+  }
+  # #grid::upViewport()
+  euler_grob$vp <- canvas_vp
+
+  # draw legend
+  # if (do_legend) {
+  #   grid::downViewport("legend.vp")
+  #   grid::grid.draw(legend_grob)
+  #   grid::upViewport()
+  # }
+
+  # draw strips
+  if (do_strip_top) {
+    strip_top_grob_children <- grid::gList()
+    #grid::downViewport("strip.top.vp")
+    for (i in seq_len(layout[2L])) {
+      # grid::pushViewport(grid::viewport(layout.pos.row = 1L,
+      #                                   layout.pos.col = i))
+      strip_top_grob_children[[i]] <- grid::textGrob(levels(strips$groups[[1L]])[i],
+                                                     just = "bottom",
+                                                     name = paste0("strip.top.grob.", i),
+                                                     gp = do.call(grid::gpar, strips$gp[i]),
+                                                     vp = grid::viewport(layout.pos.row = 1L,
+                                                                         layout.pos.col = i))
+      #grid::upViewport()
+    }
+
+    strip_top_grob <- grid::gTree(grid::nullGrob(),
+                                  children = strip_top_grob_children,
+                                  vp = strip_top_vp)
+    #grid::upViewport()
+  }
+
+  if (do_strip_left) {
+    #grid::downViewport("strip.left.vp")
+    strip_left_grob_children <- grid::gList()
+    for (i in seq_len(layout[1L])) {
+      #grid::pushViewport(grid::viewport(layout.pos.row = i,
+      #                                  layout.pos.col = 1))
+      strip_left_grob_children[[i]] <- grid::textGrob(
+        levels(strips$groups[[2L]])[i],
+        just = "bottom",
+        rot = 90,
+        name = paste0("strip.left.grob.", i),
+        gp = do.call(grid::gpar, strips$gp[i + layout[1L]]),
+        vp = grid::viewport(layout.pos.row = i, layout.pos.col = 1)
+      )
+      #grid::upViewport()
+    }
+    strip_left_grob <- grid::gTree(grid::nullGrob(),
+                                   children = strip_left_grob_children,
+                                   vp = strip_left_vp)
+    #grid::upViewport()
+  }
+
+  # return a gTree object
+  grid::grobTree(
+    if (do_strip_top) strip_top_grob = strip_top_grob,
+    if (do_strip_left) strip_left_grob = strip_left_grob,
+    if (do_legend) legend_grob = legend_grob,
+    euler_grob = euler_grob,
+    vp = grid::viewport(layout = grid::grid.layout(nrow = nrow,
+                                                   ncol = ncol,
+                                                   widths = widths,
+                                                   heights = heights,
+                                                   respect = TRUE),
+                        name = "euler.vp"),
+    cl = "eulergram",
+    name = "euler.diagram"
+  )
 }
 
 #' Compute geometries and label locations
@@ -510,279 +801,6 @@ setup_geometry <- function(x,
        ylim = limits$ylim)
 }
 
-#' Print (plot) Euler diagram
-#'
-#' This function is responsible for the actual drawing of
-#' `'eulergram'` objects created through [plot.euler()]. [print.eulergram()]
-#' is an alias for [plot.eulergram()], which has been provided so that
-#' [plot.euler()] gets called automatically.
-#'
-#' @param x an object of class `'eulergram'`, usually the output of
-#'   [plot.euler()]
-#' @param newpage if `TRUE`, opens a new page via [grid.newpage()] to draw on
-#' @param ... ignored
-#' @return A plot is drawn on the current device using [grid::Grid()] graphics.
-#' @export
-plot.eulergram <- function(x, newpage = TRUE, ...) {
-  legend <- x$legend
-  fills <- x$fills
-  edges <- x$edges
-  labels <- x$labels
-  quantities <- x$quantities
-  data <- x$data
-  strips <- x$strips
-  groups <- strips$groups
-
-  opar <- eulerr_options()
-
-  do_legend <- !is.null(legend)
-  do_groups <- !is.null(strips)
-
-  if (do_groups) {
-    euler_grob <- lapply(
-      data,
-      setup_grobs,
-      fills = fills,
-      edges = edges,
-      labels = labels,
-      quantities = quantities
-    )
-    euler_grob <- do.call(grid::gList, euler_grob)
-    pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
-    layout <- lengths(lapply(groups, unique))
-    if (length(layout) == 1L)
-      layout <- c(1L, layout)
-    xlim <- range(unlist(lapply(data, "[[", "xlim")))
-    ylim <- range(unlist(lapply(data, "[[", "ylim")))
-  } else {
-    euler_grob <- setup_grobs(data,
-                              fills = fills,
-                              edges = edges,
-                              labels = labels,
-                              quantities = quantities)
-    euler_grob <- grid::gList(euler_grob)
-    xlim <- data$xlim
-    ylim <- data$ylim
-    pos <- c(1L, 1L)
-    layout <- c(1L, 1L)
-  }
-
-  xlim <- grDevices::extendrange(xlim, f = 0.01)
-  ylim <- grDevices::extendrange(ylim, f = 0.01)
-  xrng <- abs(xlim[1L] - xlim[2L])
-  yrng <- abs(ylim[1L] - ylim[2L])
-  ar <- xrng/yrng
-  adjust <- layout[1L]/layout[2]
-
-  do_strip_left <- layout[1L] > 1L
-  do_strip_top <- layout[2L] > 1L
-  do_strips <- do_strip_left || do_strip_top
-
-  strip_top_row <- strip_top_col <- strip_left_row <- strip_left_col <- 1
-
-  nrow <- ncol <- 1
-  heights <- grid::unit(1, "null")
-  widths <- grid::unit(1*ar*layout[2]/layout[1], "null")
-  diagram_col <- 1L
-  diagram_row <- 1L
-
-  if (do_strip_left) {
-    widths <- grid::unit.c(grid::unit(1.5, "lines"), widths)
-    diagram_col <- diagram_col + 1L
-    ncol <- ncol + 1L
-  }
-  if (do_strip_top) {
-    heights <- grid::unit.c(grid::unit(1.5, "lines"), heights)
-    diagram_row <- diagram_row + 1L
-    nrow <- nrow + 1L
-  }
-
-  if (do_strip_left && do_strip_top) {
-    strip_top_col <- strip_top_col + 1L
-    strip_left_row <- strip_left_row + 1L
-  }
-
-  if (do_legend) {
-    legend_grob <- grid::legendGrob(
-      labels = legend$labels,
-      do.lines = legend$do.lines,
-      ncol = legend$ncol,
-      nrow = legend$nrow,
-      hgap = legend$hgap,
-      vgap = legend$vgap,
-      default.units = legend$default.units,
-      pch = legend$pch,
-      gp = legend$gp
-    )
-    legend_grob$name <- "legend.grob"
-    if (do_strip_top)
-      legend_row <- 2
-
-    if (legend$side == "right") {
-      # legend on right (default)
-      ncol <- ncol + 2L
-      legend_row <- nrow
-      legend_col <- ncol
-      widths <- grid::unit.c(widths, grid::unit(c(1, 1),
-                                                c("lines", "grobwidth"),
-                                                list(NULL, legend_grob)))
-    } else if (legend$side == "left") {
-      # legend on left
-      ncol <- ncol + 2L
-      legend_row <- if (do_strip_top) 2L else 1L
-      legend_col <- 1
-      diagram_col <- diagram_col + 2L
-      if (do_strip_left)
-        strip_left_col <- strip_left_col + 2L
-      if (do_strip_top)
-        strip_top_col <- strip_top_col + 2L
-      widths <- grid::unit.c(grid::unit(c(1, 1),
-                                        c("grobwidth", "lines"),
-                                        list(legend_grob, NULL)), widths)
-    } else if (legend$side == "top") {
-      # legend on top
-      nrow <- nrow + 2L
-      legend_row <- 1L
-      legend_col <- if (do_strip_left) 2L else 1L
-      diagram_row <- diagram_row + 2L
-      if (do_strip_top)
-        strip_top_row <- strip_top_row + 2L
-      if (do_strip_left)
-        strip_left_row <- strip_left_row + 2L
-      heights <- grid::unit.c(grid::unit(c(1, 1),
-                                         c("grobheight", "lines"),
-                                         list(legend_grob, NULL)),
-                              heights)
-    } else {
-      # legend on bottom
-      nrow <- nrow + 2L
-      legend_row <- nrow
-      legend_col <- if (do_strip_left) 2L else 1L
-      heights <- grid::unit.c(heights,
-                              grid::unit(c(1, 1),
-                                         c("lines", "grobheight"),
-                                         list(NULL, legend_grob)))
-    }
-  } else {
-    do_legend <- FALSE
-  }
-
-  parent <- grid::viewport(layout = grid::grid.layout(nrow = nrow,
-                                                      ncol = ncol,
-                                                      widths = widths,
-                                                      heights = heights,
-                                                      respect = TRUE),
-                           name = "euler.vp",
-                           gp = grid::gpar(fontsize = opar$fontsize))
-
-  panel_layout <- grid::grid.layout(nrow = layout[1L],
-                                    ncol = layout[2L],
-                                    widths = rep(1/ar, layout[1L]),
-                                    heights = rep(1, layout[2L]))
-
-  children <- grid::vpList(grid::viewport(layout.pos.row = diagram_row,
-                                          layout.pos.col = diagram_col,
-                                          name = "canvas.vp",
-                                          layout = panel_layout))
-  k <- 2L
-
-  if (do_legend) {
-    children[[k]] <- grid::viewport(layout.pos.row = legend_row,
-                                    layout.pos.col = legend_col,
-                                    name = "legend.vp")
-    k <- k + 1L
-  }
-
-  if (do_strip_top) {
-    strip_top_layout <- grid::grid.layout(nrow = 1L, ncol = layout[2L])
-    children[[k]] <- grid::viewport(layout.pos.row = strip_top_row,
-                                    layout.pos.col = strip_top_col,
-                                    name = "strip.top.vp",
-                                    layout = strip_top_layout)
-    k <- k + 1L
-  }
-
-  if (do_strip_left) {
-    strip_left_layout <- grid::grid.layout(nrow = layout[1L], ncol = 1L)
-    children[[k]] <- grid::viewport(layout.pos.row = strip_left_row,
-                                    layout.pos.col = strip_left_col,
-                                    name = "strip.left.vp",
-                                    layout = strip_left_layout)
-    k <- k + 1L
-  }
-
-  if (newpage)
-    grid::grid.newpage()
-  grid::pushViewport(grid::vpTree(parent, children))
-  grid::upViewport()
-
-  # draw diagram
-  grid::downViewport("canvas.vp")
-  for (i in seq_along(euler_grob)) {
-    if (NCOL(pos) == 2L) {
-      j <- pos[i, 1L]
-      k <- pos[i, 2L]
-    } else {
-      j <- 1L
-      k <- pos[i]
-    }
-    grid::pushViewport(grid::viewport(layout.pos.row = j,
-                                      layout.pos.col = k,
-                                      xscale = xlim,
-                                      yscale = ylim,
-                                      name = paste0("panel.vp.", j, ".", k)))
-    grid::grid.draw(euler_grob[[i]])
-    grid::upViewport()
-  }
-  grid::upViewport()
-
-  # draw legend
-  if (do_legend) {
-    grid::downViewport("legend.vp")
-    grid::grid.draw(legend_grob)
-    grid::upViewport()
-  }
-
-  # draw strips
-  if (do_strip_top) {
-    grid::downViewport("strip.top.vp")
-    for (i in seq_len(layout[2L])) {
-      grid::pushViewport(grid::viewport(layout.pos.row = 1L,
-                                        layout.pos.col = i))
-      grid::grid.text(levels(strips$groups[[1L]])[i],
-                      just = "bottom",
-                      name = "strip.top.grob",
-                      gp = do.call(grid::gpar, strips$gp[i]))
-      grid::upViewport()
-    }
-    grid::upViewport()
-  }
-
-  if (do_strip_left) {
-    grid::downViewport("strip.left.vp")
-    for (i in seq_len(layout[1L])) {
-      grid::pushViewport(grid::viewport(layout.pos.row = i,
-                                        layout.pos.col = 1))
-      grid::grid.text(levels(strips$groups[[2L]])[i],
-                      just = "bottom",
-                      rot = 90,
-                      name = "strip.left.grob",
-                      gp = do.call(grid::gpar, strips$gp[i + layout[1L]]))
-      grid::upViewport()
-    }
-    grid::upViewport()
-  }
-  grid::upViewport()
-  invisible(x)
-
-  # TODO: return a grob or gTree with suitable methods
-}
-
-#' @rdname plot.eulergram
-#' @export
-print.eulergram <- function(x, ...) {
-  graphics::plot(x, ...)
-}
 
 #' Grobify Euler objects
 #'
@@ -790,7 +808,12 @@ print.eulergram <- function(x, ...) {
 #'
 #' @return A [grid::gList()] is returned.
 #' @keywords internal
-setup_grobs <- function(x, fills, edges, labels, quantities) {
+setup_grobs <- function(x,
+                        fills,
+                        edges,
+                        labels,
+                        quantities,
+                        number) {
   data_labels <- x$labels
   data_edges <- x$edges
   data_fills <- x$fills
@@ -895,9 +918,35 @@ setup_grobs <- function(x, fills, edges, labels, quantities) {
     )
   }
 
-  out <- grid::grobTree(if (do_fills) fills_grob,
-                        if (do_edges) edges_grob,
-                        if (do_labels) labels_grob,
-                        if (do_quantities) quantities_grob,
-                        name = "diagram.grob")
+  grid::grobTree(if (do_fills) fills_grob,
+                 if (do_edges) edges_grob,
+                 if (do_labels) labels_grob,
+                 if (do_quantities) quantities_grob,
+                 name = paste0("diagram.grob.", number))
 }
+
+#' Print (plot) Euler diagram
+#'
+#' This function is responsible for the actual drawing of
+#' `'eulergram'` objects created through [plot.euler()]. [print.eulergram()]
+#' is an alias for [plot.eulergram()], which has been provided so that
+#' [plot.euler()] gets called automatically.
+#'
+#' @param x an object of class `'eulergram'`, usually the output of
+#'   [plot.euler()]
+#' @param newpage if `TRUE`, opens a new page via [grid.newpage()] to draw on
+#' @param ... ignored
+#' @return A plot is drawn on the current device using [grid::Grid()] graphics.
+#' @export
+plot.eulergram <- function(x, newpage = TRUE, ...) {
+  if (isTRUE(newpage))
+    grid::grid.newpage()
+  grid::grid.draw(x)
+}
+
+#' @rdname plot.eulergram
+#' @export
+print.eulergram <- function(x, ...) {
+  graphics::plot(x, ...)
+}
+

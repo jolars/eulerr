@@ -1,5 +1,9 @@
 # eulerr 4.0.0.9000
 
+## Minor changes
+
+* `plot.euler()` now returns a `gTree` object.
+
 # eulerr 4.0.0
 
 ## Major changes
