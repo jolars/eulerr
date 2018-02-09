@@ -346,6 +346,8 @@ plot.euler <- function(x,
     legend <- NULL
   }
 
+  # set up geometry for diagrams
+
   if (do_groups) {
     data <- lapply(x,
                    setup_geometry,
@@ -365,46 +367,21 @@ plot.euler <- function(x,
                            id)
   }
 
-
-  x <- list(fills = fills,
-            edges = edges,
-            labels = labels,
-            quantities = quantities,
-            strips = strips,
-            legend = legend,
-            data = data)
-
-  legend <- x$legend
-  fills <- x$fills
-  edges <- x$edges
-  labels <- x$labels
-  quantities <- x$quantities
-  data <- x$data
-  strips <- x$strips
   groups <- strips$groups
 
-  opar <- eulerr_options()
-
-  do_legend <- !is.null(legend)
-  do_groups <- !is.null(strips)
+  # start setting up grobs
 
   if (do_groups) {
-    #euler_grob <- grid::grobTree()
     n_groups <- length(data)
-    euler_grob_children <- lapply(
-      data,
-      setup_grobs,
-      fills = fills,
-      edges = edges,
-      labels = labels,
-      quantities = quantities
-    )
     euler_grob_children <- grid::gList()
     for (i in seq_len(n_groups)) {
-      euler_grob_children[[i]] <- setup_grobs(data, fills = fills[i])
+      euler_grob_children[[i]] <- setup_grobs(data[[i]],
+                                              fills = fills,
+                                              edges = edges,
+                                              labels = labels,
+                                              quantities = quantities,
+                                              number = i)
     }
-    euler_grob_children <- do.call(grid::gList, euler_grob_children)
-    #euler_grob <- grid::setChildren(euler_grob, euler_grob_children)
     euler_grob <- grid::gTree(grid::nullGrob(),
                               children = euler_grob_children)
     pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
@@ -418,7 +395,8 @@ plot.euler <- function(x,
                               fills = fills,
                               edges = edges,
                               labels = labels,
-                              quantities = quantities)
+                              quantities = quantities,
+                              number = 1)
     euler_grob <- grid::grobTree(euler_grob)
     xlim <- data$xlim
     ylim <- data$ylim
@@ -555,24 +533,6 @@ plot.euler <- function(x,
     )
   }
 
-  # if (newpage)
-  #   grid::grid.newpage()
-  # grid::pushViewport(grid::vpTree(parent, children))
-  # grid::upViewport()
-
-  # draw diagram
-  #grid::downViewport("canvas.vp")
-
-  # for (i in pos[, 1L]) {
-  #   for (j in pos[, 2L]) {
-  #     euler_grob$children[[i]]$vp <- grid::viewport(layout.pos.row = i,
-  #                                                   layout.pos.col = j,
-  #                                                   xscale = xlim,
-  #                                                   yscale = ylim,
-  #                                                   name = paste0("panel.vp.", i, ".", j))
-  #   }
-  # }
-
   for (i in seq_along(euler_grob$children)) {
     if (NCOL(pos) == 2L) {
       j <- pos[i, 1L]
@@ -581,72 +541,54 @@ plot.euler <- function(x,
       j <- 1L
       k <- pos[i]
     }
-    # grid::pushViewport(grid::viewport(layout.pos.row = j,
-    #                                   layout.pos.col = k,
-    #                                   xscale = xlim,
-    #                                   yscale = ylim,
-    #                                   name = paste0("panel.vp.", j, ".", k)))
-    euler_grob$children[[i]]$vp <- grid::viewport(layout.pos.row = j,
-                                                  layout.pos.col = k,
-                                                  xscale = xlim,
-                                                  yscale = ylim,
-                                                  name = paste0("panel.vp.", j, ".", k))
-
-    #grid::grid.draw(euler_grob[[i]])
-    #grid::upViewport()
+    euler_grob$children[[i]]$vp <- grid::viewport(
+      layout.pos.row = j,
+      layout.pos.col = k,
+      xscale = xlim,
+      yscale = ylim,
+      name = paste0("panel.vp.", j, ".", k)
+    )
   }
-  # #grid::upViewport()
-  euler_grob$vp <- canvas_vp
 
-  # draw legend
-  # if (do_legend) {
-  #   grid::downViewport("legend.vp")
-  #   grid::grid.draw(legend_grob)
-  #   grid::upViewport()
-  # }
+  euler_grob$vp <- canvas_vp
 
   # draw strips
   if (do_strip_top) {
     strip_top_grob_children <- grid::gList()
-    #grid::downViewport("strip.top.vp")
     for (i in seq_len(layout[2L])) {
-      # grid::pushViewport(grid::viewport(layout.pos.row = 1L,
-      #                                   layout.pos.col = i))
-      strip_top_grob_children[[i]] <- grid::textGrob(levels(strips$groups[[1L]])[i],
-                                                     just = "bottom",
-                                                     name = paste0("strip.top.grob.", i),
-                                                     gp = do.call(grid::gpar, strips$gp[i]),
-                                                     vp = grid::viewport(layout.pos.row = 1L,
-                                                                         layout.pos.col = i))
-      #grid::upViewport()
+      strip_top_grob_children[[i]] <- grid::textGrob(
+        levels(strips$groups[[1L]])[i],
+        just = "bottom",
+        name = paste0("strip.top.grob.", i),
+        gp = do.call(grid::gpar, strips$gp[i]),
+        vp = grid::viewport(layout.pos.row = 1L,
+                            layout.pos.col = i,
+                            name = paste0("strip.top.vp", i))
+      )
     }
 
     strip_top_grob <- grid::gTree(grid::nullGrob(),
                                   children = strip_top_grob_children,
                                   vp = strip_top_vp)
-    #grid::upViewport()
   }
 
   if (do_strip_left) {
-    #grid::downViewport("strip.left.vp")
     strip_left_grob_children <- grid::gList()
     for (i in seq_len(layout[1L])) {
-      #grid::pushViewport(grid::viewport(layout.pos.row = i,
-      #                                  layout.pos.col = 1))
       strip_left_grob_children[[i]] <- grid::textGrob(
         levels(strips$groups[[2L]])[i],
         just = "bottom",
         rot = 90,
         name = paste0("strip.left.grob.", i),
         gp = do.call(grid::gpar, strips$gp[i + layout[1L]]),
-        vp = grid::viewport(layout.pos.row = i, layout.pos.col = 1)
+        vp = grid::viewport(layout.pos.row = i,
+                            layout.pos.col = 1,
+                            name = paste0("strip.left.vp", i))
       )
-      #grid::upViewport()
     }
     strip_left_grob <- grid::gTree(grid::nullGrob(),
                                    children = strip_left_grob_children,
                                    vp = strip_left_vp)
-    #grid::upViewport()
   }
 
   # return a gTree object
@@ -804,7 +746,12 @@ setup_geometry <- function(x,
 
 #' Grobify Euler objects
 #'
-#' @param x an `euler` object
+#' @param x geometry data
+#' @param fills fills params
+#' @param edges edges params
+#' @param labels labels params
+#' @param quantities quantities params
+#' @param number current diagram number
 #'
 #' @return A [grid::gList()] is returned.
 #' @keywords internal

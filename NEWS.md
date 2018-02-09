@@ -2,7 +2,14 @@
 
 ## Minor changes
 
-* `plot.euler()` now returns a `gTree` object.
+* `plot.euler()` now returns a `gTree` object. All of the plotting mechanisms 
+are now also found in this function and `plot.eulergram()` and
+`print.eulergram()` basically just call `grid::grid.draw()` on the result
+of `plot.euler()`. This change means that functions such as
+`gridExtra::grid.arrange()` now work as one would intuit on the objects
+produces by `plot.euler()`. The downside is that the plot parameters for
+people who prefer to plot the diagrams using other software is
+somewhat harder to extract.
 
 # eulerr 4.0.0
 

@@ -4,7 +4,7 @@
 \alias{setup_grobs}
 \title{Grobify Euler objects}
 \usage{
-setup_grobs(x, fills, edges, labels, quantities)
+setup_grobs(x, fills, edges, labels, quantities, number)
 }
 \arguments{
 \item{x}{an \code{euler} object}
