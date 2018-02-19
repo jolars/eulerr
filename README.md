@@ -3,7 +3,7 @@
 eulerr
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![Coverage Status](https://coveralls.io/repos/github/jolars/eulerr/badge.svg?branch=master)](https://coveralls.io/github/jolars/eulerr?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr) [![Research software impact](http://depsy.org/api/package/cran/eulerr/badge.svg)](http://depsy.org/package/r/eulerr)
+[![Travis-CI Build Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr) [![Coverage Status](https://coveralls.io/repos/github/jolars/eulerr/badge.svg?branch=master)](https://coveralls.io/github/jolars/eulerr?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr) [![Research software impact](http://depsy.org/api/package/cran/eulerr/badge.svg)](http://depsy.org/package/r/eulerr) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KERLYHUY639WU)
 
 **eulerr** generates area-proportional Euler diagrams that display set relationships (intersections, unions, and disjoints) with circles or ellipses. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, **eulerr** sometimes produces Venn diagrams and sometimes not.
 
@@ -45,9 +45,9 @@ We can inspect the goodness-of-fit metrics *diagError* and *stress* for the solu
 
 ``` r
 fit$stress
-#> [1] 2.055708e-12
+#> [1] 1.301979e-11
 fit$diagError
-#> [1] 2.183156e-07
+#> [1] 6.926084e-07
 ```
 
 and plot it
