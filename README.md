@@ -26,7 +26,7 @@ devtools::install_github("jolars/eulerr")
 
 ### Shiny app
 
-eulerr is also available as a shiny app hosted at [jolars.co/eulerr](http://jolars.co/eulerr/).
+eulerr is also available as a shiny app hosted at [eulerr.co](http://eulerr.co).
 
 Usage
 -----
@@ -45,9 +45,9 @@ We can inspect the goodness-of-fit metrics *diagError* and *stress* for the solu
 
 ``` r
 fit$stress
-#> [1] 3.762385e-12
+#> [1] 2.055708e-12
 fit$diagError
-#> [1] 3.944839e-07
+#> [1] 2.183156e-07
 ```
 
 and plot it
