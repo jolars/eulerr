@@ -8,18 +8,27 @@ if(is.null(vers))
   vers <- packageVersion("eulerr")
 note <- paste("R package version", vers)
 
-citHeader("To cite eulerr in publications, please use")
+citHeader("To cite eulerr in publications, please use:")
 
-citEntry(entry = "Manual",
+bibentry(
+  bibtype      = "Manual",
   title        = "{eulerr}: Area-Proportional {Euler} and {Venn} Diagrams with Ellipses",
   author       = personList(as.person("Johan Larsson")),
   year         = year,
   note         = note,
-  url          = "https://cran.r-project.org/package=eulerr",
-  textVersion  = paste(
-    paste0("Johan Larsson (", year, ")."),
-    "eulerr: Area-Proportional Euler and Venn Diagrams with Ellipses",
-    note,
-    "URL https://cran.r-project.org/package=eulerr"
-  )
+  url          = "https://cran.r-project.org/package=eulerr"
+)
+
+bibentry(
+  bibtype      = "Misc",
+  address      = "Lund, Sweden",
+  type         = "Bachelor Thesis",
+  title        = "{eulerr}: Area-Proportional {Euler} Diagrams with Ellipses",
+  author       = personList(as.person("Johan Larsson")),
+  school       = "Lund University",
+  collaborator = personList(as.person("Peter Gustafsson")),
+  pages        = 33,
+  year         = 2018,
+  note         = "Bachelor's Thesis, Lund University",
+  url          = "http://lup.lub.lu.se/student-papers/record/8934042"
 )
