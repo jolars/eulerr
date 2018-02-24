@@ -175,7 +175,7 @@ euler.default <- function(
         areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
       }
       if (any(areas_disjoint < 0))
-        stop("Check your set configuration. Your specification resulted in some disjoint areas being set to 0.")
+        stop("Check your set configuration. Some disjoint areas are negative.")
     }
 
     id_sums <- rowSums(id)
