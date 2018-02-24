@@ -178,182 +178,196 @@ euler.default <- function(
         stop("Check your set configuration. Some disjoint areas are negative.")
     }
 
-    id_sums <- rowSums(id)
-    ones <- id_sums == 1L
-    twos <- id_sums == 2L
-    two <- choose_two(1L:n)
-    r <- sqrt(areas[ones]/pi)
-
-    # Establish identities of disjoint and subset sets
-    subset <- disjoint <- matrix(FALSE, ncol = n, nrow = n)
-    distances <- area_mat <- matrix(0, ncol = n, nrow = n)
-
-    lwrtri <- lower.tri(subset)
-
-    tmp <- matrix(areas[ones][two], ncol = 2L)
-
-    subset[lwrtri] <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
-    disjoint[lwrtri] <- areas[twos] == 0
-    distances[lwrtri] <- mapply(separate_two_discs,
-                                r1 = r[two[, 1L]],
-                                r2 = r[two[, 2L]],
-                                overlap = areas[twos],
-                                USE.NAMES = FALSE)
-
-    # Starting layout
-    loss <- Inf
-    initial_layouts <- vector("list", n_restarts)
-    bnd <- sqrt(sum(r^2*pi))
-
-    i <- 1L
-    while (loss > small && i <= n_restarts) {
-      initial_layouts[[i]] <- stats::nlm(
-        f = optim_init,
-        p = stats::runif(n*2, 0, bnd),
-        d = distances,
-        disjoint = disjoint,
-        subset = subset,
-        iterlim = 1000L
-      )
-      loss <- initial_layouts[[i]]$minimum
-      i <- i + 1L
-    }
-
-    # Find the best initial layout
-    best_init <- which.min(lapply(initial_layouts[1L:(i - 1L)],
-                                  "[[",
-                                  "minimum"))
-    initial_layout <- initial_layouts[[best_init]]
-
-    # Final layout
-    circle <- match.arg(shape) == "circle"
-
-    if (circle) {
-      pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L, byrow = TRUE))
-      lwr <- rep.int(0, 3L)
-      upr <- rep.int(bnd, 3L)
+    if (all(areas == 0)) {
+      # all sets are zero
+      fpar <- matrix(data = rep.int(0, 5L*n),
+                     ncol = 5L,
+                     dimnames = list(setnames, c("h", "k", "a", "b", "phi")))
+      regionError <- diagError <- stress <- 0
+      orig <- fit <- areas
+      names(orig) <- names(fit) <-
+        apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
     } else {
-      pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L, byrow = TRUE),
-                              r, r, 0, deparse.level = 0L))
-      lwr <- c(rep.int(0, 4L), -2*pi)
-      upr <- c(rep.int(bnd, 4L), 2*pi)
-    }
+      id_sums <- rowSums(id)
+      ones <- id_sums == 1L
+      twos <- id_sums == 2L
+      two <- choose_two(1L:n)
+      r <- sqrt(areas[ones]/pi)
 
-    orig <- areas_disjoint
+      # Establish identities of disjoint and subset sets
+      subset <- disjoint <- matrix(FALSE, ncol = n, nrow = n)
+      distances <- area_mat <- matrix(0, ncol = n, nrow = n)
 
-    # Try to find a solution using nlm() first (faster)
-    # TODO: Allow user options here?
-    nlm_solution <- stats::nlm(
-      f = optim_final_loss,
-      p = pars,
-      areas = areas_disjoint,
-      circle = circle,
-      iterlim = 1e4L
-    )$estimate
+      lwrtri <- lower.tri(subset)
 
-    tpar <- as.data.frame(matrix(
-      data = nlm_solution,
-      ncol = if (circle) 3L else 5L,
-      dimnames = list(
-        setnames,
-        if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
-      ),
-      byrow = TRUE
-    ))
-    if (circle)
-      tpar <- cbind(tpar, tpar[, 3L], 0)
+      tmp <- matrix(areas[ones][two], ncol = 2L)
 
-    # Normalize layout
-    nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
+      subset[lwrtri] <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
+      disjoint[lwrtri] <- areas[twos] == 0
+      distances[lwrtri] <- mapply(separate_two_discs,
+                                  r1 = r[two[, 1L]],
+                                  r2 = r[two[, 2L]],
+                                  overlap = areas[twos],
+                                  USE.NAMES = FALSE)
 
-    nlm_pars <- compress_layout(normalize_pars(tpar), id, nlm_fit)
+      # Starting layout
+      loss <- Inf
+      initial_layouts <- vector("list", n_restarts)
+      bnd <- sqrt(sum(r^2*pi))
 
-    nlm_diagError <- diagError(nlm_fit, orig)
+      i <- 1L
+      while (loss > small && i <= n_restarts) {
+        initial_layouts[[i]] <- stats::nlm(
+          f = optim_init,
+          p = stats::runif(n*2, 0, bnd),
+          d = distances,
+          disjoint = disjoint,
+          subset = subset,
+          iterlim = 1000L
+        )
+        loss <- initial_layouts[[i]]$minimum
+        i <- i + 1L
+      }
 
-    # If inadequate solution, try with a second optimizer (slower, better)
-    if (!circle && control$extraopt &&
-        nlm_diagError > control$extraopt_threshold) {
-      # Set bounds for the parameters
-      newpars <- matrix(
-        data = as.vector(t(nlm_pars)),
-        ncol = 5L,
-        dimnames = list(setnames, c("h", "k", "a", "b", "phi")),
-        byrow = TRUE
-      )
+      # Find the best initial layout
+      best_init <- which.min(lapply(initial_layouts[1L:(i - 1L)],
+                                    "[[",
+                                    "minimum"))
+      initial_layout <- initial_layouts[[best_init]]
 
-      constraints <- get_constraints(compress_layout(newpars, id, nlm_fit))
+      # Final layout
+      circle <- match.arg(shape) == "circle"
 
-      # TODO: Set up initial population in some clever fashion.
+      if (circle) {
+        pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L,
+                                 byrow = TRUE))
+        lwr <- rep.int(0, 3L)
+        upr <- rep.int(bnd, 3L)
+      } else {
+        pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L,
+                                       byrow = TRUE),
+                                r, r, 0, deparse.level = 0L))
+        lwr <- c(rep.int(0, 4L), -2*pi)
+        upr <- c(rep.int(bnd, 4L), 2*pi)
+      }
 
-      deoptim <- RcppDE::DEoptim(
-        fn = optim_final_loss,
-        lower = constraints$lwr,
-        upper = constraints$upr,
-        control = do.call(
-          RcppDE::DEoptim.control,
-          utils::modifyList(
-            list(VTR = -Inf,
-                 NP = length(newpars)*10,
-                 CR = 0.6,
-                 F = 0.2,
-                 itermax = 1000L,
-                 trace = FALSE),
-            control$extraopt_control
-          )
-        ),
-        areas = areas_disjoint,
-        circle = circle
-      )
+      orig <- areas_disjoint
 
-      # Fine tune the fit from DEoptim
-      last_ditch_effort <- stats::nlm(
+      # Try to find a solution using nlm() first (faster)
+      # TODO: Allow user options here?
+      nlm_solution <- stats::nlm(
         f = optim_final_loss,
-        p = deoptim$optim$bestmem,
+        p = pars,
         areas = areas_disjoint,
         circle = circle,
         iterlim = 1e4L
       )$estimate
 
-      last_ditch_fit <- as.vector(intersect_ellipses(last_ditch_effort, circle))
-      last_ditch_diagError <- diagError(last_ditch_fit, orig)
+      tpar <- as.data.frame(matrix(
+        data = nlm_solution,
+        ncol = if (circle) 3L else 5L,
+        dimnames = list(
+          setnames,
+          if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
+        ),
+        byrow = TRUE
+      ))
+      if (circle)
+        tpar <- cbind(tpar, tpar[, 3L], 0)
 
-      # Check for the best solution
-      if (last_ditch_diagError < nlm_diagError) {
-        final_par <- last_ditch_effort
-        fit <- last_ditch_fit
+      # Normalize layout
+      nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
+
+      nlm_pars <- compress_layout(normalize_pars(tpar), id, nlm_fit)
+
+      nlm_diagError <- diagError(nlm_fit, orig)
+
+      # If inadequate solution, try with a second optimizer (slower, better)
+      if (!circle && control$extraopt &&
+          nlm_diagError > control$extraopt_threshold) {
+        # Set bounds for the parameters
+        newpars <- matrix(
+          data = as.vector(t(nlm_pars)),
+          ncol = 5L,
+          dimnames = list(setnames, c("h", "k", "a", "b", "phi")),
+          byrow = TRUE
+        )
+
+        constraints <- get_constraints(compress_layout(newpars, id, nlm_fit))
+
+        # TODO: Set up initial population in some clever fashion.
+
+        deoptim <- RcppDE::DEoptim(
+          fn = optim_final_loss,
+          lower = constraints$lwr,
+          upper = constraints$upr,
+          control = do.call(
+            RcppDE::DEoptim.control,
+            utils::modifyList(
+              list(VTR = -Inf,
+                   NP = length(newpars)*10,
+                   CR = 0.6,
+                   F = 0.2,
+                   itermax = 1000L,
+                   trace = FALSE),
+              control$extraopt_control
+            )
+          ),
+          areas = areas_disjoint,
+          circle = circle
+        )
+
+        # Fine tune the fit from DEoptim
+        last_ditch_effort <- stats::nlm(
+          f = optim_final_loss,
+          p = deoptim$optim$bestmem,
+          areas = areas_disjoint,
+          circle = circle,
+          iterlim = 1e4L
+        )$estimate
+
+        last_ditch_fit <- as.vector(intersect_ellipses(last_ditch_effort,
+                                                       circle))
+        last_ditch_diagError <- diagError(last_ditch_fit, orig)
+
+        # Check for the best solution
+        if (last_ditch_diagError < nlm_diagError) {
+          final_par <- last_ditch_effort
+          fit <- last_ditch_fit
+        } else {
+          final_par <- nlm_solution
+          fit <- nlm_fit
+        }
       } else {
         final_par <- nlm_solution
         fit <- nlm_fit
       }
-    } else {
-      final_par <- nlm_solution
-      fit <- nlm_fit
+
+      names(orig) <- names(fit) <-
+        apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
+
+      regionError <- regionError(fit, orig)
+      diagError <- diagError(regionError = regionError)
+      stress <- stress(orig, fit)
+
+      fpar <- matrix(data = final_par,
+                     ncol = if (circle) 3L else 5L,
+                     byrow = TRUE)
+
+      if (circle)
+        fpar <- cbind(fpar, fpar[, 3L], 0)
+
+      dimnames(fpar) <- list(setnames, c("h", "k", "a", "b", "phi"))
+
+      # Normalize semiaxes and rotation
+      fpar <- normalize_pars(fpar)
+
+      # Find disjoint clusters and compress the layout
+      fpar <- compress_layout(fpar, id, fit)
+
+      # Center the solution on the coordinate plane
+      fpar <- center_layout(fpar)
     }
-
-    names(orig) <- names(fit) <-
-      apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
-
-    regionError <- regionError(fit, orig)
-    diagError <- diagError(regionError = regionError)
-    stress <- stress(orig, fit)
-
-    fpar <- matrix(data = final_par,
-                   ncol = if (circle) 3L else 5L,
-                   byrow = TRUE)
-
-    if (circle)
-      fpar <- cbind(fpar, fpar[, 3L], 0)
-
-    dimnames(fpar) <- list(setnames, c("h", "k", "a", "b", "phi"))
-
-    # Normalize semiaxes and rotation
-    fpar <- normalize_pars(fpar)
-
-    # Find disjoint clusters and compress the layout
-    fpar <- compress_layout(fpar, id, fit)
-
-    # Center the solution on the coordinate plane
-    fpar <- center_layout(fpar)
   } else {
     # One set
     fpar <- matrix(data = c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0),

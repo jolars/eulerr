@@ -408,6 +408,12 @@ plot.euler <- function(x,
   ylim <- grDevices::extendrange(ylim, f = 0.01)
   xrng <- abs(xlim[1L] - xlim[2L])
   yrng <- abs(ylim[1L] - ylim[2L])
+
+  if (xrng == 0 || yrng == 0) {
+    xrng <- yrng <- 1
+    ylim <- xlim <- c(0, 1)
+  }
+
   ar <- xrng/yrng
   adjust <- layout[1L]/layout[2]
 
@@ -691,6 +697,7 @@ setup_geometry <- function(x,
   }
 
   if (do_labels || do_quantities) {
+    void_sets <- apply(id, 2, function(i) all(fitted[i] == 0))
     singles <- rowSums(id) == 1
     empty <- abs(fitted) < sqrt(.Machine$double.eps)
 
@@ -723,12 +730,16 @@ setup_geometry <- function(x,
         quantities <- list(labels = orig[quantities_centers[, 3L]])
       quantities$x <- quantities_centers[, 1L]
       quantities$y <- quantities_centers[, 2L]
+      quantities$x[void_sets] <- NA
+      quantities$y[void_sets] <- NA
     }
 
     if (do_labels) {
       labels$x <- labels_centers[, 1L]
       labels$y <- labels_centers[, 2L]
       labels$labels <- center_labels
+      labels$x[void_sets] <- NA
+      labels$y[void_sets] <- NA
     }
   }
 
@@ -800,9 +811,11 @@ setup_grobs <- function(x,
     } else {
       fills_grob <- vector("list", n_id)
       fill_id <- seq_len(n_id)
+      empty_cols <- colSums(id & fitted > 0) == 0
+      # skip <- rowSums(id[, empty_cols, drop = FALSE]) > 0
       empty <- fitted < sqrt(.Machine$double.eps)
-      for (i in 1:n_e) {
-        if (empty[i]) {
+      for (i in seq_len(n_e)) {
+        if (empty[i] && !empty_cols[i]) {
           idx <- id[i, ]
           n_idx <- sum(idx)
           sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx

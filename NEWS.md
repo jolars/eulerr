@@ -8,6 +8,7 @@ are now also found in this function and `plot.eulergram()` and
 of `plot.euler()`. This change means that functions such as
 `gridExtra::grid.arrange()` now work as one would intuit on the objects
 produced by `plot.euler()`. 
+* Fitting and plotting euler diagrams with empty sets is now allowed (#23).
 
 ## Bug fixes
 

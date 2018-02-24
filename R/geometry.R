@@ -24,12 +24,16 @@
 #'   area.
 #' @keywords internal
 separate_two_discs <- function(r1, r2, overlap) {
-  stats::optimize(discdisc,
-                  interval = c(abs(r1 - r2), sum(r1, r2)),
-                  r1 = r1,
-                  r2 = r2,
-                  overlap = overlap,
-                  tol = sqrt(.Machine$double.eps))$minimum
+  if (r1 > 0 && r2 > 0) {
+    stats::optimize(discdisc,
+                    interval = c(abs(r1 - r2), sum(r1, r2)),
+                    r1 = r1,
+                    r2 = r2,
+                    overlap = overlap,
+                    tol = sqrt(.Machine$double.eps))$minimum
+  } else {
+    0
+  }
 }
 
 #' Get the bounding box of an ellipse
