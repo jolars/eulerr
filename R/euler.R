@@ -471,7 +471,7 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
     colnames(out) <- colnames(combinations)
 
     for (i in seq_along(combinations)) {
-      y <- combinations[, i]
+      y <- combinations[, i, drop = TRUE]
       if (is.factor(y) || is.character(y)) {
         facs <- unique(as.character(y))
         if (length(facs) > 2L)

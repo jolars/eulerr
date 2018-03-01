@@ -14,6 +14,8 @@ produced by `plot.euler()`.
 
 * The **grid** parameters available for *edges* are now correctly specified in
 the manual for `plot.euler()`.
+* `euler.data.frame()` now works as expected for tibbles (from the **tibble**
+package) when argument `by` is used.
 
 # eulerr 4.0.0
 
