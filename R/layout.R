@@ -242,8 +242,8 @@ center_layout <- function(pars) {
   pars[!void, 1L] <- h + abs(xlim[1L] - xlim[2L])/2 - xlim[2L]
   pars[!void, 2L] <- k + abs(ylim[1L] - ylim[2L])/2 - ylim[2L]
   if (any(!void)) {
-    pars[void, 1L] <- pars[!void, 1L]/sum(!void)
-    pars[void, 2L] <- pars[!void, 2L]/sum(!void)
+    pars[void, 1L] <- sum(pars[!void, 1L])/sum(!void)
+    pars[void, 2L] <- sum(pars[!void, 2L])/sum(!void)
   }
   pars
 }
