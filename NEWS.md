@@ -9,6 +9,8 @@ of `plot.euler()`. This change means that functions such as
 `gridExtra::grid.arrange()` now work as one would intuit on the objects
 produced by `plot.euler()`. 
 * Fitting and plotting euler diagrams with empty sets is now allowed (#23).
+Empty sets in the input will be returned as `NA` in the resulting
+`data.frame` of ellipses.
 
 ## Bug fixes
 

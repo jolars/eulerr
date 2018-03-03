@@ -137,6 +137,8 @@ euler.default <- function(
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
 
+  # setup preliminary return pars
+
   n <- length(setnames)
   id <- bit_indexr(n)
   N <- NROW(id)
@@ -159,34 +161,52 @@ euler.default <- function(
     }
   }
 
-  if (n > 1L) {
-    # Decompose or collect set volumes depending on input
-    if (match.arg(input) == "disjoint") {
-      areas_disjoint <- areas
-      areas[] <- 0
-      for (i in rev(seq_along(areas))) {
-        prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
-        areas[i] <- sum(areas_disjoint[prev_areas])
-      }
-    } else if (match.arg(input) == "union") {
-      areas_disjoint <- double(length(areas))
-      for (i in rev(seq_along(areas))) {
-        prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
-        areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
-      }
-      if (any(areas_disjoint < 0))
-        stop("Check your set configuration. Some disjoint areas are negative.")
+  # Decompose or collect set volumes depending on input
+  if (match.arg(input) == "disjoint") {
+    areas_disjoint <- areas
+    areas[] <- 0
+    for (i in rev(seq_along(areas))) {
+      prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
+      areas[i] <- sum(areas_disjoint[prev_areas])
     }
+  } else if (match.arg(input) == "union") {
+    areas_disjoint <- double(length(areas))
+    for (i in rev(seq_along(areas))) {
+      prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
+      areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
+    }
+    if (any(areas_disjoint < 0))
+      stop("Check your set configuration. Some disjoint areas are negative.")
+  }
 
+  # setup return object
+  fpar <- as.data.frame(matrix(
+    NA,
+    ncol = 5L,
+    nrow = n,
+    dimnames = list(setnames, c("h", "k", "a", "b", "phi"))
+  ))
+
+  # setup return values
+  orig <- rep.int(0, N)
+  fit <- rep.int(0, N)
+  names(orig) <- names(fit) <-
+    apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
+
+  # find empty sets
+  empty_sets <- areas[seq_len(n)] < sqrt(.Machine$double.eps)
+  empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
+
+  id <- id[!empty_subsets, !empty_sets, drop = FALSE]
+  N <- NROW(id)
+  n <- sum(!empty_sets)
+  areas <- areas[!empty_subsets]
+  areas_disjoint <- areas_disjoint[!empty_subsets]
+
+  if (n > 1L) {
     if (all(areas == 0)) {
       # all sets are zero
-      fpar <- matrix(data = rep.int(0, 5L*n),
-                     ncol = 5L,
-                     dimnames = list(setnames, c("h", "k", "a", "b", "phi")))
-      regionError <- diagError <- stress <- 0
-      orig <- fit <- areas
-      names(orig) <- names(fit) <-
-        apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
+      fpar[] <- NA
     } else {
       id_sums <- rowSums(id)
       ones <- id_sums == 1L
@@ -251,7 +271,7 @@ euler.default <- function(
         upr <- c(rep.int(bnd, 4L), 2*pi)
       }
 
-      orig <- areas_disjoint
+      orig[!empty_subsets] <- areas_disjoint
 
       # Try to find a solution using nlm() first (faster)
       # TODO: Allow user options here?
@@ -267,7 +287,7 @@ euler.default <- function(
         data = nlm_solution,
         ncol = if (circle) 3L else 5L,
         dimnames = list(
-          setnames,
+          setnames[!empty_sets],
           if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
         ),
         byrow = TRUE
@@ -280,7 +300,7 @@ euler.default <- function(
 
       nlm_pars <- compress_layout(normalize_pars(tpar), id, nlm_fit)
 
-      nlm_diagError <- diagError(nlm_fit, orig)
+      nlm_diagError <- diagError(nlm_fit, orig[!empty_subsets])
 
       # If inadequate solution, try with a second optimizer (slower, better)
       if (!circle && control$extraopt &&
@@ -333,53 +353,48 @@ euler.default <- function(
         # Check for the best solution
         if (last_ditch_diagError < nlm_diagError) {
           final_par <- last_ditch_effort
-          fit <- last_ditch_fit
+          fit[!empty_subsets] <- last_ditch_fit
         } else {
           final_par <- nlm_solution
-          fit <- nlm_fit
+          fit[!empty_subsets] <- nlm_fit
         }
       } else {
         final_par <- nlm_solution
-        fit <- nlm_fit
+        fit[!empty_subsets] <- nlm_fit
       }
 
-      names(orig) <- names(fit) <-
-        apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
+      # names(orig) <- names(fit) <-
+      #   apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
 
       regionError <- regionError(fit, orig)
       diagError <- diagError(regionError = regionError)
       stress <- stress(orig, fit)
 
-      fpar <- matrix(data = final_par,
+      temp <- matrix(data = final_par,
                      ncol = if (circle) 3L else 5L,
                      byrow = TRUE)
 
       if (circle)
-        fpar <- cbind(fpar, fpar[, 3L], 0)
-
-      dimnames(fpar) <- list(setnames, c("h", "k", "a", "b", "phi"))
+        temp <- cbind(temp, temp[, 3L], 0)
 
       # Normalize semiaxes and rotation
-      fpar <- normalize_pars(fpar)
+      temp <- normalize_pars(temp)
 
       # Find disjoint clusters and compress the layout
-      fpar <- compress_layout(fpar, id, fit)
+      temp <- compress_layout(temp, id, fit[!empty_subsets])
 
       # Center the solution on the coordinate plane
-      fpar <- center_layout(fpar)
+      fpar[!empty_sets, ] <- center_layout(temp)
     }
   } else {
     # One set
-    fpar <- matrix(data = c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0),
-                   ncol = 5L,
-                   dimnames = list(setnames, c("h", "k", "a", "b", "phi")))
+    fpar[!empty_sets, ] <- c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0)
     regionError <- diagError <- stress <- 0
-    orig <- fit <- areas
-    names(orig) <- names(fit) <- setnames
+    orig[!empty_subsets] <- fit[!empty_subsets] <- areas
   }
 
   # Return eulerr structure
-  structure(list(ellipses = as.data.frame(fpar),
+  structure(list(ellipses = fpar,
                  original.values = orig,
                  fitted.values = fit,
                  residuals = orig - fit,

@@ -266,6 +266,7 @@ plot.euler <- function(x,
                      rot = opar$labels$rot)
     }
 
+    labels$rot <- rep_len(labels$rot, n_e)
     labels$gp <- setup_gpar(list(col = opar$labels$col,
                                  alpha = opar$labels$alpha,
                                  fontsize = opar$labels$fontsize,
@@ -290,6 +291,7 @@ plot.euler <- function(x,
     } else {
       quantities <- list(labels = quantities, rot = opar$quantities$rot)
     }
+    quantities$rot <- rep_len(quantities$rot, n_id)
 
     quantities$gp <- setup_gpar(list(col = opar$quantities$col,
                                      alpha = opar$quantities$alpha,
@@ -299,7 +301,7 @@ plot.euler <- function(x,
                                      lineheight = opar$quantities$lineheight,
                                      font = opar$quantities$font),
                                 quantities,
-                                n_e)
+                                n_id)
   } else {
     quantities <- NULL
   }
@@ -632,13 +634,19 @@ setup_geometry <- function(x,
                            n,
                            id) {
   dd <- x$ellipses
-  orig <- x$original.values
-  fitted <- x$fitted.values
+  empty_sets <- is.na(dd[, 1L])
+  empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
+
+  orig <- x$original.values[!empty_subsets]
+  fitted <- x$fitted.values[!empty_subsets]
+  dd <- dd[!empty_sets, , drop = FALSE]
 
   do_fills <- !is.null(fills)
   do_edges <- !is.null(edges)
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
+
+  id <- id[!empty_subsets, !empty_sets, drop = FALSE]
 
   h <- dd$h
   k <- dd$k
@@ -697,7 +705,6 @@ setup_geometry <- function(x,
   }
 
   if (do_labels || do_quantities) {
-    void_sets <- apply(id, 2, function(i) all(fitted[i] == 0))
     singles <- rowSums(id) == 1
     empty <- abs(fitted) < sqrt(.Machine$double.eps)
 
@@ -705,7 +712,7 @@ setup_geometry <- function(x,
     rownames(centers) <- names(orig)
 
     if (do_labels) {
-      labels <- list(labels = labels$labels)
+      labels <- list(labels = labels$labels[which(!empty_sets)])
       center_labels <- labels$labels[!is.nan(centers[singles, 1L])]
     }
 
@@ -725,21 +732,24 @@ setup_geometry <- function(x,
         centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
       quantities_centers <- rbind(quantities_centers, labels_centers)
       if (!is.null(quantities$labels))
-        quantities <- list(labels = quantities$labels[quantities_centers[, 3L]])
+        quantities <- list(
+          labels =
+            quantities$labels[which(!empty_subsets)][quantities_centers[, 3L]]
+        )
       else
         quantities <- list(labels = orig[quantities_centers[, 3L]])
       quantities$x <- quantities_centers[, 1L]
       quantities$y <- quantities_centers[, 2L]
-      quantities$x[void_sets] <- NA
-      quantities$y[void_sets] <- NA
+      # quantities$x[void_sets] <- NA
+      # quantities$y[void_sets] <- NA
     }
 
     if (do_labels) {
       labels$x <- labels_centers[, 1L]
       labels$y <- labels_centers[, 2L]
       labels$labels <- center_labels
-      labels$x[void_sets] <- NA
-      labels$y[void_sets] <- NA
+      # labels$x[void_sets] <- NA
+      # labels$y[void_sets] <- NA
     }
   }
 
@@ -750,6 +760,8 @@ setup_geometry <- function(x,
        edges = edges,
        labels = labels,
        quantities = quantities,
+       empty_sets = empty_sets,
+       empty_subsets = empty_subsets,
        xlim = limits$xlim,
        ylim = limits$ylim)
 }
@@ -777,13 +789,15 @@ setup_grobs <- function(x,
   data_fills <- x$fills
   data_quantities <- x$quantities
   fitted <- x$fitted.values
+  empty_sets <- x$empty_sets
+  empty_subsets <- x$empty_subsets
 
   do_labels <- !is.null(data_labels)
   do_edges <- !is.null(data_edges)
   do_fills <- !is.null(data_fills)
   do_quantities <- !is.null(data_quantities)
 
-  n_e <- nrow(x$ellipses)
+  n_e <- NROW(x$ellipses)
   n_id <- 2L^n_e - 1L
   id <- bit_indexr(n_e)
 
@@ -795,7 +809,7 @@ setup_grobs <- function(x,
                                      id.lengths = data_edges$id.lengths,
                                      default.units = "native",
                                      name = "edges.grob",
-                                     gp = edges$gp)
+                                     gp = edges$gp[which(!empty_sets)])
   }
 
   # fills
@@ -806,7 +820,7 @@ setup_grobs <- function(x,
         data_fills[[1]]$y,
         default.units = "native",
         name = "fills.grob",
-        gp = fills$gp[1L]
+        gp = fills$gp[which(!empty_subsets)[1L]]
       ))
     } else {
       fills_grob <- vector("list", n_id)
@@ -838,7 +852,7 @@ setup_grobs <- function(x,
             id.lengths = data_fills[[i]]$id.lengths,
             default.units = "native",
             name = paste0("fills.grob.", i),
-            gp = fills$gp[fill_id[i]]
+            gp = fills$gp[which(!empty_subsets)][fill_id[i]]
           )
       }
       fills_grob <- do.call(grid::gList, fills_grob)
@@ -856,11 +870,11 @@ setup_grobs <- function(x,
       label = data_quantities$labels,
       x = data_quantities$x,
       y = data_quantities$y,
-      rot = quantities$rot,
+      rot = quantities$rot[which(!empty_subsets)],
       vjust = ifelse(lab_id & do_labels, 1, 0.5),
       name = "quantities.grob",
       default.units = "native",
-      gp = quantities$gp
+      gp = quantities$gp[which(!empty_subsets)]
     )
   }
 
@@ -870,11 +884,11 @@ setup_grobs <- function(x,
       label = data_labels$labels,
       x = data_labels$x,
       y = data_labels$y,
-      rot = labels$rot,
+      rot = labels$rot[which(!empty_sets)],
       vjust = if (do_quantities) -0.5 else 0.5,
       name = "labels.grob",
       default.units = "native",
-      gp = labels$gp
+      gp = labels$gp[!empty_sets]
     )
   }
 
