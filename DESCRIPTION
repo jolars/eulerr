@@ -2,7 +2,8 @@ Package: eulerr
 Title: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
 Version: 4.0.0.9000
 Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
-                    role = c("aut", "cre")),
+                    role = c("aut", "cre"),
+                    comment = c(ORCID = "0000-0002-4029-5945")),
              person("A. Jonathan R.", "Godfrey", role = "ctb"),
              person("Tim", "Kelley", role = "ctb", 
                     comment = "original Nelder-Mead code"),
