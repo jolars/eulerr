@@ -84,7 +84,7 @@ test_that("a variety of sets can be reproduced", {
     for (i in seq_along(s)) {
       x <- euler(s[[i]],
                  shape = shape,
-                 control = list(extraopt_control = list(itermax = 50)))
+                 control = list(extraopt_control = list(max.call = 100)))
       expect_is(x, "euler")
       y <- expect_error(dont_print(x), NA)
     }

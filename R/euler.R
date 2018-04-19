@@ -57,7 +57,7 @@
 #' @param shape geometric shape used in the diagram
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the more thorough optimizer (currently
-#'   [RcppDE::DEoptim()]) kick in (provided `extraopt_threshold` is exceeded)? The
+#'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
 #'   default is `TRUE` for ellipses and three sets and `FALSE` otherwise.
 #'   * `extraopt_threshold`: threshold, in terms of `diagError`, for when
 #'   the extra optimizer kicks in. This will almost always slow down the
@@ -65,7 +65,7 @@
 #'   that the extra optimizer will kick in if there is *any* error. A value of
 #'   1 means that it will never kick in. The default is `0.001`.
 #'   * `extraopt_control`: a list of control parameters to pass to the
-#'   extra optimizer, such as `itermax`. See [RcppDE::DEoptim.control()].
+#'   extra optimizer, such as `max.call`. See [GenSA::GenSA()].
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.
@@ -280,7 +280,7 @@ euler.default <- function(
         p = pars,
         areas = areas_disjoint,
         circle = circle,
-        iterlim = 1e4L
+        iterlim = 1e6L
       )$estimate
 
       tpar <- as.data.frame(matrix(
@@ -315,36 +315,20 @@ euler.default <- function(
 
         constraints <- get_constraints(compress_layout(newpars, id, nlm_fit))
 
-        # TODO: Set up initial population in some clever fashion.
-
-        deoptim <- RcppDE::DEoptim(
+        last_ditch_effort <- GenSA::GenSA(
+          par = as.vector(newpars),
           fn = optim_final_loss,
           lower = constraints$lwr,
           upper = constraints$upr,
-          control = do.call(
-            RcppDE::DEoptim.control,
-            utils::modifyList(
-              list(VTR = -Inf,
-                   NP = length(newpars)*10,
-                   CR = 0.6,
-                   F = 0.2,
-                   itermax = 1000L,
-                   trace = FALSE),
-              control$extraopt_control
-            )
-          ),
-          areas = areas_disjoint,
-          circle = circle
-        )
-
-        # Fine tune the fit from DEoptim
-        last_ditch_effort <- stats::nlm(
-          f = optim_final_loss,
-          p = deoptim$optim$bestmem,
-          areas = areas_disjoint,
           circle = circle,
-          iterlim = 1e4L
-        )$estimate
+          areas = areas_disjoint,
+          control = utils::modifyList(
+            list(threshold.stop = sqrt(.Machine$double.eps),
+                 max.call = 1e7,
+                 trace.mat = FALSE),
+            control$extraopt_control
+          )
+        )$par
 
         last_ditch_fit <- as.vector(intersect_ellipses(last_ditch_effort,
                                                        circle))

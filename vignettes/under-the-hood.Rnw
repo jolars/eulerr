@@ -981,15 +981,9 @@ If the fitted diagram is still inexact after the procedure in
 \cref{sec:final-optimization}, we offer a final step in which we
 pass the parameters on to a last-ditch optimizer. The weapon of
 choice\footnote{We conducted thorough benchmarking, that we opt not to report here, to
-decide upon an algorithm for this step.} is a \emph{differential evolution algorithm}
-from the R package \pkg{RcppDE}~\citep{Eddelbuettel_2016}---a
-port of the \pkg{DEoptim} package~\cite{Mullen_2011} from \proglang{C} to \proglang{C++}.
-
-The solutions offered by \pkg{RcppDE} often avoid local minima but may be
-inefficient in local search regions;
-this shortcoming can be remedied by fine tuning with a local
-optimizer~\citep{Xiang_2013}---once more, we rely on \code{nlm()} to
-serve this purpose.
+decide upon an algorithm for this step.} is \emph{Generalized simulated annealing}
+from the R package \pkg{GenSA}~\citep{Xiang_2013}. The solutions offered by
+\pkg{GenSA} often avoid local minima.
 
 By default, this last-ditch step is activated only when we have a three-set diagram
 with ellipses and a diagError~\eqref{eq:diagError} above

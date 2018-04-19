@@ -11,6 +11,8 @@ produced by `plot.euler()`.
 * Fitting and plotting euler diagrams with empty sets is now allowed (#23).
 Empty sets in the input will be returned as `NA` in the resulting
 `data.frame` of ellipses.
+* The last-ditch optimizer has been switched back to `GenSA::GenSA()` from
+`RcppDE::DEoptim()`.
 
 ## Bug fixes
 
