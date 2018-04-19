@@ -26,7 +26,7 @@ Imports:
     lattice,
     polyclip,
     Rcpp,
-    RcppDE,
+    GenSA,
     stats,
     utils,
 Suggests: 
