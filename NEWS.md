@@ -1,4 +1,4 @@
-# eulerr 4.0.0.9000
+# eulerr 4.1.0
 
 ## Minor changes
 
