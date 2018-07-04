@@ -598,6 +598,11 @@ plot.euler <- function(x,
                                    children = strip_left_grob_children,
                                    vp = strip_left_vp)
   }
+    
+  absentCombinations<-names(x$original.values)[x$original.values>0&x$fitted.values==0]
+  if(length(absentCombinations)>0){
+    message("Warning: some combinations are not empty but will not be plotted:",paste(absentCombinations,collapse=","))
+  }
 
   # return a gTree object
   grid::grobTree(
