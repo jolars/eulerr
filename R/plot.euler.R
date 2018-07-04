@@ -619,7 +619,6 @@ plot.euler <- function(x,
     cl = "eulergram",
     name = "euler.diagram"
   )
-
 }
 
 #' Compute geometries and label locations
