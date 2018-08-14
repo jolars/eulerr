@@ -12,7 +12,8 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), control = list(), ...)
+  shape = c("circle", "ellipse"), n_threads = 1, control = list(),
+  ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL,
   ...)
@@ -33,6 +34,10 @@ data.frame (see \strong{methods (by class)})}
 (\code{'disjoint'}) or unions (\code{'union'}).}
 
 \item{shape}{geometric shape used in the diagram}
+
+\item{n_threads}{number of threads for parallel processing, either a
+number or \code{"auto"}, in which case \code{\link[RcppParallel:defaultNumThreads]{RcppParallel::defaultNumThreads()}} will
+be called to decide the number of threads to use}
 
 \item{control}{a list of control parameters.
 \itemize{

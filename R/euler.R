@@ -55,6 +55,9 @@
 #' @param input type of input: disjoint identities
 #'   (`'disjoint'`) or unions (`'union'`).
 #' @param shape geometric shape used in the diagram
+#' @param n_threads number of threads for parallel processing, either a
+#'   number or `"auto"`, in which case [RcppParallel::defaultNumThreads()] will
+#'   be called to decide the number of threads to use
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the more thorough optimizer (currently
 #'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
@@ -125,6 +128,7 @@ euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
+  n_threads = 1,
   control = list(),
   ...
 ) {
@@ -133,6 +137,14 @@ euler.default <- function(
             !is.null(attr(combinations, "names")),
             !any(names(combinations) == ""),
             !any(duplicated(names(combinations))))
+
+  if (n_threads == "auto")
+    n_threads <- RcppParallel::defaultNumThreads()
+
+  if (!is.numeric(n_threads))
+    stop("'n_threads' must be either a numeric or 'auto'")
+
+  RcppParallel::setThreadOptions(numThreads = n_threads)
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))

@@ -1,6 +1,6 @@
 Package: eulerr
 Title: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-Version: 4.1.0
+Version: 4.1.0.9000
 Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     role = c("aut", "cre"),
                     comment = c(ORCID = "0000-0002-4029-5945")),
@@ -26,9 +26,10 @@ Imports:
     lattice,
     polyclip,
     Rcpp,
+    RcppParallel,
     GenSA,
     stats,
-    utils,
+    utils
 Suggests: 
     covr,
     knitr,
@@ -37,12 +38,14 @@ Suggests:
     testthat
 LinkingTo:
     Rcpp (>= 0.12.12),
-    RcppArmadillo (>= 0.7.600.1.0)
+    RcppArmadillo (>= 0.7.600.1.0),
+    RcppParallel (>= 4.4.1)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
+SystemRequirements: GNU make
