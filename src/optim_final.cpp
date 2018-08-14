@@ -17,6 +17,7 @@
 #define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
+#include <RcppParallel.h>
 #include "transformations.h"
 #include "intersections.h"
 #include "conversions.h"
@@ -26,6 +27,66 @@
 #include "areas.h"
 
 using namespace arma;
+
+struct AreaWorker : public RcppParallel::Worker {
+  AreaWorker(vec& areas,
+             const mat& ellipses,
+             const umat& id,
+             const mat& points,
+             const umat& parents,
+             const umat& adopters)
+             : areas(areas),
+               ellipses(ellipses),
+               id(id),
+               points(points),
+               parents(parents),
+               adopters(adopters) {}
+
+  void
+  operator()(std::size_t begin, std::size_t end)
+  {
+    for (uword i = begin; i < end; ++i) {
+      uvec ids = find(id.row(i));
+
+      if (ids.n_elem == 1) {
+        // One set
+        areas(i) = ellipse_area(ellipses.col(ids(0)));
+      } else {
+        // Two or more sets
+        urowvec owners(parents.n_cols);
+        for (uword q = 0; q < parents.n_cols; ++q) {
+          owners(q) = n_intersections(parents.col(q), ids) == 2;
+        }
+
+        uvec int_points = find(all(adopters.rows(ids))%owners);
+
+        if (int_points.n_elem == 0) {
+          // No intersections: either disjoint or subset
+          areas(i) = disjoint_or_subset(ellipses.cols(ids));
+        } else {
+          // Compute the area of the overlap
+          bool failure = false;
+          areas(i) = polysegments(points.cols(int_points),
+                                  ellipses,
+                                  parents.cols(int_points),
+                                  failure);
+          if (failure) {
+            // Resort to approximation if exact calculation fails
+            // TODO: Use a better fallback approximation
+            areas(i) = montecarlo(ellipses.cols(ids));
+          }
+        }
+      }
+    }
+  };
+
+  vec&        areas;
+  const mat&  ellipses;
+  const mat&  points;
+  const umat& id;
+  const umat& parents;
+  const umat& adopters;
+};
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
@@ -73,50 +134,19 @@ intersect_ellipses(const arma::vec& par,
   points = points.cols(not_na);
   adopters = adopters.cols(not_na);
   parents = parents.cols(not_na);
-  urowvec owners(parents.n_cols);
 
   // Loop over each set combination
   vec areas(id.n_rows);
 
-  for (uword i = 0; i < id.n_rows; ++i) {
-    uvec ids = find(id.row(i));
+  AreaWorker area_worker(areas, ellipses, id, points, parents, adopters);
 
-    if (ids.n_elem == 1) {
-      // One set
-      areas(i) = ellipse_area(ellipses.unsafe_col(ids(0)));
-    } else {
-      // Two or more sets
-      for (uword q = 0; q < parents.n_cols; ++q) {
-        owners(q) = n_intersections(parents.unsafe_col(q), ids) == 2;
-      }
-
-      uvec int_points = find(all(adopters.rows(ids))%owners);
-
-      if (int_points.n_elem == 0) {
-        // No intersections: either disjoint or subset
-        areas(i) = disjoint_or_subset(ellipses.cols(ids));
-      } else {
-        // Compute the area of the overlap
-        bool failure = false;
-        areas(i) = polysegments(points.cols(int_points),
-                                ellipses,
-                                parents.cols(int_points),
-                                failure);
-        if (failure) {
-          // Resort to approximation if exact calculation fails
-          // TODO: Use a better fallback approximation
-          areas(i) = montecarlo(ellipses.cols(ids));
-        }
-      }
-    }
-  }
+  RcppParallel::parallelFor(0, id.n_rows, area_worker);
 
   vec out(id.n_rows, fill::zeros);
 
   // hierarchically decompose combination to get disjoint subsets
-  for (uword i = id.n_rows; i-- > 0;) {
+  for (uword i = id.n_rows; i-- > 0;)
     out(i) = areas(i) - accu(out(find(all(id.cols(find(id.row(i))), 1))));
-  }
 
   return clamp(out, 0.0, out.max());
 }
@@ -139,5 +169,4 @@ optim_final_loss(const arma::vec& par,
                  const arma::vec& areas,
                  const bool circle) {
   return stress(areas, intersect_ellipses(par, circle));
-  //return accu(square(areas - intersect_ellipses(par, circle)));
 }
