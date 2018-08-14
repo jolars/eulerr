@@ -28,7 +28,8 @@ template <class Fun, class...Pars>
 arma::vec
 nelderMead(arma::vec&& x0,
            Fun&& f,
-           Pars&&... args) {
+           Pars&&... args)
+{
   uword maximize = 1;
   uword maxit = 2000;
   double tol = 1e-8;

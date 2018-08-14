@@ -24,7 +24,8 @@ using namespace arma;
 // See if a group of ellipses are completely disjoint or a russian doll
 inline
 double
-disjoint_or_subset(const arma::mat& M) {
+disjoint_or_subset(const arma::mat& M)
+{
   rowvec areas = M.row(2)%M.row(3)*datum::pi;
   uword i = areas.index_min();
 
@@ -52,7 +53,8 @@ find_surrounding_sets(const rowvec& x,
                       const rowvec& k,
                       const rowvec& a,
                       const rowvec& b,
-                      const rowvec& phi) {
+                      const rowvec& phi)
+{
   umat out(h.n_elem, x.n_elem);
 
   for (uword i = 0; i < h.n_elem; ++i) {
@@ -75,7 +77,8 @@ arma::umat
 adopt(const mat& points,
       const mat& ellipses,
       const uword i,
-      const uword j) {
+      const uword j)
+{
   umat out(ellipses.n_cols, 4);
   for (uword l = 0; l < ellipses.n_cols; ++l) {
     if ((l == i) || (l == j)) {

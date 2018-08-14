@@ -36,7 +36,8 @@ double
 bisect(const double r0,
        const double z0,
        const double z1,
-       double g) {
+       double g)
+{
   const double n0 = r0*z0;
   double s0 = z1 - 1;
   double s1 = g < 0 ? 0 : std::hypot(n0, z1) - 1;
@@ -64,7 +65,8 @@ bisect(const double r0,
 // Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
 // (c) 1998-2016
 double
-dist_to_ellipse(double a, double b, double x, double y) {
+dist_to_ellipse(double a, double b, double x, double y)
+{
   // Flip the coordinate system if semi-major axis > semi-minor axis
   if (b > a) {
     std::swap(x, y);
@@ -108,7 +110,8 @@ dist_loss(const arma::vec& p,
           const arma::rowvec& k,
           const arma::rowvec& a,
           const arma::rowvec& b,
-          const arma::rowvec& phi) {
+          const arma::rowvec& phi)
+{
   uword n = h.n_elem;
   vec d(n);
   vec::fixed<3> pp;
@@ -129,7 +132,8 @@ locate_centers(const arma::rowvec& h,
                const arma::rowvec& a,
                const arma::rowvec& b,
                const arma::rowvec& phi,
-               const arma::colvec& fitted) {
+               const arma::colvec& fitted)
+{
   uword n = h.n_elem;
   mat xy;
 

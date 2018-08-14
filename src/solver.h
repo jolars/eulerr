@@ -31,7 +31,8 @@ arma::cx_vec
 solve_cubic(const double alpha,
             const double beta,
             const double gamma,
-            const double delta) {
+            const double delta)
+{
   std::complex<double> i(0.0, 1.0);
   cx_vec::fixed<3> y;
 

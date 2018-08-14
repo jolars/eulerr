@@ -23,7 +23,8 @@ using namespace arma;
 // overlap between two discs
 // [[Rcpp::export]]
 arma::umat
-choose_two(const arma::uvec& x) {
+choose_two(const arma::uvec& x)
+{
   uword n = x.n_elem;
   umat m(n*(n - 1)/2, 2);
   for (uword i = 0, k = 0; i < n - 1; ++i) {
@@ -41,7 +42,8 @@ double
 discdisc(double d,
          double r1,
          double r2,
-         double overlap) {
+         double overlap)
+{
   double r1sq = r1*r1;
   double r2sq = r2*r2;
   double dsq  = d*d;
@@ -56,6 +58,7 @@ discdisc(double d,
 // export wrapper around bit_index()
 // [[Rcpp::export]]
 arma::umat
-bit_index_cpp(arma::uword n) {
+bit_index_cpp(arma::uword n)
+{
   return bit_index(n);
 }

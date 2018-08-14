@@ -23,12 +23,14 @@ using namespace arma;
 
 // Area of an ellipse
 double
-ellipse_area(const arma::vec& v) {
+ellipse_area(const arma::vec& v)
+{
   return datum::pi*v(2)*v(3);
 }
 
 double
-montecarlo(arma::mat ellipses) {
+montecarlo(arma::mat ellipses)
+{
   double n = ellipses.n_cols;
 
   // Get bounding box for all the ellipses
@@ -75,7 +77,8 @@ inline
 double
 sector_area(const double a,
             const double b,
-            const double theta) {
+            const double theta)
+{
   return 0.5*a*b*(theta - std::atan2((b - a)*std::sin(2.0*theta),
                                      b + a + (b - a)*std::cos(2.0*theta)));
 }
@@ -87,7 +90,8 @@ sector_area(const double a,
 double
 ellipse_segment(const arma::vec& ellipse,
                 const arma::vec& pa,
-                const arma::vec& pb) {
+                const arma::vec& pb)
+{
   vec::fixed<2> hk = ellipse.subvec(0, 1);
   double a = ellipse(2);
   double b = ellipse(3);
@@ -128,7 +132,8 @@ double
 polysegments(arma::mat&& points,
              const arma::mat& ellipses,
              arma::umat&& parents,
-             bool& failure) {
+             bool& failure)
+{
   vec x_int = points.row(0).t();
   vec y_int = points.row(1).t();
   uword n = points.n_cols;

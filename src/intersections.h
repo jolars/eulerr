@@ -27,7 +27,8 @@ using namespace arma;
 
 // Split a degenerate conic into two lines
 arma::mat
-split_conic(const mat& A) {
+split_conic(const mat& A)
+{
   mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
@@ -50,7 +51,8 @@ split_conic(const mat& A) {
 
 // Intersect a conic with two lines to return 0 to 4 intersection points
 arma::mat
-intersect_conic_line(const arma::mat& A, const arma::vec& l) {
+intersect_conic_line(const arma::mat& A, const arma::vec& l)
+{
   mat::fixed<3, 3> M = skewsymmat(l);
   mat::fixed<3, 3> B = M.t()*A*M;
   vec::fixed<3> l_abs = abs(l);
@@ -87,7 +89,8 @@ intersect_conic_line(const arma::mat& A, const arma::vec& l) {
 // Intersect two conics, returning 0-4 intersection points
 arma::mat
 intersect_conics(const arma::mat& A,
-                 const arma::mat& B) {
+                 const arma::mat& B)
+{
   double alpha = det(A);
   double beta = det(join_rows(A.cols(0, 1), B.col(2))) +
                 det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2))) +

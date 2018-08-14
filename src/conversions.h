@@ -24,7 +24,8 @@ using namespace arma;
 
 inline
 arma::cube
-standard_to_matrix(const mat& m) {
+standard_to_matrix(const mat& m)
+{
   rowvec h = m.row(0);
   rowvec k = m.row(1);
   rowvec a = m.row(2);

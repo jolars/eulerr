@@ -92,11 +92,12 @@ struct AreaWorker : public RcppParallel::Worker {
 // [[Rcpp::export]]
 arma::vec
 intersect_ellipses(const arma::vec& par,
-                   const bool circle) {
-  uword n_pars   = circle ? 3 : 5;
-  uword n        = par.n_elem/n_pars;
-  uword n_int    = 2*n*(n - 1);
-  umat  id       = bit_index(n);
+                   const bool circle)
+{
+  uword n_pars = circle ? 3 : 5;
+  uword n      = par.n_elem/n_pars;
+  uword n_int  = 2*n*(n - 1);
+  umat  id     = bit_index(n);
 
   // Set up a matrix of the ellipses in standard form and a cube of conics
   mat ellipses = reshape(par, n_pars, n);
@@ -155,7 +156,8 @@ intersect_ellipses(const arma::vec& par,
 // [[Rcpp::export]]
 double
 stress(const arma::vec& orig,
-       const arma::vec& fit) {
+       const arma::vec& fit)
+{
   double sst   = accu(square(fit));
   double slope = accu(orig%fit)/accu(square(orig));
   double sse   = accu(square(fit - orig*slope));
@@ -167,6 +169,7 @@ stress(const arma::vec& orig,
 double
 optim_final_loss(const arma::vec& par,
                  const arma::vec& areas,
-                 const bool circle) {
+                 const bool circle)
+{
   return stress(areas, intersect_ellipses(par, circle));
 }

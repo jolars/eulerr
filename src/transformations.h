@@ -24,7 +24,8 @@ using namespace arma;
 // Scaling matrix
 inline
 arma::mat
-scale(const arma::vec& xy) {
+scale(const arma::vec& xy)
+{
   mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = xy(0);
@@ -35,7 +36,8 @@ scale(const arma::vec& xy) {
 inline
 arma::mat
 scale(const double x,
-      const double y) {
+      const double y)
+{
   mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) = x;
@@ -46,7 +48,8 @@ scale(const double x,
 // Translation matrix
 inline
 arma::mat
-translate(const arma::vec& xy) {
+translate(const arma::vec& xy)
+{
   mat::fixed<3, 3> out;
   out.eye();
   out(span(0, 1), 2) = xy;
@@ -56,7 +59,8 @@ translate(const arma::vec& xy) {
 inline
 arma::mat
 translate(const double x,
-          const double y) {
+          const double y)
+{
   mat::fixed<3, 3> out;
   out.eye();
   out(0, 2) = x;
@@ -67,7 +71,8 @@ translate(const double x,
 // Produce a rotation matrix
 inline
 arma::mat
-rotate(const double phi) {
+rotate(const double phi)
+{
   mat::fixed<3, 3> out;
   out.eye();
   out(0, 0) =  std::cos(phi);
@@ -80,7 +85,8 @@ rotate(const double phi) {
 // Return the adjoint (adjugate) of a 3-by-3 matrix
 inline
 arma::mat
-adjoint(const arma::mat& m) {
+adjoint(const arma::mat& m)
+{
   mat::fixed<3, 3> out;
   const double a = m(0, 0);
   const double b = m(1, 0);
@@ -102,7 +108,8 @@ adjoint(const arma::mat& m) {
 // Skew-symmetric matrix for complex matrices
 inline
 arma::cx_mat
-skewsymmat(const arma::cx_vec& v) {
+skewsymmat(const arma::cx_vec& v)
+{
   cx_mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);
@@ -117,7 +124,8 @@ skewsymmat(const arma::cx_vec& v) {
 // Skew-symmetric matrix
 inline
 arma::mat
-skewsymmat(const arma::vec& v) {
+skewsymmat(const arma::vec& v)
+{
   mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);

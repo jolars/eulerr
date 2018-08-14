@@ -24,7 +24,8 @@ Rcpp::NumericVector
 optim_init(const Rcpp::NumericVector& par,
            const Rcpp::NumericMatrix& d,
            const Rcpp::LogicalMatrix& disjoint,
-           const Rcpp::LogicalMatrix& subset) {
+           const Rcpp::LogicalMatrix& subset)
+{
   const unsigned int n = par.size()/2;
   const Rcpp::NumericVector x = Rcpp::head(par, n);
   const Rcpp::NumericVector y = Rcpp::tail(par, n);
