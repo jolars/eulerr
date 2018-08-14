@@ -52,7 +52,7 @@ discdisc(double d,
     r2sq*std::acos((dsq + r2sq - r1sq)/(2*d*r2)) -
     0.5*std::sqrt((r1 + r2 - d)*(d + r1 - r2)*(d - r1 + r2)*(d + r1 + r2));
 
-  return std::pow(D - overlap, 2);
+  return (D - overlap)*(D - overlap);
 }
 
 // export wrapper around bit_index()
