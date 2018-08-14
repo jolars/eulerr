@@ -150,16 +150,16 @@ polysegments(arma::mat&& points,
 
   for (uword i = 0, j = n - 1; i < n; ++i) {
     // First discover which ellipses the points belong to
-    uvec ii = set_intersect(parents.unsafe_col(i), parents.unsafe_col(j));
+    uvec ii = set_intersect(parents.col(i), parents.col(j));
 
     if (ii.n_elem > 0) {
       vec areas(ii.n_elem);
 
       // Ellipse segment
       for (uword k = 0; k < ii.n_elem; ++k)
-        areas(k) = ellipse_segment(ellipses.unsafe_col(ii(k)),
-                                   points.unsafe_col(i),
-                                   points.unsafe_col(j));
+        areas(k) = ellipse_segment(ellipses.col(ii(k)),
+                                   points.col(i),
+                                   points.col(j));
 
       // Triangular plus ellipse segment area
       area += 0.5*((x_int(j) + x_int(i))*(y_int(j) - y_int(i))) + areas.min();
