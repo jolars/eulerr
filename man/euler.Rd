@@ -14,7 +14,8 @@ euler(combinations, ...)
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
   shape = c("circle", "ellipse"), control = list(), ...)
 
-\method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
+\method{euler}{data.frame}(combinations, weights = NULL, by = NULL,
+  ...)
 
 \method{euler}{matrix}(combinations, ...)
 

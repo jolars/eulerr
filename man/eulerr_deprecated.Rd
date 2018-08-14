@@ -26,8 +26,8 @@ panel.euler.circles(x, y, r, border = "black", fill = "transparent",
 
 panel.euler.ellipses(x, y, ra, rb, phi, fill = "transparent",
   fill_alpha = 0.4, border = "black", mode = c("split", "overlay"),
-  identifier = NULL, n = 200, fitted.values, ..., name.type = "panel",
-  col, font, fontface)
+  identifier = NULL, n = 200, fitted.values, ...,
+  name.type = "panel", col, font, fontface)
 
 panel.euler.labels(x, y, ra, rb, phi, labels, quantities = FALSE,
   original.values, fitted.values, ...)

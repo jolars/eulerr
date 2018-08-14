@@ -5,9 +5,9 @@
 \title{Plot area-proportional Euler diagrams}
 \usage{
 \method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
-  labels = identical(legend, FALSE), quantities = FALSE, strips = NULL,
-  n = 200L, ..., fill_alpha, auto.key, fontface, par.settings,
-  default.prepanel, default.scales, panel)
+  labels = identical(legend, FALSE), quantities = FALSE,
+  strips = NULL, n = 200L, ..., fill_alpha, auto.key, fontface,
+  par.settings, default.prepanel, default.scales, panel)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
