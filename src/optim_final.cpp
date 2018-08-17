@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#define ARMA_NO_DEBUG // For the final version
+// #define ARMA_NO_DEBUG // For the final version
+#define ARMA_DONT_USE_OPENMP
 
 #include <RcppArmadillo.h>
 #include <RcppParallel.h>
@@ -27,6 +28,56 @@
 #include "areas.h"
 
 using namespace arma;
+
+arma::umat
+choose_two(const arma::uword n)
+{
+  umat m(2, n*(n - 1)/2);
+  for (uword i = 0, k = 0; i < n - 1; ++i) {
+    for (uword j = i + 1; j < n; ++j, ++k) {
+      m(0, k) = i;
+      m(1, k) = j;
+    }
+  }
+  return m;
+}
+
+struct IntersectionWorker : public RcppParallel::Worker {
+  IntersectionWorker(mat& points,
+                     umat& parents,
+                     umat& adopters,
+                     const cube& conics,
+                     const mat& ellipses,
+                     const umat& two_combos)
+                     : points(points),
+                       parents(parents),
+                       adopters(adopters),
+                       conics(conics),
+                       ellipses(ellipses),
+                       two_combos(two_combos) {}
+
+  void
+  operator()(std::size_t begin, std::size_t end)
+  {
+    for (std::size_t k = begin; k < end; ++k) {
+      uword i = two_combos(0, k);
+      uword j = two_combos(1, k);
+      auto p = intersect_conics(conics.slice(i), conics.slice(j));
+      points.cols(k*4, k*4 + 3) = p;
+      adopters.cols(k*4, k*4 + 3) = adopt(p, ellipses, i, j);
+      parents(0, span(k*4, k*4 + 3)).fill(i);
+      parents(1, span(k*4, k*4 + 3)).fill(j);
+    }
+  }
+
+  mat& points;
+  umat& parents;
+  umat& adopters;
+  const cube& conics;
+  const mat& ellipses;
+  const umat& two_combos;
+};
+
 
 struct AreaWorker : public RcppParallel::Worker {
   AreaWorker(vec& areas,
@@ -119,16 +170,16 @@ intersect_ellipses(const arma::vec& par,
   umat parents  (2, n_int);
   umat adopters (n, n_int);
 
-  for (uword i = 0, k = 0; i < n - 1; ++i) {
-    for (uword j = i + 1; j < n; ++j) {
-      points.cols(k, k + 3) = intersect_conics(conics.slice(i),
-                                               conics.slice(j));
-      adopters.cols(k, k + 3) = adopt(points.cols(k, k + 3), ellipses, i, j);
-      parents(0, span(k, k + 3)).fill(i);
-      parents(1, span(k, k + 3)).fill(j);
-      k += 4;
-    }
-  }
+  auto two_combos = choose_two(n);
+
+  IntersectionWorker intersection_worker(points,
+                                         parents,
+                                         adopters,
+                                         conics,
+                                         ellipses,
+                                         two_combos);
+
+  RcppParallel::parallelFor(0, two_combos.n_cols, intersection_worker);
 
   // Shed points that are NA
   uvec not_na = find_finite(points.row(0));
