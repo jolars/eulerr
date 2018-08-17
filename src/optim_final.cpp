@@ -133,8 +133,8 @@ struct AreaWorker : public RcppParallel::Worker {
 
   vec&        areas;
   const mat&  ellipses;
-  const mat&  points;
   const umat& id;
+  const mat&  points;
   const umat& parents;
   const umat& adopters;
 };
