@@ -19,7 +19,7 @@
 
 #include <RcppArmadillo.h>
 
-constexpr double small = std::pow(arma::datum::eps, 0.95);
-const double two_pi = 2*arma::datum::pi;
+const double small = std::pow(arma::datum::eps, 0.95);
+const double two_pi = 2.0*arma::datum::pi;
 
 #endif
