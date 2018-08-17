@@ -80,7 +80,7 @@ struct IntersectionWorker : public RcppParallel::Worker {
 
 
 struct AreaWorker : public RcppParallel::Worker {
-  AreaWorker(vec& areas,
+  AreaWorker(Rcpp::NumericVector areas,
              const mat& ellipses,
              const umat& id,
              const mat& points,
@@ -101,7 +101,7 @@ struct AreaWorker : public RcppParallel::Worker {
 
       if (ids.n_elem == 1) {
         // One set
-        areas(i) = ellipse_area(ellipses.col(ids(0)));
+        areas[i] = ellipse_area(ellipses.col(ids(0)));
       } else {
         // Two or more sets
         urowvec owners(parents.n_cols);
@@ -113,25 +113,25 @@ struct AreaWorker : public RcppParallel::Worker {
 
         if (int_points.n_elem == 0) {
           // No intersections: either disjoint or subset
-          areas(i) = disjoint_or_subset(ellipses.cols(ids));
+          areas[i] = disjoint_or_subset(ellipses.cols(ids));
         } else {
           // Compute the area of the overlap
           bool failure = false;
-          areas(i) = polysegments(points.cols(int_points),
+          areas[i] = polysegments(points.cols(int_points),
                                   ellipses,
                                   parents.cols(int_points),
                                   failure);
           if (failure) {
             // Resort to approximation if exact calculation fails
             // TODO: Use a better fallback approximation
-            areas(i) = montecarlo(ellipses.cols(ids));
+            areas[i] = montecarlo(ellipses.cols(ids));
           }
         }
       }
     }
   };
 
-  vec&        areas;
+  RcppParallel::RVector<double> areas;
   const mat&  ellipses;
   const umat& id;
   const mat&  points;
@@ -188,7 +188,7 @@ intersect_ellipses(const arma::vec& par,
   parents = parents.cols(not_na);
 
   // Loop over each set combination
-  vec areas(id.n_rows);
+  Rcpp::NumericVector areas(id.n_rows);
 
   AreaWorker area_worker(areas, ellipses, id, points, parents, adopters);
 
@@ -198,7 +198,7 @@ intersect_ellipses(const arma::vec& par,
 
   // hierarchically decompose combination to get disjoint subsets
   for (uword i = id.n_rows; i-- > 0;)
-    out(i) = areas(i) - accu(out(find(all(id.cols(find(id.row(i))), 1))));
+    out(i) = areas[i] - accu(out(find(all(id.cols(find(id.row(i))), 1))));
 
   return clamp(out, 0.0, out.max());
 }
