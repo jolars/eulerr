@@ -22,6 +22,7 @@
 using namespace arma;
 
 // Area of an ellipse
+inline
 double
 ellipse_area(const arma::vec& v)
 {
@@ -92,13 +93,13 @@ ellipse_segment(const arma::vec& ellipse,
                 const arma::vec& pa,
                 const arma::vec& pb)
 {
-  vec::fixed<2> hk = ellipse.subvec(0, 1);
+  const vec::fixed<2> hk = ellipse.subvec(0, 1);
   double a = ellipse(2);
   double b = ellipse(3);
   double phi = ellipse(4);
 
-  vec::fixed<3> p0 = rotate(phi)*translate(-hk)*pa;
-  vec::fixed<3> p1 = rotate(phi)*translate(-hk)*pb;
+  const vec::fixed<3> p0 = rotate(phi)*translate(-hk)*pa;
+  const vec::fixed<3> p1 = rotate(phi)*translate(-hk)*pb;
 
   double x0 = p0(0);
   double x1 = p1(0);
