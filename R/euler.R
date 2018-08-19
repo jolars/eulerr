@@ -39,10 +39,9 @@
 #' The *stress* statistic is computed as
 #'
 #' \deqn{
-#'   \frac{
-#'     \sum_{i=1}^n (A_i - \beta\omega_i)^2}{\sum_{i=1}^n A_i^2},
-#'   }{
-#'     \sum (A_i - \beta\omega_i)^2 / \sum A_i^2,
+#'   \frac{\sum_{i=1}^n (A_i - \beta\omega_i)^2}{\sum_{i=1}^n A_i^2},
+#' }{
+#'   \sum (A_i - \beta\omega_i)^2 / \sum A_i^2,
 #' }
 #' where
 #' \deqn{
@@ -54,10 +53,10 @@
 #' `regionError` is computed as
 #'
 #' \deqn{
-#'     \left| \frac{A_i}{\sum_{i=1}^n A_i} - \frac{\omega_i}{\sum_{i=1}^n \omega_i}\right|.
-#'   }{
-#'     max|A_i / \sum A  - \omega_i / \sum \omega|.
-#'  }
+#'   \left| \frac{A_i}{\sum_{i=1}^n A_i} - \frac{\omega_i}{\sum_{i=1}^n \omega_i}\right|.
+#' }{
+#'   max|A_i / \sum A  - \omega_i / \sum \omega|.
+#' }
 #'
 #' `diagError` is simply the maximum of regionError.
 #'
