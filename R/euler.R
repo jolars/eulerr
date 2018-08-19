@@ -23,27 +23,40 @@
 #' If the input is a matrix or data frame and argument `by` is specified,
 #' the function returns a list of euler diagrams.
 #'
-#' The function minimizes the *stress* statistic from \pkg{venneuler},
+#' The function minimizes the residual sums of squares,
+#' \deqn{
+#'   \sum_{i=1}^n (A_i - \omega_i)^2,
+#' }{
+#'   \sum (A_i - \omega_i)^2,
+#' }
+#' where \eqn{\omega_i} the size of the ith disjoint subset, and \eqn{A_i} the
+#' corresponding area in the diagram, that is, the unique contribution to the
+#' total area from this overlap.
+#'
+#' [euler()] also returns `stress` (from \pkg{venneuler}), as well as
+#' `diagError`, and `regionError` from \pkg{eulerAPE}.
+#'
+#' The *stress* statistic is computed as
 #'
 #' \deqn{
 #'   \frac{
-#'     \sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2},
+#'     \sum_{i=1}^n (A_i - \beta\omega_i)^2}{\sum_{i=1}^n A_i^2},
 #'   }{
-#'   \sum (fit - original) ^ 2 / \sum original ^ 2,
+#'     \sum (A_i - \beta\omega_i)^2 / \sum A_i^2,
+#' }
+#' where
+#' \deqn{
+#'   \beta = \sum_{i=1}^n A_i\omega_i / \sum_{i=1}^n \omega_i^2.
+#' }{
+#'   \beta = \sum A_i\omega_i / \sum \omega_i^2.
 #' }
 #'
-#' where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
-#' regression of the fitted areas on the original areas that are currently being
-#' explored. The stress statistic can also be used as a goodness of fit
-#' measure.
-#'
-#' [euler()] also returns `diagError` and `regionError` from
-#' \pkg{eulerAPE}. `regionError` is computed as
+#' `regionError` is computed as
 #'
 #' \deqn{
-#'     \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
+#'     \left| \frac{A_i}{\sum_{i=1}^n A_i} - \frac{\omega_i}{\sum_{i=1}^n \omega_i}\right|.
 #'   }{
-#'     max|fit / \sum fit  - original / \sum original|.
+#'     max|A_i / \sum A  - \omega_i / \sum \omega|.
 #'  }
 #'
 #' `diagError` is simply the maximum of regionError.

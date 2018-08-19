@@ -231,5 +231,5 @@ optim_final_loss(const arma::vec& par,
                  const arma::vec& areas,
                  const bool circle)
 {
-  return stress(areas, intersect_ellipses(par, circle));
+  return accu(square(areas - intersect_ellipses(par, circle)));
 }

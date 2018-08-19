@@ -945,48 +945,21 @@ to rotate and the relation between the semiaxes to vary, altogether
 rendering five parameters to optimize per set and ellipse (or three if we
 restrict ourselves to circles). For each iteration of
 the optimizer, the areas of all intersections are analyzed and a measure of loss
-returned. The loss we use is the same as that in \pkg{venneuler}~\cite{Wilkinson_2012},
-namely \emph{stress},
-\begin{equation}
- \frac{\sum_{i=1}^n (A_i - \beta \omega_i)^2}{\sum_{i=1}^n A_i},
-\label{eq:stress}
-\end{equation}
-where \[\beta = \frac{\sum_{i=1}^n A_i\omega_i}{\sum_{i=1}^n \omega_i^2}.\]
-This is equivalent to linear regression through the origin, where $\beta$ is the
-slope of the regression line~(\cref{fig:origin-regress}).
-
-<<origin-regress, fig.env="marginfigure", fig.cap="Optimizing via stress is analogous to least-squares linear regression through the origin. $\\omega$ is the set of unique quantities in the input~(\\cref{def:omega}) and $A$ the respective areas in the diagram.",fig.width=2.4,fig.height=2.4>>=
-fit <- euler(c(X = 3, Y = 1, Z = 2,
-               "X&Y" = 2, "X&Z" = 1.2, "Y&Z" = 1.5,
-               "X&Y&Z" = 1))
-d <- data.frame(A = fitted(fit), omega = fit$original.values)
-xyplot(A ~ omega, d, groups = as.factor(1:7), asp = "iso",
-       xlim = c(-0.1, 3.9), ylim = c(-0.1, 3.9),
-       xlab = expression(omega),
-       panel = function(x, y, ...) {
-         panel.abline(a = 0, b = sum(d$A*d$omega)/(sum(d$omega^2)),
-                       rotate = TRUE, at = 0.8, pos = 1,
-                       col = "grey60")
-         panel.xyplot(x, y, col = trellis.par.get("superpose.symbol")$col, ...)
-         panel.text(x, y, labels = names(resid(fit)),
-                    col = trellis.par.get("superpose.symbol")$col,
-                    pos = c(3, 3, 3, 2, 3, 4, 2))
-       })
-@
-
-\subsection{Last-ditch optimization}
-\label{sec:last-ditch}
+returned. The loss we use is the same as in
+\pkg{venneuler}~\cite{Frederickson_2016}, namely the residual sums
+of squares.
 
 If the fitted diagram is still inexact after the procedure in
 \cref{sec:final-optimization}, we offer a final step in which we
 pass the parameters on to a last-ditch optimizer. The weapon of
-choice\footnote{We conducted thorough benchmarking, that we opt not to report here, to
-decide upon an algorithm for this step.} is \emph{Generalized simulated annealing}
+choice\footnote{We conducted thorough benchmarking, that we opt not to report
+here, to decide upon an algorithm for this step.} is
+\emph{Generalized simulated annealing}
 from the R package \pkg{GenSA}~\citep{Xiang_2013}. The solutions offered by
 \pkg{GenSA} often avoid local minima.
 
-By default, this last-ditch step is activated only when we have a three-set diagram
-with ellipses and a diagError~\eqref{eq:diagError} above
+By default, this last-ditch step is activated only when we have a three-set
+diagram with ellipses and a diagError~\eqref{eq:diagError} above
 0.001\footnote{The choice of if and when this last-ditch optimizer is
 activated is left to the user via simple commands to the main function
 of the package.} The
