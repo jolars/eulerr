@@ -78,21 +78,21 @@ struct IntersectionWorker : public RcppParallel::Worker {
   const umat& two_combos;
 };
 
-
 struct AreaWorker : public RcppParallel::Worker {
   AreaWorker(Rcpp::NumericVector areas,
              const mat& ellipses,
              const umat& id,
              const mat& points,
              const umat& parents,
-             const umat& adopters)
+             const umat& adopters,
+             const bool approx)
              : areas(areas),
                ellipses(ellipses),
                id(id),
                points(points),
                parents(parents),
-               adopters(adopters) {}
-
+               adopters(adopters),
+               approx(approx) {}
   void
   operator()(std::size_t begin, std::size_t end)
   {
@@ -130,7 +130,7 @@ struct AreaWorker : public RcppParallel::Worker {
                                   ellipses,
                                   parents.cols(int_points),
                                   failure);
-          if (failure) {
+          if (failure || approx) {
             // Resort to approximation if exact calculation fails
             // TODO: Use a better fallback approximation
             areas[i] = montecarlo(ellipses.cols(ids));
@@ -146,13 +146,15 @@ struct AreaWorker : public RcppParallel::Worker {
   const mat&  points;
   const umat& parents;
   const umat& adopters;
+  const bool approx;
 };
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
 arma::vec
 intersect_ellipses(const arma::vec& par,
-                   const bool circle)
+                   const bool circle,
+                   const bool approx = false)
 {
   uword n_pars = circle ? 3 : 5;
   uword n      = par.n_elem/n_pars;
@@ -199,7 +201,13 @@ intersect_ellipses(const arma::vec& par,
   // Loop over each set combination
   Rcpp::NumericVector areas(id.n_rows);
 
-  AreaWorker area_worker(areas, ellipses, id, points, parents, adopters);
+  AreaWorker area_worker(areas,
+                         ellipses,
+                         id,
+                         points,
+                         parents,
+                         adopters,
+                         approx);
 
   RcppParallel::parallelFor(0, id.n_rows, area_worker);
 

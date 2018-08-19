@@ -7,14 +7,15 @@
 using namespace Rcpp;
 
 // intersect_ellipses
-arma::vec intersect_ellipses(const arma::vec& par, const bool circle);
-RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP) {
+arma::vec intersect_ellipses(const arma::vec& par, const bool circle, const bool approx);
+RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP, SEXP approxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
-    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circle));
+    Rcpp::traits::input_parameter< const bool >::type approx(approxSEXP);
+    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circle, approx));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -111,7 +112,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 2},
+    {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
     {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
