@@ -25,7 +25,7 @@ matrix:
       before_install:
         - tlmgr install fontaxes sttools mweights libertine mathalfa units sidenotes marginnote marginfix algorithmicx
       after_success:
-        - Rscript -e 'covr::coveralls()'
+        - Rscript -e 'covr::codecov()'
 
     - os: linux
       r: oldrel
