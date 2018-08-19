@@ -57,7 +57,7 @@ montecarlo(arma::mat ellipses)
     // Fit the sampling points to the current ellipse
     mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
     umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
-                                                h, k, a, b, phi);
+                                          h, k, a, b, phi);
 
     double inside = accu(all(in_which).t());
 
