@@ -68,3 +68,19 @@ test_that("errors are thrown for incorrect input to list method", {
   expect_error(euler(list(c("a", "b"), c("a", "c"))))
   expect_error(euler(list(b = c(1, 2), b = c(1, 3))))
 })
+
+test_that("correct parallel options are asserted", {
+  s <- c(a = 1, b = 2, "a&b" = 3)
+  expect_silent(euler(s, n_threads = "auto"))
+  expect_error(euler(s, n_threads = "default"))
+})
+
+test_that("zero-sized input is allowed", {
+  s <- c(A = 0)
+  expect_silent(f <- euler(s))
+  expect_equivalent(fitted(f), 0)
+
+  s <- c(A = 0, B = 0)
+  expect_silent(f <- euler(s))
+  expect_equivalent(fitted(f), rep(0, length(fitted(f))))
+})
