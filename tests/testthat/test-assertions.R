@@ -1,6 +1,8 @@
 context("Assertions")
 
 test_that("erroneous input to euler() throw errors", {
+  set.seed(1)
+
   expect_error(euler(c(1, 2, 3)))
   expect_error(euler(c()))
   expect_error(euler(c(A = FALSE, B = TRUE, C = FALSE)))
@@ -13,12 +15,14 @@ test_that("erroneous input to euler() throw errors", {
     B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
     x = sample(c("Men", "Women"), size = 100, replace = TRUE),
     y = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE),
-    z = sample(c("asdf", "qwer", size = 100, replace = TRUE))
+    z = sample(c("asdf", "qwer"), size = 100, replace = TRUE)
   )
 
   expect_error(euler(dat, by = list(x, y, z)))
   expect_error(euler(dat, by = dat[1:50, 3]))
   expect_error(euler(dat, by = list(dat[, 2])))
+
+  expect_error(euler(cbind(dat, rnorm(nrow(dat)))))
 
   # impossible configuration
   expect_error(euler(c(A = 10, B = 14, "A&B" = 15), input = "union"))
