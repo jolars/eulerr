@@ -91,3 +91,14 @@ test_that("factors in euler.data.frame() are handled appropriately", {
                   status = sample(gl(2, 45, 90, c("cohabitation", "single"))))
   expect_silent(f <- euler(d, by = list(status)))
 })
+
+test_that("list method works appropriately", {
+  l <- list(A = c("a", "b", "c"),
+            B = c("b", "e"),
+            C = c("c"))
+  expect_silent(euler(l))
+})
+
+test_that("table method works appropriately", {
+  expect_silent(euler(as.table(apply(Titanic, 2:4, sum))))
+})
