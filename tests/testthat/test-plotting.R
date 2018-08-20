@@ -1,10 +1,5 @@
 context("Plotting")
 
-test_that("erroneous input to plot.euler return errors", {
-  f <- euler(c(A = 5, B = 2))
-  expect_error(dont_plot(f, n = -1))
-})
-
 test_that("normal plotting works without errors", {
   f1 <- euler(c("A" = 10, "B" = 5, "A&B" = 2))
 
