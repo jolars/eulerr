@@ -552,8 +552,8 @@ plot.euler <- function(x,
     euler_grob$children[[i]]$vp <- grid::viewport(
       layout.pos.row = j,
       layout.pos.col = k,
-      xscale = xlim,
-      yscale = ylim,
+      xscale = if (xlim[1] == -Inf) c(-1, 1) else xlim,
+      yscale = if (ylim[1] == -Inf) c(-1, 1) else ylim,
       name = paste0("panel.vp.", j, ".", k)
     )
   }
@@ -804,17 +804,23 @@ setup_grobs <- function(x,
   #edges
   if (do_edges) {
     # edges
-    edges_grob <- grid::polylineGrob(data_edges$x,
-                                     data_edges$y,
-                                     id.lengths = data_edges$id.lengths,
-                                     default.units = "native",
-                                     name = "edges.grob",
-                                     gp = edges$gp[which(!empty_sets)])
+    if (is.null(data_edges$x)) {
+      edges_grob <- grid::nullGrob()
+    } else {
+      edges_grob <- grid::polylineGrob(data_edges$x,
+                                       data_edges$y,
+                                       id.lengths = data_edges$id.lengths,
+                                       default.units = "native",
+                                       name = "edges.grob",
+                                       gp = edges$gp[which(!empty_sets)])
+    }
   }
 
   # fills
   if (do_fills) {
-    if (n_e == 1) {
+    if (n_e == 0) {
+      fills_grob <- grid::nullGrob()
+    } else if (n_e == 1) {
       fills_grob <- grid::gList(grid::polygonGrob(
         data_fills[[1]]$x,
         data_fills[[1]]$y,
@@ -880,16 +886,20 @@ setup_grobs <- function(x,
 
   # labels
   if (do_labels) {
-    labels_grob <- grid::textGrob(
-      label = data_labels$labels,
-      x = data_labels$x,
-      y = data_labels$y,
-      rot = labels$rot[which(!empty_sets)],
-      vjust = if (do_quantities) -0.5 else 0.5,
-      name = "labels.grob",
-      default.units = "native",
-      gp = labels$gp[!empty_sets]
-    )
+    if (length(data_labels$x) > 0) {
+      labels_grob <- grid::textGrob(
+        label = data_labels$labels,
+        x = data_labels$x,
+        y = data_labels$y,
+        rot = labels$rot[which(!empty_sets)],
+        vjust = if (do_quantities) -0.5 else 0.5,
+        name = "labels.grob",
+        default.units = "native",
+        gp = labels$gp[!empty_sets]
+      )
+    } else {
+      labels_grob <- grid::nullGrob()
+    }
   }
 
   grid::grobTree(if (do_fills) fills_grob,
