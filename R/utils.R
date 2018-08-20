@@ -279,3 +279,33 @@ setup_gpar <- function(default = list(), user = list(), n) {
   do.call(grid::gpar, lapply(gp, rep_len, n))
 }
 
+#' Dummy code a data.frame
+#'
+#' @param x
+#'
+#' @return A dummy-coded version of x.
+#'
+#' @keywords internal
+#' @noRd
+dummy_code <- function(x) {
+  fac_chr <- vapply(x, function(x) is.character(x) || is.factor(x), logical(1))
+  tmp <- x[, fac_chr, drop = FALSE]
+
+  lvls <- lapply(tmp, function(x) levels(as.factor(x)))
+
+  n_levels <- vapply(lvls, function(x) length(x) - 1, double(1))
+  ref_levels <- lapply(lvls, function(x) x[-length(x)])
+  n_levels_tot <- sum(n_levels)
+
+  out <- matrix(FALSE, nrow(x), n_levels_tot)
+
+  for (i in seq_along(n_levels)) {
+    kk <- as.numeric(tmp[, i])
+    for (j in seq_len(n_levels[i])) {
+      out[, (i - 1) + j] <- kk == j
+    }
+  }
+
+  colnames(out) <- unlist(ref_levels)
+  cbind(x[, !fac_chr, drop = FALSE], out)
+}

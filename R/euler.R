@@ -117,7 +117,6 @@
 #' euler(c("a" = 3491, "b" = 3409, "c" = 3503,
 #'         "a&b" = 120, "a&c" = 114, "b&c" = 132,
 #'         "a&b&c" = 50))
-#'
 #' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
 #'   Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
 #'   Graphics (Internet). 2012 Feb (cited 2016 Apr 9);18(2):321-31. Available
@@ -230,7 +229,7 @@ euler.default <- function(
   if (n > 1L) {
     if (all(areas == 0)) {
       # all sets are zero
-      fpar[] <- NA
+      fpar[] <- 0
     } else {
       id_sums <- rowSums(id)
       ones <- id_sums == 1L
@@ -396,9 +395,13 @@ euler.default <- function(
     }
   } else {
     # One set
-    fpar[!empty_sets, ] <- c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0)
+    if (length(areas) == 0) {
+      fpar[] <- 0
+    } else {
+      fpar[!empty_sets, ] <- c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0)
+      orig[!empty_subsets] <- fit[!empty_subsets] <- areas
+    }
     regionError <- diagError <- stress <- 0
-    orig[!empty_subsets] <- fit[!empty_subsets] <- areas
   }
 
   # Return eulerr structure
@@ -412,11 +415,13 @@ euler.default <- function(
             class = c("euler", "list"))
 }
 
-#' @describeIn euler a data.frame of logicals, two-level factors (see examples).
+#' @describeIn euler a `data.frame` of logicals, binary integers, or
+#'   factors.
 #' @param weights a numeric vector of weights of the same length as
 #'   the number of rows in `combinations`.
 #' @export
 #' @examples
+#'
 #' # Using grouping via the 'by' argument through the data.frame method
 #' dat <- data.frame(
 #'   A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
@@ -431,7 +436,6 @@ euler.default <- function(
 #' dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
 #'                    B = c(FALSE, TRUE, TRUE, FALSE))
 #' euler(dat2, weights = c(3, 2, 1, 1))
-#'
 euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
   stopifnot(!any(grepl("&", colnames(combinations), fixed = TRUE)))
 
@@ -457,12 +461,12 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
     rownames(groups) <- NULL
 
     out <- g <- vector("list", NROW(groups))
-    int_or_log <- vapply(combinations,
-                         function(x) is.numeric(x) || is.logical(x),
-                         FUN.VALUE = logical(1L))
+
+    by_ind <- match(nms, colnames(combinations))
+
     for (i in seq_len(NROW(groups))) {
       ind <- apply(dd, 1, function(x) all(x == groups[i, ]))
-      out[[i]] <- euler(combinations[ind, int_or_log])
+      out[[i]] <- euler(combinations[ind, -by_ind, drop = FALSE])
       names(out)[[i]] <- paste(unlist(groups[i, , drop = TRUE]),
                                collapse = ".")
     }
@@ -470,22 +474,17 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
     class(out) <- c("euler", "list")
     attr(out, "groups") <- groups
   } else {
-    if (is.null(weights)) {
-      combinations <- combinations[,
-                                   vapply(combinations,
-                                          function(y)
-                                            is.integer(y) || is.logical(y),
-                                          FUN.VALUE = logical(1L))]
-    } else {
-      combinations <- combinations[,
-                                   vapply(combinations,
-                                          function(y)
-                                            is.integer(y) ||
-                                            is.logical(y) ||
-                                            is.factor(y) ||
-                                            is.character(y),
-                                          FUN.VALUE = logical(1L))]
-    }
+    is_factor <- vapply(combinations,
+                        function(x) is.factor(x) || is.character(x),
+                        logical(1))
+
+    is_numeric <- vapply(combinations, function(x) is.numeric(x), logical(1))
+
+    if (any(is_numeric))
+      stop("you cannot use numeric variables for an Euler diagram.")
+
+    if (any(is_factor))
+      combinations <- dummy_code(combinations)
 
     if (is.null(weights))
       weights <- rep.int(1L, NROW(combinations))
@@ -519,7 +518,9 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
 #' @describeIn euler a matrix that can be converted to a data.frame of logicals
 #'   (as in the description above) via [base::as.data.frame.matrix()].
 #' @export
+#'
 #' @examples
+#'
 #' # Using the matrix method
 #' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
 #'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
@@ -530,7 +531,9 @@ euler.matrix <- function(combinations, ...) {
 
 #' @describeIn euler A table with `max(dim(x)) < 3`.
 #' @export
+#'
 #' @examples
+#'
 #' # The table method
 #' plot(euler(as.table(apply(Titanic, 2:4, sum))))
 euler.table <- function(combinations, ...) {
@@ -544,6 +547,7 @@ euler.table <- function(combinations, ...) {
 #'   that set (with no duplicates). Vectors in the list do not need to be named.
 #' @export
 #' @examples
+#'
 #' # A euler diagram from a list of sample spaces (the list method)
 #' euler(list(A = c("a", "ab", "ac", "abc"),
 #'            B = c("b", "ab", "bc", "abc"),

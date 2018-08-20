@@ -123,7 +123,8 @@ where
 combinations separated by an ampersand, for instance \code{A&B = 10}.
 Missing combinations are treated as being 0.
 
-\item \code{data.frame}: a data.frame of logicals, two-level factors (see examples).
+\item \code{data.frame}: a \code{data.frame} of logicals, binary integers, or
+factors.
 
 \item \code{matrix}: a matrix that can be converted to a data.frame of logicals
 (as in the description above) via \code{\link[base:as.data.frame.matrix]{base::as.data.frame.matrix()}}.
@@ -175,8 +176,10 @@ euler(dat2, weights = c(3, 2, 1, 1))
 mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
 euler(mat)
+
 # The table method
 plot(euler(as.table(apply(Titanic, 2:4, sum))))
+
 # A euler diagram from a list of sample spaces (the list method)
 euler(list(A = c("a", "ab", "ac", "abc"),
            B = c("b", "ab", "bc", "abc"),
