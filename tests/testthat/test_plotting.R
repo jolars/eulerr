@@ -37,4 +37,8 @@ test_that("normal plotting works without errors", {
   expect_error(euler(dat, by = list(Gender, Nation, Gender)))
 })
 
+test_that("plotting zero-fits works", {
+  s <- c(a = 0, b = 0)
+  expect_is(plot(euler(s)), "gTree")
+})
 
