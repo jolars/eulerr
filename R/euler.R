@@ -489,28 +489,8 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
     if (is.null(weights))
       weights <- rep.int(1L, NROW(combinations))
 
-    out <- matrix(NA, nrow = NROW(combinations), ncol = NCOL(combinations))
-    colnames(out) <- colnames(combinations)
-
-    for (i in seq_along(combinations)) {
-      y <- combinations[, i, drop = TRUE]
-      if (is.factor(y) || is.character(y)) {
-        facs <- unique(as.character(y))
-        if (length(facs) > 2L)
-          stop("no more than 2 levels allowed")
-        out[, i] <- y == facs[1L]
-        colnames(out)[i] <- facs[1L]
-      } else if (is.numeric(y)) {
-        out[, i] <- as.logical(y)
-      } else if (is.logical(y)) {
-        out[, i] <- y
-      } else {
-        stop("unsupported type of variables")
-      }
-    }
-    combinations <- as.data.frame(out)
-    out <- tally_combinations(combinations, weights)
-    out <- euler(out, ...)
+    spec <- tally_combinations(combinations, weights)
+    out <- euler(spec, ...)
   }
   out
 }
