@@ -84,3 +84,10 @@ test_that("zero-sized input is allowed", {
   expect_silent(f <- euler(s))
   expect_equivalent(fitted(f), rep(0, length(fitted(f))))
 })
+
+test_that("factors in euler.data.frame() are handled appropriately", {
+  d <- data.frame(A = sample(c(TRUE, FALSE), 90, TRUE),
+                  gender = gl(3, 30, 90, c("man", "woman", "transgender")),
+                  status = sample(gl(2, 45, 90, c("cohabitation", "single"))))
+  expect_silent(f <- euler(d, by = list(status)))
+})
