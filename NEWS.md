@@ -1,3 +1,28 @@
+# eulerr 4.1.0.9000
+
+## Major changes
+
+* The work horse of `euler()` has now been parallalized, which
+should lead to considerable performance gains when large combinations
+are given.
+* `euler()` once again uses the residual sums of squares, rather than the
+stress metric, as optimization objective, which means that 
+output is always scaled appropriately to input (#28).
+
+## Minor changes
+
+* The `euler.data.frame()` method (and by proxy the `euler.matrix()` method)
+can now take matrices with factors in addition to the previously supported
+logical and integer (binary) input. The function will dummy code the variables
+for the user.
+* A few performance fixes.
+* Additional unit tests.
+
+## Bug fixes
+
+* Empty combinations can now be provided and will be plotted (generating
+completely blank plots).
+
 # eulerr 4.1.0
 
 ## Minor changes
