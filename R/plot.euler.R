@@ -82,13 +82,6 @@
 #' @param n number of vertices for the `edges` and `fills`
 #' @param ... parameters to update `fills` and `edges` with and thereby a shortcut
 #'   to set these parameters
-#' @param fill_alpha deprecated
-#' @param auto.key deprecated
-#' @param fontface deprecated
-#' @param par.settings deprecated
-#' @param default.prepanel deprecated
-#' @param default.scales deprecated
-#' @param panel deprecated
 #'
 #' @seealso [euler()], [plot.eulergram()], [grid::gpar()],
 #'   [grid::grid.polyline()], [grid::grid.path()],
@@ -124,41 +117,9 @@ plot.euler <- function(x,
                        labels = identical(legend, FALSE),
                        quantities = FALSE,
                        strips = NULL,
+                       main = NULL,
                        n = 200L,
-                       ...,
-                       fill_alpha,
-                       auto.key,
-                       fontface,
-                       par.settings,
-                       default.prepanel,
-                       default.scales,
-                       panel) {
-  if (!missing(fill_alpha)) {
-    warning("'fill_alpha' is deprecated; please use 'fills'")
-    fills <- update_list(fills, list(alpha = fill_alpha))
-  }
-
-  if (!missing(auto.key)) {
-    warning("'auto.key' is deprecated; please use 'legend'")
-    legend <- !identical(auto.key, FALSE)
-  }
-
-  if (!missing(fontface)) {
-    warning("'fontface' is deprecated; please use 'labels'")
-    if (is.list(labels))
-      labels <- update_list(labels, list(fontface = fontface))
-    else if (isTRUE(labels))
-      labels <- list(fontface = fontface)
-  }
-
-  if (!missing(par.settings))
-    warning("'par.settings' is deprecated")
-  if (!missing(default.prepanel))
-    warning("'default.prepanel' is deprecated")
-  if (!missing(default.scales))
-    warning("'default.scales' is deprecated")
-  if (!missing(panel))
-    warning("'panel' is deprecated")
+                       ...) {
 
   if (inherits(x, "diagram"))
     return(print(x))

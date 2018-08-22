@@ -17,6 +17,7 @@ logical and integer (binary) input. The function will dummy code the variables
 for the user.
 * A few performance fixes.
 * Additional unit tests.
+* Previously deprecated arguments to `plot.euler()` have been made defunct.
 
 ## Bug fixes
 

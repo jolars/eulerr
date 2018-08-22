@@ -6,8 +6,7 @@
 \usage{
 \method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = FALSE,
-  strips = NULL, n = 200L, ..., fill_alpha, auto.key, fontface,
-  par.settings, default.prepanel, default.scales, panel)
+  strips = NULL, main = NULL, n = 200L, ...)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
@@ -39,20 +38,6 @@ was used in \code{\link[=euler]{euler()}}}
 
 \item{...}{parameters to update \code{fills} and \code{edges} with and thereby a shortcut
 to set these parameters}
-
-\item{fill_alpha}{deprecated}
-
-\item{auto.key}{deprecated}
-
-\item{fontface}{deprecated}
-
-\item{par.settings}{deprecated}
-
-\item{default.prepanel}{deprecated}
-
-\item{default.scales}{deprecated}
-
-\item{panel}{deprecated}
 }
 \value{
 Provides an object of class \code{'eulergram'} , which is a
