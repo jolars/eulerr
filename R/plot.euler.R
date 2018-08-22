@@ -35,19 +35,19 @@
 #' The various [grid::gpar()] values that are available for each argument
 #' are:
 #'
-#' \tabular{lccccccc}{
-#'              \tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \cr
-#'   col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
-#'   fill       \tab x     \tab       \tab        \tab            \tab        \tab        \cr
-#'   alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \cr
-#'   lty        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-#'   lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-#'   lex        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-#'   fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-#'   cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-#'   fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-#'   lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-#'   font       \tab       \tab       \tab x      \tab x          \tab x      \tab x
+#' \tabular{lcccccccc}{
+#'              \tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \tab main \cr
+#'   col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+#'   fill       \tab x     \tab       \tab        \tab            \tab        \tab        \tab      \cr
+#'   alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+#'   lty        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
+#'   lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
+#'   lex        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
+#'   fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+#'   cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+#'   fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+#'   lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+#'   font       \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
 #' }
 #'
 #' Defaults for these values, as well as other parameters of the plots, can
@@ -80,6 +80,12 @@
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]
 #' @param n number of vertices for the `edges` and `fills`
+#' @param main a title for the plot in the form of a
+#'   character, expression, list or something that can be
+#'   sensibly converted to a label via [grDevices::as.graphicsAnnot()]. A
+#'   list of length one can be provided, in which case its only element
+#'   is used as the label. If a list of longer length is provided, an item
+#'   named `'label'` must be provided (and will be used for the actual text).
 #' @param ... parameters to update `fills` and `edges` with and thereby a shortcut
 #'   to set these parameters
 #'
@@ -130,12 +136,13 @@ plot.euler <- function(x,
   groups <- attr(x, "groups")
   dots <- list(...)
 
-  do_fills <- !identical(fills, FALSE) && !is.null(fills)
-  do_edges <- !identical(edges, FALSE) && !is.null(edges)
-  do_labels <- !identical(labels, FALSE) && !is.null(labels)
-  do_quantities <- !identical(quantities, FALSE) && !is.null(quantities)
-  do_legend <- !identical(legend, FALSE) && !is.null(legend)
+  do_fills <- !is_false(fills) && !is.null(fills)
+  do_edges <- !is_false(edges) && !is.null(edges)
+  do_labels <- !is_false(labels) && !is.null(labels)
+  do_quantities <- !is_false(quantities) && !is.null(quantities)
+  do_legend <- !is_false(legend) && !is.null(legend)
   do_strips <- do_groups <- !is.null(groups)
+  do_main <- is.character(main) || is.expression(main) || is.list(main)
 
   ellipses <- if (do_strips) x[[1L]]$ellipses else x$ellipses
 
@@ -309,6 +316,50 @@ plot.euler <- function(x,
     legend <- NULL
   }
 
+  if (do_main) {
+    if (is.list(main)) {
+      if (length(main) == 1 && is.null(names(main)))
+        label <- main[[1]]
+      else
+        label <- main$label
+
+      if (is.null(label))
+        stop("you need to provide a 'label' item if 'main' is a list.")
+
+    } else {
+      label <- main
+    }
+
+    main <- update_list(
+      list(label = label,
+           x = opar$main$x,
+           y = opar$main$y,
+           just = opar$main$just,
+           hjust = opar$main$hjust,
+           vjust = opar$main$vjust,
+           rot = opar$main$rot,
+           check.overlap = opar$main$check.overlap,
+           default.units = opar$main$default.units),
+      main
+    )
+
+    main$gp <- setup_gpar(
+      list(
+        cex = opar$main$cex,
+        fontsize = opar$main$fontsize,
+        font = opar$main$font,
+        fontfamily = opar$main$fontfamily,
+        col = opar$main$col,
+        lineheight = opar$main$lineheight,
+        alpha = opar$main$alpha
+      ),
+      main,
+      1
+    )
+  } else {
+    main <- NULL
+  }
+
   # set up geometry for diagrams
 
   if (do_groups) {
@@ -392,6 +443,13 @@ plot.euler <- function(x,
   diagram_col <- 1L
   diagram_row <- 1L
 
+  if (do_main) {
+    diagram_row <- diagram_row + 2
+    nrow <- nrow + 2
+    strip_left_row <- strip_left_row + 2
+    strip_top_row <- strip_top_row + 2
+  }
+
   if (do_strip_left) {
     widths <- grid::unit.c(grid::unit(1.5, "lines"), widths)
     diagram_col <- diagram_col + 1L
@@ -422,7 +480,7 @@ plot.euler <- function(x,
     )
     legend_grob$name <- "legend.grob"
     if (do_strip_top)
-      legend_row <- 2
+      legend_row <- 2 + 2*do_main
 
     if (legend$side == "right") {
       # legend on right (default)
@@ -435,7 +493,7 @@ plot.euler <- function(x,
     } else if (legend$side == "left") {
       # legend on left
       ncol <- ncol + 2L
-      legend_row <- if (do_strip_top) 2L else 1L
+      legend_row <- if (do_strip_top) 2L + 2*do_main else 1L + 2*do_main
       legend_col <- 1
       diagram_col <- diagram_col + 2L
       if (do_strip_left)
@@ -448,7 +506,7 @@ plot.euler <- function(x,
     } else if (legend$side == "top") {
       # legend on top
       nrow <- nrow + 2L
-      legend_row <- 1L
+      legend_row <- 1L + do_main*2
       legend_col <- if (do_strip_left) 2L else 1L
       diagram_row <- diagram_row + 2L
       if (do_strip_top)
@@ -472,6 +530,27 @@ plot.euler <- function(x,
     legend_grob$vp <- grid::viewport(layout.pos.row = legend_row,
                                      layout.pos.col = legend_col,
                                      name = "legend.vp")
+  }
+
+  if (do_main) {
+    main_grob <- grid::textGrob(label = main$label,
+                                x = main$x,
+                                y = main$y,
+                                just = main$just,
+                                hjust = main$hjust,
+                                vjust = main$vjust,
+                                rot = main$rot,
+                                check.overlap = FALSE,
+                                default.units = main$default.units,
+                                gp = main$gp,
+                                name = "main.grob")
+    heights <- grid::unit.c(grid::unit(c(1, 1),
+                                       c("lines", "grobheight"),
+                                       list(NULL, main_grob)),
+                            heights)
+    main_grob$vp <- grid::viewport(layout.pos.row = 1,
+                                   layout.pos.col = diagram_col,
+                                   name = "main.vp")
   }
 
   canvas_vp <- grid::viewport(
@@ -562,6 +641,7 @@ plot.euler <- function(x,
 
   # return a gTree object
   grid::grobTree(
+    if (do_main) main_grob = main_grob,
     if (do_strip_top) strip_top_grob = strip_top_grob,
     if (do_strip_left) strip_left_grob = strip_left_grob,
     if (do_legend) legend_grob = legend_grob,

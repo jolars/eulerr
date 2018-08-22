@@ -37,6 +37,7 @@
 #'   `lineheight`, and `font`}
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
 #'   `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`}
+#'   \item{main}{arguments to [grid::textGrob()]}
 #' }
 #'
 #' @param ... objects to update the global graphical parameters for \pkg{eulerr}
@@ -74,6 +75,7 @@ eulerr_options <- function(...) {
            quantities = list(fontsize = pointsize),
            strips = list(fontsize = pointsize),
            legend = list(fontsize = pointsize),
+           main = list(fontsize = pointsize),
            pointsize = pointsize)
     )
   invisible(out)
@@ -152,6 +154,24 @@ eulerr_default_options <- function() {
       vgap = grid::unit(0.25, "lines"),
       default.units = "lines",
       pch = 21
+    ),
+    main = list(
+      label = NULL,
+      x = grid::unit(0.5, "npc"),
+      y = grid::unit(0.5, "npc"),
+      just = "center",
+      hjust = NULL,
+      vjust = NULL,
+      rot = 0,
+      check.overlap = FALSE,
+      default.units = "npc",
+      cex = 1.5,
+      fontsize = 12,
+      font = 1,
+      fontfamily = "",
+      col = 1,
+      lineheight = 1.2,
+      alpha = 1
     )
   )
 }

@@ -37,6 +37,7 @@ some margin sizes in the resulting plot}
 \code{lineheight}, and \code{font}}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},
 \code{fontsize}, \code{cex}, \code{fontfamily}, \code{lineheight}, and \code{font}}
+\item{main}{arguments to \code{\link[grid:textGrob]{grid::textGrob()}}}
 }
 }
 \examples{
