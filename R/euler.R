@@ -427,19 +427,8 @@ euler.default <- function(
 #' @examples
 #'
 #' # Using grouping via the 'by' argument through the data.frame method
-#' dat <- data.frame(
-#'   A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-#'   B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-#'   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-#'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-#' )
+#' euler(fruits, by = list(sex, age))
 #'
-#' euler(dat, by = list(gender, nation))
-#'
-#'
-#' dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
-#'                    B = c(FALSE, TRUE, TRUE, FALSE))
-#' euler(dat2, weights = c(3, 2, 1, 1))
 euler.data.frame <- function(combinations,
                              weights = NULL,
                              by = NULL,
@@ -514,9 +503,10 @@ euler.data.frame <- function(combinations,
 #' @examples
 #'
 #' # Using the matrix method
-#' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-#'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-#' euler(mat)
+#' euler(organisms)
+#'
+#' # Using weights
+#' euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 euler.matrix <- function(combinations, ...) {
   euler(as.data.frame(combinations), ...)
 }
@@ -527,7 +517,7 @@ euler.matrix <- function(combinations, ...) {
 #' @examples
 #'
 #' # The table method
-#' plot(euler(as.table(apply(Titanic, 2:4, sum))))
+#' euler(pain, factor_names = FALSE)
 euler.table <- function(combinations, ...) {
   x <- as.data.frame(combinations)
   euler(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
@@ -539,9 +529,7 @@ euler.table <- function(combinations, ...) {
 #' @examples
 #'
 #' # A euler diagram from a list of sample spaces (the list method)
-#' euler(list(A = c("a", "ab", "ac", "abc"),
-#'            B = c("b", "ab", "bc", "abc"),
-#'            C = c("c", "ac", "bc", "abc")))
+#' euler(plants[c("erigenia", "solanum", "cynodon")])
 euler.list <- function(combinations, ...) {
   stopifnot(!is.null(attr(combinations, "names")),
             !any(names(combinations) == ""),

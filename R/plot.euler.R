@@ -114,8 +114,11 @@
 #' # Plot without fills and distinguish sets with border types instead
 #' plot(fit, fill = "transparent", lty = 1:2)
 #'
-#' # save plot parameters to plot using some other method
+#' # Save plot parameters to plot using some other method
 #' diagram_description <- plot(fit)
+#'
+#' # Plots using 'by' argument
+#' plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
 plot.euler <- function(x,
                        fills = TRUE,
                        edges = TRUE,
