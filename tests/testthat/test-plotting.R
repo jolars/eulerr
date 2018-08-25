@@ -12,6 +12,9 @@ test_that("normal plotting works without errors", {
   expect_silent(dont_plot(f1, legend = FALSE, quantities = TRUE))
   expect_silent(dont_plot(f1, legend = TRUE, labels = FALSE))
   expect_silent(dont_plot(f1, labels = c("asdf", "qwer")))
+  expect_silent(dont_plot(f1, legend = list(side = "left")))
+  expect_silent(dont_plot(f1, legend = list(side = "top")))
+  expect_silent(dont_plot(f1, legend = list(side = "bottom")))
 
   dat <- data.frame(
     Liberal = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
@@ -27,8 +30,23 @@ test_that("normal plotting works without errors", {
                           fills = list(fill = "transparent",
                                        lty = c(1, 2),
                                        lwd = c(1, 2))))
-  expect_silent(dont_plot(f2, fill = "black", lwd = 0))
-  expect_error(dont_print(dont_plot(f3)), NA)
+
+  grid <- expand.grid(side = c(NA, "right", "left", "top", "bottom"),
+                      main = c("Title", FALSE))
+
+  for (i in seq_len(nrow(grid))) {
+    if (is.na(grid$side[i])) {
+      legend <- FALSE
+    } else {
+      legend <- list(side = grid$side[i])
+    }
+    main <- grid$main[i]
+
+    expect_silent(dont_plot(f1, legend = legend, main = main))
+    expect_silent(dont_plot(f2, legend = legend, main = main))
+    expect_silent(dont_plot(f3, legend = legend, main = main))
+  }
+
   expect_error(euler(dat, by = list(Gender, Nation, Gender)))
 })
 
