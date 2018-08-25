@@ -419,6 +419,8 @@ euler.default <- function(
 #'   factors.
 #' @param weights a numeric vector of weights of the same length as
 #'   the number of rows in `combinations`.
+#' @param sep a character to use to separate the dummy-coded factors
+#'   if there are factor or character vectors in 'combinations'.
 #' @export
 #' @examples
 #'
@@ -436,7 +438,12 @@ euler.default <- function(
 #' dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
 #'                    B = c(FALSE, TRUE, TRUE, FALSE))
 #' euler(dat2, weights = c(3, 2, 1, 1))
-euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
+euler.data.frame <- function(combinations,
+                             weights = NULL,
+                             by = NULL,
+                             sep = "_",
+                             ...)
+{
   stopifnot(!any(grepl("&", colnames(combinations), fixed = TRUE)))
 
   facs <- eval(substitute(by), combinations)
@@ -484,7 +491,7 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
       stop("you cannot use numeric variables for an Euler diagram.")
 
     if (any(is_factor))
-      combinations <- dummy_code(combinations)
+      combinations <- dummy_code(combinations, sep = sep)
 
     if (is.null(weights))
       weights <- rep.int(1L, NROW(combinations))

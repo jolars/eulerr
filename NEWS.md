@@ -18,7 +18,11 @@ for the user.
 * A few performance fixes.
 * Additional unit tests.
 * Previously deprecated arguments to `plot.euler()` have been made defunct.
-* Added a data set, `plants`, to examplify the list method for `euler()`.
+* Added a data set, `plants`, to exemplify the list method for `euler()`.
+* Added a data set, `fruits`, to exemplify the data.frame method for `euler()`.
+* `euler.data.frame()` gains an argument `sep`, which is a character vector
+used to separate dummy-coded factors if there are factors or characters in the
+input.
 
 ## Bug fixes
 

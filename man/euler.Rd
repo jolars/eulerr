@@ -16,7 +16,7 @@ euler(combinations, ...)
   ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL,
-  ...)
+  sep = "_", ...)
 
 \method{euler}{matrix}(combinations, ...)
 
@@ -58,6 +58,9 @@ the number of rows in \code{combinations}.}
 
 \item{by}{a factor or character matrix to be used in \code{\link[base:by]{base::by()}} to
 split the data.frame or matrix of set combinations}
+
+\item{sep}{a character to use to separate the dummy-coded factors
+if there are factor or character vectors in 'combinations'.}
 }
 \value{
 A list object of class \code{'euler'} with the following parameters.

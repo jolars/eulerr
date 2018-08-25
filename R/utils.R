@@ -287,7 +287,7 @@ setup_gpar <- function(default = list(), user = list(), n) {
 #'
 #' @keywords internal
 #' @noRd
-dummy_code <- function(x) {
+dummy_code <- function(x, sep = "_") {
   fac_chr <- vapply(x, function(x) is.character(x) || is.factor(x), logical(1))
   tmp <- x[, fac_chr, drop = FALSE]
 
@@ -297,10 +297,19 @@ dummy_code <- function(x) {
   dummy_levels <- lapply(lvls, function(x) x[-length(x)])
   n_levels_tot <- sum(n_levels)
 
+  dummy_names <- dummy_levels
+
+  for (i in seq_along(dummy_names)) {
+    dummy_names[[i]] <- paste(names(dummy_levels)[i],
+                              dummy_levels[[i]],
+                              sep = sep)
+  }
+  dummy_names <- unlist(dummy_names)
+
   out <- matrix(FALSE,
                 nrow(x),
                 n_levels_tot,
-                dimnames = list(NULL, unlist(dummy_levels)))
+                dimnames = list(NULL, dummy_names))
 
   k <- 1
 
