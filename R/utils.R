@@ -294,18 +294,23 @@ dummy_code <- function(x) {
   lvls <- lapply(tmp, function(x) levels(as.factor(x)))
 
   n_levels <- vapply(lvls, function(x) length(x) - 1, double(1))
-  ref_levels <- lapply(lvls, function(x) x[-length(x)])
+  dummy_levels <- lapply(lvls, function(x) x[-length(x)])
   n_levels_tot <- sum(n_levels)
 
-  out <- matrix(FALSE, nrow(x), n_levels_tot)
+  out <- matrix(FALSE,
+                nrow(x),
+                n_levels_tot,
+                dimnames = list(NULL, unlist(dummy_levels)))
+
+  k <- 1
 
   for (i in seq_along(n_levels)) {
     kk <- as.numeric(tmp[, i])
     for (j in seq_len(n_levels[i])) {
-      out[, (i - 1) + j] <- kk == j
+      out[, k] <- kk == j
+      k <- 1 + k
     }
   }
 
-  colnames(out) <- unlist(ref_levels)
   cbind(x[, !fac_chr, drop = FALSE], out)
 }
