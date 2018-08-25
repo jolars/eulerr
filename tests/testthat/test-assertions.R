@@ -27,9 +27,6 @@ test_that("erroneous input to euler() throw errors", {
   # impossible configuration
   expect_error(euler(c(A = 10, B = 14, "A&B" = 15), input = "union"))
 
-  # table method
-  expect_error(euler(as.table(apply(Titanic, 1:4, sum))))
-
   # list method
   expect_error(euler(list(c("a", "b"), c("a", "c"))))
   expect_error(euler(list(b = c(1, 2), b = c(1, 3))))
