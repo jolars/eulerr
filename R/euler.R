@@ -524,8 +524,6 @@ euler.matrix <- function(combinations, ...) {
 #' # The table method
 #' plot(euler(as.table(apply(Titanic, 2:4, sum))))
 euler.table <- function(combinations, ...) {
-  if (max(dim(combinations)) > 2L)
-    stop("no table dimension may exceed 2")
   x <- as.data.frame(combinations)
   euler(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
 }

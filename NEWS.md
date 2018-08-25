@@ -24,6 +24,7 @@ for the user.
 used to separate dummy-coded factors if there are factors or characters in the
 input.
 * Added a data set, `organisms`, to exemplify the matrix method for `euler()`.
+* Added a data set, `pain`, to exemplify the table method for `euler()`.
 
 ## Bug fixes
 
