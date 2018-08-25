@@ -12,9 +12,22 @@ test_that("normal plotting works without errors", {
   expect_silent(dont_plot(f1, legend = FALSE, quantities = TRUE))
   expect_silent(dont_plot(f1, legend = TRUE, labels = FALSE))
   expect_silent(dont_plot(f1, labels = c("asdf", "qwer")))
-  expect_silent(dont_plot(f1, legend = list(side = "left")))
-  expect_silent(dont_plot(f1, legend = list(side = "top")))
-  expect_silent(dont_plot(f1, legend = list(side = "bottom")))
+
+  grid <- expand.grid(labels = c(TRUE, FALSE),
+                      quantities = c(TRUE, FALSE),
+                      legend = c(TRUE, FALSE),
+                      fills = c(TRUE, FALSE),
+                      edges = c(TRUE, FALSE))
+
+  for (i in seq_len(nrow(grid))) {
+    expect_silent(dont_plot(f1,
+                            labels = grid$labels[i],
+                            quantities = grid$quantities[i],
+                            legend = grid$legend[i],
+                            fills = grid$fills[i],
+                            edges = grid$edges[i]))
+  }
+
 
   dat <- data.frame(
     Liberal = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
@@ -23,7 +36,7 @@ test_that("normal plotting works without errors", {
     Nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
   )
 
-  f2 <- euler(dat, by = list(Gender))
+  f2 <- euler(dat[, 1:3], by = list(Gender))
   f3 <- euler(dat, by = list(Gender, Nation))
 
   expect_silent(dont_plot(f2,
