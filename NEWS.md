@@ -25,6 +25,10 @@ used to separate dummy-coded factors if there are factors or characters in the
 input.
 * Added a data set, `organisms`, to exemplify the matrix method for `euler()`.
 * Added a data set, `pain`, to exemplify the table method for `euler()`.
+* `euler.table()` gains an argument, `factor_names`, for specifying
+whether the factor names should be included when generating dummy-coded
+variables in case the input is a data.frame with character or factor vectors
+or if the input is a table with more than two columns or rows.
 
 ## Bug fixes
 

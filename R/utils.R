@@ -281,13 +281,16 @@ setup_gpar <- function(default = list(), user = list(), n) {
 
 #' Dummy code a data.frame
 #'
-#' @param x
+#' @param x a data.frame
+#' @param sep character for separating dummy code factors and their levels
+#'   when cosntructing names
+#' @param factor_names whether to include factor names when creating new
+#'   names for dummy codes
 #'
 #' @return A dummy-coded version of x.
 #'
 #' @keywords internal
-#' @noRd
-dummy_code <- function(x, sep = "_") {
+dummy_code <- function(x, sep = "_", factor_names = TRUE) {
   fac_chr <- vapply(x, function(x) is.character(x) || is.factor(x), logical(1))
   tmp <- x[, fac_chr, drop = FALSE]
 
@@ -299,12 +302,18 @@ dummy_code <- function(x, sep = "_") {
 
   dummy_names <- dummy_levels
 
-  for (i in seq_along(dummy_names)) {
-    dummy_names[[i]] <- paste(names(dummy_levels)[i],
-                              dummy_levels[[i]],
-                              sep = sep)
+  if (isTRUE(factor_names)) {
+    for (i in seq_along(dummy_names)) {
+      dummy_names[[i]] <- paste(names(dummy_levels)[i],
+                                dummy_levels[[i]],
+                                sep = sep)
+    }
   }
+
   dummy_names <- unlist(dummy_names)
+
+  if (any(duplicated(dummy_names)))
+    stop("duplicated names for dummy coded factors were generated; please consider specifying 'factor_names = TRUE'.")
 
   out <- matrix(FALSE,
                 nrow(x),
