@@ -23,6 +23,7 @@ for the user.
 * `euler.data.frame()` gains an argument `sep`, which is a character vector
 used to separate dummy-coded factors if there are factors or characters in the
 input.
+* Added a data set, `organisms`, to exemplify the matrix method for `euler()`.
 
 ## Bug fixes
 

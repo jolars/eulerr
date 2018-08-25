@@ -27,3 +27,18 @@
 #'   \item{age}{the age of the person, a factor with levels 'child' and 'adult'}
 #' }
 "fruits"
+
+#' Organisms
+#'
+#' Example data from the **VennMaster** package.
+#'
+#' Note that this data is difficult to fit using an Euler diagram, even
+#' if we use ellipses, which is clear if one chooses to study the various
+#' overlaps in the resulting diagrams.
+#'
+#' @format A [matrix] with 7 observations, consisting of various organisms,
+#'   and 5 variables: *animal, mammal, plant, sea*, and, *spiny*,
+#'   indicating whether the organism belongs to the category or not.
+#'
+#' @source <https://github.com/sysbio-bioinf/VennMaster/blob/master/data_examples/deploy/example1.list>
+"organisms"
