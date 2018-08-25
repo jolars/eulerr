@@ -304,7 +304,7 @@ plot.euler <- function(x,
         else if (do_edges)
           edges$gp$alpha
         else
-          "transparent",
+          0,
         cex = opar$legend$cex,
         fontsize = opar$legend$fontsize/opar$legend$cex,
         font = opar$legend$font,
