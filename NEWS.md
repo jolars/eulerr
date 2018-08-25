@@ -18,6 +18,7 @@ for the user.
 * A few performance fixes.
 * Additional unit tests.
 * Previously deprecated arguments to `plot.euler()` have been made defunct.
+* Added a data set, `plants`, to examplify the list method for `euler()`.
 
 ## Bug fixes
 
