@@ -266,7 +266,8 @@ euler.default <- function(
           d = distances,
           disjoint = disjoint,
           subset = subset,
-          iterlim = 1000L
+          iterlim = 1000L,
+          check.analyticals = FALSE
         )
         loss <- initial_layouts[[i]]$minimum
         i <- i + 1L
