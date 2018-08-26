@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // #define ARMA_NO_DEBUG // For the final version
-#define ARMA_DONT_USE_OPENMP
+// #define ARMA_DONT_USE_OPENMP
 
 #include <RcppArmadillo.h>
 #include <RcppParallel.h>
