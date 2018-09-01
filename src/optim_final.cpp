@@ -19,7 +19,6 @@
 
 #include <RcppArmadillo.h>
 #include <RcppParallel.h>
-#include <future>
 #include "transformations.h"
 #include "intersections.h"
 #include "conversions.h"
@@ -79,58 +78,76 @@ struct IntersectionWorker : public RcppParallel::Worker {
   const umat& two_combos;
 };
 
-double
-overlap(const arma::uword i,
-        const arma::mat& ellipses,
-        const arma::umat& id,
-        const arma::mat& points,
-        const arma::umat& parents,
-        const arma::umat& adopters,
-        const bool approx)
-{
-  uvec ids = find(id.row(i));
+struct AreaWorker : public RcppParallel::Worker {
+  AreaWorker(Rcpp::NumericVector areas,
+             const mat& ellipses,
+             const umat& id,
+             const mat& points,
+             const umat& parents,
+             const umat& adopters,
+             const bool approx)
+             : areas(areas),
+               ellipses(ellipses),
+               id(id),
+               points(points),
+               parents(parents),
+               adopters(adopters),
+               approx(approx) {}
+  void
+  operator()(std::size_t begin, std::size_t end)
+  {
+    std::vector<uword> intersections;
+    intersections.reserve(parents.n_rows);
 
-  if (ids.n_elem == 1) {
-    // One set
-    return ellipse_area(ellipses.col(ids(0)));
-  } else {
-    // Two or more sets
-    urowvec owners(parents.n_cols);
-    // std::vector<int> intersections;
-    // intersections.reserve(parents.n_cols);
-    // for (uword q = 0; q < parents.n_cols; ++q) {
-    //   std::set_intersection(parents.begin_col(q),
-    //                         parents.end_col(q),
-    //                         ids.begin(),
-    //                         ids.end(),
-    //                         std::back_inserter(intersections));
-    //   owners(q) = intersections.size() == 2;
-    // }
+    for (uword i = begin; i < end; ++i) {
+      uvec ids = find(id.row(i));
 
-    for (uword q = 0; q < parents.n_cols; ++q) {
-      owners(q) = n_intersections(parents.unsafe_col(q), ids) == 2;
-    }
+      if (ids.n_elem == 1) {
+        // One set
+        areas[i] = ellipse_area(ellipses.col(ids(0)));
+      } else {
+        // Two or more sets
+        urowvec owners(parents.n_cols);
+        for (uword q = 0; q < parents.n_cols; ++q) {
+          std::set_intersection(parents.begin_col(q),
+                                parents.end_col(q),
+                                ids.begin(),
+                                ids.end(),
+                                std::back_inserter(intersections));
+          owners(q) = intersections.size() == 2;
+          intersections.clear();
+        }
 
-    uvec int_points = find(all(adopters.rows(ids))%owners);
+        uvec int_points = find(all(adopters.rows(ids))%owners);
 
-    if (int_points.n_elem == 0) {
-      // No intersections: either disjoint or subset
-      return disjoint_or_subset(ellipses.cols(ids));
-    } else {
-      // Compute the area of the overlap
-      bool failure = false;
-      return polysegments(points.cols(int_points),
-                          ellipses,
-                          parents.cols(int_points),
-                          failure);
-      if (failure || approx) {
-        // Resort to approximation if exact calculation fails
-        // TODO: Use a better fallback approximation
-        return montecarlo(ellipses.cols(ids));
+        if (int_points.n_elem == 0) {
+          // No intersections: either disjoint or subset
+          areas[i] = disjoint_or_subset(ellipses.cols(ids));
+        } else {
+          // Compute the area of the overlap
+          bool failure = false;
+          areas[i] = polysegments(points.cols(int_points),
+                                  ellipses,
+                                  parents.cols(int_points),
+                                  failure);
+          if (failure || approx) {
+            // Resort to approximation if exact calculation fails
+            // TODO: Use a better fallback approximation
+            areas[i] = montecarlo(ellipses.cols(ids));
+          }
+        }
       }
     }
-  }
-}
+  };
+
+  RcppParallel::RVector<double> areas;
+  const mat&  ellipses;
+  const umat& id;
+  const mat&  points;
+  const umat& parents;
+  const umat& adopters;
+  const bool approx;
+};
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
@@ -181,24 +198,24 @@ intersect_ellipses(const arma::vec& par,
   adopters = adopters.cols(not_na);
   parents = parents.cols(not_na);
 
-  std::vector<std::future<double>> areas;
+  // Loop over each set combination
+  Rcpp::NumericVector areas(id.n_rows);
 
-  for (uword i = id.n_rows; i-- > 0;) {
-    areas.push_back(std::async(overlap,
-                               i,
-                               ellipses,
-                               id,
-                               points,
-                               parents,
-                               adopters,
-                               approx));
-  }
+  AreaWorker area_worker(areas,
+                         ellipses,
+                         id,
+                         points,
+                         parents,
+                         adopters,
+                         approx);
+
+  RcppParallel::parallelFor(0, id.n_rows, area_worker);
 
   vec out(id.n_rows, fill::zeros);
 
   // hierarchically decompose combination to get disjoint subsets
   for (uword i = id.n_rows; i-- > 0;)
-    out(i) = areas[i].get() - accu(out(find(all(id.cols(find(id.row(i))), 1))));
+    out(i) = areas[i] - accu(out(find(all(id.cols(find(id.row(i))), 1))));
 
   return clamp(out, 0.0, out.max());
 }
@@ -222,5 +239,5 @@ optim_final_loss(const arma::vec& par,
                  const arma::vec& areas,
                  const bool circle)
 {
-  return stress(areas, intersect_ellipses(par, circle));
+  return accu(square(areas - intersect_ellipses(par, circle)));
 }
