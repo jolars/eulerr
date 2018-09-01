@@ -40,18 +40,18 @@ bisect(const double r0,
 {
   const double n0 = r0*z0;
   double s0 = z1 - 1;
-  double s1 = g < 0 ? 0 : std::hypot(n0, z1) - 1;
-  double s = 0;
+  double s1 = g < 0.0 ? 0.0 : std::hypot(n0, z1) - 1.0;
+  double s = 0.0;
 
   for (uword i = 0; i < max_it; ++i) {
     s = (s0 + s1) / 2;
     if (s == s0 || s == s1) {
       break;
     } else {
-      g = std::pow(n0/(s + r0), 2) + std::pow(z1/(s + 1), 2) - 1;
-      if (g > 0) {
+      g = std::pow(n0/(s + r0), 2) + std::pow(z1/(s + 1.0), 2) - 1.0;
+      if (g > 0.0) {
         s0 = s;
-      } else if (g < 0) {
+      } else if (g < 0.0) {
         s1 = s;
       } else {
         break;
@@ -74,15 +74,17 @@ dist_to_ellipse(double a, double b, double x, double y)
   }
 
   // Operate in the first quadrant only
-  x = x < 0 ? -x : x;
-  y = y < 0 ? -y : y;
+  if (x < 0.0)
+    x = -x;
+  if (y < 0.0)
+    y = -y;
 
-  if (y > 0) {
-    if (x > 0) {
+  if (y > 0.0) {
+    if (x > 0.0) {
       double z0 = x/a;
       double z1 = y/b;
       double g = z0*z0 + z1*z1 - 1.0;
-      if (g != 0) {
+      if (g != 0.0) {
         double r0 = std::pow(a/b, 2);
         double sbar = bisect(r0, z0, z1, g);
         return std::hypot(r0*x/(sbar + r0) - x, y/(sbar + 1.0) - y);
@@ -112,7 +114,7 @@ dist_loss(const arma::vec& p,
           const arma::rowvec& b,
           const arma::rowvec& phi)
 {
-  uword n = h.n_elem;
+  auto n = h.n_elem;
   vec d(n);
   vec::fixed<3> pp;
   pp(span(0, 1)) = p;
