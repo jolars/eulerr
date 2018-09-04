@@ -108,14 +108,17 @@ struct AreaWorker : public RcppParallel::Worker {
       } else {
         // Two or more sets
         urowvec owners(parents.n_cols);
+        // for (uword q = 0; q < parents.n_cols; ++q) {
+        //   std::set_intersection(parents.begin_col(q),
+        //                         parents.end_col(q),
+        //                         ids.begin(),
+        //                         ids.end(),
+        //                         std::back_inserter(intersections));
+        //   owners(q) = intersections.size() == 2;
+        //   intersections.clear();
+        // }
         for (uword q = 0; q < parents.n_cols; ++q) {
-          std::set_intersection(parents.begin_col(q),
-                                parents.end_col(q),
-                                ids.begin(),
-                                ids.end(),
-                                std::back_inserter(intersections));
-          owners(q) = intersections.size() == 2;
-          intersections.clear();
+          owners(q) = n_intersections(parents.col(q), ids) == 2;
         }
 
         uvec int_points = find(all(adopters.rows(ids))%owners);
