@@ -18,19 +18,12 @@
 #include "helpers.h"
 #include "transformations.h"
 #include "geometry.h"
+#include "point.h"
 
 using namespace arma;
 
-// Area of an ellipse
-inline
 double
-ellipse_area(const arma::vec& v)
-{
-  return datum::pi*v(2)*v(3);
-}
-
-double
-montecarlo(arma::mat ellipses)
+montecarlo(arma::mat ellipses, std::vector<int> int_points)
 {
   double n = ellipses.n_cols;
 
@@ -63,7 +56,7 @@ montecarlo(arma::mat ellipses)
 
     // Update the area as the fraction of the points inside all ellipses to
     // the area of the ellipses
-    areas(i) = (inside/n_s)*a(i)*b(i)*datum::pi;
+    areas(i) = (inside/n_s)*a(i)*b(i)*PI;
   }
 
   // Return the average of all the ellipses
@@ -89,88 +82,115 @@ sector_area(const double a,
 
 // Compute the area of an ellipse segment.
 double
-ellipse_segment(const arma::vec& ellipse,
-                const arma::vec& pa,
-                const arma::vec& pb)
+ellipse_segment(const Ellipse& ellipse, Point p0, Point p1)
 {
-  const vec::fixed<2> hk = ellipse.subvec(0, 1);
-  double a = ellipse(2);
-  double b = ellipse(3);
-  double phi = ellipse(4);
+  double h = ellipse.h;
+  double k = ellipse.k;
+  double a = ellipse.a;
+  double b = ellipse.b;
+  double phi = ellipse.phi;
 
-  const vec::fixed<3> p0 = rotate(phi)*translate(-hk)*pa;
-  const vec::fixed<3> p1 = rotate(phi)*translate(-hk)*pb;
+  p0.translate(-h, -k);
+  p0.rotate(-phi);
+  p1.translate(-h, -k);
+  p1.rotate(-phi);
 
-  double x0 = p0(0);
-  double x1 = p1(0);
-  double y0 = p0(1);
-  double y1 = p1(1);
-
-  double theta0 = std::atan2(y0, x0);
-  double theta1 = std::atan2(y1, x1);
+  double theta0 = std::atan2(p0.k, p0.h);
+  double theta1 = std::atan2(p1.k, p1.h);
 
   if (theta1 < theta0)
-    theta1 += 2.0*datum::pi;
+    theta1 += 2.0*PI;
 
   // Triangle part of the sector
-  double triangle = 0.5*std::abs(x1*y0 - x0*y1);
+  double triangle = 0.5*std::abs(p1.h*p0.k - p0.h*p1.k);
 
   double dtheta = theta1 - theta0;
 
-  if (dtheta <= datum::pi) {
+  if (dtheta <= PI) {
     // Sector area
     return sector_area(a, b, theta1) - sector_area(a, b, theta0) - triangle;
   } else {
-    theta0 += 2.0*datum::pi;
+    theta0 += 2.0*PI;
     //Sector area
-    return a*b*datum::pi - sector_area(a, b, theta0) +
-      sector_area(a, b, theta1) + triangle;
+    return a*b*PI - sector_area(a, b, theta0)
+           + sector_area(a, b, theta1)
+           + triangle;
   }
 }
 
-// Compute the area of a intersection of 2+ ellipses
+// Compute the area of an intersection of 2+ ellipses
 double
-polysegments(arma::mat&& points,
-             const arma::mat& ellipses,
-             arma::umat&& parents,
+polysegments(const std::vector<Point>& points,
+             const std::vector<Ellipse>& ellipses,
+             const std::vector<std::array<int, 2>>& parents,
+             std::vector<int> int_points,
              bool& failure)
 {
-  vec x_int = points.row(0).t();
-  vec y_int = points.row(1).t();
-  uword n = points.n_cols;
+  auto n = int_points.size();
 
   // Sort points by their angle to the centroid
-  uvec ind = sort_index(atan2(x_int - accu(x_int)/n, y_int - accu(y_int)/n));
+  double h0, k0 = 0.0;
+
+  for (auto i : int_points) {
+    h0 += points[i].h/n;
+    k0 += points[i].k/n;
+  }
+
+  std::vector<double> angle;
+  angle.reserve(n);
+
+  for (const auto i : int_points)
+    angle.emplace_back(std::atan2(points[i].h - h0, points[i].k - k0));
+
+  auto ind = seq(n);
+
+  std::sort(ind.begin(), ind.end(),
+            [&angle](int i, int j) { return angle[i] < angle[j]; });
 
   // Reorder vectors and matrix based on angles to centroid
-  points  = points.cols(ind);
-  parents = parents.cols(ind);
-  x_int   = x_int(ind);
-  y_int   = y_int(ind);
   double area = 0.0;
 
-  for (uword i = 0, j = n - 1; i < n; ++i) {
-    // First discover which ellipses the points belong to
-    uvec ii = set_intersect(parents.col(i), parents.col(j));
+  for (int k = 0, l = n - 1; k < n; ++k) {
+    auto i = int_points[ind[k]];
+    auto j = int_points[ind[l]];
 
-    if (ii.n_elem > 0) {
-      vec areas(ii.n_elem);
+    // Rcpp::Rcout << i << "," << j << std::endl;
+
+    // First discover which ellipses the points belong to
+    std::vector<int> ii;
+    // Rcpp::Rcout << parents[i][0] << "," << parents[i][1] << ":" << parents[j][0] << "," << parents[j][1] << std::endl;
+
+    std::set_intersection(std::begin(parents[i]), std::end(parents[i]),
+                          std::begin(parents[j]), std::end(parents[j]),
+                          std::back_inserter(ii));
+
+    // for (auto asdf : ii)
+    //   Rcpp::Rcout << asdf;
+    // Rcpp::Rcout << std::endl;
+
+    if (!ii.empty()) {
+      std::vector<double> areas;
+      areas.reserve(2);
 
       // Ellipse segment
-      for (uword k = 0; k < ii.n_elem; ++k)
-        areas(k) = ellipse_segment(ellipses.col(ii(k)),
-                                   points.col(i),
-                                   points.col(j));
+      for (auto m : ii)
+        areas.emplace_back(ellipse_segment(ellipses[m],
+                                           points[i],
+                                           points[j]));
+
+      // Rcpp::Rcout << areas[0] << std::endl;
 
       // Triangular plus ellipse segment area
-      area += 0.5*((x_int(j) + x_int(i))*(y_int(j) - y_int(i))) + areas.min();
+      area += 0.5*((points[j].h + points[i].h)*(points[j].k - points[i].k))
+              + *std::min_element(areas.begin(), areas.end());
+
     } else {
       // Emergency exit (and fallback) when algorithm fails
       failure = true;
       return 0.0;
     }
 
-    j = i;
+    l = k;
   }
   return area;
 }

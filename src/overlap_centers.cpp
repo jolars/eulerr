@@ -43,7 +43,7 @@ bisect(const double r0,
   double s1 = g < 0.0 ? 0.0 : std::hypot(n0, z1) - 1.0;
   double s = 0.0;
 
-  for (uword i = 0; i < max_it; ++i) {
+  for (int i = 0; i < max_it; ++i) {
     s = (s0 + s1) / 2;
     if (s == s0 || s == s1) {
       break;
@@ -114,6 +114,8 @@ dist_loss(const arma::vec& p,
           const arma::rowvec& b,
           const arma::rowvec& phi)
 {
+  using namespace arma;
+
   auto n = h.n_elem;
   vec d(n);
   vec::fixed<3> pp;
@@ -136,6 +138,8 @@ locate_centers(const arma::rowvec& h,
                const arma::rowvec& phi,
                const arma::colvec& fitted)
 {
+  using namespace arma;
+
   uword n = h.n_elem;
   mat xy;
 

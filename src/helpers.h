@@ -20,28 +20,18 @@
 #include <RcppArmadillo.h>
 #include "constants.h"
 
-using namespace arma;
-
+template <typename T1, typename T2>
 inline
-arma::uvec
-set_intersect(const arma::uvec& x, const arma::uvec& y)
+bool
+isSubset(const T1& a, const T2& b)
 {
-  std::vector<int> out;
-  std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
-                        std::back_inserter(out));
-  return conv_to<uvec>::from(out);
-}
-
-// Number of intersections
-inline
-arma::uword
-n_intersections(const arma::uvec& x,
-                const arma::uvec& y)
-{
-  std::vector<int> out;
-  std::set_intersection(x.begin(), x.end(), y.begin(), y.end(),
-                        std::back_inserter(out));
-  return out.size();
+  return std::all_of(
+    std::begin(a),
+    std::end(a),
+    [&b](const int k) {
+      return std::find(std::begin(b), std::end(b), k) != std::end(b);
+    }
+  );
 }
 
 // Bit indexing
@@ -50,6 +40,7 @@ inline
 arma::umat
 bit_index(arma::uword n)
 {
+  using namespace arma;
   umat out(std::pow(2, n) - 1, n);
 
   for (uword i = 1, k = 0; i < n + 1; ++i) {
@@ -65,9 +56,33 @@ bit_index(arma::uword n)
   return out;
 }
 
+inline
+std::vector<std::vector<int>>
+set_index(const int n)
+{
+  std::vector<std::vector<int>> out(std::pow(2, n) - 1);
+
+  for (int i = 1, k = 0; i < n + 1; ++i) {
+
+    std::vector<bool> v(n);
+    std::fill(v.begin(), v.begin() + i, true);
+    do {
+      std::vector<int> ind;
+      ind.reserve(i);
+      for (int j = 0; j < n; ++j) {
+        if (v[j])
+          ind.emplace_back(j);
+      }
+      out[k] = std::move(ind);
+      k++;
+    } while (std::prev_permutation(v.begin(), v.end()));
+  }
+  return out;
+}
+
 // Signum function
 template <typename T>
-int
+constexpr int
 signum(T x)
 {
   return (T(0) < x) - (x < T(0));
@@ -87,6 +102,7 @@ inline
 arma::uword
 max_colmins(const arma::mat& x)
 {
+  using namespace arma;
   vec mins(x.n_cols);
 
   for (uword i = 0; i < x.n_cols; ++i)
@@ -100,6 +116,7 @@ template <typename T>
 Rcpp::NumericVector
 arma_to_rcpp(const T& x)
 {
+  using namespace arma;
   return Rcpp::NumericVector(x.begin(), x.end());
 }
 
@@ -108,8 +125,44 @@ template <typename T>
 T
 normalize_angle(T& x)
 {
-  T a = std::fmod(x + datum::pi, two_pi);
-  return a >= 0 ? (a - datum::pi) : (a + datum::pi);
+  T a = std::fmod(x + PI, 2.0*PI);
+  return a >= 0 ? (a - PI) : (a + PI);
+}
+
+template <typename T>
+constexpr void
+clamp(T& x, const double hi, const double lo)
+{
+  for (auto& x_i : x)
+    x_i = x_i < lo ? lo : (x_i > hi ? hi : x_i);
+}
+
+template <typename T>
+std::vector<T>
+seq(const T& n)
+{
+  std::vector<T> out(n);
+  std::iota(std::begin(out), std::end(out), 0);
+
+  return out;
+}
+
+template <typename T>
+std::vector<T>
+seq(const T& from, const T& to)
+{
+  auto n = static_cast<std::size_t>(to - from);
+  std::vector<T> out(n);
+  std::iota(std::begin(out), std::end(out), from);
+
+  return out;
+}
+
+template <typename T>
+constexpr T
+pow2(const T& x)
+{
+  return x*x;
 }
 
 #endif

@@ -14,33 +14,53 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef eulerr_geometry_
-#define eulerr_geometry_
+#ifndef eulerr_geometry_h_
+#define eulerr_geometry_h_
 
 #include <RcppArmadillo.h>
+#include "ellipse.h"
 
 using namespace arma;
 
 // See if a group of ellipses are completely disjoint or a russian doll
 inline
 double
-disjoint_or_subset(const arma::mat& M)
+disjoint_or_subset(const std::vector<Ellipse>& ellipse,
+                   const std::vector<int>& ind)
 {
-  rowvec areas = M.row(2)%M.row(3)*datum::pi;
-  uword i = areas.index_min();
+  std::vector<double> areas;
+  areas.reserve(ind.size());
 
-  rowvec xmh    = M(0, i) - M.row(0);
-  rowvec ymk    = M(1, i) - M.row(1);
-  rowvec phi    = M.row(4);
-  rowvec cosphi = cos(phi);
-  rowvec sinphi = sin(phi);
+  for (auto i : ind) {
+    areas.emplace_back(ellipse[i].area());
+  }
 
-  urowvec is_subset = square(xmh%cosphi + ymk%sinphi)/square(M.row(2)) +
-                      square(xmh%sinphi - ymk%cosphi)/square(M.row(3)) < 1.0;
+  auto min_itr = std::min_element(areas.begin(), areas.end());
+  int min_ind = ind[std::distance(areas.begin(), min_itr)];
 
-  is_subset.shed_col(i);
+  bool subset = false;
 
-  return all(is_subset) ? areas(i) : 0.0;
+  double h0 = ellipse[min_ind].h;
+  double k0 = ellipse[min_ind].k;
+
+  for (const auto i : ind) {
+    if (i != min_ind) {
+      double h = ellipse[i].h;
+      double k = ellipse[i].k;
+      double a = ellipse[i].a;
+      double b = ellipse[i].b;
+      double phi = ellipse[i].phi;
+      double cos_phi = std::cos(phi);
+      double sin_phi = std::sin(phi);
+
+      subset = std::pow((h0 - h)*cos_phi + (k0 - k)*sin_phi, 2)/(a*a) +
+               std::pow((h0 - h)*sin_phi + (k0 - k)*cos_phi, 2)/(b*b) < 1.0;
+      if (!subset)
+        break;
+    }
+  }
+
+  return subset ? *min_itr : 0.0;
 }
 
 
@@ -102,4 +122,42 @@ adopt(const mat& points,
   return out;
 }
 
-#endif
+inline
+std::vector<int>
+adopt2(const double x,
+       const double y,
+       const std::vector<Ellipse>& ellipses,
+       const int a,
+       const int b)
+{
+  auto n = ellipses.size();
+
+  std::vector<int> out;
+  out.reserve(n);
+
+  for (int i = 0; i < n; ++i) {
+    if ((i == a) || (i == b)) {
+      out.emplace_back(i);
+    } else {
+      double h = ellipses[i].h;
+      double k = ellipses[i].k;
+      double a = ellipses[i].a;
+      double b = ellipses[i].b;
+      double phi = ellipses[i].phi;
+      double cos_phi = std::cos(phi);
+      double sin_phi = std::sin(phi);
+
+      // Check if the points lie inside the ellipse
+      bool inside = std::pow((x - h)*cos_phi + (y - k)*sin_phi, 2)/(a*a) +
+                    std::pow((x - h)*sin_phi - (y - k)*cos_phi, 2)/(b*b) < 1.0;
+      if (inside)
+        out.emplace_back(i);
+    }
+  }
+
+  out.shrink_to_fit();
+
+  return out;
+}
+
+#endif // eulerr_geometry_h_
