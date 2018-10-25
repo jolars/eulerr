@@ -23,7 +23,7 @@
 template <typename T1, typename T2>
 inline
 bool
-isSubset(const T1& a, const T2& b)
+is_subset(const T1& a, const T2& b)
 {
   return std::all_of(
     std::begin(a),
