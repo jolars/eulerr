@@ -3,6 +3,7 @@
 
 #include "ellipse.h"
 #include "helpers.h"
+#include "constants.h"
 #include <RcppArmadillo.h>
 
 struct Conic {
@@ -40,7 +41,7 @@ struct Conic {
     M(2, 1) = E;
     M(2, 2) = F;
 
-    M(arma::find(arma::abs(M) < small)).zeros();
+    M(arma::find(arma::abs(M) < SMALL)).zeros();
   }
 };
 

@@ -55,7 +55,7 @@ standard_to_matrix(const mat& m)
   out.tube(2, 1) = E;
   out.tube(2, 2) = F;
 
-  out(find(abs(out) < small)).zeros();
+  out(find(abs(out) < SMALL)).zeros();
 
   return out;
 }
