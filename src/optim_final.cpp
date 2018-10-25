@@ -76,8 +76,8 @@ struct AreaWorker : public RcppParallel::Worker {
         std::vector<int> int_points;
 
         for (int j = 0; j < parents.size(); ++j) {
-          if (isSubset(parents[j], id_i)) {
-            if (isSubset(id_i, adopters[j])) {
+          if (is_subset(parents[j], id_i)) {
+            if (is_subset(id_i, adopters[j])) {
               int_points.emplace_back(j);
             }
           }
@@ -151,9 +151,8 @@ intersect_ellipses(const arma::vec& par,
   }
 
   std::vector<Conic> conics;
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i)
     conics.emplace_back(ellipses[i]);
-  }
 
   // Collect all points of intersection
   std::vector<Point> points;
@@ -207,7 +206,7 @@ intersect_ellipses(const arma::vec& par,
   // hierarchically decompose combination to get disjoint subsets
   for (int i = n_overlaps; i-- > 0;) {
     for (int j = i + 1; j < n_overlaps; ++j) {
-      if (isSubset(id[i], id[j]))
+      if (is_subset(id[i], id[j]))
         out[i] -= out[j];
     }
   }
