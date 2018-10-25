@@ -63,7 +63,7 @@ intersect_conic_line(const arma::mat& A,
   mat::fixed<3, 2> out;
 
   // Pick a non-zero element of l
-  if (any(l_abs > small)) {
+  if (any(l_abs > SMALL)) {
     uword i = index_max(l_abs);
     uvec li = regspace<uvec>(0, 2);
     li.shed_row(i);
@@ -74,7 +74,7 @@ intersect_conic_line(const arma::mat& A,
 
     vec::fixed<9> C_abs = abs(vectorise(C));
 
-    if (any(C_abs > small)) {
+    if (any(C_abs > SMALL)) {
       uvec ind = ind2sub(size(3, 3), index_max(C_abs));
       uword i0 = ind(0);
       uword i1 = ind(1);
@@ -91,16 +91,16 @@ intersect_conic_line(const arma::mat& A,
 std::vector<Point>
 intersect(const Conic& conic_A, const Conic& conic_B)
 {
-  arma::mat A = conic_A.M;
-  arma::mat B = conic_B.M;
+  const auto& A = conic_A.M;
+  const auto& B = conic_B.M;
 
   double alpha = det(A);
-  double beta = det(join_rows(A.cols(0, 1), B.col(2))) +
-    det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2))) +
-    det(join_rows(B.col(0), A.cols(1, 2)));
-  double gamma = det(join_rows(A.col(0), B.cols(1, 2))) +
-    det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2))) +
-    det(join_rows(B.cols(0, 1), A.col(2)));
+  double beta = det(join_rows(A.cols(0, 1), B.col(2)))
+                + det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2)))
+                + det(join_rows(B.col(0), A.cols(1, 2)));
+  double gamma = det(join_rows(A.col(0), B.cols(1, 2)))
+                 + det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2)))
+                 + det(join_rows(B.cols(0, 1), A.col(2)));
   double delta = det(B);
 
   // Find the cubic roots
@@ -117,7 +117,7 @@ intersect(const Conic& conic_A, const Conic& conic_B)
 
   mat::fixed<3, 3> C = lambda*A + B;
 
-  C(find(abs(C) < small)).zeros();
+  C(find(abs(C) < SMALL)).zeros();
 
   // Split the degenerate conic into two lines
   mat::fixed<3, 2> lines = split_conic(C);
