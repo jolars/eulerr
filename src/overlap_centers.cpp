@@ -22,6 +22,8 @@
 #include "transformations.h"
 #include "neldermead.h"
 #include "geometry.h"
+#include "point.h"
+#include "ellipse.h"
 
 // The code below code is adapted from "Distance from a Point to an Ellipse, an
 // Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
@@ -65,8 +67,20 @@ bisect(const double r0,
 // Ellipsoid, or a Hyperellipsoid" by David Eberly, Geometric Tools, LLC
 // (c) 1998-2016
 double
-dist_to_ellipse(double a, double b, double x, double y)
+distance(const Ellipse& ellipse, Point point)
 {
+  auto h = ellipse.h;
+  auto k = ellipse.k;
+  auto a = ellipse.a;
+  auto b = ellipse.b;
+  auto phi = ellipse.phi;
+
+  point.translate(-h, -k);
+  point.rotate(phi);
+
+  auto x = point.h;
+  auto y = point.k;
+
   // Flip the coordinate system if semi-major axis > semi-minor axis
   if (b > a) {
     std::swap(x, y);
@@ -107,26 +121,17 @@ dist_to_ellipse(double a, double b, double x, double y)
 }
 
 double
-dist_loss(const arma::vec& p,
-          const arma::rowvec& h,
-          const arma::rowvec& k,
-          const arma::rowvec& a,
-          const arma::rowvec& b,
-          const arma::rowvec& phi)
+min_distance(const arma::vec& p,
+             const std::vector<Ellipse>& ellipses)
 {
-  using namespace arma;
+  Point point(p(0), p(1));
 
-  auto n = h.n_elem;
-  vec d(n);
-  vec::fixed<3> pp;
-  pp(span(0, 1)) = p;
-  pp(2) = 1;
+  auto d = INF;
 
-  for (uword i = 0; i < n; ++i) {
-    vec::fixed<3> ppp = rotate(phi(i))*translate(-h(i), -k(i))*pp;
-    d(i) = dist_to_ellipse(a(i), b(i), ppp(0), ppp(1));
-  }
-  return d.min();
+  for (const auto& ellipse : ellipses)
+    d = std::min(d, distance(ellipse, point));
+
+  return d;
 }
 
 // [[Rcpp::export]]
@@ -142,6 +147,12 @@ locate_centers(const arma::rowvec& h,
 
   uword n = h.n_elem;
   mat xy;
+
+  std::vector<Ellipse> ellipses;
+
+  for (int i = 0; i < h.n_elem; ++i) {
+    ellipses.emplace_back(h[i], k[i], a[i], b[i], phi[i]);
+  }
 
   if (n > 1) {
     // Evenly space points across template circle
@@ -160,14 +171,14 @@ locate_centers(const arma::rowvec& h,
     xy.set_size(2, n_combos);
     xy.fill(datum::nan);
 
-    uvec not_zero = fitted > small;
+    uvec not_zero = fitted > SMALL;
     uvec singles = sum(id, 1) == 1;
 
     for (uword i = 0; i < n; ++i) {
       // Fit the sampling points to the current ellipse
       mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
       umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
-                                                  h, k, a, b, phi);
+                                            h, k, a, b, phi);
 
       uvec seqr = find(id.unsafe_col(i));
 
@@ -188,7 +199,8 @@ locate_centers(const arma::rowvec& h,
             if (p2.n_cols != 0) {
               uword midpos = std::ceil(p2.n_cols/2);
               xy.col(j) = nelderMead(p2(span(0, 1), midpos),
-                                     dist_loss, h, k, a, b, phi);
+                                     min_distance,
+                                     ellipses);
             }
           }
         }
