@@ -25,6 +25,7 @@ Imports:
     grid,
     lattice,
     polyclip,
+    polylabelr,
     Rcpp,
     RcppParallel,
     GenSA,

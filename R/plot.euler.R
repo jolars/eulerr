@@ -660,6 +660,18 @@ plot.euler <- function(x,
   )
 }
 
+#' Test if two polygons are intersecting or not
+#'
+#' @param a first polygon
+#' @param b second polygon
+#'
+#' @return `TRUE` if polygon `a` and `b` are intersecting, `FALSE` otherwise.
+#' @keywords internal
+#' @noRd
+test_intersection <- function(a, b) {
+  length(poly_clip(a, b, "intersection")) > 0
+}
+
 #' Compute geometries and label locations
 #'
 #' @param x an object of class 'euler'
@@ -711,14 +723,15 @@ setup_geometry <- function(x,
   if (do_edges)
     edges <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
 
-  if (do_fills) {
+  if (do_fills || do_labels || do_quantities) {
     # overlay ellipses on top of each other
     pieces <- fills <- vector("list", n_id)
     for (i in rev(seq_len(n_id))) {
       idx <- which(id[i, ])
       n_idx <- length(idx)
+
       if (n_idx == 1L) {
-        pieces[[i]] <- e[[idx[1]]]
+        pieces[[i]] <- list(e[[idx[1]]])
       } else {
         pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
         if (n_idx > 2L) {
@@ -727,11 +740,12 @@ setup_geometry <- function(x,
           }
         }
       }
-      for (ii in which(!id[i, ])) {
-        pieces[[i]] <- poly_clip(pieces[[i]], e[[ii]], "minus")
+
+      for (j in which(!id[i, ])) {
+        pieces[[i]] <- poly_clip(pieces[[i]], e[[j]], "minus")
       }
 
-      for (i in seq_along(pieces)) {
+      for (k in seq_along(pieces)) {
         if (is.null(pieces[[i]]$x)) {
           x0 <- lapply(pieces[[i]], "[[", "x")
           y0 <- lapply(pieces[[i]], "[[", "y")
@@ -752,19 +766,68 @@ setup_geometry <- function(x,
     singles <- rowSums(id) == 1
     empty <- abs(fitted) < sqrt(.Machine$double.eps)
 
-    centers <- cbind(t(locate_centers(h, k, a, b, phi, fitted)), seq_len(n_id))
+    width <- abs(limits$xlim[1] - limits$xlim[2])
+    height <- abs(limits$ylim[1] - limits$ylim[2])
+
+    prec <- max(width, height)/100
+
+    centers <- lapply(pieces, function(p) {
+      n_p <- length(p)
+
+      if (n_p == 1) {
+        polylabelr::poi(p[[1]]$x, p[[1]]$y, precision = prec)
+      } else if (n_p > 1) {
+        x <- double(0)
+        y <- double(0)
+
+        intersects <- matrix(TRUE, ncol = n_p, nrow = n_p)
+
+        for (i in 1:(n_p - 1)) {
+          for (j in (i + 1):n_p) {
+            intersects[i, j] <- test_intersection(p[[i]], p[[j]])
+          }
+        }
+
+        intersects[lower.tri(intersects)] <- intersects[upper.tri(intersects)]
+
+        clusters <- unique(lapply(split(intersects, row(intersects)), which))
+
+        res <- lapply(clusters, function(cluster) {
+          n_c <- length(cluster)
+
+          for (i in cluster) {
+            x <- c(x, p[[i]]$x)
+            y <- c(y, p[[i]]$y)
+            if (i < n_c) {
+              x <- c(x, NA)
+              y <- c(y, NA)
+            }
+          }
+          polylabelr::poi(x, y, precision = prec)
+        })
+
+        res[[which.max(unlist(lapply(res, "[[", "dist")))]]
+
+      } else {
+        grDevices::xy.coords(NA, NA)
+      }
+    })
+
+    centers <- cbind(vapply(centers, "[[", "x", FUN.VALUE = double(1)),
+                     vapply(centers, "[[", "y", FUN.VALUE = double(1)),
+                     seq_len(n_id))
     rownames(centers) <- names(orig)
 
     if (do_labels) {
       labels <- list(labels = labels$labels[which(!empty_sets)])
-      center_labels <- labels$labels[!is.nan(centers[singles, 1L])]
+      center_labels <- labels$labels[!is.na(centers[singles, 1L])]
     }
 
-    labels_centers <- centers[!is.nan(centers[, 1L]) & singles, , drop = FALSE]
+    labels_centers <- centers[!is.na(centers[, 1L]) & singles, , drop = FALSE]
 
     droprows <- rep.int(TRUE, NROW(centers))
-    for (i in which(is.nan(centers[singles, 1L]))) {
-      pick <- id[, i] & !empty & !is.nan(centers[, 1L])
+    for (i in which(is.na(centers[singles, 1L]))) {
+      pick <- id[, i] & !empty & !is.na(centers[, 1L])
       labels_centers <- rbind(labels_centers, centers[which(pick)[1L], ])
       if (do_labels)
         center_labels <- c(center_labels, labels$labels[i])
@@ -773,7 +836,7 @@ setup_geometry <- function(x,
 
     if (do_quantities) {
       quantities_centers <-
-        centers[!is.nan(centers[, 1L]) & !singles & droprows, , drop = FALSE]
+        centers[!is.na(centers[, 1L]) & !singles & droprows, , drop = FALSE]
       quantities_centers <- rbind(quantities_centers, labels_centers)
       if (!is.null(quantities$labels))
         quantities <- list(
@@ -784,16 +847,12 @@ setup_geometry <- function(x,
         quantities <- list(labels = orig[quantities_centers[, 3L]])
       quantities$x <- quantities_centers[, 1L]
       quantities$y <- quantities_centers[, 2L]
-      # quantities$x[void_sets] <- NA
-      # quantities$y[void_sets] <- NA
     }
 
     if (do_labels) {
       labels$x <- labels_centers[, 1L]
       labels$y <- labels_centers[, 2L]
       labels$labels <- center_labels
-      # labels$x[void_sets] <- NA
-      # labels$y[void_sets] <- NA
     }
   }
 
