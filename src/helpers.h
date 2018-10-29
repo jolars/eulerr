@@ -137,11 +137,11 @@ normalize_angle(T& x)
 
 template <typename T>
 inline
-constexpr void
-clamp(T& x, const double hi, const double lo)
+constexpr
+T
+clamp(const T& x, const T& lo, const T& hi)
 {
-  for (auto& x_i : x)
-    x_i = x_i < lo ? lo : (x_i > hi ? hi : x_i);
+  return x < lo ? lo : (x > hi ? hi : x);
 }
 
 template <typename T>
