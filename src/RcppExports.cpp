@@ -58,22 +58,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// locate_centers
-arma::mat locate_centers(const arma::rowvec& h, const arma::rowvec& k, const arma::rowvec& a, const arma::rowvec& b, const arma::rowvec& phi, const arma::colvec& fitted);
-RcppExport SEXP _eulerr_locate_centers(SEXP hSEXP, SEXP kSEXP, SEXP aSEXP, SEXP bSEXP, SEXP phiSEXP, SEXP fittedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type h(hSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type a(aSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type b(bSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec& >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< const arma::colvec& >::type fitted(fittedSEXP);
-    rcpp_result_gen = Rcpp::wrap(locate_centers(h, k, a, b, phi, fitted));
-    return rcpp_result_gen;
-END_RCPP
-}
 // choose_two
 arma::umat choose_two(const arma::uvec& x);
 RcppExport SEXP _eulerr_choose_two(SEXP xSEXP) {
@@ -116,7 +100,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_stress", (DL_FUNC) &_eulerr_stress, 2},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
-    {"_eulerr_locate_centers", (DL_FUNC) &_eulerr_locate_centers, 6},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
     {"_eulerr_bit_index_cpp", (DL_FUNC) &_eulerr_bit_index_cpp, 1},

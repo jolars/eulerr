@@ -672,6 +672,47 @@ test_intersection <- function(a, b) {
   length(poly_clip(a, b, "intersection")) > 0
 }
 
+locate_centers <- function(p, precision = 1) {
+  n_p <- length(p)
+
+  if (n_p == 1) {
+    polylabelr::poi(p[[1]]$x, p[[1]]$y, precision = precision)
+  } else if (n_p > 1) {
+
+    intersects <- matrix(TRUE, ncol = n_p, nrow = n_p)
+
+    for (i in 1:(n_p - 1)) {
+      for (j in (i + 1):n_p) {
+        intersects[i, j] <- test_intersection(p[[i]], p[[j]])
+      }
+    }
+
+    intersects[lower.tri(intersects)] <- intersects[upper.tri(intersects)]
+
+    clusters <- unique(lapply(split(intersects, row(intersects)), which))
+
+    res <- lapply(clusters, function(cluster) {
+      n_c <- length(cluster)
+      x <- y <- double(0)
+
+      for (i in seq_len(n_c)) {
+        x <- c(x, p[[cluster[i]]]$x)
+        y <- c(y, p[[cluster[i]]]$y)
+        if (i < n_c) {
+          x <- c(x, NA)
+          y <- c(y, NA)
+        }
+      }
+      polylabelr::poi(x, y, precision = precision)
+    })
+
+    res[[which.max(unlist(lapply(res, "[[", "dist")))]]
+
+  } else {
+    grDevices::xy.coords(NA, NA)
+  }
+}
+
 #' Compute geometries and label locations
 #'
 #' @param x an object of class 'euler'
@@ -724,7 +765,7 @@ setup_geometry <- function(x,
     edges <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
 
   if (do_fills || do_labels || do_quantities) {
-    # overlay ellipses on top of each other
+    # decompose ellipse polygons into intersections
     pieces <- fills <- vector("list", n_id)
     for (i in rev(seq_len(n_id))) {
       idx <- which(id[i, ])
@@ -744,20 +785,16 @@ setup_geometry <- function(x,
       for (j in which(!id[i, ])) {
         pieces[[i]] <- poly_clip(pieces[[i]], e[[j]], "minus")
       }
+    }
 
-      for (k in seq_along(pieces)) {
-        if (is.null(pieces[[i]]$x)) {
-          x0 <- lapply(pieces[[i]], "[[", "x")
-          y0 <- lapply(pieces[[i]], "[[", "y")
-        } else {
-          x0 <- pieces[[i]]$x
-          y0 <- pieces[[i]]$y
-        }
-        if (length(x0) > 0L) {
-          fills[[i]]$x <- c(x0, recursive = TRUE)
-          fills[[i]]$y <- c(y0, recursive = TRUE)
-          fills[[i]]$id.lengths <- lengths(x0)
-        }
+    for (i in seq_along(pieces)) {
+      x0 <- lapply(pieces[[i]], "[[", "x")
+      y0 <- lapply(pieces[[i]], "[[", "y")
+
+      if (length(x0) > 0L) {
+        fills[[i]]$x <- c(x0, recursive = TRUE)
+        fills[[i]]$y <- c(y0, recursive = TRUE)
+        fills[[i]]$id.lengths <- lengths(x0)
       }
     }
   }
@@ -771,47 +808,7 @@ setup_geometry <- function(x,
 
     prec <- max(width, height)/100
 
-    centers <- lapply(pieces, function(p) {
-      n_p <- length(p)
-
-      if (n_p == 1) {
-        polylabelr::poi(p[[1]]$x, p[[1]]$y, precision = prec)
-      } else if (n_p > 1) {
-        x <- double(0)
-        y <- double(0)
-
-        intersects <- matrix(TRUE, ncol = n_p, nrow = n_p)
-
-        for (i in 1:(n_p - 1)) {
-          for (j in (i + 1):n_p) {
-            intersects[i, j] <- test_intersection(p[[i]], p[[j]])
-          }
-        }
-
-        intersects[lower.tri(intersects)] <- intersects[upper.tri(intersects)]
-
-        clusters <- unique(lapply(split(intersects, row(intersects)), which))
-
-        res <- lapply(clusters, function(cluster) {
-          n_c <- length(cluster)
-
-          for (i in cluster) {
-            x <- c(x, p[[i]]$x)
-            y <- c(y, p[[i]]$y)
-            if (i < n_c) {
-              x <- c(x, NA)
-              y <- c(y, NA)
-            }
-          }
-          polylabelr::poi(x, y, precision = prec)
-        })
-
-        res[[which.max(unlist(lapply(res, "[[", "dist")))]]
-
-      } else {
-        grDevices::xy.coords(NA, NA)
-      }
-    })
+    centers <- lapply(pieces, locate_centers, precision = prec)
 
     centers <- cbind(vapply(centers, "[[", "x", FUN.VALUE = double(1)),
                      vapply(centers, "[[", "y", FUN.VALUE = double(1)),
