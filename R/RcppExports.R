@@ -17,10 +17,6 @@ optim_init <- function(par, d, disjoint, subset) {
     .Call(`_eulerr_optim_init`, par, d, disjoint, subset)
 }
 
-locate_centers <- function(h, k, a, b, phi, fitted) {
-    .Call(`_eulerr_locate_centers`, h, k, a, b, phi, fitted)
-}
-
 choose_two <- function(x) {
     .Call(`_eulerr_choose_two`, x)
 }
