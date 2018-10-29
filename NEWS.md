@@ -34,6 +34,8 @@ or if the input is a table with more than two columns or rows.
 
 * Empty combinations can now be provided and will be plotted (generating
 completely blank plots).
+* `euler.list()` now passes its ellipsis argument along properly. (#33, 
+  thanks, @banfai)
 
 # eulerr 4.1.0
 

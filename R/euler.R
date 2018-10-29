@@ -546,5 +546,5 @@ euler.list <- function(combinations, ...) {
   for (i in 1L:nrow(id))
     out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
 
-  euler(out, input = "union")
+  euler(out, input = "union", ...)
 }
