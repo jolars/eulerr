@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef eulerr_helpers_
-#define eulerr_helpers_
+#ifndef eulerr_helpers_h_
+#define eulerr_helpers_h_
 
 #include <RcppArmadillo.h>
 #include "constants.h"
@@ -41,6 +41,7 @@ arma::umat
 bit_index(arma::uword n)
 {
   using namespace arma;
+
   umat out(std::pow(2, n) - 1, n);
 
   for (uword i = 1, k = 0; i < n + 1; ++i) {
@@ -82,7 +83,9 @@ set_index(const int n)
 
 // Signum function
 template <typename T>
-constexpr int
+inline
+constexpr
+int
 signum(T x)
 {
   return (T(0) < x) - (x < T(0));
@@ -90,6 +93,7 @@ signum(T x)
 
 // Nearly equal
 template <typename T>
+inline
 bool
 nearly_equal(T a, T b)
 {
@@ -98,8 +102,8 @@ nearly_equal(T a, T b)
 }
 
 // Max of minimums colwise
-inline
 arma::uword
+inline
 max_colmins(const arma::mat& x)
 {
   using namespace arma;
@@ -113,6 +117,7 @@ max_colmins(const arma::mat& x)
 
 // Convert armadillo vector to rcpp vector
 template <typename T>
+inline
 Rcpp::NumericVector
 arma_to_rcpp(const T& x)
 {
@@ -122,6 +127,7 @@ arma_to_rcpp(const T& x)
 
 // Normalize angle
 template <typename T>
+inline
 T
 normalize_angle(T& x)
 {
@@ -130,6 +136,7 @@ normalize_angle(T& x)
 }
 
 template <typename T>
+inline
 constexpr void
 clamp(T& x, const double hi, const double lo)
 {
@@ -138,6 +145,7 @@ clamp(T& x, const double hi, const double lo)
 }
 
 template <typename T>
+inline
 std::vector<T>
 seq(const T& n)
 {
@@ -148,6 +156,7 @@ seq(const T& n)
 }
 
 template <typename T>
+inline
 std::vector<T>
 seq(const T& from, const T& to)
 {
@@ -159,10 +168,36 @@ seq(const T& from, const T& to)
 }
 
 template <typename T>
+inline
 constexpr T
 pow2(const T& x)
 {
   return x*x;
 }
 
-#endif
+template <typename T>
+inline
+constexpr
+std::size_t
+min_index(const T& x)
+{
+  return std::distance(x.begin(), std::min_element(x.begin(), x.end()));
+}
+
+inline
+arma::umat
+choose_two(const arma::uword n)
+{
+  using namespace arma;
+
+  umat m(2, n*(n - 1)/2);
+  for (uword i = 0, k = 0; i < n - 1; ++i) {
+    for (uword j = i + 1; j < n; ++j, ++k) {
+      m(0, k) = i;
+      m(1, k) = j;
+    }
+  }
+  return m;
+}
+
+#endif // eulerr_helpers_h_
