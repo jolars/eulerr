@@ -19,48 +19,59 @@
 #include "transformations.h"
 #include "geometry.h"
 #include "point.h"
+#include "ellipse.h"
 
-using namespace arma;
+#ifndef eulerr_areas_h_
+#define eulerr_areas_h_
 
 double
-montecarlo(arma::mat ellipses, std::vector<int> int_points)
+montecarlo(const std::vector<Ellipse>& ellipses,
+           const std::vector<int>&     indices)
 {
-  double n = ellipses.n_cols;
+  using namespace std;
 
-  // Get bounding box for all the ellipses
-  rowvec h = ellipses.row(0);
-  rowvec k = ellipses.row(1);
-  rowvec a = ellipses.row(2);
-  rowvec b = ellipses.row(3);
-  rowvec phi = ellipses.row(4);
+  auto n = indices.size();
 
-  // Sample points using Vogel's method
-  uword n_s = 1e4;
-  rowvec seqn = regspace<rowvec>(0, n_s - 1);
-  rowvec theta = seqn*(datum::pi*(3 - std::sqrt(5)));
-  rowvec rad = sqrt(seqn/n_s);
-  mat p0(3, n_s);
-  p0.row(0) = rad%cos(theta);
-  p0.row(1) = rad%sin(theta);
-  p0.row(2).ones();
+  vector<double> areas;
+  areas.reserve(n);
 
-  vec areas(n);
+  for (const auto ind : indices)
+    areas.push_back(ellipses[ind].area());
 
-  for (uword i = 0; i < n; ++i) {
-    // Fit the sampling points to the current ellipse
-    mat p1 = translate(h(i), k(i))*rotate(-phi(i))*scale(a(i), b(i))*p0;
-    umat in_which = find_surrounding_sets(p1.row(0), p1.row(1),
-                                          h, k, a, b, phi);
+  // pick the ellipse with the smallest area
+  auto ind_min = indices[min_index(areas)];
 
-    double inside = accu(all(in_which).t());
+  size_t n_points = 1e4;
+  size_t n_inside = 0;
 
-    // Update the area as the fraction of the points inside all ellipses to
-    // the area of the ellipses
-    areas(i) = (inside/n_s)*a(i)*b(i)*PI;
+  for (size_t i = 0; i < n_points; ++i) {
+    // Sample points using Vogel's method
+    double theta = i*(PI*(3.0 - sqrt(5.0)));
+    double r = sqrt(i/n_points);
+
+    Point p{r*cos(theta), r*sin(theta)};
+
+    // modify point to fit ellipse
+    p.scale(ellipses[ind_min].a, ellipses[ind_min].b);
+    p.rotate(ellipses[ind_min].phi);
+    p.translate(ellipses[ind_min].h, ellipses[ind_min].k);
+
+    // check if point is inside the intersection
+    bool inside = true;
+
+    for (const auto ind : indices) {
+      if (ind == ind_min)
+        continue;
+
+      if (!point_in_ellipse(p, ellipses[ind]))
+        break;
+    }
+
+    if (inside)
+      n_inside++;
   }
 
-  // Return the average of all the ellipses
-  return accu(areas)/n;
+  return (n_inside/n_points)*ellipses[ind_min].area();
 }
 
 // The code below is adapted from "The area of intersecting ellipses" by
@@ -120,11 +131,11 @@ ellipse_segment(const Ellipse& ellipse, Point p0, Point p1)
 
 // Compute the area of an intersection of 2+ ellipses
 double
-polysegments(const std::vector<Point>& points,
-             const std::vector<Ellipse>& ellipses,
+polysegments(const std::vector<Point>&              points,
+             const std::vector<Ellipse>&            ellipses,
              const std::vector<std::array<int, 2>>& parents,
-             std::vector<int> int_points,
-             bool& failure)
+             std::vector<int>                       int_points,
+             bool&                                  failure)
 {
   auto n = int_points.size();
 
@@ -154,19 +165,12 @@ polysegments(const std::vector<Point>& points,
     auto i = int_points[ind[k]];
     auto j = int_points[ind[l]];
 
-    // Rcpp::Rcout << i << "," << j << std::endl;
-
     // First discover which ellipses the points belong to
     std::vector<int> ii;
-    // Rcpp::Rcout << parents[i][0] << "," << parents[i][1] << ":" << parents[j][0] << "," << parents[j][1] << std::endl;
 
     std::set_intersection(std::begin(parents[i]), std::end(parents[i]),
                           std::begin(parents[j]), std::end(parents[j]),
                           std::back_inserter(ii));
-
-    // for (auto asdf : ii)
-    //   Rcpp::Rcout << asdf;
-    // Rcpp::Rcout << std::endl;
 
     if (!ii.empty()) {
       std::vector<double> areas;
@@ -177,8 +181,6 @@ polysegments(const std::vector<Point>& points,
         areas.emplace_back(ellipse_segment(ellipses[m],
                                            points[i],
                                            points[j]));
-
-      // Rcpp::Rcout << areas[0] << std::endl;
 
       // Triangular plus ellipse segment area
       area += 0.5*((points[j].h + points[i].h)*(points[j].k - points[i].k))
@@ -194,3 +196,5 @@ polysegments(const std::vector<Point>& points,
   }
   return area;
 }
+
+#endif // eulerr_areas_h_
