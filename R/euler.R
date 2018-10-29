@@ -135,14 +135,13 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'   Missing combinations are treated as being 0.
 #'
 #' @export
-euler.default <- function(
-  combinations,
-  input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
-  n_threads = 1,
-  control = list(),
-  ...
-) {
+euler.default <- function(combinations,
+                          input = c("disjoint", "union"),
+                          shape = c("circle", "ellipse"),
+                          n_threads = 1,
+                          control = list(),
+                          ...)
+{
   stopifnot(is.numeric(combinations),
             !any(combinations < 0),
             !is.null(attr(combinations, "names")),
@@ -234,7 +233,7 @@ euler.default <- function(
       id_sums <- rowSums(id)
       ones <- id_sums == 1L
       twos <- id_sums == 2L
-      two <- choose_two(1L:n)
+      two <- choose_two(1:n)
       r <- sqrt(areas[ones]/pi)
 
       # Establish identities of disjoint and subset sets
@@ -299,21 +298,20 @@ euler.default <- function(
 
       # Try to find a solution using nlm() first (faster)
       # TODO: Allow user options here?
-      nlm_solution <- stats::nlm(
-        f = optim_final_loss,
-        p = pars,
-        areas = areas_disjoint,
-        circle = circle,
-        iterlim = 1e6L
-      )$estimate
+      nlm_solution <- stats::nlm(f = optim_final_loss,
+                                 p = pars,
+                                 areas = areas_disjoint,
+                                 circle = circle,
+                                 iterlim = 1e6L)$estimate
 
       tpar <- as.data.frame(matrix(
         data = nlm_solution,
         ncol = if (circle) 3L else 5L,
-        dimnames = list(
-          setnames[!empty_sets],
-          if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
-        ),
+        dimnames = list(setnames[!empty_sets],
+                        if (circle)
+                          c("h", "k", "r")
+                        else
+                          c("h", "k", "a", "b", "phi")),
         byrow = TRUE
       ))
       if (circle)
