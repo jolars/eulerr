@@ -46,3 +46,11 @@ test_that("erroneous input to plot.euler() return errors", {
   f <- euler(c(A = 5, B = 2))
   expect_error(dont_plot(f, n = -1))
 })
+
+test_that("erroneous input to error_plot() throws", {
+  f <- euler(organisms)
+
+  expect_error(error_plot(f, fills = list(col = "grey")))
+  expect_error(error_plot(f, legend = TRUE))
+  expect_error(error_plot(f, strips = TRUE))
+})

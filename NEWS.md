@@ -1,7 +1,11 @@
 # eulerr 4.1.0.9000
 
-## Major changes
+## New features
+* `error_plot()` is a new function that offers diagnostic plots of
+fits from `euler()`, letting the user visualize the error in the 
+resulting Euler diagram.
 
+## Major changes
 * The work horse of `euler()` has now been parallalized, which
 should lead to considerable performance gains when large combinations
 are given.

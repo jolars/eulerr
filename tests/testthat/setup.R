@@ -6,10 +6,10 @@
 #' @return Invisibly returns whatever `plot(x)` would normally return, but
 #'   does not plot anything (which is the point).
 #' @keywords internal
-dont_plot <- function(x, ...) {
+dont_plot <- function(x, ..., .f = graphics::plot) {
   tmp <- tempfile()
   grDevices::png(tmp)
-  p <- graphics::plot(x, ...)
+  p <- .f(x, ...)
   grDevices::dev.off()
   unlink(tmp)
   invisible(p)

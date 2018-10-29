@@ -68,3 +68,14 @@ test_that("plotting zero-fits works", {
   expect_is(plot(euler(s)), "gTree")
 })
 
+test_that("error_plot functions normally", {
+  f <- euler(organisms)
+
+  expect_silent(dont_plot(f, .f = error_plot))
+  expect_silent(dont_plot(f,
+                          pal = grDevices::colorRampPalette(c("red", "blue")),
+                          .f = error_plot))
+  expect_silent(dont_plot(f, quantities = FALSE, .f = error_plot))
+  expect_silent(dont_plot(f, edges = FALSE, .f = error_plot))
+})
+

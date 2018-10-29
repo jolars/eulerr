@@ -139,6 +139,8 @@ plot.euler <- function(x,
   groups <- attr(x, "groups")
   dots <- list(...)
 
+  do_custom_legend <- grid::is.grob(legend)
+
   do_fills <- !is_false(fills) && !is.null(fills)
   do_edges <- !is_false(edges) && !is.null(edges)
   do_labels <- !is_false(labels) && !is.null(labels)
@@ -278,7 +280,9 @@ plot.euler <- function(x,
   }
 
   # setup legend
-  if (do_legend) {
+  if (do_custom_legend) {
+    legend <- legend
+  } else if (do_legend) {
     # TODO: create a better, custom legend
 
     legend <- update_list(
@@ -399,8 +403,7 @@ plot.euler <- function(x,
                                               quantities = quantities,
                                               number = i)
     }
-    euler_grob <- grid::gTree(grid::nullGrob(),
-                              children = euler_grob_children)
+    euler_grob <- grid::gTree(grid::nullGrob(), children = euler_grob_children)
     pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
     layout <- lengths(lapply(groups, unique))
     if (length(layout) == 1L)
@@ -470,17 +473,23 @@ plot.euler <- function(x,
   }
 
   if (do_legend) {
-    legend_grob <- grid::legendGrob(
-      labels = legend$labels,
-      do.lines = legend$do.lines,
-      ncol = legend$ncol,
-      nrow = legend$nrow,
-      hgap = legend$hgap,
-      vgap = legend$vgap,
-      default.units = legend$default.units,
-      pch = legend$pch,
-      gp = legend$gp
-    )
+    if (do_custom_legend) {
+      legend_grob <- legend
+      legend <- list(side = "right")
+    } else {
+      legend_grob <- grid::legendGrob(
+        labels = legend$labels,
+        do.lines = legend$do.lines,
+        ncol = legend$ncol,
+        nrow = legend$nrow,
+        hgap = legend$hgap,
+        vgap = legend$vgap,
+        default.units = legend$default.units,
+        pch = legend$pch,
+        gp = legend$gp
+      )
+    }
+
     legend_grob$name <- "legend.grob"
     if (do_strip_top)
       legend_row <- 2 + 2*do_main
