@@ -21,67 +21,6 @@
 
 using namespace arma;
 
-// Scaling matrix
-inline
-arma::mat
-scale(const arma::vec& xy)
-{
-  mat::fixed<3, 3> out;
-  out.eye();
-  out(0, 0) = xy(0);
-  out(1, 1) = xy(1);
-  return out;
-}
-
-inline
-arma::mat
-scale(const double x,
-      const double y)
-{
-  mat::fixed<3, 3> out;
-  out.eye();
-  out(0, 0) = x;
-  out(1, 1) = y;
-  return out;
-}
-
-// Translation matrix
-inline
-arma::mat
-translate(const arma::vec& xy)
-{
-  mat::fixed<3, 3> out;
-  out.eye();
-  out(span(0, 1), 2) = xy;
-  return out;
-}
-
-inline
-arma::mat
-translate(const double x,
-          const double y)
-{
-  mat::fixed<3, 3> out;
-  out.eye();
-  out(0, 2) = x;
-  out(1, 2) = y;
-  return out;
-}
-
-// Produce a rotation matrix
-inline
-arma::mat
-rotate(const double phi)
-{
-  mat::fixed<3, 3> out;
-  out.eye();
-  out(0, 0) =  std::cos(phi);
-  out(1, 0) = -std::sin(phi);
-  out(0, 1) =  std::sin(phi);
-  out(1, 1) =  std::cos(phi);
-  return out;
-}
-
 // Return the adjoint (adjugate) of a 3-by-3 matrix
 inline
 arma::mat
