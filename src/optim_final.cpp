@@ -175,9 +175,8 @@ intersect_ellipses(const arma::vec& par,
   }
 
   // Clamp output to be non-zero
-  std::replace_if(out.begin(), out.end(),
-                  [](double x) { return x < 0.0; },
-                  0.0);
+  std::transform(out.begin(), out.end(), out.begin(),
+                 [](double& x) { return clamp(x, 0.0, INF); });
 
   return out;
 }
