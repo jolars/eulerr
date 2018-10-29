@@ -21,7 +21,6 @@
 #include <RcppParallel.h>
 #include "transformations.h"
 #include "intersections.h"
-#include "conversions.h"
 #include "solver.h"
 #include "helpers.h"
 #include "constants.h"
@@ -29,19 +28,6 @@
 #include "point.h"
 
 using namespace arma;
-
-arma::umat
-choose_two(const arma::uword n)
-{
-  umat m(2, n*(n - 1)/2);
-  for (uword i = 0, k = 0; i < n - 1; ++i) {
-    for (uword j = i + 1; j < n; ++j, ++k) {
-      m(0, k) = i;
-      m(1, k) = j;
-    }
-  }
-  return m;
-}
 
 struct AreaWorker : public RcppParallel::Worker {
   AreaWorker(std::vector<double>& areas,
@@ -82,16 +68,10 @@ struct AreaWorker : public RcppParallel::Worker {
             }
           }
         }
-//
-//         for (auto df : int_points) {
-//           Rcpp::Rcout << df << ",";
-//         }
-//         Rcpp::Rcout << std::endl;
 
         if (int_points.empty()) {
           // No intersections: either disjoint or subset
           areas[i] = disjoint_or_subset(ellipses, id_i);
-          // Rcpp::Rcout << areas[i] << std::endl;
         } else {
           // Compute the area of the overlap
           bool failure = false;
@@ -100,11 +80,10 @@ struct AreaWorker : public RcppParallel::Worker {
                                   parents,
                                   int_points,
                                   failure);
-          // if (failure || approx) {
-          //   // Resort to approximation if exact calculation fails
-          //   // TODO: Use a better fallback approximation
-          //   areas[i] = montecarlo(ellipses, id_i);
-          // }
+          if (failure || approx) {
+            // Resort to approximation if exact calculation fails
+            areas[i] = montecarlo(ellipses, id_i);
+          }
         }
       }
     }
@@ -166,24 +145,11 @@ intersect_ellipses(const arma::vec& par,
       for (auto& p_i : p) {
         std::array<int, 2> parent = {i, j};
         parents.push_back(std::move(parent));
-        adopters.emplace_back(adopt2(p_i.h, p_i.k, ellipses, i, j));
+        adopters.emplace_back(adopt(p_i.h, p_i.k, ellipses, i, j));
         points.push_back(std::move(p_i));
       }
     }
   }
-
-  // for (auto pg : parents) {
-  //   Rcpp::Rcout << pg[0] << "," << pg[1] << std::endl;
-  // }
-  //
-  // Rcpp::Rcout << std::endl;
-  //
-  // for (auto gg : adopters) {
-  //   for (auto ggg : gg) {
-  //     Rcpp::Rcout << ggg << ",";
-  //   }
-  //   Rcpp::Rcout << std::endl;
-  // }
 
   // Loop over each set combination
   std::vector<double> areas(n_overlaps);
@@ -199,9 +165,6 @@ intersect_ellipses(const arma::vec& par,
   RcppParallel::parallelFor(0, n_overlaps, area_worker);
 
   std::vector<double> out(areas.begin(), areas.end());
-
-  // for (auto o : out)
-  //   Rcpp::Rcout << o << std::endl;
 
   // hierarchically decompose combination to get disjoint subsets
   for (int i = n_overlaps; i-- > 0;) {
