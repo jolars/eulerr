@@ -30,7 +30,7 @@ point_in_ellipse(const Point& p, const Ellipse& e)
 
   return
     pow((p.h - e.h)*cos(e.phi) + (p.k - e.k)*sin(e.phi), 2)/(e.a*e.a) +
-    pow((p.h - e.h)*sin(e.phi) + (p.k - e.k)*cos(e.phi), 2)/(e.b*e.b) < 1.0;
+    pow((p.h - e.h)*sin(e.phi) + (p.k - e.k)*cos(e.phi), 2)/(e.b*e.b) <= 1.0;
 }
 
 // See if a group of ellipses are completely disjoint or a russian doll
@@ -92,6 +92,5 @@ adopt(const double x,
 
   return out;
 }
-
 
 #endif // eulerr_geometry_h_
