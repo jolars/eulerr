@@ -22,6 +22,13 @@ struct Point {
     h += x;
     k += y;
   }
+
+  void
+  scale(const double x, const double y)
+  {
+    h *= x;
+    k *= y;
+  }
 };
 
 #endif // eulerr_point_h_
