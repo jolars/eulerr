@@ -11,9 +11,7 @@ struct Ellipse {
             k(k),
             a(std::abs(a)),
             b(std::abs(b)),
-            phi(normalize_angle(phi))
-  {
-  }
+            phi(normalize_angle(phi)) {}
 
   double
   area()
@@ -26,8 +24,10 @@ struct Ellipse {
   sector(const double theta)
   const
   {
-    return 0.5*a*b*(theta - std::atan2((b - a)*std::sin(2.0*theta),
-                                       b + a + (b - a)*std::cos(2.0*theta)));
+    using namespace std;
+
+    return 0.5*a*b*(theta - atan2((b - a)*sin(2.0*theta),
+                                  b + a + (b - a)*cos(2.0*theta)));
   }
 };
 
