@@ -16,15 +16,16 @@
 
 #define ARMA_NO_DEBUG // For the final version
 
+#include <RcppArmadillo.h>
 #include "helpers.h"
-
-using namespace arma;
 
 // overlap between two discs
 // [[Rcpp::export]]
 arma::umat
 choose_two(const arma::uvec& x)
 {
+  using namespace arma;
+
   uword n = x.n_elem;
   umat m(n*(n - 1)/2, 2);
   for (uword i = 0, k = 0; i < n - 1; ++i) {
