@@ -284,7 +284,8 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
   dummy_names <- unlist(dummy_names)
 
   if (any(duplicated(dummy_names)))
-    stop("duplicated names for dummy coded factors were generated; please consider specifying 'factor_names = TRUE'.")
+    stop(paste("duplicated names for dummy coded factors were generated;",
+               "please consider specifying 'factor_names = TRUE'."))
 
   out <- matrix(FALSE,
                 nrow(x),
