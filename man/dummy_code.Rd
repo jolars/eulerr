@@ -10,7 +10,7 @@ dummy_code(x, sep = "_", factor_names = TRUE)
 \item{x}{a data.frame}
 
 \item{sep}{character for separating dummy code factors and their levels
-when cosntructing names}
+when constructing names}
 
 \item{factor_names}{whether to include factor names when creating new
 names for dummy codes}

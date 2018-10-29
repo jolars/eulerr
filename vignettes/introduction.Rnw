@@ -165,7 +165,7 @@ knitr::opts_chunk$set(
   size = "small",
   fig.align = "center",
   dev = "pdf",
-  dev.args = list(family = "sans", pointsize = 8)
+  dev.args = list(pointsize = 8)
 )
 library(lattice)
 lattice.options(default.theme = list(fontsize = list(text = 8, points = 4)))
@@ -200,7 +200,7 @@ program to uses ellipses instead of circles, has also been instrumental in the
 design of \pkg{eulerr}. The downside to \pkg{eulerAPE} is that it only handles
 three sets that all need to intersect.
 
-\emph{enneuler}, on the other hand, will take any number of sets (in theory),
+\emph{venneuler}, on the other hand, will take any number of sets (in theory),
 yet has been known to produce
 \href{http://benfred.github.io/venn.js/tests/venneuler_comparison/}{imperfect solutions}
 for set configurations that have perfect such. And unlike \pkg{eulerAPE}, it is
@@ -212,7 +212,7 @@ introduced with \pkg{venn.js} but has been programmed from scratch, uses differe
 optimizers, and returns statistics featured in \pkg{venneuler} and
 \pkg{eulerAPE} as well as allows a range of different inputs and conditioning on
 additional variables. Moreover, it can model set relationships with ellipses for
-any number of sets involed.
+any number of sets involved.
 
 \subsection{Input}
 At the time of writing, it is possible to provide input to \pkg{eulerr} as
@@ -310,7 +310,7 @@ fit3 <- euler(wilkinson2012, shape = "ellipse")
 @
 
 \begin{figure}
-\sidecaption{A difficult combination modelled with ellipses.\label{fig:wilkinson2012}}
+\sidecaption{A difficult combination modeled with ellipses.\label{fig:wilkinson2012}}
 <<wilkinson2012, echo = FALSE, fig.width = 3.4, fig.height = 2.5>>=
 plot(fit3)
 @
@@ -323,7 +323,7 @@ excellent \href{https://cran.r-project.org/package=UpSetR}{UpSetR} package.)
 \subsection{Visualization}
 No we get to the fun part: plotting our diagram. This is easy, as well as
 highly customizable, with \pkg{eulerr}. The default
-parameters~(\cref{fig:eulerr-plot}) can easily be adjusted to suit anyobody's
+parameters~(\cref{fig:eulerr-plot}) can easily be adjusted to suit anybody's
 needs~(\cref{fig:custom-plot}).
 
 <<eulerr-plot, eval = FALSE>>=
@@ -354,7 +354,7 @@ plot(fit2,
 \end{marginfigure}
 
 Plotting is provided through a custom plotting method built on top of the
-excellent facilities made avaiable by the core R package \pkg{grid}.
+excellent facilities made available by the core R package \pkg{grid}.
 \pkg{eulerr}'s default color palette is chosen to be color deficiency-friendly.
 
 \section{Acknowledgements}

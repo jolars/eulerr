@@ -42,6 +42,8 @@ or if the input is a table with more than two columns or rows.
 completely blank plots).
 * `euler.list()` now passes its ellipsis argument along properly. (#33, 
   thanks, @banfai)
+* Several spelling and grammar mistakes were corrected in vignettes and
+documentation.
 
 # eulerr 4.1.0
 

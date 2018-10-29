@@ -254,7 +254,7 @@ setup_gpar <- function(default = list(), user = list(), n) {
 #'
 #' @param x a data.frame
 #' @param sep character for separating dummy code factors and their levels
-#'   when cosntructing names
+#'   when constructing names
 #' @param factor_names whether to include factor names when creating new
 #'   names for dummy codes
 #'

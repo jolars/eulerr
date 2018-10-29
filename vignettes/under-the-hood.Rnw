@@ -1038,12 +1038,12 @@ separated through any of the following aesthetics:
 \begin{itemize}
 \item color,
 \item border type,
-\item text labelling,
-\item transperancy,
+\item text labeling,
+\item transparency,
 \item patterns,
 \end{itemize}
 %
-or a combination of these. The main purpose of these aethetics is to separate
+or a combination of these. The main purpose of these aesthetics is to separate
 out the different ellipses so that the audience may interpret the diagram with
 ease and clarity.
 
@@ -1061,7 +1061,7 @@ using a color palette generated via the R package
 \pkg{qualpalr}~\citep{Larsson_2016}, which automatically generates qualitative
 color palettes based on a perceptual model of color vision that optionally
 caters to color vision deficiency. This palette has been manually modified
-to fullfil our other objectives of avoiding using colors for two
+to fulfill our other objectives of avoiding using colors for two
 sets. The first eight colors of the pallete are visualized in
 \cref{fig:colorexample}.
 
@@ -1076,7 +1076,7 @@ plot(euler(con), labels = as.character(1:8))
 @
 \end{figure}
 
-\section{Normalizing dispered layouts}
+\section{Normalizing dispersed layouts}
 \label{sec:layout}
 
 If there are disjoint clusters of ellipses, the optimizer will often
