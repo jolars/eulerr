@@ -10,5 +10,5 @@ test_that("Monte Carlo area approximation approximates the real solution", {
   exact <- eulerr:::intersect_ellipses(t(as.matrix(coef(fit))), FALSE, FALSE)
   approx <- eulerr:::intersect_ellipses(t(as.matrix(coef(fit))), FALSE, TRUE)
 
-  expect_equal(exact, approx, tolerance = 1e-3)
+  expect_equal(exact, approx, tolerance = 1e-1)
 })
