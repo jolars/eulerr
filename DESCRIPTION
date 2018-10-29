@@ -16,6 +16,7 @@ Description: Generate area-proportional Euler diagrams
 Depends:
     R (>= 3.3.0)
 Imports:
+    GenSA,
     graphics,
     grDevices,
     grid,
@@ -23,12 +24,12 @@ Imports:
     polylabelr,
     Rcpp,
     RcppParallel,
-    GenSA,
     stats,
     utils
 Suggests: 
     covr,
     knitr,
+    lattice,
     pBrackets,
     RConics,
     testthat
