@@ -35,43 +35,43 @@ montecarlo(const std::vector<Ellipse>& ellipses,
   vector<double> areas;
   areas.reserve(n);
 
-  for (const auto ind : indices)
-    areas.push_back(ellipses[ind].area());
-
-  // pick the ellipse with the smallest area
-  auto ind_min = indices[min_index(areas)];
-
   size_t n_points = 1e4;
-  size_t n_inside = 0;
 
-  for (size_t i = 0; i < n_points; ++i) {
-    // Sample points using Vogel's method
-    double theta = i*(PI*(3.0 - sqrt(5.0)));
-    double r = sqrt(i/n_points);
+  for (auto ind : indices) {
 
-    Point p{r*cos(theta), r*sin(theta)};
+    size_t n_inside = 0;
 
-    // modify point to fit ellipse
-    p.scale(ellipses[ind_min].a, ellipses[ind_min].b);
-    p.rotate(ellipses[ind_min].phi);
-    p.translate(ellipses[ind_min].h, ellipses[ind_min].k);
+    const auto& e = ellipses[ind];
 
-    // check if point is inside the intersection
-    bool inside = true;
+    for (size_t i = 0; i < n_points; ++i) {
+      // sample points using Vogel's method
+      double theta = i*(PI*(3.0 - std::sqrt(5.0)));
+      double r = std::sqrt(static_cast<double>(i)/static_cast<double>(n_points));
 
-    for (const auto ind : indices) {
-      if (ind == ind_min)
-        continue;
+      Point p{r*std::cos(theta), r*std::sin(theta)};
 
-      if (!point_in_ellipse(p, ellipses[ind]))
-        break;
+      // modify point to fit ellipse
+      p.scale(e.a, e.b);
+      p.rotate(e.phi);
+      p.translate(e.h, e.k);
+
+      // check if point is inside the intersection
+      auto all_inside = all_of(
+        indices.begin(),
+        indices.end(),
+        [&p, &ellipses, &ind](int i) {
+          return i == ind || point_in_ellipse(p, ellipses[i]);
+        }
+      );
+
+      if (all_inside)
+        n_inside++;
     }
 
-    if (inside)
-      n_inside++;
+    areas.push_back(e.area()*n_inside/n_points);
   }
 
-  return (n_inside/n_points)*ellipses[ind_min].area();
+  return std::accumulate(areas.begin(), areas.end(), 0.0)/n;
 }
 
 // The code below is adapted from "The area of intersecting ellipses" by
