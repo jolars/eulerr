@@ -76,35 +76,15 @@ montecarlo(const std::vector<Ellipse>& ellipses,
 
 // The code below is adapted from "The area of intersecting ellipses" by
 // David Eberly, Geometric Tools, LLC (c) 1998-2016
-//
-// Area of an ellipse sector
-inline
-double
-sector_area(const double a,
-            const double b,
-            const double theta)
-{
-  return 0.5*a*b*(theta - std::atan2((b - a)*std::sin(2.0*theta),
-                                     b + a + (b - a)*std::cos(2.0*theta)));
-}
-
-// The code below is adapted from "The area of intersecting ellipses" by
-// David Eberly, Geometric Tools, LLC (c) 1998-2016
 
 // Compute the area of an ellipse segment.
 double
-ellipse_segment(const Ellipse& ellipse, Point p0, Point p1)
+ellipse_segment(const Ellipse& e, Point p0, Point p1)
 {
-  double h = ellipse.h;
-  double k = ellipse.k;
-  double a = ellipse.a;
-  double b = ellipse.b;
-  double phi = ellipse.phi;
-
-  p0.translate(-h, -k);
-  p0.rotate(-phi);
-  p1.translate(-h, -k);
-  p1.rotate(-phi);
+  p0.translate(-e.h, -e.k);
+  p0.rotate(-e.phi);
+  p1.translate(-e.h, -e.k);
+  p1.rotate(-e.phi);
 
   double theta0 = std::atan2(p0.k, p0.h);
   double theta1 = std::atan2(p1.k, p1.h);
@@ -115,17 +95,12 @@ ellipse_segment(const Ellipse& ellipse, Point p0, Point p1)
   // Triangle part of the sector
   double triangle = 0.5*std::abs(p1.h*p0.k - p0.h*p1.k);
 
-  double dtheta = theta1 - theta0;
-
-  if (dtheta <= PI) {
+  if ((theta1 - theta0) <= PI) {
     // Sector area
-    return sector_area(a, b, theta1) - sector_area(a, b, theta0) - triangle;
+    return e.sector(theta1) - e.sector(theta0) - triangle;
   } else {
-    theta0 += 2.0*PI;
     //Sector area
-    return a*b*PI - sector_area(a, b, theta0)
-           + sector_area(a, b, theta1)
-           + triangle;
+    return e.area() - e.sector(theta0 + 2.0*PI) + e.sector(theta1) + triangle;
   }
 }
 
@@ -134,7 +109,7 @@ double
 polysegments(const std::vector<Point>&              points,
              const std::vector<Ellipse>&            ellipses,
              const std::vector<std::array<int, 2>>& parents,
-             std::vector<int>                       int_points,
+             const std::vector<int>&                int_points,
              bool&                                  failure)
 {
   auto n = int_points.size();
@@ -178,9 +153,7 @@ polysegments(const std::vector<Point>&              points,
 
       // Ellipse segment
       for (auto m : ii)
-        areas.emplace_back(ellipse_segment(ellipses[m],
-                                           points[i],
-                                           points[j]));
+        areas.emplace_back(ellipse_segment(ellipses[m], points[i], points[j]));
 
       // Triangular plus ellipse segment area
       area += 0.5*((points[j].h + points[i].h)*(points[j].k - points[i].k))

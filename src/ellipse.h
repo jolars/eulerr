@@ -2,6 +2,7 @@
 #define eulerr_ellipse_h_
 
 #include "helpers.h"
+#include "point.h"
 
 struct Ellipse {
   const double h, k, a, b, phi;
@@ -13,16 +14,14 @@ struct Ellipse {
             b(std::abs(b)),
             phi(normalize_angle(phi)) {}
 
-  double
-  area()
-  const
+  constexpr double area() const
   {
     return a*b*PI;
   }
 
-  double
-  sector(const double theta)
-  const
+  // The code below is adapted from "The area of intersecting ellipses" by
+  // David Eberly, Geometric Tools, LLC (c) 1998-2016
+  double sector(const double theta) const
   {
     using namespace std;
 
