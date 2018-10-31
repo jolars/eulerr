@@ -27,6 +27,7 @@ Other contributors:
 \itemize{
   \item A. Jonathan R. Godfrey [contributor]
   \item Peter Gustafsson [contributor]
+  \item David H. Eberly (geometric algorithms) [contributor]
   \item Emanuel Huber (root solver code) [contributor]
 }
 

@@ -6,6 +6,8 @@ Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     comment = c(ORCID = "0000-0002-4029-5945")),
              person("A. Jonathan R.", "Godfrey", role = "ctb"),
              person("Peter", "Gustafsson", role = "ctb"),
+             person("David H.", "Eberly", role = "ctb",
+                    comment = "geometric algorithms"),
              person("Emanuel", "Huber", role = "ctb",
                     comment = "root solver code"))
 Description: Generate area-proportional Euler diagrams
