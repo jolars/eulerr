@@ -27,7 +27,7 @@
 #'
 #' @export
 #'
-#' @seealso [plot.euler()], [euler()], [residuals.euler()],
+#' @seealso [plot.euler()], [euler()],
 #'   [plot.eulergram()]
 #'
 #' @examples
@@ -52,8 +52,8 @@ error_plot <- function(x,
     stop("values for 'strips' are not allowed here and will be ignored.")
 
   r <- switch(type,
-              residuals = resid(x),
-              regionError = sign(resid(x))*x$regionError)
+              residuals = stats::residuals(x),
+              regionError = sign(stats::residuals(x))*x$regionError)
 
   if (is.null(pal)) {
     pal <- grDevices::colorRampPalette(c("#67001F", "#B2182B", "#D6604D",
@@ -95,7 +95,7 @@ error_plot <- function(x,
   frame <- grid::frameGrob(
     layout = layout,
     vp = NULL,
-    name = paste("eulerr", "error_plot", "frame", sep = ".")
+    name = paste("eulerr", "error_plot", "key", sep = ".")
   )
 
   step <- diff(range(s))/(n - 1)
@@ -120,7 +120,7 @@ error_plot <- function(x,
   )
 
   rect_grob <- grid::rectGrob(
-    x = rep(0.5, length(rect)),
+    x = rep(0.5, length(y_rect)),
     y = y_rect,
     default.units = "native",
     height = step,
@@ -134,12 +134,12 @@ error_plot <- function(x,
   frame <- grid::placeGrob(frame, ticks_grob, row = 2, col = 2)
   frame <- grid::placeGrob(frame, labels_grob, row = 2, col = 3)
 
-  plot(x,
-       fills = pal(n)[ind],
-       labels = TRUE,
-       quantities = if (quantities) round(r, 3) else FALSE,
-       legend = frame,
-       ...)
+  graphics::plot(x,
+                 fills = pal(n)[ind],
+                 labels = TRUE,
+                 quantities = if (quantities) round(r, 3) else FALSE,
+                 legend = frame,
+                 ...)
 }
 
 
