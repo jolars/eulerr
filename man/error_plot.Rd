@@ -44,6 +44,6 @@ is completely turned off.
 error_plot(euler(organisms), quantities = FALSE)
 }
 \seealso{
-\code{\link[=plot.euler]{plot.euler()}}, \code{\link[=euler]{euler()}}, \code{\link[=residuals.euler]{residuals.euler()}},
+\code{\link[=plot.euler]{plot.euler()}}, \code{\link[=euler]{euler()}},
 \code{\link[=plot.eulergram]{plot.eulergram()}}
 }
