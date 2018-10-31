@@ -33,7 +33,8 @@ Suggests:
     pBrackets,
     RConics,
     testthat,
-    spelling
+    spelling,
+    rmarkdown
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0),

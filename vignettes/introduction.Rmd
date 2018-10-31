@@ -1,0 +1,195 @@
+---
+title: "Introducing eulerr"
+author: "Johan Larsson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introducing eulerr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: eulerr.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(digits = 4)
+```
+
+## Motivation
+
+**eulerr** generates area-proportional euler diagrams that display set
+relationships (intersections, unions, and disjoints) with circles or ellipses.
+[Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn
+diagrams without the requirement that all set interactions be present (whether
+they are empty or not). That is, depending on input, eulerr will sometimes
+produce Venn diagrams but sometimes not.
+
+R features several packages that produce Euler diagrams;
+some of the more prominent ones (on CRAN) are
+
+* [eVenn](https://cran.r-project.org/package=eVenn),
+* [VennDiagram](https://cran.r-project.org/package=VennDiagram)
+* [venn](https://cran.r-project.org/package=venn)
+* [colorfulVennPlot](https://cran.r-project.org/package=colorfulVennPlot), and
+* [venneuler](https://cran.r-project.org/package=venneuler).
+
+The last of these (**venneuler**) was the primary inspiration for this
+package, along with the refinements that Fredrickson has presented on his
+[blog](http://www.benfrederickson.com/) and made available in his
+javascript [venn.js](https://github.com/benfred/venn.js).
+[eulerAPE](http://www.eulerdiagrams.org/eulerAPE/), which was the first
+program to uses ellipses instead of circles, has also been instrumental in the
+design of **eulerr**. The downside to **eulerAPE** is that it only handles
+three sets that all need to intersect.
+
+**venneuler**, on the other hand, will take any number of sets (in theory),
+yet has been known to produce
+[imperfect solutions](http://benfred.github.io/venn.js/tests/venneuler_comparison/)
+for set configurations that have perfect such. And unlike **eulerAPE**, it is
+restricted to circles (as is **venn.js**).
+
+
+## Enter eulerr
+
+**eulerr** is based on the improvements to venneuler that Ben Fredrickson
+introduced with **venn.js** but has been programmed from scratch, uses different
+optimizers, and returns statistics featured in **venneuler** and
+**eulerAPE** as well as allows a range of different inputs and conditioning on
+additional variables. Moreover, it can model set relationships with ellipses for
+any number of sets involved.
+
+## Input 
+
+At the time of writing, it is possible to provide input to **eulerr** as
+either
+
+* a named numeric vector with set combinations as disjoint set combinations
+or unions (depending on how the argument `type` is set in `euler()`),
+* a matrix or data frame of logicals with columns representing sets and rows
+the set relationships for each observation,
+* a list of sample spaces, or
+* a table.
+
+```{r input}
+library(eulerr)
+
+# Input in the form of a named numeric vector
+fit1 <- euler(c("A" = 25, "B" = 5, "C" = 5,
+                "A&B" = 5, "A&C" = 5, "B&C" = 3,
+                "A&B&C" = 3))
+
+# Input as a matrix of logicals
+set.seed(1)
+mat <- cbind(
+  A = sample(c(TRUE, TRUE, FALSE), 50, TRUE),
+  B = sample(c(TRUE, FALSE), 50, TRUE),
+  C = sample(c(TRUE, FALSE, FALSE, FALSE), 50, TRUE)
+)
+fit2 <- euler(mat)
+```
+
+##
+
+We inspect our results by printing the eulerr object
+
+```{r}
+fit2
+```
+
+or directly access and plot the residuals.
+
+```{r residual-plot, fig.cap = "Residuals for the fit diagram."}
+# Cleveland dot plot of the residuals
+library(lattice)
+dotplot(resid(fit2), xlab = "",
+        panel = function(...) {
+          panel.abline(v = 0, lty = 2)
+          panel.dotplot(...)
+        })
+```
+
+We can also use **eulerr**'s built in `error_plot()` function
+to diagnose the fit.
+
+```{r error-plot, fig.cap = "A plot from `error_plot()`."}
+error_plot(fit2)
+```
+
+This shows us that the \code{A\&C} intersection is somewhat overrepresented in
+\code{fit2}. Given that these residuals are on the scale of the original
+values, however, the residuals are arguably of little concern.
+
+As an alternative, we could plot the circles in another program by retrieving
+their coordinates and radii.
+
+```{r coefs}
+coef(fit2)
+```
+
+### Goodness-of-fit
+
+To tell if we can trust our solution, we use two goodness-of-fit measures: the
+stress statistic from **venneuler** [@wilkinson_exact_2012],
+$$\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}$$
+where $\hat{y}_i$ is an ordinary least squares estimate from the regression of
+the fitted areas on the original areas that is being explored during
+optimization,
+
+and the *diagError* statistic from **eulerAPE** [@Micallef_2014a]:
+
+$$
+\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
+\frac{\hat{y}_i}{\sum \hat{y}_i} \right|
+$$
+In our example, the diagError is `r fit2$diag_error` and our
+stress is `r fit2$stress`, suggesting that the fit is accurate.
+
+We can now be confident that eulerr provides a reasonable representation of
+our input using circles. Were it otherwise, we might try to use ellipses
+instead. [@wilkinson_exact_2012] features a difficult combination that it manages
+to fit with a reasonably small error; with **eulerr**, however, we can get
+rid of that error entirely.
+
+```{r fig.cap = "A difficult combination from Wilkinson 2012."}
+wilkinson2012 <-  c(A = 4, B = 6, C = 3, D = 2, E = 7, F = 3,
+                    "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
+                    "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+                    "A&B&F" = 1, "B&C&D" = 1)
+fit3 <- euler(wilkinson2012, shape = "ellipse")
+plot(fit3)
+```
+
+If we still lack a good fit after having tried ellipses, we would do best to
+stop here and look for another way to visualize our data. (I suggest the
+excellent [UpSetR](https://cran.r-project.org/package=UpSetR) package.)
+
+### Visualization
+
+No we get to the fun part: plotting our diagram. This is easy, as well as
+highly customizable, with **eulerr**. The default
+parameters can easily be adjusted to suit anybody's
+needs.
+
+```{r eulerr-plot, fig.cap = "Customizing Euler plots is a breeze in eulerr."}
+plot(fit2)
+
+# Remove fills, vary borders, display quantities, and switch font.
+plot(fit2,
+     quantities = TRUE,
+     fill = "transparent",
+     lty = 1:3,
+     labels = list(font = 4))
+```
+
+Plotting is provided through a custom plotting method built on top of the
+excellent facilities made available by the core R package **grid**.
+**eulerr**'s default color palette is chosen to be color deficiency-friendly.
+
+## Acknowledgements
+
+**eulerr** would not be possible without Ben Fredrickson's work on
+**venn.js** or Leland Wilkinson's **venneuler**.
