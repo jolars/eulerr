@@ -10,17 +10,10 @@ init:
 install:
   ps: Bootstrap
 
+cache:
+  - C:\RLibrary
+
 # Adapt as necessary starting from here
-
-environment:
-  global:
-    WARNINGS_ARE_ERRORS: 1
-
-  matrix:
-  - R_VERSION: devel
-  - R_VERSION: release
-  - R_VERSION: patched
-  - R_VERSION: oldrel
 
 build_script:
   - travis-tool.sh install_deps
