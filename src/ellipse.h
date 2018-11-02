@@ -14,7 +14,7 @@ struct Ellipse {
             b(std::abs(b)),
             phi(normalize_angle(phi)) {}
 
-  constexpr double area() const
+  double area() const
   {
     return a*b*PI;
   }
