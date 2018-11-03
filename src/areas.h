@@ -95,13 +95,12 @@ ellipse_segment(const Ellipse& e, Point p0, Point p1)
   // Triangle part of the sector
   double triangle = 0.5*std::abs(p1.h*p0.k - p0.h*p1.k);
 
-  if ((theta1 - theta0) <= PI) {
-    // Sector area
-    return e.sector(theta1) - e.sector(theta0) - triangle;
-  } else {
-    //Sector area
-    return e.area() - e.sector(theta0 + 2.0*PI) + e.sector(theta1) + triangle;
-  }
+  return
+    (theta1 - theta0) <= PI ? e.sector(theta1) - e.sector(theta0) - triangle
+                            : e.area()
+                              - e.sector(theta0 + 2.0*PI)
+                              + e.sector(theta1)
+                              + triangle;
 }
 
 // Compute the area of an intersection of 2+ ellipses
