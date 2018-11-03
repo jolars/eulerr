@@ -4,9 +4,8 @@
 #include "helpers.h"
 #include "point.h"
 
-struct Ellipse {
-  const double h, k, a, b, phi;
-
+class Ellipse {
+public:
   Ellipse(double h, double k, double a, double b, double phi)
           : h(h),
             k(k),
@@ -28,6 +27,8 @@ struct Ellipse {
     return 0.5*a*b*(theta - atan2((b - a)*sin(2.0*theta),
                                   b + a + (b - a)*cos(2.0*theta)));
   }
+
+  const double h, k, a, b, phi;
 };
 
 #endif // eulerr_ellipse_h_
