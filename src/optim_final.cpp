@@ -30,12 +30,12 @@
 using namespace arma;
 
 struct AreaWorker : public RcppParallel::Worker {
-  AreaWorker(std::vector<double>& areas,
-             const std::vector<eulerr::Ellipse>& ellipses,
-             const std::vector<std::vector<int>>& id,
-             const std::vector<eulerr::Point>& points,
+  AreaWorker(std::vector<double>&                   areas,
+             const std::vector<eulerr::Ellipse>&    ellipses,
+             const std::vector<std::vector<int>>&   id,
+             const std::vector<eulerr::Point>&      points,
              const std::vector<std::array<int, 2>>& parents,
-             const std::vector<std::vector<int>>& adopters,
+             const std::vector<std::vector<int>>&   adopters,
              const bool approx)
              : areas(areas),
                ellipses(ellipses),
@@ -102,8 +102,8 @@ struct AreaWorker : public RcppParallel::Worker {
 // [[Rcpp::export]]
 arma::vec
 intersect_ellipses(const arma::vec& par,
-                   const bool circle,
-                   const bool approx = false)
+                   const bool       circle,
+                   const bool       approx = false)
 {
   int  n_pars     = circle ? 3 : 5;
   int  n          = par.n_elem/n_pars;
