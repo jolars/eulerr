@@ -16,7 +16,6 @@
 
 #include <RcppArmadillo.h>
 #include "helpers.h"
-#include "transformations.h"
 #include "geometry.h"
 #include "point.h"
 #include "ellipse.h"
