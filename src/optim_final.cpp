@@ -18,13 +18,14 @@
 
 #include <RcppArmadillo.h>
 #include <RcppParallel.h>
-#include "transformations.h"
+#include "constants.h"
+#include "point.h"
+#include "ellipse.h"
+#include "conic.h"
 #include "intersections.h"
 #include "solver.h"
 #include "helpers.h"
-#include "constants.h"
 #include "areas.h"
-#include "point.h"
 
 using namespace arma;
 
