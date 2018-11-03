@@ -52,7 +52,6 @@ yet has been known to produce
 for set configurations that have perfect such. And unlike **eulerAPE**, it is
 restricted to circles (as is **venn.js**).
 
-
 ## Enter eulerr
 
 **eulerr** is based on the improvements to venneuler that Ben Fredrickson
@@ -91,8 +90,6 @@ mat <- cbind(
 )
 fit2 <- euler(mat)
 ```
-
-##
 
 We inspect our results by printing the eulerr object
 
@@ -145,6 +142,7 @@ $$
 \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
 \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
 $$
+
 In our example, the diagError is `r fit2$diag_error` and our
 stress is `r fit2$stress`, suggesting that the fit is accurate.
 
