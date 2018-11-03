@@ -19,8 +19,7 @@
 
 #include <RcppArmadillo.h>
 #include "ellipse.h"
-
-using namespace arma;
+#include "point.h"
 
 inline
 bool

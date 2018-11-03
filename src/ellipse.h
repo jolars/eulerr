@@ -6,12 +6,14 @@
 
 class Ellipse {
 public:
-  Ellipse(double h, double k, double a, double b, double phi)
-          : h(h),
-            k(k),
-            a(std::abs(a)),
-            b(std::abs(b)),
-            phi(normalize_angle(phi)) {}
+  Ellipse(double h_, double k_, double a_, double b_, double phi_)
+  {
+    h = h_;
+    k = k_;
+    a = std::abs(a_);
+    b = std::abs(b_);
+    phi = normalize_angle(phi_);
+  }
 
   double area() const
   {

@@ -1,10 +1,10 @@
 #ifndef eulerr_conic_h_
 #define eulerr_conic_h_
 
+#include <RcppArmadillo.h>
 #include "ellipse.h"
 #include "helpers.h"
 #include "constants.h"
-#include <RcppArmadillo.h>
 
 struct Conic {
 
