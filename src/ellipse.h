@@ -28,7 +28,7 @@ public:
                                   b + a + (b - a)*cos(2.0*theta)));
   }
 
-  const double h, k, a, b, phi;
+  double h, k, a, b, phi;
 };
 
 #endif // eulerr_ellipse_h_
