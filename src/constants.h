@@ -17,8 +17,6 @@
 #ifndef eulerr_constants_h_
 #define eulerr_constants_h_
 
-#include <RcppArmadillo.h>
-
 const double SMALL = std::pow(std::numeric_limits<double>::epsilon(), 0.95);
 const double INF = std::numeric_limits<double>::infinity();
 
