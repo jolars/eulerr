@@ -49,7 +49,7 @@ struct AreaWorker : public RcppParallel::Worker {
     std::vector<uword> intersections;
     intersections.reserve(parents.size());
 
-    for (int i = begin; i < end; ++i) {
+    for (std::size_t i = begin; i < end; ++i) {
       auto id_i = id[i];
       auto n = id_i.size();
 
@@ -60,7 +60,7 @@ struct AreaWorker : public RcppParallel::Worker {
         // Two or more sets
         std::vector<int> int_points;
 
-        for (int j = 0; j < parents.size(); ++j) {
+        for (std::size_t j = 0; j < parents.size(); ++j) {
           if (is_subset(parents[j], id_i)) {
             if (is_subset(id_i, adopters[j])) {
               int_points.emplace_back(j);
@@ -106,7 +106,6 @@ intersect_ellipses(const arma::vec& par,
 {
   int  n_pars     = circle ? 3 : 5;
   int  n          = par.n_elem/n_pars;
-  int  n_pairs    = 2*n*(n - 1);
   int  n_overlaps = std::pow(2, n) - 1;
   auto id         = set_index(n);
 
