@@ -1,7 +1,7 @@
 # year
 year <- sub("-.*", "", meta$Date)
 if(!length(year))
-  year <- substr(Sys.Date(),1,4)
+  year <- substr(Sys.Date(), 1, 4)
 
 # version
 vers <- meta$Version
