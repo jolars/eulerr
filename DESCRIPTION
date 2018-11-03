@@ -1,15 +1,13 @@
 Package: eulerr
 Title: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-Version: 4.1.0
+Version: 4.1.0.9000
 Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     role = c("aut", "cre"),
                     comment = c(ORCID = "0000-0002-4029-5945")),
              person("A. Jonathan R.", "Godfrey", role = "ctb"),
-             person("Tim", "Kelley", role = "ctb", 
-                    comment = "original Nelder-Mead code"),
+             person("Peter", "Gustafsson", role = "ctb"),
              person("David H.", "Eberly", role = "ctb",
                     comment = "geometric algorithms"),
-             person("Peter", "Gustafsson", role = "ctb"),
              person("Emanuel", "Huber", role = "ctb",
                     comment = "root solver code"))
 Description: Generate area-proportional Euler diagrams
@@ -20,29 +18,36 @@ Description: Generate area-proportional Euler diagrams
 Depends:
     R (>= 3.3.0)
 Imports:
+    GenSA,
     graphics,
     grDevices,
     grid,
-    lattice,
     polyclip,
+    polylabelr,
     Rcpp,
-    GenSA,
+    RcppParallel,
     stats,
-    utils,
+    utils
 Suggests: 
     covr,
     knitr,
+    lattice,
     pBrackets,
     RConics,
-    testthat
+    testthat,
+    spelling,
+    rmarkdown
 LinkingTo:
     Rcpp (>= 0.12.12),
-    RcppArmadillo (>= 0.7.600.1.0)
+    RcppArmadillo (>= 0.7.600.1.0),
+    RcppParallel (>= 4.4.1)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
+SystemRequirements: GNU make
+Language: en-US

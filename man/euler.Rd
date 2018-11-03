@@ -12,9 +12,11 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), control = list(), ...)
+  shape = c("circle", "ellipse"), n_threads = 1, control = list(),
+  ...)
 
-\method{euler}{data.frame}(combinations, weights = NULL, by = NULL, ...)
+\method{euler}{data.frame}(combinations, weights = NULL, by = NULL,
+  sep = "_", factor_names = TRUE, ...)
 
 \method{euler}{matrix}(combinations, ...)
 
@@ -32,6 +34,10 @@ data.frame (see \strong{methods (by class)})}
 (\code{'disjoint'}) or unions (\code{'union'}).}
 
 \item{shape}{geometric shape used in the diagram}
+
+\item{n_threads}{number of threads for parallel processing, either a
+number or \code{"auto"}, in which case \code{\link[RcppParallel:defaultNumThreads]{RcppParallel::defaultNumThreads()}} will
+be called to decide the number of threads to use}
 
 \item{control}{a list of control parameters.
 \itemize{
@@ -52,6 +58,12 @@ the number of rows in \code{combinations}.}
 
 \item{by}{a factor or character matrix to be used in \code{\link[base:by]{base::by()}} to
 split the data.frame or matrix of set combinations}
+
+\item{sep}{a character to use to separate the dummy-coded factors
+if there are factor or character vectors in 'combinations'.}
+
+\item{factor_names}{whether to include factor names when
+constructing dummy codes}
 }
 \value{
 A list object of class \code{'euler'} with the following parameters.
@@ -74,28 +86,40 @@ relationships. The shape of the diagram may be a circle or an ellipse.
 If the input is a matrix or data frame and argument \code{by} is specified,
 the function returns a list of euler diagrams.
 
-The function minimizes the \emph{stress} statistic from \pkg{venneuler},
+The function minimizes the residual sums of squares,
+\deqn{
+  \sum_{i=1}^n (A_i - \omega_i)^2,
+}{
+  \sum (A_i - \omega_i)^2,
+}
+where \eqn{\omega_i} the size of the ith disjoint subset, and \eqn{A_i} the
+corresponding area in the diagram, that is, the unique contribution to the
+total area from this overlap.
+
+\code{\link[=euler]{euler()}} also returns \code{stress} (from \pkg{venneuler}), as well as
+\code{diagError}, and \code{regionError} from \pkg{eulerAPE}.
+
+The \emph{stress} statistic is computed as
 
 \deqn{
-  \frac{
-    \sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2},
-  }{
-  \sum (fit - original) ^ 2 / \sum original ^ 2,
+  \frac{\sum_{i=1}^n (A_i - \beta\omega_i)^2}{\sum_{i=1}^n A_i^2},
+}{
+  \sum (A_i - \beta\omega_i)^2 / \sum A_i^2,
+}
+where
+\deqn{
+  \beta = \sum_{i=1}^n A_i\omega_i / \sum_{i=1}^n \omega_i^2.
+}{
+  \beta = \sum A_i\omega_i / \sum \omega_i^2.
 }
 
-where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
-regression of the fitted areas on the original areas that are currently being
-explored. The stress statistic can also be used as a goodness of fit
-measure.
-
-\code{\link[=euler]{euler()}} also returns \code{diagError} and \code{regionError} from
-\pkg{eulerAPE}. \code{regionError} is computed as
+\code{regionError} is computed as
 
 \deqn{
-    \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
-  }{
-    max|fit / \sum fit  - original / \sum original|.
- }
+  \left| \frac{A_i}{\sum_{i=1}^n A_i} - \frac{\omega_i}{\sum_{i=1}^n \omega_i}\right|.
+}{
+  max|A_i / \sum A  - \omega_i / \sum \omega|.
+}
 
 \code{diagError} is simply the maximum of regionError.
 }
@@ -105,7 +129,8 @@ measure.
 combinations separated by an ampersand, for instance \code{A&B = 10}.
 Missing combinations are treated as being 0.
 
-\item \code{data.frame}: a data.frame of logicals, two-level factors (see examples).
+\item \code{data.frame}: a \code{data.frame} of logicals, binary integers, or
+factors.
 
 \item \code{matrix}: a matrix that can be converted to a data.frame of logicals
 (as in the description above) via \code{\link[base:as.data.frame.matrix]{base::as.data.frame.matrix()}}.
@@ -139,30 +164,20 @@ euler(c("a" = 3491, "b" = 3409, "c" = 3503,
         "a&b&c" = 50))
 
 # Using grouping via the 'by' argument through the data.frame method
-dat <- data.frame(
-  A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-  B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-  gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-  nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-)
+euler(fruits, by = list(sex, age))
 
-euler(dat, by = list(gender, nation))
-
-
-dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
-                   B = c(FALSE, TRUE, TRUE, FALSE))
-euler(dat2, weights = c(3, 2, 1, 1))
 
 # Using the matrix method
-mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-             B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-euler(mat)
+euler(organisms)
+
+# Using weights
+euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
+
 # The table method
-plot(euler(as.table(apply(Titanic, 2:4, sum))))
+euler(pain, factor_names = FALSE)
+
 # A euler diagram from a list of sample spaces (the list method)
-euler(list(A = c("a", "ab", "ac", "abc"),
-           B = c("b", "ab", "bc", "abc"),
-           C = c("c", "ac", "bc", "abc")))
+euler(plants[c("erigenia", "solanum", "cynodon")])
 }
 \references{
 Wilkinson L. Exact and Approximate Area-Proportional Circular

@@ -23,28 +23,40 @@
 #' If the input is a matrix or data frame and argument `by` is specified,
 #' the function returns a list of euler diagrams.
 #'
-#' The function minimizes the *stress* statistic from \pkg{venneuler},
+#' The function minimizes the residual sums of squares,
+#' \deqn{
+#'   \sum_{i=1}^n (A_i - \omega_i)^2,
+#' }{
+#'   \sum (A_i - \omega_i)^2,
+#' }
+#' where \eqn{\omega_i} the size of the ith disjoint subset, and \eqn{A_i} the
+#' corresponding area in the diagram, that is, the unique contribution to the
+#' total area from this overlap.
+#'
+#' [euler()] also returns `stress` (from \pkg{venneuler}), as well as
+#' `diagError`, and `regionError` from \pkg{eulerAPE}.
+#'
+#' The *stress* statistic is computed as
 #'
 #' \deqn{
-#'   \frac{
-#'     \sum_{i=1}^{n} (y_i - \hat{y}_i) ^ 2}{\sum_{i=1}^{n} y_i ^ 2},
-#'   }{
-#'   \sum (fit - original) ^ 2 / \sum original ^ 2,
+#'   \frac{\sum_{i=1}^n (A_i - \beta\omega_i)^2}{\sum_{i=1}^n A_i^2},
+#' }{
+#'   \sum (A_i - \beta\omega_i)^2 / \sum A_i^2,
+#' }
+#' where
+#' \deqn{
+#'   \beta = \sum_{i=1}^n A_i\omega_i / \sum_{i=1}^n \omega_i^2.
+#' }{
+#'   \beta = \sum A_i\omega_i / \sum \omega_i^2.
 #' }
 #'
-#' where \eqn{\hat{y}}{fit} are ordinary least squares estimates from the
-#' regression of the fitted areas on the original areas that are currently being
-#' explored. The stress statistic can also be used as a goodness of fit
-#' measure.
-#'
-#' [euler()] also returns `diagError` and `regionError` from
-#' \pkg{eulerAPE}. `regionError` is computed as
+#' `regionError` is computed as
 #'
 #' \deqn{
-#'     \left| \frac{y_i}{\sum y_i} - \frac{\hat{y}_i}{\sum \hat{y}_i}\right|.
-#'   }{
-#'     max|fit / \sum fit  - original / \sum original|.
-#'  }
+#'   \left| \frac{A_i}{\sum_{i=1}^n A_i} - \frac{\omega_i}{\sum_{i=1}^n \omega_i}\right|.
+#' }{
+#'   max|A_i / \sum A  - \omega_i / \sum \omega|.
+#' }
 #'
 #' `diagError` is simply the maximum of regionError.
 #'
@@ -55,6 +67,9 @@
 #' @param input type of input: disjoint identities
 #'   (`'disjoint'`) or unions (`'union'`).
 #' @param shape geometric shape used in the diagram
+#' @param n_threads number of threads for parallel processing, either a
+#'   number or `"auto"`, in which case [RcppParallel::defaultNumThreads()] will
+#'   be called to decide the number of threads to use
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the more thorough optimizer (currently
 #'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
@@ -102,7 +117,6 @@
 #' euler(c("a" = 3491, "b" = 3409, "c" = 3503,
 #'         "a&b" = 120, "a&c" = 114, "b&c" = 132,
 #'         "a&b&c" = 50))
-#'
 #' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
 #'   Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
 #'   Graphics (Internet). 2012 Feb (cited 2016 Apr 9);18(2):321-31. Available
@@ -121,18 +135,26 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'   Missing combinations are treated as being 0.
 #'
 #' @export
-euler.default <- function(
-  combinations,
-  input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
-  control = list(),
-  ...
-) {
+euler.default <- function(combinations,
+                          input = c("disjoint", "union"),
+                          shape = c("circle", "ellipse"),
+                          n_threads = 1,
+                          control = list(),
+                          ...)
+{
   stopifnot(is.numeric(combinations),
             !any(combinations < 0),
             !is.null(attr(combinations, "names")),
             !any(names(combinations) == ""),
             !any(duplicated(names(combinations))))
+
+  if (n_threads == "auto")
+    n_threads <- RcppParallel::defaultNumThreads()
+
+  if (!is.numeric(n_threads))
+    stop("'n_threads' must be either a numeric or 'auto'")
+
+  RcppParallel::setThreadOptions(numThreads = n_threads)
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
@@ -206,12 +228,12 @@ euler.default <- function(
   if (n > 1L) {
     if (all(areas == 0)) {
       # all sets are zero
-      fpar[] <- NA
+      fpar[] <- 0
     } else {
       id_sums <- rowSums(id)
       ones <- id_sums == 1L
       twos <- id_sums == 2L
-      two <- choose_two(1L:n)
+      two <- choose_two(1:n)
       r <- sqrt(areas[ones]/pi)
 
       # Establish identities of disjoint and subset sets
@@ -243,7 +265,8 @@ euler.default <- function(
           d = distances,
           disjoint = disjoint,
           subset = subset,
-          iterlim = 1000L
+          iterlim = 1000L,
+          check.analyticals = FALSE
         )
         loss <- initial_layouts[[i]]$minimum
         i <- i + 1L
@@ -275,21 +298,20 @@ euler.default <- function(
 
       # Try to find a solution using nlm() first (faster)
       # TODO: Allow user options here?
-      nlm_solution <- stats::nlm(
-        f = optim_final_loss,
-        p = pars,
-        areas = areas_disjoint,
-        circle = circle,
-        iterlim = 1e6L
-      )$estimate
+      nlm_solution <- stats::nlm(f = optim_final_loss,
+                                 p = pars,
+                                 areas = areas_disjoint,
+                                 circle = circle,
+                                 iterlim = 1e6L)$estimate
 
       tpar <- as.data.frame(matrix(
         data = nlm_solution,
         ncol = if (circle) 3L else 5L,
-        dimnames = list(
-          setnames[!empty_sets],
-          if (circle) c("h", "k", "r") else c("h", "k", "a", "b", "phi")
-        ),
+        dimnames = list(setnames[!empty_sets],
+                        if (circle)
+                          c("h", "k", "r")
+                        else
+                          c("h", "k", "a", "b", "phi")),
         byrow = TRUE
       ))
       if (circle)
@@ -372,9 +394,13 @@ euler.default <- function(
     }
   } else {
     # One set
-    fpar[!empty_sets, ] <- c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0)
+    if (length(areas) == 0) {
+      fpar[] <- 0
+    } else {
+      fpar[!empty_sets, ] <- c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0)
+      orig[!empty_subsets] <- fit[!empty_subsets] <- areas
+    }
     regionError <- diagError <- stress <- 0
-    orig[!empty_subsets] <- fit[!empty_subsets] <- areas
   }
 
   # Return eulerr structure
@@ -388,27 +414,27 @@ euler.default <- function(
             class = c("euler", "list"))
 }
 
-#' @describeIn euler a data.frame of logicals, two-level factors (see examples).
+#' @describeIn euler a `data.frame` of logicals, binary integers, or
+#'   factors.
 #' @param weights a numeric vector of weights of the same length as
 #'   the number of rows in `combinations`.
+#' @param sep a character to use to separate the dummy-coded factors
+#'   if there are factor or character vectors in 'combinations'.
+#' @param factor_names whether to include factor names when
+#'   constructing dummy codes
 #' @export
 #' @examples
+#'
 #' # Using grouping via the 'by' argument through the data.frame method
-#' dat <- data.frame(
-#'   A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
-#'   B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-#'   gender = sample(c("Men", "Women"), size = 100, replace = TRUE),
-#'   nation = sample(c("Sweden", "Denmark"), size = 100, replace = TRUE)
-#' )
+#' euler(fruits, by = list(sex, age))
 #'
-#' euler(dat, by = list(gender, nation))
-#'
-#'
-#' dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
-#'                    B = c(FALSE, TRUE, TRUE, FALSE))
-#' euler(dat2, weights = c(3, 2, 1, 1))
-#'
-euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
+euler.data.frame <- function(combinations,
+                             weights = NULL,
+                             by = NULL,
+                             sep = "_",
+                             factor_names = TRUE,
+                             ...)
+{
   stopifnot(!any(grepl("&", colnames(combinations), fixed = TRUE)))
 
   facs <- eval(substitute(by), combinations)
@@ -433,12 +459,12 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
     rownames(groups) <- NULL
 
     out <- g <- vector("list", NROW(groups))
-    int_or_log <- vapply(combinations,
-                         function(x) is.numeric(x) || is.logical(x),
-                         FUN.VALUE = logical(1L))
+
+    by_ind <- match(nms, colnames(combinations))
+
     for (i in seq_len(NROW(groups))) {
       ind <- apply(dd, 1, function(x) all(x == groups[i, ]))
-      out[[i]] <- euler(combinations[ind, int_or_log])
+      out[[i]] <- euler(combinations[ind, -by_ind, drop = FALSE])
       names(out)[[i]] <- paste(unlist(groups[i, , drop = TRUE]),
                                collapse = ".")
     }
@@ -446,48 +472,25 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
     class(out) <- c("euler", "list")
     attr(out, "groups") <- groups
   } else {
-    if (is.null(weights)) {
-      combinations <- combinations[,
-                                   vapply(combinations,
-                                          function(y)
-                                            is.integer(y) || is.logical(y),
-                                          FUN.VALUE = logical(1L))]
-    } else {
-      combinations <- combinations[,
-                                   vapply(combinations,
-                                          function(y)
-                                            is.integer(y) ||
-                                            is.logical(y) ||
-                                            is.factor(y) ||
-                                            is.character(y),
-                                          FUN.VALUE = logical(1L))]
-    }
+    is_factor <- vapply(combinations,
+                        function(x) is.factor(x) || is.character(x),
+                        logical(1))
+
+    is_numeric <- vapply(combinations, function(x) is.numeric(x), logical(1))
+
+    if (any(is_numeric))
+      stop("you cannot use numeric variables for an Euler diagram.")
+
+    if (any(is_factor))
+      combinations <- dummy_code(combinations,
+                                 sep = sep,
+                                 factor_names = factor_names)
 
     if (is.null(weights))
       weights <- rep.int(1L, NROW(combinations))
 
-    out <- matrix(NA, nrow = NROW(combinations), ncol = NCOL(combinations))
-    colnames(out) <- colnames(combinations)
-
-    for (i in seq_along(combinations)) {
-      y <- combinations[, i, drop = TRUE]
-      if (is.factor(y) || is.character(y)) {
-        facs <- unique(as.character(y))
-        if (length(facs) > 2L)
-          stop("no more than 2 levels allowed")
-        out[, i] <- y == facs[1L]
-        colnames(out)[i] <- facs[1L]
-      } else if (is.numeric(y)) {
-        out[, i] <- as.logical(y)
-      } else if (is.logical(y)) {
-        out[, i] <- y
-      } else {
-        stop("unsupported type of variables")
-      }
-    }
-    combinations <- as.data.frame(out)
-    out <- tally_combinations(combinations, weights)
-    out <- euler(out, ...)
+    spec <- tally_combinations(combinations, weights)
+    out <- euler(spec, ...)
   }
   out
 }
@@ -495,23 +498,26 @@ euler.data.frame <- function(combinations, weights = NULL, by = NULL, ...) {
 #' @describeIn euler a matrix that can be converted to a data.frame of logicals
 #'   (as in the description above) via [base::as.data.frame.matrix()].
 #' @export
+#'
 #' @examples
+#'
 #' # Using the matrix method
-#' mat <- cbind(A = sample(c(TRUE, TRUE, FALSE), size = 50, replace = TRUE),
-#'              B = sample(c(TRUE, FALSE), size = 50, replace = TRUE))
-#' euler(mat)
+#' euler(organisms)
+#'
+#' # Using weights
+#' euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 euler.matrix <- function(combinations, ...) {
   euler(as.data.frame(combinations), ...)
 }
 
 #' @describeIn euler A table with `max(dim(x)) < 3`.
 #' @export
+#'
 #' @examples
+#'
 #' # The table method
-#' plot(euler(as.table(apply(Titanic, 2:4, sum))))
+#' euler(pain, factor_names = FALSE)
 euler.table <- function(combinations, ...) {
-  if (max(dim(combinations)) > 2L)
-    stop("no table dimension may exceed 2")
   x <- as.data.frame(combinations)
   euler(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
 }
@@ -520,10 +526,9 @@ euler.table <- function(combinations, ...) {
 #'   that set (with no duplicates). Vectors in the list do not need to be named.
 #' @export
 #' @examples
+#'
 #' # A euler diagram from a list of sample spaces (the list method)
-#' euler(list(A = c("a", "ab", "ac", "abc"),
-#'            B = c("b", "ab", "bc", "abc"),
-#'            C = c("c", "ac", "bc", "abc")))
+#' euler(plants[c("erigenia", "solanum", "cynodon")])
 euler.list <- function(combinations, ...) {
   stopifnot(!is.null(attr(combinations, "names")),
             !any(names(combinations) == ""),
@@ -541,5 +546,5 @@ euler.list <- function(combinations, ...) {
   for (i in 1L:nrow(id))
     out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
 
-  euler(out, input = "union")
+  euler(out, input = "union", ...)
 }

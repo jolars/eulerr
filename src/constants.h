@@ -14,12 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef eulerr_constants_h
-#define eulerr_constants_h
+#ifndef eulerr_constants_h_
+#define eulerr_constants_h_
 
-#include <RcppArmadillo.h>
+const double SMALL = std::pow(std::numeric_limits<double>::epsilon(), 0.95);
+const double INF = std::numeric_limits<double>::infinity();
 
-const double small = std::pow(arma::datum::eps, 0.95);
-const double two_pi = 2*arma::datum::pi;
-
-#endif
+#endif // eulerr_constants_h_

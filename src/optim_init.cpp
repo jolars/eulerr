@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#define ARMA_NO_DEBUG // For the final version
+#define ARMA_NO_DEBUG
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 // Computes the loss, gradient, and hessian simultaneously. For use with nlm()
 // [[Rcpp::export]]
@@ -24,21 +24,21 @@ Rcpp::NumericVector
 optim_init(const Rcpp::NumericVector& par,
            const Rcpp::NumericMatrix& d,
            const Rcpp::LogicalMatrix& disjoint,
-           const Rcpp::LogicalMatrix& subset) {
-  const unsigned int n = par.size()/2;
+           const Rcpp::LogicalMatrix& subset)
+{
+  auto n = par.size()/2;
   const Rcpp::NumericVector x = Rcpp::head(par, n);
   const Rcpp::NumericVector y = Rcpp::tail(par, n);
 
-
   double loss = 0;
   Rcpp::NumericVector grad(2*n, 0.0);
-  //Rcpp::NumericMatrix hess(2*n, 2*n);
+  // Rcpp::NumericMatrix hess(2*n, 2*n);
 
-  for (unsigned int i = 0; i < (n - 1); ++i) {
-    for (unsigned int j = i + 1; j < n; ++j) {
+  for (decltype(n) i = 0; i < (n - 1); ++i) {
+    for (decltype(n) j = i + 1; j < n; ++j) {
       double xd = x(j) - x(i);
       double yd = y(j) - y(i);
-      double D = xd*xd + yd*yd - std::pow(d(j, i), 2);
+      double D = xd*xd + yd*yd - d(j, i)*d(j, i);
       if ((disjoint(j, i) && (D >= 0.0)) || (subset(j, i) && (D < 0.0))) {
         continue;
       } else {
@@ -73,7 +73,7 @@ optim_init(const Rcpp::NumericVector& par,
   Rcpp::NumericVector out(1, loss);
 
   out.attr("gradient") = grad;
-  //out.attr("hessian") = arma::symmatl(hess);
+  // out.attr("hessian") = arma::symmatl(Rcpp::as<arma::mat>(hess));
 
   return out;
 }

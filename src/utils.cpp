@@ -16,14 +16,16 @@
 
 #define ARMA_NO_DEBUG // For the final version
 
+#include <RcppArmadillo.h>
 #include "helpers.h"
-
-using namespace arma;
 
 // overlap between two discs
 // [[Rcpp::export]]
 arma::umat
-choose_two(const arma::uvec& x) {
+choose_two(const arma::uvec& x)
+{
+  using namespace arma;
+
   uword n = x.n_elem;
   umat m(n*(n - 1)/2, 2);
   for (uword i = 0, k = 0; i < n - 1; ++i) {
@@ -41,7 +43,8 @@ double
 discdisc(double d,
          double r1,
          double r2,
-         double overlap) {
+         double overlap)
+{
   double r1sq = r1*r1;
   double r2sq = r2*r2;
   double dsq  = d*d;
@@ -50,12 +53,13 @@ discdisc(double d,
     r2sq*std::acos((dsq + r2sq - r1sq)/(2*d*r2)) -
     0.5*std::sqrt((r1 + r2 - d)*(d + r1 - r2)*(d - r1 + r2)*(d + r1 + r2));
 
-  return std::pow(D - overlap, 2);
+  return (D - overlap)*(D - overlap);
 }
 
 // export wrapper around bit_index()
 // [[Rcpp::export]]
 arma::umat
-bit_index_cpp(arma::uword n) {
+bit_index_cpp(arma::uword n)
+{
   return bit_index(n);
 }

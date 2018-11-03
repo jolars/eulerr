@@ -1,3 +1,54 @@
+# eulerr 4.1.0.9000
+
+## New features
+* `error_plot()` is a new function that offers diagnostic plots of
+fits from `euler()`, letting the user visualize the error in the 
+resulting Euler diagram.
+
+## Major changes
+* The work horse of `euler()` has now been parallalized, which
+should lead to considerable performance gains when large combinations
+are given.
+* `euler()` once again uses the residual sums of squares, rather than the
+stress metric, as optimization objective, which means that 
+output is always scaled appropriately to input (#28).
+* `plot.euler()` now uses the **polyabelr** package to position 
+labels for the overlaps of the ellipses, which has improved
+performance in plotting complicated diagrams considerably and reduced
+the amount of code in this package greatly.
+* Much of the innards of the package have been rewritten using more
+memory-efficient and expressive code.
+
+## Minor changes
+
+* The `euler.data.frame()` method (and by proxy the `euler.matrix()` method)
+can now take matrices with factors in addition to the previously supported
+logical and integer (binary) input. The function will dummy code the variables
+for the user.
+* A few performance fixes.
+* Additional unit tests.
+* Previously deprecated arguments to `plot.euler()` have been made defunct.
+* Added a data set, `plants`, to exemplify the list method for `euler()`.
+* Added a data set, `fruits`, to exemplify the data.frame method for `euler()`.
+* `euler.data.frame()` gains an argument `sep`, which is a character vector
+used to separate dummy-coded factors if there are factors or characters in the
+input.
+* Added a data set, `organisms`, to exemplify the matrix method for `euler()`.
+* Added a data set, `pain`, to exemplify the table method for `euler()`.
+* `euler.table()` gains an argument, `factor_names`, for specifying
+whether the factor names should be included when generating dummy-coded
+variables in case the input is a data.frame with character or factor vectors
+or if the input is a table with more than two columns or rows.
+
+## Bug fixes
+
+* Empty combinations can now be provided and will be plotted (generating
+completely blank plots).
+* `euler.list()` now passes its ellipsis argument along properly. (#33, 
+  thanks, @banfai)
+* Several spelling and grammar mistakes were corrected in vignettes and
+documentation.
+
 # eulerr 4.1.0
 
 ## Minor changes

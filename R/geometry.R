@@ -108,7 +108,10 @@ poly_clip <- function(a, b, op = c("intersection", "union", "minus", "xor")) {
       return(b)
     else if (!a0 && b0)
       return(a)
-    else
+    else if (!a0 && !b0) {
+      if (all(unlist(a) == unlist(b)))
+        return(a)
+    } else
       return(list())
   } else if (op == "minus") {
     if (!a0 && b0)

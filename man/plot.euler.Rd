@@ -5,9 +5,8 @@
 \title{Plot area-proportional Euler diagrams}
 \usage{
 \method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
-  labels = identical(legend, FALSE), quantities = FALSE, strips = NULL,
-  n = 200L, ..., fill_alpha, auto.key, fontface, par.settings,
-  default.prepanel, default.scales, panel)
+  labels = identical(legend, FALSE), quantities = FALSE,
+  strips = NULL, main = NULL, n = 200L, ...)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
@@ -35,24 +34,17 @@ default are the original values in the input to \code{\link[=euler]{euler()}}. S
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}}
 
+\item{main}{a title for the plot in the form of a
+character, expression, list or something that can be
+sensibly converted to a label via \code{\link[grDevices:as.graphicsAnnot]{grDevices::as.graphicsAnnot()}}. A
+list of length one can be provided, in which case its only element
+is used as the label. If a list of longer length is provided, an item
+named \code{'label'} must be provided (and will be used for the actual text).}
+
 \item{n}{number of vertices for the \code{edges} and \code{fills}}
 
 \item{...}{parameters to update \code{fills} and \code{edges} with and thereby a shortcut
 to set these parameters}
-
-\item{fill_alpha}{deprecated}
-
-\item{auto.key}{deprecated}
-
-\item{fontface}{deprecated}
-
-\item{par.settings}{deprecated}
-
-\item{default.prepanel}{deprecated}
-
-\item{default.scales}{deprecated}
-
-\item{panel}{deprecated}
 }
 \value{
 Provides an object of class \code{'eulergram'} , which is a
@@ -81,19 +73,19 @@ arguments that are specific to each argument.
 The various \code{\link[grid:gpar]{grid::gpar()}} values that are available for each argument
 are:
 
-\tabular{lccccccc}{
-\tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \cr
-col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \cr
-fill       \tab x     \tab       \tab        \tab            \tab        \tab        \cr
-alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \cr
-lty        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-lex        \tab       \tab x     \tab        \tab            \tab        \tab        \cr
-fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \cr
-font       \tab       \tab       \tab x      \tab x          \tab x      \tab x
+\tabular{lcccccccc}{
+\tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \tab main \cr
+col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+fill       \tab x     \tab       \tab        \tab            \tab        \tab        \tab      \cr
+alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+lty        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
+lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
+lex        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
+fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+font       \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
 }
 
 Defaults for these values, as well as other parameters of the plots, can
@@ -124,8 +116,11 @@ plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 # Plot without fills and distinguish sets with border types instead
 plot(fit, fill = "transparent", lty = 1:2)
 
-# save plot parameters to plot using some other method
+# Save plot parameters to plot using some other method
 diagram_description <- plot(fit)
+
+# Plots using 'by' argument
+plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[=plot.eulergram]{plot.eulergram()}}, \code{\link[grid:gpar]{grid::gpar()}},

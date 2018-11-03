@@ -84,35 +84,6 @@ replace_list <- function(old, new) {
   update_list(old, new[names(new) %in% names(old)])
 }
 
-#' Suppress plotting
-#'
-#' @param x object to call [graphics::plot()] on
-#' @param ... arguments to pass to `x`
-#'
-#' @return Invisibly returns whatever `plot(x)` would normally return, but
-#'   does not plot anything (which is the point).
-#' @keywords internal
-dont_plot <- function(x, ...) {
-  tmp <- tempfile()
-  grDevices::png(tmp)
-  p <- graphics::plot(x, ...)
-  grDevices::dev.off()
-  unlink(tmp)
-  invisible(p)
-}
-
-#' Suppress printing
-#'
-#' @param x object to (not) print
-#' @param ... arguments to `x`
-#'
-#' @return Invisibly returns the output of running print on `x`.
-#' @keywords internal
-dont_print <- function(x, ...) {
-  utils::capture.output(y <- print(x, ...))
-  invisible(y)
-}
-
 #' Check if object is strictly FALSE
 #'
 #' @param x object to check
@@ -279,3 +250,57 @@ setup_gpar <- function(default = list(), user = list(), n) {
   do.call(grid::gpar, lapply(gp, rep_len, n))
 }
 
+#' Dummy code a data.frame
+#'
+#' @param x a data.frame
+#' @param sep character for separating dummy code factors and their levels
+#'   when constructing names
+#' @param factor_names whether to include factor names when creating new
+#'   names for dummy codes
+#'
+#' @return A dummy-coded version of x.
+#'
+#' @keywords internal
+dummy_code <- function(x, sep = "_", factor_names = TRUE) {
+  fac_chr <- vapply(x, function(x) is.character(x) || is.factor(x), logical(1))
+  tmp <- x[, fac_chr, drop = FALSE]
+
+  lvls <- lapply(tmp, function(x) levels(as.factor(x)))
+
+  n_levels <- vapply(lvls, function(x) length(x) - 1, double(1))
+  dummy_levels <- lapply(lvls, function(x) x[-length(x)])
+  n_levels_tot <- sum(n_levels)
+
+  dummy_names <- dummy_levels
+
+  if (isTRUE(factor_names)) {
+    for (i in seq_along(dummy_names)) {
+      dummy_names[[i]] <- paste(names(dummy_levels)[i],
+                                dummy_levels[[i]],
+                                sep = sep)
+    }
+  }
+
+  dummy_names <- unlist(dummy_names)
+
+  if (any(duplicated(dummy_names)))
+    stop(paste("duplicated names for dummy coded factors were generated;",
+               "please consider specifying 'factor_names = TRUE'."))
+
+  out <- matrix(FALSE,
+                nrow(x),
+                n_levels_tot,
+                dimnames = list(NULL, dummy_names))
+
+  k <- 1
+
+  for (i in seq_along(n_levels)) {
+    kk <- as.numeric(tmp[, i])
+    for (j in seq_len(n_levels[i])) {
+      out[, k] <- kk == j
+      k <- 1 + k
+    }
+  }
+
+  cbind(x[, !fac_chr, drop = FALSE], out)
+}

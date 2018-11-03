@@ -1,50 +1,12 @@
-language: r
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
 sudo: false
 cache: packages
-warnings_are_errors: true
 
-matrix:
-  include:
-    - os: linux
-      r: devel
-      compiler: clang
-      latex: false
-      addons:
-        apt:
-          packages:
-            - valgrind
-      r_check_args: '--ignore-vignettes --use-valgrind'
-      r_build_args: '--no-build-vignettes'
-      env:
-        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
 
-    - os: linux
-      r: release
-      compiler: gcc
-      r_build_args: '--compact-vignettes=both'
-      before_install:
-        - tlmgr install fontaxes sttools mweights libertine mathalfa units sidenotes marginnote marginfix algorithmicx
-      after_success:
-        - Rscript -e 'covr::coveralls()'
-
-    - os: linux
-      r: oldrel
-      compiler: gcc
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes'
-
-    - os: osx
-      r: release
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes --no-examples'
-
-    - os: osx
-      r: oldrel
-      latex: false
-      r_build_args: '--no-build-vignettes'
-      r_check_args: '--ignore-vignettes --no-examples'
+after_success:
+  - Rscript -e 'covr::codecov()'
 
 notifications:
   email:
