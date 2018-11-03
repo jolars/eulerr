@@ -6,11 +6,12 @@
 #include "helpers.h"
 #include "constants.h"
 
-struct Conic {
+namespace eulerr {
 
+struct Conic {
   arma::mat::fixed<3, 3> M;
 
-  Conic(const Ellipse& ellipse)
+  Conic(const eulerr::Ellipse& ellipse)
   {
     auto h = ellipse.h;
     auto k = ellipse.k;
@@ -44,5 +45,7 @@ struct Conic {
     M(arma::find(arma::abs(M) < SMALL)).zeros();
   }
 };
+} // namespace eulerr
+
 
 #endif // eulerr_conic_h_

@@ -4,16 +4,17 @@
 #include "helpers.h"
 #include "point.h"
 
-class Ellipse {
-public:
-  Ellipse(double h_, double k_, double a_, double b_, double phi_)
-  {
-    h = h_;
-    k = k_;
-    a = std::abs(a_);
-    b = std::abs(b_);
-    phi = normalize_angle(phi_);
-  }
+namespace eulerr {
+
+struct Ellipse {
+  double h, k, a, b, phi;
+
+  Ellipse(double h, double k, double a, double b, double phi)
+          : h(h),
+            k(k),
+            a(std::abs(a)),
+            b(std::abs(b)),
+            phi(normalize_angle(phi)) {}
 
   double area() const
   {
@@ -29,9 +30,8 @@ public:
     return 0.5*a*b*(theta - atan2((b - a)*sin(2.0*theta),
                                   b + a + (b - a)*cos(2.0*theta)));
   }
-
-  double h, k, a, b, phi;
 };
+} // namespace eulerr
 
 #endif // eulerr_ellipse_h_
 

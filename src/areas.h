@@ -24,8 +24,8 @@
 #define eulerr_areas_h_
 
 double
-montecarlo(const std::vector<Ellipse>& ellipses,
-           const std::vector<int>&     indices)
+montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
+           const std::vector<int>&             indices)
 {
   using namespace std;
 
@@ -47,7 +47,7 @@ montecarlo(const std::vector<Ellipse>& ellipses,
       double theta = i*(PI*(3.0 - std::sqrt(5.0)));
       double r = std::sqrt(static_cast<double>(i)/static_cast<double>(n_points));
 
-      Point p{r*std::cos(theta), r*std::sin(theta)};
+      eulerr::Point p{r*std::cos(theta), r*std::sin(theta)};
 
       // modify point to fit ellipse
       p.scale(e.a, e.b);
@@ -78,7 +78,7 @@ montecarlo(const std::vector<Ellipse>& ellipses,
 
 // Compute the area of an ellipse segment.
 double
-ellipse_segment(const Ellipse& e, Point p0, Point p1)
+ellipse_segment(const eulerr::Ellipse& e, eulerr::Point p0, eulerr::Point p1)
 {
   p0.translate(-e.h, -e.k);
   p0.rotate(-e.phi);
@@ -104,8 +104,8 @@ ellipse_segment(const Ellipse& e, Point p0, Point p1)
 
 // Compute the area of an intersection of 2+ ellipses
 double
-polysegments(const std::vector<Point>&              points,
-             const std::vector<Ellipse>&            ellipses,
+polysegments(const std::vector<eulerr::Point>&      points,
+             const std::vector<eulerr::Ellipse>&    ellipses,
              const std::vector<std::array<int, 2>>& parents,
              const std::vector<int>&                int_points,
              bool&                                  failure)
@@ -113,7 +113,8 @@ polysegments(const std::vector<Point>&              points,
   auto n = int_points.size();
 
   // Sort points by their angle to the centroid
-  double h0, k0 = 0.0;
+  double h0 = 0.0;
+  double k0 = 0.0;
 
   for (auto i : int_points) {
     h0 += points[i].h/n;
@@ -134,7 +135,7 @@ polysegments(const std::vector<Point>&              points,
   // Reorder vectors and matrix based on angles to centroid
   double area = 0.0;
 
-  for (int k = 0, l = n - 1; k < n; ++k) {
+  for (decltype(n) k = 0, l = n - 1; k < n; ++k) {
     auto i = int_points[ind[k]];
     auto j = int_points[ind[l]];
 

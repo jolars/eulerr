@@ -31,9 +31,9 @@ using namespace arma;
 
 struct AreaWorker : public RcppParallel::Worker {
   AreaWorker(std::vector<double>& areas,
-             const std::vector<Ellipse>& ellipses,
+             const std::vector<eulerr::Ellipse>& ellipses,
              const std::vector<std::vector<int>>& id,
-             const std::vector<Point>& points,
+             const std::vector<eulerr::Point>& points,
              const std::vector<std::array<int, 2>>& parents,
              const std::vector<std::vector<int>>& adopters,
              const bool approx)
@@ -90,9 +90,9 @@ struct AreaWorker : public RcppParallel::Worker {
   };
 
   std::vector<double>& areas;
-  const std::vector<Ellipse>& ellipses;
+  const std::vector<eulerr::Ellipse>& ellipses;
   const std::vector<std::vector<int>>& id;
-  const std::vector<Point>& points;
+  const std::vector<eulerr::Point>& points;
   const std::vector<std::array<int, 2>>& parents;
   const std::vector<std::vector<int>>& adopters;
   const bool approx;
@@ -110,7 +110,7 @@ intersect_ellipses(const arma::vec& par,
   int  n_overlaps = std::pow(2, n) - 1;
   auto id         = set_index(n);
 
-  std::vector<Ellipse> ellipses;
+  std::vector<eulerr::Ellipse> ellipses;
 
   for (int i = 0; i < n; ++i) {
     if (circle) {
@@ -128,12 +128,12 @@ intersect_ellipses(const arma::vec& par,
     }
   }
 
-  std::vector<Conic> conics;
+  std::vector<eulerr::Conic> conics;
   for (int i = 0; i < n; ++i)
     conics.emplace_back(ellipses[i]);
 
   // Collect all points of intersection
-  std::vector<Point> points;
+  std::vector<eulerr::Point> points;
   std::vector<std::array<int, 2>> parents;
   std::vector<std::vector<int>> adopters;
 
@@ -166,8 +166,8 @@ intersect_ellipses(const arma::vec& par,
   std::vector<double> out(areas.begin(), areas.end());
 
   // hierarchically decompose combination to get disjoint subsets
-  for (int i = n_overlaps; i-- > 0;) {
-    for (int j = i + 1; j < n_overlaps; ++j) {
+  for (decltype(n_overlaps) i = n_overlaps; i-- > 0;) {
+    for (decltype(n_overlaps) j = i + 1; j < n_overlaps; ++j) {
       if (is_subset(id[i], id[j]))
         out[i] -= out[j];
     }

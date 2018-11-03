@@ -1,6 +1,7 @@
 #ifndef eulerr_point_h_
 #define eulerr_point_h_
 
+namespace eulerr {
 struct Point {
   double h, k;
 
@@ -30,6 +31,7 @@ struct Point {
     k *= y;
   }
 };
+} // namespace eulerr
 
 #endif // eulerr_point_h_
 

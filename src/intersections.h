@@ -55,7 +55,7 @@ split_conic(const mat& A)
 void
 intersect_conic_line(const arma::mat& A,
                      const arma::vec& l,
-                     std::vector<Point>& points)
+                     std::vector<eulerr::Point>& points)
 {
   mat::fixed<3, 3> M = skewsymmat(l);
   mat::fixed<3, 3> B = M.t()*A*M;
@@ -88,8 +88,8 @@ intersect_conic_line(const arma::mat& A,
   }
 }
 
-std::vector<Point>
-intersect(const Conic& conic_A, const Conic& conic_B)
+std::vector<eulerr::Point>
+intersect(const eulerr::Conic& conic_A, const eulerr::Conic& conic_B)
 {
   const auto& A = conic_A.M;
   const auto& B = conic_B.M;
@@ -123,7 +123,7 @@ intersect(const Conic& conic_A, const Conic& conic_B)
   mat::fixed<3, 2> lines = split_conic(C);
 
   // Intersect one of the conics with each line to get 0 to 4 points
-  std::vector<Point> points;
+  std::vector<eulerr::Point> points;
   if (is_finite(lines)) {
     intersect_conic_line(A, lines.col(0), points);
     intersect_conic_line(A, lines.col(1), points);

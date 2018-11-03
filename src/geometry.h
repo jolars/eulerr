@@ -23,7 +23,7 @@
 
 inline
 bool
-point_in_ellipse(const Point& p, const Ellipse& e)
+point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
 {
   using namespace std;
 
@@ -35,8 +35,8 @@ point_in_ellipse(const Point& p, const Ellipse& e)
 // See if a group of ellipses are completely disjoint or a russian doll
 inline
 double
-disjoint_or_subset(const std::vector<Ellipse>& ellipse,
-                   const std::vector<int>&     ind)
+disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
+                   const std::vector<int>&             ind)
 {
   std::vector<double> areas;
   areas.reserve(ind.size());
@@ -47,7 +47,7 @@ disjoint_or_subset(const std::vector<Ellipse>& ellipse,
   auto min_itr = std::min_element(areas.begin(), areas.end());
   auto min_ind = ind[std::distance(areas.begin(), min_itr)];
 
-  Point p{ellipse[min_ind].h, ellipse[min_ind].k};
+  eulerr::Point p{ellipse[min_ind].h, ellipse[min_ind].k};
 
   bool subset = false;
 
@@ -67,19 +67,19 @@ disjoint_or_subset(const std::vector<Ellipse>& ellipse,
 inline
 std::vector<int>
 adopt(const double x,
-       const double y,
-       const std::vector<Ellipse>& ellipses,
-       const int a,
-       const int b)
+      const double y,
+      const std::vector<eulerr::Ellipse>& ellipses,
+      const int a,
+      const int b)
 {
-  auto n = ellipses.size();
+  int n = ellipses.size();
 
   std::vector<int> out;
   out.reserve(n);
 
-  Point p{x, y};
+  eulerr::Point p{x, y};
 
-  for (int i = 0; i < n; ++i) {
+  for (decltype(n) i = 0; i < n; ++i) {
     if ((i == a) || (i == b)) {
       out.emplace_back(i);
     } else if (point_in_ellipse(p, ellipses[i])) {
