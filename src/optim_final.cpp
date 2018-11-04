@@ -17,6 +17,7 @@
 #define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
+#include <RcppThread.h>
 #include "transformations.h"
 #include "intersections.h"
 #include "conversions.h"
@@ -27,6 +28,69 @@
 
 using namespace arma;
 
+struct AreaWorker {
+  const arma::mat&  ellipses;
+  const arma::umat& id;
+  const arma::mat&  points;
+  const arma::umat& parents;
+  const arma::umat& adopters;
+  const bool        approx;
+
+  AreaWorker(const arma::mat&  ellipses,
+             const arma::umat& id,
+             const arma::mat&  points,
+             const arma::umat& parents,
+             const arma::umat& adopters,
+             const bool        approx)
+             : ellipses(ellipses),
+               id(id),
+               points(points),
+               parents(parents),
+               adopters(adopters),
+               approx(approx) {}
+
+  double operator()(arma::uword i)
+  {
+    using namespace arma;
+
+    double area = 0.0;
+
+    uvec ids = find(id.row(i));
+
+    if (ids.n_elem == 1) {
+      // One set
+      area = ellipse_area(ellipses.unsafe_col(ids(0)));
+    } else {
+      // Two or more sets
+      urowvec owners(parents.n_cols);
+
+      for (uword q = 0; q < parents.n_cols; ++q) {
+        owners(q) = n_intersections(parents.unsafe_col(q), ids) == 2;
+      }
+
+      uvec int_points = find(all(adopters.rows(ids))%owners);
+
+      if (int_points.n_elem == 0) {
+        // No intersections: either disjoint or subset
+        area = disjoint_or_subset(ellipses.cols(ids));
+      } else {
+        // Compute the area of the overlap
+        bool failure = false;
+        area = polysegments(points.cols(int_points),
+                            ellipses,
+                            parents.cols(int_points),
+                            failure);
+        if (failure || approx) {
+          // Resort to approximation if exact calculation fails
+          // TODO: Use a better fallback approximation
+          area = montecarlo(ellipses.cols(ids));
+        }
+      }
+    }
+    return area;
+  }
+};
+
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
 arma::vec intersect_ellipses(const arma::vec& par,
@@ -34,10 +98,11 @@ arma::vec intersect_ellipses(const arma::vec& par,
                              const unsigned   n_threads = 1,
                              const bool       approx = false)
 {
-  uword n_pars   = circle ? 3 : 5;
-  uword n        = par.n_elem/n_pars;
-  uword n_int    = 2*n*(n - 1);
-  umat  id       = bit_index(n);
+  uword n_pars     = circle ? 3 : 5;
+  uword n          = par.n_elem/n_pars;
+  uword n_int      = 2*n*(n - 1);
+  umat  id         = bit_index(n);
+  uword n_overlaps = id.n_rows;
 
   // Set up a matrix of the ellipses in standard form and a cube of conics
   mat ellipses = reshape(par, n_pars, n);
@@ -75,45 +140,26 @@ arma::vec intersect_ellipses(const arma::vec& par,
   points = points.cols(not_na);
   adopters = adopters.cols(not_na);
   parents = parents.cols(not_na);
-  urowvec owners(parents.n_cols);
 
   // Loop over each set combination
-  vec areas(id.n_rows);
+  vec areas(n_overlaps);
 
-  for (uword i = 0; i < id.n_rows; ++i) {
-    uvec ids = find(id.row(i));
+  AreaWorker area_worker(ellipses,
+                         id,
+                         points,
+                         parents,
+                         adopters,
+                         approx);
 
-    if (ids.n_elem == 1) {
-      // One set
-      areas(i) = ellipse_area(ellipses.unsafe_col(ids(0)));
-    } else {
-      // Two or more sets
-      for (uword q = 0; q < parents.n_cols; ++q) {
-        owners(q) = n_intersections(parents.unsafe_col(q), ids) == 2;
-      }
+  RcppThread::ThreadPool pool{n_threads};
 
-      uvec int_points = find(all(adopters.rows(ids))%owners);
+  pool.parallelFor(0, n_overlaps, [&area_worker, &areas] (std::size_t i) {
+    areas[i] = area_worker(i);
+  });
 
-      if (int_points.n_elem == 0) {
-        // No intersections: either disjoint or subset
-        areas(i) = disjoint_or_subset(ellipses.cols(ids));
-      } else {
-        // Compute the area of the overlap
-        bool failure = false;
-        areas(i) = polysegments(points.cols(int_points),
-                                ellipses,
-                                parents.cols(int_points),
-                                failure);
-        if (failure || approx) {
-          // Resort to approximation if exact calculation fails
-          // TODO: Use a better fallback approximation
-          areas(i) = montecarlo(ellipses.cols(ids));
-        }
-      }
-    }
-  }
+  pool.join();
 
-  vec out(id.n_rows, fill::zeros);
+  vec out(n_overlaps, fill::zeros);
 
   // hierarchically decompose combination to get disjoint subsets
   for (uword i = id.n_rows; i-- > 0;) {
@@ -142,6 +188,5 @@ double optim_final_loss(const arma::vec& par,
 {
   auto fit = intersect_ellipses(par, circle, n_threads, false);
 
-  return stress(areas, fit);
-  //return accu(square(areas - intersect_ellipses(par, circle)));
+  return accu(square(areas - intersect_ellipses(par, circle)));
 }
