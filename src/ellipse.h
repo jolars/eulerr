@@ -10,11 +10,7 @@ struct Ellipse {
   double h, k, a, b, phi;
 
   Ellipse(double h, double k, double a, double b, double phi)
-          : h(h),
-            k(k),
-            a(std::abs(a)),
-            b(std::abs(b)),
-            phi(normalize_angle(phi)) {}
+          : h(h), k(k), a(a), b(b), phi(phi) {}
 
   double area() const
   {

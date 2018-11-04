@@ -17,7 +17,6 @@
 // #define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
-//#include <RcppParallel.h>
 #include <RcppThread.h>
 #include "constants.h"
 #include "point.h"
@@ -43,8 +42,8 @@ struct AreaWorker {
                parents(parents),
                adopters(adopters),
                approx(approx) {}
-  double
-  operator()(std::size_t i)
+
+  double operator()(std::size_t i)
   {
     double area = 0.0;
 
@@ -110,15 +109,15 @@ intersect_ellipses(const arma::vec& par,
     if (circle) {
       ellipses.emplace_back(par[i*3],
                             par[i*3 + 1],
-                            par[i*3 + 2],
-                            par[i*3 + 2],
+                            std::abs(par[i*3 + 2]),
+                            std::abs(par[i*3 + 2]),
                             0.0);
     } else {
       ellipses.emplace_back(par[i*5],
                             par[i*5 + 1],
-                            par[i*5 + 2],
-                            par[i*5 + 3],
-                            par[i*5 + 4]);
+                            std::abs(par[i*5 + 2]),
+                            std::abs(par[i*5 + 3]),
+                            normalize_angle(par[i*5 + 4]));
     }
   }
 
