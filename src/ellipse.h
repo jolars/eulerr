@@ -1,9 +1,6 @@
 #ifndef eulerr_ellipse_h_
 #define eulerr_ellipse_h_
 
-#include "helpers.h"
-#include "point.h"
-
 namespace eulerr {
 
 struct Ellipse {
@@ -21,12 +18,11 @@ struct Ellipse {
   // David Eberly, Geometric Tools, LLC (c) 1998-2016
   double sector(const double theta) const
   {
-    using namespace std;
-
-    return 0.5*a*b*(theta - atan2((b - a)*sin(2.0*theta),
-                                  b + a + (b - a)*cos(2.0*theta)));
+    return 0.5*a*b*(theta - atan2((b - a)*std::sin(2.0*theta),
+                                  b + a + (b - a)*std::cos(2.0*theta)));
   }
 };
+
 } // namespace eulerr
 
 #endif // eulerr_ellipse_h_
