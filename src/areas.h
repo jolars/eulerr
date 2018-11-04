@@ -34,7 +34,7 @@ montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
   vector<double> areas;
   areas.reserve(n);
 
-  size_t n_points = 1e4;
+  size_t n_points = 1e6;
 
   for (auto ind : indices) {
 
@@ -47,7 +47,7 @@ montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
       double theta = i*(PI*(3.0 - sqrt(5.0)));
       double r = sqrt(static_cast<double>(i)/static_cast<double>(n_points));
 
-      eulerr::Point p{r*std::cos(theta), r*std::sin(theta)};
+      eulerr::Point p{r*cos(theta), r*sin(theta)};
 
       // modify point to fit ellipse
       p.scale(e.a, e.b);

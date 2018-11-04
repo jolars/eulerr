@@ -46,11 +46,13 @@ struct AreaWorker {
   double
   operator()(std::size_t i)
   {
+    double area = 0.0;
+
     auto id_i = id[i];
 
     if (id_i.size() == 1) {
       // One set
-      return ellipses[i].area();
+      area = ellipses[i].area();
     } else {
       // Two or more sets
       std::vector<int> int_points;
@@ -65,20 +67,20 @@ struct AreaWorker {
 
       if (int_points.empty()) {
         // No intersections: either disjoint or subset
-        return disjoint_or_subset(ellipses, id_i);
+        area = disjoint_or_subset(ellipses, id_i);
       } else {
         // Compute the area of the overlap
         bool failure = false;
-        return polysegments(points, ellipses, parents, int_points, failure);
+        area = polysegments(points, ellipses, parents, int_points, failure);
 
         if (failure || approx) {
           // Resort to approximation if exact calculation fails
-          return montecarlo(ellipses, id_i);
+          area = montecarlo(ellipses, id_i);
         }
       }
     }
 
-    return 0.0;
+    return area;
   };
 
   const std::vector<eulerr::Ellipse>&    ellipses;
