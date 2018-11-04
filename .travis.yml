@@ -11,10 +11,6 @@ before_install:
   - sudo apt-get install g++-4.9 gfortran-4.9 -y
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100
 
-r:
-  - release
-  - devel
-
 after_success:
   - Rscript -e 'covr::codecov()'
 
