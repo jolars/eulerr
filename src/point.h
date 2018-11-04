@@ -7,8 +7,7 @@ struct Point {
 
   Point(const double h, const double k) : h(h), k(k) {}
 
-  void
-  rotate(const double theta)
+  void rotate(const double theta)
   {
     auto h0 = h;
     auto k0 = k;
@@ -17,15 +16,13 @@ struct Point {
     k = h0*std::sin(theta) + k0*std::cos(theta);
   }
 
-  void
-  translate(const double x, const double y)
+  void translate(const double x, const double y)
   {
     h += x;
     k += y;
   }
 
-  void
-  scale(const double x, const double y)
+  void scale(const double x, const double y)
   {
     h *= x;
     k *= y;
