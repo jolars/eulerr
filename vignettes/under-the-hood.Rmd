@@ -17,7 +17,8 @@ knitr::opts_chunk$set(
   message = FALSE,
   fig.height = 3,
   fig.width = 3,
-  dev = "png"
+  collapse = TRUE,
+  comment = "#>"
 )
 
 library(grid)
@@ -101,8 +102,8 @@ describe these relationships, either directly or indirectly.
   \begin{array}{l}
       A = \{a,\,b,\,c,\,d\}\\
       B = \{a,\,e,\,f,\}
-    \end{array}
-  $$,
+    \end{array},
+  $$
 * or a two- or three-way table
 
                     $A$      $A^\mathsf{c}$
@@ -595,22 +596,19 @@ points, we can establish the segments' areas algorithmically [@Eberly_2016].
 For each ellipse and its related pair of points (located at angles $\theta_0$ and
 $\theta_1$ from the semimajor axis), we proceed to find its area by
 
-1. centering the ellipse at $(0, 0)$,
-2. normalizing its rotation, which is not needed to compute the area,
-3. integrating the ellipse over [$0,\theta_0$] and [$0,\theta_1$], producing
-elliptical sectors $F(\theta_0)$ and $F(\theta_1)$,
-4. subtracting the smaller ($F(\theta_0$)) of these sectors from the larger ($F(\theta_0$), and
-5. subtracting the triangle section to finally find the segment area,
-
-$$
-F(\theta_1) - F(\theta_0) - \frac{1}{2}\left|x_1y_0 - x_0y_1\right|,
-$$
-
-where
-
-$$
-F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
-$$
+1.  centering the ellipse at $(0, 0)$,
+2.  normalizing its rotation, which is not needed to compute the area,
+3.  integrating the ellipse over [$0,\theta_0$] and [$0,\theta_1$], producing
+    elliptical sectors $F(\theta_0)$ and $F(\theta_1)$,
+4.  subtracting the smaller ($F(\theta_0$)) of these sectors from the larger ($F(\theta_0$), and
+5.  subtracting the triangle section to finally find the segment area,
+    $$
+    F(\theta_1) - F(\theta_0) - \frac{1}{2}\left|x_1y_0 - x_0y_1\right|,
+    $$
+    where
+    $$
+    F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
+    $$
 
 This procedure is illustrated in the following figure. Note that there are
 situations where this algorithm is altered, such that when the sector angle
@@ -671,14 +669,12 @@ the area of the involved overlap by
 1.  spreading points across the ellipses using Vogel's
     method.
 2.  identifying the points that are inside the intersection via the inequality
-
     $$
     \begin{aligned}
     &\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
     &\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} < 1,
     \end{aligned}
     $$
-
     where $x$ and $y$ are the coordinates of the sampled points, and finally
 3.  approximating the area by multiplying the proportion of points inside the
     overlap with the area of the ellipse.
