@@ -44,8 +44,8 @@ montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
 
     for (size_t i = 0; i < n_points; ++i) {
       // sample points using Vogel's method
-      double theta = i*(PI*(3.0 - std::sqrt(5.0)));
-      double r = std::sqrt(static_cast<double>(i)/static_cast<double>(n_points));
+      double theta = i*(PI*(3.0 - sqrt(5.0)));
+      double r = sqrt(static_cast<double>(i)/static_cast<double>(n_points));
 
       eulerr::Point p{r*std::cos(theta), r*std::sin(theta)};
 

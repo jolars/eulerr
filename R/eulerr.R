@@ -16,7 +16,6 @@
 
 #' @useDynLib eulerr, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
-#' @importFrom RcppParallel RcppParallelLibs
 NULL
 
 #' @keywords internal

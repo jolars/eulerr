@@ -35,9 +35,7 @@ data.frame (see \strong{methods (by class)})}
 
 \item{shape}{geometric shape used in the diagram}
 
-\item{n_threads}{number of threads for parallel processing, either a
-number or \code{"auto"}, in which case \code{\link[RcppParallel:defaultNumThreads]{RcppParallel::defaultNumThreads()}} will
-be called to decide the number of threads to use}
+\item{n_threads}{number of threads for parallel processing,}
 
 \item{control}{a list of control parameters.
 \itemize{

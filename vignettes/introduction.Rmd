@@ -131,7 +131,11 @@ coef(fit2)
 
 To tell if we can trust our solution, we use two goodness-of-fit measures: the
 stress statistic from **venneuler** [@wilkinson_exact_2012],
-$$\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}$$
+
+$$
+\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
+$$
+
 where $\hat{y}_i$ is an ordinary least squares estimate from the regression of
 the fitted areas on the original areas that is being explored during
 optimization,

@@ -67,9 +67,7 @@
 #' @param input type of input: disjoint identities
 #'   (`'disjoint'`) or unions (`'union'`).
 #' @param shape geometric shape used in the diagram
-#' @param n_threads number of threads for parallel processing, either a
-#'   number or `"auto"`, in which case [RcppParallel::defaultNumThreads()] will
-#'   be called to decide the number of threads to use
+#' @param n_threads number of threads for parallel processing,
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the more thorough optimizer (currently
 #'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
@@ -146,15 +144,10 @@ euler.default <- function(combinations,
             !any(combinations < 0),
             !is.null(attr(combinations, "names")),
             !any(names(combinations) == ""),
-            !any(duplicated(names(combinations))))
-
-  if (n_threads == "auto")
-    n_threads <- RcppParallel::defaultNumThreads()
-
-  if (!is.numeric(n_threads))
-    stop("'n_threads' must be either a numeric or 'auto'")
-
-  RcppParallel::setThreadOptions(numThreads = n_threads)
+            !any(duplicated(names(combinations))),
+            is.numeric(n_threads),
+            length(n_threads) == 1,
+            n_threads >= 1)
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
@@ -302,7 +295,8 @@ euler.default <- function(combinations,
                                  p = pars,
                                  areas = areas_disjoint,
                                  circle = circle,
-                                 iterlim = 1e6L)$estimate
+                                 iterlim = 1e6L,
+                                 n_threads = n_threads)$estimate
 
       tpar <- as.data.frame(matrix(
         data = nlm_solution,
@@ -344,6 +338,7 @@ euler.default <- function(combinations,
           upper = constraints$upr,
           circle = circle,
           areas = areas_disjoint,
+          n_threads = n_threads,
           control = utils::modifyList(
             list(threshold.stop = sqrt(.Machine$double.eps),
                  max.call = 1e7,
