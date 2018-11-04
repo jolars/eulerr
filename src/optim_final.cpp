@@ -31,28 +31,26 @@
 using namespace arma;
 
 struct AreaWorker {
-  AreaWorker(std::vector<double>&                   areas,
-             const std::vector<eulerr::Ellipse>&    ellipses,
+  AreaWorker(const std::vector<eulerr::Ellipse>&    ellipses,
              const std::vector<std::vector<int>>&   id,
              const std::vector<eulerr::Point>&      points,
              const std::vector<std::array<int, 2>>& parents,
              const std::vector<std::vector<int>>&   adopters,
              const bool approx)
-             : areas(areas),
-               ellipses(ellipses),
+             : ellipses(ellipses),
                id(id),
                points(points),
                parents(parents),
                adopters(adopters),
                approx(approx) {}
-  void
+  double
   operator()(std::size_t i)
   {
     auto id_i = id[i];
 
     if (id_i.size() == 1) {
       // One set
-      areas[i] = ellipses[i].area();
+      return ellipses[i].area();
     } else {
       // Two or more sets
       std::vector<int> int_points;
@@ -67,21 +65,22 @@ struct AreaWorker {
 
       if (int_points.empty()) {
         // No intersections: either disjoint or subset
-        areas[i] = disjoint_or_subset(ellipses, id_i);
+        return disjoint_or_subset(ellipses, id_i);
       } else {
         // Compute the area of the overlap
         bool failure = false;
-        areas[i] = polysegments(points, ellipses, parents, int_points, failure);
+        return polysegments(points, ellipses, parents, int_points, failure);
 
         if (failure || approx) {
           // Resort to approximation if exact calculation fails
-          areas[i] = montecarlo(ellipses, id_i);
+          return montecarlo(ellipses, id_i);
         }
       }
     }
+
+    return 0.0;
   };
 
-  std::vector<double>&                   areas;
   const std::vector<eulerr::Ellipse>&    ellipses;
   const std::vector<std::vector<int>>&   id;
   const std::vector<eulerr::Point>&      points;
@@ -144,10 +143,7 @@ intersect_ellipses(const arma::vec& par,
   }
 
   // Loop over each set combination
-  std::vector<double> areas(n_overlaps);
-
-  AreaWorker area_worker(areas,
-                         ellipses,
+  AreaWorker area_worker(ellipses,
                          id,
                          points,
                          parents,
@@ -156,8 +152,9 @@ intersect_ellipses(const arma::vec& par,
 
   RcppThread::ThreadPool pool{n_threads};
 
-  pool.parallelFor(0, n_overlaps, [&area_worker] (std::size_t i) {
-    area_worker(i);
+  std::vector<double> areas(n_overlaps);
+  pool.parallelFor(0, n_overlaps, [&area_worker, &areas] (std::size_t i) {
+    areas[i] = area_worker(i);
   });
 
   pool.join();
