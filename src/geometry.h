@@ -76,13 +76,9 @@ adopt(const eulerr::Point&                p,
   std::vector<int> out;
   out.reserve(n);
 
-  for (decltype(n) i = 0; i < n; ++i) {
-    if ((i == a) || (i == b)) {
+  for (decltype(n) i = 0; i < n; ++i)
+    if ((i == a) || (i == b) || point_in_ellipse(p, ellipses[i]))
       out.emplace_back(i);
-    } else if (point_in_ellipse(p, ellipses[i])) {
-      out.emplace_back(i);
-    }
-  }
 
   out.shrink_to_fit();
 
