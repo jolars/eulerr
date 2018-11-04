@@ -1,19 +1,3 @@
-// eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-// Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #ifndef eulerr_geometry_h_
 #define eulerr_geometry_h_
 
@@ -21,9 +5,7 @@
 #include "ellipse.h"
 #include "point.h"
 
-inline
-bool
-point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
+inline bool point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
 {
   using namespace std;
 
@@ -33,10 +15,9 @@ point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
 }
 
 // See if a group of ellipses are completely disjoint or a russian doll
-inline
-double
-disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
-                   const std::vector<int>&             ind)
+template <typename T>
+inline double disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
+                                 const std::vector<T>&               ind)
 {
   std::vector<double> areas;
   areas.reserve(ind.size());
@@ -64,19 +45,18 @@ disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
   return subset ? *min_itr : 0.0;
 }
 
-inline
-std::vector<int>
-adopt(const eulerr::Point&                p,
-      const std::vector<eulerr::Ellipse>& ellipses,
-      const int                           a,
-      const int                           b)
+template <typename T>
+inline std::vector<int> adopt(const eulerr::Point&                p,
+                              const std::vector<eulerr::Ellipse>& ellipses,
+                              const T                             a,
+                              const T                             b)
 {
-  int n = ellipses.size();
+  T n = ellipses.size();
 
-  std::vector<int> out;
+  std::vector<T> out;
   out.reserve(n);
 
-  for (decltype(n) i = 0; i < n; ++i)
+  for (T i = 0; i < n; ++i)
     if ((i == a) || (i == b) || point_in_ellipse(p, ellipses[i]))
       out.emplace_back(i);
 

@@ -1,19 +1,3 @@
-// eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-// Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 // #define ARMA_NO_DEBUG // For the final version
 
 #include <RcppArmadillo.h>
@@ -92,11 +76,10 @@ struct AreaWorker {
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
-arma::vec
-intersect_ellipses(const arma::vec& par,
-                   const bool       circle,
-                   const unsigned   n_threads = 1,
-                   const bool       approx = false)
+arma::vec intersect_ellipses(const arma::vec& par,
+                             const bool       circle,
+                             const unsigned   n_threads = 1,
+                             const bool       approx = false)
 {
   int  n_pars     = circle ? 3 : 5;
   int  n          = par.n_elem/n_pars;
@@ -179,9 +162,7 @@ intersect_ellipses(const arma::vec& par,
 
 // stress metric from venneuler (Wilkinson 2012)
 // [[Rcpp::export]]
-double
-stress(const arma::vec& orig,
-       const arma::vec& fit)
+double stress(const arma::vec& orig, const arma::vec& fit)
 {
   using namespace arma;
 
@@ -193,13 +174,11 @@ stress(const arma::vec& orig,
 
 // compute loss between the actual and desired areas
 // [[Rcpp::export]]
-double
-optim_final_loss(const arma::vec& par,
-                 const arma::vec& areas,
-                 const bool circle,
-                 const int n_threads = 1)
+double optim_final_loss(const arma::vec& par,
+                        const arma::vec& areas,
+                        const bool circle,
+                        const int n_threads = 1)
 {
   auto fit = intersect_ellipses(par, circle, n_threads, false);
   return accu(square(areas - fit));
-  // return stress(areas, intersect_ellipses(par, circle));
 }

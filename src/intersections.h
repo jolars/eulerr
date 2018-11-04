@@ -1,19 +1,3 @@
-// eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-// Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #ifndef eulerr_intersections_h_
 #define eulerr_intersections_h_
 
@@ -25,12 +9,11 @@
 #include "point.h"
 #include "conic.h"
 
-using namespace arma;
-
 // Split a degenerate conic into two lines
-arma::mat
-split_conic(const mat& A)
+arma::mat split_conic(const arma::mat& A)
 {
+  using namespace arma;
+
   mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
@@ -52,11 +35,12 @@ split_conic(const mat& A)
 }
 
 // Intersect a conic with two lines to return 0 to 4 intersection points
-void
-intersect_conic_line(const arma::mat& A,
-                     const arma::vec& l,
-                     std::vector<eulerr::Point>& points)
+void intersect_conic_line(const arma::mat& A,
+                          const arma::vec& l,
+                          std::vector<eulerr::Point>& points)
 {
+  using namespace arma;
+
   mat::fixed<3, 3> M = skewsymmat(l);
   mat::fixed<3, 3> B = M.t()*A*M;
   vec::fixed<3> l_abs = abs(l);
@@ -88,9 +72,11 @@ intersect_conic_line(const arma::mat& A,
   }
 }
 
-std::vector<eulerr::Point>
-intersect(const eulerr::Conic& conic_A, const eulerr::Conic& conic_B)
+std::vector<eulerr::Point> intersect(const eulerr::Conic& conic_A,
+                                     const eulerr::Conic& conic_B)
 {
+  using namespace arma;
+
   const auto& A = conic_A.M;
   const auto& B = conic_B.M;
 

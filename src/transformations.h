@@ -1,31 +1,13 @@
-// eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-// Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #ifndef eulerr_transformations_h_
 #define eulerr_transformations_h_
 
 #include <RcppArmadillo.h>
 
-using namespace arma;
-
 // Return the adjoint (adjugate) of a 3-by-3 matrix
-inline
-arma::mat
-adjoint(const arma::mat& m)
+inline arma::mat adjoint(const arma::mat& m)
 {
+  using namespace arma;
+
   mat::fixed<3, 3> out;
   const double a = m(0, 0);
   const double b = m(1, 0);
@@ -45,10 +27,10 @@ adjoint(const arma::mat& m)
 }
 
 // Skew-symmetric matrix for complex matrices
-inline
-arma::cx_mat
-skewsymmat(const arma::cx_vec& v)
+inline arma::cx_mat skewsymmat(const arma::cx_vec& v)
 {
+  using namespace arma;
+
   cx_mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);
@@ -61,10 +43,10 @@ skewsymmat(const arma::cx_vec& v)
 }
 
 // Skew-symmetric matrix
-inline
-arma::mat
-skewsymmat(const arma::vec& v)
+inline arma::mat skewsymmat(const arma::vec& v)
 {
+  using namespace arma;
+
   mat::fixed<3, 3> out;
   out.diag().zeros();
   out(0, 1) =  v(2);
@@ -76,4 +58,4 @@ skewsymmat(const arma::vec& v)
   return out;
 }
 
-#endif
+#endif // eulerr_transformations_h_
