@@ -25,7 +25,7 @@ test_that("using weights works", {
 
 test_that("correct parallel options are asserted", {
   s <- c(a = 1, b = 2, "a&b" = 3)
-  expect_silent(euler(s, n_threads = "auto"))
+  expect_silent(euler(s, n_threads = 1))
 })
 
 test_that("zero-sized input is allowed", {
