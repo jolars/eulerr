@@ -669,19 +669,19 @@ completely overlap. In these cases, the algorithm will approximate
 the area of the involved overlap by
 
 1.  spreading points across the ellipses using Vogel's
-method.
+    method.
 2.  identifying the points that are inside the intersection via the inequality
 
-$$
-\begin{aligned}
-&\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
-&\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} < 1,
-\end{aligned}
-$$
+    $$
+    \begin{aligned}
+    &\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
+    &\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} < 1,
+    \end{aligned}
+    $$
 
-where $x$ and $y$ are the coordinates of the sampled points, and finally
+    where $x$ and $y$ are the coordinates of the sampled points, and finally
 3.  approximating the area by multiplying the proportion of points inside the
-overlap with the area of the ellipse.
+    overlap with the area of the ellipse.
 
 With this in place, we are now able to compute the areas of all intersections
 and their relative complements, $\omega$, up to numerical precision.
