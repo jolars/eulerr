@@ -48,13 +48,9 @@ struct AreaWorker {
   void
   operator()(std::size_t i)
   {
-    std::vector<uword> intersections;
-    intersections.reserve(parents.size());
-
     auto id_i = id[i];
-    auto n = id_i.size();
 
-    if (n == 1) {
+    if (id_i.size() == 1) {
       // One set
       areas[i] = ellipses[i].area();
     } else {
@@ -75,27 +71,23 @@ struct AreaWorker {
       } else {
         // Compute the area of the overlap
         bool failure = false;
-        areas[i] = polysegments(points,
-                                ellipses,
-                                parents,
-                                int_points,
-                                failure);
+        areas[i] = polysegments(points, ellipses, parents, int_points, failure);
+
         if (failure || approx) {
           // Resort to approximation if exact calculation fails
           areas[i] = montecarlo(ellipses, id_i);
-          RcppThread::Rcout << "Hello" << std::endl;
         }
       }
     }
   };
 
-  std::vector<double>& areas;
-  const std::vector<eulerr::Ellipse>& ellipses;
-  const std::vector<std::vector<int>>& id;
-  const std::vector<eulerr::Point>& points;
+  std::vector<double>&                   areas;
+  const std::vector<eulerr::Ellipse>&    ellipses;
+  const std::vector<std::vector<int>>&   id;
+  const std::vector<eulerr::Point>&      points;
   const std::vector<std::array<int, 2>>& parents;
-  const std::vector<std::vector<int>>& adopters;
-  const bool approx;
+  const std::vector<std::vector<int>>&   adopters;
+  const bool                             approx;
 };
 
 // Intersect any number of ellipses or circles
@@ -103,6 +95,7 @@ struct AreaWorker {
 arma::vec
 intersect_ellipses(const arma::vec& par,
                    const bool       circle,
+                   const unsigned   n_threads = 1,
                    const bool       approx = false)
 {
   int  n_pars     = circle ? 3 : 5;
@@ -144,7 +137,7 @@ intersect_ellipses(const arma::vec& par,
       for (auto& p_i : p) {
         std::array<int, 2> parent = {i, j};
         parents.push_back(std::move(parent));
-        adopters.emplace_back(adopt(p_i.h, p_i.k, ellipses, i, j));
+        adopters.emplace_back(adopt(p_i, ellipses, i, j));
         points.push_back(std::move(p_i));
       }
     }
@@ -161,9 +154,13 @@ intersect_ellipses(const arma::vec& par,
                          adopters,
                          approx);
 
-  RcppThread::parallelFor(0, n_overlaps, [&area_worker] (unsigned int i) {
+  RcppThread::ThreadPool pool{n_threads};
+
+  pool.parallelFor(0, n_overlaps, [&area_worker] (std::size_t i) {
     area_worker(i);
   });
+
+  pool.join();
 
   std::vector<double> out(areas.begin(), areas.end());
 
@@ -201,8 +198,10 @@ stress(const arma::vec& orig,
 double
 optim_final_loss(const arma::vec& par,
                  const arma::vec& areas,
-                 const bool circle)
+                 const bool circle,
+                 const int n_threads = 1)
 {
-  return accu(square(areas - intersect_ellipses(par, circle)));
+  auto fit = intersect_ellipses(par, circle, n_threads, false);
+  return accu(square(areas - fit));
   // return stress(areas, intersect_ellipses(par, circle));
 }

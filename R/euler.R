@@ -154,8 +154,6 @@ euler.default <- function(combinations,
   if (!is.numeric(n_threads))
     stop("'n_threads' must be either a numeric or 'auto'")
 
-  RcppParallel::setThreadOptions(numThreads = n_threads)
-
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
 
@@ -302,7 +300,8 @@ euler.default <- function(combinations,
                                  p = pars,
                                  areas = areas_disjoint,
                                  circle = circle,
-                                 iterlim = 1e6L)$estimate
+                                 iterlim = 1e6L,
+                                 n_threads = n_threads)$estimate
 
       tpar <- as.data.frame(matrix(
         data = nlm_solution,
@@ -344,6 +343,7 @@ euler.default <- function(combinations,
           upper = constraints$upr,
           circle = circle,
           areas = areas_disjoint,
+          n_threads = n_threads,
           control = utils::modifyList(
             list(threshold.stop = sqrt(.Machine$double.eps),
                  max.call = 1e7,

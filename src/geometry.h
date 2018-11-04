@@ -66,18 +66,15 @@ disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
 
 inline
 std::vector<int>
-adopt(const double x,
-      const double y,
+adopt(const eulerr::Point&                p,
       const std::vector<eulerr::Ellipse>& ellipses,
-      const int a,
-      const int b)
+      const int                           a,
+      const int                           b)
 {
   int n = ellipses.size();
 
   std::vector<int> out;
   out.reserve(n);
-
-  eulerr::Point p{x, y};
 
   for (decltype(n) i = 0; i < n; ++i) {
     if ((i == a) || (i == b)) {
