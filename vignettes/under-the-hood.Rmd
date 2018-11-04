@@ -2,7 +2,7 @@
 title: "eulerr under the hood"
 author: "Johan Larsson"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::html_document
 vignette: >
   %\VignetteIndexEntry{eulerr under the hood}
   %\VignetteEngine{knitr::rmarkdown}
