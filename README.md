@@ -8,8 +8,9 @@ Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-c
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
 [![Coverage
-Status](https://coveralls.io/repos/github/jolars/eulerr/badge.svg?branch=master)](https://coveralls.io/github/jolars/eulerr?branch=master)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
+Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
+[![CRAN
+Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KERLYHUY639WU)
 
 **eulerr** generates area-proportional Euler diagrams that display set
@@ -62,9 +63,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 3.066487e-12
+#> [1] 0.0001957608
 fit$diagError
-#> [1] 2.973873e-07
+#> [1] 0.002251973
 ```
 
 and plot it
