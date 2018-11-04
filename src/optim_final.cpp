@@ -188,5 +188,5 @@ double optim_final_loss(const arma::vec& par,
 {
   auto fit = intersect_ellipses(par, circle, n_threads, false);
 
-  return accu(square(areas - intersect_ellipses(par, circle)));
+  return accu(square(areas - fit));
 }
