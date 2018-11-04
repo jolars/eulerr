@@ -89,12 +89,12 @@ arma::mat intersect_conics(const arma::mat& A,
                            const arma::mat& B)
 {
   double alpha = det(A);
-  double beta = det(join_rows(A.cols(0, 1), B.col(2))) +
-    det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2))) +
-    det(join_rows(B.col(0), A.cols(1, 2)));
-  double gamma = det(join_rows(A.col(0), B.cols(1, 2))) +
-    det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2))) +
-    det(join_rows(B.cols(0, 1), A.col(2)));
+  double beta = det(join_rows(A.cols(0, 1), B.col(2)))
+                + det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2)))
+                + det(join_rows(B.col(0), A.cols(1, 2)));
+  double gamma = det(join_rows(A.col(0), B.cols(1, 2)))
+                 + det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2)))
+                 + det(join_rows(B.cols(0, 1), A.col(2)));
   double delta = det(B);
 
   // Find the cubic roots
