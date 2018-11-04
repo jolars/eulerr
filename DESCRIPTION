@@ -25,7 +25,6 @@ Imports:
     polyclip,
     polylabelr,
     Rcpp,
-    RcppParallel,
     stats,
     utils
 Suggests: 
@@ -40,7 +39,7 @@ Suggests:
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0),
-    RcppParallel (>= 4.4.1)
+    RcppThread (>= 0.5.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -49,5 +48,4 @@ URL: https://github.com/jolars/eulerr
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
-SystemRequirements: GNU make
 Language: en-US
