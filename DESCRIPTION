@@ -43,7 +43,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-URL: https://github.com/jolars/eulerr
+URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)

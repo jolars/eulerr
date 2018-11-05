@@ -16,6 +16,7 @@ Generate area-proportional Euler diagrams
 Useful links:
 \itemize{
   \item \url{https://github.com/jolars/eulerr}
+  \item \url{https://jolars.github.io/eulerr/}
   \item Report bugs at \url{https://github.com/jolars/eulerr/issues}
 }
 
