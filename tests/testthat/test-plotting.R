@@ -12,6 +12,8 @@ test_that("normal plotting works without errors", {
   expect_silent(dont_plot(f1, legend = FALSE, quantities = TRUE))
   expect_silent(dont_plot(f1, legend = TRUE, labels = FALSE))
   expect_silent(dont_plot(f1, labels = c("asdf", "qwer")))
+  expect_silent(dont_plot(f1, main = "Hello"))
+  expect_silent(dont_plot(f1, expression = "phi[1]"))
 
   grid <- expand.grid(labels = c(TRUE, FALSE),
                       quantities = c(TRUE, FALSE),
@@ -61,6 +63,10 @@ test_that("normal plotting works without errors", {
   }
 
   expect_error(euler(dat, by = list(Gender, Nation, Gender)))
+
+
+  f4 <- euler(c(A = 1))
+  expect_silent(dont_plot(f4))
 })
 
 test_that("plotting zero-fits works", {
