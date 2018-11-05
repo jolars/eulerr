@@ -47,5 +47,4 @@ struct Conic {
 };
 } // namespace eulerr
 
-
 #endif // eulerr_conic_h_
