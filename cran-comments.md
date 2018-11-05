@@ -1,21 +1,26 @@
 ## Test environments
-* Local Antergos 18.4, release
-* Ubuntu 14.04, oldrel, release, devel, gcc and clang with valgrind (on travis ci)
-* OS X release, oldrel (on travis ci)
-* Windows Server 2012 R2 x64 oldrel, release, patched, devel (on appveyor)
-* Win-builder, release, devel
+* Antergos Linux 18.10, release (on local machine)
+* Ubuntu 14.04, release (on travis)
+* Windows Server 2012 R2 x64 release (on appveyor)
+* Ubuntu Linux 16.04 LTS, R-release, GCC (on rhub)
+* Debian Linux, R-devel, GCC ASAN/UBSAN (on rhub)
+* Fedora Linux, R-devel, clang, gfortran (on rhub)
+* Win-builder, release, devel 
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 note
+0 errors | 0 warnings | 1 note
 
-## Sanitizer warnings
+> * checking CRAN incoming feasibility ... NOTE
+> Maintainer: ‘Johan Larsson <mail@larssonjohan.com>’
+> 
+> New maintainer:
+>   Johan Larsson <mail@larssonjohan.com>
+> Old maintainer(s):
+>   Johan Larsson <johanlarsson@outlook.com>
 
-The package incurs several warnings when ran through the
-GCC ASAN/UBSAN sanitizers on rhub. I believe these to be related
-to the RcppParallel package
-(https://cran.r-project.org/web/checks/check_results_RcppParallel.html)
-and to be harmless (see https://github.com/RcppCore/RcppParallel/issues/36).
+An e-mail has been sent from <johanlarsson@outlook.com> to verify this
+change.
 
 ## Reverse dependencies
 
