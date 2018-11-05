@@ -100,3 +100,5 @@ with a bounding box, pack these boxes into a bin of appropriate size and
 aspect ratio, and adjust the coordinates of the ellipses in the clusters to
 compact our diagram. As a bonus, this increases the chance of having
 similar layouts for different function calls.
+
+## References
