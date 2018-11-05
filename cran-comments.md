@@ -1,10 +1,11 @@
 ## Test environments
 * Antergos Linux 18.10, release (on local machine)
-* Ubuntu 14.04, release (on travis)
+* Ubuntu 14.04, release, clang+valgrind, gcc (on travis)
 * Windows Server 2012 R2 x64 release (on appveyor)
 * Ubuntu Linux 16.04 LTS, R-release, GCC (on rhub)
 * Debian Linux, R-devel, GCC ASAN/UBSAN (on rhub)
 * Fedora Linux, R-devel, clang, gfortran (on rhub)
+* macOS 10.11 El Capitan, R-release (on rhub)
 * Win-builder, release, devel 
 
 ## R CMD check results
