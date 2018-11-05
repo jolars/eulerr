@@ -1,18 +1,37 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
-language: R
+language: r
 sudo: false
 cache: packages
+warnings_are_errors: true
 
-before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo add-apt-repository ppa:marutter/c2d4u -y
-  - sudo apt-get update -q
-  - sudo apt-get install g++-4.9 gfortran-4.9 -y
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 100
+matrix:
+  include:
+    - os: linux
+      r: release
+      compiler: clang
+      addons:
+        apt:
+          packages:
+            - valgrind
+      r_check_args: '--ignore-vignettes --use-valgrind'
+      r_build_args: '--no-build-vignettes'
+      env:
+        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
 
-after_success:
-  - Rscript -e 'covr::codecov()'
+    - os: linux
+      r: devel
+      compiler: gcc
+      after_success:
+        - Rscript -e 'covr::codecov()'
+
+    - os: linux
+      r: oldrel
+      compiler: gcc
+
+    - os: osx
+      r: release
+
+    - os: osx
+      r: oldrel
 
 notifications:
   email:
