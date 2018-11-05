@@ -76,7 +76,7 @@
 #'   \item{diagError}{the largest `regionError`}
 #'   \item{stress}{normalized residual sums of squares}
 #'
-#' @seealso [plot.euler()], [print.euler()]
+#' @seealso [plot.euler()], [print.euler()], [eulerr_options()]
 #'
 #' @examples
 #' # Fit a diagram with circles
@@ -120,7 +120,7 @@ euler <- function(combinations, ...) UseMethod("euler")
 euler.default <- function(combinations,
                           input = c("disjoint", "union"),
                           shape = c("circle", "ellipse"),
-                          n_threads = 1,
+                          n_threads = eulerr_options("n_threads")[[1]],
                           control = list(),
                           ...)
 {

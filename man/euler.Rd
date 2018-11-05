@@ -12,8 +12,8 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), n_threads = 1, control = list(),
-  ...)
+  shape = c("circle", "ellipse"),
+  n_threads = eulerr_options("n_threads")[[1]], control = list(), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL,
   sep = "_", factor_names = TRUE, ...)
@@ -189,5 +189,5 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 \url{http://dx.doi.org/10.1371/journal.pone.0101717}
 }
 \seealso{
-\code{\link[=plot.euler]{plot.euler()}}, \code{\link[=print.euler]{print.euler()}}
+\code{\link[=plot.euler]{plot.euler()}}, \code{\link[=print.euler]{print.euler()}}, \code{\link[=eulerr_options]{eulerr_options()}}
 }

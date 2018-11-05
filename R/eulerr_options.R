@@ -1,12 +1,13 @@
 #' Get or set global graphical parameters for eulerr
 #'
-#' This function provides a means to set default parameters for plots
-#' produced by [plot.euler()]. Query [eulerr_options()] (without any
+#' This function provides a means to set default parameters for functions
+#' in eulerr. Query [eulerr_options()] (without any
 #' argument) to see all the available options and read more about
-#' them in [grid::gpar()] and [graphics::par()].
+#' the plot-related ones in [grid::gpar()] and [graphics::par()].
 #'
 #' Currently, the following items will be considered:
 #' \describe{
+#'   \item{n_threads}{the number of threads to use in [euler()]}
 #'   \item{pointsize}{size in pts to be used as basis for fontsizes and
 #'   some margin sizes in the resulting plot}
 #'   \item{fills}{a list of items `fill` and `alpha`}
@@ -34,6 +35,7 @@
 #'
 #' @examples
 #' eulerr_options(edges = list(col = "blue"), fontsize = 10)
+#' eulerr_options(n_threads = 2)
 eulerr_options <- function(...) {
   new <- list(...)
   if (is.null(names(new)) && length(new) == 1L && is.list(new[[1L]]))
@@ -71,6 +73,7 @@ eulerr_options <- function(...) {
 #' @keywords internal
 eulerr_default_options <- function() {
   list(
+    n_threads = 1,
     pointsize = 12,
     fills = list(
       fill = function(n) {

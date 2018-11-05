@@ -15,14 +15,15 @@ This function gets or sets updates in the global environment
 that are used in \code{\link[=plot.euler]{plot.euler()}}.
 }
 \description{
-This function provides a means to set default parameters for plots
-produced by \code{\link[=plot.euler]{plot.euler()}}. Query \code{\link[=eulerr_options]{eulerr_options()}} (without any
+This function provides a means to set default parameters for functions
+in eulerr. Query \code{\link[=eulerr_options]{eulerr_options()}} (without any
 argument) to see all the available options and read more about
-them in \code{\link[grid:gpar]{grid::gpar()}} and \code{\link[graphics:par]{graphics::par()}}.
+the plot-related ones in \code{\link[grid:gpar]{grid::gpar()}} and \code{\link[graphics:par]{graphics::par()}}.
 }
 \details{
 Currently, the following items will be considered:
 \describe{
+\item{n_threads}{the number of threads to use in \code{\link[=euler]{euler()}}}
 \item{pointsize}{size in pts to be used as basis for fontsizes and
 some margin sizes in the resulting plot}
 \item{fills}{a list of items \code{fill} and \code{alpha}}
@@ -42,6 +43,7 @@ some margin sizes in the resulting plot}
 }
 \examples{
 eulerr_options(edges = list(col = "blue"), fontsize = 10)
+eulerr_options(n_threads = 2)
 }
 \seealso{
 \code{\link[=plot.euler]{plot.euler()}}, \code{\link[grid:gpar]{grid::gpar()}}, \code{\link[graphics:par]{graphics::par()}}
