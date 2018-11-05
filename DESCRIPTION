@@ -1,5 +1,5 @@
 Package: eulerr
-Title: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
+Title: Area-Proportional Euler and Venn Diagrams with Ellipses
 Version: 5.0.0
 Authors@R: c(person("Johan", "Larsson", email = "mail@larssonjohan.com",
                     role = c("aut", "cre"),
