@@ -195,3 +195,5 @@ excellent facilities made available by the core R package **grid**.
 
 **eulerr** would not be possible without Ben Fredrickson's work on
 **venn.js** or Leland Wilkinson's **venneuler**.
+
+## References
