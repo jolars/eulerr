@@ -45,7 +45,7 @@ std::vector<double> intersect_ellipses(const std::vector<double>& par,
 
   // Collect all points of intersection
   std::vector<eulerr::Point> points;
-  std::vector<std::array<int, 2>> parents;
+  std::vector<std::vector<int>> parents;
   std::vector<std::vector<int>> adopters;
 
   for (decltype(n) i = 0; i < n - 1; ++i) {
@@ -53,8 +53,8 @@ std::vector<double> intersect_ellipses(const std::vector<double>& par,
       auto p = intersect(conics[i], conics[j]);
 
       for (auto& p_i : p) {
-        std::array<int, 2> parent = {i, j};
-        parents.push_back(std::move(parent));
+        std::vector<int> parent = {i, j};
+        parents.emplace_back(std::move(parent));
         adopters.emplace_back(adopt(p_i, ellipses, i, j));
         points.push_back(std::move(p_i));
       }

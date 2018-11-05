@@ -80,18 +80,18 @@ double ellipse_segment(const eulerr::Ellipse& e,
 
   return
     (theta1 - theta0) <= PI ? e.sector(theta1) - e.sector(theta0) - triangle
-    : e.area()
-    - e.sector(theta0 + 2.0*PI)
-    + e.sector(theta1)
-    + triangle;
+                            : e.area()
+                              - e.sector(theta0 + 2.0*PI)
+                              + e.sector(theta1)
+                              + triangle;
 }
 
 // Compute the area of an intersection of 2+ ellipses
-double polysegments(const std::vector<eulerr::Point>&      points,
-                    const std::vector<eulerr::Ellipse>&    ellipses,
-                    const std::vector<std::array<int, 2>>& parents,
-                    const std::vector<int>&                int_points,
-                    bool&                                  failure)
+double polysegments(const std::vector<eulerr::Point>&    points,
+                    const std::vector<eulerr::Ellipse>&  ellipses,
+                    const std::vector<std::vector<int>>& parents,
+                    const std::vector<int>&              int_points,
+                    bool&                                failure)
 {
   auto n = int_points.size();
 
@@ -125,8 +125,8 @@ double polysegments(const std::vector<eulerr::Point>&      points,
     // First discover which ellipses the points belong to
     std::vector<int> ii;
 
-    std::set_intersection(std::begin(parents[i]), std::end(parents[i]),
-                          std::begin(parents[j]), std::end(parents[j]),
+    std::set_intersection(parents[i].begin(), parents[i].end(),
+                          parents[j].begin(), parents[j].end(),
                           std::back_inserter(ii));
 
     if (!ii.empty()) {
@@ -139,7 +139,7 @@ double polysegments(const std::vector<eulerr::Point>&      points,
 
       // Triangular plus ellipse segment area
       area += 0.5*((points[j].h + points[i].h)*(points[j].k - points[i].k))
-        + *std::min_element(areas.begin(), areas.end());
+              + *std::min_element(areas.begin(), areas.end());
 
     } else {
       // Emergency exit (and fallback) when algorithm fails
