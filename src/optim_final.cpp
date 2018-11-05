@@ -12,9 +12,9 @@
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
-std::vector<double> intersect_ellipses(const Rcpp::NumericVector par,
-                                       const bool                circle,
-                                       const bool                approx = false)
+std::vector<double> intersect_ellipses(const std::vector<double>& par,
+                                       const bool                 circle,
+                                       const bool                 approx = false)
 {
   int  n_pars     = circle ? 3 : 5;
   int  n          = par.size()/n_pars;
@@ -116,8 +116,8 @@ std::vector<double> intersect_ellipses(const Rcpp::NumericVector par,
 
 // compute loss between the actual and desired areas
 // [[Rcpp::export]]
-double optim_final_loss(const Rcpp::NumericVector par,
-                        const Rcpp::NumericVector areas,
+double optim_final_loss(const std::vector<double>& par,
+                        const std::vector<double>& areas,
                         const bool circle)
 {
   auto fit = intersect_ellipses(par, circle, false);
@@ -125,7 +125,7 @@ double optim_final_loss(const Rcpp::NumericVector par,
   // return sums of squared errors
   return std::inner_product(fit.begin(),
                             fit.end(),
-                            std::begin(areas),
+                            areas.begin(),
                             0.0,
                             std::plus<double>(),
                             [](double a, double b) { return (a - b)*(a -b); });

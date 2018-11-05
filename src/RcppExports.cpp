@@ -7,12 +7,12 @@
 using namespace Rcpp;
 
 // intersect_ellipses
-std::vector<double> intersect_ellipses(const Rcpp::NumericVector par, const bool circle, const bool approx);
+std::vector<double> intersect_ellipses(const std::vector<double>& par, const bool circle, const bool approx);
 RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP, SEXP approxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type par(parSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
     Rcpp::traits::input_parameter< const bool >::type approx(approxSEXP);
     rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circle, approx));
@@ -20,13 +20,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // optim_final_loss
-double optim_final_loss(const Rcpp::NumericVector par, const Rcpp::NumericVector areas, const bool circle);
+double optim_final_loss(const std::vector<double>& par, const std::vector<double>& areas, const bool circle);
 RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type par(parSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type areas(areasSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
     rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle));
     return rcpp_result_gen;

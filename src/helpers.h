@@ -8,10 +8,10 @@ template <typename T1, typename T2>
 inline bool is_subset(const T1& a, const T2& b)
 {
   return std::all_of(
-    std::begin(a),
-    std::end(a),
+    a.begin(),
+    a.end(),
     [&b](const int k) {
-      return std::find(std::begin(b), std::end(b), k) != std::end(b);
+      return std::find(b.begin(), b.end(), k) != b.end();
     }
   );
 }
