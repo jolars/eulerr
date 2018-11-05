@@ -20,6 +20,8 @@ output is always scaled appropriately to input (#28).
 labels for the overlaps of the ellipses, which has improved
 performance in plotting complicated diagrams considerably and reduced
 the amount of code in this package greatly.
+* The c++ internals have been rewritten using more memory efficient and
+expressive code.
 
 ## Minor changes
 
