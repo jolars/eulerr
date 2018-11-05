@@ -63,7 +63,7 @@ relationships. The shape of the diagram may be a circle or an ellipse." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">4.1.0.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.0.0</span>
       </span>
     </div>
 
@@ -90,6 +90,9 @@ relationships. The shape of the diagram may be a circle or an ellipse." />
     </li>
     <li>
       <a href="../articles/under-the-hood.html">eulerr under the hood</a>
+    </li>
+    <li>
+      <a href="../articles/visualization.html">Visualizing Euler diagrams with eulerr</a>
     </li>
   </ul>
 </li>
@@ -134,8 +137,7 @@ relationships. The shape of the diagram may be a circle or an ellipse.</p>
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"disjoint"</span>, <span class='st'>"union"</span>),
-  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"circle"</span>, <span class='st'>"ellipse"</span>), <span class='kw'>n_threads</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
-  <span class='no'>...</span>)
+  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"circle"</span>, <span class='st'>"ellipse"</span>), <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -170,12 +172,6 @@ data.frame (see <strong>methods (by class)</strong>)</p></td>
     <tr>
       <th>shape</th>
       <td><p>geometric shape used in the diagram</p></td>
-    </tr>
-    <tr>
-      <th>n_threads</th>
-      <td><p>number of threads for parallel processing, either a
-number or <code>"auto"</code>, in which case <code><a href='http://www.rdocumentation.org/packages/RcppParallel/topics/setThreadOptions'>RcppParallel::defaultNumThreads()</a></code> will
-be called to decide the number of threads to use</p></td>
     </tr>
     <tr>
       <th>control</th>
@@ -283,7 +279,7 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='plot.euler.html'>plot.euler()</a></code>, <code><a href='print.euler.html'>print.euler()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='plot.euler.html'>plot.euler()</a></code>, <code><a href='print.euler.html'>print.euler()</a></code>, <code><a href='eulerr_options.html'>eulerr_options()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -308,13 +304,13 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 
 <span class='co'># Investigate the fit again (which is now exact)</span>
 <span class='no'>fit2</span></div><div class='output co'>#&gt;       original fitted residuals regionError
-#&gt; A            2  1.999     0.001           0
-#&gt; B            2  1.999     0.001           0
-#&gt; C            2  2.000     0.000           0
-#&gt; A&amp;B          1  1.001    -0.001           0
-#&gt; A&amp;C          1  0.999     0.001           0
-#&gt; B&amp;C          1  1.000     0.000           0
-#&gt; A&amp;B&amp;C        0  0.004    -0.004           0
+#&gt; A            2      2         0           0
+#&gt; B            2      2         0           0
+#&gt; C            2      2         0           0
+#&gt; A&amp;B          1      1         0           0
+#&gt; A&amp;C          1      1         0           0
+#&gt; B&amp;C          1      1         0           0
+#&gt; A&amp;B&amp;C        0      0         0           0
 #&gt; 
 #&gt; diagError: 0 
 #&gt; stress:    0 </div><div class='input'>

@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">4.1.0.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.0.0</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
     </li>
     <li>
       <a href="../articles/under-the-hood.html">eulerr under the hood</a>
+    </li>
+    <li>
+      <a href="../articles/visualization.html">Visualizing Euler diagrams with eulerr</a>
     </li>
   </ul>
 </li>
@@ -116,9 +119,9 @@
       <small>Source: <a href='https://github.com/jolars/eulerr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="eulerr-4-1-0-9000" class="section level1">
+    <div id="eulerr-5-0-0" class="section level1">
 <h1 class="page-header">
-<a href="#eulerr-4-1-0-9000" class="anchor"></a>eulerr 4.1.0.9000<small> Unreleased </small>
+<a href="#eulerr-5-0-0" class="anchor"></a>eulerr 5.0.0<small> Unreleased </small>
 </h1>
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
@@ -132,12 +135,11 @@
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>Major changes</h2>
 <ul>
-<li>The work horse of <code><a href="../reference/euler.html">euler()</a></code> has now been parallalized, which should lead to considerable performance gains when large combinations are given.</li>
 <li>
 <code><a href="../reference/euler.html">euler()</a></code> once again uses the residual sums of squares, rather than the stress metric, as optimization objective, which means that output is always scaled appropriately to input (<a href='https://github.com/jolars/eulerr/issues/28'>#28</a>).</li>
 <li>
-<code><a href="../reference/plot.euler.html">plot.euler()</a></code> now uses the <strong>polyabelr</strong> package to position labels for the overlaps of the ellipses, which has improved performance in plotting complicated diagrams considerably and reduced the amount of code in this package greatly.</li>
-<li>Much of the innards of the package have been rewritten using more memory-efficient and expressive code.</li>
+<code><a href="../reference/plot.euler.html">plot.euler()</a></code> now uses the <a href="https://CRAN.R-project.org/package=polylabelr">polylabelr</a> package to position labels for the overlaps of the ellipses, which has improved performance in plotting complicated diagrams considerably and reduced the amount of code in this package greatly.</li>
+<li>The c++ internals have been rewritten using more memory-efficient, performant and expressive code.</li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
@@ -156,6 +158,7 @@
 <li>Added a data set, <code>pain</code>, to exemplify the table method for <code><a href="../reference/euler.html">euler()</a></code>.</li>
 <li>
 <code><a href="../reference/euler.html">euler.table()</a></code> gains an argument, <code>factor_names</code>, for specifying whether the factor names should be included when generating dummy-coded variables in case the input is a data.frame with character or factor vectors or if the input is a table with more than two columns or rows.</li>
+<li>Parts of the <em>eulerr under the hood</em> vignette has been branched off into a new vignette regarding visualization.</li>
 </ul>
 </div>
 <div id="bug-fixes" class="section level2">
@@ -426,7 +429,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#eulerr-4-1-0-9000">4.1.0.9000</a></li>
+        <li><a href="#eulerr-5-0-0">5.0.0</a></li>
         <li><a href="#eulerr-4-1-0">4.1.0</a></li>
         <li><a href="#eulerr-4-0-0">4.0.0</a></li>
         <li><a href="#eulerr-3-1-0">3.1.0</a></li>

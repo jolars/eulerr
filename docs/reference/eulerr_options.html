@@ -32,10 +32,10 @@
 
 <meta property="og:title" content="Get or set global graphical parameters for eulerr — eulerr_options" />
 
-<meta property="og:description" content="This function provides a means to set default parameters for plots
-produced by plot.euler(). Query eulerr_options() (without any
+<meta property="og:description" content="This function provides a means to set default parameters for functions
+in eulerr. Query eulerr_options() (without any
 argument) to see all the available options and read more about
-them in grid::gpar() and graphics::par()." />
+the plot-related ones in grid::gpar() and graphics::par()." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@ them in grid::gpar() and graphics::par()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">4.1.0.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.0.0</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@ them in grid::gpar() and graphics::par()." />
     </li>
     <li>
       <a href="../articles/under-the-hood.html">eulerr under the hood</a>
+    </li>
+    <li>
+      <a href="../articles/visualization.html">Visualizing Euler diagrams with eulerr</a>
     </li>
   </ul>
 </li>
@@ -125,10 +128,10 @@ them in grid::gpar() and graphics::par()." />
 
     <div class="ref-description">
     
-    <p>This function provides a means to set default parameters for plots
-produced by <code><a href='plot.euler.html'>plot.euler()</a></code>. Query <code>eulerr_options()</code> (without any
+    <p>This function provides a means to set default parameters for functions
+in eulerr. Query <code>eulerr_options()</code> (without any
 argument) to see all the available options and read more about
-them in <code><a href='http://www.rdocumentation.org/packages/grid/topics/gpar'>grid::gpar()</a></code> and <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>graphics::par()</a></code>.</p>
+the plot-related ones in <code><a href='http://www.rdocumentation.org/packages/grid/topics/gpar'>grid::gpar()</a></code> and <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>graphics::par()</a></code>.</p>
     
     </div>
 
@@ -175,7 +178,8 @@ some margin sizes in the resulting plot</p></dd>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>eulerr_options</span>(<span class='kw'>edges</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>), <span class='kw'>fontsize</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>eulerr_options</span>(<span class='kw'>edges</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>), <span class='kw'>fontsize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='fu'>eulerr_options</span>(<span class='kw'>n_threads</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

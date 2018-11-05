@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">4.1.0.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.0.0</span>
       </span>
     </div>
 
@@ -56,6 +56,9 @@
     </li>
     <li>
       <a href="../articles/under-the-hood.html">eulerr under the hood</a>
+    </li>
+    <li>
+      <a href="../articles/visualization.html">Visualizing Euler diagrams with eulerr</a>
     </li>
   </ul>
 </li>
@@ -85,7 +88,7 @@
       <h1>Introducing eulerr</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2018-11-04</h4>
+            <h4 class="date">2018-11-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -185,7 +188,11 @@ A plot from <code><a href="../reference/error_plot.html">error_plot()</a></code>
 <div id="goodness-of-fit" class="section level3">
 <h3 class="hasAnchor">
 <a href="#goodness-of-fit" class="anchor"></a>Goodness-of-fit</h3>
-<p>To tell if we can trust our solution, we use two goodness-of-fit measures: the stress statistic from <strong>venneuler</strong> <span class="citation">(Wilkinson 2012)</span>, <span class="math display">\[\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}\]</span> where <span class="math inline">\(\hat{y}_i\)</span> is an ordinary least squares estimate from the regression of the fitted areas on the original areas that is being explored during optimization,</p>
+<p>To tell if we can trust our solution, we use two goodness-of-fit measures: the stress statistic from <strong>venneuler</strong> <span class="citation">(Wilkinson 2012)</span>,</p>
+<p><span class="math display">\[
+\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
+\]</span></p>
+<p>where <span class="math inline">\(\hat{y}_i\)</span> is an ordinary least squares estimate from the regression of the fitted areas on the original areas that is being explored during optimization,</p>
 <p>and the <em>diagError</em> statistic from <strong>eulerAPE</strong> <span class="citation">(Micallef and Rodgers 2014)</span>:</p>
 <p><span class="math display">\[
 \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
@@ -235,6 +242,10 @@ Customizing Euler plots is a breeze in eulerr.
 <h2 class="hasAnchor">
 <a href="#acknowledgements" class="anchor"></a>Acknowledgements</h2>
 <p><strong>eulerr</strong> would not be possible without Ben Fredrickson’s work on <strong>venn.js</strong> or Leland Wilkinson’s <strong>venneuler</strong>.</p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-Micallef_2014a">
 <p>Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing Area-Proportional 3-Venn Diagrams Using Ellipses.” <em>PLOS ONE</em> 9 (7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717">https://doi.org/10.1371/journal.pone.0101717</a>.</p>
@@ -255,6 +266,7 @@ Customizing Euler plots is a breeze in eulerr.
       <li><a href="#enter-eulerr">Enter eulerr</a></li>
       <li><a href="#input">Input</a></li>
       <li><a href="#acknowledgements">Acknowledgements</a></li>
+      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>

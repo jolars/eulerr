@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">4.1.0.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.0.0</span>
       </span>
     </div>
 
@@ -56,6 +56,9 @@
     </li>
     <li>
       <a href="../articles/under-the-hood.html">eulerr under the hood</a>
+    </li>
+    <li>
+      <a href="../articles/visualization.html">Visualizing Euler diagrams with eulerr</a>
     </li>
   </ul>
 </li>
@@ -85,7 +88,7 @@
       <h1>eulerr under the hood</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2018-11-04</h4>
+            <h4 class="date">2018-11-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/under-the-hood.Rmd"><code>vignettes/under-the-hood.Rmd</code></a></small>
       <div class="hidden name"><code>under-the-hood.Rmd</code></div>
@@ -129,8 +132,9 @@ A=4 \quad B=3 \quad A \cap B=1,
 \begin{array}{l}
     A = \{a,\,b,\,c,\,d\}\\
     B = \{a,\,e,\,f,\}
-  \end{array}
-\]</span>,</li>
+  \end{array},
+\]</span>
+</li>
 <li>
 <p>or a two- or three-way table</p>
 <table class="table">
@@ -271,12 +275,7 @@ B/2 &amp; C   &amp; E/2 \\
 D/2 &amp; E/2 &amp; F
 \end{bmatrix},
 \]</span></p>
-<p>which is the form we need to intersect our ellipses. We now proceed to</p>
-<ol style="list-style-type: decimal">
-<li>form three degenerate conics from a linear combination of the two ellipses we wish to intersect,</li>
-<li>split one of these degenerate conics into two lines, and</li>
-<li>intersect one of the ellipses with these lines, yielding 0 to 4 intersection points points.</li>
-</ol>
+<p>which is the form we need to intersect our ellipses. We now proceed to form three degenerate conics from a linear combination of the two ellipses we wish to intersect, split one of these degenerate conics into two lines, and intersect one of the ellipses with these lines, yielding 0 to 4 intersection points points.</p>
 <div class="figure">
 <img src="under-the-hood_files/figure-html/intersect-1-1.png" alt="The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011." width="192"><img src="under-the-hood_files/figure-html/intersect-1-2.png" alt="The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011." width="192"><img src="under-the-hood_files/figure-html/intersect-1-3.png" alt="The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011." width="192"><p class="caption">
 The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter–Gebert 2011.
@@ -298,15 +297,13 @@ The overlap area between three ellipses is the sum of a convex polygon (in grey)
 <li>normalizing its rotation, which is not needed to compute the area,</li>
 <li>integrating the ellipse over [<span class="math inline">\(0,\theta_0\)</span>] and [<span class="math inline">\(0,\theta_1\)</span>], producing elliptical sectors <span class="math inline">\(F(\theta_0)\)</span> and <span class="math inline">\(F(\theta_1)\)</span>,</li>
 <li>subtracting the smaller (<span class="math inline">\(F(\theta_0\)</span>)) of these sectors from the larger (<span class="math inline">\(F(\theta_0\)</span>), and</li>
-<li>subtracting the triangle section to finally find the segment area,</li>
-</ol>
-<p><span class="math display">\[
+<li>subtracting the triangle section to finally find the segment area, <span class="math display">\[
 F(\theta_1) - F(\theta_0) - \frac{1}{2}\left|x_1y_0 - x_0y_1\right|,
-\]</span></p>
-<p>where</p>
-<p><span class="math display">\[
+\]</span> where <span class="math display">\[
 F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
-\]</span></p>
+\]</span>
+</li>
+</ol>
 <p>This procedure is illustrated in the following figure. Note that there are situations where this algorithm is altered, such that when the sector angle ranges beyond <span class="math inline">\(\pi\)</span>—we refer the interested reader to <span class="citation">Eberly (2016)</span>.</p>
 <div class="figure">
 <img src="under-the-hood_files/figure-html/ellipsesegment-1.png" alt="The elliptical segment in blue is found by first subtracting the elliptical sector from $(a, 0)$ to $\theta_0$ from the one from $(a, 0)$ to $\theta_1$ and then subtracting the triangle part (in grey)." width="288"><p class="caption">
@@ -318,15 +315,14 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 <p>The exact algorithm may in rare instances<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>, break down, the culprit being numerical precision issues that occur when ellipses are tangent or completely overlap. In these cases, the algorithm will approximate the area of the involved overlap by</p>
 <ol style="list-style-type: decimal">
 <li>spreading points across the ellipses using Vogel’s method.</li>
-<li>identifying the points that are inside the intersection via the inequality</li>
-</ol>
-<p><span class="math display">\[
+<li>identifying the points that are inside the intersection via the inequality <span class="math display">\[
 \begin{aligned}
 &amp;\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
 &amp;\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} &lt; 1,
 \end{aligned}
-\]</span></p>
-<p>where <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are the coordinates of the sampled points, and finally 3. approximating the area by multiplying the proportion of points inside the overlap with the area of the ellipse.</p>
+\]</span> where <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are the coordinates of the sampled points, and finally</li>
+<li>approximating the area by multiplying the proportion of points inside the overlap with the area of the ellipse.</li>
+</ol>
 <p>With this in place, we are now able to compute the areas of all intersections and their relative complements, <span class="math inline">\(\omega\)</span>, up to numerical precision.</p>
 </div>
 <div id="final-optimization" class="section level3">
@@ -343,60 +339,10 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 <p>which is the maximum <em>absolute</em> difference of the proportion of any <span class="math inline">\(\omega\)</span> to the respective unique area of the diagram.</p>
 </div>
 </div>
-<div id="plotting" class="section level2">
-<h2 class="hasAnchor">
-<a href="#plotting" class="anchor"></a>Plotting</h2>
-<p>Once we have ascertained that our Euler diagram fits well, we can turn to visualizing the solution. For this purpose, <strong>eulerr</strong> relies on the <strong>grid</strong> graphics system <span class="citation">(R Core Team 2017)</span> and offers intuitive and granular control over the output.</p>
-<p>Plotting the ellipses is straightforward using the parametrization of a rotated ellipse,</p>
-<p><span class="math display">\[
-\begin{bmatrix}
-x \\ y
-\end{bmatrix} =
-\begin{bmatrix}
-h + a \cos{\theta} \\
-k + b \sin{\theta}
-\end{bmatrix},
-\]</span> where <span class="math inline">\(\theta \in [0, 2\pi],\quad a,b&gt;0\)</span>.</p>
-<p>Most users will also prefer to label the ellipses and their intersections with text and this, however, is considerably more involved.</p>
-<div id="labeling" class="section level3">
-<h3 class="hasAnchor">
-<a href="#labeling" class="anchor"></a>Labeling</h3>
-<p>Labeling the ellipses is complicated since the shapes of the intersections often are irregular, lacking well-defined centers; we know of no analytical solution to this problem. Instead, <strong>eulerr</strong> relies on the <strong>polylabelr</strong> package <span class="citation">(Larsson 2018)</span>, which was created by the author. It provides a simple wrapper for the <strong>polylabel</strong> <span class="citation">(Mapbox 2018)</span> C++ library from <em>Mapbox</em>.</p>
-</div>
-<div id="aesthetics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#aesthetics" class="anchor"></a>Aesthetics</h3>
-<p>Euler diagrams display both quantitative and qualitative data. The quantitative aspect is the quantities or sizes of the sets depicted in the diagram and is visualized by the relative sizes, and possibly the labels, of the areas of the shapes—this is the main focus of this paper. The qualitative aspects, meanwhile, consist of the mapping of each set to some quality or category, such as having a certain gene or not. In the diagram, these qualities can be separated through any of the following aesthetics:</p>
-<ul>
-<li>color,</li>
-<li>border type,</li>
-<li>text labeling,</li>
-<li>transparency,</li>
-<li>patterns,</li>
-</ul>
-<p>or a combination of these. The main purpose of these aesthetics is to separate out the different ellipses so that the audience may interpret the diagram with ease and clarity.</p>
-<p>Among these aesthetics, the best choice (from a viewer perspective) appears to be color <span class="citation">(Blake 2016)</span>, which provides useful information without extraneous chart junk.</p>
-<p>The issue with color, however, is that it cannot be perceived perfectly by all. Eight percent of men and 0.4% of women in European Caucasian countries, for instance, suffer the most common form, red–green color deficiency. Moreover, color is often printed at a premium in scientific publications and adds no utility to a diagram of two shapes.</p>
-<p>For these reasons, <strong>eulerr</strong> defaults to distinguishing ellipses with color using a manually tuned color palette.</p>
-<div class="figure">
-<img src="under-the-hood_files/figure-html/colorexamle-1.png" alt="The eight first colors of the default color palette" width="288"><p class="caption">
-The eight first colors of the default color palette
-</p>
-</div>
-</div>
-</div>
-<div id="normalizing-dispersed-layouts" class="section level2">
-<h2 class="hasAnchor">
-<a href="#normalizing-dispersed-layouts" class="anchor"></a>Normalizing dispersed layouts</h2>
-<p>If there are disjoint clusters of ellipses, the optimizer will often spread these out more than is necessary, wasting space in our diagram. To tackle this, we use a SKYLINE-BL rectangle packing algorithm <span class="citation">(Jylänki 2010)</span> designed specifically for <strong>eulerr</strong>. In it, we surround each ellipse cluster with a bounding box, pack these boxes into a bin of appropriate size and aspect ratio, and adjust the coordinates of the ellipses in the clusters to compact our diagram. As a bonus, this increases the chance of having similar layouts for different function calls.</p>
-</div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
-<div id="ref-Blake_2016">
-<p>Blake, Andrew. 2016. “The Impact of Graphical Choices on the Perception of Euler Diagrams.” Ph.D. dissertation, Brighton, UK: Brighton University. <a href="http://eprints.brighton.ac.uk/15754/1/main.pdf">http://eprints.brighton.ac.uk/15754/1/main.pdf</a>.</p>
-</div>
 <div id="ref-Eberly_2016">
 <p>Eberly, David. 2016. “The Area of Intersecting Ellipses.” <em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.</p>
 </div>
@@ -409,15 +355,6 @@ The eight first colors of the default color palette
 <div id="ref-Frederickson_2016">
 <p>———. 2016. “Venn.Js Area Proportional Venn and Euler Diagrams in JavaScript.”</p>
 </div>
-<div id="ref-Jylaenki_2010">
-<p>Jylänki, Jukka. 2010. “A Thousand Ways to Pack the Bin – a Practical Approach to Two-Dimensional Rectangle Bin Packing.”</p>
-</div>
-<div id="ref-larsson2018d">
-<p>Larsson, Johan. 2018. “polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon.”</p>
-</div>
-<div id="ref-mapbox2018">
-<p>Mapbox. 2018. “polylabel: A Fast Algorithm for Finding the Pole of Inaccessibility of a Polygon (in JavaScript and C++).” Mapbox.</p>
-</div>
 <div id="ref-Micallef_2014a">
 <p>Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing Area-Proportional 3-Venn Diagrams Using Ellipses.” <em>PLOS ONE</em> 9 (7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717">https://doi.org/10.1371/journal.pone.0101717</a>.</p>
 </div>
@@ -428,7 +365,7 @@ The eight first colors of the default color palette
 <p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
 </div>
 <div id="ref-Richter-Gebert_2011">
-<p>Richter-Gebert, Jürgen. 2011. <em>Perspectives on Projective Geometry: A Guided Tour Through Real and Complex Geometry</em>. 1st ed. Berlin, Germany: Springer.</p>
+<p>Richter-Gebert, Jurgen. 2011. <em>Perspectives on Projective Geometry: A Guided Tour Through Real and Complex Geometry</em>. 1st ed. Berlin, Germany: Springer.</p>
 </div>
 <div id="ref-Schnabel_1985">
 <p>Schnabel, Robert B., John E. Koonatz, and Barry E. Weiss. 1985. “A Modular System of Algorithms for Unconstrained Minimization.” <em>ACM Trans Math Softw</em> 11 (4): 419–40. <a href="https://doi.org/10.1145/6187.6192">https://doi.org/10.1145/6187.6192</a>.</p>
@@ -459,8 +396,6 @@ The eight first colors of the default color palette
       <li><a href="#input">Input</a></li>
       <li><a href="#initial-layout">Initial layout</a></li>
       <li><a href="#final-layout">Final layout</a></li>
-      <li><a href="#plotting">Plotting</a></li>
-      <li><a href="#normalizing-dispersed-layouts">Normalizing dispersed layouts</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>
