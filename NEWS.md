@@ -8,10 +8,6 @@ resulting Euler diagram.
 
 ## Major changes
 
-* The work horse of `euler()` has now been parallalized
-using [RcppThread](https://CRAN.R-project.org/package=RcppThread), which
-should lead to considerable performance gains when large combinations
-are given.
 * `euler()` once again uses the residual sums of squares, rather than the
 stress metric, as optimization objective, which means that 
 output is always scaled appropriately to input (#28).
@@ -20,8 +16,8 @@ output is always scaled appropriately to input (#28).
 labels for the overlaps of the ellipses, which has improved
 performance in plotting complicated diagrams considerably and reduced
 the amount of code in this package greatly.
-* The c++ internals have been rewritten using more memory efficient and
-expressive code.
+* The c++ internals have been rewritten using more memory-efficient, performant
+and expressive code.
 
 ## Minor changes
 

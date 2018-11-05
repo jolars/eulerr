@@ -7,30 +7,28 @@
 using namespace Rcpp;
 
 // intersect_ellipses
-std::vector<double> intersect_ellipses(const Rcpp::NumericVector par, const bool circle, const unsigned n_threads, const bool approx);
-RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP, SEXP n_threadsSEXP, SEXP approxSEXP) {
+std::vector<double> intersect_ellipses(const Rcpp::NumericVector par, const bool circle, const bool approx);
+RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP, SEXP approxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type par(parSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
-    Rcpp::traits::input_parameter< const unsigned >::type n_threads(n_threadsSEXP);
     Rcpp::traits::input_parameter< const bool >::type approx(approxSEXP);
-    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circle, n_threads, approx));
+    rcpp_result_gen = Rcpp::wrap(intersect_ellipses(par, circle, approx));
     return rcpp_result_gen;
 END_RCPP
 }
 // optim_final_loss
-double optim_final_loss(const Rcpp::NumericVector par, const Rcpp::NumericVector areas, const bool circle, const int n_threads);
-RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP, SEXP n_threadsSEXP) {
+double optim_final_loss(const Rcpp::NumericVector par, const Rcpp::NumericVector areas, const bool circle);
+RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type par(parSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
-    Rcpp::traits::input_parameter< const int >::type n_threads(n_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle, n_threads));
+    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -86,8 +84,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 4},
-    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 4},
+    {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
+    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},

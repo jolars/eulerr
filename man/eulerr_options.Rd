@@ -23,7 +23,6 @@ the plot-related ones in \code{\link[grid:gpar]{grid::gpar()}} and \code{\link[g
 \details{
 Currently, the following items will be considered:
 \describe{
-\item{n_threads}{the number of threads to use in \code{\link[=euler]{euler()}}}
 \item{pointsize}{size in pts to be used as basis for fontsizes and
 some margin sizes in the resulting plot}
 \item{fills}{a list of items \code{fill} and \code{alpha}}

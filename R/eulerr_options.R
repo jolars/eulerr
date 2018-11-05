@@ -7,7 +7,6 @@
 #'
 #' Currently, the following items will be considered:
 #' \describe{
-#'   \item{n_threads}{the number of threads to use in [euler()]}
 #'   \item{pointsize}{size in pts to be used as basis for fontsizes and
 #'   some margin sizes in the resulting plot}
 #'   \item{fills}{a list of items `fill` and `alpha`}
@@ -73,7 +72,6 @@ eulerr_options <- function(...) {
 #' @keywords internal
 eulerr_default_options <- function() {
   list(
-    n_threads = 1,
     pointsize = 12,
     fills = list(
       fill = function(n) {

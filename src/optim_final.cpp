@@ -1,7 +1,6 @@
 // #define ARMA_NO_DEBUG
 
 #include <RcppArmadillo.h>
-#include <RcppThread.h>
 #include "constants.h"
 #include "point.h"
 #include "ellipse.h"
@@ -11,73 +10,10 @@
 #include "helpers.h"
 #include "areas.h"
 
-struct AreaWorker {
-  AreaWorker(const std::vector<eulerr::Ellipse>&    ellipses,
-             const std::vector<std::vector<int>>&   id,
-             const std::vector<eulerr::Point>&      points,
-             const std::vector<std::array<int, 2>>& parents,
-             const std::vector<std::vector<int>>&   adopters,
-             const bool approx)
-             : ellipses(ellipses),
-               id(id),
-               points(points),
-               parents(parents),
-               adopters(adopters),
-               approx(approx) {}
-
-  double
-  operator()(std::size_t i)
-  {
-    double area = 0.0;
-
-    auto id_i = id[i];
-
-    if (id_i.size() == 1) {
-      // One set
-      area = ellipses[i].area();
-    } else {
-      // Two or more sets
-      std::vector<int> int_points;
-
-      for (std::size_t j = 0; j < parents.size(); ++j) {
-        if (is_subset(parents[j], id_i)) {
-          if (is_subset(id_i, adopters[j])) {
-            int_points.emplace_back(j);
-          }
-        }
-      }
-
-      if (int_points.empty()) {
-        // No intersections: either disjoint or subset
-        area = disjoint_or_subset(ellipses, id_i);
-      } else {
-        // Compute the area of the overlap
-        bool failure = false;
-        area = polysegments(points, ellipses, parents, int_points, failure);
-
-        if (failure || approx) {
-          // Resort to approximation if exact calculation fails
-          area = montecarlo(ellipses, id_i);
-        }
-      }
-    }
-
-    return area;
-  };
-
-  const std::vector<eulerr::Ellipse>&    ellipses;
-  const std::vector<std::vector<int>>&   id;
-  const std::vector<eulerr::Point>&      points;
-  const std::vector<std::array<int, 2>>& parents;
-  const std::vector<std::vector<int>>&   adopters;
-  const bool                             approx;
-};
-
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
 std::vector<double> intersect_ellipses(const Rcpp::NumericVector par,
                                        const bool                circle,
-                                       const unsigned            n_threads = 1,
                                        const bool                approx = false)
 {
   int  n_pars     = circle ? 3 : 5;
@@ -87,7 +23,7 @@ std::vector<double> intersect_ellipses(const Rcpp::NumericVector par,
 
   std::vector<eulerr::Ellipse> ellipses;
 
-  for (int i = 0; i < n; ++i) {
+  for (decltype(n) i = 0; i < n; ++i) {
     if (circle) {
       ellipses.emplace_back(par[i*3],
                             par[i*3 + 1],
@@ -112,8 +48,8 @@ std::vector<double> intersect_ellipses(const Rcpp::NumericVector par,
   std::vector<std::array<int, 2>> parents;
   std::vector<std::vector<int>> adopters;
 
-  for (int i = 0; i < n - 1; ++i) {
-    for (int j = i + 1; j < n; ++j) {
+  for (decltype(n) i = 0; i < n - 1; ++i) {
+    for (decltype(n) j = i + 1; j < n; ++j) {
       auto p = intersect(conics[i], conics[j]);
 
       for (auto& p_i : p) {
@@ -125,22 +61,41 @@ std::vector<double> intersect_ellipses(const Rcpp::NumericVector par,
     }
   }
 
-  // Loop over each set combination
-  AreaWorker area_worker(ellipses,
-                         id,
-                         points,
-                         parents,
-                         adopters,
-                         approx);
+  std::vector<double> areas;
+  areas.reserve(n_overlaps);
+  std::vector<int> int_points;
 
-  RcppThread::ThreadPool pool{n_threads};
+  for (const auto& id_i : id) {
+    if (id_i.size() == 1) {
+      // One set
+      areas.emplace_back(ellipses[id_i[0]].area());
+    } else {
+      // Two or more sets
+      for (std::size_t j = 0; j < parents.size(); ++j) {
+        if (is_subset(parents[j], id_i) && is_subset(id_i, adopters[j])) {
+          int_points.emplace_back(j);
+        }
+      }
 
-  std::vector<double> areas(n_overlaps);
-  pool.parallelFor(0, n_overlaps, [&area_worker, &areas] (std::size_t i) {
-    areas[i] = area_worker(i);
-  });
+      if (int_points.empty()) {
+        // No intersections: either disjoint or subset
+        areas.emplace_back(disjoint_or_subset(ellipses, id_i));
+      } else {
+        // Compute the area of the overlap
+        bool failure = false;
+        auto area =
+          polysegments(points, ellipses, parents, int_points, failure);
 
-  pool.join();
+        if (failure || approx) {
+          // Resort to approximation if exact calculation fails
+          area = montecarlo(ellipses, id_i);
+        }
+
+        areas.emplace_back(area);
+      }
+    }
+    int_points.clear();
+  }
 
   std::vector<double> out(areas.begin(), areas.end());
 
@@ -163,11 +118,11 @@ std::vector<double> intersect_ellipses(const Rcpp::NumericVector par,
 // [[Rcpp::export]]
 double optim_final_loss(const Rcpp::NumericVector par,
                         const Rcpp::NumericVector areas,
-                        const bool circle,
-                        const int n_threads = 1)
+                        const bool circle)
 {
-  auto fit = intersect_ellipses(par, circle, n_threads, false);
+  auto fit = intersect_ellipses(par, circle, false);
 
+  // return sums of squared errors
   return std::inner_product(fit.begin(),
                             fit.end(),
                             std::begin(areas),

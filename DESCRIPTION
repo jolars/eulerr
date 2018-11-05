@@ -38,8 +38,7 @@ Suggests:
     rmarkdown
 LinkingTo:
     Rcpp (>= 0.12.12),
-    RcppArmadillo (>= 0.7.600.1.0),
-    RcppThread (>= 0.5.0)
+    RcppArmadillo (>= 0.7.600.1.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

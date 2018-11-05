@@ -30,10 +30,6 @@ test_that("erroneous input to euler() throw errors", {
   # list method
   expect_error(euler(list(c("a", "b"), c("a", "c"))))
   expect_error(euler(list(b = c(1, 2), b = c(1, 3))))
-
-  # parallelization
-  s <- c(a = 1, b = 2, "a&b" = 3)
-  expect_error(euler(s, n_threads = "default"))
 })
 
 test_that("erroneous input to print.euler() throw errors", {

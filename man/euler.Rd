@@ -12,8 +12,7 @@
 euler(combinations, ...)
 
 \method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
-  n_threads = eulerr_options("n_threads")[[1]], control = list(), ...)
+  shape = c("circle", "ellipse"), control = list(), ...)
 
 \method{euler}{data.frame}(combinations, weights = NULL, by = NULL,
   sep = "_", factor_names = TRUE, ...)
@@ -34,8 +33,6 @@ data.frame (see \strong{methods (by class)})}
 (\code{'disjoint'}) or unions (\code{'union'}).}
 
 \item{shape}{geometric shape used in the diagram}
-
-\item{n_threads}{number of threads for parallel processing,}
 
 \item{control}{a list of control parameters.
 \itemize{
