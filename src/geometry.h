@@ -45,7 +45,7 @@ inline double disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
   return subset ? *min_itr : 0.0;
 }
 
-temlate <typename T>
+template <typename T>
 inline std::vector<T> adopt(const eulerr::Point&                p,
                             const std::vector<eulerr::Ellipse>& ellipses,
                             const T                             a,
