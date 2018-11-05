@@ -1,0 +1,34 @@
+---
+title: "Multi-threading in eulerr"
+author: "Johan Larsson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multi-threading in eulerr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r}
+library(eulerr)
+
+s <- c(A = 4, B = 6, C = 3, D = 2, E = 7, F = 3,
+       "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
+       "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+       "A&B&F" = 1, "B&C&D" = 1)
+
+bench::mark(one = {euler(s, shape = "ellipse", n_threads = 1)},
+            two = {euler(s, shape = "ellipse", n_threads = 2)},
+            three = {euler(s, shape = "ellipse", n_threads = 3)},
+            four = {euler(s, shape = "ellipse", n_threads = 4)},
+            check = FALSE)
+
+```
+
