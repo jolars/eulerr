@@ -5,10 +5,6 @@ intersect_ellipses <- function(par, circle, n_threads = 1L, approx = FALSE) {
     .Call(`_eulerr_intersect_ellipses`, par, circle, n_threads, approx)
 }
 
-stress <- function(orig, fit) {
-    .Call(`_eulerr_stress`, orig, fit)
-}
-
 optim_final_loss <- function(par, areas, circle, n_threads = 1L) {
     .Call(`_eulerr_optim_final_loss`, par, areas, circle, n_threads)
 }

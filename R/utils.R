@@ -288,3 +288,19 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
 
   cbind(x[, !fac_chr, drop = FALSE], out)
 }
+
+#' Stress
+#'
+#' @param orig original values
+#' @param fit fitted values
+#'
+#' @return Stress metric.
+#'
+#' @keywords internal
+stress <- function(orig, fit)
+{
+  sst <- sum(fit^2)
+  slope <- sum(orig*fit)/sum(orig^2)
+  sse   <- sum((fit - orig*slope)^2)
+  sse/sst
+}
