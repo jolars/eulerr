@@ -43,6 +43,8 @@ input.
 whether the factor names should be included when generating dummy-coded
 variables in case the input is a data.frame with character or factor vectors
 or if the input is a table with more than two columns or rows.
+* Parts of the *eulerr under the hood* vignette has been branched off into
+a new vignette regarding visualization.
 
 ## Bug fixes
 
