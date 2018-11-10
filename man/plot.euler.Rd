@@ -2,10 +2,15 @@
 % Please edit documentation in R/plot.euler.R
 \name{plot.euler}
 \alias{plot.euler}
-\title{Plot area-proportional Euler diagrams}
+\alias{plot.venn}
+\title{Plot Euler and Venn diagrams}
 \usage{
 \method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = FALSE,
+  strips = NULL, main = NULL, n = 200L, ...)
+
+\method{plot}{venn}(x, fills = TRUE, edges = TRUE, legend = FALSE,
+  labels = identical(legend, FALSE), quantities = TRUE,
   strips = NULL, main = NULL, n = 200L, ...)
 }
 \arguments{
@@ -52,13 +57,18 @@ description of the diagram to be drawn. \code{\link[=plot.eulergram]{plot.eulerg
 drawing of the diagram.
 }
 \description{
-Plot Euler diagrams fit with \code{\link[=euler]{euler()}} using \code{\link[grid:Grid]{grid::Grid()}} graphics. This
+Plot diagrams fit with \code{\link[=euler]{euler()}} and \code{\link[=venn]{venn()}} using \code{\link[grid:Grid]{grid::Grid()}} graphics.
+This
 function sets up all the necessary plot parameters and computes
 the geometry of the diagram. \code{\link[=plot.eulergram]{plot.eulergram()}}, meanwhile,
 does the actual plotting of the diagram. Please see the \strong{Details} section
 to learn about the individual settings for each argument.
 }
 \details{
+The only difference between \code{\link[=plot.euler]{plot.euler()}} and \code{\link[=plot.venn]{plot.venn()}} is that
+\code{quantities} is set to \code{TRUE} by default in the latter and \code{FALSE} in
+the former.
+
 Most of the arguments to this function accept either a logical, a vector, or
 a list where
 \itemize{

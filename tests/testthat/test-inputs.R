@@ -1,6 +1,6 @@
 context("Inputs")
 
-test_that("normal use returns no errors", {
+test_that("normal use of euler() returns no errors", {
   f <- euler(c(A = 10.923, B = 5.4, "A&B" = 0.43))
 
   expect_error(dont_print(f, round = 2), NA)
@@ -15,6 +15,21 @@ test_that("normal use returns no errors", {
   expect_silent(euler(as.matrix(dat[, 1:2])))
   expect_is(euler(dat, by = x), "euler")
   expect_silent(dont_print(euler(dat, by = x)))
+})
+
+test_that("normal use of venn() returns no errors", {
+  expect_silent(venn(organisms))
+  expect_silent(venn(c(A = 1, B = 2)))
+  expect_silent(venn(pain))
+  expect_silent(venn(fruits, by = list(sex, age)))
+  expect_silent(venn(organisms, weights = c(10, 20, 5, 4, 8, 9, 2)))
+  expect_silent(venn(plants[c("erigenia", "solanum", "cynodon")]))
+})
+
+test_that("all venn diagram sizes work", {
+  for (n in 2:5) {
+    expect_silent(venn(n, names = letters[1:n]))
+  }
 })
 
 test_that("using weights works", {

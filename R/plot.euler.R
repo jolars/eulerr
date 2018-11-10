@@ -1,10 +1,15 @@
-#' Plot area-proportional Euler diagrams
+#' Plot Euler and Venn diagrams
 #'
-#' Plot Euler diagrams fit with [euler()] using [grid::Grid()] graphics. This
+#' Plot diagrams fit with [euler()] and [venn()] using [grid::Grid()] graphics.
+#' This
 #' function sets up all the necessary plot parameters and computes
 #' the geometry of the diagram. [plot.eulergram()], meanwhile,
 #' does the actual plotting of the diagram. Please see the **Details** section
 #' to learn about the individual settings for each argument.
+#'
+#' The only difference between [plot.euler()] and [plot.venn()] is that
+#' `quantities` is set to `TRUE` by default in the latter and `FALSE` in
+#' the former.
 #'
 #' Most of the arguments to this function accept either a logical, a vector, or
 #' a list where
@@ -1000,6 +1005,22 @@ setup_grobs <- function(x,
                  if (do_labels) labels_grob,
                  if (do_quantities) quantities_grob,
                  name = paste0("diagram.grob.", number))
+}
+
+#' @rdname plot.euler
+#' @export
+plot.venn <- function(x,
+                      fills = TRUE,
+                      edges = TRUE,
+                      legend = FALSE,
+                      labels = identical(legend, FALSE),
+                      quantities = TRUE,
+                      strips = NULL,
+                      main = NULL,
+                      n = 200L,
+                      ...)
+{
+  NextMethod("plot", ..., quantities = quantities)
 }
 
 #' Print (plot) Euler diagram
