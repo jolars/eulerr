@@ -32,6 +32,13 @@ test_that("erroneous input to euler() throw errors", {
   expect_error(euler(list(b = c(1, 2), b = c(1, 3))))
 })
 
+test_that("erroneous input to venn() throws errors", {
+  expect_error(venn(2))
+  expect_error(venn(0))
+  expect_error(venn(2, names = "a"))
+  expect_error(venn(6, names = letters[1:n]))
+})
+
 test_that("erroneous input to print.euler() throw errors", {
   f <- euler(c(A = 10.923, B = 5.4, "A&B" = 0.43))
   expect_error(dont_print(f, round = "hello"))
