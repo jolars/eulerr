@@ -41,9 +41,7 @@ practical. **eulerr** is built around ellipses and ellipses are only
 good for Venn diagrams with at most 5 sets. The other part of the
 reason has to do with usability. A five-set diagram is already 
 stretching it in terms of what we can reasonably expect the viewer to
-be able to decipher. And despite the hilarity of
-[banana-shaped six-set Venn diagrams](https://www.nature.com/articles/nature11241/figures/4),
-monstrosities like that are better left in the dark.
+be able to decipher. And despite the hilarity of [banana-shaped six-set Venn diagrams](https://www.nature.com/articles/nature11241/figures/4), monstrosities like that are better left in the dark.
 
 ## Examples of Venn and Euler diagrams
 
