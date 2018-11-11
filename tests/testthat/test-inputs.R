@@ -33,6 +33,21 @@ test_that("all venn diagram sizes work", {
   }
 })
 
+test_that("normal use of venn() returns no errors", {
+  expect_silent(venn(organisms))
+  expect_silent(venn(c(A = 1, B = 2)))
+  expect_silent(venn(pain))
+  expect_silent(venn(fruits, by = list(sex, age)))
+  expect_silent(venn(organisms, weights = c(10, 20, 5, 4, 8, 9, 2)))
+  expect_silent(venn(plants[c("erigenia", "solanum", "cynodon")]))
+})
+
+test_that("all venn diagram sizes work", {
+  for (n in 2:5) {
+    expect_silent(venn(n, names = letters[1:n]))
+  }
+})
+
 test_that("using weights works", {
   dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
                      B = c(FALSE, TRUE, TRUE, FALSE))
