@@ -67,7 +67,7 @@ fit_diagram <- function(combinations,
     rownames(fpar) <- setnames
 
     fit[] <- intersect_ellipses(t(as.matrix(fpar)), circle = FALSE)
-    orig[] <- areas
+    orig[] <- areas_disjoint
 
     out <- structure(list(ellipses = fpar,
                           original.values = orig,
