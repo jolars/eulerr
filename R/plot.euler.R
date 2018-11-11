@@ -132,10 +132,11 @@ plot.euler <- function(x,
   do_labels <- !is_false(labels) && !is.null(labels)
   do_quantities <- !is_false(quantities) && !is.null(quantities)
   do_legend <- !is_false(legend) && !is.null(legend)
-  do_strips <- do_groups <- !is.null(groups)
+  do_groups <- !is.null(groups)
+  do_strips <- !is_false(strips) && do_groups
   do_main <- is.character(main) || is.expression(main) || is.list(main)
 
-  ellipses <- if (do_strips) x[[1L]]$ellipses else x$ellipses
+  ellipses <- if (do_groups) x[[1L]]$ellipses else x$ellipses
 
   n_e <- NROW(ellipses)
   n_id <- 2^n_e - 1
@@ -200,13 +201,11 @@ plot.euler <- function(x,
   if (do_groups) {
     group_names <- lapply(groups, levels)
     n_levels <- sum(lengths(group_names))
+  }
 
-    if (isTRUE(strips)) {
-      strips <- list()
-    }
-
-    strips$groups <- groups
-    strips$gp <- setup_gpar(opar$strips, strips, n_levels)
+  if (do_strips) {
+    strips <- list(gp = setup_gpar(opar$strips, strips, n_levels),
+                   groups = groups)
   } else {
     strips <- NULL
   }
@@ -374,8 +373,6 @@ plot.euler <- function(x,
                            id)
   }
 
-  groups <- strips$groups
-
   # start setting up grobs
 
   if (do_groups) {
@@ -423,9 +420,8 @@ plot.euler <- function(x,
   ar <- xrng/yrng
   adjust <- layout[1L]/layout[2]
 
-  do_strip_left <- layout[1L] > 1L
-  do_strip_top <- layout[2L] > 1L
-  do_strips <- do_strip_left || do_strip_top
+  do_strip_left <- layout[1L] > 1L && do_strips
+  do_strip_top <- layout[2L] > 1L && do_strips
 
   strip_top_row <- strip_top_col <- strip_left_row <- strip_left_col <- 1
 

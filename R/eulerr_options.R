@@ -118,11 +118,13 @@ eulerr_default_options <- function() {
       font = 1
     ),
     strips = list(
+      cex = 1L,
       col = 1L,
       alpha = 1,
       fontsize = 12,
       fontfamily = "",
       lineheight = 1.2,
+      rot = 0,
       font = 4
     ),
     legend = list(

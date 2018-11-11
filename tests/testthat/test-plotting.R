@@ -86,3 +86,7 @@ test_that("error_plot functions normally", {
   expect_silent(dont_plot(f, edges = FALSE, .f = error_plot))
 })
 
+test_that("plots with euler lists works", {
+  plot(euler(fruits[, 1:5], by = list(sex, age)), legend = TRUE, strips = FALSE)
+  plot(euler(fruits[, 1:5], by = list(sex, age)), legend = TRUE, strip = list(cex = 2))
+})
