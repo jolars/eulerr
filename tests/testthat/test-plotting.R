@@ -65,7 +65,6 @@ test_that("normal plotting works without errors", {
 
   expect_error(euler(dat, by = list(Gender, Nation, Gender)))
 
-
   f4 <- euler(c(A = 1))
   expect_silent(dont_plot(f4))
 })
@@ -87,6 +86,9 @@ test_that("error_plot functions normally", {
 })
 
 test_that("plots with euler lists works", {
-  plot(euler(fruits[, 1:5], by = list(sex, age)), legend = TRUE, strips = FALSE)
-  plot(euler(fruits[, 1:5], by = list(sex, age)), legend = TRUE, strip = list(cex = 2))
+  f1 <- euler(fruits[, 1:5], by = age)
+  f2 <- euler(fruits[, 1:5], by = list(age, sex))
+
+  expect_silent(dont_plot(f1, legend = TRUE, strips = FALSE))
+  expect_silent(dont_plot(f2, strips = list(cex = 2, fontface = "bold")))
 })
