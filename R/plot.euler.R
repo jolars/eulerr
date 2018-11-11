@@ -716,6 +716,7 @@ setup_geometry <- function(x,
 
   # avoid plotting very small intersections
   nonzero <- abs(fitted)/max(abs(fitted)) > 1e-3
+  nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
 
   do_fills <- !is.null(fills)
   do_edges <- !is.null(edges)
