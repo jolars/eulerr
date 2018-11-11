@@ -13,6 +13,9 @@ examplifies its use.
 * Calculations for the strips in `plot.euler()` when a list of
 Euler diagrams is given has been improved. Setting `fontsize` or
 `cex` now results in appropriately sized strips as one would expect.
+* Tiny overlaps (where the fraction of the area is less than one
+thousandth of the largest overlap) in the final diagram are no longer
+plotted.
 
 # eulerr 5.0.0
 

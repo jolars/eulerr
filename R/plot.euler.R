@@ -714,6 +714,9 @@ setup_geometry <- function(x,
   fitted <- x$fitted.values[!empty_subsets]
   dd <- dd[!empty_sets, , drop = FALSE]
 
+  # avoid plotting very small intersections
+  nonzero <- abs(fitted)/max(abs(fitted)) > 1e-3
+
   do_fills <- !is.null(fills)
   do_edges <- !is.null(edges)
   do_labels <- !is.null(labels)
@@ -744,22 +747,24 @@ setup_geometry <- function(x,
     # decompose ellipse polygons into intersections
     pieces <- fills <- vector("list", n_id)
     for (i in rev(seq_len(n_id))) {
-      idx <- which(id[i, ])
-      n_idx <- length(idx)
+      if (nonzero[i]) {
+        idx <- which(id[i, ])
+        n_idx <- length(idx)
 
-      if (n_idx == 1L) {
-        pieces[[i]] <- list(e[[idx[1]]])
-      } else {
-        pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
-        if (n_idx > 2L) {
-          for (j in 3L:n_idx) {
-            pieces[[i]] <- poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
+        if (n_idx == 1L) {
+          pieces[[i]] <- list(e[[idx[1]]])
+        } else {
+          pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
+          if (n_idx > 2L) {
+            for (j in 3L:n_idx) {
+              pieces[[i]] <- poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
+            }
           }
         }
-      }
 
-      for (j in which(!id[i, ])) {
-        pieces[[i]] <- poly_clip(pieces[[i]], e[[j]], "minus")
+        for (j in which(!id[i, ])) {
+          pieces[[i]] <- poly_clip(pieces[[i]], e[[j]], "minus")
+        }
       }
     }
 
