@@ -21,6 +21,7 @@ test_that("erroneous input to euler() throw errors", {
   expect_error(euler(dat, by = list(x, y, z)))
   expect_error(euler(dat, by = dat[1:50, 3]))
   expect_error(euler(dat, by = list(dat[, 2])))
+  expect_error(euler(dat, by = list(x, y, z, k)))
 
   expect_error(euler(cbind(dat, rnorm(nrow(dat)))))
 
