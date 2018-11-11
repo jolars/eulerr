@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.euler.R
 \name{print.venn}
 \alias{print.venn}
-\title{Title}
+\title{Print a summary of a Venn diagram}
 \usage{
 \method{print}{venn}(x, round = 3, vsep = strrep("-", 0.75 *
   getOption("width")), ...)

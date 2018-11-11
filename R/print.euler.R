@@ -1,4 +1,4 @@
-#' Print Euler diagram fits
+#' Print a summary of an Euler diagram
 #'
 #' This function is responsible for printing fits from [euler()] and provides
 #' a summary of the fit. Prints a data frame of the original set relationships
@@ -44,7 +44,7 @@ print.euler <- function(x,
   invisible(x)
 }
 
-#' Title
+#' Print a summary of a Venn diagram
 #'
 #' This function is responsible for printing objects from
 #' from [venn()] and provides a simple description of the number of

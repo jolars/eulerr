@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.euler.R
 \name{print.euler}
 \alias{print.euler}
-\title{Print Euler diagram fits}
+\title{Print a summary of an Euler diagram}
 \usage{
 \method{print}{euler}(x, round = 3, vsep = strrep("-", 0.75 *
   getOption("width")), ...)
