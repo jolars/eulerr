@@ -14,6 +14,7 @@ test_that("normal plotting works without errors", {
   expect_silent(dont_plot(f1, labels = c("asdf", "qwer")))
   expect_silent(dont_plot(f1, main = "Hello"))
   expect_silent(dont_plot(f1, expression = "phi[1]"))
+  expect_silent(dont_plot(f1, edges = c("white", "blue")))
 
   grid <- expand.grid(labels = c(TRUE, FALSE),
                       quantities = c(TRUE, FALSE),
