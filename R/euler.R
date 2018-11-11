@@ -65,7 +65,7 @@
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.
-#'   \item{coefficients}{a matrix of `h` and `k` (x and y-coordinates for the
+#'   \item{ellipses}{a matrix of `h` and `k` (x and y-coordinates for the
 #'     centers of the shapes), semiaxes `a` and `b`, and rotation angle `phi`}
 #'   \item{original.values}{set relationships in the input}
 #'   \item{fitted.values}{set relationships in the solution}

@@ -17,6 +17,11 @@ Euler diagrams is given has been improved. Setting `fontsize` or
 thousandth of the largest overlap) in the final diagram are no longer
 plotted.
 
+## Bug fixes
+
+* Return value documentation for `euler()` now correctly says "ellipses"
+and not "coefficients".
+
 # eulerr 5.0.0
 
 ## New features

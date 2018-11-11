@@ -62,7 +62,7 @@ constructing dummy codes}
 }
 \value{
 A list object of class \code{'euler'} with the following parameters.
-\item{coefficients}{a matrix of \code{h} and \code{k} (x and y-coordinates for the
+\item{ellipses}{a matrix of \code{h} and \code{k} (x and y-coordinates for the
 centers of the shapes), semiaxes \code{a} and \code{b}, and rotation angle \code{phi}}
 \item{original.values}{set relationships in the input}
 \item{fitted.values}{set relationships in the solution}
