@@ -15,6 +15,7 @@ test_that("normal use of euler() returns no errors", {
   expect_silent(euler(as.matrix(dat[, 1:2])))
   expect_is(euler(dat, by = x), "euler")
   expect_silent(dont_print(euler(dat, by = x)))
+  expect_silent(dont_print(venn(dat, by = x)))
 })
 
 test_that("normal use of venn() returns no errors", {
