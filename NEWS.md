@@ -5,7 +5,8 @@
 * `venn()` is a new function that produces Venn diagrams for up to
 5 sets. The interface
 is almost identical to `euler()` except that a single integer
-can also be provided.
+can also be provided. A new vignette, *Venn diagrams with eulerr*, 
+examplifies its use.
 
 ## Minor changes
 
