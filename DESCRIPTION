@@ -33,9 +33,9 @@ Suggests:
     lattice,
     pBrackets,
     RConics,
+    rmarkdown,
     testthat,
-    spelling,
-    rmarkdown
+    spelling
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0)
