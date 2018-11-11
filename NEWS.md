@@ -1,5 +1,22 @@
 # eulerr 5.0.0.9000
 
+## New features
+
+* `venn()` is a new function that produces Venn diagrams for up to
+5 sets. The interface
+is almost identical to `euler()` except that a single integer
+can also be provided. A new vignette, *Venn diagrams with eulerr*, 
+examplifies its use.
+
+## Minor changes
+
+* Calculations for the strips in `plot.euler()` when a list of
+Euler diagrams is given has been improved. Setting `fontsize` or
+`cex` now results in appropriately sized strips as one would expect.
+* Tiny overlaps (where the fraction of the area is less than one
+thousandth of the largest overlap) in the final diagram are no longer
+plotted.
+
 # eulerr 5.0.0
 
 ## New features

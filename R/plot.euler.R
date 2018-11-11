@@ -1,10 +1,15 @@
-#' Plot area-proportional Euler diagrams
+#' Plot Euler and Venn diagrams
 #'
-#' Plot Euler diagrams fit with [euler()] using [grid::Grid()] graphics. This
+#' Plot diagrams fit with [euler()] and [venn()] using [grid::Grid()] graphics.
+#' This
 #' function sets up all the necessary plot parameters and computes
 #' the geometry of the diagram. [plot.eulergram()], meanwhile,
 #' does the actual plotting of the diagram. Please see the **Details** section
 #' to learn about the individual settings for each argument.
+#'
+#' The only difference between [plot.euler()] and [plot.venn()] is that
+#' `quantities` is set to `TRUE` by default in the latter and `FALSE` in
+#' the former.
 #'
 #' Most of the arguments to this function accept either a logical, a vector, or
 #' a list where
@@ -114,9 +119,6 @@ plot.euler <- function(x,
                        n = 200L,
                        ...) {
 
-  if (inherits(x, "diagram"))
-    return(print(x))
-
   # retrieve default options
   opar <- eulerr_options()
 
@@ -130,10 +132,11 @@ plot.euler <- function(x,
   do_labels <- !is_false(labels) && !is.null(labels)
   do_quantities <- !is_false(quantities) && !is.null(quantities)
   do_legend <- !is_false(legend) && !is.null(legend)
-  do_strips <- do_groups <- !is.null(groups)
+  do_groups <- !is.null(groups)
+  do_strips <- !is_false(strips) && do_groups
   do_main <- is.character(main) || is.expression(main) || is.list(main)
 
-  ellipses <- if (do_strips) x[[1L]]$ellipses else x$ellipses
+  ellipses <- if (do_groups) x[[1L]]$ellipses else x$ellipses
 
   n_e <- NROW(ellipses)
   n_id <- 2^n_e - 1
@@ -198,13 +201,11 @@ plot.euler <- function(x,
   if (do_groups) {
     group_names <- lapply(groups, levels)
     n_levels <- sum(lengths(group_names))
+  }
 
-    if (isTRUE(strips)) {
-      strips <- list()
-    }
-
-    strips$groups <- groups
-    strips$gp <- setup_gpar(opar$strips, strips, n_levels)
+  if (do_strips) {
+    strips <- list(gp = setup_gpar(opar$strips, strips, n_levels),
+                   groups = groups)
   } else {
     strips <- NULL
   }
@@ -372,8 +373,6 @@ plot.euler <- function(x,
                            id)
   }
 
-  groups <- strips$groups
-
   # start setting up grobs
 
   if (do_groups) {
@@ -421,17 +420,16 @@ plot.euler <- function(x,
   ar <- xrng/yrng
   adjust <- layout[1L]/layout[2]
 
-  do_strip_left <- layout[1L] > 1L
-  do_strip_top <- layout[2L] > 1L
-  do_strips <- do_strip_left || do_strip_top
+  do_strip_left <- layout[1L] > 1L && do_strips
+  do_strip_top <- layout[2L] > 1L && do_strips
 
   strip_top_row <- strip_top_col <- strip_left_row <- strip_left_col <- 1
 
   nrow <- ncol <- 1
   heights <- grid::unit(1, "null")
   widths <- grid::unit(1*ar*layout[2]/layout[1], "null")
-  diagram_col <- 1L
-  diagram_row <- 1L
+  diagram_col <- 1
+  diagram_row <- 1
 
   if (do_main) {
     diagram_row <- diagram_row + 2
@@ -441,19 +439,61 @@ plot.euler <- function(x,
   }
 
   if (do_strip_left) {
-    widths <- grid::unit.c(grid::unit(1.5, "lines"), widths)
-    diagram_col <- diagram_col + 1L
-    ncol <- ncol + 1L
+    diagram_col <- diagram_col + 1
+    ncol <- ncol + 1
   }
   if (do_strip_top) {
-    heights <- grid::unit.c(grid::unit(1.5, "lines"), heights)
-    diagram_row <- diagram_row + 1L
-    nrow <- nrow + 1L
+    diagram_row <- diagram_row + 1
+    nrow <- nrow + 1
   }
 
   if (do_strip_left && do_strip_top) {
-    strip_top_col <- strip_top_col + 1L
-    strip_left_row <- strip_left_row + 1L
+    strip_top_col <- strip_top_col + 1
+    strip_left_row <- strip_left_row + 1
+  }
+
+  # draw strips
+  if (do_strip_top) {
+    strip_top_vp <-
+      grid::viewport(layout.pos.row = strip_top_row,
+                     layout.pos.col = strip_top_col,
+                     name = "strip.top.vp",
+                     layout = grid::grid.layout(nrow = 1, ncol = layout[2]))
+
+    lvls <- levels(strips$groups[[1]])
+    n_lvls <- length(lvls)
+    step <- 1/n_lvls
+
+    strip_top_grob <- grid::textGrob(lvls,
+                                     x = step/2 + (seq(0, n_lvls - 1)*step),
+                                     name = "strip.top.grob",
+                                     gp = do.call(grid::gpar, strips$gp),
+                                     vp = strip_top_vp)
+
+    heights <- grid::unit.c(grid::unit(2, "grobheight", list(strip_top_grob)),
+                            heights)
+  }
+
+  if (do_strip_left) {
+    strip_left_vp <-
+      grid::viewport(layout.pos.row = strip_left_row,
+                     layout.pos.col = strip_left_col,
+                     name = "strip.left.vp",
+                     layout = grid::grid.layout(nrow = layout[1], ncol = 1))
+
+    lvls <- levels(strips$groups[[2]])
+    n_lvls <- length(lvls)
+    step <- 1/n_lvls
+
+    strip_left_grob <- grid::textGrob(lvls,
+                                      y = step/2 + (seq(0, n_lvls - 1)*step),
+                                      name = "strip.left.grob",
+                                      rot = 90,
+                                      gp = do.call(grid::gpar, strips$gp),
+                                      vp = strip_left_vp)
+
+    widths <- grid::unit.c(grid::unit(2, "grobwidth", list(strip_left_grob)),
+                           widths)
   }
 
   if (do_legend) {
@@ -559,24 +599,6 @@ plot.euler <- function(x,
                                heights = rep(1, layout[2L]))
   )
 
-  if (do_strip_top) {
-    strip_top_vp <- grid::viewport(
-      layout.pos.row = strip_top_row,
-      layout.pos.col = strip_top_col,
-      name = "strip.top.vp",
-      layout = grid::grid.layout(nrow = 1L, ncol = layout[2L])
-    )
-  }
-
-  if (do_strip_left) {
-    strip_left_vp <- grid::viewport(
-      layout.pos.row = strip_left_row,
-      layout.pos.col = strip_left_col,
-      name = "strip.left.vp",
-      layout = grid::grid.layout(nrow = layout[1L], ncol = 1L)
-    )
-  }
-
   for (i in seq_along(euler_grob$children)) {
     if (NCOL(pos) == 2L) {
       j <- pos[i, 1L]
@@ -596,46 +618,7 @@ plot.euler <- function(x,
 
   euler_grob$vp <- canvas_vp
 
-  # draw strips
-  if (do_strip_top) {
-    strip_top_grob_children <- grid::gList()
-    for (i in seq_len(layout[2L])) {
-      strip_top_grob_children[[i]] <- grid::textGrob(
-        levels(strips$groups[[1L]])[i],
-        just = "bottom",
-        name = paste0("strip.top.grob.", i),
-        gp = do.call(grid::gpar, strips$gp[i]),
-        vp = grid::viewport(layout.pos.row = 1L,
-                            layout.pos.col = i,
-                            name = paste0("strip.top.vp", i))
-      )
-    }
-
-    strip_top_grob <- grid::gTree(grid::nullGrob(),
-                                  children = strip_top_grob_children,
-                                  vp = strip_top_vp)
-  }
-
-  if (do_strip_left) {
-    strip_left_grob_children <- grid::gList()
-    for (i in seq_len(layout[1L])) {
-      strip_left_grob_children[[i]] <- grid::textGrob(
-        levels(strips$groups[[2L]])[i],
-        just = "bottom",
-        rot = 90,
-        name = paste0("strip.left.grob.", i),
-        gp = do.call(grid::gpar, strips$gp[i + layout[1L]]),
-        vp = grid::viewport(layout.pos.row = i,
-                            layout.pos.col = 1,
-                            name = paste0("strip.left.vp", i))
-      )
-    }
-    strip_left_grob <- grid::gTree(grid::nullGrob(),
-                                   children = strip_left_grob_children,
-                                   vp = strip_left_vp)
-  }
-
-  # return a gTree object
+    # return a gTree object
   grid::grobTree(
     if (do_main) main_grob = main_grob,
     if (do_strip_top) strip_top_grob = strip_top_grob,
@@ -731,6 +714,10 @@ setup_geometry <- function(x,
   fitted <- x$fitted.values[!empty_subsets]
   dd <- dd[!empty_sets, , drop = FALSE]
 
+  # avoid plotting very small intersections
+  nonzero <- abs(fitted)/max(abs(fitted)) > 1e-3
+  nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
+
   do_fills <- !is.null(fills)
   do_edges <- !is.null(edges)
   do_labels <- !is.null(labels)
@@ -761,22 +748,24 @@ setup_geometry <- function(x,
     # decompose ellipse polygons into intersections
     pieces <- fills <- vector("list", n_id)
     for (i in rev(seq_len(n_id))) {
-      idx <- which(id[i, ])
-      n_idx <- length(idx)
+      if (nonzero[i]) {
+        idx <- which(id[i, ])
+        n_idx <- length(idx)
 
-      if (n_idx == 1L) {
-        pieces[[i]] <- list(e[[idx[1]]])
-      } else {
-        pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
-        if (n_idx > 2L) {
-          for (j in 3L:n_idx) {
-            pieces[[i]] <- poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
+        if (n_idx == 1L) {
+          pieces[[i]] <- list(e[[idx[1]]])
+        } else {
+          pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
+          if (n_idx > 2L) {
+            for (j in 3L:n_idx) {
+              pieces[[i]] <- poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
+            }
           }
         }
-      }
 
-      for (j in which(!id[i, ])) {
-        pieces[[i]] <- poly_clip(pieces[[i]], e[[j]], "minus")
+        for (j in which(!id[i, ])) {
+          pieces[[i]] <- poly_clip(pieces[[i]], e[[j]], "minus")
+        }
       }
     }
 
@@ -1000,6 +989,22 @@ setup_grobs <- function(x,
                  if (do_labels) labels_grob,
                  if (do_quantities) quantities_grob,
                  name = paste0("diagram.grob.", number))
+}
+
+#' @rdname plot.euler
+#' @export
+plot.venn <- function(x,
+                      fills = TRUE,
+                      edges = TRUE,
+                      legend = FALSE,
+                      labels = identical(legend, FALSE),
+                      quantities = TRUE,
+                      strips = NULL,
+                      main = NULL,
+                      n = 200L,
+                      ...)
+{
+  NextMethod("plot", ..., quantities = quantities)
 }
 
 #' Print (plot) Euler diagram

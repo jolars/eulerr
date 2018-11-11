@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.euler.R
 \name{print.euler}
 \alias{print.euler}
-\title{Print Euler diagram fits}
+\title{Print a summary of an Euler diagram}
 \usage{
 \method{print}{euler}(x, round = 3, vsep = strrep("-", 0.75 *
   getOption("width")), ...)
@@ -18,13 +18,16 @@ when \code{x} is a nested \code{euler} object}
 \item{...}{arguments passed to \code{\link[base:print.data.frame]{base::print.data.frame()}}}
 }
 \value{
-Summary statistics of the fitted Euler diagram is printed to
-screen or a plot is generated.
+Summary statistics of the fitted Euler diagram are printed to
+screen.
 }
 \description{
 This function is responsible for printing fits from \code{\link[=euler]{euler()}} and provides
 a summary of the fit. Prints a data frame of the original set relationships
 and the fitted values as well as \code{diagError} and \code{stress} statistics.
+}
+\examples{
+euler(organisms)
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[base:print.data.frame]{base::print.data.frame()}}

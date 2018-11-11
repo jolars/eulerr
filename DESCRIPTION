@@ -33,9 +33,9 @@ Suggests:
     lattice,
     pBrackets,
     RConics,
+    rmarkdown,
     testthat,
-    spelling,
-    rmarkdown
+    spelling
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0)
@@ -45,6 +45,6 @@ LazyData: true
 VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/
 BugReports: https://github.com/jolars/eulerr/issues
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Language: en-US

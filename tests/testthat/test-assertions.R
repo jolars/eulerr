@@ -21,6 +21,7 @@ test_that("erroneous input to euler() throw errors", {
   expect_error(euler(dat, by = list(x, y, z)))
   expect_error(euler(dat, by = dat[1:50, 3]))
   expect_error(euler(dat, by = list(dat[, 2])))
+  expect_error(euler(dat, by = list(x, y, z, k)))
 
   expect_error(euler(cbind(dat, rnorm(nrow(dat)))))
 
@@ -30,6 +31,13 @@ test_that("erroneous input to euler() throw errors", {
   # list method
   expect_error(euler(list(c("a", "b"), c("a", "c"))))
   expect_error(euler(list(b = c(1, 2), b = c(1, 3))))
+})
+
+test_that("erroneous input to venn() throws errors", {
+  expect_error(venn(2))
+  expect_error(venn(0))
+  expect_error(venn(2, names = "a"))
+  expect_error(venn(6, names = letters[1:n]))
 })
 
 test_that("erroneous input to print.euler() throw errors", {
