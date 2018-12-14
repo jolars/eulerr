@@ -16,6 +16,8 @@ Euler diagrams is given has been improved. Setting `fontsize` or
 * Tiny overlaps (where the fraction of the area is less than one
 thousandth of the largest overlap) in the final diagram are no longer
 plotted.
+* `eulergram()` objects from `plot.euler()` now have a proper grob name 
+for the canvas grob, so that extracting information from them is easier.
 
 ## Bug fixes
 
