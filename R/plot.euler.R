@@ -386,7 +386,9 @@ plot.euler <- function(x,
                                               quantities = quantities,
                                               number = i)
     }
-    euler_grob <- grid::gTree(grid::nullGrob(), children = euler_grob_children)
+    euler_grob <- grid::gTree(grid::nullGrob(),
+                              name = "canvas.grob",
+                              children = euler_grob_children)
     pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
     layout <- lengths(lapply(groups, unique))
     if (length(layout) == 1L)
@@ -400,7 +402,8 @@ plot.euler <- function(x,
                               labels = labels,
                               quantities = quantities,
                               number = 1)
-    euler_grob <- grid::grobTree(euler_grob)
+    euler_grob <- grid::grobTree(euler_grob,
+                                 name = "canvas.grob")
     xlim <- data$xlim
     ylim <- data$ylim
     pos <- c(1L, 1L)
