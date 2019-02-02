@@ -16,6 +16,11 @@ test_that("normal use of euler() returns no errors", {
   expect_is(euler(dat, by = x), "euler")
   expect_silent(dont_print(euler(dat, by = x)))
   expect_silent(dont_print(venn(dat, by = x)))
+
+  d <- data.frame(Apple = c(1, 0, 0, 1),
+                  Banana = c(0, 1, 0, 1),
+                  Orange = c(1, 0, 1, 0))
+  expect_silent(euler(d))
 })
 
 test_that("normal use of venn() returns no errors", {

@@ -65,10 +65,12 @@ parse_dataframe <- function(combinations,
                         function(x) is.factor(x) || is.character(x),
                         logical(1))
 
-    is_numeric <- vapply(combinations, function(x) is.numeric(x), logical(1))
+    reals <- vapply(combinations,
+                    is_real,
+                    FUN.VALUE = logical(1))
 
-    if (any(is_numeric))
-      stop("you cannot use numeric variables for an Euler diagram.")
+    if (any(reals))
+      stop("you cannot use non-integer numeric variables.")
 
     if (any(is_factor))
       combinations <- dummy_code(combinations,

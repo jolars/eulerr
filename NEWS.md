@@ -21,6 +21,8 @@ plotted.
 
 * Return value documentation for `euler()` now correctly says "ellipses"
 and not "coefficients".
+* `data.frame` or `matrix` inputs now work properly
+when values are given as numerics. (#42)
 
 # eulerr 5.0.0
 
