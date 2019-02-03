@@ -70,7 +70,7 @@ fit_diagram <- function(combinations,
 
     out <- structure(list(ellipses = fpar,
                           original.values = orig,
-                          fitted.values = fit),
+                          fitted.values = rep(1, length(orig))),
                      class = c("venn", "euler", "list"))
     return(out)
   }
