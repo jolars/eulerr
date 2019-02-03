@@ -342,7 +342,7 @@ The fitted diagram's area-equivalents for $\omega$ will be defined as $A$, so th
 an exact diagram requires that $\omega_i = A_i$ for $i=1,2,\dots,2^N-1$,
 where $N$ is the number of sets in the input.
 
-In our intial configuration, we restricted
+In our initial configuration, we restricted
 ourselves to circles but now extend ourselves also to ellipses. From now on,
 we abandon the practice of treating circles separately---they are only
 a special case of ellipses, and, hence, everything that applies to an ellipse does so
