@@ -153,6 +153,7 @@
 <li>Return value documentation for <code><a href="../reference/euler.html">euler()</a></code> now correctly says “ellipses” and not “coefficients”.</li>
 <li>
 <code>data.frame</code> or <code>matrix</code> inputs now work properly when values are given as numerics. (<a href='https://github.com/jolars/eulerr/issues/42'>#42</a>)</li>
+<li>Fixed some spelling errors in news and vignettes.</li>
 </ul>
 </div>
 </div>
@@ -243,8 +244,8 @@
 <ul>
 <li>
 <code><a href="../reference/plot.euler.html">plot.euler()</a></code> has been rewritten completely from scratch, now using a custom <strong>grid</strong>-based implementation rather than <strong>lattice</strong>. As a result, all <code>panel.*()</code> functions and <code>label()</code> have been deprecated as well as arguments <code>fill_alpha</code>, <code>auto.key</code>, <code>fontface</code>, <code>par.settings</code>, <code>default.prepanel</code>, <code>default.scales</code>, and <code>panel</code>. The method for plotting diagrams has also changed—rather than overlaying shapes on top of each other, the diagram is now split into separate polygons using the <strong>polyclip</strong> package. Instead of relying on semi-transparent fills, the colors of the fills are now blended in the CIELab color space (<a href='https://github.com/jolars/eulerr/issues/16'>#16</a>).</li>
-<li>The default color palette has been resdesigned from scratch to suit the new plot method.</li>
-<li>A new function <code><a href="../reference/eulerr_options.html">eulerr_options()</a></code> have been provided in order to set default grahical parameters for the diagrams.</li>
+<li>The default color palette has been redesigned from scratch to suit the new plot method.</li>
+<li>A new function <code><a href="../reference/eulerr_options.html">eulerr_options()</a></code> have been provided in order to set default graphical parameters for the diagrams.</li>
 </ul>
 </div>
 <div id="minor-changes-3" class="section level2">
@@ -404,7 +405,7 @@
 <h2 class="hasAnchor">
 <a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
 <ul>
-<li>Added a <code>counts</code> argument to <code>plot.eulerr</code>, which intersections and complements with counts from the original set specificiation (<a href='https://github.com/jolars/eulerr/issues/6'>#6</a>).</li>
+<li>Added a <code>counts</code> argument to <code>plot.eulerr</code>, which intersections and complements with counts from the original set specification (<a href='https://github.com/jolars/eulerr/issues/6'>#6</a>).</li>
 <li>Added a <code>key</code> argument to <code>plot.eulerr</code> that prints a legend next to the diagram.</li>
 <li>Switched to <code><a href="https://www.rdocumentation.org/packages/base/topics/Trig">atan2()</a></code> from RcppArmadillo.</li>
 <li>Added version requirement for RcppArmadillo.</li>
@@ -433,7 +434,7 @@
 <a href="#new-features-2" class="anchor"></a>New features</h2>
 <ul>
 <li>Final optimization routines have been completely rewritten in C++ using Rcpp and RcppArmadillo.</li>
-<li>Switched to the cost function from EulerAPE for the default optimization target but added the posibility to choose cost function via a <code>cost</code> argument (currently <code>eulerAPE</code> or <code>venneuler</code>).</li>
+<li>Switched to the cost function from EulerAPE for the default optimization target but added the possibility to choose cost function via a <code>cost</code> argument (currently <code>eulerAPE</code> or <code>venneuler</code>).</li>
 <li>Added the option to produce conditional eulerr plots via a <code>by</code> argument to <code>eulerr</code>. The result is a list of euler diagrams that can be plotted in a grid arrangement via a new plot method.</li>
 <li>Improved label placement by using a two-dimensional kernel density estimation instead of means to calculate label centers.</li>
 </ul>
