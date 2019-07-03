@@ -11,7 +11,7 @@
 
 \method{plot}{venn}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = TRUE,
-  strips = NULL, main = NULL, n = 200L, ...)
+  percentages = FALSE, strips = NULL, main = NULL, n = 200L, ...)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
