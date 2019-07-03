@@ -4,7 +4,8 @@
 \alias{setup_grobs}
 \title{Grobify Euler objects}
 \usage{
-setup_grobs(x, fills, edges, labels, quantities, number)
+setup_grobs(x, fills, edges, labels, quantities, percentages, centers,
+  number)
 }
 \arguments{
 \item{x}{geometry data}
@@ -16,6 +17,8 @@ setup_grobs(x, fills, edges, labels, quantities, number)
 \item{labels}{labels params}
 
 \item{quantities}{quantities params}
+
+\item{centers}{data.frame of data for labels and quantities}
 
 \item{number}{current diagram number}
 }

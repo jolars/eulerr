@@ -230,7 +230,7 @@ constrained multi-dimensional scaling.
 
 The algorithm tries to position the circles so that the separation
 between each pair of circles matches the separation required from
-the seperation equation.
+the separation equation.
 If the two sets are disjoint, however, the algorithm is indifferent to the
 relative locations of those circles as long as they do not intersect. The
 equivalent applies to subset sets: as long as the circle representing the 

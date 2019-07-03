@@ -1,5 +1,15 @@
 # eulerr 5.1.0.9000
 
+## New features
+
+* `plot.euler()` gains a `percentages` argument, which adds the
+mass/count of each overlap as a percentage of the total. This change
+also comes with a fundamental redesign of the approach to adding labels, now
+setting up each label, quantity, and percentage as a unified grob (in grid
+graphics terminology). Moreover, `eulerr_options()` now has a new argument
+`padding` which controls the amount of padding between labels, quantities,
+and percentages. (#48)
+
 # eulerr 5.1.0
 
 ## New features
@@ -8,7 +18,7 @@
 5 sets. The interface
 is almost identical to `euler()` except that a single integer
 can also be provided. A new vignette, *Venn diagrams with eulerr*, 
-examplifies its use.
+exemplifies its use.
 
 ## Minor changes
 

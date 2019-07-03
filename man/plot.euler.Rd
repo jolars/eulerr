@@ -7,7 +7,7 @@
 \usage{
 \method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = FALSE,
-  strips = NULL, main = NULL, n = 200L, ...)
+  percentages = FALSE, strips = NULL, main = NULL, n = 200L, ...)
 
 \method{plot}{venn}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = TRUE,
@@ -33,6 +33,14 @@ text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
 
 \item{quantities}{a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
+default are the original values in the input to \code{\link[=euler]{euler()}}. See
+\code{\link[grid:grid.text]{grid::grid.text()}}.}
+
+\item{percentages}{a logical, vector, or list. If \code{TRUE}, the
+percentages of the original set overlaps relative masses will be plotted
+underneath the label and quantity for each overlap's tag.
+Vectors are assumed to be
+text for the percentages' labels, which by
 default are the original values in the input to \code{\link[=euler]{euler()}}. See
 \code{\link[grid:grid.text]{grid::grid.text()}}.}
 
@@ -83,19 +91,19 @@ arguments that are specific to each argument.
 The various \code{\link[grid:gpar]{grid::gpar()}} values that are available for each argument
 are:
 
-\tabular{lcccccccc}{
-\tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \tab main \cr
-col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-fill       \tab x     \tab       \tab        \tab            \tab        \tab        \tab      \cr
-alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-lty        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
-lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
-lex        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
-fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-font       \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+\tabular{lccccccccc}{
+\tab fills \tab edges \tab labels \tab quantities \tab percentages \tab strips \tab legend \tab main \cr
+col        \tab       \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+fill       \tab x     \tab       \tab        \tab            \tab             \tab        \tab        \tab      \cr
+alpha      \tab x     \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+lty        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
+lwd        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
+lex        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
+fontsize   \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+cex        \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+fontfamily \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+lineheight \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+font       \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
 }
 
 Defaults for these values, as well as other parameters of the plots, can

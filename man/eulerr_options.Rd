@@ -24,7 +24,7 @@ the plot-related ones in \code{\link[grid:gpar]{grid::gpar()}} and \code{\link[g
 Currently, the following items will be considered:
 \describe{
 \item{pointsize}{size in pts to be used as basis for fontsizes and
-some margin sizes in the resulting plot}
+some margin sizes in the resulting plot}#'
 \item{fills}{a list of items \code{fill} and \code{alpha}}
 \item{edges}{a list of items \code{col}, \code{alpha}, \code{lex}, \code{lwd}, and \code{lty}}
 \item{labels}{a list of items \code{rot},
@@ -33,11 +33,18 @@ some margin sizes in the resulting plot}
 \item{quantities}{a list of items \code{rot},
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
+\item{percentages}{a list with items \code{rot},
+\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
+\code{lineheight}, and \code{font}}
 \item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},
 \code{fontsize}, \code{cex}, \code{fontfamily}, \code{lineheight}, and \code{font}}
 \item{main}{arguments to \code{\link[grid:textGrob]{grid::textGrob()}}}
+\item{padding}{a \code{\link[grid:unit]{grid::unit()}} giving the padding between various
+elemens in plots from \code{\link[=plot.euler]{plot.euler()}}, which you can change
+if you, for instance, want to increase spacing between labels,
+quantities, and percentages.}
 }
 }
 \examples{
