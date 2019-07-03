@@ -42,7 +42,7 @@ some margin sizes in the resulting plot}#'
 \code{fontsize}, \code{cex}, \code{fontfamily}, \code{lineheight}, and \code{font}}
 \item{main}{arguments to \code{\link[grid:textGrob]{grid::textGrob()}}}
 \item{padding}{a \code{\link[grid:unit]{grid::unit()}} giving the padding between various
-elemens in plots from \code{\link[=plot.euler]{plot.euler()}}, which you can change
+elements in plots from \code{\link[=plot.euler]{plot.euler()}}, which you can change
 if you, for instance, want to increase spacing between labels,
 quantities, and percentages.}
 }
