@@ -10,6 +10,10 @@ graphics terminology). Moreover, `eulerr_options()` now has a new argument
 `padding` which controls the amount of padding between labels, quantities,
 and percentages. (#48)
 
+## Minor changes
+
+* The default `cex` for quantity labels has changed from 1.0 to 0.9.
+
 # eulerr 5.1.0
 
 ## New features
