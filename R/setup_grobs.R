@@ -21,7 +21,7 @@ setup_grobs <- function(x,
   data_edges <- x$edges
   data_fills <- x$fills
   data_tags <- x$centers
-  fitted <- x$fitted.values
+  # fitted <- x$fitted.values
   empty_sets <- x$empty_sets
   empty_subsets <- x$empty_subsets
 
@@ -34,7 +34,7 @@ setup_grobs <- function(x,
 
   n_e <- NROW(x$ellipses)
   n_id <- 2L^n_e - 1L
-  id <- bit_indexr(n_e)
+  # id <- bit_indexr(n_e)
 
   #edges
   if (do_edges) {

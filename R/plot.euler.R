@@ -748,7 +748,7 @@ setup_tag <- function(data, labels, quantities, percentages) {
   quantity <- data$quantities
   percentage <- data$percentages
 
-  k <- data$par_id
+  # k <- data$par_id
 
   do_labels <- !is.null(labels) & !is.na(label)
   do_quantities <- !is.null(quantities) & !is.na(quantity)

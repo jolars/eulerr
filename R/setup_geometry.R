@@ -1,4 +1,3 @@
-
 #' Compute geometries and label locations
 #'
 #' @param x an object of class 'euler'
