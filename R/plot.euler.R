@@ -861,8 +861,15 @@ setup_geometry <- function(x,
     for (i in seq_len(n_singles)) {
       ind <- which((id[, i] & !empty & has_center))[1]
 
-      if (do_labels)
-        centers$labels[ind] <- labels$labels[i]
+      if (do_labels) {
+        if (is.na(centers$labels[ind])) {
+          centers$labels[ind] <- labels$labels[i]
+        } else {
+          centers$labels[ind] <- paste(centers$labels[ind],
+                                       labels$labels[i],
+                                       sep = ",")
+        }
+      }
 
       singles[ind] <- TRUE
     }

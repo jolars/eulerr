@@ -13,6 +13,7 @@ and percentages. (#48)
 ## Minor changes
 
 * The default `cex` for quantity labels has changed from 1.0 to 0.9.
+* Labels for sets that overlap are now merged (partly fixes #45)
 
 # eulerr 5.1.0
 
