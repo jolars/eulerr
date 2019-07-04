@@ -8,7 +8,7 @@
 #' Currently, the following items will be considered:
 #' \describe{
 #'   \item{pointsize}{size in pts to be used as basis for fontsizes and
-#'   some margin sizes in the resulting plot}
+#'   some margin sizes in the resulting plot}#'
 #'   \item{fills}{a list of items `fill` and `alpha`}
 #'   \item{edges}{a list of items `col`, `alpha`, `lex`, `lwd`, and `lty`}
 #'   \item{labels}{a list of items `rot`,
@@ -17,11 +17,18 @@
 #'   \item{quantities}{a list of items `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
+#'   \item{percentages}{a list with items `rot`,
+#'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
+#'   `lineheight`, and `font`}
 #'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
 #'   `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`}
 #'   \item{main}{arguments to [grid::textGrob()]}
+#'   \item{padding}{a [grid::unit()] giving the padding between various
+#'   elements in plots from [plot.euler()], which you can change
+#'   if you, for instance, want to increase spacing between labels,
+#'   quantities, and percentages.}
 #' }
 #'
 #' @param ... objects to update the global graphical parameters for \pkg{eulerr}
@@ -58,6 +65,7 @@ eulerr_options <- function(...) {
       .eulerr_env$options,
       list(labels = list(fontsize = pointsize),
            quantities = list(fontsize = pointsize),
+           percentages = list(fontsize = pointsize),
            strips = list(fontsize = pointsize),
            legend = list(fontsize = pointsize),
            main = list(fontsize = pointsize),
@@ -117,6 +125,16 @@ eulerr_default_options <- function() {
       lineheight = 1.2,
       font = 1
     ),
+    percentages = list(
+      rot = 0,
+      col = 1,
+      alpha = 1,
+      fontsize = 12,
+      cex = 1,
+      fontfamily = "",
+      lineheight = 1.2,
+      font = 1
+    ),
     strips = list(
       cex = 1L,
       col = 1L,
@@ -159,7 +177,8 @@ eulerr_default_options <- function() {
       col = 1,
       lineheight = 1.2,
       alpha = 1
-    )
+    ),
+    padding = grid::unit(0.2, "lines")
   )
 }
 

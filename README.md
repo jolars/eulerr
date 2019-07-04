@@ -3,8 +3,10 @@
 
 # eulerr
 
-[![Travis-CI Build
-Status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr)
+<!-- badges: start -->
+
+[![Travis build
+status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
 [![Coverage
@@ -12,6 +14,9 @@ Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](http
 [![CRAN
 Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KERLYHUY639WU)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
+<!-- badges: end -->
 
 **eulerr** generates area-proportional Euler diagrams that display set
 relationships (intersections, unions, and disjoints) with circles or
@@ -63,9 +68,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 0.0001957608
+#> [1] 3.930017e-12
 fit$diagError
-#> [1] 0.002251973
+#> [1] 6.07127e-07
 ```
 
 and plot it

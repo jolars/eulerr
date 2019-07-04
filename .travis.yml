@@ -1,39 +1,13 @@
-language: r
-sudo: false
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
 cache: packages
-warnings_are_errors: true
 
-matrix:
-  include:
-    - os: linux
-      r: release
-      compiler: clang
-      addons:
-        apt:
-          packages:
-            - valgrind
-      r_check_args: '--ignore-vignettes --use-valgrind'
-      r_build_args: '--no-build-vignettes'
-      env:
-        - VALGRIND_OPTS='--leak-check=full --track-origins=yes'
+before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+deploy:
+  provider: script
+  script: Rscript -e 'pkgdown::deploy_site_github()'
+  skip_cleanup: true
 
-    - os: linux
-      r: devel
-      compiler: gcc
-      after_success:
-        - Rscript -e 'covr::codecov()'
-
-    - os: linux
-      r: oldrel
-      compiler: gcc
-
-    - os: osx
-      r: release
-
-    - os: osx
-      r: oldrel
-
-notifications:
-  email:
-    on_success: change
-    on_failure: change
+after_success:
+  - Rscript -e 'covr::codecov()'

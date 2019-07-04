@@ -1,3 +1,7 @@
+^pkgdown$
+^_pkgdown\.yml$
+^docs$
+^tic\.R$
 ^CRAN-RELEASE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -10,7 +14,6 @@
 ^CONDUCT\.md$
 ^LICENSE$
 ^data-raw$
-^docs$
 ^vignettes/cache$
 ^vignettes/figure$
 ^vignettes/*\.log$

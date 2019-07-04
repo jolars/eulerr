@@ -16,6 +16,7 @@
 
 #' @useDynLib eulerr, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
+#' @import grid
 NULL
 
 #' @keywords internal

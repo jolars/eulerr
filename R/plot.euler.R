@@ -24,19 +24,19 @@
 #' The various [grid::gpar()] values that are available for each argument
 #' are:
 #'
-#' \tabular{lcccccccc}{
-#'              \tab fills \tab edges \tab labels \tab quantities \tab strips \tab legend \tab main \cr
-#'   col        \tab       \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-#'   fill       \tab x     \tab       \tab        \tab            \tab        \tab        \tab      \cr
-#'   alpha      \tab x     \tab x     \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-#'   lty        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
-#'   lwd        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
-#'   lex        \tab       \tab x     \tab        \tab            \tab        \tab        \tab      \cr
-#'   fontsize   \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-#'   cex        \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-#'   fontfamily \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-#'   lineheight \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
-#'   font       \tab       \tab       \tab x      \tab x          \tab x      \tab x      \tab x    \cr
+#' \tabular{lccccccccc}{
+#'              \tab fills \tab edges \tab labels \tab quantities \tab percentages \tab strips \tab legend \tab main \cr
+#'   col        \tab       \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+#'   fill       \tab x     \tab       \tab        \tab            \tab             \tab        \tab        \tab      \cr
+#'   alpha      \tab x     \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+#'   lty        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
+#'   lwd        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
+#'   lex        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
+#'   fontsize   \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+#'   cex        \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+#'   fontfamily \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+#'   lineheight \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+#'   font       \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
 #' }
 #'
 #' Defaults for these values, as well as other parameters of the plots, can
@@ -77,6 +77,13 @@
 #'   named `'label'` must be provided (and will be used for the actual text).
 #' @param ... parameters to update `fills` and `edges` with and thereby a shortcut
 #'   to set these parameters
+#' @param percentages a logical, vector, or list. If `TRUE`, the
+#'   percentages of the original set overlaps relative masses will be plotted
+#'   underneath the label and quantity for each overlap's tag.
+#'   Vectors are assumed to be
+#'   text for the percentages' labels, which by
+#'   default are the original values in the input to [euler()]. See
+#'   [grid::grid.text()].
 #'
 #' @seealso [euler()], [plot.eulergram()], [grid::gpar()],
 #'   [grid::grid.polyline()], [grid::grid.path()],
@@ -114,6 +121,7 @@ plot.euler <- function(x,
                        legend = FALSE,
                        labels = identical(legend, FALSE),
                        quantities = FALSE,
+                       percentages = FALSE,
                        strips = NULL,
                        main = NULL,
                        n = 200L,
@@ -131,6 +139,7 @@ plot.euler <- function(x,
   do_edges <- !is_false(edges) && !is.null(edges)
   do_labels <- !is_false(labels) && !is.null(labels)
   do_quantities <- !is_false(quantities) && !is.null(quantities)
+  do_percentages <- !is_false(percentages) && !is.null(percentages)
   do_legend <- !is_false(legend) && !is.null(legend)
   do_groups <- !is.null(groups)
   do_strips <- !is_false(strips) && do_groups
@@ -264,6 +273,32 @@ plot.euler <- function(x,
     quantities <- NULL
   }
 
+  # setup percentages
+  if (do_percentages) {
+    if (is.list(percentages)) {
+      percentages <- update_list(list(labels = NULL,
+                                      rot = opar$percentages$rot),
+                                 percentages)
+    } else if (isTRUE(percentages)) {
+      percentages <- list(labels = NULL, rot = opar$percentages$rot)
+    } else {
+      percentages <- list(labels = percentages, rot = opar$percentages$rot)
+    }
+    percentages$rot <- rep_len(percentages$rot, n_id)
+
+    percentages$gp <- setup_gpar(list(col = opar$percentages$col,
+                                     alpha = opar$percentages$alpha,
+                                     fontsize = opar$percentages$fontsize,
+                                     cex = opar$percentages$cex,
+                                     fontfamily = opar$percentages$fontfamily,
+                                     lineheight = opar$percentages$lineheight,
+                                     font = opar$percentages$font),
+                                percentages,
+                                n_id)
+  } else {
+    percentages <- NULL
+  }
+
   # setup legend
   if (do_custom_legend) {
     legend <- legend
@@ -353,7 +388,6 @@ plot.euler <- function(x,
   }
 
   # set up geometry for diagrams
-
   if (do_groups) {
     data <- lapply(x,
                    setup_geometry,
@@ -361,6 +395,7 @@ plot.euler <- function(x,
                    edges = edges,
                    labels = labels,
                    quantities = quantities,
+                   percentages = percentages,
                    n = n,
                    id = id)
   } else {
@@ -369,6 +404,7 @@ plot.euler <- function(x,
                            edges,
                            labels,
                            quantities,
+                           percentages,
                            n,
                            id)
   }
@@ -384,6 +420,7 @@ plot.euler <- function(x,
                                               edges = edges,
                                               labels = labels,
                                               quantities = quantities,
+                                              percentages = percentages,
                                               number = i)
     }
     euler_grob <- grid::gTree(grid::nullGrob(),
@@ -401,6 +438,7 @@ plot.euler <- function(x,
                               edges = edges,
                               labels = labels,
                               quantities = quantities,
+                              percentages = percentages,
                               number = 1)
     euler_grob <- grid::grobTree(euler_grob,
                                  name = "canvas.grob")
@@ -421,7 +459,7 @@ plot.euler <- function(x,
   }
 
   ar <- xrng/yrng
-  adjust <- layout[1L]/layout[2]
+  # adjust <- layout[1L]/layout[2]
 
   do_strip_left <- layout[1L] > 1L && do_strips
   do_strip_top <- layout[2L] > 1L && do_strips
@@ -707,6 +745,7 @@ setup_geometry <- function(x,
                            edges,
                            labels,
                            quantities,
+                           percentages,
                            n,
                            id) {
   dd <- x$ellipses
@@ -725,6 +764,7 @@ setup_geometry <- function(x,
   do_edges <- !is.null(edges)
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
+  do_percentages <- !is.null(percentages)
 
   id <- id[!empty_subsets, !empty_sets, drop = FALSE]
 
@@ -747,7 +787,7 @@ setup_geometry <- function(x,
   if (do_edges)
     edges <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
 
-  if (do_fills || do_labels || do_quantities) {
+  if (do_fills || do_labels || do_quantities || do_percentages) {
     # decompose ellipse polygons into intersections
     pieces <- fills <- vector("list", n_id)
     for (i in rev(seq_len(n_id))) {
@@ -784,8 +824,8 @@ setup_geometry <- function(x,
     }
   }
 
-  if (do_labels || do_quantities) {
-    singles <- rowSums(id) == 1
+  if (do_labels || do_quantities || do_percentages) {
+    n_singles <- sum(rowSums(id) == 1)
     empty <- abs(fitted) < sqrt(.Machine$double.eps)
 
     width <- abs(limits$xlim[1] - limits$xlim[2])
@@ -795,47 +835,88 @@ setup_geometry <- function(x,
 
     centers <- lapply(pieces, locate_centers, precision = prec)
 
-    centers <- cbind(vapply(centers, "[[", "x", FUN.VALUE = double(1)),
-                     vapply(centers, "[[", "y", FUN.VALUE = double(1)),
-                     seq_len(n_id))
-    rownames(centers) <- names(orig)
+    centers_x <- vapply(centers, "[[", "x", FUN.VALUE = double(1))
+    centers_y <- vapply(centers, "[[", "y", FUN.VALUE = double(1))
+    centers_id <- seq_len(n_id)
+
+    centers <- data.frame(x = centers_x,
+                          y = centers_y,
+                          id = centers_id,
+                          labels = NA_character_,
+                          quantities = NA,
+                          percentages = NA_character_,
+                          labels_par_id = NA_integer_,
+                          others_par_id = NA_integer_,
+                          row.names = names(orig),
+                          stringsAsFactors = FALSE)
+
+    has_center <- !is.na(centers$x) & !is.na(centers$y)
 
     if (do_labels) {
       labels <- list(labels = labels$labels[which(!empty_sets)])
-      center_labels <- labels$labels[!is.na(centers[singles, 1L])]
     }
 
-    labels_centers <- centers[!is.na(centers[, 1L]) & singles, , drop = FALSE]
+    singles <- logical(NROW(centers))
 
-    droprows <- rep.int(TRUE, NROW(centers))
-    for (i in which(is.na(centers[singles, 1L]))) {
-      pick <- id[, i] & !empty & !is.na(centers[, 1L])
-      labels_centers <- rbind(labels_centers, centers[which(pick)[1L], ])
+    for (i in seq_len(n_singles)) {
+      ind <- which((id[, i] & !empty & has_center))[1]
+
       if (do_labels)
-        center_labels <- c(center_labels, labels$labels[i])
-      droprows[which(pick)[1L]] <- FALSE
+        centers$labels[ind] <- labels$labels[i]
+
+      singles[ind] <- TRUE
     }
 
-    if (do_quantities) {
-      quantities_centers <-
-        centers[!is.na(centers[, 1L]) & !singles & droprows, , drop = FALSE]
-      quantities_centers <- rbind(quantities_centers, labels_centers)
-      if (!is.null(quantities$labels))
-        quantities <- list(
-          labels =
-            quantities$labels[which(!empty_subsets)][quantities_centers[, 3L]]
-        )
-      else
-        quantities <- list(labels = orig[quantities_centers[, 3L]])
-      quantities$x <- quantities_centers[, 1L]
-      quantities$y <- quantities_centers[, 2L]
+    others <- has_center & !singles & !empty
+
+    if (do_quantities || do_percentages) {
+      digits <- options("digits")$digits
+
+      if (is.null(quantities$labels)) {
+        centers$quantities[singles | others] <-
+          signif(orig[centers$id[singles | others]], digits)
+      } else {
+        centers$quantities[singles | others] <-
+          signif(quantities$labels[which(!empty_subsets)][centers$id[singles | others]], digits)
+      }
     }
 
-    if (do_labels) {
-      labels$x <- labels_centers[, 1L]
-      labels$y <- labels_centers[, 2L]
-      labels$labels <- center_labels
+    if (do_percentages) {
+      if (is.null(percentages$labels)) {
+        perc <- centers$quantities/sum(centers$quantities, na.rm = TRUE)*100
+        perc <- ifelse(perc >= 1, as.character(round(perc)), "< 1")
+
+        centers$percentages[!is.na(perc)] <-
+          sapply(perc[!is.na(perc)], function(x) {
+            if (do_quantities)
+              paste0("(", x, " %)")
+            else
+              paste0(x, " %")
+          })
+      } else {
+        centers$percentages[others | singles] <-
+          percentages$labels[which(!empty_subsets)][centers$id[others | singles]]
+      }
     }
+
+    centers <- centers[has_center, , drop = FALSE]
+
+    centers$labels_par_id[which(!is.na(centers$labels))] <-
+      seq_len(sum(singles))
+
+    centers$others_par_id[!is.na(centers$quantities) | !is.na(centers$percentages)] <-
+      seq_len(sum(others | singles))
+
+    naornull <- function(x)
+      is.na(x) | is.null(x)
+
+    has_tag <- !naornull(centers$quantities) |
+      !naornull(centers$labels) |
+      !naornull(centers$percentages)
+
+    centers <- centers[has_tag, , drop = FALSE]
+  } else {
+    centers <- NULL
   }
 
   list(ellipses = dd,
@@ -845,10 +926,93 @@ setup_geometry <- function(x,
        edges = edges,
        labels = labels,
        quantities = quantities,
+       centers = centers,
        empty_sets = empty_sets,
        empty_subsets = empty_subsets,
        xlim = limits$xlim,
        ylim = limits$ylim)
+}
+
+#' Setup grobs for labels (labels, quantities, percentages)
+#'
+#' @param data data for the locations of points and more
+#' @param labels plot parameters for labels
+#' @param quantities plot parameters for quantities
+#' @param percentages plot parameters for percentages
+#'
+#' @return A [grid::gTree()] object
+#' @keywords internal
+setup_tag <- function(data, labels, quantities, percentages) {
+
+  x <- data$x
+  y <- data$y
+
+  label <- data$labels
+  quantity <- data$quantities
+  percentage <- data$percentages
+
+  k <- data$par_id
+
+  do_labels <- !is.null(labels) & !is.na(label)
+  do_quantities <- !is.null(quantities) & !is.na(quantity)
+  do_percentages <- !is.null(percentages) & !is.na(percentage)
+
+  n_grobs <- sum(do_labels + do_quantities + do_percentages)
+  n_rows <- n_grobs * 2 - 1
+
+  # setup a gList to store the various components of the tag
+  grobs <- gList()
+  i <- 0
+  j <- 0
+
+  if (do_labels) {
+    i <- i + 1
+    grobs[[i]] <- textGrob(label,
+                           rot = labels$rot[data$labels_par_id],
+                           gp = labels$gp[data$labels_par_id],
+                           name = paste0("tag.label.", data$labels_par_id),
+                           vp = viewport(layout.pos.row = i + j))
+    j <- j + 1
+  }
+
+  if (do_quantities) {
+    i <- i + 1
+    grobs[[i]] <- textGrob(quantity,
+                           rot = quantities$rot[data$others_par_id],
+                           gp = quantities$gp[data$others_par_id],
+                           name = paste0("tag.quantity.", data$others_par_id),
+                           vp = viewport(layout.pos.row = i + j))
+    j <- j + 1
+  }
+
+  if (do_percentages) {
+    i <- i + 1
+    grobs[[i]] <- textGrob(percentage,
+                           rot = percentages$rot[data$others_par_id],
+                           gp = percentages$gp[data$others_par_id],
+                           name = paste0("tag.percentage.", data$others_par_id),
+                           vp = viewport(layout.pos.row = i + j))
+    j <- j + 1
+  }
+
+  # setup heights for the layout of the tags
+  ind <- seq(1, n_rows, by = 2)
+
+  heights <- unit(double(n_rows), "null")
+
+  heights[ind] <- unit(1, "grobheight", grobs)
+
+  if (n_grobs > 1) {
+    pad_ind <- seq(2, n_rows, by = 2)
+    heights[pad_ind] <- eulerr_options()$padding
+  }
+
+  parent_vp <- viewport(x = x, y = y,
+                        default.units = "native",
+                        layout = grid.layout(nrow = n_rows, ncol = 1,
+                                             heights = heights))
+
+  grobTree(children = grobs, vp = parent_vp)
 }
 
 
@@ -860,6 +1024,7 @@ setup_geometry <- function(x,
 #' @param labels labels params
 #' @param quantities quantities params
 #' @param number current diagram number
+#' @param centers data.frame of data for labels and quantities
 #'
 #' @return A [grid::gList()] is returned.
 #' @keywords internal
@@ -868,19 +1033,22 @@ setup_grobs <- function(x,
                         edges,
                         labels,
                         quantities,
+                        percentages,
+                        centers,
                         number) {
-  data_labels <- x$labels
   data_edges <- x$edges
   data_fills <- x$fills
-  data_quantities <- x$quantities
+  data_tags <- x$centers
   fitted <- x$fitted.values
   empty_sets <- x$empty_sets
   empty_subsets <- x$empty_subsets
 
-  do_labels <- !is.null(data_labels)
+  do_tags <- !is.null(data_tags)
   do_edges <- !is.null(data_edges)
   do_fills <- !is.null(data_fills)
-  do_quantities <- !is.null(data_quantities)
+  do_labels <- !is.null(labels)
+  do_quantities <- !is.null(quantities)
+  do_percentages <- !is.null(percentages)
 
   n_e <- NROW(x$ellipses)
   n_id <- 2L^n_e - 1L
@@ -950,47 +1118,23 @@ setup_grobs <- function(x,
     }
   }
 
-  # quantities
-  if (do_quantities)  {
-    quantities_id <- rep.int(FALSE, length(data_quantities$x))
-    if (do_labels)
-      quantities_id[names(data_quantities$x) %in% names(data_labels$x)] <- TRUE
-    lab_id <- quantities_id
-
-    quantities_grob <- grid::textGrob(
-      label = data_quantities$labels,
-      x = data_quantities$x,
-      y = data_quantities$y,
-      rot = quantities$rot[which(!empty_subsets)],
-      vjust = ifelse(lab_id & do_labels, 1, 0.5),
-      name = "quantities.grob",
-      default.units = "native",
-      gp = quantities$gp[which(!empty_subsets)]
-    )
-  }
+  do_tags <- do_quantities || do_labels || do_percentages
 
   # labels
-  if (do_labels) {
-    if (length(data_labels$x) > 0) {
-      labels_grob <- grid::textGrob(
-        label = data_labels$labels,
-        x = data_labels$x,
-        y = data_labels$y,
-        rot = labels$rot[which(!empty_sets)],
-        vjust = if (do_quantities) -0.5 else 0.5,
-        name = "labels.grob",
-        default.units = "native",
-        gp = labels$gp[!empty_sets]
-      )
-    } else {
-      labels_grob <- grid::nullGrob()
+  if (do_tags) {
+    tags_grob <- gList()
+
+    for (i in seq_len(NROW(data_tags))) {
+      tags_grob[[i]] <- setup_tag(data_tags[i, ],
+                                  labels,
+                                  quantities,
+                                  percentages)
     }
   }
 
   grid::grobTree(if (do_fills) fills_grob,
                  if (do_edges) edges_grob,
-                 if (do_labels) labels_grob,
-                 if (do_quantities) quantities_grob,
+                 if (do_tags) tags_grob,
                  name = paste0("diagram.grob.", number))
 }
 
@@ -1002,6 +1146,7 @@ plot.venn <- function(x,
                       legend = FALSE,
                       labels = identical(legend, FALSE),
                       quantities = TRUE,
+                      percentages = FALSE,
                       strips = NULL,
                       main = NULL,
                       n = 200L,
