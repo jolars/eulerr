@@ -147,12 +147,12 @@ to learn about the individual settings for each argument.</p>
     <pre class="usage"><span class='co'># S3 method for euler</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/identical'>identical</a></span>(<span class='no'>legend</span>, <span class='fl'>FALSE</span>), <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='no'>...</span>)
+  <span class='kw'>percentages</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for venn</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/identical'>identical</a></span>(<span class='no'>legend</span>, <span class='fl'>FALSE</span>), <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>percentages</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,6 +188,16 @@ text for the labels. See <code><a href='https://www.rdocumentation.org/packages/
       <th>quantities</th>
       <td><p>a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
+default are the original values in the input to <code><a href='euler.html'>euler()</a></code>. See
+<code><a href='https://www.rdocumentation.org/packages/grid/topics/grid.text'>grid::grid.text()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>percentages</th>
+      <td><p>a logical, vector, or list. If <code>TRUE</code>, the
+percentages of the original set overlaps relative masses will be plotted
+underneath the label and quantity for each overlap's tag.
+Vectors are assumed to be
+text for the percentages' labels, which by
 default are the original values in the input to <code><a href='euler.html'>euler()</a></code>. See
 <code><a href='https://www.rdocumentation.org/packages/grid/topics/grid.text'>grid::grid.text()</a></code>.</p></td>
     </tr>
@@ -239,18 +249,18 @@ arguments that are specific to each argument.</p></li>
     <p>The various <code><a href='https://www.rdocumentation.org/packages/grid/topics/gpar'>grid::gpar()</a></code> values that are available for each argument
 are:</p>
 <table class='table'>
-<tr><td></td><td>fills</td><td>edges</td><td>labels</td><td>quantities</td><td>strips</td><td>legend</td><td>main</td><td></td></tr>
-<tr><td>col</td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>fill</td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>alpha</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>lty</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>lwd</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>lex</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>fontsize</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>cex</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>fontfamily</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>lineheight</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>font</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td></td><td>fills</td><td>edges</td><td>labels</td><td>quantities</td><td>percentages</td><td>strips</td><td>legend</td><td>main</td><td></td></tr>
+<tr><td>col</td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td>fill</td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>alpha</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td>lty</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>lwd</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>lex</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>fontsize</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td>cex</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td>fontfamily</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td>lineheight</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td>font</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
 </table>
     <p>Defaults for these values, as well as other parameters of the plots, can
 be set globally using <code><a href='eulerr_options.html'>eulerr_options()</a></code>.</p>

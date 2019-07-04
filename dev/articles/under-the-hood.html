@@ -93,7 +93,7 @@
       <h1>eulerr under the hood</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2019-03-17</h4>
+            <h4 class="date">2019-07-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/under-the-hood.Rmd"><code>vignettes/under-the-hood.Rmd</code></a></small>
       <div class="hidden name"><code>under-the-hood.Rmd</code></div>
@@ -193,7 +193,7 @@ j \leq n,
 <p>which we optimize using <code><a href="https://www.rdocumentation.org/packages/stats/topics/optimize">optimize()</a></code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p>For a two-set combination, this is all we need to plot an exact diagram, given that we now have the two circles’ radii and separation and may place the circles arbitrarily as long as their separation, <span class="math inline">\(d\)</span>, remains the same. This is not, however, the case with more than two sets.</p>
 <p>With three or more sets, the circles need to be arranged so that they interfere minimally with one another. In some cases, the set configuration allows this to be accomplished flawlessly, but often, compromises must me made. As is often the case in this context, this turns out to be another optimization problem. It can be tackled in many ways; <strong>eulerr</strong>’s approach is based on a method developed by <span class="citation">Frederickson (2015)</span>, which the author describes as constrained multi-dimensional scaling.</p>
-<p>The algorithm tries to position the circles so that the separation between each pair of circles matches the separation required from the seperation equation. If the two sets are disjoint, however, the algorithm is indifferent to the relative locations of those circles as long as they do not intersect. The equivalent applies to subset sets: as long as the circle representing the smaller set remains within the larger circle, their locations are free to vary. In all other cases, the loss function is the residual sums of squares of the optimal separation of circles, <span class="math inline">\(d\)</span>, that we found in the overlap equation, and the actual distance in the layout we are currently exploring.</p>
+<p>The algorithm tries to position the circles so that the separation between each pair of circles matches the separation required from the separation equation. If the two sets are disjoint, however, the algorithm is indifferent to the relative locations of those circles as long as they do not intersect. The equivalent applies to subset sets: as long as the circle representing the smaller set remains within the larger circle, their locations are free to vary. In all other cases, the loss function is the residual sums of squares of the optimal separation of circles, <span class="math inline">\(d\)</span>, that we found in the overlap equation, and the actual distance in the layout we are currently exploring.</p>
 <p><span class="math display">\[
 \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i&lt;j\leq N}}
 \begin{cases}

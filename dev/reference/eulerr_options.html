@@ -161,7 +161,7 @@ that are used in <code><a href='plot.euler.html'>plot.euler()</a></code>.</p>
 
     <p>Currently, the following items will be considered:</p><dl class='dl-horizontal'>
 <dt>pointsize</dt><dd><p>size in pts to be used as basis for fontsizes and
-some margin sizes in the resulting plot</p></dd>
+some margin sizes in the resulting plot</p></dd>#'
 <dt>fills</dt><dd><p>a list of items <code>fill</code> and <code>alpha</code></p></dd>
 <dt>edges</dt><dd><p>a list of items <code>col</code>, <code>alpha</code>, <code>lex</code>, <code>lwd</code>, and <code>lty</code></p></dd>
 <dt>labels</dt><dd><p>a list of items <code>rot</code>,
@@ -170,11 +170,18 @@ some margin sizes in the resulting plot</p></dd>
 <dt>quantities</dt><dd><p>a list of items <code>rot</code>,
 <code>col</code>, <code>alpha</code>, <code>fontsize</code>, <code>cex</code>, <code>fontfamily</code>,
 <code>lineheight</code>, and <code>font</code></p></dd>
+<dt>percentages</dt><dd><p>a list with items <code>rot</code>,
+<code>col</code>, <code>alpha</code>, <code>fontsize</code>, <code>cex</code>, <code>fontfamily</code>,
+<code>lineheight</code>, and <code>font</code></p></dd>
 <dt>strips</dt><dd><p><code>col</code>, <code>alpha</code>, <code>fontsize</code>, <code>cex</code>, <code>fontfamily</code>,
 <code>lineheight</code>, and <code>font</code></p></dd>
 <dt>legend</dt><dd><p>arguments to <code><a href='https://www.rdocumentation.org/packages/grid/topics/legendGrob'>grid::legendGrob()</a></code> as well as <code>col</code>, <code>alpha</code>,
 <code>fontsize</code>, <code>cex</code>, <code>fontfamily</code>, <code>lineheight</code>, and <code>font</code></p></dd>
 <dt>main</dt><dd><p>arguments to <code><a href='https://www.rdocumentation.org/packages/grid/topics/grid.text'>grid::textGrob()</a></code></p></dd>
+<dt>padding</dt><dd><p>a <code><a href='https://www.rdocumentation.org/packages/grid/topics/unit'>grid::unit()</a></code> giving the padding between various
+elements in plots from <code><a href='plot.euler.html'>plot.euler()</a></code>, which you can change
+if you, for instance, want to increase spacing between labels,
+quantities, and percentages.</p></dd>
 </dl>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

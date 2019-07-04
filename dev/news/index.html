@@ -128,22 +128,37 @@
 <h1 class="page-header">
 <a href="#eulerr-5-1-0-9000" class="anchor"></a>eulerr 5.1.0.9000<small> Unreleased </small>
 </h1>
-</div>
-    <div id="eulerr-5-1-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-5-1-0" class="anchor"></a>eulerr 5.1.0<small> 2019-02-04 </small>
-</h1>
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features</h2>
 <ul>
 <li>
-<code><a href="../reference/venn.html">venn()</a></code> is a new function that produces Venn diagrams for up to 5 sets. The interface is almost identical to <code><a href="../reference/euler.html">euler()</a></code> except that a single integer can also be provided. A new vignette, <em>Venn diagrams with eulerr</em>, examplifies its use.</li>
+<code><a href="../reference/plot.euler.html">plot.euler()</a></code> gains a <code>percentages</code> argument, which adds the mass/count of each overlap as a percentage of the total. This change also comes with a fundamental redesign of the approach to adding labels, now setting up each label, quantity, and percentage as a unified grob (in grid graphics terminology). Moreover, <code><a href="../reference/eulerr_options.html">eulerr_options()</a></code> now has a new argument <code>padding</code> which controls the amount of padding between labels, quantities, and percentages. (<a href='https://github.com/jolars/eulerr/issues/48'>#48</a>)</li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>The default <code>cex</code> for quantity labels has changed from 1.0 to 0.9.</li>
+</ul>
+</div>
+</div>
+    <div id="eulerr-5-1-0" class="section level1">
+<h1 class="page-header">
+<a href="#eulerr-5-1-0" class="anchor"></a>eulerr 5.1.0<small> 2019-02-04 </small>
+</h1>
+<div id="new-features-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features-1" class="anchor"></a>New features</h2>
+<ul>
+<li>
+<code><a href="../reference/venn.html">venn()</a></code> is a new function that produces Venn diagrams for up to 5 sets. The interface is almost identical to <code><a href="../reference/euler.html">euler()</a></code> except that a single integer can also be provided. A new vignette, <em>Venn diagrams with eulerr</em>, exemplifies its use.</li>
+</ul>
+</div>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Calculations for the strips in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> when a list of Euler diagrams is given has been improved. Setting <code>fontsize</code> or <code>cex</code> now results in appropriately sized strips as one would expect.</li>
 <li>Tiny overlaps (where the fraction of the area is less than one thousandth of the largest overlap) in the final diagram are no longer plotted.</li>
@@ -166,9 +181,9 @@
 <h1 class="page-header">
 <a href="#eulerr-5-0-0" class="anchor"></a>eulerr 5.0.0<small> 2018-11-05 </small>
 </h1>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>New features</h2>
+<a href="#new-features-2" class="anchor"></a>New features</h2>
 <ul>
 <li>
 <code><a href="../reference/error_plot.html">error_plot()</a></code> is a new function that offers diagnostic plots of fits from <code><a href="../reference/euler.html">euler()</a></code>, letting the user visualize the error in the resulting Euler diagram.</li>
@@ -185,9 +200,9 @@
 <li>The c++ internals have been rewritten using more memory-efficient, performant and expressive code.</li>
 </ul>
 </div>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>The <code><a href="../reference/euler.html">euler.data.frame()</a></code> method (and by proxy the <code><a href="../reference/euler.html">euler.matrix()</a></code> method) can now take matrices with factors in addition to the previously supported logical and integer (binary) input. The function will dummy code the variables for the user.</li>
 <li>A few performance fixes.</li>
@@ -219,9 +234,9 @@
 <h1 class="page-header">
 <a href="#eulerr-4-1-0" class="anchor"></a>eulerr 4.1.0<small> 2018-04-20 </small>
 </h1>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now returns a <code>gTree</code> object. All of the plotting mechanisms are now also found in this function and <code><a href="../reference/plot.eulergram.html">plot.eulergram()</a></code> and <code><a href="../reference/plot.eulergram.html">print.eulergram()</a></code> basically just call <code><a href="https://www.rdocumentation.org/packages/grid/topics/grid.draw">grid::grid.draw()</a></code> on the result of <code><a href="../reference/plot.euler.html">plot.euler()</a></code>. This change means that functions such as <code>gridExtra::grid.arrange()</code> now work as one would intuit on the objects produced by <code><a href="../reference/plot.euler.html">plot.euler()</a></code>.</li>
@@ -253,9 +268,9 @@
 <li>A new function <code><a href="../reference/eulerr_options.html">eulerr_options()</a></code> have been provided in order to set default graphical parameters for the diagrams.</li>
 </ul>
 </div>
-<div id="minor-changes-3" class="section level2">
+<div id="minor-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Arguments <code>counts</code> and <code>outer_strips</code> to <code><a href="../reference/plot.euler.html">plot.euler()</a></code> are now defunct.</li>
 <li>
@@ -284,9 +299,9 @@
 <li>In final optimization, we now use <em>stress</em> instead of residual sums of squares as a target for our optimizer.</li>
 </ul>
 </div>
-<div id="minor-changes-4" class="section level2">
+<div id="minor-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-5" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code>label</code> is now a proper generic with an appropriate method (<code>label.euler()</code>).</li>
@@ -332,9 +347,9 @@
 <li>The initial optimizer now uses an analytical Hessian in addition to gradient.</li>
 </ul>
 </div>
-<div id="minor-changes-5" class="section level2">
+<div id="minor-changes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-5" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-6" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>The initial optimizer now restarts up to 10 times and picks the best fit (unless it is perfect somewhere along the way).</li>
 <li>The default palette has been changed to a fixed palette, still adapted to color deficiency, but with some manual adjustments to, among other things, avoid unnecessary use of color.</li>
@@ -369,9 +384,9 @@
 <li>Arguments <code>polygon_args</code>, <code>mar</code>, and <code>text_args</code> to <code><a href="../reference/plot.euler.html">plot.euler()</a></code> have been made defunct.</li>
 </ul>
 </div>
-<div id="minor-changes-6" class="section level2">
+<div id="minor-changes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-6" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code><a href="../reference/plot.euler.html">plot.euler()</a></code> handles conflicting arguments better.</li>
@@ -406,9 +421,9 @@
 <code><a href="../reference/plot.euler.html">plot.euler()</a></code> has been completely revamped, now interfacing <code>xyplot()</code> from lattice. As a result, arguments <code>polygon_args</code>, <code>mar</code>, and <code>text_args</code> have been deprecated.</li>
 </ul>
 </div>
-<div id="minor-changes-7" class="section level2">
+<div id="minor-changes-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-8" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Added a <code>counts</code> argument to <code>plot.eulerr</code>, which intersections and complements with counts from the original set specification (<a href='https://github.com/jolars/eulerr/issues/6'>#6</a>).</li>
 <li>Added a <code>key</code> argument to <code>plot.eulerr</code> that prints a legend next to the diagram.</li>
@@ -434,9 +449,9 @@
 <h1 class="page-header">
 <a href="#eulerr-1-0-0" class="anchor"></a>eulerr 1.0.0<small> 2016-12-10 </small>
 </h1>
-<div id="new-features-2" class="section level2">
+<div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>New features</h2>
+<a href="#new-features-3" class="anchor"></a>New features</h2>
 <ul>
 <li>Final optimization routines have been completely rewritten in C++ using Rcpp and RcppArmadillo.</li>
 <li>Switched to the cost function from EulerAPE for the default optimization target but added the possibility to choose cost function via a <code>cost</code> argument (currently <code>eulerAPE</code> or <code>venneuler</code>).</li>

@@ -93,7 +93,7 @@
       <h1>Introducing eulerr</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2019-03-17</h4>
+            <h4 class="date">2019-07-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -153,16 +153,16 @@
 <p>We inspect our results by printing the eulerr object</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">fit2</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt;       original fitted residuals regionError</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt; A           10 10.025    -0.025       0.003</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; B            7  7.040    -0.040       0.003</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; C            5  5.049    -0.049       0.002</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; A&amp;B         15 14.966     0.034       0.003</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; A&amp;C          1  0.563     0.437       0.010</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; B&amp;C          2  1.777     0.223       0.005</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; A&amp;B&amp;C        5  5.071    -0.071       0.003</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt; A           13     13         0       0.008</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; B            4      4         0       0.002</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; C            0      0         0       0.000</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; A&amp;B         17     17         0       0.010</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; A&amp;C          5      5         0       0.003</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; B&amp;C          1      0         1       0.024</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; A&amp;B&amp;C        2      2         0       0.001</span></a>
 <a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; diagError: 0.01 </span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; stress:    0.001</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; diagError: 0.024 </span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; stress:    0.002</span></a></code></pre></div>
 <p>or directly access and plot the residuals.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Cleveland dot plot of the residuals</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(lattice)</a>
@@ -186,10 +186,10 @@ A plot from <code><a href="../reference/error_plot.html">error_plot()</a></code>
 <p>This shows us that the  intersection is somewhat overrepresented in . Given that these residuals are on the scale of the original values, however, the residuals are arguably of little concern.</p>
 <p>As an alternative, we could plot the circles in another program by retrieving their coordinates and radii.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/coef">coef</a></span>(fit2)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt;         h      k     a     b    phi</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; A -0.7544 -1.087 3.122 3.122 -2.715</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; B  0.8378 -1.087 3.031 3.031 -2.715</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; C  0.7798  1.555 1.991 1.991 -2.715</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt;         h       k     a     b phi</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; A -0.5309 -0.2497 3.432 3.432 2.5</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; B  1.1125 -0.2497 2.706 2.706 2.5</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; C -1.5067  1.4108 1.493 1.493 2.5</span></a></code></pre></div>
 <div id="goodness-of-fit" class="section level3">
 <h3 class="hasAnchor">
 <a href="#goodness-of-fit" class="anchor"></a>Goodness-of-fit</h3>
@@ -203,7 +203,7 @@ A plot from <code><a href="../reference/error_plot.html">error_plot()</a></code>
 \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
 \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
 \]</span></p>
-<p>In our example, the diagError is and our stress is 5.86510^{-4}, suggesting that the fit is accurate.</p>
+<p>In our example, the diagError is and our stress is 0.002, suggesting that the fit is accurate.</p>
 <p>We can now be confident that eulerr provides a reasonable representation of our input using circles. Were it otherwise, we might try to use ellipses instead. <span class="citation">(Wilkinson 2012)</span> features a difficult combination that it manages to fit with a reasonably small error; with <strong>eulerr</strong>, however, we can get rid of that error entirely.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">wilkinson2012 &lt;-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">A =</span> <span class="dv">4</span>, <span class="dt">B =</span> <span class="dv">6</span>, <span class="dt">C =</span> <span class="dv">3</span>, <span class="dt">D =</span> <span class="dv">2</span>, <span class="dt">E =</span> <span class="dv">7</span>, <span class="dt">F =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">                    <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"A&amp;F"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"B&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>,</a>

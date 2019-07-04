@@ -101,6 +101,7 @@
 <div id="eulerr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#eulerr" class="anchor"></a>eulerr</h1></div>
+<!-- badges: start -->
 
 <p><strong>eulerr</strong> generates area-proportional Euler diagrams that display set relationships (intersections, unions, and disjoints) with circles or ellipses. <a href="https://en.wikipedia.org/wiki/Euler_diagram">Euler diagrams</a> are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, <strong>eulerr</strong> sometimes produces Venn diagrams and sometimes not.</p>
 <p>With three or more sets intersecting, exact Euler diagrams are often impossible. For such cases <strong>eulerr</strong> attempts to provide a good approximation by numerically tuning the parameters of the ellipses or circles to minimize the error in the resulting diagram. Residuals and goodness of fit statistics are provided to assess whether the resulting diagram can be trusted.</p>
@@ -135,9 +136,9 @@
 <a class="sourceLine" id="cb3-7" data-line-number="7">             <span class="dt">shape =</span> <span class="st">"ellipse"</span>)</a></code></pre></div>
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">fit<span class="op">$</span>stress</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; [1] 1.951045e-12</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; [1] 1.270512e-12</span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">fit<span class="op">$</span>diagError</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; [1] 3.256371e-07</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; [1] 1.430987e-07</span></a></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit)</a></code></pre></div>
 <p><img src="reference/figures/README-plot_method-1.png" width="700"></p>
@@ -201,11 +202,12 @@
       <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/jolars/eulerr"><img src="https://travis-ci.org/jolars/eulerr.svg?branch=master" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://travis-ci.org/jolars/eulerr"><img src="https://travis-ci.org/jolars/eulerr.svg?branch=master" alt="Travis build status"></a></li>
 <li><a href="https://ci.appveyor.com/project/jolars/eulerr"><img src="https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
 <li><a href="https://codecov.io/gh/jolars/eulerr"><img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
 <li><a href="https://cran.r-project.org/package=eulerr"><img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge"></a></li>
 <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=KERLYHUY639WU"><img src="https://img.shields.io/badge/Donate-PayPal-blue.svg" alt="Donate"></a></li>
+<li><a href="https://ci.appveyor.com/project/jolars/eulerr"><img src="https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
 </ul>
 </div>
 </div>
