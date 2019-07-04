@@ -14,6 +14,9 @@ and percentages. (#48)
 
 * The default `cex` for quantity labels has changed from 1.0 to 0.9.
 * Labels for sets that overlap are now merged (partly fixes #45)
+* The fill colors for sets which are completely contained within another set 
+are now once again composed of a mix of the color of the subset and
+the superset.
 
 # eulerr 5.1.0
 

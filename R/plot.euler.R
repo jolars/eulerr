@@ -1091,22 +1091,6 @@ setup_grobs <- function(x,
     } else {
       fills_grob <- vector("list", n_id)
       fill_id <- seq_len(n_id)
-      empty_cols <- colSums(id & fitted > 0) == 0
-      # skip <- rowSums(id[, empty_cols, drop = FALSE]) > 0
-      empty <- fitted < sqrt(.Machine$double.eps)
-      for (i in seq_len(n_e)) {
-        if (empty[i] && !empty_cols[i]) {
-          idx <- id[i, ]
-          n_idx <- sum(idx)
-          sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
-          next_num <- min(rowSums(id[sub_id & rowSums(id) > n_idx & !empty, ,
-                                     drop = FALSE]))
-          next_level <- rowSums(id) == next_num & sub_id
-          if (any(next_level)) {
-            fill_id[next_level] <- fill_id[i]
-          }
-        }
-      }
 
       for (i in seq_len(n_id)) {
         if (is.null(data_fills[[i]])) {
