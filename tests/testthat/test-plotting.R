@@ -18,11 +18,16 @@ test_that("normal plotting works without errors", {
   expect_silent(p[[7]] <- plot(f1, main = "Hello"))
   expect_silent(p[[8]] <- plot(f1, expression = "phi[1]"))
   expect_silent(p[[9]] <- plot(f1, edges = c("white", "blue")))
-  expect_silent(p[[10]] <- plot(f1, percentages = TRUE))
+  expect_silent(p[[10]] <- plot(f1, quantities = list(type = "percent")))
+  expect_silent(p[[11]] <- plot(f1, quantities = list(type = "numbers")))
+  expect_silent(p[[11]] <- plot(f1, quantities = list(type = c("percent",
+                                                               "numbers"))))
+
+  expect_silent(p[[12]] <- plot(f1, quantities = list(type = c("numbers",
+                                                               "percent"))))
 
   grid <- expand.grid(labels = c(TRUE, FALSE),
                       quantities = c(TRUE, FALSE),
-                      percentages = c(TRUE, FALSE),
                       legend = c(TRUE, FALSE),
                       fills = c(TRUE, FALSE),
                       edges = c(TRUE, FALSE))
@@ -31,7 +36,6 @@ test_that("normal plotting works without errors", {
     expect_silent(dont_plot(plot(f1,
                                  labels = grid$labels[!!i],
                                  quantities = grid$quantities[!!i],
-                                 percentages = grid$percentages[!!i],
                                  legend = grid$legend[!!i],
                                  fills = grid$fills[!!i],
                                  edges = grid$edges[!!i])))
@@ -84,7 +88,9 @@ test_that("error_plot functions normally", {
 
   expect_silent(dont_plot(error_plot(f)))
   expect_silent(dont_plot(error_plot(f,
-                                     pal = grDevices::colorRampPalette(c("red", "blue")))))
+                                     pal = grDevices::colorRampPalette(c(
+                                       "red", "blue"
+                                     )))))
   expect_silent(dont_plot(error_plot(f, quantities = FALSE)))
   expect_silent(dont_plot(error_plot(f, edges = FALSE)))
 })

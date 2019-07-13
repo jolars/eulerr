@@ -7,11 +7,11 @@
 \usage{
 \method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = FALSE,
-  percentages = FALSE, strips = NULL, main = NULL, n = 200L, ...)
+  strips = NULL, main = NULL, n = 200L, adjust_labels = TRUE, ...)
 
 \method{plot}{venn}(x, fills = TRUE, edges = TRUE, legend = FALSE,
   labels = identical(legend, FALSE), quantities = TRUE,
-  percentages = FALSE, strips = NULL, main = NULL, n = 200L, ...)
+  strips = NULL, main = NULL, n = 200L, ...)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}
@@ -33,16 +33,12 @@ text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
 
 \item{quantities}{a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
-default are the original values in the input to \code{\link[=euler]{euler()}}. See
-\code{\link[grid:grid.text]{grid::grid.text()}}.}
-
-\item{percentages}{a logical, vector, or list. If \code{TRUE}, the
-percentages of the original set overlaps relative masses will be plotted
-underneath the label and quantity for each overlap's tag.
-Vectors are assumed to be
-text for the percentages' labels, which by
-default are the original values in the input to \code{\link[=euler]{euler()}}. See
-\code{\link[grid:grid.text]{grid::grid.text()}}.}
+default are the original values in the input to \code{\link[=euler]{euler()}}. In addition
+to arguments that apply to \code{\link[grid:grid.text]{grid::grid.text()}}, an argument \code{type} may
+also be used which should be a combination of \code{"numbers"} and
+\code{"percent"}. The first item will be printed first and the second
+will be printed thereafter inside brackets. The default is
+\code{type = "numbers"}.}
 
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}}
@@ -56,8 +52,13 @@ named \code{'label'} must be provided (and will be used for the actual text).}
 
 \item{n}{number of vertices for the \code{edges} and \code{fills}}
 
+\item{adjust_labels}{a logical. If \code{TRUE}, adjustment will be made to avoid
+overlaps or out-of-limits plotting of labels, quantities, and
+percentages.}
+
 \item{...}{parameters to update \code{fills} and \code{edges} with and thereby a shortcut
-to set these parameters}
+to set these parameters
+\code{\link[grid:grid.text]{grid::grid.text()}}.}
 }
 \value{
 Provides an object of class \code{'eulergram'} , which is a
@@ -92,18 +93,18 @@ The various \code{\link[grid:gpar]{grid::gpar()}} values that are available for 
 are:
 
 \tabular{lccccccccc}{
-\tab fills \tab edges \tab labels \tab quantities \tab percentages \tab strips \tab legend \tab main \cr
-col        \tab       \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-fill       \tab x     \tab       \tab        \tab            \tab             \tab        \tab        \tab      \cr
-alpha      \tab x     \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-lty        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
-lwd        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
-lex        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
-fontsize   \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-cex        \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-fontfamily \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-lineheight \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-font       \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+\tab fills \tab edges \tab labels \tab quantities  \tab strips \tab legend \tab main \cr
+col        \tab       \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+fill       \tab x     \tab       \tab        \tab             \tab        \tab        \tab      \cr
+alpha      \tab x     \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+lty        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
+lwd        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
+lex        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
+fontsize   \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+cex        \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+fontfamily \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+lineheight \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+font       \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
 }
 
 Defaults for these values, as well as other parameters of the plots, can

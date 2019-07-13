@@ -13,7 +13,6 @@ setup_geometry <- function(x,
                            edges,
                            labels,
                            quantities,
-                           percentages,
                            n,
                            id) {
   dd <- x$ellipses
@@ -32,7 +31,6 @@ setup_geometry <- function(x,
   do_edges <- !is.null(edges)
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
-  do_percentages <- !is.null(percentages)
 
   id <- id[!empty_subsets, !empty_sets, drop = FALSE]
 
@@ -55,7 +53,7 @@ setup_geometry <- function(x,
   if (do_edges)
     edges <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
 
-  if (do_fills || do_labels || do_quantities || do_percentages) {
+  if (do_fills || do_labels || do_quantities) {
     # decompose ellipse polygons into intersections
     pieces <- fills <- vector("list", n_id)
     for (i in rev(seq_len(n_id))) {
@@ -92,7 +90,7 @@ setup_geometry <- function(x,
     }
   }
 
-  if (do_labels || do_quantities || do_percentages) {
+  if (do_labels || do_quantities) {
     n_singles <- sum(rowSums(id) == 1)
     empty <- abs(fitted) < sqrt(.Machine$double.eps)
 
@@ -144,33 +142,38 @@ setup_geometry <- function(x,
 
     others <- has_center & !singles & !empty
 
-    if (do_quantities || do_percentages) {
+    if (do_quantities) {
       digits <- options("digits")$digits
 
+      num <- orig[centers$id[singles | others]]
+
       if (is.null(quantities$labels)) {
-        centers$quantities[singles | others] <-
-          signif(orig[centers$id[singles | others]], digits)
+        type <- quantities$type
+
+        if ("percent" %in% type) {
+          perc <- num/sum(num, na.rm = TRUE)*100
+          perc <- ifelse(perc >= 1, as.character(round(perc)), "< 1")
+          perc <- sapply(perc[!is.na(perc)], function(x) paste0(x, " %"))
+        }
+
+        if (length(type) == 2) {
+          if (type[1] == "numbers") {
+            qnt <- paste0(signif(num, digits), " (", perc, ")")
+          } else {
+            qnt <- paste0(perc, " (", num, ")")
+          }
+          centers$quantities[singles | others] <- qnt
+        } else {
+          if ("percent" %in% type) {
+            centers$quantities[singles | others] <- perc
+          } else {
+            centers$quantities[singles | others] <- signif(num, digits)
+          }
+        }
+
       } else {
         centers$quantities[singles | others] <-
-          signif(quantities$labels[which(!empty_subsets)][centers$id[singles | others]], digits)
-      }
-    }
-
-    if (do_percentages) {
-      if (is.null(percentages$labels)) {
-        perc <- centers$quantities/sum(centers$quantities, na.rm = TRUE)*100
-        perc <- ifelse(perc >= 1, as.character(round(perc)), "< 1")
-
-        centers$percentages[!is.na(perc)] <-
-          sapply(perc[!is.na(perc)], function(x) {
-            if (do_quantities)
-              paste0("(", x, " %)")
-            else
-              paste0(x, " %")
-          })
-      } else {
-        centers$percentages[others | singles] <-
-          percentages$labels[which(!empty_subsets)][centers$id[others | singles]]
+          quantities$labels[which(!empty_subsets)][centers$id[singles | others]]
       }
     }
 

@@ -2,13 +2,17 @@
 
 ## New features
 
-* `plot.euler()` gains a `percentages` argument, which adds the
-mass/count of each overlap as a percentage of the total. This change
-also comes with a fundamental redesign of the approach to adding labels, now
-setting up each label, quantity, and percentage as a unified grob (in grid
-graphics terminology). Moreover, `eulerr_options()` now has a new argument
-`padding` which controls the amount of padding between labels, quantities,
-and percentages. (#48)
+* In `plot.euler()`, percentages can be added to the plot in addition to or
+instead of counts by providing a `list` to the `quantities` argument
+with an item `type` that can take any combination of `counts` and `percent`.
+This change also comes with a redesign of the grid graphics
+implementation for labels. 
+* `eulerr_options()` gains a new argument
+`padding` which controls the amount of padding between labels and quantities.
+(#48)
+* `plot.euler()` now uses code from the **ggrepel** package to prevent
+labels from overlapping or escaping the plot area if `adjust_labels` is
+set to `TRUE`.
 
 ## Minor changes
 

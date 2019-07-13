@@ -4,7 +4,7 @@
 \alias{setup_geometry}
 \title{Compute geometries and label locations}
 \usage{
-setup_geometry(x, fills, edges, labels, quantities, percentages, n, id)
+setup_geometry(x, fills, edges, labels, quantities, n, id)
 }
 \arguments{
 \item{x}{an object of class 'euler'}

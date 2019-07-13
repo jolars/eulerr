@@ -4,8 +4,7 @@
 \alias{setup_grobs}
 \title{Grobify Euler objects}
 \usage{
-setup_grobs(x, fills, edges, labels, quantities, percentages, centers,
-  number)
+setup_grobs(x, fills, edges, labels, quantities, number, adjust_labels)
 }
 \arguments{
 \item{x}{geometry data}
@@ -18,9 +17,9 @@ setup_grobs(x, fills, edges, labels, quantities, percentages, centers,
 
 \item{quantities}{quantities params}
 
-\item{centers}{data.frame of data for labels and quantities}
-
 \item{number}{current diagram number}
+
+\item{centers}{data.frame of data for labels and quantities}
 }
 \value{
 A \code{\link[grid:gList]{grid::gList()}} is returned.

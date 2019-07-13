@@ -30,6 +30,7 @@ Other contributors:
   \item Peter Gustafsson [contributor]
   \item David H. Eberly (geometric algorithms) [contributor]
   \item Emanuel Huber (root solver code) [contributor]
+  \item Kamil Slowikowski (0000-0002-2843-6370) [contributor, copyright holder]
 }
 
 }

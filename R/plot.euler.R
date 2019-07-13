@@ -25,18 +25,18 @@
 #' are:
 #'
 #' \tabular{lccccccccc}{
-#'              \tab fills \tab edges \tab labels \tab quantities \tab percentages \tab strips \tab legend \tab main \cr
-#'   col        \tab       \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-#'   fill       \tab x     \tab       \tab        \tab            \tab             \tab        \tab        \tab      \cr
-#'   alpha      \tab x     \tab x     \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-#'   lty        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
-#'   lwd        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
-#'   lex        \tab       \tab x     \tab        \tab            \tab             \tab        \tab        \tab      \cr
-#'   fontsize   \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-#'   cex        \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-#'   fontfamily \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-#'   lineheight \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
-#'   font       \tab       \tab       \tab x      \tab x          \tab x           \tab x      \tab x      \tab x    \cr
+#'              \tab fills \tab edges \tab labels \tab quantities  \tab strips \tab legend \tab main \cr
+#'   col        \tab       \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+#'   fill       \tab x     \tab       \tab        \tab             \tab        \tab        \tab      \cr
+#'   alpha      \tab x     \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+#'   lty        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
+#'   lwd        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
+#'   lex        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
+#'   fontsize   \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+#'   cex        \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+#'   fontfamily \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+#'   lineheight \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+#'   font       \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
 #' }
 #'
 #' Defaults for these values, as well as other parameters of the plots, can
@@ -64,8 +64,12 @@
 #'   text for the labels. See [grid::grid.text()].
 #' @param quantities a logical, vector, or list. Vectors are assumed to be
 #'   text for the quantities' labels, which by
-#'   default are the original values in the input to [euler()]. See
-#'   [grid::grid.text()].
+#'   default are the original values in the input to [euler()]. In addition
+#'   to arguments that apply to [grid::grid.text()], an argument `type` may
+#'   also be used which should be a combination of `"numbers"` and
+#'   `"percent"`. The first item will be printed first and the second
+#'   will be printed thereafter inside brackets. The default is
+#'   `type = "numbers"`.
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]
 #' @param n number of vertices for the `edges` and `fills`
@@ -77,13 +81,10 @@
 #'   named `'label'` must be provided (and will be used for the actual text).
 #' @param ... parameters to update `fills` and `edges` with and thereby a shortcut
 #'   to set these parameters
-#' @param percentages a logical, vector, or list. If `TRUE`, the
-#'   percentages of the original set overlaps relative masses will be plotted
-#'   underneath the label and quantity for each overlap's tag.
-#'   Vectors are assumed to be
-#'   text for the percentages' labels, which by
-#'   default are the original values in the input to [euler()]. See
 #'   [grid::grid.text()].
+#' @param adjust_labels a logical. If `TRUE`, adjustment will be made to avoid
+#'   overlaps or out-of-limits plotting of labels, quantities, and
+#'   percentages.
 #'
 #' @seealso [euler()], [plot.eulergram()], [grid::gpar()],
 #'   [grid::grid.polyline()], [grid::grid.path()],
@@ -121,11 +122,13 @@ plot.euler <- function(x,
                        legend = FALSE,
                        labels = identical(legend, FALSE),
                        quantities = FALSE,
-                       percentages = FALSE,
                        strips = NULL,
                        main = NULL,
                        n = 200L,
+                       adjust_labels = TRUE,
                        ...) {
+
+  stopifnot(is.logical(adjust_labels))
 
   # retrieve default options
   opar <- eulerr_options()
@@ -139,7 +142,6 @@ plot.euler <- function(x,
   do_edges <- !is_false(edges) && !is.null(edges)
   do_labels <- !is_false(labels) && !is.null(labels)
   do_quantities <- !is_false(quantities) && !is.null(quantities)
-  do_percentages <- !is_false(percentages) && !is.null(percentages)
   do_legend <- !is_false(legend) && !is.null(legend)
   do_groups <- !is.null(groups)
   do_strips <- !is_false(strips) && do_groups
@@ -250,9 +252,19 @@ plot.euler <- function(x,
   # setup quantities
   if (do_quantities) {
     if (is.list(quantities)) {
+      if (!is.null(quantities$type)) {
+        quantities_type <- match.arg(quantities$type,
+                                     c("numbers", "percent"),
+                                     several.ok = TRUE)
+      } else {
+        quantities_type <- opar$quantities$type
+      }
+
       quantities <- update_list(list(labels = NULL,
+                                     type = quantities_type,
                                      rot = opar$quantities$rot),
                                 quantities)
+
     } else if (isTRUE(quantities)) {
       quantities <- list(labels = NULL, rot = opar$quantities$rot)
     } else {
@@ -271,32 +283,6 @@ plot.euler <- function(x,
                                 n_id)
   } else {
     quantities <- NULL
-  }
-
-  # setup percentages
-  if (do_percentages) {
-    if (is.list(percentages)) {
-      percentages <- update_list(list(labels = NULL,
-                                      rot = opar$percentages$rot),
-                                 percentages)
-    } else if (isTRUE(percentages)) {
-      percentages <- list(labels = NULL, rot = opar$percentages$rot)
-    } else {
-      percentages <- list(labels = percentages, rot = opar$percentages$rot)
-    }
-    percentages$rot <- rep_len(percentages$rot, n_id)
-
-    percentages$gp <- setup_gpar(list(col = opar$percentages$col,
-                                     alpha = opar$percentages$alpha,
-                                     fontsize = opar$percentages$fontsize,
-                                     cex = opar$percentages$cex,
-                                     fontfamily = opar$percentages$fontfamily,
-                                     lineheight = opar$percentages$lineheight,
-                                     font = opar$percentages$font),
-                                percentages,
-                                n_id)
-  } else {
-    percentages <- NULL
   }
 
   # setup legend
@@ -395,7 +381,6 @@ plot.euler <- function(x,
                    edges = edges,
                    labels = labels,
                    quantities = quantities,
-                   percentages = percentages,
                    n = n,
                    id = id)
   } else {
@@ -404,7 +389,6 @@ plot.euler <- function(x,
                            edges,
                            labels,
                            quantities,
-                           percentages,
                            n,
                            id)
   }
@@ -420,8 +404,8 @@ plot.euler <- function(x,
                                               edges = edges,
                                               labels = labels,
                                               quantities = quantities,
-                                              percentages = percentages,
-                                              number = i)
+                                              number = i,
+                                              adjust_labels = adjust_labels)
     }
     euler_grob <- grid::gTree(grid::nullGrob(),
                               name = "canvas.grob",
@@ -438,10 +422,11 @@ plot.euler <- function(x,
                               edges = edges,
                               labels = labels,
                               quantities = quantities,
-                              percentages = percentages,
-                              number = 1)
+                              number = 1,
+                              adjust_labels = adjust_labels)
     euler_grob <- grid::grobTree(euler_grob,
                                  name = "canvas.grob")
+
     xlim <- data$xlim
     ylim <- data$ylim
     pos <- c(1L, 1L)
@@ -730,88 +715,6 @@ locate_centers <- function(p, precision = 1) {
   }
 }
 
-#' Setup grobs for labels (labels, quantities, percentages)
-#'
-#' @param data data for the locations of points and more
-#' @param labels plot parameters for labels
-#' @param quantities plot parameters for quantities
-#' @param percentages plot parameters for percentages
-#'
-#' @return A [grid::gTree()] object
-#' @keywords internal
-setup_tag <- function(data, labels, quantities, percentages) {
-
-  x <- data$x
-  y <- data$y
-
-  label <- data$labels
-  quantity <- data$quantities
-  percentage <- data$percentages
-
-  # k <- data$par_id
-
-  do_labels <- !is.null(labels) & !is.na(label)
-  do_quantities <- !is.null(quantities) & !is.na(quantity)
-  do_percentages <- !is.null(percentages) & !is.na(percentage)
-
-  n_grobs <- sum(do_labels + do_quantities + do_percentages)
-  n_rows <- n_grobs * 2 - 1
-
-  # setup a gList to store the various components of the tag
-  grobs <- gList()
-  i <- 0
-  j <- 0
-
-  if (do_labels) {
-    i <- i + 1
-    grobs[[i]] <- textGrob(label,
-                           rot = labels$rot[data$labels_par_id],
-                           gp = labels$gp[data$labels_par_id],
-                           name = paste0("tag.label.", data$labels_par_id),
-                           vp = viewport(layout.pos.row = i + j))
-    j <- j + 1
-  }
-
-  if (do_quantities) {
-    i <- i + 1
-    grobs[[i]] <- textGrob(quantity,
-                           rot = quantities$rot[data$others_par_id],
-                           gp = quantities$gp[data$others_par_id],
-                           name = paste0("tag.quantity.", data$others_par_id),
-                           vp = viewport(layout.pos.row = i + j))
-    j <- j + 1
-  }
-
-  if (do_percentages) {
-    i <- i + 1
-    grobs[[i]] <- textGrob(percentage,
-                           rot = percentages$rot[data$others_par_id],
-                           gp = percentages$gp[data$others_par_id],
-                           name = paste0("tag.percentage.", data$others_par_id),
-                           vp = viewport(layout.pos.row = i + j))
-    j <- j + 1
-  }
-
-  # setup heights for the layout of the tags
-  ind <- seq(1, n_rows, by = 2)
-
-  heights <- unit(double(n_rows), "null")
-
-  heights[ind] <- unit(1, "grobheight", grobs)
-
-  if (n_grobs > 1) {
-    pad_ind <- seq(2, n_rows, by = 2)
-    heights[pad_ind] <- eulerr_options()$padding
-  }
-
-  parent_vp <- viewport(x = x, y = y,
-                        default.units = "native",
-                        layout = grid.layout(nrow = n_rows, ncol = 1,
-                                             heights = heights))
-
-  grobTree(children = grobs, vp = parent_vp)
-}
-
 #' @rdname plot.euler
 #' @export
 plot.venn <- function(x,
@@ -820,7 +723,6 @@ plot.venn <- function(x,
                       legend = FALSE,
                       labels = identical(legend, FALSE),
                       quantities = TRUE,
-                      percentages = FALSE,
                       strips = NULL,
                       main = NULL,
                       n = 200L,

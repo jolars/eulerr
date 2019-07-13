@@ -14,10 +14,7 @@
 #'   \item{labels}{a list of items `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
 #'   `lineheight`, and `font`}
-#'   \item{quantities}{a list of items `rot`,
-#'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
-#'   `lineheight`, and `font`}
-#'   \item{percentages}{a list with items `rot`,
+#'   \item{quantities}{a list of items `type`, `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
@@ -65,7 +62,6 @@ eulerr_options <- function(...) {
       .eulerr_env$options,
       list(labels = list(fontsize = pointsize),
            quantities = list(fontsize = pointsize),
-           percentages = list(fontsize = pointsize),
            strips = list(fontsize = pointsize),
            legend = list(fontsize = pointsize),
            main = list(fontsize = pointsize),
@@ -116,18 +112,9 @@ eulerr_default_options <- function() {
       font = 2
     ),
     quantities = list(
+      type = "numbers",
       rot = 0,
       col = 1L,
-      alpha = 1,
-      fontsize = 12,
-      cex = 1,
-      fontfamily = "",
-      lineheight = 1.2,
-      font = 1
-    ),
-    percentages = list(
-      rot = 0,
-      col = 1,
       alpha = 1,
       fontsize = 12,
       cex = 1,
@@ -178,7 +165,7 @@ eulerr_default_options <- function() {
       lineheight = 1.2,
       alpha = 1
     ),
-    padding = grid::unit(0.2, "lines")
+    padding = grid::unit(0.4, "lines")
   )
 }
 

@@ -15,13 +15,12 @@ setup_grobs <- function(x,
                         edges,
                         labels,
                         quantities,
-                        percentages,
-                        centers,
-                        number) {
+                        number,
+                        adjust_labels) {
   data_edges <- x$edges
   data_fills <- x$fills
   data_tags <- x$centers
-  # fitted <- x$fitted.values
+  fitted <- x$fitted.values
   empty_sets <- x$empty_sets
   empty_subsets <- x$empty_subsets
 
@@ -30,7 +29,9 @@ setup_grobs <- function(x,
   do_fills <- !is.null(data_fills)
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
-  do_percentages <- !is.null(percentages)
+
+  xlim <- x$xlim
+  ylim <- x$ylim
 
   n_e <- NROW(x$ellipses)
   n_id <- 2L^n_e - 1L
@@ -84,22 +85,29 @@ setup_grobs <- function(x,
     }
   }
 
-  do_tags <- do_quantities || do_labels || do_percentages
+  do_tags <- do_quantities || do_labels
 
   # labels
   if (do_tags) {
-    tags_grob <- gList()
+    tag_grobs <- gList()
 
     for (i in seq_len(NROW(data_tags))) {
-      tags_grob[[i]] <- setup_tag(data_tags[i, ],
+      tag_grobs[[i]] <- setup_tag(data_tags[i, ],
                                   labels,
                                   quantities,
-                                  percentages)
+                                  number = i)
     }
+
+    tags_gtree <- gTree(xlim = xlim,
+                        ylim = ylim,
+                        adjust_labels = adjust_labels,
+                        children = tag_grobs,
+                        name = paste("tags"),
+                        cl = "EulerTags")
   }
 
   grid::grobTree(if (do_fills) fills_grob,
                  if (do_edges) edges_grob,
-                 if (do_tags) tags_grob,
+                 if (do_tags) tags_gtree,
                  name = paste0("diagram.grob.", number))
 }
