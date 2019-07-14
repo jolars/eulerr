@@ -24,7 +24,7 @@ setup_geometry <- function(x,
   dd <- dd[!empty_sets, , drop = FALSE]
 
   # avoid plotting very small intersections
-  nonzero <- abs(fitted)/max(abs(fitted)) > 1e-6
+  nonzero <- abs(fitted)/max(abs(fitted)) > 1e-4
   nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
 
   do_fills <- !is.null(fills)
@@ -110,9 +110,8 @@ setup_geometry <- function(x,
                           id = centers_id,
                           labels = NA_character_,
                           quantities = NA,
-                          percentages = NA_character_,
                           labels_par_id = NA_integer_,
-                          others_par_id = NA_integer_,
+                          quantities_par_id = NA_integer_,
                           row.names = names(orig),
                           stringsAsFactors = FALSE)
 
@@ -135,6 +134,8 @@ setup_geometry <- function(x,
                                        labels$labels[i],
                                        sep = ",")
         }
+
+        centers$labels_par_id[ind] <- i
       }
 
       singles[ind] <- TRUE
@@ -179,18 +180,13 @@ setup_geometry <- function(x,
 
     centers <- centers[has_center, , drop = FALSE]
 
-    centers$labels_par_id[which(!is.na(centers$labels))] <-
-      seq_len(sum(singles))
-
-    centers$others_par_id[!is.na(centers$quantities) | !is.na(centers$percentages)] <-
+    centers$quantities_par_id[!is.na(centers$quantities)] <-
       seq_len(sum(others | singles))
 
     naornull <- function(x)
       is.na(x) | is.null(x)
 
-    has_tag <- !naornull(centers$quantities) |
-      !naornull(centers$labels) |
-      !naornull(centers$percentages)
+    has_tag <- !naornull(centers$quantities) | !naornull(centers$labels)
 
     centers <- centers[has_tag, , drop = FALSE]
   } else {
