@@ -2,10 +2,8 @@
 #'
 #' @param data data for the locations of points and more
 #' @param labels plot parameters for labels
+#' @param number panel number, used for naming the resulting grob
 #' @param quantities plot parameters for quantities
-#' @param percentages plot parameters for percentages
-#' @param xlim x limits
-#' @param ylim y limits
 #'
 #' @return A [grid::gTree()] object
 #' @keywords internal

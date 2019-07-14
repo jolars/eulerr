@@ -4,7 +4,7 @@
 \alias{setup_tag}
 \title{Setup grobs for labels (labels, quantities, percentages)}
 \usage{
-setup_tag(data, labels, quantities)
+setup_tag(data, labels, quantities, number)
 }
 \arguments{
 \item{data}{data for the locations of points and more}
@@ -13,11 +13,7 @@ setup_tag(data, labels, quantities)
 
 \item{quantities}{plot parameters for quantities}
 
-\item{percentages}{plot parameters for percentages}
-
-\item{xlim}{x limits}
-
-\item{ylim}{y limits}
+\item{number}{panel number, used for naming the resulting grob}
 }
 \value{
 A \code{\link[grid:gTree]{grid::gTree()}} object
