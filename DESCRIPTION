@@ -11,8 +11,7 @@ Authors@R: c(person("Johan", "Larsson", email = "mail@larssonjohan.com",
              person("Emanuel", "Huber", role = "ctb",
                     comment = "root solver code"),
              person("Kamil", "Slowikowski", role = c("ctb", "cph"),
-                    comment = c(ORCID = "0000-0002-2843-6370",
-                                "modified code from ggrepel")))
+                    comment = "modified code from ggrepel"))
 Description: Generate area-proportional Euler diagrams
     using numerical optimization. An Euler diagram is a generalization of a Venn
     diagram, relaxing the criterion that all interactions need to be
