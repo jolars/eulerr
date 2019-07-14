@@ -142,60 +142,64 @@ compress_layout <- function(fpar, id, fit) {
 
     for (i in seq_along(unique_clusters)) {
       ii <- unique_clusters[[i]]
-      h <- fpar[ii, 1L]
-      k <- fpar[ii, 2L]
 
-      if (NCOL(fpar) == 3L) {
-        a <- b <- fpar[ii, 3L]
-        phi <- rep.int(0, length(a))
-      } else {
-        a <- fpar[ii, 3L]
-        b <- fpar[ii, 4L]
-        phi <- fpar[ii, 5L]
-      }
+      h <- fpar[ii, 1]
+      k <- fpar[ii, 2]
+      a <- fpar[ii, 3]
+      b <- fpar[ii, 4]
+      phi <- fpar[ii, 5]
 
       # normalize rotation by setting rotation angle between two first
       # ellipses to 0
-      o <- seq_len(length(h))
-      if (length(o) > 1) {
-        ang <- atan2(k[o[2]] - k[o[1]], h[o[2]] - h[o[1]])
 
-        h0 <- cos(-ang)*(h - h[o[1]]) - sin(-ang)*(k - k[o[1]]) + h[o[1]]
-        k0 <- sin(-ang)*(h - h[o[1]]) + cos(-ang)*(k - k[o[1]]) + k[o[1]]
-        phi0 <- phi - ang
+      if (length(h) > 1) {
+        theta <- atan2(k[2] - k[1], h[2] - h[1])
 
-        fpar[ii, 1] <- h <- h0
-        fpar[ii, 2] <- k <- k0
-        fpar[ii, 5] <- phi <- phi0
+        h0 <- cos(-theta)*(h - h[1]) - sin(-theta)*(k - k[1]) + h[1]
+        k0 <- sin(-theta)*(h - h[1]) + cos(-theta)*(k - k[1]) + k[1]
+        phi0 <- phi - theta
+
+        h <- h0
+        k <- k0
+        phi <- phi0
+
+        xc <- mean(range(h))
+        yc <- mean(range(k))
 
         # mirror across y axis if first shape is not at bottom
-        if ((k[1] > mean(k))) {
-          fpar[ii, 2] <- -fpar[ii, 2]
-          fpar[ii, 5] <- -fpar[ii, 5] + pi
+        if ((k[1] > yc)) {
+          k <- yc - k
+          phi <- -pi + phi
         }
 
-        # mirro across x axis if first set is not furthest to the left
-        if (h[1] > mean(h)) {
-          fpar[ii, 1] <- -fpar[ii, 1]
-          fpar[ii, 5] <- -fpar[ii, 5] + pi
+        # mirror across x axis if first set is not furthest to the left
+        if (h[1] > xc) {
+          h <- xc -h
+          phi <- -phi + pi
         }
       }
 
       limits <- get_bounding_box(h, k, a, b, phi)
 
-      bounds[1L:2L, i] <- limits$xlim
-      bounds[3L:4L, i] <- limits$ylim
+      fpar[ii, 1] <- h
+      fpar[ii, 2] <- k
+      fpar[ii, 3] <- a
+      fpar[ii, 4] <- b
+      fpar[ii, 5] <- phi
+
+      bounds[1:2, i] <- limits$xlim
+      bounds[3:4, i] <- limits$ylim
     }
 
     if (n_clusters > 1) {
-      # Skyline pack the bounding rectangles
+      # pack the bounding rectangles
       # TODO: Fix occasional errors in computing the bounding boxes.
       if (all(is.finite(bounds))) {
         new_bounds <- skyline_pack(bounds)
         for (i in seq_along(unique_clusters)) {
           ii <- unique_clusters[[i]]
-          fpar[ii, 1L] <- fpar[ii, 1L] - (bounds[1L, i] - new_bounds[1L, i])
-          fpar[ii, 2L] <- fpar[ii, 2L] - (bounds[3L, i] - new_bounds[3L, i])
+          fpar[ii, 1] <- fpar[ii, 1] - (bounds[1, i] - new_bounds[1, i])
+          fpar[ii, 2] <- fpar[ii, 2] - (bounds[3, i] - new_bounds[3, i])
         }
       }
     }
