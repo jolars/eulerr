@@ -25,9 +25,9 @@ setup_tag <- function(data, labels, quantities, number) {
       quantity,
       x = unit(x, "native"),
       y = unit(y, "native"),
-      rot = quantities$rot[data$others_par_id],
-      gp = quantities$gp[data$others_par_id],
-      name = paste0("tag.quantity.", data$others_par_id)
+      rot = quantities$rot[data$quantities_par_id],
+      gp = quantities$gp[data$quantities_par_id],
+      name = paste0("tag.quantity.", data$quantities_par_id)
     )
   } else {
     quantities_grob <- nullGrob()
@@ -155,10 +155,13 @@ makeContent.EulerTags <- function(x) {
       direction = "both"
     )
 
+    k <- 1
+
     for (i in seq_along(x$children)) {
       if (!inherits(x$children[[i]]$children[[1]], "null")) {
-        x$children[[i]]$children[[1]]$x <- unit(repel[i, 1], "native")
-        x$children[[i]]$children[[1]]$y <- unit(repel[i, 2], "native")
+        x$children[[i]]$children[[1]]$x <- unit(repel[k, 1], "native")
+        x$children[[i]]$children[[1]]$y <- unit(repel[k, 2], "native")
+        k <- k + 1
       }
     }
   }
