@@ -155,6 +155,12 @@ plot.euler <- function(x,
 
   setnames <- rownames(ellipses)
 
+  empty_sets <- is.na(x$ellipses[, 1L])
+  empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
+  fitted <- x$fitted.values[!empty_subsets]
+  nonzero <- abs(fitted)/max(abs(fitted)) > 1e-4
+  nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
+
   stopifnot(n > 0, is.numeric(n) && length(n) == 1)
 
   # setup fills
@@ -292,9 +298,9 @@ plot.euler <- function(x,
     # TODO: create a better, custom legend
 
     legend <- update_list(
-      list(labels = if (do_labels) labels$labels else setnames,
+      list(labels = if (do_labels) labels$labels else setnames[!empty_sets],
            side = opar$legend$side,
-           nrow = n_e,
+           nrow = sum(!empty_sets),
            ncol = 1L,
            byrow = opar$legend$byrow,
            do.lines = opar$legend$do.lines,
@@ -308,22 +314,23 @@ plot.euler <- function(x,
 
     legend$gp <- setup_gpar(
       list(
-        fill = if (do_fills) fills$gp$fill else "transparent",
+        fill = if (do_fills) fills$gp$fill[!empty_sets] else "transparent",
         alpha = if (do_fills)
-          fills$gp$alpha
+          fills$gp$alpha[!empty_sets]
         else if (do_edges)
-          edges$gp$alpha
+          edges$gp$alpha[!empty_sets]
         else
           0,
         cex = opar$legend$cex,
-        fontsize = opar$legend$fontsize/opar$legend$cex,
+        fontsize =
+          opar$legend$fontsize/opar$legend$cex,
         font = opar$legend$font,
         fontfamily = opar$legend$fontfamily,
-        lwd = if (do_edges) edges$gp$lwd else 0,
-        lex = if (do_edges) edges$gp$lex else 0,
-        col = if (do_edges) edges$gp$col else "transparent"),
+        lwd = if (do_edges) edges$gp$lwd[!empty_sets] else 0,
+        lex = if (do_edges) edges$gp$lex[!empty_sets] else 0,
+        col = if (do_edges) edges$gp$col[!empty_sets] else "transparent"),
       legend,
-      n_e
+      sum(!empty_sets)
     )
   } else {
     legend <- NULL
