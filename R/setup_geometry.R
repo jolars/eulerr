@@ -1,10 +1,13 @@
 #' Compute geometries and label locations
 #'
+#' @param fills fills
+#' @param edges edges
+#' @param labels labels
+#' @param quantities quantities
+#' @param n number of sets
+#' @param id identity matrix
+#' @param merged_sets which sets have been merged?
 #' @param x an object of class 'euler'
-#' @param do_fills do fills?
-#' @param do_edges do edges?
-#' @param do_labels do labels?
-#' @param do_quantities do quantities?
 #'
 #' @return a list object with slots for the various objects
 #' @keywords internal
@@ -14,9 +17,10 @@ setup_geometry <- function(x,
                            labels,
                            quantities,
                            n,
-                           id) {
+                           id,
+                           merged_sets) {
   dd <- x$ellipses
-  empty_sets <- is.na(dd[, 1L])
+  empty_sets <- is.na(dd[, 1L]) & !merged_sets
   empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
 
   orig <- x$original.values[!empty_subsets]
@@ -24,7 +28,7 @@ setup_geometry <- function(x,
   dd <- dd[!empty_sets, , drop = FALSE]
 
   # avoid plotting very small intersections
-  nonzero <- abs(fitted)/max(abs(fitted)) > 1e-4
+  nonzero <- nonzero_fit(fitted)
   nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
 
   do_fills <- !is.null(fills)
@@ -92,7 +96,7 @@ setup_geometry <- function(x,
 
   if (do_labels || do_quantities) {
     n_singles <- sum(rowSums(id) == 1)
-    empty <- abs(fitted) < sqrt(.Machine$double.eps)
+    empty <- !nonzero_fit(fitted)
 
     width <- abs(limits$xlim[1] - limits$xlim[2])
     height <- abs(limits$ylim[1] - limits$ylim[2])
@@ -127,13 +131,7 @@ setup_geometry <- function(x,
       ind <- which((id[, i] & !empty & has_center))[1]
 
       if (do_labels) {
-        if (is.na(centers$labels[ind])) {
-          centers$labels[ind] <- labels$labels[i]
-        } else {
-          centers$labels[ind] <- paste(centers$labels[ind],
-                                       labels$labels[i],
-                                       sep = ",")
-        }
+        centers$labels[ind] <- labels$labels[i]
 
         centers$labels_par_id[ind] <- i
       }

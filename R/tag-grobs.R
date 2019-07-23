@@ -37,14 +37,17 @@ setup_tag <- function(data, labels, quantities, number) {
     labels_grob <- textGrob(
       label,
       x = unit(x, "native"),
-      y = unit(y, "native") +
-        0.5*stringHeight(label) +
-        0.5*grobHeight(quantities_grob) +
-        padding,
+      y = unit(y, "native"),
       rot = labels$rot[data$labels_par_id],
       gp = labels$gp[data$labels_par_id],
       name = paste0("tag.label.", data$labels_par_id)
     )
+
+    if (do_quantities) {
+      labels_grob$y <- labels_grob$y + 0.5*stringHeight(label) +
+        0.5*grobHeight(quantities_grob) +
+        padding
+    }
 
   } else {
     labels_grob <- nullGrob()

@@ -16,7 +16,8 @@ setup_grobs <- function(x,
                         labels,
                         quantities,
                         number,
-                        adjust_labels) {
+                        adjust_labels,
+                        merged_sets) {
   data_edges <- x$edges
   data_fills <- x$fills
   data_tags <- x$centers
@@ -48,7 +49,7 @@ setup_grobs <- function(x,
                                        id.lengths = data_edges$id.lengths,
                                        default.units = "native",
                                        name = "edges.grob",
-                                       gp = edges$gp[which(!empty_sets)])
+                                       gp = edges$gp[which(!empty_sets & !merged_sets)])
     }
   }
 
@@ -67,9 +68,9 @@ setup_grobs <- function(x,
     } else {
       fills_grob <- vector("list", n_id)
       fill_id <- seq_len(n_id)
-      empty_cols <- colSums(id & fitted > 0) == 0
+      empty <- !nonzero_fit(fitted)
+      empty_cols <- colSums(id & !empty) == 0 | merged_sets
       # skip <- rowSums(id[, empty_cols, drop = FALSE]) > 0
-      empty <- fitted < sqrt(.Machine$double.eps)
       for (i in seq_len(n_e)) {
         if (empty[i] && !empty_cols[i]) {
           idx <- id[i, ]

@@ -155,11 +155,55 @@ plot.euler <- function(x,
 
   setnames <- rownames(ellipses)
 
-  empty_sets <- is.na(x$ellipses[, 1L])
-  empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
-  fitted <- x$fitted.values[!empty_subsets]
-  nonzero <- abs(fitted)/max(abs(fitted)) > 1e-4
-  nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
+  if (do_groups) {
+    res <- lapply(x, function(xi) is.na(xi$ellipses)[, 1L])
+    empty_sets <- apply(do.call(rbind, res), 2, all)
+
+    empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
+
+    res <- lapply(x, function(xi) {
+      fitted <- xi$fitted.values[!empty_subsets]
+      nonzero <- nonzero_fit(fitted)
+      ifelse(is.na(nonzero), FALSE, nonzero)
+    })
+
+    nonzero <- apply(do.call(rbind, res), 2, any)
+
+  } else {
+    empty_sets <- is.na(x$ellipses[, 1L])
+    empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
+    fitted <- x$fitted.values[!empty_subsets]
+    nonzero <- nonzero_fit(fitted)
+    nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
+  }
+
+  merged_sets <- rep(FALSE, length(setnames))
+
+  if (!do_groups && any(nonzero)) {
+    n_overlaps <- integer(n_id)
+    single_mass <- logical(n_e)
+
+    for (i in seq_len(n_e)) {
+      nz <- nonzero_fit(x$fitted.values)
+      nzi <- nz & id[, i]
+
+      if (sum(nzi) == 1) {
+        n_overlaps[which(nzi)] <- n_overlaps[which(nzi)] + 1
+      }
+
+      single_mass[i] <- sum(nzi) == 1
+    }
+
+    complete_overlaps <- n_overlaps > 1
+
+    merge_sets <- id[complete_overlaps, ] & single_mass
+
+    if (any(merge_sets)) {
+      setnames[merge_sets] <- paste(setnames[merge_sets],
+                                    collapse = ",")
+      merged_sets[which(merge_sets)[length(which(merge_sets))]] <- TRUE
+    }
+  }
 
   stopifnot(n > 0, is.numeric(n) && length(n) == 1)
 
@@ -298,7 +342,7 @@ plot.euler <- function(x,
     # TODO: create a better, custom legend
 
     legend <- update_list(
-      list(labels = if (do_labels) labels$labels else setnames[!empty_sets],
+      list(labels = setnames[!empty_sets & !merged_sets],
            side = opar$legend$side,
            nrow = sum(!empty_sets),
            ncol = 1L,
@@ -314,11 +358,11 @@ plot.euler <- function(x,
 
     legend$gp <- setup_gpar(
       list(
-        fill = if (do_fills) fills$gp$fill[!empty_sets] else "transparent",
+        fill = if (do_fills) fills$gp$fill[!empty_sets & !merged_sets] else "transparent",
         alpha = if (do_fills)
-          fills$gp$alpha[!empty_sets]
+          fills$gp$alpha[!empty_sets & !merged_sets]
         else if (do_edges)
-          edges$gp$alpha[!empty_sets]
+          edges$gp$alpha[!empty_sets & !merged_sets]
         else
           0,
         cex = opar$legend$cex,
@@ -326,9 +370,11 @@ plot.euler <- function(x,
           opar$legend$fontsize/opar$legend$cex,
         font = opar$legend$font,
         fontfamily = opar$legend$fontfamily,
-        lwd = if (do_edges) edges$gp$lwd[!empty_sets] else 0,
-        lex = if (do_edges) edges$gp$lex[!empty_sets] else 0,
-        col = if (do_edges) edges$gp$col[!empty_sets] else "transparent"),
+        lwd = if (do_edges) edges$gp$lwd[!empty_sets & !merged_sets] else 0,
+        lex = if (do_edges) edges$gp$lex[!empty_sets & !merged_sets] else 0,
+        col = if (do_edges)
+          edges$gp$col[!empty_sets & !merged_sets]
+          else "transparent"),
       legend,
       sum(!empty_sets)
     )
@@ -389,15 +435,17 @@ plot.euler <- function(x,
                    labels = labels,
                    quantities = quantities,
                    n = n,
-                   id = id)
+                   id = id,
+                   merged_sets = merged_sets)
   } else {
     data <- setup_geometry(x,
-                           fills,
-                           edges,
-                           labels,
-                           quantities,
-                           n,
-                           id)
+                           fills = fills,
+                           edges = edges,
+                           labels = labels,
+                           quantities = quantities,
+                           n = n,
+                           id = id,
+                           merged_sets = merged_sets)
   }
 
   # start setting up grobs
@@ -412,7 +460,8 @@ plot.euler <- function(x,
                                               labels = labels,
                                               quantities = quantities,
                                               number = i,
-                                              adjust_labels = adjust_labels)
+                                              adjust_labels = adjust_labels,
+                                              merged_sets = merged_sets)
     }
     euler_grob <- grid::gTree(grid::nullGrob(),
                               name = "canvas.grob",
@@ -430,7 +479,8 @@ plot.euler <- function(x,
                               labels = labels,
                               quantities = quantities,
                               number = 1,
-                              adjust_labels = adjust_labels)
+                              adjust_labels = adjust_labels,
+                              merged_sets = merged_sets)
     euler_grob <- grid::grobTree(euler_grob,
                                  name = "canvas.grob")
 
