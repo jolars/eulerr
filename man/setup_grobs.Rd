@@ -4,7 +4,8 @@
 \alias{setup_grobs}
 \title{Grobify Euler objects}
 \usage{
-setup_grobs(x, fills, edges, labels, quantities, number, adjust_labels)
+setup_grobs(x, fills, edges, labels, quantities, number, adjust_labels,
+  merged_sets)
 }
 \arguments{
 \item{x}{geometry data}
