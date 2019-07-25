@@ -66,13 +66,10 @@ test_that("normal plotting works without errors", {
     } else {
       legend <- list(side = grid$side[i])
     }
-    plot(f1, legend = legend, main = grid$main[!!i])
-    plot(f2, legend = legend, main = grid$main[!!i])
-    # plot(f1, legend = legend, main = grid$main[!!i])
 
-    # expect_silent(dont_plot(plot(f1, legend = legend, main = grid$main[!!i])))
-    # expect_silent(dont_plot(plot(f2, legend = legend, main = grid$main[!!i])))
-    # expect_silent(dont_plot(plot(f3, legend = legend, main = grid$main[!!i])))
+    expect_silent(dont_plot(plot(f1, legend = legend, main = grid$main[!!i])))
+    expect_silent(dont_plot(plot(f2, legend = legend, main = grid$main[!!i])))
+    expect_silent(dont_plot(plot(f3, legend = legend, main = grid$main[!!i])))
   }
 
   f4 <- euler(c(A = 1))
@@ -106,4 +103,11 @@ test_that("plots with euler lists works", {
   expect_silent(dont_plot(plot(f1, legend = TRUE, strips = FALSE)))
   expect_silent(dont_plot(plot(f2, strips = list(cex = 2, fontface = "bold"))))
   expect_silent(dont_plot(plot(f1)))
+})
+
+test_that("label repelling functions", {
+  f1 <- euler(c("very long label that has lots of words in it" = 1,
+                "another long, long label that is sure to overlap" = 1,
+                "very long label that has lots of words in it&another long, long label that is sure to overlap" = 10))
+  expect_silent(dont_plot(plot(f1, adjust_labels = TRUE, quantities = TRUE)))
 })
