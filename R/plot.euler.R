@@ -783,6 +783,7 @@ plot.venn <- function(x,
                       strips = NULL,
                       main = NULL,
                       n = 200L,
+                      adjust_labels = TRUE,
                       ...)
 {
   NextMethod("plot", ..., quantities = quantities)
