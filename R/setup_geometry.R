@@ -156,7 +156,7 @@ setup_geometry <- function(x,
         }
 
         if (length(type) == 2) {
-          if (type[1] == "numbers") {
+          if (type[1] == "counts") {
             qnt <- paste0(signif(num, digits), " (", perc, ")")
           } else {
             qnt <- paste0(perc, " (", num, ")")

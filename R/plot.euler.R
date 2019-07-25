@@ -66,10 +66,10 @@
 #'   text for the quantities' labels, which by
 #'   default are the original values in the input to [euler()]. In addition
 #'   to arguments that apply to [grid::grid.text()], an argument `type` may
-#'   also be used which should be a combination of `"numbers"` and
+#'   also be used which should be a combination of `"counts"` and
 #'   `"percent"`. The first item will be printed first and the second
 #'   will be printed thereafter inside brackets. The default is
-#'   `type = "numbers"`.
+#'   `type = "counts"`.
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]
 #' @param n number of vertices for the `edges` and `fills`
@@ -303,8 +303,11 @@ plot.euler <- function(x,
   if (do_quantities) {
     if (is.list(quantities)) {
       if (!is.null(quantities$type)) {
+        if (!all(quantities$type %in% c("counts", "percent")))
+          stop("'type' must be one or both of 'counts' and 'percent")
+
         quantities_type <- match.arg(quantities$type,
-                                     c("numbers", "percent"),
+                                     c("counts", "percent"),
                                      several.ok = TRUE)
       } else {
         quantities_type <- opar$quantities$type
