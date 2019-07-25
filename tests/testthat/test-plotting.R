@@ -19,12 +19,14 @@ test_that("normal plotting works without errors", {
   expect_silent(p[[8]] <- plot(f1, expression = "phi[1]"))
   expect_silent(p[[9]] <- plot(f1, edges = c("white", "blue")))
   expect_silent(p[[10]] <- plot(f1, quantities = list(type = "percent")))
-  expect_silent(p[[11]] <- plot(f1, quantities = list(type = "numbers")))
+  expect_silent(p[[11]] <- plot(f1, quantities = list(type = "counts")))
   expect_silent(p[[11]] <- plot(f1, quantities = list(type = c("percent",
-                                                               "numbers"))))
+                                                               "counts"))))
 
-  expect_silent(p[[12]] <- plot(f1, quantities = list(type = c("numbers",
+  expect_silent(p[[12]] <- plot(f1, quantities = list(type = c("counts",
                                                                "percent"))))
+
+  expect_error(plot(f1, quantities = list(type = c("asdf"))))
 
   grid <- expand.grid(labels = c(TRUE, FALSE),
                       quantities = c(TRUE, FALSE),
