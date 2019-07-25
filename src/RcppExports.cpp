@@ -28,29 +28,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// repel_boxes2
-DataFrame repel_boxes2(NumericMatrix data_points, NumericVector point_size, double point_padding_x, double point_padding_y, NumericMatrix boxes, NumericVector xlim, NumericVector ylim, NumericVector hjust, NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
-RcppExport SEXP _eulerr_repel_boxes2(SEXP data_pointsSEXP, SEXP point_sizeSEXP, SEXP point_padding_xSEXP, SEXP point_padding_ySEXP, SEXP boxesSEXP, SEXP xlimSEXP, SEXP ylimSEXP, SEXP hjustSEXP, SEXP vjustSEXP, SEXP force_pushSEXP, SEXP force_pullSEXP, SEXP maxiterSEXP, SEXP directionSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type data_points(data_pointsSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type point_size(point_sizeSEXP);
-    Rcpp::traits::input_parameter< double >::type point_padding_x(point_padding_xSEXP);
-    Rcpp::traits::input_parameter< double >::type point_padding_y(point_padding_ySEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type boxes(boxesSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type xlim(xlimSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type ylim(ylimSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type hjust(hjustSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type vjust(vjustSEXP);
-    Rcpp::traits::input_parameter< double >::type force_push(force_pushSEXP);
-    Rcpp::traits::input_parameter< double >::type force_pull(force_pullSEXP);
-    Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
-    Rcpp::traits::input_parameter< std::string >::type direction(directionSEXP);
-    rcpp_result_gen = Rcpp::wrap(repel_boxes2(data_points, point_size, point_padding_x, point_padding_y, boxes, xlim, ylim, hjust, vjust, force_push, force_pull, maxiter, direction));
-    return rcpp_result_gen;
-END_RCPP
-}
 // intersect_ellipses
 std::vector<double> intersect_ellipses(const std::vector<double>& par, const bool circle, const bool approx);
 RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP, SEXP approxSEXP) {
@@ -130,7 +107,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_repel_boxes", (DL_FUNC) &_eulerr_repel_boxes, 12},
-    {"_eulerr_repel_boxes2", (DL_FUNC) &_eulerr_repel_boxes2, 13},
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
