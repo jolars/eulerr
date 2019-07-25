@@ -133,7 +133,7 @@ plot(fit, quantities = TRUE)
 plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 
 # Plot without fills and distinguish sets with border types instead
-plot(fit, fill = "transparent", lty = 1:2)
+plot(fit, fills = "transparent", lty = 1:2)
 
 # Save plot parameters to plot using some other method
 diagram_description <- plot(fit)
