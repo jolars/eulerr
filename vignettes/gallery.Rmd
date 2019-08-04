@@ -86,8 +86,8 @@ plot(one_contained,
 
 ### Russian doll
 
-Sets intersecting inside other sets. This example also examplifies how
-the auomatic label adjustment algorithm (borrowed from the excellent
+Sets intersecting inside other sets. This example also exemplifies how
+the automatic label adjustment algorithm (borrowed from the excellent
 **ggrepel** package) works.
 
 ```{r}
