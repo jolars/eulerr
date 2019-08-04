@@ -35,10 +35,10 @@ text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
 text for the quantities' labels, which by
 default are the original values in the input to \code{\link[=euler]{euler()}}. In addition
 to arguments that apply to \code{\link[grid:grid.text]{grid::grid.text()}}, an argument \code{type} may
-also be used which should be a combination of \code{"numbers"} and
+also be used which should be a combination of \code{"counts"} and
 \code{"percent"}. The first item will be printed first and the second
 will be printed thereafter inside brackets. The default is
-\code{type = "numbers"}.}
+\code{type = "counts"}.}
 
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}}
