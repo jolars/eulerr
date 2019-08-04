@@ -21,6 +21,8 @@ set to `TRUE`.
 * The fill colors for sets which are completely contained within another set 
 are now once again composed of a mix of the color of the subset and
 the superset.
+* Plotting data has been exposed in a `data` slot in the object created
+by calling to `plot.euler()` (#57)
 
 
 ## Bug fixes

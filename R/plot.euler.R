@@ -704,13 +704,18 @@ plot.euler <- function(x,
 
   euler_grob$vp <- canvas_vp
 
-    # return a gTree object
-  grid::grobTree(
+  # return a gTree object
+  children <- gList(
     if (do_main) main_grob = main_grob,
     if (do_strip_top) strip_top_grob = strip_top_grob,
     if (do_strip_left) strip_left_grob = strip_left_grob,
     if (do_legend) legend_grob = legend_grob,
-    euler_grob = euler_grob,
+    euler_grob = euler_grob
+  )
+
+  grid::gTree(
+    data = data,
+    children = children,
     vp = grid::viewport(layout = grid::grid.layout(nrow = nrow,
                                                    ncol = ncol,
                                                    widths = widths,
