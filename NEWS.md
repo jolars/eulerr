@@ -13,6 +13,8 @@ implementation for labels.
 * `plot.euler()` now uses code from the **ggrepel** package to prevent
 labels from overlapping or escaping the plot area if `adjust_labels` is
 set to `TRUE`.
+* A new vignette featuring a gallery of plots from the package has been
+added.
 
 ## Minor changes
 
