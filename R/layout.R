@@ -169,13 +169,13 @@ compress_layout <- function(fpar, id, fit) {
         # mirror across y axis if first shape is not at bottom
         if ((k[1] > yc)) {
           k <- yc - k
-          phi <- -pi + phi
+          phi <- pi - phi
         }
 
         # mirror across x axis if first set is not furthest to the left
         if (h[1] > xc) {
-          h <- xc -h
-          phi <- -phi + pi
+          h <- xc - h
+          phi <- pi - phi
         }
       }
 

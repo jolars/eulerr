@@ -22,6 +22,13 @@ set to `TRUE`.
 are now once again composed of a mix of the color of the subset and
 the superset.
 
+
+## Bug fixes
+
+* An error in layout normalization that ocurred sometimes
+with ellipses has been fixed.
+
+
 # eulerr 5.1.0
 
 ## New features
