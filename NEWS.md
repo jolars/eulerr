@@ -29,7 +29,7 @@ by calling to `plot.euler()` (#57)
 
 ## Bug fixes
 
-* An error in layout normalization that ocurred sometimes
+* An error in layout normalization that occurred sometimes
 with ellipses has been fixed.
 
 
