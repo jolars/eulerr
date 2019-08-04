@@ -162,7 +162,10 @@ uniform <- euler(c("A" = 10, "B" = 10, "C" = 10, "D" = 10,
                    "A&B" = 3, "A&C" = 3, "A&D" = 0, "B&C" = 0, "B&D" = 3, "C&D" = 3,
                    "A&B&C" = 1, "A&B&D" = 1, "A&C&D" = 1, "B&C&D" = 1,
                    "A&B&C&D" = 1))
-plot(uniform)
+plot(uniform, labels = list(labels = c("Frodo", "Bilbo", "Merry", "Pippin"),
+                            font = 1:4,
+                            col = 1:4,
+                            cex = seq(1, 1.5, length.out = 4)))
 ```
 
 
