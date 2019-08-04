@@ -126,9 +126,10 @@ makeContent.EulerTags <- function(x) {
   padding <- eulerr_options()$padding
   padding <- convertHeight(padding, "native", TRUE)
 
+  # treat quantities as points for the algorithm
   if (NROW(dd) > 0) {
-    point_padding_x <- max(dd$w)*0.49 + padding
-    point_padding_y <- max(dd$h)*0.49 + padding
+    point_padding_x <- max(dd$w)*0.49
+    point_padding_y <- max(dd$h)*0.49
     data_points <- cbind(dd$x, dd$y)
   } else {
     point_padding_x <- 0
@@ -138,10 +139,11 @@ makeContent.EulerTags <- function(x) {
 
   # only do something if there are any labels
   if (NROW(d) > 0) {
-    boxes <- data.frame(x1 = d$x - 0.5*d$w,
-                        y1 = d$y - 0.5*d$h,
-                        x2 = d$x + 0.5*d$w,
-                        y2 = d$y + 0.5*d$h)
+    # boxes are the labels (in eulerr terminology)
+    boxes <- data.frame(x1 = d$x - 0.5*d$w - padding,
+                        y1 = d$y - 0.5*d$h - padding,
+                        x2 = d$x + 0.5*d$w + padding,
+                        y2 = d$y + 0.5*d$h + padding)
 
     repel <- repel_boxes(
       data_points = data_points,
