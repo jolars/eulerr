@@ -1,3 +1,5 @@
+# eulerr 6.0.0
+
 # eulerr 5.1.0.9000
 
 ## New features
