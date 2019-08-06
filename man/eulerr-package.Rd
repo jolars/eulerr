@@ -30,6 +30,7 @@ Other contributors:
   \item Peter Gustafsson [contributor]
   \item David H. Eberly (geometric algorithms) [contributor]
   \item Emanuel Huber (root solver code) [contributor]
+  \item Kamil Slowikowski (modified code from ggrepel) [contributor, copyright holder]
 }
 
 }

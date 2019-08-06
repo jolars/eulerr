@@ -18,11 +18,18 @@ test_that("normal plotting works without errors", {
   expect_silent(p[[7]] <- plot(f1, main = "Hello"))
   expect_silent(p[[8]] <- plot(f1, expression = "phi[1]"))
   expect_silent(p[[9]] <- plot(f1, edges = c("white", "blue")))
-  expect_silent(p[[10]] <- plot(f1, percentages = TRUE))
+  expect_silent(p[[10]] <- plot(f1, quantities = list(type = "percent")))
+  expect_silent(p[[11]] <- plot(f1, quantities = list(type = "counts")))
+  expect_silent(p[[11]] <- plot(f1, quantities = list(type = c("percent",
+                                                               "counts"))))
+
+  expect_silent(p[[12]] <- plot(f1, quantities = list(type = c("counts",
+                                                               "percent"))))
+
+  expect_error(plot(f1, quantities = list(type = c("asdf"))))
 
   grid <- expand.grid(labels = c(TRUE, FALSE),
                       quantities = c(TRUE, FALSE),
-                      percentages = c(TRUE, FALSE),
                       legend = c(TRUE, FALSE),
                       fills = c(TRUE, FALSE),
                       edges = c(TRUE, FALSE))
@@ -31,7 +38,6 @@ test_that("normal plotting works without errors", {
     expect_silent(dont_plot(plot(f1,
                                  labels = grid$labels[!!i],
                                  quantities = grid$quantities[!!i],
-                                 percentages = grid$percentages[!!i],
                                  legend = grid$legend[!!i],
                                  fills = grid$fills[!!i],
                                  edges = grid$edges[!!i])))
@@ -53,7 +59,8 @@ test_that("normal plotting works without errors", {
                                              lwd = c(1, 2))))
 
   grid <- expand.grid(side = c(NA, "right", "left", "top", "bottom"),
-                      main = c("Title", FALSE))
+                      main = c("Title", FALSE),
+                      stringsAsFactors = FALSE)
 
   for (i in seq_len(nrow(grid))) {
     if (is.na(grid$side[i])) {
@@ -84,7 +91,9 @@ test_that("error_plot functions normally", {
 
   expect_silent(dont_plot(error_plot(f)))
   expect_silent(dont_plot(error_plot(f,
-                                     pal = grDevices::colorRampPalette(c("red", "blue")))))
+                                     pal = grDevices::colorRampPalette(c(
+                                       "red", "blue"
+                                     )))))
   expect_silent(dont_plot(error_plot(f, quantities = FALSE)))
   expect_silent(dont_plot(error_plot(f, edges = FALSE)))
 })
@@ -96,4 +105,11 @@ test_that("plots with euler lists works", {
   expect_silent(dont_plot(plot(f1, legend = TRUE, strips = FALSE)))
   expect_silent(dont_plot(plot(f2, strips = list(cex = 2, fontface = "bold"))))
   expect_silent(dont_plot(plot(f1)))
+})
+
+test_that("label repelling functions", {
+  f1 <- euler(c("very long label that has lots of words in it" = 1,
+                "another long, long label that is sure to overlap" = 1,
+                "very long label that has lots of words in it&another long, long label that is sure to overlap" = 10))
+  expect_silent(dont_plot(plot(f1, adjust_labels = TRUE, quantities = TRUE)))
 })

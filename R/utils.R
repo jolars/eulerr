@@ -325,3 +325,8 @@ stress <- function(orig, fit)
   sse   <- sum((fit - orig*slope)^2)
   sse/sst
 }
+
+
+nonzero_fit <- function(x) {
+  abs(x) / sum(abs(x) + .Machine$double.eps) > 1e-4
+}

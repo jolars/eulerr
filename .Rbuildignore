@@ -22,3 +22,5 @@
 ^vignettes/*\.tex$
 ^vignettes/*\.toc$
 ^codecov\.yml$
+^doc$
+^Meta$
