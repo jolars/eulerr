@@ -68,9 +68,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 2.152162e-12
+#> [1] 1.681159e-12
 fit$diagError
-#> [1] 2.366725e-07
+#> [1] 2.562909e-07
 ```
 
 and plot it
@@ -89,7 +89,8 @@ for details.
 
 ## License
 
-eulerr is open source software, licensed under [GPL-3](LICENSE).
+eulerr is open source software, licensed under
+[GPL-3](https://github.com/jolars/eulerr/blob/master/LICENSE).
 
 ## Versioning
 
@@ -98,8 +99,8 @@ eulerr uses [semantic versioning](http://semver.org).
 ## Code of conduct
 
 Please note that this project is released with a [Contributor Code of
-Conduct](CONDUCT.md). By participating in this project you agree to
-abide by its terms.
+Conduct](https://github.com/jolars/eulerr/blob/master/CONDUCT.md). By
+participating in this project you agree to abide by its terms.
 
 ## Acknowledgements
 
