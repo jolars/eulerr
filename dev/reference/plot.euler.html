@@ -91,6 +91,9 @@ to learn about the individual settings for each argument." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
     </li>
     <li>
@@ -147,12 +150,12 @@ to learn about the individual settings for each argument.</p>
     <pre class="usage"><span class='co'># S3 method for euler</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/identical'>identical</a></span>(<span class='no'>legend</span>, <span class='fl'>FALSE</span>), <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>percentages</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='no'>...</span>)
+  <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='kw'>adjust_labels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for venn</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/identical'>identical</a></span>(<span class='no'>legend</span>, <span class='fl'>FALSE</span>), <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>percentages</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>strips</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>200L</span>, <span class='kw'>adjust_labels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,18 +191,12 @@ text for the labels. See <code><a href='https://www.rdocumentation.org/packages/
       <th>quantities</th>
       <td><p>a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
-default are the original values in the input to <code><a href='euler.html'>euler()</a></code>. See
-<code><a href='https://www.rdocumentation.org/packages/grid/topics/grid.text'>grid::grid.text()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>percentages</th>
-      <td><p>a logical, vector, or list. If <code>TRUE</code>, the
-percentages of the original set overlaps relative masses will be plotted
-underneath the label and quantity for each overlap's tag.
-Vectors are assumed to be
-text for the percentages' labels, which by
-default are the original values in the input to <code><a href='euler.html'>euler()</a></code>. See
-<code><a href='https://www.rdocumentation.org/packages/grid/topics/grid.text'>grid::grid.text()</a></code>.</p></td>
+default are the original values in the input to <code><a href='euler.html'>euler()</a></code>. In addition
+to arguments that apply to <code><a href='https://www.rdocumentation.org/packages/grid/topics/grid.text'>grid::grid.text()</a></code>, an argument <code>type</code> may
+also be used which should be a combination of <code>"counts"</code> and
+<code>"percent"</code>. The first item will be printed first and the second
+will be printed thereafter inside brackets. The default is
+<code>type = "counts"</code>.</p></td>
     </tr>
     <tr>
       <th>strips</th>
@@ -220,9 +217,16 @@ named <code>'label'</code> must be provided (and will be used for the actual tex
       <td><p>number of vertices for the <code>edges</code> and <code>fills</code></p></td>
     </tr>
     <tr>
+      <th>adjust_labels</th>
+      <td><p>a logical. If <code>TRUE</code>, adjustment will be made to avoid
+overlaps or out-of-limits plotting of labels, quantities, and
+percentages.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>parameters to update <code>fills</code> and <code>edges</code> with and thereby a shortcut
-to set these parameters</p></td>
+to set these parameters
+<code><a href='https://www.rdocumentation.org/packages/grid/topics/grid.text'>grid::grid.text()</a></code>.</p></td>
     </tr>
     </table>
     
@@ -249,18 +253,17 @@ arguments that are specific to each argument.</p></li>
     <p>The various <code><a href='https://www.rdocumentation.org/packages/grid/topics/gpar'>grid::gpar()</a></code> values that are available for each argument
 are:</p>
 <table class='table'>
-<tr><td></td><td>fills</td><td>edges</td><td>labels</td><td>quantities</td><td>percentages</td><td>strips</td><td>legend</td><td>main</td><td></td></tr>
-<tr><td>col</td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>fill</td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>alpha</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>lty</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>lwd</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>lex</td><td></td><td>x</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td>fontsize</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>cex</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>fontfamily</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>lineheight</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
-<tr><td>font</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td></td><td>fills</td><td>edges</td><td>labels</td><td>quantities</td><td>strips</td><td>legend</td><td>main</td><td></td><td>col</td></tr>
+<tr><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td><td>fill</td><td>x</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>alpha</td><td>x</td><td>x</td></tr>
+<tr><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td><td>lty</td><td></td><td>x</td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td>lwd</td><td></td><td>x</td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td>lex</td><td></td><td>x</td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td>fontsize</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td></tr>
+<tr><td>x</td><td></td><td>cex</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td></tr>
+<tr><td></td><td>fontfamily</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td></tr>
+<tr><td>lineheight</td><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td><td>font</td></tr>
+<tr><td></td><td></td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td><td></td><td></td><td>fills</td></tr>
 </table>
     <p>Defaults for these values, as well as other parameters of the plots, can
 be set globally using <code><a href='eulerr_options.html'>eulerr_options()</a></code>.</p>
@@ -290,7 +293,7 @@ function is assigned to a variable (rather than printed to screen).</p>
 <span class='co'># Add a custom legend and retain quantities</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"foo"</span>, <span class='st'>"bar"</span>)))</div><div class='img'><img src='plot.euler-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Plot without fills and distinguish sets with border types instead</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>)</div><div class='img'><img src='plot.euler-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>)</div><div class='img'><img src='plot.euler-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Save plot parameters to plot using some other method</span>
 <span class='no'>diagram_description</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)
 

@@ -86,6 +86,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
     </li>
     <li>
@@ -124,7 +127,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Setup grobs for labels (labels, quantities, percentages)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jolars/eulerr/blob/master/R/plot.euler.R'><code>R/plot.euler.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jolars/eulerr/blob/master/R/tag-grobs.R'><code>R/tag-grobs.R</code></a></small>
     <div class="hidden name"><code>setup_tag.Rd</code></div>
     </div>
 
@@ -134,7 +137,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>setup_tag</span>(<span class='no'>data</span>, <span class='no'>labels</span>, <span class='no'>quantities</span>, <span class='no'>percentages</span>)</pre>
+    <pre class="usage"><span class='fu'>setup_tag</span>(<span class='no'>data</span>, <span class='no'>labels</span>, <span class='no'>quantities</span>, <span class='no'>number</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,8 +155,8 @@
       <td><p>plot parameters for quantities</p></td>
     </tr>
     <tr>
-      <th>percentages</th>
-      <td><p>plot parameters for percentages</p></td>
+      <th>number</th>
+      <td><p>panel number, used for naming the resulting grob</p></td>
     </tr>
     </table>
     

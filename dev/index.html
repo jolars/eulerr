@@ -58,6 +58,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/gallery.html">A Gallery of Euler and Venn Diagrams</a>
+    </li>
+    <li>
       <a href="articles/introduction.html">Introducing eulerr</a>
     </li>
     <li>
@@ -136,9 +139,9 @@
 <a class="sourceLine" id="cb3-7" data-line-number="7">             <span class="dt">shape =</span> <span class="st">"ellipse"</span>)</a></code></pre></div>
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">fit<span class="op">$</span>stress</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; [1] 1.270512e-12</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; [1] 5.647406e-12</span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">fit<span class="op">$</span>diagError</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; [1] 1.430987e-07</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; [1] 7.292745e-07</span></a></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(fit)</a></code></pre></div>
 <p><img src="reference/figures/README-plot_method-1.png" width="700"></p>

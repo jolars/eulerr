@@ -86,6 +86,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
     </li>
     <li>
@@ -124,7 +127,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Compute geometries and label locations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jolars/eulerr/blob/master/R/plot.euler.R'><code>R/plot.euler.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jolars/eulerr/blob/master/R/setup_geometry.R'><code>R/setup_geometry.R</code></a></small>
     <div class="hidden name"><code>setup_geometry.Rd</code></div>
     </div>
 
@@ -134,7 +137,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>setup_geometry</span>(<span class='no'>x</span>, <span class='no'>fills</span>, <span class='no'>edges</span>, <span class='no'>labels</span>, <span class='no'>quantities</span>, <span class='no'>percentages</span>, <span class='no'>n</span>, <span class='no'>id</span>)</pre>
+    <pre class="usage"><span class='fu'>setup_geometry</span>(<span class='no'>x</span>, <span class='no'>fills</span>, <span class='no'>edges</span>, <span class='no'>labels</span>, <span class='no'>quantities</span>, <span class='no'>n</span>, <span class='no'>id</span>, <span class='no'>merged_sets</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -144,20 +147,32 @@
       <td><p>an object of class 'euler'</p></td>
     </tr>
     <tr>
-      <th>do_fills</th>
-      <td><p>do fills?</p></td>
+      <th>fills</th>
+      <td><p>fills</p></td>
     </tr>
     <tr>
-      <th>do_edges</th>
-      <td><p>do edges?</p></td>
+      <th>edges</th>
+      <td><p>edges</p></td>
     </tr>
     <tr>
-      <th>do_labels</th>
-      <td><p>do labels?</p></td>
+      <th>labels</th>
+      <td><p>labels</p></td>
     </tr>
     <tr>
-      <th>do_quantities</th>
-      <td><p>do quantities?</p></td>
+      <th>quantities</th>
+      <td><p>quantities</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>number of sets</p></td>
+    </tr>
+    <tr>
+      <th>id</th>
+      <td><p>identity matrix</p></td>
+    </tr>
+    <tr>
+      <th>merged_sets</th>
+      <td><p>which sets have been merged?</p></td>
     </tr>
     </table>
     

@@ -83,6 +83,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
     </li>
     <li>
@@ -132,8 +135,12 @@
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features</h2>
 <ul>
+<li>In <code><a href="../reference/plot.euler.html">plot.euler()</a></code>, percentages can be added to the plot in addition to or instead of counts by providing a <code>list</code> to the <code>quantities</code> argument with an item <code>type</code> that can take any combination of <code>counts</code> and <code>percent</code>. This change also comes with a redesign of the grid graphics implementation for labels.</li>
 <li>
-<code><a href="../reference/plot.euler.html">plot.euler()</a></code> gains a <code>percentages</code> argument, which adds the mass/count of each overlap as a percentage of the total. This change also comes with a fundamental redesign of the approach to adding labels, now setting up each label, quantity, and percentage as a unified grob (in grid graphics terminology). Moreover, <code><a href="../reference/eulerr_options.html">eulerr_options()</a></code> now has a new argument <code>padding</code> which controls the amount of padding between labels, quantities, and percentages. (<a href='https://github.com/jolars/eulerr/issues/48'>#48</a>)</li>
+<code><a href="../reference/eulerr_options.html">eulerr_options()</a></code> gains a new argument <code>padding</code> which controls the amount of padding between labels and quantities. (<a href='https://github.com/jolars/eulerr/issues/48'>#48</a>)</li>
+<li>
+<code><a href="../reference/plot.euler.html">plot.euler()</a></code> now uses code from the <strong>ggrepel</strong> package to prevent labels from overlapping or escaping the plot area if <code>adjust_labels</code> is set to <code>TRUE</code>.</li>
+<li>A new vignette featuring a gallery of plots from the package has been added.</li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
@@ -141,6 +148,16 @@
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>The default <code>cex</code> for quantity labels has changed from 1.0 to 0.9.</li>
+<li>Labels for sets that overlap are now merged (partly fixes <a href='https://github.com/jolars/eulerr/issues/45'>#45</a>)</li>
+<li>The fill colors for sets which are completely contained within another set are now once again composed of a mix of the color of the subset and the superset.</li>
+<li>Plotting data has been exposed in a <code>data</code> slot in the object created by calling to <code><a href="../reference/plot.euler.html">plot.euler()</a></code> (<a href='https://github.com/jolars/eulerr/issues/57'>#57</a>)</li>
+</ul>
+</div>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li>An error in layout normalization that occurred sometimes with ellipses has been fixed.</li>
 </ul>
 </div>
 </div>
@@ -166,9 +183,9 @@
 <code>eulergram()</code> objects from <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now have a proper grob name for the canvas grob, so that extracting information from them is easier.</li>
 </ul>
 </div>
-<div id="bug-fixes" class="section level2">
+<div id="bug-fixes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Return value documentation for <code><a href="../reference/euler.html">euler()</a></code> now correctly says “ellipses” and not “coefficients”.</li>
 <li>
@@ -219,9 +236,9 @@
 <li>Parts of the <em>eulerr under the hood</em> vignette has been branched off into a new vignette regarding visualization.</li>
 </ul>
 </div>
-<div id="bug-fixes-1" class="section level2">
+<div id="bug-fixes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-2" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Empty combinations can now be provided and will be plotted (generating completely blank plots).</li>
 <li>
@@ -244,9 +261,9 @@
 <li>The last-ditch optimizer has been switched back to <code><a href="https://www.rdocumentation.org/packages/GenSA/topics/GenSA">GenSA::GenSA()</a></code> from <code>RcppDE::DEoptim()</code>.</li>
 </ul>
 </div>
-<div id="bug-fixes-2" class="section level2">
+<div id="bug-fixes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-2" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-3" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>The <strong>grid</strong> parameters available for <em>edges</em> are now correctly specified in the manual for <code><a href="../reference/plot.euler.html">plot.euler()</a></code>.</li>
 <li>
@@ -278,9 +295,9 @@
 <li>Layouts are now partially normalized so that diagrams will look approximately the same even with different random seeds.</li>
 </ul>
 </div>
-<div id="bug-fixes-3" class="section level2">
+<div id="bug-fixes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-3" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-4" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Providing custom labels to <code>quantities</code> and <code>labels</code> arguments of <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now works correctly (<a href='https://github.com/jolars/eulerr/issues/20'>#20</a>).</li>
 </ul>
@@ -308,9 +325,9 @@
 <li>The <strong>eulerr under the hood</strong> vignette has received a substantial update.</li>
 </ul>
 </div>
-<div id="bug-fixes-4" class="section level2">
+<div id="bug-fixes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-4" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-5" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Fixed warnings resulting from the deprecated <code>counts</code> argument in one of the vignettes.</li>
 <li>Fixed memcheck errors in the final optimizer.</li>
@@ -322,9 +339,9 @@
 <h1 class="page-header">
 <a href="#eulerr-3-0-1" class="anchor"></a>eulerr 3.0.1<small> 2017-11-15 </small>
 </h1>
-<div id="bug-fixes-5" class="section level2">
+<div id="bug-fixes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-5" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-6" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Added the missing %\VignetteEngine{knitr::knitr} to both vignettes. It had mistakenly been left out, which had mangled the resulting vignettes.</li>
 </ul>
@@ -398,9 +415,9 @@
 <li>Argument <code>fill_opacity</code> is softly deprecated and has been replaced with <code>fill_alpha</code> for consistency with other lattice functions.</li>
 </ul>
 </div>
-<div id="bug-fixes-6" class="section level2">
+<div id="bug-fixes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-6" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-7" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>
 <code>border</code> argument in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> works again (<a href='https://github.com/jolars/eulerr/issues/7'>#7</a>).</li>
@@ -436,9 +453,9 @@
 <code><a href="../reference/euler.html">euler()</a></code> now uses <code><a href="https://www.rdocumentation.org/packages/stats/topics/nlm">nlm()</a></code> instead of <code><a href="https://www.rdocumentation.org/packages/stats/topics/optim">optim(method = "Nelder-Mead")</a></code> for its final optimization.</li>
 </ul>
 </div>
-<div id="bug-fixes-7" class="section level2">
+<div id="bug-fixes-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-7" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-8" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>The previous algorithm incorrectly computed loss from unions of sets. It now computes loss from disjoint class combinations.</li>
 <li>Added missing row breaks in <code>print.eulerr</code>.</li>
