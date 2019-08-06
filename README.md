@@ -68,9 +68,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 3.930017e-12
+#> [1] 2.152162e-12
 fit$diagError
-#> [1] 6.07127e-07
+#> [1] 2.366725e-07
 ```
 
 and plot it
@@ -82,9 +82,9 @@ plot(fit)
 ![](man/figures/README-plot_method-1.png)<!-- -->
 
 Please see [the introductory
-vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.pdf)
+vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
 for a brief introduction or [*eulerr under the
-hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.pdf)
+hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
 
 ## License

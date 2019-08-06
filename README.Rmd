@@ -82,8 +82,8 @@ and plot it
 plot(fit)
 ```
 
-Please see [the introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.pdf)
-for a brief introduction or [*eulerr under the hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.pdf)
+Please see [the introductory vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
+for a brief introduction or [*eulerr under the hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
 
 ## License
