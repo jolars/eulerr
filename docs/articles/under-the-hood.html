@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>eulerr under the hood • eulerr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="eulerr under the hood">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">5.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.0</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -53,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
     </li>
     <li>
@@ -73,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/jolars/eulerr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -86,13 +90,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>eulerr under the hood</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2019-02-04</h4>
+            <h4 class="date">2019-09-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/under-the-hood.Rmd"><code>vignettes/under-the-hood.Rmd</code></a></small>
       <div class="hidden name"><code>under-the-hood.Rmd</code></div>
@@ -112,15 +117,13 @@
 <a href="#input" class="anchor"></a>Input</h2>
 <p>Euler diagrams present relationships between sets, wherefore the data must describe these relationships, either directly or indirectly. <strong>eulerr</strong> allows several alternatives for this data, namely,</p>
 <ul>
-<li>intersections and relative complements <span class="math display">\[
+<li><p>intersections and relative complements <span class="math display">\[
 A \setminus B = 3 \quad B \setminus A = 2 \quad A \cap B=1,
-\]</span>
-</li>
-<li>unions and identities <span class="math display">\[
+\]</span></p></li>
+<li><p>unions and identities <span class="math display">\[
 A=4 \quad B=3 \quad A \cap B=1,
-\]</span>
-</li>
-<li>a matrix of binary (or boolean) indices, <span class="math display">\[
+\]</span></p></li>
+<li><p>a matrix of binary (or boolean) indices, <span class="math display">\[
 \begin{bmatrix}
   \mathbf{A} &amp; \mathbf{B}\\
   1          &amp; 0     \\
@@ -130,15 +133,13 @@ A=4 \quad B=3 \quad A \cap B=1,
   0          &amp; 1     \\
   0          &amp; 1,
 \end{bmatrix}
-\]</span>
-</li>
-<li>a list of sample spaces <span class="math display">\[
+\]</span></p></li>
+<li><p>a list of sample spaces <span class="math display">\[
 \begin{array}{l}
     A = \{a,\,b,\,c,\,d\}\\
     B = \{a,\,e,\,f,\}
   \end{array},
-\]</span>
-</li>
+\]</span></p></li>
 <li>
 <p>or a two- or three-way table</p>
 <table class="table">
@@ -189,10 +190,10 @@ The circle–circle overlap is computed as a function of the discs’ separation
 \mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i &lt;
 j \leq n,
 \]</span></p>
-<p>which we optimize using <code><a href="https://www.rdocumentation.org/packages/stats/topics/optimize">optimize()</a></code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>which we optimize using <code><a href="https://rdrr.io/r/stats/optimize.html">optimize()</a></code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p>For a two-set combination, this is all we need to plot an exact diagram, given that we now have the two circles’ radii and separation and may place the circles arbitrarily as long as their separation, <span class="math inline">\(d\)</span>, remains the same. This is not, however, the case with more than two sets.</p>
 <p>With three or more sets, the circles need to be arranged so that they interfere minimally with one another. In some cases, the set configuration allows this to be accomplished flawlessly, but often, compromises must me made. As is often the case in this context, this turns out to be another optimization problem. It can be tackled in many ways; <strong>eulerr</strong>’s approach is based on a method developed by <span class="citation">Frederickson (2015)</span>, which the author describes as constrained multi-dimensional scaling.</p>
-<p>The algorithm tries to position the circles so that the separation between each pair of circles matches the separation required from the seperation equation. If the two sets are disjoint, however, the algorithm is indifferent to the relative locations of those circles as long as they do not intersect. The equivalent applies to subset sets: as long as the circle representing the smaller set remains within the larger circle, their locations are free to vary. In all other cases, the loss function is the residual sums of squares of the optimal separation of circles, <span class="math inline">\(d\)</span>, that we found in the overlap equation, and the actual distance in the layout we are currently exploring.</p>
+<p>The algorithm tries to position the circles so that the separation between each pair of circles matches the separation required from the separation equation. If the two sets are disjoint, however, the algorithm is indifferent to the relative locations of those circles as long as they do not intersect. The equivalent applies to subset sets: as long as the circle representing the smaller set remains within the larger circle, their locations are free to vary. In all other cases, the loss function is the residual sums of squares of the optimal separation of circles, <span class="math inline">\(d\)</span>, that we found in the overlap equation, and the actual distance in the layout we are currently exploring.</p>
 <p><span class="math display">\[
 \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i&lt;j\leq N}}
 \begin{cases}
@@ -226,7 +227,7 @@ j \leq n,
 \end{bmatrix}.
 \]</span></p>
 <p>Note that the constraints given in loss and gradients still apply to each element of the Hessian and have been omitted for convenience only.</p>
-<p>We optimize the loss function using the nonlinear optimizer <code><a href="https://www.rdocumentation.org/packages/stats/topics/nlm">nlm()</a></code> from the R core package <strong>stats</strong>. The underlying code for <code>nlm</code> was written by <span class="citation">Schnabel, Koonatz, and Weiss (1985)</span>. It was ported to R by Saikat DebRoy and the R Core team <span class="citation">(R Core Team 2017)</span> from a previous FORTRAN to C translation by Richard H. Jones. <code><a href="https://www.rdocumentation.org/packages/stats/topics/nlm">nlm()</a></code> consists of a system of Newton-type algorithms and performs well for difficult problems <span class="citation">(Nash 2014)</span>.</p>
+<p>We optimize the loss function using the nonlinear optimizer <code><a href="https://rdrr.io/r/stats/nlm.html">nlm()</a></code> from the R core package <strong>stats</strong>. The underlying code for <code>nlm</code> was written by <span class="citation">Schnabel, Koonatz, and Weiss (1985)</span>. It was ported to R by Saikat DebRoy and the R Core team <span class="citation">(R Core Team 2017)</span> from a previous FORTRAN to C translation by Richard H. Jones. <code><a href="https://rdrr.io/r/stats/nlm.html">nlm()</a></code> consists of a system of Newton-type algorithms and performs well for difficult problems <span class="citation">(Nash 2014)</span>.</p>
 <p>The initial layout outlined above will sometimes turn up perfect diagrams, but only reliably so when the diagram is completely determined by its pairwise intersections. More pertinently, we have not yet considered the higher-order intersections in our algorithm and neither have we approached the problem of using ellipses—as we set out to do.</p>
 </div>
 <div id="final-layout" class="section level2">
@@ -332,7 +333,7 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 <div id="final-optimization" class="section level3">
 <h3 class="hasAnchor">
 <a href="#final-optimization" class="anchor"></a>Final optimization</h3>
-<p>We feed the initial layout to the optimizer—once again we employ <code><a href="https://www.rdocumentation.org/packages/stats/topics/nlm">nlm()</a></code> from <strong>stats</strong> but now also provide the option to use ellipses rather than circles, allowing the “circles” to rotate and the relation between the semiaxes to vary, altogether rendering five parameters to optimize per set and ellipse (or three if we restrict ourselves to circles). For each iteration of the optimizer, the areas of all intersections are analyzed and a measure of loss returned. The loss we use is the same as in <strong>venneuler</strong> <span class="citation">(Frederickson 2016)</span>, namely the residual sums of squares.</p>
+<p>We feed the initial layout to the optimizer—once again we employ <code><a href="https://rdrr.io/r/stats/nlm.html">nlm()</a></code> from <strong>stats</strong> but now also provide the option to use ellipses rather than circles, allowing the “circles” to rotate and the relation between the semiaxes to vary, altogether rendering five parameters to optimize per set and ellipse (or three if we restrict ourselves to circles). For each iteration of the optimizer, the areas of all intersections are analyzed and a measure of loss returned. The loss we use is the same as in <strong>venneuler</strong> <span class="citation">(Frederickson 2016)</span>, namely the residual sums of squares.</p>
 <p>If the fitted diagram is still inexact after the procedure, we offer a final step in which we pass the parameters on to a last-ditch optimizer. The weapon of choice<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> is <em>stress</em> <span class="citation">(Wilkinson 2012)</span>, which is also the loss metric we use in our final optimization step and is used in <strong>venneuler</strong>, as well as <em>diagError</em> <span class="citation">(Micallef and Rodgers 2014)</span>, which is used by <strong>eulerAPE</strong>.</p>
 <p>The stress metric is not easily grasped but can be transformed into a rough analogue of the correlation coefficient via <span class="math inline">\(r = \sqrt{1-\text{stress}^2}\)</span>.</p>
 <p>diagError, meanwhile, is given by</p>
@@ -382,7 +383,7 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>According to the documentation, <code><a href="https://www.rdocumentation.org/packages/stats/topics/optimize">optimize()</a></code> consists of a “combination of golden section search and successive parabolic interpolation.” from <strong>stats</strong>.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>According to the documentation, <code><a href="https://rdrr.io/r/stats/optimize.html">optimize()</a></code> consists of a “combination of golden section search and successive parabolic interpolation.” from <strong>stats</strong>.<a href="#fnref1" class="footnote-back">↩</a></p></li>
 <li id="fn2"><p>The current development version of R features a fix for this bug; <strong>eulerr</strong> will be updated to use the analytical Hessian as soon as it is introduced in a stable version of R.<a href="#fnref2" class="footnote-back">↩</a></p></li>
 <li id="fn3"><p>The circle, parabola, and hyperbola are the other types of conics.<a href="#fnref3" class="footnote-back">↩</a></p></li>
 <li id="fn4"><p>1 out of approximately 7000 in our simulations.<a href="#fnref4" class="footnote-back">↩</a></p></li>
@@ -392,6 +393,7 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -408,17 +410,20 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Johan Larsson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

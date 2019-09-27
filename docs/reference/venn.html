@@ -8,21 +8,25 @@
 
 <title>Venn diagrams — venn • eulerr</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,8 +34,8 @@
 
 
 
-<meta property="og:title" content="Venn diagrams — venn" />
 
+<meta property="og:title" content="Venn diagrams — venn" />
 <meta property="og:description" content="This function fits Venn diagrams using an interface that is
 almost identical to euler(). Strictly speaking,
 Venn diagrams are Euler diagrams where every intersection is visible,
@@ -39,6 +43,7 @@ regardless of whether or not it is zero. In almost every incarnation of
 Venn diagrams, however, the areas in the diagram are also
 non-proportional to the input; this is also the case here." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -50,6 +55,7 @@ non-proportional to the input; this is also the case here." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -68,7 +74,7 @@ non-proportional to the input; this is also the case here." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">5.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.0</span>
       </span>
     </div>
 
@@ -76,7 +82,7 @@ non-proportional to the input; this is also the case here." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -90,6 +96,9 @@ non-proportional to the input; this is also the case here." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a>
+    </li>
     <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
     </li>
@@ -108,11 +117,10 @@ non-proportional to the input; this is also the case here." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jolars/eulerr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -123,6 +131,7 @@ non-proportional to the input; this is also the case here." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -134,21 +143,19 @@ non-proportional to the input; this is also the case here." />
     </div>
 
     <div class="ref-description">
-    
     <p>This function fits Venn diagrams using an interface that is
 almost identical to <code><a href='euler.html'>euler()</a></code>. Strictly speaking,
 Venn diagrams are Euler diagrams where every intersection is visible,
 regardless of whether or not it is zero. In almost every incarnation of
 Venn diagrams, however, the areas in the diagram are also
 <em>non-proportional</em> to the input; this is also the case here.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"disjoint"</span>, <span class='st'>"union"</span>),
-  <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>combinations</span>)], <span class='no'>...</span>)
+<span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"disjoint"</span>, <span class='st'>"union"</span>),
+  <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>combinations</span>)], <span class='no'>...</span>)
 
 <span class='co'># S3 method for table</span>
 <span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
@@ -162,7 +169,7 @@ Venn diagrams, however, the areas in the diagram are also
 
 <span class='co'># S3 method for list</span>
 <span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -193,7 +200,7 @@ the number of rows in <code>combinations</code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
-      <td><p>a factor or character matrix to be used in <code><a href='https://www.rdocumentation.org/packages/base/topics/by'>base::by()</a></code> to
+      <td><p>a factor or character matrix to be used in <code><a href='https://rdrr.io/r/base/by.html'>base::by()</a></code> to
 split the data.frame or matrix of set combinations</p></td>
     </tr>
     <tr>
@@ -207,7 +214,7 @@ if there are factor or character vectors in 'combinations'.</p></td>
 constructing dummy codes</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns an object of class <code>'venn', 'euler'</code> with items</p>
@@ -216,10 +223,10 @@ centers of the shapes), semiaxes <code>a</code> and <code>b</code>, and rotation
 <dt>original.values</dt><dd><p>set relationships in the input</p></dd>
 <dt>fitted.values</dt><dd><p>set relationships in the solution</p></dd>
 
-    
     <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
 
-    <ul>
+    
+<ul>
 <li><p><code>default</code>: a named numeric vector, with
 combinations separated by an ampersand, for instance <code>A&amp;B = 10</code>.
 Missing combinations are treated as being 0.</p></li>
@@ -227,22 +234,20 @@ Missing combinations are treated as being 0.</p></li>
 <li><p><code>data.frame</code>: a <code>data.frame</code> of logicals, binary integers, or
 factors.</p></li>
 <li><p><code>matrix</code>: a matrix that can be converted to a data.frame of logicals
-(as in the description above) via <code><a href='https://www.rdocumentation.org/packages/base/topics/as.data.frame'>base::as.data.frame.matrix()</a></code>.</p></li>
+(as in the description above) via <code><a href='https://rdrr.io/r/base/as.data.frame.html'>base::as.data.frame.matrix()</a></code>.</p></li>
 <li><p><code>list</code>: a list of vectors, each vector giving the contents of
 that set (with no duplicates). Vectors in the list do not need to be named.</p></li>
 </ul>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='plot.euler.html'>plot.venn()</a></code>, <code><a href='print.venn.html'>print.venn()</a></code>, <code><a href='euler.html'>euler()</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># The trivial version</span>
 <span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='fu'>venn</span>(<span class='fl'>5</span>, <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>5</span>])
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>f1</span>)</div><div class='img'><img src='venn-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>f1</span>)</div><div class='img'><img src='venn-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Using data (a numeric vector)</span>
-<span class='no'>f2</span> <span class='kw'>&lt;-</span> <span class='fu'>venn</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>A</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='st'>"A&amp;D"</span> <span class='kw'>=</span> <span class='fl'>0.3</span>))
+<span class='no'>f2</span> <span class='kw'>&lt;-</span> <span class='fu'>venn</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>A</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='st'>"A&amp;D"</span> <span class='kw'>=</span> <span class='fl'>0.3</span>))
 
 <span class='co'># The table method</span>
 <span class='fu'>venn</span>(<span class='no'>pain</span>, <span class='kw'>factor_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; 3 set Venn diagram 
@@ -252,7 +257,7 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 #&gt; regional    0.42 -0.36 1.05 1.05 3.76
 #&gt; male        0.00  0.36 1.05 1.05 3.76</div><div class='input'>
 <span class='co'># Using grouping via the 'by' argument through the data.frame method</span>
-<span class='fu'>venn</span>(<span class='no'>fruits</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>sex</span>, <span class='no'>age</span>))</div><div class='output co'>#&gt; female.adult 
+<span class='fu'>venn</span>(<span class='no'>fruits</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>sex</span>, <span class='no'>age</span>))</div><div class='output co'>#&gt; female.adult 
 #&gt; 3 set Venn diagram 
 #&gt; 
 #&gt;            h     k    a    b  phi
@@ -294,7 +299,7 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 #&gt; sea    -0.086 -0.181 1 0.6 3.770
 #&gt; spiny   0.145 -0.137 1 0.6 5.027</div><div class='input'>
 <span class='co'># Using weights</span>
-<span class='fu'>venn</span>(<span class='no'>organisms</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt; 5 set Venn diagram 
+<span class='fu'>venn</span>(<span class='no'>organisms</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt; 5 set Venn diagram 
 #&gt; 
 #&gt;             h      k a   b   phi
 #&gt; animal  0.176  0.096 1 0.6 0.000
@@ -303,7 +308,7 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 #&gt; sea    -0.086 -0.181 1 0.6 3.770
 #&gt; spiny   0.145 -0.137 1 0.6 5.027</div><div class='input'>
 <span class='co'># A venn diagram from a list of sample spaces (the list method)</span>
-<span class='fu'>venn</span>(<span class='no'>plants</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span>)])</div><div class='output co'>#&gt; 3 set Venn diagram 
+<span class='fu'>venn</span>(<span class='no'>plants</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span>)])</div><div class='output co'>#&gt; 3 set Venn diagram 
 #&gt; 
 #&gt;              h     k    a    b  phi
 #&gt; erigenia -0.42 -0.36 1.05 1.05 3.76
@@ -314,18 +319,15 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#methods-by-class-">Methods (by class)</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -333,13 +335,16 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

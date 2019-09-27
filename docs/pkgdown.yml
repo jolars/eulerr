@@ -1,7 +1,8 @@
-pandoc: '2.6'
-pkgdown: 1.3.0
+pandoc: 2.7.2
+pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
+  gallery: gallery.html
   introduction: introduction.html
   under-the-hood: under-the-hood.html
   venn-diagrams: venn-diagrams.html
