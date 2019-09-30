@@ -7,7 +7,7 @@
 using namespace Rcpp;
 
 // repel_boxes
-DataFrame repel_boxes(NumericMatrix data_points, double point_padding_x, double point_padding_y, NumericMatrix boxes, NumericVector xlim, NumericVector ylim, NumericVector hjust, NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
+Rcpp::DataFrame repel_boxes(NumericMatrix data_points, double point_padding_x, double point_padding_y, NumericMatrix boxes, NumericVector xlim, NumericVector ylim, NumericVector hjust, NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
 RcppExport SEXP _eulerr_repel_boxes(SEXP data_pointsSEXP, SEXP point_padding_xSEXP, SEXP point_padding_ySEXP, SEXP boxesSEXP, SEXP xlimSEXP, SEXP ylimSEXP, SEXP hjustSEXP, SEXP vjustSEXP, SEXP force_pushSEXP, SEXP force_pullSEXP, SEXP maxiterSEXP, SEXP directionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
