@@ -1,5 +1,10 @@
 # eulerr (development version)
 
+## Minor changes
+
+* Random seed has been set in vignettes in order ot ensure that
+  results are reproducible.
+
 # eulerr 6.0.0
 
 ## New features
