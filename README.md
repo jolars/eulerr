@@ -55,6 +55,9 @@ eulerr is also available as a shiny app hosted at
 
 ``` r
 library(eulerr)
+
+set.seed(1)
+
 # From Wilkinson 2012
 fit <- euler(c("A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
                "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
@@ -68,9 +71,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 1.681159e-12
+#> [1] 4.594237e-17
 fit$diagError
-#> [1] 2.562909e-07
+#> [1] 1.144817e-09
 ```
 
 and plot it

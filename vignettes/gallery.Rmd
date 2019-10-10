@@ -29,6 +29,7 @@ as a showcase of the various options for customization that are available.
 ### Uniform intersections
 
 ```{r}
+set.seed(1) # ensure reproducibility
 uniform_intersections <- euler(c("A" = 10, "B" = 10, "C" = 10,
                                  "A&B" = 4, "A&C" = 4, "B&C" = 4,
                                  "A&B&C" = 2))

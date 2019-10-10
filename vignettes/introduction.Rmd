@@ -76,7 +76,10 @@ the set relationships for each observation,
 ```{r input}
 library(eulerr)
 
+set.seed(1)
+
 # Input in the form of a named numeric vector
+
 fit1 <- euler(c("A" = 25, "B" = 5, "C" = 5,
                 "A&B" = 5, "A&C" = 5, "B&C" = 3,
                 "A&B&C" = 3))
