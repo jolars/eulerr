@@ -138,7 +138,7 @@ makeContent.EulerTags <- function(x) {
   }
 
   # only do something if there are any labels
-  if (NROW(d) > 0) {
+  if (NROW(d) > 0 && length(xlim) == 2 && length(ylim) == 2) {
     # boxes are the labels (in eulerr terminology)
     boxes <- data.frame(x1 = d$x - 0.5*d$w - padding,
                         y1 = d$y - 0.5*d$h - padding,
