@@ -1,5 +1,9 @@
 # eulerr (development version)
 
+## Minor changes
+
+* Throw an error message when the number of sets in `venn()` exceeds 5 (#65)
+
 # eulerr 6.0.0
 
 ## New features
