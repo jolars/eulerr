@@ -22,9 +22,11 @@ parse_list <- function(combinations)
       if (length(ind) == 1) {
         intersect_sets[[nm]] <<- combinations[[ind]]
       } else {
-        bool[] <- FALSE; bool[ind[1]] <- TRUE
+        bool[] <- FALSE
+        bool[ind[1]] <- TRUE
         part1 <- compute_intersect(bool)
-        bool[ind] <- TRUE; bool[ind[1]] <- FALSE
+        bool[ind] <- TRUE
+        bool[ind[1]] <- FALSE
         part2 <- compute_intersect(bool)
         intersect_sets[[nm]] <<- intersect(part1, part2)
       }
