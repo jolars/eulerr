@@ -67,6 +67,11 @@ venn.default <- function(combinations,
                                  collapse = "&"))
     combinations <- rep.int(1, nrow(id))
     names(combinations) <- combo_names
+  } else {
+    n_combinations <- length(unique(unlist(strsplit(names(combinations), "&"))))
+
+    if (n_combinations > 5)
+      stop("'venn()' only supports diagrams with up to five sets")
   }
 
   fit_diagram(combinations,
