@@ -4,8 +4,13 @@
 \alias{error_plot}
 \title{Error plot for \code{euler} objects}
 \usage{
-error_plot(x, type = c("regionError", "residuals"), quantities = TRUE,
-  pal = NULL, ...)
+error_plot(
+  x,
+  type = c("regionError", "residuals"),
+  quantities = TRUE,
+  pal = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{euler}, typically the result of

@@ -5,13 +5,33 @@
 \alias{plot.venn}
 \title{Plot Euler and Venn diagrams}
 \usage{
-\method{plot}{euler}(x, fills = TRUE, edges = TRUE, legend = FALSE,
-  labels = identical(legend, FALSE), quantities = FALSE,
-  strips = NULL, main = NULL, n = 200L, adjust_labels = TRUE, ...)
+\method{plot}{euler}(
+  x,
+  fills = TRUE,
+  edges = TRUE,
+  legend = FALSE,
+  labels = identical(legend, FALSE),
+  quantities = FALSE,
+  strips = NULL,
+  main = NULL,
+  n = 200L,
+  adjust_labels = TRUE,
+  ...
+)
 
-\method{plot}{venn}(x, fills = TRUE, edges = TRUE, legend = FALSE,
-  labels = identical(legend, FALSE), quantities = TRUE,
-  strips = NULL, main = NULL, n = 200L, adjust_labels = TRUE, ...)
+\method{plot}{venn}(
+  x,
+  fills = TRUE,
+  edges = TRUE,
+  legend = FALSE,
+  labels = identical(legend, FALSE),
+  quantities = TRUE,
+  strips = NULL,
+  main = NULL,
+  n = 200L,
+  adjust_labels = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}

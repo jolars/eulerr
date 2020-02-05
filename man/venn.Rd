@@ -11,13 +11,23 @@
 \usage{
 venn(combinations, ...)
 
-\method{venn}{default}(combinations, input = c("disjoint", "union"),
-  names = letters[length(combinations)], ...)
+\method{venn}{default}(
+  combinations,
+  input = c("disjoint", "union"),
+  names = letters[length(combinations)],
+  ...
+)
 
 \method{venn}{table}(combinations, ...)
 
-\method{venn}{data.frame}(combinations, weights = NULL, by = NULL,
-  sep = "_", factor_names = TRUE, ...)
+\method{venn}{data.frame}(
+  combinations,
+  weights = NULL,
+  by = NULL,
+  sep = "_",
+  factor_names = TRUE,
+  ...
+)
 
 \method{venn}{matrix}(combinations, ...)
 
@@ -49,7 +59,7 @@ if there are factor or character vectors in 'combinations'.}
 constructing dummy codes}
 }
 \value{
-Returns an object of class \code{'venn', 'euler'} with items
+Returns an object of class \verb{'venn', 'euler'} with items
 \item{ellipses}{a matrix of \code{h} and \code{k} (x and y-coordinates for the
 centers of the shapes), semiaxes \code{a} and \code{b}, and rotation angle \code{phi}}
 \item{original.values}{set relationships in the input}

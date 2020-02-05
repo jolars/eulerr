@@ -11,11 +11,22 @@
 \usage{
 euler(combinations, ...)
 
-\method{euler}{default}(combinations, input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"), control = list(), ...)
+\method{euler}{default}(
+  combinations,
+  input = c("disjoint", "union"),
+  shape = c("circle", "ellipse"),
+  control = list(),
+  ...
+)
 
-\method{euler}{data.frame}(combinations, weights = NULL, by = NULL,
-  sep = "_", factor_names = TRUE, ...)
+\method{euler}{data.frame}(
+  combinations,
+  weights = NULL,
+  by = NULL,
+  sep = "_",
+  factor_names = TRUE,
+  ...
+)
 
 \method{euler}{matrix}(combinations, ...)
 

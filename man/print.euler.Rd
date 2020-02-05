@@ -4,8 +4,7 @@
 \alias{print.euler}
 \title{Print a summary of an Euler diagram}
 \usage{
-\method{print}{euler}(x, round = 3, vsep = strrep("-", 0.75 *
-  getOption("width")), ...)
+\method{print}{euler}(x, round = 3, vsep = strrep("-", 0.75 * getOption("width")), ...)
 }
 \arguments{
 \item{x}{\code{'euler'} object from \code{\link[=euler]{euler()}}}

@@ -4,8 +4,7 @@
 \alias{print.venn}
 \title{Print a summary of a Venn diagram}
 \usage{
-\method{print}{venn}(x, round = 3, vsep = strrep("-", 0.75 *
-  getOption("width")), ...)
+\method{print}{venn}(x, round = 3, vsep = strrep("-", 0.75 * getOption("width")), ...)
 }
 \arguments{
 \item{x}{an object of class \code{'venn'}}
