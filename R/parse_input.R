@@ -32,7 +32,7 @@ parse_list <- function(combinations)
     intersect_sets[[nm]]
   }
 
-  lengths(apply(id, 1, compute_intersect))
+  apply(id, 1, function(x) length(compute_intersect(x)))
 }
 
 parse_dataframe <- function(combinations,
