@@ -11,12 +11,28 @@ parse_list <- function(combinations)
   id <- bit_indexr(n)
 
   out <- integer(nrow(id))
-  names(out) <- apply(id, 1L, function(x) paste(sets[x], collapse = "&"))
+  rownames(id) <- apply(id, 1L, function(x) paste(sets[x], collapse = "&"))
 
-  for (i in seq_len(nrow(id)))
-    out[i] <- length(Reduce(intersect, combinations[id[i, ]]))
+  intersect_sets <- as.list(rep(-1, nrow(id)))
+  names(intersect_sets) <- rownames(id)
+  compute_intersect <- function(bool) {
+    ind <- which(bool)
+    nm <- paste(sets[ind], collapse = "&")
+    if (identical(intersect_sets[[nm]], -1)) { # not computed yet
+      if (length(ind) == 1) {
+        intersect_sets[[nm]] <<- combinations[[ind]]
+      } else {
+        bool[] <- FALSE; bool[ind[1]] <- TRUE
+        part1 <- compute_intersect(bool)
+        bool[ind] <- TRUE; bool[ind[1]] <- FALSE
+        part2 <- compute_intersect(bool)
+        intersect_sets[[nm]] <<- intersect(part1, part2)
+      }
+    }
+    intersect_sets[[nm]]
+  }
 
-  out
+  lengths(apply(id, 1, compute_intersect))
 }
 
 parse_dataframe <- function(combinations,
