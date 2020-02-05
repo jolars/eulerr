@@ -3,6 +3,8 @@
 ## Minor changes
 
 * Throw an error message when the number of sets in `venn()` exceeds 5 (#65)
+* Performance improved when large lists are used as input to `euler()` and
+  `venn()` (#64, @privefl)
 
 # eulerr 6.0.0
 
