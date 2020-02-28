@@ -6,6 +6,11 @@
 * Performance improved when large lists are used as input to `euler()` and
   `venn()` (#64, @privefl)
 
+## Bug fixes
+
+* Correctly handle `data.frame` inputs to `euler()` when categorical
+  variables are character vectors and not factors.
+
 # eulerr 6.0.0
 
 ## New features

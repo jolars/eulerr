@@ -268,9 +268,15 @@ setup_gpar <- function(default = list(), user = list(), n) {
 #' @keywords internal
 dummy_code <- function(x, sep = "_", factor_names = TRUE) {
   fac_chr <- vapply(x, function(x) is.character(x) || is.factor(x), logical(1))
+
   tmp <- x[, fac_chr, drop = FALSE]
 
-  lvls <- lapply(tmp, function(x) levels(as.factor(x)))
+  # convert characters into factors
+  for (i in seq_len(ncol(tmp))) {
+    tmp[, i] <- as.factor(tmp[, i])
+  }
+
+  lvls <- lapply(tmp, function(x) levels(x))
 
   n_levels <- vapply(lvls, function(x) length(x) - 1, double(1))
   dummy_levels <- lapply(lvls, function(x) x[-length(x)])

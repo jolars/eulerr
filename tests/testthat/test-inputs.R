@@ -5,13 +5,25 @@ test_that("normal use of euler() returns no errors", {
 
   expect_error(dont_print(f, round = 2), NA)
 
+  # test both against stringsAsFactors = TRUE and FALSE
   dat <- data.frame(
     A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
     B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
-    x = sample(c("Men", "Women"), size = 100, replace = TRUE)
+    x = sample(c("Men", "Women"), size = 100, replace = TRUE),
+    stringsAsFactors = TRUE
   )
 
   expect_is(euler(dat), "euler")
+
+  dat <- data.frame(
+    A = sample(c(TRUE, FALSE), size = 100, replace = TRUE),
+    B = sample(c(TRUE, TRUE, FALSE), size = 100, replace = TRUE),
+    x = sample(c("Men", "Women"), size = 100, replace = TRUE),
+    stringsAsFactors = FALSE
+  )
+
+  expect_is(euler(dat), "euler")
+
   expect_silent(euler(as.matrix(dat[, 1:2])))
   expect_is(euler(dat, by = x), "euler")
   expect_silent(dont_print(euler(dat, by = x)))
