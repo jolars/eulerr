@@ -3,6 +3,9 @@
 language: R
 cache: packages
 
+r_packages:
+  - covr
+
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 deploy:
   provider: script
