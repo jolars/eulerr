@@ -23,4 +23,6 @@ I am switching e-mail address for this package.
 
 ## Reverse dependencies
 
-* eulerr has no reverse dependencies.
+* eulerr's two reverse dependencies cola and seqsetvis where checked
+  by comparing R CMD checks using the development and release versions
+  of eulerr (by using the package revdepcheck).
