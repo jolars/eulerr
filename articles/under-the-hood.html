@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.2</span>
       </span>
     </div>
 
@@ -300,7 +300,7 @@ The process used to intersect two ellipses, here yielding four points. This figu
 The overlap area between three ellipses is the sum of a convex polygon (in grey) and 2–3 ellipse segments (in blue).
 </p>
 </div>
-<p>We continue by ordering the points around their centroid. It is then trivial to find the area of the polygon section since it is always convex <span class="citation">(Finley 2006)</span>. Now, because each elliptical segment is formed from the arcs that connect successive points, we can establish the segments’ areas algorithmically <span class="citation">(Eberly 2016)</span>. For each ellipse and its related pair of points (located at angles <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\theta_1\)</span> from the semimajor axis), we proceed to find its area by</p>
+<p>We continue by ordering the points around their centroid. It is then trivial to find the area of the polygon section since it is always convex. Now, because each elliptical segment is formed from the arcs that connect successive points, we can establish the segments’ areas algorithmically <span class="citation">(Eberly 2016)</span>. For each ellipse and its related pair of points (located at angles <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\theta_1\)</span> from the semimajor axis), we proceed to find its area by</p>
 <ol style="list-style-type: decimal">
 <li>centering the ellipse at <span class="math inline">\((0, 0)\)</span>,</li>
 <li>normalizing its rotation, which is not needed to compute the area,</li>
@@ -354,9 +354,6 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 <div id="refs" class="references">
 <div id="ref-Eberly_2016">
 <p>Eberly, David. 2016. “The Area of Intersecting Ellipses.” <em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf" class="uri">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.</p>
-</div>
-<div id="ref-Finley_2006">
-<p>Finley, Darel R. 2006. “Ultra-Easy Algorithm with C Code Sample.” <em>Alien Ryder Flex</em>. http://alienryderflex.com/polygon_area/. <a href="http://alienryderflex.com/polygon_area/" class="uri">http://alienryderflex.com/polygon_area/</a>.</p>
 </div>
 <div id="ref-Frederickson_2015">
 <p>Frederickson, Ben. 2015. “Venn Diagrams with D3.Js.” http://www.benfrederickson.com/venn-diagrams-with-d3.js/.</p>
