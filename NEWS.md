@@ -4,6 +4,7 @@
 
 * Set `stringsAsFactors = TRUE` inside all relevant functions in `euler()`
   to avoid errors in upcoming R version.
+* Fix broken link in *euler under the hood* vignette.
 
 # eulerr 6.0.1
 

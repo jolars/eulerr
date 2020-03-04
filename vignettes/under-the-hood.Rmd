@@ -587,7 +587,7 @@ xyplot(
 
 We continue by ordering the points around their centroid. It is then trivial to
 find the area of the
-polygon section since it is always convex [@Finley_2006]. Now, because each
+polygon section since it is always convex. Now, because each
 elliptical segment is formed from the arcs that connect successive
 points, we can establish the segments' areas algorithmically [@Eberly_2016].
 For each ellipse and its related pair of points (located at angles $\theta_0$ and
