@@ -71,7 +71,7 @@ relationships. The shape of the diagram may be a circle or an ellipse." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.1</span>
       </span>
     </div>
 
@@ -148,12 +148,23 @@ relationships. The shape of the diagram may be a circle or an ellipse.</p>
     <pre class="usage"><span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"disjoint"</span>, <span class='st'>"union"</span>),
-  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"circle"</span>, <span class='st'>"ellipse"</span>), <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(), <span class='no'>...</span>)
+<span class='fu'>euler</span>(
+  <span class='no'>combinations</span>,
+  <span class='kw'>input</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"disjoint"</span>, <span class='st'>"union"</span>),
+  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"circle"</span>, <span class='st'>"ellipse"</span>),
+  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='no'>...</span>
+)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>, <span class='kw'>factor_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>euler</span>(
+  <span class='no'>combinations</span>,
+  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
+  <span class='kw'>factor_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S3 method for matrix</span>
 <span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
