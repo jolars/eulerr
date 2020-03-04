@@ -1,4 +1,9 @@
-# eulerr (development version)
+# eulerr 6.0.2
+
+## Bug fixes
+
+* Set `stringsAsFactors = TRUE` inside all relevant functions in `euler()`
+  to avoid errors in upcoming R version.
 
 # eulerr 6.0.1
 

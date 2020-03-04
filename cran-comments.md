@@ -21,6 +21,11 @@
 
 I am switching e-mail address for this package.
 
+## Resubmission
+
+This is a resubmission. In this version I have correctly resolved the
+error that causes the package to fail the automated check last time.
+
 ## Reverse dependencies
 
 * eulerr's two reverse dependencies cola and seqsetvis where checked
