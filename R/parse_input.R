@@ -62,7 +62,7 @@ parse_dataframe <- function(combinations,
     else
       facs <- list(facs)
 
-    dd <- as.data.frame(facs, col.names = nms)
+    dd <- as.data.frame(facs, col.names = nms, stringsAsFactors = TRUE)
     groups <- unique(dd)
     rownames(groups) <- NULL
 

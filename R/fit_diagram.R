@@ -81,7 +81,7 @@ fit_diagram <- function(combinations,
     ncol = 5L,
     nrow = n,
     dimnames = list(setnames, c("h", "k", "a", "b", "phi"))
-  ))
+  ), stringsAsFactors = TRUE)
 
   # find empty sets
   empty_sets <- areas[seq_len(n)] < sqrt(.Machine$double.eps)
@@ -187,7 +187,7 @@ fit_diagram <- function(combinations,
                         else
                           c("h", "k", "a", "b", "phi")),
         byrow = TRUE
-      ))
+      ), stringsAsFactors = TRUE)
       if (circle)
         tpar <- cbind(tpar, tpar[, 3L], 0)
 

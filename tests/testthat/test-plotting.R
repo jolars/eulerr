@@ -49,7 +49,7 @@ test_that("normal plotting works without errors", {
   f3 <- euler(dat, by = list(Gender, Nation))
 
   expect_silent(plot(f2,
-                     fills = list(fill = "transparent",
+                     edges = list(fill = "transparent",
                                   lty = c(1, 2),
                                   lwd = c(1, 2))))
 

@@ -100,7 +100,7 @@ makeContent.EulerTags <- function(x) {
     }
   })
 
-  d <- as.data.frame(do.call(rbind, d))
+  d <- as.data.frame(do.call(rbind, d), stringsAsFactors = TRUE)
 
   nas <- is.na(d$x)
 
@@ -119,7 +119,7 @@ makeContent.EulerTags <- function(x) {
     }
   })
 
-  dd <- as.data.frame(do.call(rbind, dd))
+  dd <- as.data.frame(do.call(rbind, dd), stringsAsFactors = TRUE)
 
   dd <- dd[!is.na(dd$x), , drop = FALSE]
 
@@ -143,7 +143,8 @@ makeContent.EulerTags <- function(x) {
     boxes <- data.frame(x1 = d$x - 0.5*d$w - padding,
                         y1 = d$y - 0.5*d$h - padding,
                         x2 = d$x + 0.5*d$w + padding,
-                        y2 = d$y + 0.5*d$h + padding)
+                        y2 = d$y + 0.5*d$h + padding,
+                        stringsAsFactors = TRUE)
 
     repel <- repel_boxes(
       data_points = data_points,
