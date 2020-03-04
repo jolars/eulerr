@@ -1,3 +1,5 @@
+# eulerr (development version)
+
 # eulerr 6.0.1
 
 ## Minor changes
