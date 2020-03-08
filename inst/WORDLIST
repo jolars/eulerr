@@ -4,6 +4,7 @@ algorithmically
 AppVeyor
 arccos
 arctan
+ASAN
 benchmarking
 bigcap
 bigcup

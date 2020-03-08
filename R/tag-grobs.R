@@ -84,6 +84,9 @@ makeContent.EulerTags <- function(x) {
   # xlim <- c(x0 - w/2, x0 + w/2)
   # ylim <- c(y0 - h/2, y0 + h/2)
 
+  padding <- eulerr_options()$padding
+  padding <- convertHeight(padding, "native", TRUE)
+
   if (!x$adjust_labels)
     return(x)
 

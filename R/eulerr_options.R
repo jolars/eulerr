@@ -22,7 +22,10 @@
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
 #'   `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`}
 #'   \item{main}{arguments to [grid::textGrob()]}
-#'   \item{padding}{deprecated}
+#'   \item{padding}{a [grid::unit()] giving the padding between various
+#'   elements in plots from [plot.euler()], which you can change
+#'   if you, for instance, want to increase spacing between labels,
+#'   quantities, and percentages.}
 #' }
 #'
 #' @param ... objects to update the global graphical parameters for \pkg{eulerr}
@@ -161,7 +164,8 @@ eulerr_default_options <- function() {
       col = 1,
       lineheight = 1.2,
       alpha = 1
-    )
+    ),
+    padding = grid::unit(0.4, "lines")
   )
 }
 
