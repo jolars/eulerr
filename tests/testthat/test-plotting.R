@@ -1,6 +1,9 @@
 context("Plotting")
 
 test_that("normal plotting works without errors", {
+  tmp <- tempfile()
+  png(tmp)
+
   f1 <- euler(c("A" = 10, "B" = 5, "A&B" = 2))
 
   expect_silent(plot(f1,
@@ -71,37 +74,62 @@ test_that("normal plotting works without errors", {
 
   f4 <- euler(c(A = 1))
   expect_silent(plot(f4))
+
+  dev.off()
+  unlink(tmp)
 })
 
 test_that("plotting zero-fits works", {
+  tmp <- tempfile()
+  png(tmp)
+
   s <- c(a = 0, b = 0)
   expect_is(plot(euler(s)), "gTree")
+  dev.off()
+  unlink(tmp)
 })
 
 test_that("error_plot functions normally", {
+  tmp <- tempfile()
+  png(tmp)
+
   f <- euler(organisms)
 
-  expect_silent(plot(error_plot(f)))
-  expect_silent(plot(error_plot(f,
-                                pal = grDevices::colorRampPalette(c(
-                                  "red", "blue"
-                                )))))
-  expect_silent(plot(error_plot(f, quantities = FALSE)))
-  expect_silent(plot(error_plot(f, edges = FALSE)))
+  expect_silent(error_plot(f))
+  expect_silent(error_plot(f,
+                           pal = grDevices::colorRampPalette(c("red", "blue"))))
+  expect_silent(error_plot(f, quantities = FALSE))
+  expect_silent(error_plot(f, edges = FALSE))
+
+  dev.off()
+  unlink(tmp)
 })
 
 test_that("plots with euler lists works", {
+  tmp <- tempfile()
+  png(tmp)
+
   f1 <- euler(fruits[, 1:5], by = age)
   f2 <- euler(fruits[, 1:5], by = list(age, sex))
 
   expect_silent(plot(f1, legend = TRUE, strips = FALSE))
   expect_silent(plot(f2, strips = list(cex = 2, fontface = "bold")))
   expect_silent(plot(f1))
+
+  dev.off()
+  unlink(tmp)
 })
 
 test_that("label repelling functions", {
+  tmp <- tempfile()
+  png(tmp, width = 150, height = 150)
+
+  set.seed(2112)
   f1 <- euler(c("very long label that has lots of words in it" = 1,
                 "another long, long label that is sure to overlap" = 1,
                 "very long label that has lots of words in it&another long, long label that is sure to overlap" = 10))
   expect_silent(plot(f1, adjust_labels = TRUE, quantities = TRUE))
+
+  dev.off()
+  unlink(tmp)
 })

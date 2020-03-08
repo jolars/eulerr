@@ -106,37 +106,6 @@ makeContent.EulerTags <- function(x) {
 
   d <- d[!nas, , drop = FALSE]
 
-  dd <- lapply(x$children, function(z) {
-    q <- z$children[[2]]
-
-    if (inherits(q, "null")) {
-      c(x = NA, y = NA, w = NA, h = NA)
-    } else {
-      c(x = convertX(q$x, "native", TRUE),
-        y = convertY(q$y, "native", TRUE),
-        w = convertWidth(grobWidth(q), "native", TRUE),
-        h = convertHeight(grobHeight(q), "native", TRUE))
-    }
-  })
-
-  dd <- as.data.frame(do.call(rbind, dd), stringsAsFactors = TRUE)
-
-  dd <- dd[!is.na(dd$x), , drop = FALSE]
-
-  padding <- eulerr_options()$padding
-  padding <- convertHeight(padding, "native", TRUE)
-
-  # treat quantities as points for the algorithm
-  if (NROW(dd) > 0) {
-    point_padding_x <- max(dd$w)*0.49
-    point_padding_y <- max(dd$h)*0.49
-    data_points <- cbind(dd$x, dd$y)
-  } else {
-    point_padding_x <- 0
-    point_padding_y <- 0
-    data_points <- cbind(d$x, d$y)
-  }
-
   # only do something if there are any labels
   if (NROW(d) > 0) {
     # boxes are the labels (in eulerr terminology)
@@ -147,16 +116,13 @@ makeContent.EulerTags <- function(x) {
                         stringsAsFactors = TRUE)
 
     repel <- repel_boxes(
-      data_points = data_points,
-      point_padding_x = point_padding_x,
-      point_padding_y = point_padding_y,
       boxes = as.matrix(boxes),
       xlim = xlim,
       ylim = ylim,
       hjust = 0.5,
       vjust = 0.5,
-      force_push = 1e-4,
-      force_pull = 1e-4,
+      force_push = 1e-6,
+      force_pull = 1e-6,
       maxiter = 1e5,
       direction = "both"
     )

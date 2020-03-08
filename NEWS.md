@@ -1,3 +1,15 @@
+# eulerr 6.1.0
+
+## Minor changes
+
+* Label repelling (activated by calling `euler()` with `adjust_labels = TRUE`)
+  no longer repels text labels away from the edges of the shapes in
+  the diagram.
+
+## Bug fixes
+
+* Rectify sanitizer error from clang-ASAN test environment.
+
 # eulerr 6.0.2
 
 ## Bug fixes

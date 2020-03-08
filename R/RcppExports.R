@@ -59,8 +59,8 @@ NULL
 #' @param maxiter Maximum number of iterations to try to resolve overlaps
 #'   (defaults to 2000)
 #' @noRd
-repel_boxes <- function(data_points, point_padding_x, point_padding_y, boxes, xlim, ylim, hjust, vjust, force_push = 1e-7, force_pull = 1e-7, maxiter = 2000L, direction = "both") {
-    .Call(`_eulerr_repel_boxes`, data_points, point_padding_x, point_padding_y, boxes, xlim, ylim, hjust, vjust, force_push, force_pull, maxiter, direction)
+repel_boxes <- function(boxes, xlim, ylim, hjust, vjust, force_push = 1e-7, force_pull = 1e-7, maxiter = 6000L, direction = "both") {
+    .Call(`_eulerr_repel_boxes`, boxes, xlim, ylim, hjust, vjust, force_push, force_pull, maxiter, direction)
 }
 
 intersect_ellipses <- function(par, circle, approx = FALSE) {

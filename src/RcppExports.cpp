@@ -7,14 +7,11 @@
 using namespace Rcpp;
 
 // repel_boxes
-DataFrame repel_boxes(NumericMatrix data_points, double point_padding_x, double point_padding_y, NumericMatrix boxes, NumericVector xlim, NumericVector ylim, NumericVector hjust, NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
-RcppExport SEXP _eulerr_repel_boxes(SEXP data_pointsSEXP, SEXP point_padding_xSEXP, SEXP point_padding_ySEXP, SEXP boxesSEXP, SEXP xlimSEXP, SEXP ylimSEXP, SEXP hjustSEXP, SEXP vjustSEXP, SEXP force_pushSEXP, SEXP force_pullSEXP, SEXP maxiterSEXP, SEXP directionSEXP) {
+DataFrame repel_boxes(NumericMatrix boxes, NumericVector xlim, NumericVector ylim, NumericVector hjust, NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
+RcppExport SEXP _eulerr_repel_boxes(SEXP boxesSEXP, SEXP xlimSEXP, SEXP ylimSEXP, SEXP hjustSEXP, SEXP vjustSEXP, SEXP force_pushSEXP, SEXP force_pullSEXP, SEXP maxiterSEXP, SEXP directionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type data_points(data_pointsSEXP);
-    Rcpp::traits::input_parameter< double >::type point_padding_x(point_padding_xSEXP);
-    Rcpp::traits::input_parameter< double >::type point_padding_y(point_padding_ySEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type boxes(boxesSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type xlim(xlimSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ylim(ylimSEXP);
@@ -24,7 +21,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type force_pull(force_pullSEXP);
     Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
     Rcpp::traits::input_parameter< std::string >::type direction(directionSEXP);
-    rcpp_result_gen = Rcpp::wrap(repel_boxes(data_points, point_padding_x, point_padding_y, boxes, xlim, ylim, hjust, vjust, force_push, force_pull, maxiter, direction));
+    rcpp_result_gen = Rcpp::wrap(repel_boxes(boxes, xlim, ylim, hjust, vjust, force_push, force_pull, maxiter, direction));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -106,7 +103,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_eulerr_repel_boxes", (DL_FUNC) &_eulerr_repel_boxes, 12},
+    {"_eulerr_repel_boxes", (DL_FUNC) &_eulerr_repel_boxes, 9},
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
