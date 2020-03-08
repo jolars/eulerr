@@ -74,7 +74,7 @@ to learn about the individual settings for each argument." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.0</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ to learn about the individual settings for each argument.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for euler</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(
   <span class='no'>x</span>,
   <span class='kw'>fills</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -167,7 +167,7 @@ to learn about the individual settings for each argument.</p>
 )
 
 <span class='co'># S3 method for venn</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(
   <span class='no'>x</span>,
   <span class='kw'>fills</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -307,20 +307,20 @@ function is assigned to a variable (rather than printed to screen).</p>
     <pre class="examples"><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='euler.html'>euler</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='st'>"B"</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='st'>"A&amp;B"</span> <span class='kw'>=</span> <span class='fl'>3</span>))
 
 <span class='co'># Customize colors, remove borders, bump alpha, color labels white</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>,
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit</span>,
      <span class='kw'>fills</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"red"</span>, <span class='st'>"steelblue4"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>),
      <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"white"</span>, <span class='kw'>font</span> <span class='kw'>=</span> <span class='fl'>4</span>))</div><div class='img'><img src='plot.euler-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Add quantities to the plot</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.euler-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.euler-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Add a custom legend and retain quantities</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"foo"</span>, <span class='st'>"bar"</span>)))</div><div class='img'><img src='plot.euler-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>quantities</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"foo"</span>, <span class='st'>"bar"</span>)))</div><div class='img'><img src='plot.euler-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Plot without fills and distinguish sets with border types instead</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>)</div><div class='img'><img src='plot.euler-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>)</div><div class='img'><img src='plot.euler-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Save plot parameters to plot using some other method</span>
-<span class='no'>diagram_description</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>)
+<span class='no'>diagram_description</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit</span>)
 
 <span class='co'># Plots using 'by' argument</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'><a href='euler.html'>euler</a></span>(<span class='no'>fruits</span>[, <span class='fl'>1</span>:<span class='fl'>4</span>], <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>sex</span>)), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.euler-5.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='euler.html'>euler</a></span>(<span class='no'>fruits</span>[, <span class='fl'>1</span>:<span class='fl'>4</span>], <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>sex</span>)), <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.euler-5.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

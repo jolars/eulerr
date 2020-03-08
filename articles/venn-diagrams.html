@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.0</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1>Venn diagrams with eulerr</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2020-03-04</h4>
+            <h4 class="date">2020-03-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/venn-diagrams.Rmd"><code>vignettes/venn-diagrams.Rmd</code></a></small>
       <div class="hidden name"><code>venn-diagrams.Rmd</code></div>
@@ -119,21 +119,21 @@
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4">s2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">A =</span> <span class="dv">1</span>, <span class="dt">B =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(s2))</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(s2), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(s2))</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(s2), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="venn-diagrams_files/figure-html/two-1.png" width="307.2"><img src="venn-diagrams_files/figure-html/two-2.png" width="307.2"></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(fruits[, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]))</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(fruits[, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">shape =</span> <span class="st">"ellipse"</span>), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(fruits[, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]))</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(fruits[, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">shape =</span> <span class="st">"ellipse"</span>), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="venn-diagrams_files/figure-html/three-1.png" width="307.2"><img src="venn-diagrams_files/figure-html/three-2.png" width="307.2"></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">s4 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">a =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">           <span class="dt">b =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>),</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">           <span class="dt">c =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">4</span>),</a>
 <a class="sourceLine" id="cb3-4" data-line-number="4">           <span class="dt">e =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">5</span>))</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(s4))</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(s4, <span class="dt">shape =</span> <span class="st">"ellipse"</span>), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(s4))</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(s4, <span class="dt">shape =</span> <span class="st">"ellipse"</span>), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="venn-diagrams_files/figure-html/four-1.png" width="307.2"><img src="venn-diagrams_files/figure-html/four-2.png" width="307.2"></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(organisms))</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(organisms, <span class="dt">shape =</span> <span class="st">"ellipse"</span>), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/venn.html">venn</a></span>(organisms))</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(organisms, <span class="dt">shape =</span> <span class="st">"ellipse"</span>), <span class="dt">quantities =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="venn-diagrams_files/figure-html/five-1.png" width="307.2"><img src="venn-diagrams_files/figure-html/five-2.png" width="307.2"></p>
 <p>As you can see in the last plot, there are cases where Euler diagrams can be misleading. Despite the algorithm attempting its best to make the diagram area-proportional, the constraints imposed by the geometry of the ellipses prevent a perfect fit. This is probably a case where a Venn diagram makes for a good alternative. In the author’s opinion, the opposite is true for the rest.</p>
 </div>

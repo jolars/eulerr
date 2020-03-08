@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.0</span>
       </span>
     </div>
 
@@ -115,14 +115,14 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">uniform_intersections &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span> =<span class="st"> </span><span class="dv">10</span>, <span class="st">"B"</span> =<span class="st"> </span><span class="dv">10</span>, <span class="st">"C"</span> =<span class="st"> </span><span class="dv">10</span>,</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">                                 <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">4</span>, <span class="st">"A&amp;C"</span> =<span class="st"> </span><span class="dv">4</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">4</span>,</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">                                 <span class="st">"A&amp;B&amp;C"</span> =<span class="st"> </span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(uniform_intersections)</a></code></pre></div>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(uniform_intersections)</a></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="disjoint-sets" class="section level3">
 <h3 class="hasAnchor">
 <a href="#disjoint-sets" class="anchor"></a>Disjoint sets</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">disjoint_sets &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">A =</span> <span class="dv">1</span>, <span class="dt">B =</span> <span class="dv">1</span>, <span class="dt">C =</span> <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(disjoint_sets, </a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(disjoint_sets, </a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">     <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Tom"</span>, <span class="st">"Greg"</span>, <span class="st">"Alberta"</span>),</a>
 <a class="sourceLine" id="cb3-4" data-line-number="4">     <span class="dt">edges =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">lty =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>))</a></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -133,7 +133,7 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">completely_contained &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span> =<span class="st"> </span><span class="dv">15</span>, <span class="st">"B"</span> =<span class="st"> </span><span class="dv">15</span>, <span class="st">"C"</span> =<span class="st"> </span><span class="dv">0</span>,</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">                                <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"A&amp;C"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">0</span>,</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">                                <span class="st">"A&amp;B&amp;C"</span> =<span class="st"> </span><span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(completely_contained,</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(completely_contained,</a>
 <a class="sourceLine" id="cb4-5" data-line-number="5">     <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">col =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"black"</span>)),</a>
 <a class="sourceLine" id="cb4-6" data-line-number="6">     <span class="dt">edges =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">col =</span> <span class="st">"white"</span>, <span class="dt">lex =</span> <span class="dv">2</span>),</a>
 <a class="sourceLine" id="cb4-7" data-line-number="7">     <span class="dt">fills =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"black"</span>, <span class="st">"cyan"</span>, <span class="st">"orange"</span>))</a></code></pre></div>
@@ -145,7 +145,7 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">intersecting_inside &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span> =<span class="st"> </span><span class="dv">15</span>, <span class="st">"B"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"C"</span> =<span class="st"> </span><span class="dv">0</span>,</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">                               <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"A&amp;C"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">0</span>,</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">                                <span class="st">"A&amp;B&amp;C"</span> =<span class="st"> </span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(intersecting_inside,</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(intersecting_inside,</a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">     <span class="dt">fills =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">fill =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lavenderblush2"</span>, </a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">                           <span class="st">"lightblue2"</span>, </a>
 <a class="sourceLine" id="cb5-7" data-line-number="7">                           <span class="st">"lightsalmon"</span>,</a>
@@ -163,7 +163,7 @@
 <a class="sourceLine" id="cb6-2" data-line-number="2">                         <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"A&amp;C"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">                         <span class="st">"A&amp;B&amp;C"</span> =<span class="st"> </span><span class="dv">2</span>),</a>
 <a class="sourceLine" id="cb6-4" data-line-number="4">                       <span class="dt">shape =</span> <span class="st">"ellipse"</span>)</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(one_contained,</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(one_contained,</a>
 <a class="sourceLine" id="cb6-6" data-line-number="6">     <span class="dt">quantities =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">type =</span> <span class="st">"percent"</span>))</a></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -174,7 +174,7 @@
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">russian_doll &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span> =<span class="st"> </span><span class="dv">15</span>, <span class="st">"B"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="dt">C =</span> <span class="dv">0</span>, </a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">                        <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">10</span>, <span class="st">"A&amp;C"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">0</span>,</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">                        <span class="st">"A&amp;B&amp;C"</span> =<span class="st"> </span><span class="dv">5</span>))</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(russian_doll,</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(russian_doll,</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">     <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
 <a class="sourceLine" id="cb7-6" data-line-number="6">       <span class="st">"A long and complicated</span><span class="ch">\n</span><span class="st">label that is likely to have to be repelled"</span>,</a>
 <a class="sourceLine" id="cb7-7" data-line-number="7">       <span class="st">"Another, very</span><span class="ch">\n</span><span class="st">tall label that</span><span class="ch">\n</span><span class="st">probably will intrude</span><span class="ch">\n</span><span class="st">into other</span><span class="ch">\n</span><span class="st">labels"</span>,</a>
@@ -191,7 +191,7 @@
 <a class="sourceLine" id="cb8-3" data-line-number="3">                     <span class="st">"B&amp;F"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"D&amp;E"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"E&amp;F"</span> =<span class="st"> </span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">                     <span class="st">"A&amp;B&amp;F"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"B&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>),</a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">                   <span class="dt">shape =</span> <span class="st">"ellipse"</span>)</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(wilkinson, </a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(wilkinson, </a>
 <a class="sourceLine" id="cb8-7" data-line-number="7">     <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">fontfamily =</span> <span class="st">"serif"</span>),</a>
 <a class="sourceLine" id="cb8-8" data-line-number="8">     <span class="dt">edges =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">lty =</span> <span class="dv">3</span>),</a>
 <a class="sourceLine" id="cb8-9" data-line-number="9">     <span class="dt">quantities =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">type =</span> <span class="st">"percent"</span>, </a>
@@ -204,7 +204,7 @@
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">genes &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SE"</span> =<span class="st"> </span><span class="dv">13</span>, <span class="st">"Treat"</span> =<span class="st"> </span><span class="dv">28</span>, <span class="st">"Anti-CCP"</span> =<span class="st"> </span><span class="dv">101</span>, <span class="st">"DAS28"</span> =<span class="st"> </span><span class="dv">91</span>,</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">                 <span class="st">"SE&amp;Treat"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"SE&amp;DAS28"</span> =<span class="st"> </span><span class="dv">14</span>, <span class="st">"Treat&amp;Anti-CCP"</span> =<span class="st"> </span><span class="dv">6</span>,</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">                 <span class="st">"SE&amp;Anti-CCP&amp;DAS28"</span> =<span class="st"> </span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(genes,</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(genes,</a>
 <a class="sourceLine" id="cb9-5" data-line-number="5">     <span class="dt">quantities =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">type =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"percent"</span>, <span class="st">"counts"</span>)))</a></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -215,7 +215,7 @@
 <a class="sourceLine" id="cb10-2" data-line-number="2">                               <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"A&amp;C"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"A&amp;D"</span> =<span class="st"> </span><span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">                               <span class="st">"A&amp;B&amp;C"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"A&amp;B&amp;D"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"A&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">2</span>,</a>
 <a class="sourceLine" id="cb10-4" data-line-number="4">                               <span class="st">"A&amp;B&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(three_inside_fourth)</a></code></pre></div>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(three_inside_fourth)</a></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="eulerape-combination" class="section level3">
@@ -227,7 +227,7 @@
 <a class="sourceLine" id="cb11-3" data-line-number="3">                    <span class="st">"a&amp;b&amp;c"</span> =<span class="st"> </span><span class="dv">126</span>),</a>
 <a class="sourceLine" id="cb11-4" data-line-number="4">                  <span class="dt">shape =</span> <span class="st">"ellipse"</span>,</a>
 <a class="sourceLine" id="cb11-5" data-line-number="5">                  <span class="dt">control =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">extraopt =</span> <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(eulerape)</a></code></pre></div>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(eulerape)</a></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="four-uniform-interactions" class="section level3">
@@ -237,7 +237,7 @@
 <a class="sourceLine" id="cb12-2" data-line-number="2">                   <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"A&amp;C"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"A&amp;D"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"B&amp;D"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"C&amp;D"</span> =<span class="st"> </span><span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb12-3" data-line-number="3">                   <span class="st">"A&amp;B&amp;C"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"A&amp;B&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"A&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"B&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb12-4" data-line-number="4">                   <span class="st">"A&amp;B&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(uniform, <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Frodo"</span>, <span class="st">"Sam"</span>, <span class="st">"Merry"</span>, <span class="st">"Pippin"</span>),</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(uniform, <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Frodo"</span>, <span class="st">"Sam"</span>, <span class="st">"Merry"</span>, <span class="st">"Pippin"</span>),</a>
 <a class="sourceLine" id="cb12-6" data-line-number="6">                            <span class="dt">font =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,</a>
 <a class="sourceLine" id="cb12-7" data-line-number="7">                            <span class="dt">col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,</a>
 <a class="sourceLine" id="cb12-8" data-line-number="8">                            <span class="dt">cex =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dt">length.out =</span> <span class="dv">4</span>)))</a></code></pre></div>
@@ -247,7 +247,7 @@
 <h3 class="hasAnchor">
 <a href="#two-circles-intersecting-completely" class="anchor"></a>Two circles intersecting completely</h3>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">two_overlapping &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"B"</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">10</span>))</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(two_overlapping)</a></code></pre></div>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(two_overlapping)</a></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.0</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1>Introducing eulerr</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2020-03-04</h4>
+            <h4 class="date">2020-03-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -214,7 +214,7 @@ A plot from <code><a href="../reference/error_plot.html">error_plot()</a></code>
 <a class="sourceLine" id="cb6-3" data-line-number="3">                    <span class="st">"B&amp;F"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"D&amp;E"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"E&amp;F"</span> =<span class="st"> </span><span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb6-4" data-line-number="4">                    <span class="st">"A&amp;B&amp;F"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"B&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">fit3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/euler.html">euler</a></span>(wilkinson2012, <span class="dt">shape =</span> <span class="st">"ellipse"</span>)</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(fit3)</a></code></pre></div>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(fit3)</a></code></pre></div>
 <div class="figure">
 <img src="introduction_files/figure-html/unnamed-chunk-2-1.png" alt="A difficult combination from Wilkinson 2012." width="700"><p class="caption">
 A difficult combination from Wilkinson 2012.
@@ -226,7 +226,7 @@ A difficult combination from Wilkinson 2012.
 <h3 class="hasAnchor">
 <a href="#visualization" class="anchor"></a>Visualization</h3>
 <p>No we get to the fun part: plotting our diagram. This is easy, as well as highly customizable, with <strong>eulerr</strong>. The default parameters can easily be adjusted to suit anybody’s needs.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(fit2)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(fit2)</a></code></pre></div>
 <div class="figure">
 <img src="introduction_files/figure-html/eulerr-plot-1.png" alt="Customizing Euler plots is a breeze in eulerr." width="700"><p class="caption">
 Customizing Euler plots is a breeze in eulerr.
@@ -234,7 +234,7 @@ Customizing Euler plots is a breeze in eulerr.
 </div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co"># Remove fills, vary borders, display quantities, and switch font.</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(fit2,</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(fit2,</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">     <span class="dt">quantities =</span> <span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">     <span class="dt">fill =</span> <span class="st">"transparent"</span>,</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6">     <span class="dt">lty =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,</a>
