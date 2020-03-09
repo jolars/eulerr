@@ -9,25 +9,15 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
+0 errors | 0 warnings | 0 notes
 
-> * checking CRAN incoming feasibility ... NOTE
-> Maintainer: 'Johan Larsson <johanlarsson@outlook.com>'
-> 
-> New maintainer:
->   Johan Larsson <johanlarsson@outlook.com>
-> Old maintainer(s):
->   Johan Larsson <mail@larssonjohan.com>
+## Sanitizer errors
 
-I am switching e-mail address for this package.
-
-## Resubmission
-
-This is a resubmission. In this version I have correctly resolved the
-error that causes the package to fail the automated check last time.
+This update remedies the clang-ASAN error reported at
+<https://www.stats.ox.ac.uk/pub/bdr/memtests/clang-ASAN/eulerr/>.
 
 ## Reverse dependencies
 
-* eulerr's two reverse dependencies cola and seqsetvis where checked
-  by comparing R CMD checks using the development and release versions
-  of eulerr (by using the package revdepcheck).
+eulerr's two reverse dependencies cola and seqsetvis where checked
+by comparing R CMD checks using the development and release versions
+of eulerr (by using the package revdepcheck).
