@@ -10,13 +10,13 @@
 |collate  |en_US.UTF-8                  |
 |ctype    |en_US.UTF-8                  |
 |tz       |Europe/Stockholm             |
-|date     |2020-03-03                   |
+|date     |2020-03-09                   |
 
 # Dependencies
 
 |package       |old         |new         |Δ  |
 |:-------------|:-----------|:-----------|:--|
-|eulerr        |6.0.0       |6.0.1       |*  |
+|eulerr        |6.0.2       |6.1.0       |*  |
 |GenSA         |1.1.7       |1.1.7       |   |
 |polyclip      |1.10-0      |1.10-0      |   |
 |polylabelr    |0.1.0       |0.1.0       |   |
