@@ -1,5 +1,9 @@
 # eulerr (development version)
 
+## Minor changes
+
+* citation to conference paper added to `inst/CITATION`
+
 # eulerr 6.1.0
 
 ## Minor changes
