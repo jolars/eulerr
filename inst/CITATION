@@ -1,21 +1,71 @@
-# year
 year <- sub("-.*", "", meta$Date)
-if(!length(year))
-  year <- substr(Sys.Date(), 1, 4)
 
-# version
+if (!length(year)) {
+  i <- regexpr("(?<=\\s{1})\\d{4}(?=-{1})", meta$Built, perl = TRUE)
+  year <- substring(meta$Built, i, i + 3)
+}
+
+if (!length(year))
+  year <- substr(Sys.Date(),1,4)
+
+pkg <- meta$Package
 vers <- meta$Version
-if(is.null(vers))
-  vers <- packageVersion("eulerr")
-note <- paste("R package version", vers)
+title <- meta$Title
 
-citHeader("To cite eulerr in publications, please use:")
+if (is.null(vers))
+  vers <- packageVersion("eulerr")
+
+vers <- paste("R package version", vers)
+
+author <- meta$`Authors@R`
+if (length(author)) {
+  aar <- .read_authors_at_R_field(author)
+  author <- Filter(function(e) {
+    !(is.null(e$given) && is.null(e$family)) && !is.na(match("aut",
+                                                             e$role))
+  }, aar)
+  if (!length(author))
+    author <- Filter(function(e) {
+      !(is.null(e$given) && is.null(e$family)) && !is.na(match("cre",
+                                                               e$role))
+    }, aar)
+}
+if (length(author)) {
+  has_authors_at_R_field <- TRUE
+} else {
+  has_authors_at_R_field <- FALSE
+  author <- as.personList(meta$Author)
+}
+
+author <- format(author, include = c("given", "family"))
+if (length(author) > 1L)
+  author <- paste(paste(head(author, -1L), collapse = ", "),
+                  tail(author, 1L), sep = " and ")
 
 bibentry(
-  bibtype      = "Manual",
-  title        = "{eulerr}: Area-Proportional {Euler} and {Venn} Diagrams with Ellipses",
-  author       = personList(as.person("Johan Larsson")),
-  year         = year,
-  note         = note,
-  url          = "https://cran.r-project.org/package=eulerr"
+  bibtype = "Manual",
+  title   = paste0("{", pkg, "}: ", title),
+  author  = author,
+  year    = year,
+  note    = vers,
+  url     = "https://CRAN.R-project.org/package=eulerr",
+  header  = "To cite use of the eulerr R package in publications, please use:"
 )
+
+bibentry(
+  bibtype      = "inproceedings",
+  title        = "A Case Study in Fitting Area-Proportional {{Euler}} Diagrams with Ellipses Using eulerr",
+  booktitle    = "{Proceedings of {{International Workshop}} on {{Set Visualization}} and {{Reasoning}}}",
+  author       = personList(as.person("Johan Larsson"),
+                            as.person("Peter Gustafsson")),
+  year         = 2018,
+  month        = "apr",
+  volume       = 2116,
+  pages        = "84--91",
+  publisher    = "{{CEUR Workshop Proceedings}}",
+  address      = "{{Edinburgh, United Kingdom}}",
+  url          = "https://cran.r-project.org/package=eulerr",
+  header       = "To cite the methodology behind eulerr in publications, please use:"
+)
+
+
