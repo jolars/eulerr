@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.0.1.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.1.0.9000</span>
       </span>
     </div>
 
@@ -112,7 +116,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jolars/eulerr">
+  <a href="https://github.com/jolars/eulerr/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -130,38 +134,86 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
+      <h1 data-toc-skip>Changelog <small></small></h1>
       <small>Source: <a href='https://github.com/jolars/eulerr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div id="eulerr-development-version" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="development version">
 <a href="#eulerr-development-version" class="anchor"></a>eulerr (development version)<small> Unreleased </small>
-</h1>
-</div>
-    <div id="eulerr-6-0-1" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-6-0-1" class="anchor"></a>eulerr 6.0.1<small> Unreleased </small>
 </h1>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
 <ul>
-<li>Throw an error message when the number of sets in <code><a href="../reference/venn.html">venn()</a></code> exceeds 5 (<a href='https://github.com/jolars/eulerr/issues/65'>#65</a>)</li>
-<li>Performance improved when large lists are used as input to <code><a href="../reference/euler.html">euler()</a></code> and <code><a href="../reference/venn.html">venn()</a></code> (<a href='https://github.com/jolars/eulerr/issues/64'>#64</a>, <a href='https://github.com/privefl'>@privefl</a>)</li>
+<li>citation to conference paper added to <code>inst/CITATION</code>
+</li>
+<li>error messages for erroneous input have been improved in several places</li>
 </ul>
 </div>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
 <ul>
+<li>error in documentation for list method has been fixed, thanks <a href='https://github.com/gprezza'>@gprezza</a> (<a href='https://github.com/jolars/eulerr/issues/77'>#77</a>)</li>
+</ul>
+</div>
+</div>
+    <div id="eulerr-610" class="section level1">
+<h1 class="page-header" data-toc-text="6.1.0">
+<a href="#eulerr-610" class="anchor"></a>eulerr 6.1.0<small> 2020-03-09 </small>
+</h1>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>Label repelling (activated by calling <code><a href="../reference/euler.html">euler()</a></code> with <code>adjust_labels = TRUE</code>) no longer repels text labels away from the edges of the shapes in the diagram.</li>
+</ul>
+</div>
+<div id="bug-fixes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li>Rectify sanitizer error from clang-ASAN test environment.</li>
+</ul>
+</div>
+</div>
+    <div id="eulerr-602" class="section level1">
+<h1 class="page-header" data-toc-text="6.0.2">
+<a href="#eulerr-602" class="anchor"></a>eulerr 6.0.2<small> 2020-03-04 </small>
+</h1>
+<div id="bug-fixes-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-2" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li>Set <code>stringsAsFactors = TRUE</code> inside all relevant functions in <code><a href="../reference/euler.html">euler()</a></code> to avoid errors in upcoming R version.</li>
+<li>Fix broken link in <em>euler under the hood</em> vignette.</li>
+</ul>
+</div>
+</div>
+    <div id="eulerr-601" class="section level1">
+<h1 class="page-header" data-toc-text="6.0.1">
+<a href="#eulerr-601" class="anchor"></a>eulerr 6.0.1<small> Unreleased </small>
+</h1>
+<div id="minor-changes-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>Throw an error message when the number of sets in <code><a href="../reference/venn.html">venn()</a></code> exceeds 5 (<a href='https://github.com/jolars/eulerr/issues/65'>#65</a>)</li>
+<li>Performance improved when large lists are used as input to <code><a href="../reference/euler.html">euler()</a></code> and <code><a href="../reference/venn.html">venn()</a></code> (<a href='https://github.com/jolars/eulerr/issues/64'>#64</a>, <a href='https://github.com/privefl'>@privefl</a>)</li>
+</ul>
+</div>
+<div id="bug-fixes-3" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-3" class="anchor"></a>Bug fixes</h2>
+<ul>
 <li>Correctly handle <code>data.frame</code> inputs to <code><a href="../reference/euler.html">euler()</a></code> when categorical variables are character vectors and not factors.</li>
 </ul>
 </div>
 </div>
-    <div id="eulerr-6-0-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-6-0-0" class="anchor"></a>eulerr 6.0.0<small> 2019-09-27 </small>
+    <div id="eulerr-600" class="section level1">
+<h1 class="page-header" data-toc-text="6.0.0">
+<a href="#eulerr-600" class="anchor"></a>eulerr 6.0.0<small> 2019-09-27 </small>
 </h1>
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
@@ -175,9 +227,9 @@
 <li>A new vignette featuring a gallery of plots from the package has been added.</li>
 </ul>
 </div>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>The default <code>cex</code> for quantity labels has changed from 1.0 to 0.9.</li>
 <li>Labels for sets that overlap are now merged (partly fixes <a href='https://github.com/jolars/eulerr/issues/45'>#45</a>)</li>
@@ -185,17 +237,17 @@
 <li>Plotting data has been exposed in a <code>data</code> slot in the object created by calling to <code><a href="../reference/plot.euler.html">plot.euler()</a></code> (<a href='https://github.com/jolars/eulerr/issues/57'>#57</a>)</li>
 </ul>
 </div>
-<div id="bug-fixes-1" class="section level2">
+<div id="bug-fixes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-4" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>An error in layout normalization that occurred sometimes with ellipses has been fixed.</li>
 </ul>
 </div>
 </div>
-    <div id="eulerr-5-1-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-5-1-0" class="anchor"></a>eulerr 5.1.0<small> 2019-02-04 </small>
+    <div id="eulerr-510" class="section level1">
+<h1 class="page-header" data-toc-text="5.1.0">
+<a href="#eulerr-510" class="anchor"></a>eulerr 5.1.0<small> 2019-02-04 </small>
 </h1>
 <div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
@@ -205,9 +257,9 @@
 <code><a href="../reference/venn.html">venn()</a></code> is a new function that produces Venn diagrams for up to 5 sets. The interface is almost identical to <code><a href="../reference/euler.html">euler()</a></code> except that a single integer can also be provided. A new vignette, <em>Venn diagrams with eulerr</em>, exemplifies its use.</li>
 </ul>
 </div>
-<div id="minor-changes-2" class="section level2">
+<div id="minor-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Calculations for the strips in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> when a list of Euler diagrams is given has been improved. Setting <code>fontsize</code> or <code>cex</code> now results in appropriately sized strips as one would expect.</li>
 <li>Tiny overlaps (where the fraction of the area is less than one thousandth of the largest overlap) in the final diagram are no longer plotted.</li>
@@ -215,9 +267,9 @@
 <code>eulergram()</code> objects from <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now have a proper grob name for the canvas grob, so that extracting information from them is easier.</li>
 </ul>
 </div>
-<div id="bug-fixes-2" class="section level2">
+<div id="bug-fixes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-2" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-5" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Return value documentation for <code><a href="../reference/euler.html">euler()</a></code> now correctly says “ellipses” and not “coefficients”.</li>
 <li>
@@ -226,9 +278,9 @@
 </ul>
 </div>
 </div>
-    <div id="eulerr-5-0-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-5-0-0" class="anchor"></a>eulerr 5.0.0<small> 2018-11-05 </small>
+    <div id="eulerr-500" class="section level1">
+<h1 class="page-header" data-toc-text="5.0.0">
+<a href="#eulerr-500" class="anchor"></a>eulerr 5.0.0<small> 2018-11-05 </small>
 </h1>
 <div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
@@ -249,9 +301,9 @@
 <li>The c++ internals have been rewritten using more memory-efficient, performant and expressive code.</li>
 </ul>
 </div>
-<div id="minor-changes-3" class="section level2">
+<div id="minor-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-3" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-5" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>The <code><a href="../reference/euler.html">euler.data.frame()</a></code> method (and by proxy the <code><a href="../reference/euler.html">euler.matrix()</a></code> method) can now take matrices with factors in addition to the previously supported logical and integer (binary) input. The function will dummy code the variables for the user.</li>
 <li>A few performance fixes.</li>
@@ -268,9 +320,9 @@
 <li>Parts of the <em>eulerr under the hood</em> vignette has been branched off into a new vignette regarding visualization.</li>
 </ul>
 </div>
-<div id="bug-fixes-3" class="section level2">
+<div id="bug-fixes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-3" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-6" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Empty combinations can now be provided and will be plotted (generating completely blank plots).</li>
 <li>
@@ -279,13 +331,13 @@
 </ul>
 </div>
 </div>
-    <div id="eulerr-4-1-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-4-1-0" class="anchor"></a>eulerr 4.1.0<small> 2018-04-20 </small>
+    <div id="eulerr-410" class="section level1">
+<h1 class="page-header" data-toc-text="4.1.0">
+<a href="#eulerr-410" class="anchor"></a>eulerr 4.1.0<small> 2018-04-20 </small>
 </h1>
-<div id="minor-changes-4" class="section level2">
+<div id="minor-changes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-4" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-6" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now returns a <code>gTree</code> object. All of the plotting mechanisms are now also found in this function and <code><a href="../reference/plot.eulergram.html">plot.eulergram()</a></code> and <code><a href="../reference/plot.eulergram.html">print.eulergram()</a></code> basically just call <code><a href="https://rdrr.io/r/grid/grid.draw.html">grid::grid.draw()</a></code> on the result of <code><a href="../reference/plot.euler.html">plot.euler()</a></code>. This change means that functions such as <code>gridExtra::grid.arrange()</code> now work as one would intuit on the objects produced by <code><a href="../reference/plot.euler.html">plot.euler()</a></code>.</li>
@@ -293,9 +345,9 @@
 <li>The last-ditch optimizer has been switched back to <code><a href="https://rdrr.io/pkg/GenSA/man/GenSA.html">GenSA::GenSA()</a></code> from <code>RcppDE::DEoptim()</code>.</li>
 </ul>
 </div>
-<div id="bug-fixes-4" class="section level2">
+<div id="bug-fixes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-4" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-7" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>The <strong>grid</strong> parameters available for <em>edges</em> are now correctly specified in the manual for <code><a href="../reference/plot.euler.html">plot.euler()</a></code>.</li>
 <li>
@@ -303,9 +355,9 @@
 </ul>
 </div>
 </div>
-    <div id="eulerr-4-0-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-4-0-0" class="anchor"></a>eulerr 4.0.0<small> 2018-02-05 </small>
+    <div id="eulerr-400" class="section level1">
+<h1 class="page-header" data-toc-text="4.0.0">
+<a href="#eulerr-400" class="anchor"></a>eulerr 4.0.0<small> 2018-02-05 </small>
 </h1>
 <div id="major-changes-1" class="section level2">
 <h2 class="hasAnchor">
@@ -317,9 +369,9 @@
 <li>A new function <code><a href="../reference/eulerr_options.html">eulerr_options()</a></code> have been provided in order to set default graphical parameters for the diagrams.</li>
 </ul>
 </div>
-<div id="minor-changes-5" class="section level2">
+<div id="minor-changes-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-5" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Arguments <code>counts</code> and <code>outer_strips</code> to <code><a href="../reference/plot.euler.html">plot.euler()</a></code> are now defunct.</li>
 <li>
@@ -327,17 +379,17 @@
 <li>Layouts are now partially normalized so that diagrams will look approximately the same even with different random seeds.</li>
 </ul>
 </div>
-<div id="bug-fixes-5" class="section level2">
+<div id="bug-fixes-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-5" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-8" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Providing custom labels to <code>quantities</code> and <code>labels</code> arguments of <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now works correctly (<a href='https://github.com/jolars/eulerr/issues/20'>#20</a>).</li>
 </ul>
 </div>
 </div>
-    <div id="eulerr-3-1-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-3-1-0" class="anchor"></a>eulerr 3.1.0<small> 2018-01-02 </small>
+    <div id="eulerr-310" class="section level1">
+<h1 class="page-header" data-toc-text="3.1.0">
+<a href="#eulerr-310" class="anchor"></a>eulerr 3.1.0<small> 2018-01-02 </small>
 </h1>
 <div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
@@ -348,18 +400,18 @@
 <li>In final optimization, we now use <em>stress</em> instead of residual sums of squares as a target for our optimizer.</li>
 </ul>
 </div>
-<div id="minor-changes-6" class="section level2">
+<div id="minor-changes-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-6" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-8" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code>label</code> is now a proper generic with an appropriate method (<code>label.euler()</code>).</li>
 <li>The <strong>eulerr under the hood</strong> vignette has received a substantial update.</li>
 </ul>
 </div>
-<div id="bug-fixes-6" class="section level2">
+<div id="bug-fixes-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-6" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-9" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Fixed warnings resulting from the deprecated <code>counts</code> argument in one of the vignettes.</li>
 <li>Fixed memcheck errors in the final optimizer.</li>
@@ -367,21 +419,21 @@
 </ul>
 </div>
 </div>
-    <div id="eulerr-3-0-1" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-3-0-1" class="anchor"></a>eulerr 3.0.1<small> 2017-11-15 </small>
+    <div id="eulerr-301" class="section level1">
+<h1 class="page-header" data-toc-text="3.0.1">
+<a href="#eulerr-301" class="anchor"></a>eulerr 3.0.1<small> 2017-11-15 </small>
 </h1>
-<div id="bug-fixes-7" class="section level2">
+<div id="bug-fixes-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-7" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-10" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Added the missing %\VignetteEngine{knitr::knitr} to both vignettes. It had mistakenly been left out, which had mangled the resulting vignettes.</li>
 </ul>
 </div>
 </div>
-    <div id="eulerr-3-0-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-3-0-0" class="anchor"></a>eulerr 3.0.0<small> 2017-11-15 </small>
+    <div id="eulerr-300" class="section level1">
+<h1 class="page-header" data-toc-text="3.0.0">
+<a href="#eulerr-300" class="anchor"></a>eulerr 3.0.0<small> 2017-11-15 </small>
 </h1>
 <div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
@@ -396,9 +448,9 @@
 <li>The initial optimizer now uses an analytical Hessian in addition to gradient.</li>
 </ul>
 </div>
-<div id="minor-changes-7" class="section level2">
+<div id="minor-changes-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-7" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-9" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>The initial optimizer now restarts up to 10 times and picks the best fit (unless it is perfect somewhere along the way).</li>
 <li>The default palette has been changed to a fixed palette, still adapted to color deficiency, but with some manual adjustments to, among other things, avoid unnecessary use of color.</li>
@@ -410,9 +462,9 @@
 </ul>
 </div>
 </div>
-    <div id="eulerr-2-0-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-2-0-0" class="anchor"></a>eulerr 2.0.0<small> 2017-06-20 </small>
+    <div id="eulerr-200" class="section level1">
+<h1 class="page-header" data-toc-text="2.0.0">
+<a href="#eulerr-200" class="anchor"></a>eulerr 2.0.0<small> 2017-06-20 </small>
 </h1>
 <div id="major-changes-4" class="section level2">
 <h2 class="hasAnchor">
@@ -433,9 +485,9 @@
 <li>Arguments <code>polygon_args</code>, <code>mar</code>, and <code>text_args</code> to <code><a href="../reference/plot.euler.html">plot.euler()</a></code> have been made defunct.</li>
 </ul>
 </div>
-<div id="minor-changes-8" class="section level2">
+<div id="minor-changes-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-8" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-10" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code><a href="../reference/plot.euler.html">plot.euler()</a></code> handles conflicting arguments better.</li>
@@ -447,18 +499,18 @@
 <li>Argument <code>fill_opacity</code> is softly deprecated and has been replaced with <code>fill_alpha</code> for consistency with other lattice functions.</li>
 </ul>
 </div>
-<div id="bug-fixes-8" class="section level2">
+<div id="bug-fixes-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-8" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-11" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>
 <code>border</code> argument in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> works again (<a href='https://github.com/jolars/eulerr/issues/7'>#7</a>).</li>
 </ul>
 </div>
 </div>
-    <div id="eulerr-1-1-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-1-1-0" class="anchor"></a>eulerr 1.1.0<small> 2017-02-05 </small>
+    <div id="eulerr-110" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.0">
+<a href="#eulerr-110" class="anchor"></a>eulerr 1.1.0<small> 2017-02-05 </small>
 </h1>
 <div id="major-changes-5" class="section level2">
 <h2 class="hasAnchor">
@@ -467,12 +519,12 @@
 <li>
 <code><a href="../reference/eulerr-package.html">eulerr()</a></code> and its related methods been deprecated and are being replaced by <code><a href="../reference/euler.html">euler()</a></code>, which takes slightly different input. Notably, the default is now to provide input in the form of disjoint class combinations, rather than unions. This is partly to make the function a drop-in replacement for <code>venneuler::venneuler</code>.</li>
 <li>
-<code><a href="../reference/plot.euler.html">plot.euler()</a></code> has been completely revamped, now interfacing <code>xyplot()</code> from lattice. As a result, arguments <code>polygon_args</code>, <code>mar</code>, and <code>text_args</code> have been deprecated.</li>
+<code><a href="../reference/plot.euler.html">plot.euler()</a></code> has been completely revamped, now interfacing <code><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot()</a></code> from lattice. As a result, arguments <code>polygon_args</code>, <code>mar</code>, and <code>text_args</code> have been deprecated.</li>
 </ul>
 </div>
-<div id="minor-changes-9" class="section level2">
+<div id="minor-changes-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-9" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-11" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Added a <code>counts</code> argument to <code>plot.eulerr</code>, which intersections and complements with counts from the original set specification (<a href='https://github.com/jolars/eulerr/issues/6'>#6</a>).</li>
 <li>Added a <code>key</code> argument to <code>plot.eulerr</code> that prints a legend next to the diagram.</li>
@@ -485,18 +537,18 @@
 <code><a href="../reference/euler.html">euler()</a></code> now uses <code><a href="https://rdrr.io/r/stats/nlm.html">nlm()</a></code> instead of <code><a href="https://rdrr.io/r/stats/optim.html">optim(method = "Nelder-Mead")</a></code> for its final optimization.</li>
 </ul>
 </div>
-<div id="bug-fixes-9" class="section level2">
+<div id="bug-fixes-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-9" class="anchor"></a>Bug fixes</h2>
+<a href="#bug-fixes-12" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>The previous algorithm incorrectly computed loss from unions of sets. It now computes loss from disjoint class combinations.</li>
 <li>Added missing row breaks in <code>print.eulerr</code>.</li>
 </ul>
 </div>
 </div>
-    <div id="eulerr-1-0-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-1-0-0" class="anchor"></a>eulerr 1.0.0<small> 2016-12-10 </small>
+    <div id="eulerr-100" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.0">
+<a href="#eulerr-100" class="anchor"></a>eulerr 1.0.0<small> 2016-12-10 </small>
 </h1>
 <div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
@@ -522,9 +574,9 @@
 </ul>
 </div>
 </div>
-    <div id="eulerr-0-1-0" class="section level1">
-<h1 class="page-header">
-<a href="#eulerr-0-1-0" class="anchor"></a>eulerr 0.1.0<small> 2016-10-16 </small>
+    <div id="eulerr-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#eulerr-010" class="anchor"></a>eulerr 0.1.0<small> 2016-10-16 </small>
 </h1>
 <ul>
 <li>The first release.</li>
@@ -532,26 +584,10 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#eulerr-development-version">development version</a></li>
-        <li><a href="#eulerr-6-0-1">6.0.1</a></li>
-        <li><a href="#eulerr-6-0-0">6.0.0</a></li>
-        <li><a href="#eulerr-5-1-0">5.1.0</a></li>
-        <li><a href="#eulerr-5-0-0">5.0.0</a></li>
-        <li><a href="#eulerr-4-1-0">4.1.0</a></li>
-        <li><a href="#eulerr-4-0-0">4.0.0</a></li>
-        <li><a href="#eulerr-3-1-0">3.1.0</a></li>
-        <li><a href="#eulerr-3-0-1">3.0.1</a></li>
-        <li><a href="#eulerr-3-0-0">3.0.0</a></li>
-        <li><a href="#eulerr-2-0-0">2.0.0</a></li>
-        <li><a href="#eulerr-1-1-0">1.1.0</a></li>
-        <li><a href="#eulerr-1-0-0">1.0.0</a></li>
-        <li><a href="#eulerr-0-1-0">0.1.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -563,7 +599,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

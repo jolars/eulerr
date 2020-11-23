@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -39,7 +43,6 @@
 <meta property="og:description" content="Fit Euler diagrams (a generalization of Venn diagrams) using numerical
 optimization to find exact or approximate solutions to a specification of set
 relationships. The shape of the diagram may be a circle or an ellipse." />
-<meta name="twitter:card" content="summary" />
 
 
 <meta name="robots" content="noindex">
@@ -57,7 +60,7 @@ relationships. The shape of the diagram may be a circle or an ellipse." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -71,7 +74,7 @@ relationships. The shape of the diagram may be a circle or an ellipse." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.0.1.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.1.0.9000</span>
       </span>
     </div>
 
@@ -116,7 +119,7 @@ relationships. The shape of the diagram may be a circle or an ellipse." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jolars/eulerr">
+  <a href="https://github.com/jolars/eulerr/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -145,35 +148,35 @@ optimization to find exact or approximate solutions to a specification of set
 relationships. The shape of the diagram may be a circle or an ellipse.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>euler</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>euler</span>(
-  <span class='no'>combinations</span>,
-  <span class='kw'>input</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"disjoint"</span>, <span class='st'>"union"</span>),
-  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"circle"</span>, <span class='st'>"ellipse"</span>),
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='no'>...</span>
-)
+<span class='fu'>euler</span><span class='op'>(</span>
+  <span class='va'>combinations</span>,
+  input <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"disjoint"</span>, <span class='st'>"union"</span><span class='op'>)</span>,
+  shape <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"circle"</span>, <span class='st'>"ellipse"</span><span class='op'>)</span>,
+  control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>euler</span>(
-  <span class='no'>combinations</span>,
-  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
-  <span class='kw'>factor_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
-)
+<span class='fu'>euler</span><span class='op'>(</span>
+  <span class='va'>combinations</span>,
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  by <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sep <span class='op'>=</span> <span class='st'>"_"</span>,
+  factor_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for table</span>
-<span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>euler</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -285,7 +288,7 @@ factors.</p></li>
 (as in the description above) via <code><a href='https://rdrr.io/r/base/as.data.frame.html'>base::as.data.frame.matrix()</a></code>.</p></li>
 <li><p><code>table</code>: A table with <code>max(dim(x)) &lt; 3</code>.</p></li>
 <li><p><code>list</code>: a list of vectors, each vector giving the contents of
-that set (with no duplicates). Vectors in the list do not need to be named.</p></li>
+that set (with no duplicates). Vectors in the list must be named.</p></li>
 </ul>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -303,11 +306,12 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Fit a diagram with circles</span>
-<span class='no'>combo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>A</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>B</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>C</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='st'>"A&amp;B"</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='st'>"A&amp;C"</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>euler</span>(<span class='no'>combo</span>)
+<span class='va'>combo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>A <span class='op'>=</span> <span class='fl'>2</span>, B <span class='op'>=</span> <span class='fl'>2</span>, C <span class='op'>=</span> <span class='fl'>2</span>, <span class='st'>"A&amp;B"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"A&amp;C"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>fit1</span> <span class='op'>&lt;-</span> <span class='fu'>euler</span><span class='op'>(</span><span class='va'>combo</span><span class='op'>)</span>
 
 <span class='co'># Investigate the fit</span>
-<span class='no'>fit1</span></div><div class='output co'>#&gt;       original fitted residuals regionError
+<span class='va'>fit1</span>
+</div><div class='output co'>#&gt;       original fitted residuals regionError
 #&gt; A            2  2.076    -0.076       0.021
 #&gt; B            2  2.076    -0.076       0.021
 #&gt; C            2  2.076    -0.076       0.021
@@ -319,10 +323,11 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; diagError: 0.058 
 #&gt; stress:    0.049 </div><div class='input'>
 <span class='co'># Refit using ellipses instead</span>
-<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>euler</span>(<span class='no'>combo</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"ellipse"</span>)
+<span class='va'>fit2</span> <span class='op'>&lt;-</span> <span class='fu'>euler</span><span class='op'>(</span><span class='va'>combo</span>, shape <span class='op'>=</span> <span class='st'>"ellipse"</span><span class='op'>)</span>
 
 <span class='co'># Investigate the fit again (which is now exact)</span>
-<span class='no'>fit2</span></div><div class='output co'>#&gt;       original fitted residuals regionError
+<span class='va'>fit2</span>
+</div><div class='output co'>#&gt;       original fitted residuals regionError
 #&gt; A            2      2         0           0
 #&gt; B            2      2         0           0
 #&gt; C            2      2         0           0
@@ -334,11 +339,13 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; diagError: 0 
 #&gt; stress:    0 </div><div class='input'>
 <span class='co'># Plot it</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit2</span>)</div><div class='img'><img src='euler-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fit2</span><span class='op'>)</span>
+</div><div class='img'><img src='euler-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># A set with no perfect solution</span>
-<span class='fu'>euler</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span> <span class='kw'>=</span> <span class='fl'>3491</span>, <span class='st'>"b"</span> <span class='kw'>=</span> <span class='fl'>3409</span>, <span class='st'>"c"</span> <span class='kw'>=</span> <span class='fl'>3503</span>,
-        <span class='st'>"a&amp;b"</span> <span class='kw'>=</span> <span class='fl'>120</span>, <span class='st'>"a&amp;c"</span> <span class='kw'>=</span> <span class='fl'>114</span>, <span class='st'>"b&amp;c"</span> <span class='kw'>=</span> <span class='fl'>132</span>,
-        <span class='st'>"a&amp;b&amp;c"</span> <span class='kw'>=</span> <span class='fl'>50</span>))</div><div class='output co'>#&gt;       original fitted residuals regionError
+<span class='fu'>euler</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span> <span class='op'>=</span> <span class='fl'>3491</span>, <span class='st'>"b"</span> <span class='op'>=</span> <span class='fl'>3409</span>, <span class='st'>"c"</span> <span class='op'>=</span> <span class='fl'>3503</span>,
+        <span class='st'>"a&amp;b"</span> <span class='op'>=</span> <span class='fl'>120</span>, <span class='st'>"a&amp;c"</span> <span class='op'>=</span> <span class='fl'>114</span>, <span class='st'>"b&amp;c"</span> <span class='op'>=</span> <span class='fl'>132</span>,
+        <span class='st'>"a&amp;b&amp;c"</span> <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       original fitted residuals regionError
 #&gt; a         3491   3491         0       0.001
 #&gt; b         3409   3409         0       0.001
 #&gt; c         3503   3503         0       0.002
@@ -350,7 +357,8 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; diagError: 0.005 
 #&gt; stress:    0 </div><div class='input'>
 <span class='co'># Using grouping via the 'by' argument through the data.frame method</span>
-<span class='fu'>euler</span>(<span class='no'>fruits</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>sex</span>, <span class='no'>age</span>))</div><div class='output co'>#&gt; female.adult 
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>fruits</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>sex</span>, <span class='va'>age</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; female.adult 
 #&gt;                     original fitted residuals regionError
 #&gt; banana                     1  0.937     0.063       0.009
 #&gt; apple                      2  1.968     0.032       0.009
@@ -403,7 +411,8 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; stress:    0 </div><div class='input'>
 
 <span class='co'># Using the matrix method</span>
-<span class='fu'>euler</span>(<span class='no'>organisms</span>)</div><div class='output co'>#&gt;                               original fitted residuals regionError
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                               original fitted residuals regionError
 #&gt; animal                               0  0.582    -0.582       0.086
 #&gt; mammal                               0  0.302    -0.302       0.044
 #&gt; plant                                0  0.210    -0.210       0.031
@@ -439,7 +448,8 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; diagError: 0.143 
 #&gt; stress:    0.352 </div><div class='input'>
 <span class='co'># Using weights</span>
-<span class='fu'>euler</span>(<span class='no'>organisms</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt;                               original fitted residuals regionError
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>organisms</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                               original fitted residuals regionError
 #&gt; animal                               0  0.789    -0.789       0.019
 #&gt; mammal                               0  0.360    -0.360       0.009
 #&gt; plant                                0  0.099    -0.099       0.002
@@ -475,7 +485,8 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; diagError: 0.197 
 #&gt; stress:    0.1 </div><div class='input'>
 <span class='co'># The table method</span>
-<span class='fu'>euler</span>(<span class='no'>pain</span>, <span class='kw'>factor_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;                          original  fitted residuals regionError
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>pain</span>, factor_names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                          original  fitted residuals regionError
 #&gt; widespread                    204 204.002    -0.002           0
 #&gt; regional                      229 229.002    -0.002           0
 #&gt; male                           48  48.032    -0.032           0
@@ -487,7 +498,8 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; diagError: 0 
 #&gt; stress:    0 </div><div class='input'>
 <span class='co'># A euler diagram from a list of sample spaces (the list method)</span>
-<span class='fu'>euler</span>(<span class='no'>plants</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span>)])</div><div class='output co'>#&gt;                          original fitted residuals regionError
+<span class='fu'>euler</span><span class='op'>(</span><span class='va'>plants</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                          original fitted residuals regionError
 #&gt; erigenia                        0      0         0           0
 #&gt; solanum                        16     16         0           0
 #&gt; cynodon                         1      1         0           0
@@ -499,18 +511,10 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 #&gt; diagError: 0 
 #&gt; stress:    0 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#methods-by-class-">Methods (by class)</a></li>
-      <li><a href="#references">References</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -521,7 +525,7 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

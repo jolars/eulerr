@@ -6,20 +6,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Visualizing Euler diagrams with eulerr • eulerr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Visualizing Euler diagrams with eulerr">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="eulerr">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.0.1.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.1.0.9000</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jolars/eulerr">
+  <a href="https://github.com/jolars/eulerr/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -92,13 +92,14 @@
 
       
 
-      </header><div class="row">
+      </header><script src="visualization_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="visualization_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="visualization_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Visualizing Euler diagrams with eulerr</h1>
+      <h1 data-toc-skip>Visualizing Euler diagrams with eulerr</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2020-03-04</h4>
+            <h4 class="date">2020-11-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/visualization.Rmd"><code>vignettes/visualization.Rmd</code></a></small>
       <div class="hidden name"><code>visualization.Rmd</code></div>
@@ -140,12 +141,13 @@ k + b \sin{\theta}
 <p>Among these aesthetics, the best choice (from a viewer perspective) appears to be color <span class="citation">(Blake 2016)</span>, which provides useful information without extraneous chart junk.</p>
 <p>The issue with color, however, is that it cannot be perceived perfectly by all. Eight percent of men and 0.4% of women in European Caucasian countries, for instance, suffer the most common form, red–green color deficiency. Moreover, color is often printed at a premium in scientific publications and adds no utility to a diagram of two shapes.</p>
 <p>For these reasons, <strong>eulerr</strong> defaults to distinguishing ellipses with color using a manually tuned color palette.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(eulerr)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">con &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">A =</span> <span class="dv">1</span>, <span class="dt">B =</span> <span class="dv">1</span>, <span class="dt">C =</span> <span class="dv">1</span>, <span class="dt">D =</span> <span class="dv">1</span>, <span class="dt">E =</span> <span class="dv">1</span>, <span class="dt">F =</span> <span class="dv">1</span>, <span class="dt">G =</span> <span class="dv">1</span>, <span class="dt">H =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">         <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="fl">0.2</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="fl">0.2</span>, <span class="st">"C&amp;D"</span> =<span class="st"> </span><span class="fl">0.2</span>, <span class="st">"D&amp;E"</span> =<span class="st"> </span><span class="fl">0.2</span>, <span class="st">"E&amp;F"</span> =<span class="st"> </span><span class="fl">0.2</span>,</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">         <span class="st">"F&amp;G"</span> =<span class="st"> </span><span class="fl">0.2</span>, <span class="st">"G&amp;H"</span> =<span class="st"> </span><span class="fl">0.2</span>)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="../reference/euler.html">euler</a></span>(con), <span class="dt">labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr">eulerr</a></span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span>, D <span class="op">=</span> <span class="fl">1</span>, E <span class="op">=</span> <span class="fl">1</span>, F <span class="op">=</span> <span class="fl">1</span>, G <span class="op">=</span> <span class="fl">1</span>, H <span class="op">=</span> <span class="fl">1</span>,
+         <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">0.2</span>,
+         <span class="st">"F&amp;G"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"G&amp;H"</span> <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="visualization_files/figure-html/colorexamle-1.png" alt="The eight first colors of the default color palette" width="700"><p class="caption">
 The eight first colors of the default color palette
@@ -162,7 +164,7 @@ The eight first colors of the default color palette
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-Blake_2016">
-<p>Blake, Andrew. 2016. “The Impact of Graphical Choices on the Perception of Euler Diagrams.” Ph.D. dissertation, Brighton, UK: Brighton University. <a href="http://eprints.brighton.ac.uk/15754/1/main.pdf" class="uri">http://eprints.brighton.ac.uk/15754/1/main.pdf</a>.</p>
+<p>Blake, Andrew. 2016. “The Impact of Graphical Choices on the Perception of Euler Diagrams.” Ph.D. dissertation, Brighton, UK: Brighton University. <a href="http://eprints.brighton.ac.uk/15754/1/main.pdf">http://eprints.brighton.ac.uk/15754/1/main.pdf</a>.</p>
 </div>
 <div id="ref-Jylaenki_2010">
 <p>Jylänki, Jukka. 2010. “A Thousand Ways to Pack the Bin – a Practical Approach to Two-Dimensional Rectangle Bin Packing.”</p>
@@ -174,23 +176,17 @@ The eight first colors of the default color palette
 <p>Mapbox. 2018. “polylabel: A Fast Algorithm for Finding the Pole of Inaccessibility of a Polygon (in JavaScript and C++).” Mapbox.</p>
 </div>
 <div id="ref-RCT_2017">
-<p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
+<p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
 </div>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#normalizing-dispersed-layouts">Normalizing dispersed layouts</a></li>
-      <li><a href="#references">References</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -201,7 +197,7 @@ The eight first colors of the default color palette
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
