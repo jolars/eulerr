@@ -5,17 +5,13 @@
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.org/jolars/eulerr.svg?branch=master)](https://travis-ci.org/jolars/eulerr)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
+[![R build
+status](https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg)](https://github.com/jolars/eulerr/actions)
 [![Coverage
 Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
 [![CRAN
 Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KERLYHUY639WU)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&svg=true)](https://ci.appveyor.com/project/jolars/eulerr)
 <!-- badges: end -->
 
 **eulerr** generates area-proportional Euler diagrams that display set
@@ -68,9 +64,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 1.681159e-12
+#> [1] 3.196314e-16
 fit$diagError
-#> [1] 2.562909e-07
+#> [1] 2.884781e-09
 ```
 
 and plot it
