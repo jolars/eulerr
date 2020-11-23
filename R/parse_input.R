@@ -52,7 +52,8 @@ parse_dataframe <- function(combinations,
                             factor_names = TRUE,
                             ...)
 {
-  stopifnot(!any(grepl("&", colnames(combinations), fixed = TRUE)))
+  if (any(grepl("&", colnames(combinations), fixed = TRUE)))
+    stop("names of columns in `combinations` must not contain '$'")
 
   if (!is.null(facs)) {
     if (is.list(facs)) {

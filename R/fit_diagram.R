@@ -12,11 +12,17 @@ fit_diagram <- function(combinations,
   n_restarts <- 10L # should this be made an argument?
   small <- sqrt(.Machine$double.eps)
 
-  stopifnot(is.numeric(combinations),
-            !any(combinations < 0),
-            !is.null(attr(combinations, "names")),
-            !any(names(combinations) == ""),
-            !any(duplicated(names(combinations))))
+  if (!is.numeric(combinations))
+    stop("`combinations` must be numeric")
+
+  if (any(combinations < 0))
+    stop("values in `combinations` cannot be negative")
+
+  if (is.null(attr(combinations, "names")) || any(names(combinations) == ""))
+    stop("every element in `combinations` needs to be named")
+
+  if (any(duplicated(names(combinations))))
+    stop("names of elements in `combinations` cannot be duplicated")
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))

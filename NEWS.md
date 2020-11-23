@@ -3,7 +3,7 @@
 ## Minor changes
 
 * citation to conference paper added to `inst/CITATION`
-* error messages for `euler.list()` have been improved
+* error messages for erroneous input have been improved in several places
 
 ## Bug fixes
 
