@@ -14,7 +14,7 @@
 \item{vsep}{character string to paste in between \code{euler} objects
 when \code{x} is a nested \code{euler} object}
 
-\item{...}{arguments passed to \code{\link[base:print.data.frame]{base::print.data.frame()}}}
+\item{...}{arguments passed to \code{\link[base:print.dataframe]{base::print.data.frame()}}}
 }
 \value{
 Summary statistics of the fitted Euler diagram are printed to
@@ -29,5 +29,5 @@ and the fitted values as well as \code{diagError} and \code{stress} statistics.
 euler(organisms)
 }
 \seealso{
-\code{\link[=euler]{euler()}}, \code{\link[base:print.data.frame]{base::print.data.frame()}}
+\code{\link[=euler]{euler()}}, \code{\link[base:print.dataframe]{base::print.data.frame()}}
 }

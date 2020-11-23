@@ -14,7 +14,7 @@
 \item{vsep}{character string to paste in between \code{euler} objects
 when \code{x} is a nested \code{euler} object}
 
-\item{...}{arguments passed to \code{\link[base:print.data.frame]{base::print.data.frame()}}}
+\item{...}{arguments passed to \code{\link[base:print.dataframe]{base::print.data.frame()}}}
 }
 \value{
 Summary statistics of the fitted Venn diagram are printed to
@@ -29,5 +29,5 @@ sets and the specifications for the ellipses of the Venn diagram.
 venn(organisms)
 }
 \seealso{
-\code{\link[=venn]{venn()}}, \code{\link[base:print.data.frame]{base::print.data.frame()}}
+\code{\link[=venn]{venn()}}, \code{\link[base:print.dataframe]{base::print.data.frame()}}
 }

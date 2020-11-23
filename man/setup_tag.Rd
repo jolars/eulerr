@@ -16,7 +16,7 @@ setup_tag(data, labels, quantities, number)
 \item{number}{panel number, used for naming the resulting grob}
 }
 \value{
-A \code{\link[grid:gTree]{grid::gTree()}} object
+A \code{\link[grid:grid.grob]{grid::gTree()}} object
 }
 \description{
 Setup grobs for labels (labels, quantities, percentages)

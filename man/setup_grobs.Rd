@@ -31,7 +31,7 @@ setup_grobs(
 \item{centers}{data.frame of data for labels and quantities}
 }
 \value{
-A \code{\link[grid:gList]{grid::gList()}} is returned.
+A \code{\link[grid:grid.grob]{grid::gList()}} is returned.
 }
 \description{
 Grobify Euler objects

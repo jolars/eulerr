@@ -42,11 +42,11 @@ See \code{\link[grid:grid.path]{grid::grid.path()}}.}
 
 \item{edges}{a logical, vector, or list of graphical parameters for the edges
 in the diagram. Vectors are assumed to be colors for the edges.
-See \code{\link[grid:grid.polyline]{grid::grid.polyline()}}.}
+See \code{\link[grid:grid.lines]{grid::grid.polyline()}}.}
 
 \item{legend}{a logical scalar or list. If a list,
 the item \code{side} can be used to set the location of the legend. See
-\code{\link[grid:grid.legend]{grid::grid.legend()}}.}
+\code{\link[grid:legendGrob]{grid::grid.legend()}}.}
 
 \item{labels}{a logical, vector, or list. Vectors are assumed to be
 text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
@@ -163,6 +163,6 @@ plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[=plot.eulergram]{plot.eulergram()}}, \code{\link[grid:gpar]{grid::gpar()}},
-\code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
-\code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
+\code{\link[grid:grid.lines]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
+\code{\link[grid:legendGrob]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }

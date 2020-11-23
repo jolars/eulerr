@@ -4,9 +4,11 @@
 \name{plants}
 \alias{plants}
 \title{Plants}
-\format{A \link{list} with 33,721 plants, each containing a character vector
+\format{
+A \link{list} with 33,721 plants, each containing a character vector
 listing the states in the US and Canada in which they occur. The names in
-the list specify the species or genus of the plant.}
+the list specify the species or genus of the plant.
+}
 \source{
 USDA, NRCS. 2008. The PLANTS Database (\url{http://plants.usda.gov/}, 31
 December 2008). National Plant Data Center, Baton Rouge, LA 70874-4490 USA.

@@ -4,9 +4,11 @@
 \name{organisms}
 \alias{organisms}
 \title{Organisms}
-\format{A \link{matrix} with 7 observations, consisting of various organisms,
+\format{
+A \link{matrix} with 7 observations, consisting of various organisms,
 and 5 variables: \emph{animal, mammal, plant, sea}, and, \emph{spiny},
-indicating whether the organism belongs to the category or not.}
+indicating whether the organism belongs to the category or not.
+}
 \source{
 \url{https://github.com/sysbio-bioinf/VennMaster/blob/master/data_examples/deploy/example1.list}
 }

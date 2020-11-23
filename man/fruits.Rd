@@ -4,14 +4,16 @@
 \name{fruits}
 \alias{fruits}
 \title{Fruits}
-\format{A \link{data.frame} with 100 observations of 5 variables:
+\format{
+A \link{data.frame} with 100 observations of 5 variables:
 \describe{
 \item{banana}{whether the person likes bananas, a logical}
 \item{apple}{whether the person likes apples, a logical}
 \item{orange}{whether the person likes oranges, a logical}
 \item{sex}{the sex of the person, a factor with levels 'male' and 'female'}
 \item{age}{the age of the person, a factor with levels 'child' and 'adult'}
-}}
+}
+}
 \usage{
 fruits
 }

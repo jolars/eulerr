@@ -4,9 +4,11 @@
 \name{pain}
 \alias{pain}
 \title{Pain distribution data}
-\format{A flat \link{table} (cross-table) with with sex in columns and
+\format{
+A flat \link{table} (cross-table) with with sex in columns and
 pain distribution in rows and integer counts making up the cells of the
-table.}
+table.
+}
 \source{
 Westergren H, Larsson J, Freeman M, Carlsson A, Jöud A,
 Malmström E-M. Sex-based differences in pain distribution in a cohort of

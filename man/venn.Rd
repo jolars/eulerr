@@ -85,7 +85,7 @@ Missing combinations are treated as being 0.
 factors.
 
 \item \code{matrix}: a matrix that can be converted to a data.frame of logicals
-(as in the description above) via \code{\link[base:as.data.frame.matrix]{base::as.data.frame.matrix()}}.
+(as in the description above) via \code{\link[base:as.data.frame]{base::as.data.frame.matrix()}}.
 
 \item \code{list}: a list of vectors, each vector giving the contents of
 that set (with no duplicates). Vectors in the list do not need to be named.
