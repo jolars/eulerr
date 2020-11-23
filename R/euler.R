@@ -202,7 +202,7 @@ euler.table <- function(combinations, ...)
 }
 
 #' @describeIn euler a list of vectors, each vector giving the contents of
-#'   that set (with no duplicates). Vectors in the list do not need to be named.
+#'   that set (with no duplicates). Vectors in the list must be named.
 #' @export
 #' @examples
 #'

@@ -4,6 +4,10 @@
 
 * citation to conference paper added to `inst/CITATION`
 
+## Bug fixes
+
+* error in documentation for list method has been fixed, thanks @gprezza (#77)
+
 # eulerr 6.1.0
 
 ## Minor changes
