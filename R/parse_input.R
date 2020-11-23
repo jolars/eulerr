@@ -1,9 +1,16 @@
 parse_list <- function(combinations)
 {
-  stopifnot(!is.null(attr(combinations, "names")),
-            !any(names(combinations) == ""),
-            !any(duplicated(names(combinations))),
-            all(sapply(combinations, anyDuplicated) == 0))
+  if (is.null(attr(combinations, "names")))
+    stop("when `combinations` is a list, all vectors in that list must be named")
+
+  if (any(names(combinations) == ""))
+    stop("all elements of `combinations` must be named")
+
+  if (!all(sapply(combinations, anyDuplicated) == 0))
+    stop("vectors in `combinations` cannot contain duplicates")
+
+  if (any(duplicated(names(combinations))))
+    stop("names of elements in `combinations` must be unique")
 
   sets <- names(combinations)
   n <- length(sets)
