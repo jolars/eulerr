@@ -11,7 +11,6 @@ status](https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg)](https
 Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
 [![CRAN
 Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KERLYHUY639WU)
 <!-- badges: end -->
 
 **eulerr** generates area-proportional Euler diagrams that display set
@@ -64,9 +63,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 3.196314e-16
+#> [1] 2.612816e-14
 fit$diagError
-#> [1] 2.884781e-09
+#> [1] 2.616605e-08
 ```
 
 and plot it

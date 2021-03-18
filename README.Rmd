@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 [![R build status](https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg)](https://github.com/jolars/eulerr/actions)
 [![Coverage Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
 [![CRAN Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KERLYHUY639WU)
 <!-- badges: end -->
 
 **eulerr** generates area-proportional Euler diagrams that display set
