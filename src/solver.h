@@ -29,8 +29,8 @@ inline arma::cx_vec solve_cubic(const double alpha,
   if (R*R < Q*Q*Q) {
     double theta = acos(R/sqrt(Q*Q*Q));
     y(0) = -2.0*sqrt(Q)*cos(theta/3.0) -  a/3.0;
-    y(1) = -2.0*sqrt(Q)*cos((theta + 2.0*PI)/3.0) - a/3.0;
-    y(2) = -2.0*sqrt(Q)*cos((theta - 2.0*PI)/3.0) - a/3.0;
+    y(1) = -2.0*sqrt(Q)*cos((theta + 2.0*M_PI)/3.0) - a/3.0;
+    y(2) = -2.0*sqrt(Q)*cos((theta - 2.0*M_PI)/3.0) - a/3.0;
   } else {
     double A = -signum(R)*cbrt(abs(R) + sqrt(R*R - Q*Q*Q));
     double B = nearly_equal(A, 0.0) ? 0.0 : Q/A;

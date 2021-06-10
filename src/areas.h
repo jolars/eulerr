@@ -27,7 +27,7 @@ double montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
 
     for (size_t i = 0; i < n_points; ++i) {
       // sample points using Vogel's method
-      double theta = i*(PI*(3.0 - sqrt(5.0)));
+      double theta = i*(M_PI*(3.0 - sqrt(5.0)));
       double r = sqrt(static_cast<double>(i)/static_cast<double>(n_points));
 
       eulerr::Point p{r*cos(theta), r*sin(theta)};
@@ -73,15 +73,15 @@ double ellipse_segment(const eulerr::Ellipse& e,
   double theta1 = std::atan2(p1.k, p1.h);
 
   if (theta1 < theta0)
-    theta1 += 2.0*PI;
+    theta1 += 2.0*M_PI;
 
   // Triangle part of the sector
   double triangle = 0.5*std::abs(p1.h*p0.k - p0.h*p1.k);
 
   return
-    (theta1 - theta0) <= PI ? e.sector(theta1) - e.sector(theta0) - triangle
+    (theta1 - theta0) <= M_PI ? e.sector(theta1) - e.sector(theta0) - triangle
                             : e.area()
-                              - e.sector(theta0 + 2.0*PI)
+                              - e.sector(theta0 + 2.0*M_PI)
                               + e.sector(theta1)
                               + triangle;
 }
