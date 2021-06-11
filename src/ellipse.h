@@ -11,7 +11,7 @@ struct Ellipse {
 
   double area() const
   {
-    return a*b*PI;
+    return a*b*M_PI;
   }
 
   // The code below is adapted from "The area of intersecting ellipses" by

@@ -99,8 +99,8 @@ inline Rcpp::NumericVector arma_to_rcpp(const T& x)
 template <typename T>
 inline T normalize_angle(T& x)
 {
-  T a = std::fmod(x + PI, 2.0*PI);
-  return a >= 0 ? (a - PI) : (a + PI);
+  T a = std::fmod(x + M_PI, 2.0*M_PI);
+  return a >= 0 ? (a - M_PI) : (a + M_PI);
 }
 
 template <typename T>
