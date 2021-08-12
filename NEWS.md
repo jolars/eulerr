@@ -4,6 +4,8 @@
 
 * citation to conference paper added to `inst/CITATION`
 * error messages for erroneous input have been improved in several places
+* switched `PI` to `M_PI` to support `STRICT_R_HEADERS` in C++ code
+  (#82, thanks @eddelbuettel)
 
 ## Bug fixes
 
