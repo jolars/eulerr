@@ -14,7 +14,7 @@ USDA, NRCS. 2008. The PLANTS Database (\url{http://plants.usda.gov/}, 31
 December 2008). National Plant Data Center, Baton Rouge, LA 70874-4490 USA.
 
 Dua, D. and Karra Taniskidou, E. (2017). UCI Machine Learning
-Repository \url{http://archive.ics.uci.edu/ml}. Irvine, CA: University of
+Repository \url{http://archive.ics.uci.edu/ml/}. Irvine, CA: University of
 California, School of Information and Computer Science.
 }
 \usage{
