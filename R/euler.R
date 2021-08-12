@@ -98,15 +98,16 @@
 #' euler(c("a" = 3491, "b" = 3409, "c" = 3503,
 #'         "a&b" = 120, "a&c" = 114, "b&c" = 132,
 #'         "a&b&c" = 50))
+#'
 #' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
 #'   Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
 #'   Graphics (Internet). 2012 Feb (cited 2016 Apr 9);18(2):321-31. Available
-#'   from:
-#'   [http://doi.org/10.1109/TVCG.2011.56](http://doi.org/10.1109/TVCG.2011.56)
+#'   from: \doi{10.1109/TVCG.2011.56}
 #'
 #'   Micallef L, Rodgers P. eulerAPE: Drawing Area-Proportional 3-Venn Diagrams
-#'   Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec 10);9(7):e101717. Available from:
-#'   [http://dx.doi.org/10.1371/journal.pone.0101717](http://dx.doi.org/10.1371/journal.pone.0101717)
+#'   Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
+#'   10);9(7):e101717. Available from:
+#'   \doi{10.1371/journal.pone.0101717}
 #'
 #' @export
 euler <- function(combinations, ...) UseMethod("euler")

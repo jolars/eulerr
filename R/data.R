@@ -9,7 +9,7 @@
 #' @source USDA, NRCS. 2008. The PLANTS Database (<http://plants.usda.gov/>, 31
 #'   December 2008). National Plant Data Center, Baton Rouge, LA 70874-4490 USA.
 #' @source Dua, D. and Karra Taniskidou, E. (2017). UCI Machine Learning
-#' Repository <http://archive.ics.uci.edu/ml>. Irvine, CA: University of
+#' Repository <http://archive.ics.uci.edu/ml/>. Irvine, CA: University of
 #' California, School of Information and Computer Science.
 "plants"
 
@@ -60,5 +60,5 @@
 #'   Malmström E-M. Sex-based differences in pain distribution in a cohort of
 #'    patients with persistent post-traumatic neck pain. Disability and
 #'    Rehabilitation. 2017 Jan 27; Available
-#'    from: <http://www.tandfonline.com/eprint/RK8tusJswJCsa9YakGDW/full>
+#'    from: <https://www.tandfonline.com/eprint/RK8tusJswJCsa9YakGDW/full>
 "pain"
