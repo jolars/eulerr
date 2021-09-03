@@ -90,7 +90,7 @@ eulerr is open source software, licensed under
 
 ## Versioning
 
-eulerr uses [semantic versioning](http://semver.org).
+eulerr uses [semantic versioning](https://semver.org).
 
 ## Code of conduct
 
