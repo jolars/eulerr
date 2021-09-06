@@ -61,21 +61,19 @@ set.seed(1)
 
 ## Introduction
 
-**eulerr** relies on an extensive machinery to turn user input into
-a pretty Euler diagram. Little of this requires any
-tinkering from the user. To make that happen, however, **eulerr**
-needs to make several well-formed decisions about the design of the
-diagram on behalf of the user, which is not a trivial task.
+**eulerr** relies on an extensive machinery to turn user input into a pretty
+Euler diagram. Little of this requires any tinkering from the user. To make that
+happen, however, **eulerr** needs to make several well-formed decisions about
+the design of the diagram on behalf of the user, which is not a trivial task.
 
-This document outlines the implementation of **eulerr** from input
-to output. It is designed to be an evolving documentation on the innards of the
-program.
+This document outlines the implementation of **eulerr** from input to output. It
+is designed to be an evolving documentation on the innards of the program.
 
 ## Input
 
 Euler diagrams present relationships between sets, wherefore the data must
-describe these relationships, either directly or indirectly.
-**eulerr** allows several alternatives for this data, namely,
+describe these relationships, either directly or indirectly.  **eulerr** allows
+several alternatives for this data, namely,
 
 * intersections and relative complements 
   $$
@@ -112,30 +110,26 @@ describe these relationships, either directly or indirectly.
    $A^\mathsf{c}$    3             0
 
 As an additional feature for the matrix form, the user may supply a factor
-variable with which to split the data set before fitting the diagram,
-which sometimes improves diagrams where the set relationships vary
-across categories.
+variable with which to split the data set before fitting the diagram, which
+sometimes improves diagrams where the set relationships vary across categories.
 
 Whichever type of input is provided, **eulerr** will translate it to the first
-and second types, *intersections and relative complements* and
-*unions and identities*, which will be used in the steps to come.
+and second types, *intersections and relative complements* and *unions and
+identities*, which will be used in the steps to come.
 
-The Euler diagram is then fit in two
-steps: first, an initial layout is formed with circles using only the
-sets' pairwise relationships. Second, this layout is fine-tuned taking
-all $2^N-1$ intersections into consideration.
+The Euler diagram is then fit in two steps: first, an initial layout is formed
+with circles using only the sets' pairwise relationships. Second, this layout is
+fine-tuned taking all $2^N-1$ intersections into consideration.
 
 ## Initial layout
 
-For our initial layout, we adopt a constrained version of
-multi-dimensional scaling (MDS) that has been adapted from
-**venn.js** [@Frederickson_2016], which in turn is a modification of
-an algorithm used in **venneuler** [@wilkinson_exact_2012].
-In it, we consider only the pairwise intersections between sets, attempting to
-position their respective shapes so as to minimize the difference between the
-separation between their centers
-required to obtain an optimal overlap
-and the actual overlap of the shapes in the diagram.
+For our initial layout, we adopt a constrained version of multi-dimensional
+scaling (MDS) that has been adapted from **venn.js** [@Frederickson_2016], which
+in turn is a modification of an algorithm used in **venneuler**
+[@wilkinson_exact_2012].  In it, we consider only the pairwise intersections
+between sets, attempting to position their respective shapes so as to minimize
+the difference between the separation between their centers required to obtain
+an optimal overlap and the actual overlap of the shapes in the diagram.
 
 This problem is unfortunately intractable for ellipses, being that there is an
 infinite number of ways by which we can position two ellipses to obtain a given
@@ -210,35 +204,32 @@ $$
 j \leq n,
 $$
 
-which we optimize using `optimize()`^[According to the documentation, `optimize()` consists of a "combination of golden section search and successive parabolic interpolation." from **stats**.]
+which we optimize using `optimize()`^[According to the documentation,
+`optimize()` consists of a "combination of golden section search and successive
+parabolic interpolation." from **stats**.]
 
 For a two-set combination, this is all we need to plot an exact diagram, given
 that we now have the two circles' radii and separation and may place the circles
-arbitrarily as long
-as their separation, $d$, remains the same. This is not, however, the case
-with more than two sets.
+arbitrarily as long as their separation, $d$, remains the same. This is not,
+however, the case with more than two sets.
 
-With three or more sets, the circles need to be arranged so that
-they interfere minimally with one another. In some cases, the set
-configuration allows this to be accomplished flawlessly,
-but often, compromises must me made. As is often the case
-in this context, this turns out to be another optimization problem.
-It can be
-tackled in many ways; **eulerr**'s approach is based on a method
-developed by @Frederickson_2015, which the author describes as
-constrained multi-dimensional scaling.
+With three or more sets, the circles need to be arranged so that they interfere
+minimally with one another. In some cases, the set configuration allows this to
+be accomplished flawlessly, but often, compromises must me made. As is often the
+case in this context, this turns out to be another optimization problem. It can
+be tackled in many ways; **eulerr**'s approach is based on a method developed by
+@Frederickson_2015, which the author describes as constrained multi-dimensional
+scaling.
 
-The algorithm tries to position the circles so that the separation
-between each pair of circles matches the separation required from
-the separation equation.
+The algorithm tries to position the circles so that the separation between each
+pair of circles matches the separation required from the separation equation.
 If the two sets are disjoint, however, the algorithm is indifferent to the
 relative locations of those circles as long as they do not intersect. The
-equivalent applies to subset sets: as long as the circle representing the 
+equivalent applies to subset sets: as long as the circle representing the
 smaller set remains within the larger circle, their locations are free to vary.
-In all other cases, the loss function is the residual sums
-of squares of the optimal separation of circles, $d$, that we found
-in the overlap equation, and the actual distance in the layout we are
-currently exploring.
+In all other cases, the loss function is the residual sums of squares of the
+optimal separation of circles, $d$, that we found in the overlap equation, and
+the actual distance in the layout we are currently exploring.
 
 $$
 \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i<j\leq N}}
@@ -249,8 +240,8 @@ $$
 \end{cases}.
 $$
 
-The analytical gradient is retrieved as usual by
-taking the derivative of the loss function,
+The analytical gradient is retrieved as usual by taking the derivative of the
+loss function,
 
 $$
 \vec{\nabla} f(h_i) = \sum_{j=1}^N
@@ -261,16 +252,15 @@ $$
 \end{cases}
 $$
 
-where $\vec{\nabla} f(k_i)$ is found as in the gradient with $h_i$
-swapped for $k_i$ (and vice versa).
+where $\vec{\nabla} f(k_i)$ is found as in the gradient with $h_i$ swapped for
+$k_i$ (and vice versa).
 
-The Hessian for our loss function is given next. However,
-because the current release of R suffers from a bug^[The current development version
-of R features a fix for this bug; **eulerr** will be updated to
-use the analytical Hessian as soon as it is introduced in a stable version of R.] causing the
-analytical Hessian to be updated improperly, the current
-release of **eulerr** instead relies on the numerical approximation of
-the Hessian offered by the optimizer.
+The Hessian for our loss function is given next. However, because the current
+release of R suffers from a bug^[The current development version of R features a
+fix for this bug; **eulerr** will be updated to use the analytical Hessian as
+soon as it is introduced in a stable version of R.] causing the analytical
+Hessian to be updated improperly, the current release of **eulerr** instead
+relies on the numerical approximation of the Hessian offered by the optimizer.
 
 $$
 \small
@@ -286,32 +276,30 @@ $$
 \end{bmatrix}.
 $$
 
-Note that the constraints given in loss and gradients
-still apply to each element of the Hessian and have been omitted for
-convenience only.
+Note that the constraints given in loss and gradients still apply to each
+element of the Hessian and have been omitted for convenience only.
 
-We optimize the loss function using the nonlinear optimizer `nlm()` from
-the R core package **stats**. The underlying code for `nlm` was
-written by @Schnabel_1985. It was ported to R by Saikat DebRoy and the R
-Core team [@RCT_2017] from a previous FORTRAN to C
-translation by Richard H. Jones. `nlm()` consists of a system
-of Newton-type algorithms and performs well for
+We optimize the loss function using the nonlinear optimizer `nlm()` from the R
+core package **stats**. The underlying code for `nlm` was written by
+@Schnabel_1985. It was ported to R by Saikat DebRoy and the R Core team
+[@RCT_2017] from a previous FORTRAN to C translation by Richard H. Jones.
+`nlm()` consists of a system of Newton-type algorithms and performs well for
 difficult problems [@Nash_2014].
 
 The initial layout outlined above will sometimes turn up perfect diagrams, but
 only reliably so when the diagram is completely determined by its pairwise
 intersections. More pertinently, we have not yet considered the higher-order
-intersections in our algorithm and neither have we approached the problem
-of using ellipses---as we set out to do.
+intersections in our algorithm and neither have we approached the problem of
+using ellipses---as we set out to do.
 
 ## Final layout
 
-We now need to account for all the sets' intersections and, consequently,
-all the overlaps in the diagram. The goal is to map each area uniquely
-to a subset of the data from the input and for this purpose we will
-use the sets' intersections and the relative complements of these
-intersections, for which we will use the shorthand $\omega$. We introduced this
-form in the *input* section, but now define it rigorously.
+We now need to account for all the sets' intersections and, consequently, all
+the overlaps in the diagram. The goal is to map each area uniquely to a subset
+of the data from the input and for this purpose we will use the sets'
+intersections and the relative complements of these intersections, for which we
+will use the shorthand $\omega$. We introduced this form in the *input* section,
+but now define it rigorously.
 
 For a family of *N* sets, $F = F_1, F_2, \dots, F_N$, and their $n=2^N-1$
 intersections, we define $\omega$ as the intersections of these sets and their
@@ -338,21 +326,19 @@ $$
 F_i \& F_j = (F_i \cap F_j)\setminus (F_i \cap F_j)^\textsf{c}.
 $$
 
-The fitted diagram's area-equivalents for $\omega$ will be defined as $A$, so that
-an exact diagram requires that $\omega_i = A_i$ for $i=1,2,\dots,2^N-1$,
+The fitted diagram's area-equivalents for $\omega$ will be defined as $A$, so
+that an exact diagram requires that $\omega_i = A_i$ for $i=1,2,\dots,2^N-1$,
 where $N$ is the number of sets in the input.
 
-In our initial configuration, we restricted
-ourselves to circles but now extend ourselves also to ellipses. From now on,
-we abandon the practice of treating circles separately---they are only
-a special case of ellipses, and, hence, everything that applies to an ellipse does so
-equally for a circle.
+In our initial configuration, we restricted ourselves to circles but now extend
+ourselves also to ellipses. From now on, we abandon the practice of treating
+circles separately---they are only a special case of ellipses, and, hence,
+everything that applies to an ellipse does so equally for a circle.
 
 ### Intersecting ellipses
 
-We now need the ellipses'
-points of intersections. **eulerr**'s approach to this is outlined in
-[@Richter-Gebert_2011] and based in *projective*, as opposed to
+We now need the ellipses' points of intersections. **eulerr**'s approach to this
+is outlined in [@Richter-Gebert_2011] and based in *projective*, as opposed to
 *Euclidean*, geometry.
 
 To collect all the intersection points, we naturally need only to consider two
@@ -415,9 +401,8 @@ xyplot(1 ~ 1, xlim = c(-0.3, 1.7), ylim = c(-0.3, 1.3), asp = "iso",
        })
 ```
 
-However, because an ellipse
-is a conic^[The circle, parabola, and hyperbola are the other types of conics.] it
-can be represented in quadric form,
+However, because an ellipse is a conic^[The circle, parabola, and hyperbola are
+the other types of conics.] it can be represented in quadric form,
 
 $$
 Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
@@ -433,12 +418,11 @@ D/2 & E/2 & F
 \end{bmatrix},
 $$
 
-which is the form we need to intersect our ellipses. We now proceed to
-form three degenerate conics from a linear combination of the
-two ellipses we wish to intersect,
-split one of these degenerate conics into two lines, and
-intersect one of the ellipses with these lines, yielding 0 to 4
-intersection points points.
+which is the form we need to intersect our ellipses. We now proceed to form
+three degenerate conics from a linear combination of the two ellipses we wish to
+intersect, split one of these degenerate conics into two lines, and intersect
+one of the ellipses with these lines, yielding 0 to 4 intersection points
+points.
 
 ```{r intersect-1, fig.cap = "The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011.", fig.width = 2, fig.height = 2, fig.show = "hold"}
 C1 <- ellipseToConicMatrix(c(8, 2), c(0, 0), -pi/3)
@@ -501,13 +485,12 @@ xyplot(
 
 ### Overlap areas
 
-Using the intersection points of a set of ellipses that we retrieved in,
-we can now find the
-overlap of these ellipses. We are only interested in the points that are *contained
-within all of these ellipses*, which together form a geometric shape consisting of a
-convex polygon, the sides of which are made up of straight lines between
-consecutive points, and a set of elliptical arcs---one for each
-pair of points.
+Using the intersection points of a set of ellipses that we retrieved in, we can
+now find the overlap of these ellipses. We are only interested in the points
+that are *contained within all of these ellipses*, which together form a
+geometric shape consisting of a convex polygon, the sides of which are made up
+of straight lines between consecutive points, and a set of elliptical arcs---one
+for each pair of points.
 
 ```{r polyarea, fig.cap = "The overlap area between three ellipses is the sum of a convex polygon (in grey) and 2--3 ellipse segments (in blue)."}
 x <- c(0, -0.3, 0.2)
@@ -586,11 +569,10 @@ xyplot(
 ```
 
 We continue by ordering the points around their centroid. It is then trivial to
-find the area of the
-polygon section since it is always convex. Now, because each
-elliptical segment is formed from the arcs that connect successive
-points, we can establish the segments' areas algorithmically [@Eberly_2016].
-For each ellipse and its related pair of points (located at angles $\theta_0$ and
+find the area of the polygon section since it is always convex. Now, because
+each elliptical segment is formed from the arcs that connect successive points,
+we can establish the segments' areas algorithmically [@Eberly_2016].  For each
+ellipse and its related pair of points (located at angles $\theta_0$ and
 $\theta_1$ from the semimajor axis), we proceed to find its area by
 
 1.  centering the ellipse at $(0, 0)$,
@@ -645,17 +627,15 @@ xyplot(1~1, xlim = c(-1.2, 1.2), ylim = c(-0.8, 0.8), asp = "iso",
 Finally, the area of the overlap is then obtained by adding the area of the
 polygon and all the elliptical arcs together.
 
-Note that this does not yet give us
-the areas that we require, namely $A$: the area-equivalents to the set
-intersections and relative complements from our definition of the
-intersections. For this, we must
-decompose the overlap areas so that each area maps uniquely
-to a subspace of the set configuration. This, however, is simply a matter of 
-transversing down the
-hierarchy of overlaps and subtracting the higher-order overlaps from the
-lower-order ones. For a three-set relationship of sets $A$, $B$, and $C$,
-for instance, this means subtracting the $A\cap B \cap C$ overlap from
-the $A \cap B$ one to retrieve the equivalent of $(A \cap B) \setminus C$.
+Note that this does not yet give us the areas that we require, namely $A$: the
+area-equivalents to the set intersections and relative complements from our
+definition of the intersections. For this, we must decompose the overlap areas
+so that each area maps uniquely to a subspace of the set configuration. This,
+however, is simply a matter of transversing down the hierarchy of overlaps and
+subtracting the higher-order overlaps from the lower-order ones. For a three-set
+relationship of sets $A$, $B$, and $C$, for instance, this means subtracting the
+$A\cap B \cap C$ overlap from the $A \cap B$ one to retrieve the equivalent of
+$(A \cap B) \setminus C$.
 
 The exact algorithm may in rare instances^[1 out of approximately 7000 in
 our simulations.], break down, the culprit being numerical precision
@@ -681,26 +661,22 @@ and their relative complements, $\omega$, up to numerical precision.
 
 ### Final optimization
 
-We feed the initial
-layout to the optimizer---once again
-we employ `nlm()` from **stats** but now also provide the option to
-use ellipses rather than circles, allowing the "circles"
-to rotate and the relation between the semiaxes to vary, altogether
-rendering five parameters to optimize per set and ellipse (or three if we
-restrict ourselves to circles). For each iteration of
-the optimizer, the areas of all intersections are analyzed and a measure of loss
-returned. The loss we use is the same as in
-**venneuler** [@Frederickson_2016], namely the residual sums
-of squares.
+We feed the initial layout to the optimizer---once again we employ `nlm()` from
+**stats** but now also provide the option to use ellipses rather than circles,
+allowing the "circles" to rotate and the relation between the semiaxes to vary,
+altogether rendering five parameters to optimize per set and ellipse (or three
+if we restrict ourselves to circles). For each iteration of the optimizer, the
+areas of all intersections are analyzed and a measure of loss returned. The loss
+we use is the same as in **venneuler** [@Frederickson_2016], namely the residual
+sums of squares.
 
-If the fitted diagram is still inexact after the procedure,
-we offer a final step in which we
-pass the parameters on to a last-ditch optimizer. The weapon of
-choice^[We conducted thorough benchmarking, that we opt not to report here, to decide upon an algorithm for this step.] is
-*stress* [@wilkinson_exact_2012], which
-is also the loss metric we use in our final optimization step and is
-used in **venneuler**, as well as
-*diagError* [@Micallef_2014a], which is used by **eulerAPE**.
+If the fitted diagram is still inexact after the procedure, we offer a final
+step in which we pass the parameters on to a last-ditch optimizer. The weapon of
+choice^[We conducted thorough benchmarking, that we opt not to report here, to
+decide upon an algorithm for this step.] is *stress* [@wilkinson_exact_2012],
+which is also the loss metric we use in our final optimization step and is used
+in **venneuler**, as well as *diagError* [@Micallef_2014a], which is used by
+**eulerAPE**.
 
 The stress metric is not easily grasped but
 can be transformed into a rough analogue of the correlation coefficient
