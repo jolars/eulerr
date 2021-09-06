@@ -77,7 +77,7 @@ non-proportional to the input; this is also the case here." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.1</span>
       </span>
     </div>
 
@@ -85,7 +85,7 @@ non-proportional to the input; this is also the case here." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -123,7 +123,7 @@ non-proportional to the input; this is also the case here." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jolars/eulerr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -154,34 +154,34 @@ Venn diagrams, however, the areas in the diagram are also
 <em>non-proportional</em> to the input; this is also the case here.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>venn</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>venn</span>(
-  <span class='no'>combinations</span>,
-  <span class='kw'>input</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"disjoint"</span>, <span class='st'>"union"</span>),
-  <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>combinations</span>)],
-  <span class='no'>...</span>
-)
+<span class='fu'>venn</span><span class='op'>(</span>
+  <span class='va'>combinations</span>,
+  input <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"disjoint"</span>, <span class='st'>"union"</span><span class='op'>)</span>,
+  names <span class='op'>=</span> <span class='va'>letters</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>combinations</span><span class='op'>)</span><span class='op'>]</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for table</span>
-<span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>venn</span>(
-  <span class='no'>combinations</span>,
-  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
-  <span class='kw'>factor_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
-)
+<span class='fu'>venn</span><span class='op'>(</span>
+  <span class='va'>combinations</span>,
+  weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  by <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sep <span class='op'>=</span> <span class='st'>"_"</span>,
+  factor_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>venn</span>(<span class='no'>combinations</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>combinations</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -257,20 +257,23 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># The trivial version</span>
-<span class='no'>f1</span> <span class='kw'>&lt;-</span> <span class='fu'>venn</span>(<span class='fl'>5</span>, <span class='kw'>names</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>5</span>])
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>f1</span>)</div><div class='img'><img src='venn-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'>venn</span><span class='op'>(</span><span class='fl'>5</span>, names <span class='op'>=</span> <span class='va'>letters</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f1</span><span class='op'>)</span>
+</div><div class='img'><img src='venn-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Using data (a numeric vector)</span>
-<span class='no'>f2</span> <span class='kw'>&lt;-</span> <span class='fu'>venn</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>A</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='st'>"A&amp;D"</span> <span class='kw'>=</span> <span class='fl'>0.3</span>))
+<span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'>venn</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>A <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='op'>=</span> <span class='fl'>3</span>, <span class='st'>"A&amp;D"</span> <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># The table method</span>
-<span class='fu'>venn</span>(<span class='no'>pain</span>, <span class='kw'>factor_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; 3 set Venn diagram 
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>pain</span>, factor_names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 3 set Venn diagram 
 #&gt; 
 #&gt;                h     k    a    b  phi
 #&gt; widespread -0.42 -0.36 1.05 1.05 3.76
 #&gt; regional    0.42 -0.36 1.05 1.05 3.76
 #&gt; male        0.00  0.36 1.05 1.05 3.76</div><div class='input'>
 <span class='co'># Using grouping via the 'by' argument through the data.frame method</span>
-<span class='fu'>venn</span>(<span class='no'>fruits</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>sex</span>, <span class='no'>age</span>))</div><div class='output co'>#&gt; female.adult 
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>fruits</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>sex</span>, <span class='va'>age</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; female.adult 
 #&gt; 3 set Venn diagram 
 #&gt; 
 #&gt;            h     k    a    b  phi
@@ -303,7 +306,8 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 #&gt; orange  0.00  0.36 1.05 1.05 3.76</div><div class='input'>
 
 <span class='co'># Using the matrix method</span>
-<span class='fu'>venn</span>(<span class='no'>organisms</span>)</div><div class='output co'>#&gt; 5 set Venn diagram 
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 5 set Venn diagram 
 #&gt; 
 #&gt;             h      k a   b   phi
 #&gt; animal  0.176  0.096 1 0.6 0.000
@@ -312,7 +316,8 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 #&gt; sea    -0.086 -0.181 1 0.6 3.770
 #&gt; spiny   0.145 -0.137 1 0.6 5.027</div><div class='input'>
 <span class='co'># Using weights</span>
-<span class='fu'>venn</span>(<span class='no'>organisms</span>, <span class='kw'>weights</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt; 5 set Venn diagram 
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>organisms</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 5 set Venn diagram 
 #&gt; 
 #&gt;             h      k a   b   phi
 #&gt; animal  0.176  0.096 1 0.6 0.000
@@ -321,7 +326,8 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 #&gt; sea    -0.086 -0.181 1 0.6 3.770
 #&gt; spiny   0.145 -0.137 1 0.6 5.027</div><div class='input'>
 <span class='co'># A venn diagram from a list of sample spaces (the list method)</span>
-<span class='fu'>venn</span>(<span class='no'>plants</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span>)])</div><div class='output co'>#&gt; 3 set Venn diagram 
+<span class='fu'>venn</span><span class='op'>(</span><span class='va'>plants</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 3 set Venn diagram 
 #&gt; 
 #&gt;              h     k    a    b  phi
 #&gt; erigenia -0.42 -0.36 1.05 1.05 3.76
@@ -342,7 +348,7 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

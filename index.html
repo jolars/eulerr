@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.1</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -81,7 +81,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/jolars/eulerr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -110,12 +110,12 @@
 <div id="cran-version" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cran-version" class="anchor"></a>CRAN version</h3>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"eulerr"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">"eulerr"</span>)</span></code></pre></div>
 </div>
 <div id="development-version" class="section level3">
 <h3 class="hasAnchor">
 <a href="#development-version" class="anchor"></a>Development version</h3>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu">install_github</span>(<span class="st">"jolars/eulerr"</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"jolars/eulerr"</span>)</span></code></pre></div>
 </div>
 <div id="shiny-app" class="section level3">
 <h3 class="hasAnchor">
@@ -126,21 +126,21 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">eulerr</span>)
-<span class="co"># From Wilkinson 2012</span>
-<span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/euler.html">euler</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"A"</span> <span class="kw">=</span> <span class="fl">4</span>, <span class="st">"B"</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="st">"C"</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="st">"D"</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="st">"E"</span> <span class="kw">=</span> <span class="fl">7</span>, <span class="st">"F"</span> <span class="kw">=</span> <span class="fl">3</span>,
-               <span class="st">"A&amp;B"</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="st">"A&amp;F"</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="st">"B&amp;C"</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="st">"B&amp;D"</span> <span class="kw">=</span> <span class="fl">1</span>,
-               <span class="st">"B&amp;F"</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="st">"C&amp;D"</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="st">"D&amp;E"</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="st">"E&amp;F"</span> <span class="kw">=</span> <span class="fl">1</span>,
-               <span class="st">"A&amp;B&amp;F"</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="kw">=</span> <span class="fl">1</span>),
-             <span class="kw">shape</span> <span class="kw">=</span> <span class="st">"ellipse"</span>)</pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(eulerr)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># From Wilkinson 2012</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>fit &lt;-<span class="st"> </span><span class="kw">euler</span>(<span class="kw">c</span>(<span class="st">"A"</span> =<span class="st"> </span><span class="dv">4</span>, <span class="st">"B"</span> =<span class="st"> </span><span class="dv">6</span>, <span class="st">"C"</span> =<span class="st"> </span><span class="dv">3</span>, <span class="st">"D"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"E"</span> =<span class="st"> </span><span class="dv">7</span>, <span class="st">"F"</span> =<span class="st"> </span><span class="dv">3</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>               <span class="st">"A&amp;B"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"A&amp;F"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"B&amp;C"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"B&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>               <span class="st">"B&amp;F"</span> =<span class="st"> </span><span class="dv">2</span>, <span class="st">"C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"D&amp;E"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"E&amp;F"</span> =<span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>               <span class="st">"A&amp;B&amp;F"</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">"B&amp;C&amp;D"</span> =<span class="st"> </span><span class="dv">1</span>),</span>
+<span id="cb3-7"><a href="#cb3-7"></a>             <span class="dt">shape =</span> <span class="st">"ellipse"</span>)</span></code></pre></div>
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="no">fit</span>$<span class="no">stress</span>
-<span class="co">#&gt; [1] 1.681159e-12</span>
-<span class="no">fit</span>$<span class="no">diagError</span>
-<span class="co">#&gt; [1] 2.562909e-07</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>fit<span class="op">$</span>stress</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt; [1] 4.107279e-15</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>fit<span class="op">$</span>diagError</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; [1] 1.010268e-08</span></span></code></pre></div>
 <p>and plot it</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">fit</span>)</pre></div>
-<p><img src="reference/figures/README-plot_method-1.png"><!-- --></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">plot</span>(fit)</span></code></pre></div>
+<p><img src="reference/figures/README-plot_method-1.png"></p>
 <p>Please see <a href="https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html">the introductory vignette</a> for a brief introduction or <a href="https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html"><em>eulerr under the hood</em></a> for details.</p>
 </div>
 <div id="license" class="section level2">
@@ -151,7 +151,7 @@
 <div id="versioning" class="section level2">
 <h2 class="hasAnchor">
 <a href="#versioning" class="anchor"></a>Versioning</h2>
-<p>eulerr uses <a href="http://semver.org">semantic versioning</a>.</p>
+<p>eulerr uses <a href="https://semver.org">semantic versioning</a>.</p>
 </div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
@@ -201,12 +201,9 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/jolars/eulerr"><img src="https://travis-ci.org/jolars/eulerr.svg?branch=master" alt="Travis build status"></a></li>
-<li><a href="https://ci.appveyor.com/project/jolars/eulerr"><img src="https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
+<li><a href="https://github.com/jolars/eulerr/actions"><img src="https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/gh/jolars/eulerr"><img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
 <li><a href="https://cran.r-project.org/package=eulerr"><img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge"></a></li>
-<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=KERLYHUY639WU"><img src="https://img.shields.io/badge/Donate-PayPal-blue.svg" alt="Donate"></a></li>
-<li><a href="https://ci.appveyor.com/project/jolars/eulerr"><img src="https://ci.appveyor.com/api/projects/status/github/jolars/eulerr?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
 </ul>
 </div>
 </div>
@@ -218,7 +215,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

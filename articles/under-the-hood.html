@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.1</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -77,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/jolars/eulerr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -91,13 +91,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="under-the-hood_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>eulerr under the hood</h1>
                         <h4 class="author">Johan Larsson</h4>
             
-            <h4 class="date">2020-04-14</h4>
+            <h4 class="date">2021-09-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/under-the-hood.Rmd"><code>vignettes/under-the-hood.Rmd</code></a></small>
       <div class="hidden name"><code>under-the-hood.Rmd</code></div>
@@ -117,15 +117,13 @@
 <a href="#input" class="anchor"></a>Input</h2>
 <p>Euler diagrams present relationships between sets, wherefore the data must describe these relationships, either directly or indirectly. <strong>eulerr</strong> allows several alternatives for this data, namely,</p>
 <ul>
-<li>intersections and relative complements <span class="math display">\[
+<li><p>intersections and relative complements <span class="math display">\[
 A \setminus B = 3 \quad B \setminus A = 2 \quad A \cap B=1,
-\]</span>
-</li>
-<li>unions and identities <span class="math display">\[
+\]</span></p></li>
+<li><p>unions and identities <span class="math display">\[
 A=4 \quad B=3 \quad A \cap B=1,
-\]</span>
-</li>
-<li>a matrix of binary (or boolean) indices, <span class="math display">\[
+\]</span></p></li>
+<li><p>a matrix of binary (or boolean) indices, <span class="math display">\[
 \begin{bmatrix}
   \mathbf{A} &amp; \mathbf{B}\\
   1          &amp; 0     \\
@@ -135,15 +133,13 @@ A=4 \quad B=3 \quad A \cap B=1,
   0          &amp; 1     \\
   0          &amp; 1,
 \end{bmatrix}
-\]</span>
-</li>
-<li>a list of sample spaces <span class="math display">\[
+\]</span></p></li>
+<li><p>a list of sample spaces <span class="math display">\[
 \begin{array}{l}
     A = \{a,\,b,\,c,\,d\}\\
     B = \{a,\,e,\,f,\}
   \end{array},
-\]</span>
-</li>
+\]</span></p></li>
 <li>
 <p>or a two- or three-way table</p>
 <table class="table">
@@ -353,7 +349,7 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-Eberly_2016">
-<p>Eberly, David. 2016. “The Area of Intersecting Ellipses.” <em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf" class="uri">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.</p>
+<p>Eberly, David. 2016. “The Area of Intersecting Ellipses.” <em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.</p>
 </div>
 <div id="ref-Frederickson_2015">
 <p>Frederickson, Ben. 2015. “Venn Diagrams with D3.Js.” http://www.benfrederickson.com/venn-diagrams-with-d3.js/.</p>
@@ -362,33 +358,33 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 <p>———. 2016. “Venn.Js Area Proportional Venn and Euler Diagrams in JavaScript.”</p>
 </div>
 <div id="ref-Micallef_2014a">
-<p>Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing Area-Proportional 3-Venn Diagrams Using Ellipses.” <em>PLOS ONE</em> 9 (7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717" class="uri">https://doi.org/10.1371/journal.pone.0101717</a>.</p>
+<p>Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing Area-Proportional 3-Venn Diagrams Using Ellipses.” <em>PLOS ONE</em> 9 (7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717">https://doi.org/10.1371/journal.pone.0101717</a>.</p>
 </div>
 <div id="ref-Nash_2014">
 <p>Nash, John C. 2014. <em>Nonlinear Parameter Optimization Using R Tools</em>. 1st ed. Chichester, West Sussex: Wiley.</p>
 </div>
 <div id="ref-RCT_2017">
-<p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
+<p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
 </div>
 <div id="ref-Richter-Gebert_2011">
 <p>Richter-Gebert, Jurgen. 2011. <em>Perspectives on Projective Geometry: A Guided Tour Through Real and Complex Geometry</em>. 1st ed. Berlin, Germany: Springer.</p>
 </div>
 <div id="ref-Schnabel_1985">
-<p>Schnabel, Robert B., John E. Koonatz, and Barry E. Weiss. 1985. “A Modular System of Algorithms for Unconstrained Minimization.” <em>ACM Trans Math Softw</em> 11 (4): 419–40. <a href="https://doi.org/10.1145/6187.6192" class="uri">https://doi.org/10.1145/6187.6192</a>.</p>
+<p>Schnabel, Robert B., John E. Koonatz, and Barry E. Weiss. 1985. “A Modular System of Algorithms for Unconstrained Minimization.” <em>ACM Trans Math Softw</em> 11 (4): 419–40. <a href="https://doi.org/10.1145/6187.6192">https://doi.org/10.1145/6187.6192</a>.</p>
 </div>
 <div id="ref-wilkinson_exact_2012">
-<p>Wilkinson, L. 2012. “Exact and Approximate Area-Proportional Circular Venn and Euler Diagrams.” <em>IEEE Transactions on Visualization and Computer Graphics</em> 18 (2): 321–31. <a href="https://doi.org/10.1109/TVCG.2011.56" class="uri">https://doi.org/10.1109/TVCG.2011.56</a>.</p>
+<p>Wilkinson, L. 2012. “Exact and Approximate Area-Proportional Circular Venn and Euler Diagrams.” <em>IEEE Transactions on Visualization and Computer Graphics</em> 18 (2): 321–31. <a href="https://doi.org/10.1109/TVCG.2011.56">https://doi.org/10.1109/TVCG.2011.56</a>.</p>
 </div>
 </div>
 </div>
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>According to the documentation, <code><a href="https://rdrr.io/r/stats/optimize.html">optimize()</a></code> consists of a “combination of golden section search and successive parabolic interpolation.” from <strong>stats</strong>.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>The current development version of R features a fix for this bug; <strong>eulerr</strong> will be updated to use the analytical Hessian as soon as it is introduced in a stable version of R.<a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>The circle, parabola, and hyperbola are the other types of conics.<a href="#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p>1 out of approximately 7000 in our simulations.<a href="#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn5"><p>We conducted thorough benchmarking, that we opt not to report here, to decide upon an algorithm for this step.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>According to the documentation, <code><a href="https://rdrr.io/r/stats/optimize.html">optimize()</a></code> consists of a “combination of golden section search and successive parabolic interpolation.” from <strong>stats</strong>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>The current development version of R features a fix for this bug; <strong>eulerr</strong> will be updated to use the analytical Hessian as soon as it is introduced in a stable version of R.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>The circle, parabola, and hyperbola are the other types of conics.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>1 out of approximately 7000 in our simulations.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>We conducted thorough benchmarking, that we opt not to report here, to decide upon an algorithm for this step.<a href="#fnref5" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -408,7 +404,7 @@ The elliptical segment in blue is found by first subtracting the elliptical sect
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
