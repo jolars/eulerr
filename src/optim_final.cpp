@@ -12,30 +12,31 @@
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
-std::vector<double> intersect_ellipses(const std::vector<double>& par,
-                                       const bool                 circle,
-                                       const bool                 approx = false)
+std::vector<double>
+intersect_ellipses(const std::vector<double>& par,
+                   const bool circle,
+                   const bool approx = false)
 {
-  int  n_pars     = circle ? 3 : 5;
-  int  n          = par.size()/n_pars;
-  int  n_overlaps = std::pow(2, n) - 1;
-  auto id         = set_index(n);
+  int n_pars     = circle ? 3 : 5;
+  int n          = par.size() / n_pars;
+  int n_overlaps = std::pow(2, n) - 1;
+  auto id        = set_index(n);
 
   std::vector<eulerr::Ellipse> ellipses;
 
   for (decltype(n) i = 0; i < n; ++i) {
     if (circle) {
-      ellipses.emplace_back(par[i*3],
-                            par[i*3 + 1],
-                            std::abs(par[i*3 + 2]),
-                            std::abs(par[i*3 + 2]),
+      ellipses.emplace_back(par[i * 3],
+                            par[i * 3 + 1],
+                            std::abs(par[i * 3 + 2]),
+                            std::abs(par[i * 3 + 2]),
                             0.0);
     } else {
-      ellipses.emplace_back(par[i*5],
-                            par[i*5 + 1],
-                            std::abs(par[i*5 + 2]),
-                            std::abs(par[i*5 + 3]),
-                            normalize_angle(par[i*5 + 4]));
+      ellipses.emplace_back(par[i * 5],
+                            par[i * 5 + 1],
+                            std::abs(par[i * 5 + 2]),
+                            std::abs(par[i * 5 + 3]),
+                            normalize_angle(par[i * 5 + 4]));
     }
   }
 
@@ -53,7 +54,7 @@ std::vector<double> intersect_ellipses(const std::vector<double>& par,
       auto p = intersect(conics[i], conics[j]);
 
       for (auto& p_i : p) {
-        std::vector<int> parent = {i, j};
+        std::vector<int> parent = { i, j };
         parents.emplace_back(std::move(parent));
         adopters.emplace_back(adopt(p_i, ellipses, i, j));
         points.push_back(std::move(p_i));
@@ -108,25 +109,28 @@ std::vector<double> intersect_ellipses(const std::vector<double>& par,
   }
 
   // Clamp output to be non-zero
-  std::transform(out.begin(), out.end(), out.begin(),
-                 [](double& x) { return clamp(x, 0.0, INF); });
+  std::transform(out.begin(), out.end(), out.begin(), [](double& x) {
+    return clamp(x, 0.0, INF);
+  });
 
   return out;
 }
 
 // compute loss between the actual and desired areas
 // [[Rcpp::export]]
-double optim_final_loss(const std::vector<double>& par,
-                        const std::vector<double>& areas,
-                        const bool circle)
+double
+optim_final_loss(const std::vector<double>& par,
+                 const std::vector<double>& areas,
+                 const bool circle)
 {
   auto fit = intersect_ellipses(par, circle, false);
 
   // return sums of squared errors
-  return std::inner_product(fit.begin(),
-                            fit.end(),
-                            areas.begin(),
-                            0.0,
-                            std::plus<double>(),
-                            [](double a, double b) { return (a - b)*(a -b); });
+  return std::inner_product(
+    fit.begin(),
+    fit.end(),
+    areas.begin(),
+    0.0,
+    std::plus<double>(),
+    [](double a, double b) { return (a - b) * (a - b); });
 }

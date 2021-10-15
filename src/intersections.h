@@ -10,22 +10,23 @@
 #include "conic.h"
 
 // Split a degenerate conic into two lines
-arma::mat split_conic(const arma::mat& A)
+arma::mat
+split_conic(const arma::mat& A)
 {
   using namespace arma;
 
   mat::fixed<3, 3> B = -adjoint(A);
 
   // Find non-zero index on the diagonal
-  uword i = index_max(abs(B.diag()));
+  uword i                  = index_max(abs(B.diag()));
   std::complex<double> Bii = std::sqrt(B(i, i));
 
   mat::fixed<3, 2> out;
 
   if (std::real(Bii) >= 0.0) {
-    cx_mat::fixed<3, 3> C = A + skewsymmat(B.col(i)/Bii);
+    cx_mat::fixed<3, 3> C = A + skewsymmat(B.col(i) / Bii);
     // Extract the lines
-    uvec ij = ind2sub(size(3, 3), index_max(abs(vectorise(C))));
+    uvec ij    = ind2sub(size(3, 3), index_max(abs(vectorise(C))));
     out.col(0) = real(C.row(ij(0)).t());
     out.col(1) = real(C.col(ij(1)));
   } else {
@@ -35,14 +36,15 @@ arma::mat split_conic(const arma::mat& A)
 }
 
 // Intersect a conic with two lines to return 0 to 4 intersection points
-void intersect_conic_line(const arma::mat&            A,
-                          const arma::vec&            l,
-                          std::vector<eulerr::Point>& points)
+void
+intersect_conic_line(const arma::mat& A,
+                     const arma::vec& l,
+                     std::vector<eulerr::Point>& points)
 {
   using namespace arma;
 
-  mat::fixed<3, 3> M = skewsymmat(l);
-  mat::fixed<3, 3> B = M.t()*A*M;
+  mat::fixed<3, 3> M  = skewsymmat(l);
+  mat::fixed<3, 3> B  = M.t() * A * M;
   vec::fixed<3> l_abs = abs(l);
   mat::fixed<3, 2> out;
 
@@ -52,9 +54,9 @@ void intersect_conic_line(const arma::mat&            A,
     uvec li = regspace<uvec>(0, 2);
     li.shed_row(i);
 
-    double alpha = std::sqrt(-det(symmatl(B.submat(li, li))))/l(i);
+    double alpha = std::sqrt(-det(symmatl(B.submat(li, li)))) / l(i);
 
-    mat::fixed<3, 3> C = B + alpha*M;
+    mat::fixed<3, 3> C = B + alpha * M;
 
     vec::fixed<9> C_abs = abs(vectorise(C));
 
@@ -64,7 +66,7 @@ void intersect_conic_line(const arma::mat&            A,
       uword i1 = ind(1);
 
       vec::fixed<3> p0 = C.row(i0).t() / C(i0, 2);
-      vec::fixed<3> p1 = C.col(i1)     / C(2, i1);
+      vec::fixed<3> p1 = C.col(i1) / C(2, i1);
 
       points.emplace_back(p0[0], p0[1]);
       points.emplace_back(p1[0], p1[1]);
@@ -72,8 +74,8 @@ void intersect_conic_line(const arma::mat&            A,
   }
 }
 
-std::vector<eulerr::Point> intersect(const eulerr::Conic& conic_A,
-                                     const eulerr::Conic& conic_B)
+std::vector<eulerr::Point>
+intersect(const eulerr::Conic& conic_A, const eulerr::Conic& conic_B)
 {
   using namespace arma;
 
@@ -81,12 +83,12 @@ std::vector<eulerr::Point> intersect(const eulerr::Conic& conic_A,
   const auto& B = conic_B.M;
 
   double alpha = det(A);
-  double beta = det(join_rows(A.cols(0, 1), B.col(2)))
-                + det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2)))
-                + det(join_rows(B.col(0), A.cols(1, 2)));
-  double gamma = det(join_rows(A.col(0), B.cols(1, 2)))
-                 + det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2)))
-                 + det(join_rows(B.cols(0, 1), A.col(2)));
+  double beta  = det(join_rows(A.cols(0, 1), B.col(2))) +
+                det(join_rows(join_rows(A.col(0), B.col(1)), A.col(2))) +
+                det(join_rows(B.col(0), A.cols(1, 2)));
+  double gamma = det(join_rows(A.col(0), B.cols(1, 2))) +
+                 det(join_rows(join_rows(B.col(0), A.col(1)), B.col(2))) +
+                 det(join_rows(B.cols(0, 1), A.col(2)));
   double delta = det(B);
 
   // Find the cubic roots
@@ -101,7 +103,7 @@ std::vector<eulerr::Point> intersect(const eulerr::Conic& conic_A,
     }
   }
 
-  mat::fixed<3, 3> C = lambda*A + B;
+  mat::fixed<3, 3> C = lambda * A + B;
 
   C(find(abs(C) < SMALL)).zeros();
 

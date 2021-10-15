@@ -5,19 +5,23 @@
 #include "ellipse.h"
 #include "point.h"
 
-inline bool point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
+inline bool
+point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
 {
   using namespace std;
 
-  return
-    pow((p.h - e.h)*cos(e.phi) + (p.k - e.k)*sin(e.phi), 2)/(e.a*e.a) +
-    pow((p.h - e.h)*sin(e.phi) - (p.k - e.k)*cos(e.phi), 2)/(e.b*e.b) <= 1.0;
+  return pow((p.h - e.h) * cos(e.phi) + (p.k - e.k) * sin(e.phi), 2) /
+             (e.a * e.a) +
+           pow((p.h - e.h) * sin(e.phi) - (p.k - e.k) * cos(e.phi), 2) /
+             (e.b * e.b) <=
+         1.0;
 }
 
 // See if a group of ellipses are completely disjoint or a russian doll
-template <typename T>
-inline double disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
-                                 const std::vector<T>&               ind)
+template<typename T>
+inline double
+disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
+                   const std::vector<T>& ind)
 {
   std::vector<double> areas;
   areas.reserve(ind.size());
@@ -28,7 +32,7 @@ inline double disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
   auto min_itr = std::min_element(areas.begin(), areas.end());
   auto min_ind = ind[std::distance(areas.begin(), min_itr)];
 
-  eulerr::Point p{ellipse[min_ind].h, ellipse[min_ind].k};
+  eulerr::Point p{ ellipse[min_ind].h, ellipse[min_ind].k };
 
   bool subset = false;
 
@@ -45,11 +49,12 @@ inline double disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
   return subset ? *min_itr : 0.0;
 }
 
-template <typename T>
-inline std::vector<T> adopt(const eulerr::Point&                p,
-                            const std::vector<eulerr::Ellipse>& ellipses,
-                            const T                             a,
-                            const T                             b)
+template<typename T>
+inline std::vector<T>
+adopt(const eulerr::Point& p,
+      const std::vector<eulerr::Ellipse>& ellipses,
+      const T a,
+      const T b)
 {
   T n = ellipses.size();
 
