@@ -28,8 +28,7 @@ NULL
 #' @param a A point like \code{c(x, y)}
 #' @param b A point like \code{c(x, y)}
 #' @param force Magnitude of the force (defaults to \code{1e-6})
-#' @param direction direction in which to exert force, either "both", "x", or "y"
-#' @noRd
+#' @param direction direction in which to exert force, either "both", "x", or
 NULL
 
 #' Compute the spring force upon point \code{a} from point \code{b}.
@@ -40,8 +39,7 @@ NULL
 #' @param a A point like \code{c(x, y)}
 #' @param b A point like \code{c(x, y)}
 #' @param force Magnitude of the force (defaults to \code{1e-6})
-#' @param direction direction in which to exert force, either "both", "x", or "y"
-#' @noRd
+#' @param direction direction in which to exert force, either "both", "x", or
 NULL
 
 #' Adjust the layout of a list of potentially overlapping boxes.
