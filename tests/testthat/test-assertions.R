@@ -1,5 +1,3 @@
-context("Assertions")
-
 test_that("erroneous input to euler() throw errors", {
   set.seed(1)
 

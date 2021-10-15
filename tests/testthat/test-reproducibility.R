@@ -1,5 +1,3 @@
-context("Reproducibility of diagrams")
-
 test_that("a variety of sets can be reproduced", {
   set.seed(1)
 

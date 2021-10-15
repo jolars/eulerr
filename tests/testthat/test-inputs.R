@@ -1,5 +1,3 @@
-context("Inputs")
-
 test_that("normal use of euler() returns no errors", {
   f <- euler(c(A = 10.923, B = 5.4, "A&B" = 0.43))
 

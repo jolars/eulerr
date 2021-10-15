@@ -1,5 +1,3 @@
-context("Plotting")
-
 test_that("normal plotting works without errors", {
   tmp <- tempfile()
   png(tmp)

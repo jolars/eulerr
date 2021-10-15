@@ -1,5 +1,3 @@
-context("Geometry")
-
 test_that("check that disc separation optimization works", {
   set.seed(1)
 

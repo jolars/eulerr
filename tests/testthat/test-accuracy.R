@@ -1,5 +1,3 @@
-context("accuracy")
-
 test_that("diagrams that can be perfectly fit are so", {
   set.seed(1)
 
