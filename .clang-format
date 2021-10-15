@@ -1,0 +1,4 @@
+BasedOnStyle: Mozilla
+SortIncludes: false
+IndentWidth: 2
+AlignConsecutiveAssignments: Consecutive

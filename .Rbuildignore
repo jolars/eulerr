@@ -25,3 +25,4 @@
 ^doc$
 ^Meta$
 ^\.github$
+.clang-format
