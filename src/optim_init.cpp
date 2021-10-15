@@ -10,7 +10,8 @@ optim_init(const Rcpp::NumericVector& par,
            const Rcpp::LogicalMatrix& disjoint,
            const Rcpp::LogicalMatrix& subset)
 {
-  auto n                      = par.size() / 2;
+  auto n = par.size() / 2;
+
   const Rcpp::NumericVector x = Rcpp::head(par, n);
   const Rcpp::NumericVector y = Rcpp::tail(par, n);
 
