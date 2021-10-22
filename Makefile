@@ -1,43 +1,43 @@
 # prepare the package for release
-#
+
+DELETE  := rm -rf
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename `pwd`)
 
-all: check clean
+all: install
 
-deps:
-	Rscript -e 'if (!require("Rd2roxygen")) install.packages("Rd2roxygen", repos="http://cran.rstudio.com")'
+clean:
+	$(DELETE) src/*.o src/*.so
 
-docs:
-	R -q -e 'library(Rd2roxygen); rab(".", build = FALSE)'
+document: 
+	Rscript -e 'devtools::document(roclets = c("rd", "collate", "namespace"))'
 
-build:
+compile-attributes: 
+	Rscript -e 'Rcpp::compileAttributes()'
+
+build: document compile-attributes
 	cd ..;\
 	R CMD build --no-manual $(PKGSRC)
 
-compile-attributes:
-	Rscript -e 'Rcpp::compileAttributes()'
-
-build-cran:
+build-cran: compile-attributes
 	cd ..;\
 	R CMD build $(PKGSRC)
 
-install: build
+install: compile-attributes
 	cd ..;\
-	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
+	R CMD INSTALL --no-multiarch --with-keep.source $(PKGNAME)
 
-check: build-cran
-	cd ..;\
-	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz --as-cran
+clean-install: compile-attributes
+	R CMD INSTALL --preclean --no-multiarch --with-keep.source $(PKGNAME)
+
+check: compile-attributes
+	Rscript -e 'devtools::check()'
+
+test: compile-attributes
+	Rscript -e 'devtools::test()'
 
 vignettes:
-	cd vignettes;\
-	lyx -e knitr knitr-refcard.lyx;\
-	sed -i '/\\usepackage{breakurl}/ d' knitr-refcard.Rnw;\
-	mv knitr-refcard.Rnw assets/template-refcard.tex
+	Rscript -e 'devtools::build_vignettes()'
 
-clean:
-	cd ..;\
-	$(RM) -r $(PKGNAME).Rcheck/
 
