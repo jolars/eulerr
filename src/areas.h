@@ -1,11 +1,11 @@
+#ifndef eulerr_areas_h_
+#define eulerr_areas_h_
+
 #include <RcppArmadillo.h>
 #include "helpers.h"
 #include "geometry.h"
 #include "point.h"
 #include "ellipse.h"
-
-#ifndef eulerr_areas_h_
-#define eulerr_areas_h_
 
 double
 montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
