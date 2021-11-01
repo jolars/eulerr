@@ -27,3 +27,4 @@
 ^\.github$
 .clang-format
 Makefile
+compile-commands.json

@@ -14,3 +14,4 @@ vignettes/cache/
 vignettes/figure/
 doc
 Meta
+compile_commands.json
