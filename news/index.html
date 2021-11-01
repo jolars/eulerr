@@ -442,7 +442,7 @@
 <ul>
 <li>Ellipses are now supported by setting the new argument <code>shape = "ellipse"</code> in <code><a href="../reference/euler.html">euler()</a></code>. This functionality accompanies an overhaul of the innards of the function.</li>
 <li>Initial optimization function and gradient have been ported to C++.</li>
-<li>The initial optimizer has been switched from <code><a href="https://rdrr.io/r/stats/optim.html">stats::optim(..., method = "L-BFGS-B")</a></code> to <code><a href="https://rdrr.io/r/stats/nlminb.html">stats::nlminb()</a></code>.</li>
+<li>The initial optimizer has been switched from <code>stats::optim(..., method = "L-BFGS-B")</code> to <code><a href="https://rdrr.io/r/stats/nlminb.html">stats::nlminb()</a></code>.</li>
 <li>The final optimizer now falls back to <code><a href="https://rdrr.io/pkg/GenSA/man/GenSA.html">GenSA::GenSA()</a></code> when the fit from <code><a href="https://rdrr.io/r/stats/nlminb.html">nlminb()</a></code> isn’t good enough, by default for 3 sets and ellipses, but this behavior can be controlled via a new argument <code>control</code>.</li>
 <li>A packing algorithm has been introduced to arrange disjoint clusters of ellipses/circles.</li>
 <li>The label placement algorithm has been rewritten to handle ellipses and been ported to C++. It now uses numerical optimization, which should provide slightly more accurate locations.</li>
@@ -535,7 +535,7 @@
 <li>Dropped the cost function argument <code>cost</code> and now forces the function to use sums of squares, which is more or less equivalent to the cost function from <code>venneuler</code>.</li>
 <li>Color palettes in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now chooses colors adapted to color vision deficiency (deuteranopia). With increasingly large numbers of sets, this adaptation is relaxed to make sure that colors are kept visually distinct.</li>
 <li>
-<code><a href="../reference/euler.html">euler()</a></code> now uses <code><a href="https://rdrr.io/r/stats/nlm.html">nlm()</a></code> instead of <code><a href="https://rdrr.io/r/stats/optim.html">optim(method = "Nelder-Mead")</a></code> for its final optimization.</li>
+<code><a href="../reference/euler.html">euler()</a></code> now uses <code><a href="https://rdrr.io/r/stats/nlm.html">nlm()</a></code> instead of <code>optim(method = "Nelder-Mead")</code> for its final optimization.</li>
 </ul>
 </div>
 <div id="bug-fixes-12" class="section level2">

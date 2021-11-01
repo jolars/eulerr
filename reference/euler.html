@@ -305,212 +305,221 @@ doi: <a href='https://doi.org/10.1371/journal.pone.0101717'>10.1371/journal.pone
     <div class='dont-index'><p><code><a href='plot.euler.html'>plot.euler()</a></code>, <code><a href='print.euler.html'>print.euler()</a></code>, <code><a href='eulerr_options.html'>eulerr_options()</a></code>, <code><a href='venn.html'>venn()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Fit a diagram with circles</span>
-<span class='va'>combo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>A <span class='op'>=</span> <span class='fl'>2</span>, B <span class='op'>=</span> <span class='fl'>2</span>, C <span class='op'>=</span> <span class='fl'>2</span>, <span class='st'>"A&amp;B"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"A&amp;C"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>fit1</span> <span class='op'>&lt;-</span> <span class='fu'>euler</span><span class='op'>(</span><span class='va'>combo</span><span class='op'>)</span>
-
-<span class='co'># Investigate the fit</span>
-<span class='va'>fit1</span>
-</div><div class='output co'>#&gt;       original fitted residuals regionError
-#&gt; A            2  2.076    -0.076       0.021
-#&gt; B            2  2.076    -0.076       0.021
-#&gt; C            2  2.076    -0.076       0.021
-#&gt; A&amp;B          1  0.605     0.395       0.040
-#&gt; A&amp;C          1  0.605     0.395       0.040
-#&gt; B&amp;C          1  0.605     0.395       0.040
-#&gt; A&amp;B&amp;C        0  0.494    -0.494       0.058
-#&gt; 
-#&gt; diagError: 0.058 
-#&gt; stress:    0.049 </div><div class='input'>
-<span class='co'># Refit using ellipses instead</span>
-<span class='va'>fit2</span> <span class='op'>&lt;-</span> <span class='fu'>euler</span><span class='op'>(</span><span class='va'>combo</span>, shape <span class='op'>=</span> <span class='st'>"ellipse"</span><span class='op'>)</span>
-
-<span class='co'># Investigate the fit again (which is now exact)</span>
-<span class='va'>fit2</span>
-</div><div class='output co'>#&gt;       original fitted residuals regionError
-#&gt; A            2      2         0           0
-#&gt; B            2      2         0           0
-#&gt; C            2      2         0           0
-#&gt; A&amp;B          1      1         0           0
-#&gt; A&amp;C          1      1         0           0
-#&gt; B&amp;C          1      1         0           0
-#&gt; A&amp;B&amp;C        0      0         0           0
-#&gt; 
-#&gt; diagError: 0 
-#&gt; stress:    0 </div><div class='input'>
-<span class='co'># Plot it</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fit2</span><span class='op'>)</span>
-</div><div class='img'><img src='euler-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># A set with no perfect solution</span>
-<span class='fu'>euler</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span> <span class='op'>=</span> <span class='fl'>3491</span>, <span class='st'>"b"</span> <span class='op'>=</span> <span class='fl'>3409</span>, <span class='st'>"c"</span> <span class='op'>=</span> <span class='fl'>3503</span>,
-        <span class='st'>"a&amp;b"</span> <span class='op'>=</span> <span class='fl'>120</span>, <span class='st'>"a&amp;c"</span> <span class='op'>=</span> <span class='fl'>114</span>, <span class='st'>"b&amp;c"</span> <span class='op'>=</span> <span class='fl'>132</span>,
-        <span class='st'>"a&amp;b&amp;c"</span> <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       original fitted residuals regionError
-#&gt; a         3491   3491         0       0.001
-#&gt; b         3409   3409         0       0.001
-#&gt; c         3503   3503         0       0.002
-#&gt; a&amp;b        120    120         0       0.000
-#&gt; a&amp;c        114    114         0       0.000
-#&gt; b&amp;c        132    132         0       0.000
-#&gt; a&amp;b&amp;c       50      0        50       0.005
-#&gt; 
-#&gt; diagError: 0.005 
-#&gt; stress:    0 </div><div class='input'>
-
-<span class='co'># Using grouping via the 'by' argument through the data.frame method</span>
-<span class='fu'>euler</span><span class='op'>(</span><span class='va'>fruits</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>sex</span>, <span class='va'>age</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; female.adult 
-#&gt;                     original fitted residuals regionError
-#&gt; banana                     1  0.937     0.063       0.009
-#&gt; apple                      2  1.968     0.032       0.009
-#&gt; orange                     2  1.974     0.026       0.009
-#&gt; banana&amp;apple               4  4.028    -0.028       0.010
-#&gt; banana&amp;orange              0  0.268    -0.268       0.024
-#&gt; apple&amp;orange               0  0.260    -0.260       0.023
-#&gt; banana&amp;apple&amp;orange        2  1.961     0.039       0.010
-#&gt; 
-#&gt; diagError: 0.024 
-#&gt; stress:    0.005 
-#&gt; ------------------------------------------------------------ 
-#&gt; male.child 
-#&gt;                     original fitted residuals regionError
-#&gt; banana                     3  2.994     0.006       0.003
-#&gt; apple                      1  0.982     0.018       0.002
-#&gt; orange                     1  0.981     0.019       0.002
-#&gt; banana&amp;apple              10 10.004    -0.004       0.007
-#&gt; banana&amp;orange              0  0.137    -0.137       0.008
-#&gt; apple&amp;orange               0  0.144    -0.144       0.008
-#&gt; banana&amp;apple&amp;orange        3  2.993     0.007       0.003
-#&gt; 
-#&gt; diagError: 0.008 
-#&gt; stress:    0 
-#&gt; ------------------------------------------------------------ 
-#&gt; male.adult 
-#&gt;                     original fitted residuals regionError
-#&gt; banana                     3  3.000     0.000       0.000
-#&gt; apple                      2  2.003    -0.003       0.000
-#&gt; orange                     0  0.016    -0.016       0.001
-#&gt; banana&amp;apple              10 10.000     0.000       0.001
-#&gt; banana&amp;orange              0  0.000     0.000       0.000
-#&gt; apple&amp;orange               1  0.996     0.004       0.000
-#&gt; banana&amp;apple&amp;orange        1  1.002    -0.002       0.000
-#&gt; 
-#&gt; diagError: 0.001 
-#&gt; stress:    0 
-#&gt; ------------------------------------------------------------ 
-#&gt; female.child 
-#&gt;                     original fitted residuals regionError
-#&gt; banana                     4      4         0           0
-#&gt; apple                      0      0         0           0
-#&gt; orange                     1      1         0           0
-#&gt; banana&amp;apple               4      4         0           0
-#&gt; banana&amp;orange              1      1         0           0
-#&gt; apple&amp;orange               0      0         0           0
-#&gt; banana&amp;apple&amp;orange        2      2         0           0
-#&gt; 
-#&gt; diagError: 0 
-#&gt; stress:    0 </div><div class='input'>
-
-<span class='co'># Using the matrix method</span>
-<span class='fu'>euler</span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                               original fitted residuals regionError
-#&gt; animal                               0  0.582    -0.582       0.086
-#&gt; mammal                               0  0.302    -0.302       0.044
-#&gt; plant                                0  0.210    -0.210       0.031
-#&gt; sea                                  0  0.430    -0.430       0.063
-#&gt; spiny                                0  0.166    -0.166       0.025
-#&gt; animal&amp;mammal                        2  1.817     0.183       0.018
-#&gt; animal&amp;plant                         0  0.000     0.000       0.000
-#&gt; animal&amp;sea                           1  0.612     0.388       0.053
-#&gt; animal&amp;spiny                         0  0.215    -0.215       0.032
-#&gt; mammal&amp;plant                         0  0.000     0.000       0.000
-#&gt; mammal&amp;sea                           1  0.000     1.000       0.143
-#&gt; mammal&amp;spiny                         0  0.000     0.000       0.000
-#&gt; plant&amp;sea                            1  0.868     0.132       0.015
-#&gt; plant&amp;spiny                          1  0.000     1.000       0.143
-#&gt; sea&amp;spiny                            0  0.176    -0.176       0.026
-#&gt; animal&amp;mammal&amp;plant                  0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;sea                    0  0.268    -0.268       0.040
-#&gt; animal&amp;mammal&amp;spiny                  0  0.061    -0.061       0.009
-#&gt; animal&amp;plant&amp;sea                     0  0.119    -0.119       0.018
-#&gt; animal&amp;plant&amp;spiny                   0  0.000     0.000       0.000
-#&gt; animal&amp;sea&amp;spiny                     1  0.715     0.285       0.037
-#&gt; mammal&amp;plant&amp;sea                     0  0.000     0.000       0.000
-#&gt; mammal&amp;plant&amp;spiny                   0  0.000     0.000       0.000
-#&gt; mammal&amp;sea&amp;spiny                     0  0.000     0.000       0.000
-#&gt; plant&amp;sea&amp;spiny                      0  0.016    -0.016       0.002
-#&gt; animal&amp;mammal&amp;plant&amp;sea              0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;plant&amp;spiny            0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;sea&amp;spiny              0  0.177    -0.177       0.026
-#&gt; animal&amp;plant&amp;sea&amp;spiny               0  0.043    -0.043       0.006
-#&gt; mammal&amp;plant&amp;sea&amp;spiny               0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;plant&amp;sea&amp;spiny        0  0.000     0.000       0.000
-#&gt; 
-#&gt; diagError: 0.143 
-#&gt; stress:    0.352 </div><div class='input'>
-<span class='co'># Using weights</span>
-<span class='fu'>euler</span><span class='op'>(</span><span class='va'>organisms</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                               original fitted residuals regionError
-#&gt; animal                               0  0.789    -0.789       0.019
-#&gt; mammal                               0  0.360    -0.360       0.009
-#&gt; plant                                0  0.099    -0.099       0.002
-#&gt; sea                                  0  0.409    -0.409       0.010
-#&gt; spiny                                0  0.200    -0.200       0.005
-#&gt; animal&amp;mammal                       30 29.984     0.016       0.197
-#&gt; animal&amp;plant                         0  0.000     0.000       0.000
-#&gt; animal&amp;sea                           4  0.169     3.831       0.065
-#&gt; animal&amp;spiny                         0  0.027    -0.027       0.001
-#&gt; mammal&amp;plant                         0  0.000     0.000       0.000
-#&gt; mammal&amp;sea                           8  0.000     8.000       0.138
-#&gt; mammal&amp;spiny                         0  0.000     0.000       0.000
-#&gt; plant&amp;sea                            2  0.000     2.000       0.034
-#&gt; plant&amp;spiny                          9  9.000     0.000       0.059
-#&gt; sea&amp;spiny                            0  0.062    -0.062       0.001
-#&gt; animal&amp;mammal&amp;plant                  0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;sea                    0  0.431    -0.431       0.010
-#&gt; animal&amp;mammal&amp;spiny                  0  0.100    -0.100       0.002
-#&gt; animal&amp;plant&amp;sea                     0  0.000     0.000       0.000
-#&gt; animal&amp;plant&amp;spiny                   0  0.176    -0.176       0.004
-#&gt; animal&amp;sea&amp;spiny                     5  0.018     4.982       0.086
-#&gt; mammal&amp;plant&amp;sea                     0  0.000     0.000       0.000
-#&gt; mammal&amp;plant&amp;spiny                   0  0.000     0.000       0.000
-#&gt; mammal&amp;sea&amp;spiny                     0  0.000     0.000       0.000
-#&gt; plant&amp;sea&amp;spiny                      0  0.098    -0.098       0.002
-#&gt; animal&amp;mammal&amp;plant&amp;sea              0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;plant&amp;spiny            0  0.054    -0.054       0.001
-#&gt; animal&amp;mammal&amp;sea&amp;spiny              0  0.000     0.000       0.000
-#&gt; animal&amp;plant&amp;sea&amp;spiny               0  0.002    -0.002       0.000
-#&gt; mammal&amp;plant&amp;sea&amp;spiny               0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;plant&amp;sea&amp;spiny        0  0.000     0.000       0.000
-#&gt; 
-#&gt; diagError: 0.197 
-#&gt; stress:    0.1 </div><div class='input'>
-<span class='co'># The table method</span>
-<span class='fu'>euler</span><span class='op'>(</span><span class='va'>pain</span>, factor_names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                          original  fitted residuals regionError
-#&gt; widespread                    204 204.002    -0.002           0
-#&gt; regional                      229 229.002    -0.002           0
-#&gt; male                           48  48.032    -0.032           0
-#&gt; widespread&amp;regional             0   0.000     0.000           0
-#&gt; widespread&amp;male                78  77.984     0.016           0
-#&gt; regional&amp;male                 143 142.992     0.008           0
-#&gt; widespread&amp;regional&amp;male        0   0.247    -0.247           0
-#&gt; 
-#&gt; diagError: 0 
-#&gt; stress:    0 </div><div class='input'>
-<span class='co'># A euler diagram from a list of sample spaces (the list method)</span>
-<span class='fu'>euler</span><span class='op'>(</span><span class='va'>plants</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                          original fitted residuals regionError
-#&gt; erigenia                        0      0         0           0
-#&gt; solanum                        16     16         0           0
-#&gt; cynodon                         1      1         0           0
-#&gt; erigenia&amp;solanum                2      2         0           0
-#&gt; erigenia&amp;cynodon                0      0         0           0
-#&gt; solanum&amp;cynodon                25     25         0           0
-#&gt; erigenia&amp;solanum&amp;cynodon       20     20         0           0
-#&gt; 
-#&gt; diagError: 0 
-#&gt; stress:    0 </div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Fit a diagram with circles</span></span>
+<span class='r-in'><span class='va'>combo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>A <span class='op'>=</span> <span class='fl'>2</span>, B <span class='op'>=</span> <span class='fl'>2</span>, C <span class='op'>=</span> <span class='fl'>2</span>, <span class='st'>"A&amp;B"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"A&amp;C"</span> <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>fit1</span> <span class='op'>&lt;-</span> <span class='fu'>euler</span><span class='op'>(</span><span class='va'>combo</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Investigate the fit</span></span>
+<span class='r-in'><span class='va'>fit1</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A            2  2.076    -0.076       0.021</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> B            2  2.076    -0.076       0.021</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> C            2  2.076    -0.076       0.021</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A&amp;B          1  0.605     0.395       0.040</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A&amp;C          1  0.605     0.395       0.040</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> B&amp;C          1  0.605     0.395       0.040</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A&amp;B&amp;C        0  0.494    -0.494       0.058</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.058 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0.049 </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Refit using ellipses instead</span></span>
+<span class='r-in'><span class='va'>fit2</span> <span class='op'>&lt;-</span> <span class='fu'>euler</span><span class='op'>(</span><span class='va'>combo</span>, shape <span class='op'>=</span> <span class='st'>"ellipse"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Investigate the fit again (which is now exact)</span></span>
+<span class='r-in'><span class='va'>fit2</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A            2      2         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> B            2      2         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> C            2      2         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A&amp;B          1      1         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A&amp;C          1      1         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> B&amp;C          1      1         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> A&amp;B&amp;C        0      0         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0 </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Plot it</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fit2</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='euler-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># A set with no perfect solution</span></span>
+<span class='r-in'><span class='fu'>euler</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span> <span class='op'>=</span> <span class='fl'>3491</span>, <span class='st'>"b"</span> <span class='op'>=</span> <span class='fl'>3409</span>, <span class='st'>"c"</span> <span class='op'>=</span> <span class='fl'>3503</span>,</span>
+<span class='r-in'>        <span class='st'>"a&amp;b"</span> <span class='op'>=</span> <span class='fl'>120</span>, <span class='st'>"a&amp;c"</span> <span class='op'>=</span> <span class='fl'>114</span>, <span class='st'>"b&amp;c"</span> <span class='op'>=</span> <span class='fl'>132</span>,</span>
+<span class='r-in'>        <span class='st'>"a&amp;b&amp;c"</span> <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> a         3491   3491         0       0.001</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> b         3409   3409         0       0.001</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> c         3503   3503         0       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> a&amp;b        120    120         0       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> a&amp;c        114    114         0       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> b&amp;c        132    132         0       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> a&amp;b&amp;c       50      0        50       0.005</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.005 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0 </span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using grouping via the 'by' argument through the data.frame method</span></span>
+<span class='r-in'><span class='fu'>euler</span><span class='op'>(</span><span class='va'>fruits</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>sex</span>, <span class='va'>age</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> female.adult </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                     original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana                     1  0.937     0.063       0.009</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple                      2  1.968     0.032       0.009</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange                     2  1.974     0.026       0.009</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple               4  4.028    -0.028       0.010</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;orange              0  0.268    -0.268       0.024</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple&amp;orange               0  0.260    -0.260       0.023</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple&amp;orange        2  1.961     0.039       0.010</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.024 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0.005 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------ </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> male.child </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                     original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana                     3  2.994     0.006       0.003</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple                      1  0.982     0.018       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange                     1  0.981     0.019       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple              10 10.004    -0.004       0.007</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;orange              0  0.137    -0.137       0.008</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple&amp;orange               0  0.144    -0.144       0.008</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple&amp;orange        3  2.993     0.007       0.003</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.008 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------ </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> male.adult </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                     original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana                     3  3.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple                      2  2.003    -0.003       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange                     0  0.016    -0.016       0.001</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple              10 10.000     0.000       0.001</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;orange              0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple&amp;orange               1  0.996     0.004       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple&amp;orange        1  1.002    -0.002       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.001 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------ </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> female.child </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                     original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana                     4      4         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple                      0      0         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange                     1      1         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple               4      4         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;orange              1      1         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple&amp;orange               0      0         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana&amp;apple&amp;orange        2      2         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0 </span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using the matrix method</span></span>
+<span class='r-in'><span class='fu'>euler</span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                               original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal                               0  0.582    -0.582       0.086</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal                               0  0.302    -0.302       0.044</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant                                0  0.210    -0.210       0.031</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea                                  0  0.430    -0.430       0.063</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> spiny                                0  0.166    -0.166       0.025</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal                        2  1.817     0.183       0.018</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;sea                           1  0.612     0.388       0.053</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;spiny                         0  0.215    -0.215       0.032</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;sea                           1  0.000     1.000       0.143</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;spiny                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;sea                            1  0.868     0.132       0.015</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;spiny                          1  0.000     1.000       0.143</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea&amp;spiny                            0  0.176    -0.176       0.026</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant                  0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;sea                    0  0.268    -0.268       0.040</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;spiny                  0  0.061    -0.061       0.009</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;sea                     0  0.119    -0.119       0.018</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;spiny                   0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;sea&amp;spiny                     1  0.715     0.285       0.037</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;sea                     0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;spiny                   0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;sea&amp;spiny                     0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;sea&amp;spiny                      0  0.016    -0.016       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;sea              0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;spiny            0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;sea&amp;spiny              0  0.177    -0.177       0.026</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;sea&amp;spiny               0  0.043    -0.043       0.006</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;sea&amp;spiny               0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;sea&amp;spiny        0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.143 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0.352 </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using weights</span></span>
+<span class='r-in'><span class='fu'>euler</span><span class='op'>(</span><span class='va'>organisms</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                               original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal                               0  0.789    -0.789       0.019</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal                               0  0.360    -0.360       0.009</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant                                0  0.099    -0.099       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea                                  0  0.409    -0.409       0.010</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> spiny                                0  0.200    -0.200       0.005</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal                       30 29.984     0.016       0.197</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;sea                           4  0.169     3.831       0.065</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;spiny                         0  0.027    -0.027       0.001</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;sea                           8  0.000     8.000       0.138</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;spiny                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;sea                            2  0.000     2.000       0.034</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;spiny                          9  9.000     0.000       0.059</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea&amp;spiny                            0  0.062    -0.062       0.001</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant                  0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;sea                    0  0.431    -0.431       0.010</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;spiny                  0  0.100    -0.100       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;sea                     0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;spiny                   0  0.176    -0.176       0.004</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;sea&amp;spiny                     5  0.018     4.982       0.086</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;sea                     0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;spiny                   0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;sea&amp;spiny                     0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;sea&amp;spiny                      0  0.098    -0.098       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;sea              0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;spiny            0  0.054    -0.054       0.001</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;sea&amp;spiny              0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;sea&amp;spiny               0  0.002    -0.002       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;sea&amp;spiny               0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;sea&amp;spiny        0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.197 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0.1 </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># The table method</span></span>
+<span class='r-in'><span class='fu'>euler</span><span class='op'>(</span><span class='va'>pain</span>, factor_names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                          original  fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> widespread                    204 204.002    -0.002           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> regional                      229 229.002    -0.002           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> male                           48  48.032    -0.032           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> widespread&amp;regional             0   0.000     0.000           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> widespread&amp;male                78  77.984     0.016           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> regional&amp;male                 143 142.992     0.008           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> widespread&amp;regional&amp;male        0   0.247    -0.247           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0 </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># A euler diagram from a list of sample spaces (the list method)</span></span>
+<span class='r-in'><span class='fu'>euler</span><span class='op'>(</span><span class='va'>plants</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                          original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> erigenia                        0      0         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> solanum                        16     16         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> cynodon                         1      1         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> erigenia&amp;solanum                2      2         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> erigenia&amp;cynodon                0      0         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> solanum&amp;cynodon                25     25         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> erigenia&amp;solanum&amp;cynodon       20     20         0           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0 </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

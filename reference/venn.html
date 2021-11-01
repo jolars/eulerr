@@ -256,83 +256,89 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
     <div class='dont-index'><p><code><a href='plot.euler.html'>plot.venn()</a></code>, <code><a href='print.venn.html'>print.venn()</a></code>, <code><a href='euler.html'>euler()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># The trivial version</span>
-<span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'>venn</span><span class='op'>(</span><span class='fl'>5</span>, names <span class='op'>=</span> <span class='va'>letters</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f1</span><span class='op'>)</span>
-</div><div class='img'><img src='venn-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># Using data (a numeric vector)</span>
-<span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'>venn</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>A <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='op'>=</span> <span class='fl'>3</span>, <span class='st'>"A&amp;D"</span> <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># The table method</span>
-<span class='fu'>venn</span><span class='op'>(</span><span class='va'>pain</span>, factor_names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 3 set Venn diagram 
-#&gt; 
-#&gt;                h     k    a    b  phi
-#&gt; widespread -0.42 -0.36 1.05 1.05 3.76
-#&gt; regional    0.42 -0.36 1.05 1.05 3.76
-#&gt; male        0.00  0.36 1.05 1.05 3.76</div><div class='input'>
-<span class='co'># Using grouping via the 'by' argument through the data.frame method</span>
-<span class='fu'>venn</span><span class='op'>(</span><span class='va'>fruits</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>sex</span>, <span class='va'>age</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; female.adult 
-#&gt; 3 set Venn diagram 
-#&gt; 
-#&gt;            h     k    a    b  phi
-#&gt; banana -0.42 -0.36 1.05 1.05 3.76
-#&gt; apple   0.42 -0.36 1.05 1.05 3.76
-#&gt; orange  0.00  0.36 1.05 1.05 3.76
-#&gt; ------------------------------------------------------------ 
-#&gt; male.child 
-#&gt; 3 set Venn diagram 
-#&gt; 
-#&gt;            h     k    a    b  phi
-#&gt; banana -0.42 -0.36 1.05 1.05 3.76
-#&gt; apple   0.42 -0.36 1.05 1.05 3.76
-#&gt; orange  0.00  0.36 1.05 1.05 3.76
-#&gt; ------------------------------------------------------------ 
-#&gt; male.adult 
-#&gt; 3 set Venn diagram 
-#&gt; 
-#&gt;            h     k    a    b  phi
-#&gt; banana -0.42 -0.36 1.05 1.05 3.76
-#&gt; apple   0.42 -0.36 1.05 1.05 3.76
-#&gt; orange  0.00  0.36 1.05 1.05 3.76
-#&gt; ------------------------------------------------------------ 
-#&gt; female.child 
-#&gt; 3 set Venn diagram 
-#&gt; 
-#&gt;            h     k    a    b  phi
-#&gt; banana -0.42 -0.36 1.05 1.05 3.76
-#&gt; apple   0.42 -0.36 1.05 1.05 3.76
-#&gt; orange  0.00  0.36 1.05 1.05 3.76</div><div class='input'>
-
-<span class='co'># Using the matrix method</span>
-<span class='fu'>venn</span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 5 set Venn diagram 
-#&gt; 
-#&gt;             h      k a   b   phi
-#&gt; animal  0.176  0.096 1 0.6 0.000
-#&gt; mammal -0.037  0.197 1 0.6 1.257
-#&gt; plant  -0.198  0.026 1 0.6 2.513
-#&gt; sea    -0.086 -0.181 1 0.6 3.770
-#&gt; spiny   0.145 -0.137 1 0.6 5.027</div><div class='input'>
-<span class='co'># Using weights</span>
-<span class='fu'>venn</span><span class='op'>(</span><span class='va'>organisms</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 5 set Venn diagram 
-#&gt; 
-#&gt;             h      k a   b   phi
-#&gt; animal  0.176  0.096 1 0.6 0.000
-#&gt; mammal -0.037  0.197 1 0.6 1.257
-#&gt; plant  -0.198  0.026 1 0.6 2.513
-#&gt; sea    -0.086 -0.181 1 0.6 3.770
-#&gt; spiny   0.145 -0.137 1 0.6 5.027</div><div class='input'>
-<span class='co'># A venn diagram from a list of sample spaces (the list method)</span>
-<span class='fu'>venn</span><span class='op'>(</span><span class='va'>plants</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 3 set Venn diagram 
-#&gt; 
-#&gt;              h     k    a    b  phi
-#&gt; erigenia -0.42 -0.36 1.05 1.05 3.76
-#&gt; solanum   0.42 -0.36 1.05 1.05 3.76
-#&gt; cynodon   0.00  0.36 1.05 1.05 3.76</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># The trivial version</span></span>
+<span class='r-in'><span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'>venn</span><span class='op'>(</span><span class='fl'>5</span>, names <span class='op'>=</span> <span class='va'>letters</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f1</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='venn-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using data (a numeric vector)</span></span>
+<span class='r-in'><span class='va'>f2</span> <span class='op'>&lt;-</span> <span class='fu'>venn</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>A <span class='op'>=</span> <span class='fl'>1</span>, <span class='st'>"B&amp;C"</span> <span class='op'>=</span> <span class='fl'>3</span>, <span class='st'>"A&amp;D"</span> <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># The table method</span></span>
+<span class='r-in'><span class='fu'>venn</span><span class='op'>(</span><span class='va'>pain</span>, factor_names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                h     k    a    b  phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> widespread -0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> regional    0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> male        0.00  0.36 1.05 1.05 3.76</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using grouping via the 'by' argument through the data.frame method</span></span>
+<span class='r-in'><span class='fu'>venn</span><span class='op'>(</span><span class='va'>fruits</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>sex</span>, <span class='va'>age</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> female.adult </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            h     k    a    b  phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana -0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple   0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange  0.00  0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------ </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> male.child </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            h     k    a    b  phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana -0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple   0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange  0.00  0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------ </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> male.adult </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            h     k    a    b  phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana -0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple   0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange  0.00  0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------ </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> female.child </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            h     k    a    b  phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> banana -0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> apple   0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> orange  0.00  0.36 1.05 1.05 3.76</span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using the matrix method</span></span>
+<span class='r-in'><span class='fu'>venn</span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             h      k a   b   phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal  0.176  0.096 1 0.6 0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal -0.037  0.197 1 0.6 1.257</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant  -0.198  0.026 1 0.6 2.513</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea    -0.086 -0.181 1 0.6 3.770</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> spiny   0.145 -0.137 1 0.6 5.027</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Using weights</span></span>
+<span class='r-in'><span class='fu'>venn</span><span class='op'>(</span><span class='va'>organisms</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             h      k a   b   phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal  0.176  0.096 1 0.6 0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal -0.037  0.197 1 0.6 1.257</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant  -0.198  0.026 1 0.6 2.513</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea    -0.086 -0.181 1 0.6 3.770</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> spiny   0.145 -0.137 1 0.6 5.027</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># A venn diagram from a list of sample spaces (the list method)</span></span>
+<span class='r-in'><span class='fu'>venn</span><span class='op'>(</span><span class='va'>plants</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"erigenia"</span>, <span class='st'>"solanum"</span>, <span class='st'>"cynodon"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 set Venn diagram </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>              h     k    a    b  phi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> erigenia -0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> solanum   0.42 -0.36 1.05 1.05 3.76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> cynodon   0.00  0.36 1.05 1.05 3.76</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

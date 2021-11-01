@@ -182,42 +182,43 @@ screen.</p>
     <div class='dont-index'><p><code><a href='euler.html'>euler()</a></code>, <code><a href='https://rdrr.io/r/base/print.dataframe.html'>base::print.data.frame()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='euler.html'>euler</a></span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                               original fitted residuals regionError
-#&gt; animal                               0  0.582    -0.582       0.086
-#&gt; mammal                               0  0.302    -0.302       0.044
-#&gt; plant                                0  0.210    -0.210       0.031
-#&gt; sea                                  0  0.430    -0.430       0.063
-#&gt; spiny                                0  0.166    -0.166       0.025
-#&gt; animal&amp;mammal                        2  1.817     0.183       0.018
-#&gt; animal&amp;plant                         0  0.000     0.000       0.000
-#&gt; animal&amp;sea                           1  0.612     0.388       0.053
-#&gt; animal&amp;spiny                         0  0.215    -0.215       0.032
-#&gt; mammal&amp;plant                         0  0.000     0.000       0.000
-#&gt; mammal&amp;sea                           1  0.000     1.000       0.143
-#&gt; mammal&amp;spiny                         0  0.000     0.000       0.000
-#&gt; plant&amp;sea                            1  0.868     0.132       0.015
-#&gt; plant&amp;spiny                          1  0.000     1.000       0.143
-#&gt; sea&amp;spiny                            0  0.176    -0.176       0.026
-#&gt; animal&amp;mammal&amp;plant                  0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;sea                    0  0.268    -0.268       0.040
-#&gt; animal&amp;mammal&amp;spiny                  0  0.061    -0.061       0.009
-#&gt; animal&amp;plant&amp;sea                     0  0.119    -0.119       0.018
-#&gt; animal&amp;plant&amp;spiny                   0  0.000     0.000       0.000
-#&gt; animal&amp;sea&amp;spiny                     1  0.715     0.285       0.037
-#&gt; mammal&amp;plant&amp;sea                     0  0.000     0.000       0.000
-#&gt; mammal&amp;plant&amp;spiny                   0  0.000     0.000       0.000
-#&gt; mammal&amp;sea&amp;spiny                     0  0.000     0.000       0.000
-#&gt; plant&amp;sea&amp;spiny                      0  0.016    -0.016       0.002
-#&gt; animal&amp;mammal&amp;plant&amp;sea              0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;plant&amp;spiny            0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;sea&amp;spiny              0  0.177    -0.177       0.026
-#&gt; animal&amp;plant&amp;sea&amp;spiny               0  0.043    -0.043       0.006
-#&gt; mammal&amp;plant&amp;sea&amp;spiny               0  0.000     0.000       0.000
-#&gt; animal&amp;mammal&amp;plant&amp;sea&amp;spiny        0  0.000     0.000       0.000
-#&gt; 
-#&gt; diagError: 0.143 
-#&gt; stress:    0.352 </div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='euler.html'>euler</a></span><span class='op'>(</span><span class='va'>organisms</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                               original fitted residuals regionError</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal                               0  0.582    -0.582       0.086</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal                               0  0.302    -0.302       0.044</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant                                0  0.210    -0.210       0.031</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea                                  0  0.430    -0.430       0.063</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> spiny                                0  0.166    -0.166       0.025</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal                        2  1.817     0.183       0.018</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;sea                           1  0.612     0.388       0.053</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;spiny                         0  0.215    -0.215       0.032</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;sea                           1  0.000     1.000       0.143</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;spiny                         0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;sea                            1  0.868     0.132       0.015</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;spiny                          1  0.000     1.000       0.143</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sea&amp;spiny                            0  0.176    -0.176       0.026</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant                  0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;sea                    0  0.268    -0.268       0.040</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;spiny                  0  0.061    -0.061       0.009</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;sea                     0  0.119    -0.119       0.018</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;spiny                   0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;sea&amp;spiny                     1  0.715     0.285       0.037</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;sea                     0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;spiny                   0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;sea&amp;spiny                     0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> plant&amp;sea&amp;spiny                      0  0.016    -0.016       0.002</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;sea              0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;spiny            0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;sea&amp;spiny              0  0.177    -0.177       0.026</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;plant&amp;sea&amp;spiny               0  0.043    -0.043       0.006</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mammal&amp;plant&amp;sea&amp;spiny               0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> animal&amp;mammal&amp;plant&amp;sea&amp;spiny        0  0.000     0.000       0.000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> diagError: 0.143 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stress:    0.352 </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
