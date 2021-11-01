@@ -1,14 +1,14 @@
-// #define ARMA_NO_DEBUG
-
 #include <RcppArmadillo.h>
-#include "constants.h"
-#include "point.h"
-#include "ellipse.h"
+
+#include "compute-areas.h"
 #include "conic.h"
-#include "intersections.h"
-#include "solver.h"
+#include "constants.h"
+#include "ellipse.h"
+#include "geometry.h"
 #include "helpers.h"
-#include "areas.h"
+#include "intersections.h"
+#include "point.h"
+#include "solver.h"
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]

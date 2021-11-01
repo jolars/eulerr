@@ -1,7 +1,8 @@
 #include <RcppArmadillo.h>
+
 #include "conic.h"
-#include "ellipse.h"
 #include "constants.h"
+#include "ellipse.h"
 #include "helpers.h"
 
 namespace eulerr {

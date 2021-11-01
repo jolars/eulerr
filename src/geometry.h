@@ -1,9 +1,8 @@
-#ifndef eulerr_geometry_h_
-#define eulerr_geometry_h_
+#pragma once
 
-#include <RcppArmadillo.h>
 #include "ellipse.h"
 #include "point.h"
+#include <RcppArmadillo.h>
 
 inline bool
 point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
@@ -19,7 +18,7 @@ point_in_ellipse(const eulerr::Point& p, const eulerr::Ellipse& e)
 
 // See if a group of ellipses are completely disjoint or a russian doll
 template<typename T>
-inline double
+double
 disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
                    const std::vector<T>& ind)
 {
@@ -50,7 +49,7 @@ disjoint_or_subset(const std::vector<eulerr::Ellipse>& ellipse,
 }
 
 template<typename T>
-inline std::vector<T>
+std::vector<T>
 adopt(const eulerr::Point& p,
       const std::vector<eulerr::Ellipse>& ellipses,
       const T a,
@@ -69,5 +68,3 @@ adopt(const eulerr::Point& p,
 
   return out;
 }
-
-#endif // eulerr_geometry_h_

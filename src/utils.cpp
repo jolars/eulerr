@@ -1,7 +1,5 @@
-#define ARMA_NO_DEBUG
-
-#include <RcppArmadillo.h>
 #include "helpers.h"
+#include <RcppArmadillo.h>
 
 // overlap between two discs
 // [[Rcpp::export]]

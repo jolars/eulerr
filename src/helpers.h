@@ -1,7 +1,7 @@
-#ifndef eulerr_helpers_h_
-#define eulerr_helpers_h_
+#pragma once
 
 #include <RcppArmadillo.h>
+
 #include "constants.h"
 
 template<typename T1, typename T2>
@@ -15,28 +15,11 @@ is_subset(const T1& a, const T2& b)
 
 // Bit indexing
 // (http://stackoverflow.com/questions/9430568/generating-combinations-in-c)
-inline arma::umat
-bit_index(arma::uword n)
-{
-  using namespace arma;
-
-  umat out(std::pow(2, n) - 1, n);
-
-  for (uword i = 1, k = 0; i < n + 1; ++i) {
-    std::vector<bool> v(n);
-    std::fill(v.begin(), v.begin() + i, true);
-    do {
-      for (uword j = 0; j < n; ++j) {
-        out(k, j) = v[j] ? 1 : 0;
-      }
-      k++;
-    } while (std::prev_permutation(v.begin(), v.end()));
-  }
-  return out;
-}
+arma::umat
+bit_index(arma::uword n);
 
 template<typename T>
-inline std::vector<std::vector<T>>
+std::vector<std::vector<T>>
 set_index(const T n)
 {
   std::vector<std::vector<T>> out(std::pow(2, n) - 1);
@@ -76,17 +59,8 @@ nearly_equal(T a, T b)
 }
 
 // Max of minimums colwise
-arma::uword inline max_colmins(const arma::mat& x)
-{
-  using namespace arma;
-
-  vec mins(x.n_cols);
-
-  for (uword i = 0; i < x.n_cols; ++i)
-    mins(i) = x.col(i).min();
-
-  return mins.index_max();
-}
+arma::uword
+max_colmins(const arma::mat& x);
 
 // Convert armadillo vector to rcpp vector
 template<typename T>
@@ -148,19 +122,5 @@ min_index(const T& x)
   return std::distance(x.begin(), std::min_element(x.begin(), x.end()));
 }
 
-inline arma::umat
-choose_two(const arma::uword n)
-{
-  using namespace arma;
-
-  umat m(2, n * (n - 1) / 2);
-  for (uword i = 0, k = 0; i < n - 1; ++i) {
-    for (uword j = i + 1; j < n; ++j, ++k) {
-      m(0, k) = i;
-      m(1, k) = j;
-    }
-  }
-  return m;
-}
-
-#endif // eulerr_helpers_h_
+arma::umat
+choose_two(const arma::uword n);

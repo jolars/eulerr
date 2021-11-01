@@ -1,61 +1,9 @@
-#ifndef eulerr_areas_h_
-#define eulerr_areas_h_
-
 #include <RcppArmadillo.h>
-#include "helpers.h"
-#include "geometry.h"
-#include "point.h"
+
 #include "ellipse.h"
-
-double
-montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
-           const std::vector<int>& indices)
-{
-  using namespace std;
-
-  auto n = indices.size();
-
-  vector<double> areas;
-  areas.reserve(n);
-
-  size_t n_points = 1e4;
-
-  for (auto ind : indices) {
-
-    size_t n_inside = 0;
-
-    const auto& e = ellipses[ind];
-
-    for (size_t i = 0; i < n_points; ++i) {
-      // sample points using Vogel's method
-      double theta = i * (M_PI * (3.0 - sqrt(5.0)));
-      double r = sqrt(static_cast<double>(i) / static_cast<double>(n_points));
-
-      eulerr::Point p{ r * cos(theta), r * sin(theta) };
-
-      // modify point to fit ellipse
-      p.scale(e.a, e.b);
-      p.rotate(e.phi);
-      p.translate(e.h, e.k);
-
-      // check if point is inside the intersection
-      auto all_inside =
-        all_of(indices.begin(), indices.end(), [&p, &ellipses, &ind](int i) {
-          return i == ind || point_in_ellipse(p, ellipses[i]);
-        });
-
-      if (all_inside)
-        n_inside++;
-    }
-
-    areas.push_back(e.area() * n_inside / n_points);
-  }
-
-  return std::accumulate(areas.begin(), areas.end(), 0.0) / n;
-}
-
-// The code below is adapted from "The area of intersecting ellipses" by
-// David Eberly, Geometric Tools, LLC (c) 1998-2016
+#include "geometry.h"
+#include "helpers.h"
+#include "point.h"
 
 // Compute the area of an ellipse segment.
 double
@@ -81,7 +29,8 @@ ellipse_segment(const eulerr::Ellipse& e, eulerr::Point p0, eulerr::Point p1)
                triangle;
 }
 
-// Compute the area of an intersection of 2+ ellipses
+// The code below is adapted from "The area of intersecting ellipses" by
+// David Eberly, Geometric Tools, LLC (c) 1998-2016
 double
 polysegments(const std::vector<eulerr::Point>& points,
              const std::vector<eulerr::Ellipse>& ellipses,
@@ -152,4 +101,50 @@ polysegments(const std::vector<eulerr::Point>& points,
   return area;
 }
 
-#endif // eulerr_areas_h_
+double
+montecarlo(const std::vector<eulerr::Ellipse>& ellipses,
+           const std::vector<int>& indices)
+{
+  using namespace std;
+
+  auto n = indices.size();
+
+  vector<double> areas;
+  areas.reserve(n);
+
+  size_t n_points = 1e4;
+
+  for (auto ind : indices) {
+
+    size_t n_inside = 0;
+
+    const auto& e = ellipses[ind];
+
+    for (size_t i = 0; i < n_points; ++i) {
+      // sample points using Vogel's method
+      double theta = i * (M_PI * (3.0 - sqrt(5.0)));
+      double r =
+        std::sqrt(static_cast<double>(i) / static_cast<double>(n_points));
+
+      eulerr::Point p{ r * std::cos(theta), r * std::sin(theta) };
+
+      // modify point to fit ellipse
+      p.scale(e.a, e.b);
+      p.rotate(e.phi);
+      p.translate(e.h, e.k);
+
+      // check if point is inside the intersection
+      auto all_inside =
+        all_of(indices.begin(), indices.end(), [&p, &ellipses, &ind](int i) {
+          return i == ind || point_in_ellipse(p, ellipses[i]);
+        });
+
+      if (all_inside)
+        n_inside++;
+    }
+
+    areas.push_back(e.area() * n_inside / n_points);
+  }
+
+  return std::accumulate(areas.begin(), areas.end(), 0.0) / n;
+}
