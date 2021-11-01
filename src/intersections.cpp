@@ -2,7 +2,7 @@
 #include "constants.h"
 #include "helpers.h"
 #include "point.h"
-#include "solver.h"
+#include "solve_cubic.h"
 #include "transformations.h"
 #include <RcppArmadillo.h>
 
