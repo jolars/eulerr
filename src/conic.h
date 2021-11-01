@@ -1,5 +1,4 @@
-#ifndef eulerr_conic_h_
-#define eulerr_conic_h_
+#pragma once
 
 #include <RcppArmadillo.h>
 #include "ellipse.h"
@@ -13,5 +12,3 @@ struct Conic
   Conic(const eulerr::Ellipse& ellipse);
 };
 } // namespace eulerr
-
-#endif // eulerr_conic_h_

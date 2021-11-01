@@ -1,5 +1,4 @@
-#ifndef eulerr_transformations_h_
-#define eulerr_transformations_h_
+#pragma once
 
 #include <RcppArmadillo.h>
 
@@ -55,5 +54,3 @@ skewsymmat(const arma::vec& v)
   out(2, 1) = -v(0);
   return out;
 }
-
-#endif // eulerr_transformations_h_

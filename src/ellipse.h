@@ -1,5 +1,4 @@
-#ifndef eulerr_ellipse_h_
-#define eulerr_ellipse_h_
+#pragma once
 
 namespace eulerr {
 
@@ -14,6 +13,4 @@ struct Ellipse
   double sector(const double theta) const;
 };
 
-} // namespace eulerr
-
-#endif // eulerr_ellipse_h_
+}
