@@ -1,12 +1,11 @@
 // This file is a modified copy of
-// https://github.com/slowkow/ggrepel/blob/master/src/repel_boxes.cpp
-// from the ggrepel R package by Kamil Slowikowski, which is
-// licensed under GPL-3. The code in repel_boxes() has been modified
-// by commenting-out, deleting, and reorganizing some of the code. Moreover,
-// many of the Rcpp export directives have been removed.
+// https://github.com/slowkow/ggrepel/blob/master/src/repel_boxes.cpp from the
+// ggrepel R package by Kamil Slowikowski, which is licensed under GPL-3. The
+// code in repel_boxes() has been modified by commenting-out, deleting, and
+// reorganizing some of the code. Moreover, many of the Rcpp export directives
+// have been removed.
 
 #include <Rcpp.h>
-using namespace Rcpp;
 
 // Main code for text label placement -----------------------------------------
 
@@ -267,12 +266,12 @@ spring_force(Point a,
 //'   (defaults to 2000)
 //' @noRd
 // [[Rcpp::export]]
-DataFrame
-repel_boxes(NumericMatrix boxes,
-            NumericVector xlim,
-            NumericVector ylim,
-            NumericVector hjust,
-            NumericVector vjust,
+Rcpp::DataFrame
+repel_boxes(Rcpp::NumericMatrix boxes,
+            Rcpp::NumericVector xlim,
+            Rcpp::NumericVector ylim,
+            Rcpp::NumericVector hjust,
+            Rcpp::NumericVector vjust,
             double force_push     = 1e-7,
             double force_pull     = 1e-7,
             int maxiter           = 6000,
@@ -292,7 +291,7 @@ repel_boxes(NumericMatrix boxes,
   ybounds.y = ylim[1];
 
   // Add a tiny bit of jitter to each text box at the start.
-  NumericVector r = rnorm(n_texts, 0, force_push);
+  Rcpp::NumericVector r = Rcpp::rnorm(n_texts, 0, force_push);
   std::vector<Box> TextBoxes(n_texts);
   std::vector<double> ratios(n_texts);
   std::vector<Point> original_centroids(n_texts);
@@ -377,8 +376,8 @@ repel_boxes(NumericMatrix boxes,
     } // loop through all text labels
   }   // while any overlaps exist and we haven't reached max iterations
 
-  NumericVector xs(n_texts);
-  NumericVector ys(n_texts);
+  Rcpp::NumericVector xs(n_texts);
+  Rcpp::NumericVector ys(n_texts);
 
   for (int i = 0; i < n_texts; i++) {
     xs[i] = (TextBoxes[i].x1 + TextBoxes[i].x2) / 2;

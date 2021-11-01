@@ -12,16 +12,16 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // repel_boxes
-DataFrame repel_boxes(NumericMatrix boxes, NumericVector xlim, NumericVector ylim, NumericVector hjust, NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
+Rcpp::DataFrame repel_boxes(Rcpp::NumericMatrix boxes, Rcpp::NumericVector xlim, Rcpp::NumericVector ylim, Rcpp::NumericVector hjust, Rcpp::NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
 RcppExport SEXP _eulerr_repel_boxes(SEXP boxesSEXP, SEXP xlimSEXP, SEXP ylimSEXP, SEXP hjustSEXP, SEXP vjustSEXP, SEXP force_pushSEXP, SEXP force_pullSEXP, SEXP maxiterSEXP, SEXP directionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type boxes(boxesSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type xlim(xlimSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type ylim(ylimSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type hjust(hjustSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type vjust(vjustSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type boxes(boxesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type xlim(xlimSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type ylim(ylimSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type hjust(hjustSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type vjust(vjustSEXP);
     Rcpp::traits::input_parameter< double >::type force_push(force_pushSEXP);
     Rcpp::traits::input_parameter< double >::type force_pull(force_pullSEXP);
     Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
