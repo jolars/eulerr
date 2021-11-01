@@ -48,6 +48,6 @@ LazyData: true
 VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/
 BugReports: https://github.com/jolars/eulerr/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Language: en-US

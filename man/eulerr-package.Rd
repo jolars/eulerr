@@ -6,11 +6,7 @@
 \alias{eulerr-package}
 \title{eulerr: Area-Proportional Euler and Venn Diagrams with Ellipses}
 \description{
-Generate area-proportional Euler diagrams
-    using numerical optimization. An Euler diagram is a generalization of a Venn
-    diagram, relaxing the criterion that all interactions need to be
-    represented. Diagrams may be fit with ellipses and circles via
-    a wide range of inputs and can be visualized in numerous ways.
+Generate area-proportional Euler diagrams using numerical optimization. An Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with ellipses and circles via a wide range of inputs and can be visualized in numerous ways.
 }
 \seealso{
 Useful links:
