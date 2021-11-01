@@ -1,10 +1,11 @@
+#include <RcppArmadillo.h>
+
 #include "conic.h"
 #include "constants.h"
 #include "helpers.h"
 #include "point.h"
 #include "solve_cubic.h"
 #include "transformations.h"
-#include <RcppArmadillo.h>
 
 // Split a degenerate conic into two lines
 arma::mat

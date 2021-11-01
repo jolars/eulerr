@@ -1,5 +1,6 @@
-#include "helpers.h"
 #include <RcppArmadillo.h>
+
+#include "helpers.h"
 
 // overlap between two discs
 // [[Rcpp::export]]

@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+
 #include "ellipse.h"
 
 namespace eulerr {

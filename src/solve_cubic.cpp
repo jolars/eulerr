@@ -2,9 +2,10 @@
 // This code has been ported to C++ from RConics version 1.0, which is licensed
 // under the GPL-3 license.
 
+#include <RcppArmadillo.h>
+
 #include "constants.h"
 #include "helpers.h"
-#include <RcppArmadillo.h>
 
 // Solve a cubic polynomial
 arma::cx_vec
