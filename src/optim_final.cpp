@@ -6,7 +6,6 @@
 #include "helpers.h"
 #include "intersections.h"
 #include "point.h"
-#include "solver.h"
 #include <RcppArmadillo.h>
 
 // Intersect any number of ellipses or circles
