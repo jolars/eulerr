@@ -1,5 +1,3 @@
-#include <RcppArmadillo.h>
-
 #include "compute-areas.h"
 #include "conic.h"
 #include "constants.h"
@@ -9,6 +7,7 @@
 #include "intersections.h"
 #include "point.h"
 #include "solver.h"
+#include <RcppArmadillo.h>
 
 // Intersect any number of ellipses or circles
 // [[Rcpp::export]]
