@@ -1,18 +1,53 @@
 Package: eulerr
 Title: Area-Proportional Euler and Venn Diagrams with Ellipses
-Version: 6.1.1
-Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
-                    role = c("aut", "cre"),
-                    comment = c(ORCID = "0000-0002-4029-5945")),
-             person("A. Jonathan R.", "Godfrey", role = "ctb"),
-             person("Peter", "Gustafsson", role = "ctb"),
-             person("David H.", "Eberly", role = "ctb",
-                    comment = "geometric algorithms"),
-             person("Emanuel", "Huber", role = "ctb",
-                    comment = "root solver code"),
-             person("Kamil", "Slowikowski", role = c("ctb", "cph"),
-                    comment = "modified code from ggrepel"),
-             person("Florian", "Privé", role = "ctb"))
+Version: 6.1.2
+Authors@R: c(
+    person(
+        "Johan",
+        "Larsson",
+        email = "johanlarsson@outlook.com",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0002-4029-5945")
+    ),
+    person(
+        "A. Jonathan R.",
+        "Godfrey",
+        role = "ctb"
+    ),
+    person(
+        "Peter",
+        "Gustafsson",
+        role = "ctb"
+    ),
+    person(
+        "David H.",
+        "Eberly",
+        role = "ctb",
+        comment = "geometric algorithms"
+    ),
+    person(
+        "Emanuel",
+        "Huber",
+        role = "ctb",
+        comment = "root solver code"
+    ),
+    person(
+        "Kamil",
+        "Slowikowski",
+        role = c("ctb", "cph"),
+        comment = "modified code from ggrepel"
+    ),
+    person(
+        "Florian",
+        "Privé",
+        role = "ctb"
+    ),
+    person(
+        "Emmanuel",
+        "Huber",
+        role = c("ctb", "cph"),
+        comment = "modified code from RConics"
+    ))
 Description: Generate area-proportional Euler diagrams
     using numerical optimization. An Euler diagram is a generalization of a Venn
     diagram, relaxing the criterion that all interactions need to be
@@ -35,7 +70,6 @@ Suggests:
     knitr,
     lattice,
     pBrackets,
-    RConics,
     rmarkdown,
     testthat,
     spelling
