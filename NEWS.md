@@ -1,3 +1,11 @@
+# eulerr 6.1.2
+
+## Minor changes
+
+- Functions from the package RConics that were used in the
+  *Under the Hood* vignette have been imported and modified to
+  comply with changes in R devel.
+
 # eulerr 6.1.1
 
 ## Minor changes
