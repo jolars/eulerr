@@ -28,7 +28,6 @@ Other contributors:
   \item Emanuel Huber (root solver code) [contributor]
   \item Kamil Slowikowski (modified code from ggrepel) [contributor, copyright holder]
   \item Florian Privé [contributor]
-  \item Emmanuel Huber (modified code from RConics) [contributor, copyright holder]
 }
 
 }
