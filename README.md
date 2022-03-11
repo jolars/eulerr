@@ -1,14 +1,14 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-eulerr
-======
+# eulerr
 
 <!-- badges: start -->
 
 [![R build
 status](https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg)](https://github.com/jolars/eulerr/actions)
 [![Coverage
-Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://codecov.io/gh/jolars/eulerr)
+Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jolars/eulerr)
 [![CRAN
 Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 <!-- badges: end -->
@@ -27,46 +27,54 @@ circles to minimize the error in the resulting diagram. Residuals and
 goodness of fit statistics are provided to assess whether the resulting
 diagram can be trusted.
 
-Installation
-------------
+## Installation
 
 ### CRAN version
 
-    install.packages("eulerr")
+``` r
+install.packages("eulerr")
+```
 
 ### Development version
 
-    devtools::install_github("jolars/eulerr")
+``` r
+devtools::install_github("jolars/eulerr")
+```
 
 ### Shiny app
 
 eulerr is also available as a shiny app hosted at
 [eulerr.co](http://eulerr.co).
 
-Usage
------
+## Usage
 
-    library(eulerr)
-    # From Wilkinson 2012
-    fit <- euler(c("A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
-                   "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
-                   "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
-                   "A&B&F" = 1, "B&C&D" = 1),
-                 shape = "ellipse")
+``` r
+library(eulerr)
+# From Wilkinson 2012
+fit <- euler(c("A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
+               "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
+               "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+               "A&B&F" = 1, "B&C&D" = 1),
+             shape = "ellipse")
+```
 
 We can inspect the goodness-of-fit metrics *diagError* and *stress* for
 the solution,
 
-    fit$stress
-    #> [1] 4.107279e-15
-    fit$diagError
-    #> [1] 1.010268e-08
+``` r
+fit$stress
+#> [1] 6.27447e-14
+fit$diagError
+#> [1] 4.418069e-08
+```
 
 and plot it
 
-    plot(fit)
+``` r
+plot(fit)
+```
 
-![](man/figures/README-plot_method-1.png)
+![](man/figures/README-plot_method-1.png)<!-- -->
 
 Please see [the introductory
 vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
@@ -74,26 +82,22 @@ for a brief introduction or [*eulerr under the
 hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
 
-License
--------
+## License
 
 eulerr is open source software, licensed under
 [GPL-3](https://github.com/jolars/eulerr/blob/master/LICENSE).
 
-Versioning
-----------
+## Versioning
 
 eulerr uses [semantic versioning](https://semver.org).
 
-Code of conduct
----------------
+## Code of conduct
 
 Please note that this project is released with a [Contributor Code of
 Conduct](https://github.com/jolars/eulerr/blob/master/CONDUCT.md). By
 participating in this project you agree to abide by its terms.
 
-Acknowledgements
-----------------
+## Acknowledgements
 
 eulerr would not be possible without Ben Frederickson’s work on
 [venn.js](http://www.benfrederickson.com) or Leland Wilkinson’s
