@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,16 +40,10 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -76,7 +72,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jolars/eulerr/">
+  <a href="https://github.com/jolars/eulerr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -97,7 +93,7 @@
       <h1 data-toc-skip>A Gallery of Euler and Venn Diagrams</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/master/vignettes/gallery.Rmd"><code>vignettes/gallery.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/HEAD/vignettes/gallery.Rmd" class="external-link"><code>vignettes/gallery.Rmd</code></a></small>
       <div class="hidden name"><code>gallery.Rmd</code></div>
 
     </div>
@@ -105,162 +101,162 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr">eulerr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></code></pre></div>
 <p>This vignette serves as a gallery for Euler diagrams and as a showcase of the various options for customization that are available.</p>
-<div id="euler-diagrams" class="section level2">
-<h2 class="hasAnchor">
-<a href="#euler-diagrams" class="anchor"></a>Euler Diagrams</h2>
-<div id="uniform-intersections" class="section level3">
-<h3 class="hasAnchor">
-<a href="#uniform-intersections" class="anchor"></a>Uniform intersections</h3>
+<div class="section level2">
+<h2 id="euler-diagrams">Euler Diagrams<a class="anchor" aria-label="anchor" href="#euler-diagrams"></a>
+</h2>
+<div class="section level3">
+<h3 id="uniform-intersections">Uniform intersections<a class="anchor" aria-label="anchor" href="#uniform-intersections"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">uniform_intersections</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>,
+<code class="sourceCode R"><span class="va">uniform_intersections</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>,
                                  <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">4</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">4</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">4</span>,
                                  <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">uniform_intersections</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">uniform_intersections</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="disjoint-sets" class="section level3">
-<h3 class="hasAnchor">
-<a href="#disjoint-sets" class="anchor"></a>Disjoint sets</h3>
+<div class="section level3">
+<h3 id="disjoint-sets">Disjoint sets<a class="anchor" aria-label="anchor" href="#disjoint-sets"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">disjoint_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">disjoint_sets</span>, 
-     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Tom"</span>, <span class="st">"Greg"</span>, <span class="st">"Alberta"</span><span class="op">)</span>,
-     edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">disjoint_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">disjoint_sets</span>, 
+     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Tom"</span>, <span class="st">"Greg"</span>, <span class="st">"Alberta"</span><span class="op">)</span>,
+     edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="a-set-contained-in-the-intersection-of-two-sets" class="section level3">
-<h3 class="hasAnchor">
-<a href="#a-set-contained-in-the-intersection-of-two-sets" class="anchor"></a>A set contained in the intersection of two sets</h3>
+<div class="section level3">
+<h3 id="a-set-contained-in-the-intersection-of-two-sets">A set contained in the intersection of two sets<a class="anchor" aria-label="anchor" href="#a-set-contained-in-the-intersection-of-two-sets"></a>
+</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">completely_contained</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">0</span>,
+<code class="sourceCode R"><span class="va">completely_contained</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">0</span>,
                                 <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>,
                                 <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">completely_contained</span>,
-     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"black"</span><span class="op">)</span><span class="op">)</span>,
-     edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"white"</span>, lex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
-     fills <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"cyan"</span>, <span class="st">"orange"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">completely_contained</span>,
+     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"black"</span><span class="op">)</span><span class="op">)</span>,
+     edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"white"</span>, lex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
+     fills <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"cyan"</span>, <span class="st">"orange"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="two-sets-intersecting-inside-a-third" class="section level3">
-<h3 class="hasAnchor">
-<a href="#two-sets-intersecting-inside-a-third" class="anchor"></a>Two sets intersecting inside a third</h3>
+<div class="section level3">
+<h3 id="two-sets-intersecting-inside-a-third">Two sets intersecting inside a third<a class="anchor" aria-label="anchor" href="#two-sets-intersecting-inside-a-third"></a>
+</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">intersecting_inside</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">0</span>,
+<code class="sourceCode R"><span class="va">intersecting_inside</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">0</span>,
                                <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>,
                                 <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">intersecting_inside</span>,
-     fills <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lavenderblush2"</span>, 
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">intersecting_inside</span>,
+     fills <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lavenderblush2"</span>, 
                            <span class="st">"lightblue2"</span>, 
                            <span class="st">"lightsalmon"</span>,
                            <span class="st">""</span>, 
                            <span class="st">""</span>, 
                            <span class="st">""</span>,
                            <span class="st">"plum2"</span><span class="op">)</span><span class="op">)</span>,
-     legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+     legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>side <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="difficult-set-for-circles" class="section level3">
-<h3 class="hasAnchor">
-<a href="#difficult-set-for-circles" class="anchor"></a>Difficult set (for circles!)</h3>
+<div class="section level3">
+<h3 id="difficult-set-for-circles">Difficult set (for circles!)<a class="anchor" aria-label="anchor" href="#difficult-set-for-circles"></a>
+</h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">one_contained</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">7</span>, B <span class="op">=</span> <span class="fl">6</span>, C <span class="op">=</span> <span class="fl">0</span>, 
+<code class="sourceCode R"><span class="va">one_contained</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">7</span>, B <span class="op">=</span> <span class="fl">6</span>, C <span class="op">=</span> <span class="fl">0</span>, 
                          <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">1</span>,
                          <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
                        shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">one_contained</span>,
-     quantities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"percent"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">one_contained</span>,
+     quantities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"percent"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="russian-doll" class="section level3">
-<h3 class="hasAnchor">
-<a href="#russian-doll" class="anchor"></a>Russian doll</h3>
+<div class="section level3">
+<h3 id="russian-doll">Russian doll<a class="anchor" aria-label="anchor" href="#russian-doll"></a>
+</h3>
 <p>Sets intersecting inside other sets. This example also exemplifies how the automatic label adjustment algorithm (borrowed from the excellent <strong>ggrepel</strong> package) works.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">russian_doll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">0</span>, C <span class="op">=</span> <span class="fl">0</span>, 
+<code class="sourceCode R"><span class="va">russian_doll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">0</span>, C <span class="op">=</span> <span class="fl">0</span>, 
                         <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>,
                         <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">russian_doll</span>,
-     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">russian_doll</span>,
+     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
        <span class="st">"A long and complicated\nlabel that is likely to have to be repelled"</span>,
        <span class="st">"Another, very\ntall label that\nprobably will intrude\ninto other\nlabels"</span>,
        <span class="st">"The spectacle before us\nwas indeed sublime"</span><span class="op">)</span>
      <span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="wilkinson-set-relationship" class="section level3">
-<h3 class="hasAnchor">
-<a href="#wilkinson-set-relationship" class="anchor"></a>Wilkinson set relationship</h3>
+<div class="section level3">
+<h3 id="wilkinson-set-relationship">Wilkinson set relationship<a class="anchor" aria-label="anchor" href="#wilkinson-set-relationship"></a>
+</h3>
 <p>This set relationship is taken from Wilkinson et al. It works best with ellipses.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wilkinson</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">4</span>, B <span class="op">=</span> <span class="fl">6</span>, C <span class="op">=</span> <span class="fl">3</span>, D <span class="op">=</span> <span class="fl">2</span>, E <span class="op">=</span> <span class="fl">7</span>, F <span class="op">=</span> <span class="fl">3</span>,
+<code class="sourceCode R"><span class="va">wilkinson</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">4</span>, B <span class="op">=</span> <span class="fl">6</span>, C <span class="op">=</span> <span class="fl">3</span>, D <span class="op">=</span> <span class="fl">2</span>, E <span class="op">=</span> <span class="fl">7</span>, F <span class="op">=</span> <span class="fl">3</span>,
                      <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,
                      <span class="st">"B&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,
                      <span class="st">"A&amp;B&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
                    shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">wilkinson</span>, 
-     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>fontfamily <span class="op">=</span> <span class="st">"serif"</span><span class="op">)</span>,
-     edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,
-     quantities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"percent"</span>, 
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">wilkinson</span>, 
+     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fontfamily <span class="op">=</span> <span class="st">"serif"</span><span class="op">)</span>,
+     edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lty <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,
+     quantities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"percent"</span>, 
                        font <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="gene-set" class="section level3">
-<h3 class="hasAnchor">
-<a href="#gene-set" class="anchor"></a>Gene set</h3>
+<div class="section level3">
+<h3 id="gene-set">Gene set<a class="anchor" aria-label="anchor" href="#gene-set"></a>
+</h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SE"</span> <span class="op">=</span> <span class="fl">13</span>, <span class="st">"Treat"</span> <span class="op">=</span> <span class="fl">28</span>, <span class="st">"Anti-CCP"</span> <span class="op">=</span> <span class="fl">101</span>, <span class="st">"DAS28"</span> <span class="op">=</span> <span class="fl">91</span>,
+<code class="sourceCode R"><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SE"</span> <span class="op">=</span> <span class="fl">13</span>, <span class="st">"Treat"</span> <span class="op">=</span> <span class="fl">28</span>, <span class="st">"Anti-CCP"</span> <span class="op">=</span> <span class="fl">101</span>, <span class="st">"DAS28"</span> <span class="op">=</span> <span class="fl">91</span>,
                  <span class="st">"SE&amp;Treat"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"SE&amp;DAS28"</span> <span class="op">=</span> <span class="fl">14</span>, <span class="st">"Treat&amp;Anti-CCP"</span> <span class="op">=</span> <span class="fl">6</span>,
                  <span class="st">"SE&amp;Anti-CCP&amp;DAS28"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">genes</span>,
-     quantities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"percent"</span>, <span class="st">"counts"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">genes</span>,
+     quantities <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"percent"</span>, <span class="st">"counts"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="three-sets-intersecting-inside-a-fourth" class="section level3">
-<h3 class="hasAnchor">
-<a href="#three-sets-intersecting-inside-a-fourth" class="anchor"></a>Three sets intersecting inside a fourth</h3>
+<div class="section level3">
+<h3 id="three-sets-intersecting-inside-a-fourth">Three sets intersecting inside a fourth<a class="anchor" aria-label="anchor" href="#three-sets-intersecting-inside-a-fourth"></a>
+</h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">three_inside_fourth</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">30</span>,
+<code class="sourceCode R"><span class="va">three_inside_fourth</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">30</span>,
                                <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"A&amp;D"</span> <span class="op">=</span> <span class="fl">3</span>,
                                <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;B&amp;D"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">2</span>,
                                <span class="st">"A&amp;B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">three_inside_fourth</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">three_inside_fourth</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="eulerape-combination" class="section level3">
-<h3 class="hasAnchor">
-<a href="#eulerape-combination" class="anchor"></a>eulerAPE combination</h3>
+<div class="section level3">
+<h3 id="eulerape-combination">eulerAPE combination<a class="anchor" aria-label="anchor" href="#eulerape-combination"></a>
+</h3>
 <p>A combination taken from the eulerAPE article.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">eulerape</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a"</span> <span class="op">=</span> <span class="fl">3491</span>, <span class="st">"b"</span> <span class="op">=</span> <span class="fl">3409</span>, <span class="st">"c"</span> <span class="op">=</span> <span class="fl">3503</span>,
+<code class="sourceCode R"><span class="va">eulerape</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span> <span class="op">=</span> <span class="fl">3491</span>, <span class="st">"b"</span> <span class="op">=</span> <span class="fl">3409</span>, <span class="st">"c"</span> <span class="op">=</span> <span class="fl">3503</span>,
                     <span class="st">"a&amp;b"</span> <span class="op">=</span> <span class="fl">120</span>, <span class="st">"a&amp;c"</span> <span class="op">=</span> <span class="fl">114</span>, <span class="st">"b&amp;c"</span> <span class="op">=</span> <span class="fl">132</span>,
                     <span class="st">"a&amp;b&amp;c"</span> <span class="op">=</span> <span class="fl">126</span><span class="op">)</span>,
                   shape <span class="op">=</span> <span class="st">"ellipse"</span>,
-                  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>extraopt <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">eulerape</span><span class="op">)</span></code></pre></div>
+                  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>extraopt <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eulerape</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="four-uniform-interactions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#four-uniform-interactions" class="anchor"></a>Four uniform interactions</h3>
+<div class="section level3">
+<h3 id="four-uniform-interactions">Four uniform interactions<a class="anchor" aria-label="anchor" href="#four-uniform-interactions"></a>
+</h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">uniform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"D"</span> <span class="op">=</span> <span class="fl">10</span>,
+<code class="sourceCode R"><span class="va">uniform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"D"</span> <span class="op">=</span> <span class="fl">10</span>,
                    <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"A&amp;D"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">3</span>,
                    <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"A&amp;B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"A&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,
                    <span class="st">"A&amp;B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">uniform</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Frodo"</span>, <span class="st">"Sam"</span>, <span class="st">"Merry"</span>, <span class="st">"Pippin"</span><span class="op">)</span>,
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">uniform</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Frodo"</span>, <span class="st">"Sam"</span>, <span class="st">"Merry"</span>, <span class="st">"Pippin"</span><span class="op">)</span>,
                             font <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,
                             col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,
-                            cex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, length.out <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+                            cex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, length.out <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="two-circles-intersecting-completely" class="section level3">
-<h3 class="hasAnchor">
-<a href="#two-circles-intersecting-completely" class="anchor"></a>Two circles intersecting completely</h3>
+<div class="section level3">
+<h3 id="two-circles-intersecting-completely">Two circles intersecting completely<a class="anchor" aria-label="anchor" href="#two-circles-intersecting-completely"></a>
+</h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">two_overlapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">two_overlapping</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">two_overlapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">two_overlapping</span><span class="op">)</span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -277,11 +273,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Johan Larsson.</p>
+  <p></p>
+<p>Developed by Johan Larsson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -289,6 +287,8 @@
 
   
 
+
+  
 
   </body>
 </html>
