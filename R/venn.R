@@ -78,6 +78,7 @@ venn.default <- function(combinations,
               type = "venn",
               input = input,
               shape = "ellipse",
+              loss = "sse",
               control = list(),
               ...)
 }

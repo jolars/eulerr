@@ -120,6 +120,16 @@ euler <- function(combinations, ...) UseMethod("euler")
 euler.default <- function(combinations,
                           input = c("disjoint", "union"),
                           shape = c("circle", "ellipse"),
+                          loss = c(
+                            "sum_sq",
+                            "sum_abs",
+                            "sum_rel",
+                            "max_sq",
+                            "max_abs",
+                            "max_rel",
+                            "diag_error"
+                          ),
+
                           control = list(),
                           ...)
 {
@@ -127,6 +137,7 @@ euler.default <- function(combinations,
               "euler",
               input,
               shape,
+              loss,
               control,
               ...)
 }

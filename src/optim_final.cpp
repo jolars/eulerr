@@ -120,16 +120,76 @@ intersect_ellipses(const std::vector<double>& par,
 double
 optim_final_loss(const std::vector<double>& par,
                  const std::vector<double>& areas,
-                 const bool circle)
+                 const bool circle,
+                 const std::string loss = "sse")
 {
   auto fit = intersect_ellipses(par, circle, false);
 
-  // return sums of squared errors
-  return std::inner_product(
-    fit.begin(),
-    fit.end(),
-    areas.begin(),
-    0.0,
-    std::plus<double>(),
-    [](double a, double b) { return (a - b) * (a - b); });
+  double obj{ 0 };
+
+  if (loss == "sum_sq") {
+    // sums of squared errors
+    obj =
+      std::inner_product(fit.begin(),
+                         fit.end(),
+                         areas.begin(),
+                         0.0,
+                         std::plus<double>(),
+                         [](double a, double b) { return (a - b) * (a - b); });
+  } else if (loss == "max_sq") {
+    obj = std::inner_product(
+      fit.begin(),
+      fit.end(),
+      areas.begin(),
+      0.0,
+      [](double a, double b) { return std::max(a, b); },
+      [](double a, double b) { return (a - b) * (a - b); });
+  } else if (loss == "sum_abs") {
+    obj =
+      std::inner_product(fit.begin(),
+                         fit.end(),
+                         areas.begin(),
+                         0.0,
+                         std::plus<double>(),
+                         [](double a, double b) { return std::abs(a - b); });
+  } else if (loss == "max_abs") {
+    obj = std::inner_product(
+      fit.begin(),
+      fit.end(),
+      areas.begin(),
+      0.0,
+      [](double a, double b) { return std::max(a, b); },
+      [](double a, double b) { return std::abs(a - b); });
+  } else if (loss == "sum_rel") {
+    obj = std::inner_product(
+      fit.begin(),
+      fit.end(),
+      areas.begin(),
+      0.0,
+      std::plus<double>(),
+      [](double a, double b) { return std::abs(a - b) / std::max(b, SMALL); });
+  } else if (loss == "max_rel") {
+    obj = std::inner_product(
+      fit.begin(),
+      fit.end(),
+      areas.begin(),
+      0.0,
+      [](double a, double b) { return std::max(a, b); },
+      [](double a, double b) { return std::abs(a - b) / std::max(b, SMALL); });
+  } else if (loss == "diag_error") {
+    double sum_fit   = std::accumulate(fit.begin(), fit.end(), 0.0);
+    double sum_areas = std::accumulate(areas.begin(), areas.end(), 0.0);
+
+    obj = std::inner_product(
+      fit.begin(),
+      fit.end(),
+      areas.begin(),
+      0.0,
+      [](double a, double b) { return std::max(a, b); },
+      [=](double a, double b) {
+        return std::abs(a / sum_fit - b / sum_areas);
+      });
+  }
+
+  return obj;
 }

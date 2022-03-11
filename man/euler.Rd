@@ -15,6 +15,7 @@ euler(combinations, ...)
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
+  loss = c("sse", "abs", "sse_max", "abs_max", "diag_error"),
   control = list(),
   ...
 )

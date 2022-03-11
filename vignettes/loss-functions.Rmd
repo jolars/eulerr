@@ -1,0 +1,41 @@
+---
+title: "loss-functions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{loss-functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(eulerr)
+```
+
+eulerr features multiples loss functions.
+
+```{r}
+library(eulerr)
+
+list_euler <- c(
+  "agc" = 9,
+  "camk" = 17,
+  "cmgc" = 16,
+  "tk" = 16,
+  "tkl" = 23,
+  "agc&camk" = 1,
+  "camk&tk" = 1,
+  "tk&tkl" = 1,
+  "camk&cmgc&tkl" = 1,
+  "camk&tk&tkl" = 2,
+  "agc&camk&tk&tkl" = 1,
+  "camk&cmgc&tk&tkl" = 3,
+  "agc&camk&cmgc&tk&tkl" = 1
+)
+```

@@ -65,8 +65,8 @@ intersect_ellipses <- function(par, circle, approx = FALSE) {
     .Call(`_eulerr_intersect_ellipses`, par, circle, approx)
 }
 
-optim_final_loss <- function(par, areas, circle) {
-    .Call(`_eulerr_optim_final_loss`, par, areas, circle)
+optim_final_loss <- function(par, areas, circle, loss = "sse") {
+    .Call(`_eulerr_optim_final_loss`, par, areas, circle, loss)
 }
 
 optim_init <- function(par, d, disjoint, subset) {
