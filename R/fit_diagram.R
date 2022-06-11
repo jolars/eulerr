@@ -2,12 +2,20 @@ fit_diagram <- function(combinations,
                         type = c("euler", "venn"),
                         input = c("disjoint", "union"),
                         shape = c("circle", "ellipse"),
+                        loss = c(
+                            "sum_sq",
+                            "sum_abs",
+                            "max_sq",
+                            "max_abs",
+                            "diag_error"
+                        ),
                         control = list(),
                         ...)
 {
   input <- match.arg(input)
   shape <- match.arg(shape)
   type <- match.arg(type)
+  loss <- match.arg(loss)
 
   n_restarts <- 10L # should this be made an argument?
   small <- sqrt(.Machine$double.eps)
@@ -133,12 +141,12 @@ fit_diagram <- function(combinations,
                                   USE.NAMES = FALSE)
 
       # Starting layout
-      loss <- Inf
+      obj <- Inf
       initial_layouts <- vector("list", n_restarts)
       bnd <- sqrt(sum(r^2*pi))
 
       i <- 1L
-      while (loss > small && i <= n_restarts) {
+      while (obj > small && i <= n_restarts) {
         initial_layouts[[i]] <- stats::nlm(
           f = optim_init,
           p = stats::runif(n*2, 0, bnd),
@@ -148,7 +156,7 @@ fit_diagram <- function(combinations,
           iterlim = 1000L,
           check.analyticals = FALSE
         )
-        loss <- initial_layouts[[i]]$minimum
+        obj <- initial_layouts[[i]]$minimum
         i <- i + 1L
       }
 
@@ -182,6 +190,7 @@ fit_diagram <- function(combinations,
                                  p = pars,
                                  areas = areas_disjoint,
                                  circle = circle,
+                                 loss = loss,
                                  iterlim = 1e6)$estimate
 
       tpar <- as.data.frame(matrix(
@@ -224,6 +233,7 @@ fit_diagram <- function(combinations,
           upper = constraints$upr,
           circle = circle,
           areas = areas_disjoint,
+          loss = loss,
           control = utils::modifyList(
             list(threshold.stop = sqrt(.Machine$double.eps),
                  max.call = 1e7,

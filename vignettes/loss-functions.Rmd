@@ -1,0 +1,108 @@
+---
+title: "loss-functions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{loss-functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+```
+
+eulerr features multiples loss functions, which result in different diagrams
+for many combinations. In this vignette, we visualize the effect of the loss
+function on an example from an issue [posted on the GitHub repository for
+eulerr](https://github.com/jolars/eulerr/issues/93).
+
+We list the combinations below, which consists of 5 different sets,
+*agc*, *camk*, *cmgc*, and *tk*.
+
+```{r}
+combos <- c(
+  "agc" = 9,
+  "camk" = 17,
+  "cmgc" = 16,
+  "tk" = 16,
+  "tkl" = 23,
+  "agc&camk" = 1,
+  "camk&tk" = 1,
+  "tk&tkl" = 1,
+  "camk&cmgc&tkl" = 1,
+  "camk&tk&tkl" = 2,
+  "agc&camk&tk&tkl" = 1,
+  "camk&cmgc&tk&tkl" = 3,
+  "agc&camk&cmgc&tk&tkl" = 1
+)
+```
+
+Notice that the sizes of most of the intersections are small compared to the
+size of the sets themselves and that many of the
+intersections are missing. Generating an exact Euler diagram that shows these
+intersections and at the same time omits the intersections that are here
+implicitly 0 is an impossible problem, which means that the best
+we can do is an approximation.
+
+What kind of approximation we get depends on the loss functions we use.
+If we use the default, which in **eulerr** is the sums of squared errors, we
+will almost certainly get a design in which the intersections involving many
+sets are missing since including them inevitably leads to larger errors from
+having to include other intersections that are not present.
+
+```{r fig.cap = "An Euler diagram fit to the combination given earlier on, showing that only 1-by-1 intersections are present. This fit uses the default loss function, the sum of squared errors."}
+library(eulerr)
+
+fit <- euler(combos)
+plot(fit)
+```
+
+If we rather want a diagram that includes these intersections, despite 
+leading to errors for the zero-intersections, then we need to switch the loss
+function we use. In **eulerr** there are currently five different
+loss metrics, which can be provided to the `loss` argument in `euler()`. 
+
+Table: Loss functions in **eulerr**
+
+Loss                    Input          Definition
+----------------------  ------------   -----------------------------
+Sum of squared errors   `sum_sq`       $\sum_i (y_i - \hat y_i)^2$
+Sum of absolute errors  `sum_abs`      $\sum_i |y_i - \hat y_i|$
+Maximum squared error   `max_sq`       $\max_i (y_i - \hat y_i)^2$
+Maximum absolute error  `max_sq`       $\max_i |y_i - \hat y_i|$
+diagError               `diag_error`   $\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|$
+
+To see what these different choices mean for the combination that we have
+looked at, we now refit the diagram for each combination.
+
+```{r fig.cap = "Euler diagrams fit to the combination above, using different loss function", fig.show = "hold"}
+metrics <- c(
+  "sum_sq",
+  "sum_abs",
+  "max_sq",
+  "max_abs",
+  "diag_error"
+)
+
+for (loss in metrics) {
+  fit <- euler(combos, loss = loss)
+  print(plot(fit, main = loss))
+}
+```
+
+As you can see, the errors that sum either the absolute or squared errors result
+in very similar fits and keep the existing two-set intersections and drop
+everything else. The `max_abs` and `max_sq` errors, meanwhile, produce
+fits that are much more unpredictable since they only care about the
+largest error. Finally, `diag_error` results in a diagram that tries to
+include many more intersections.
+
+Feel free to raise a request at <https://github.com/jolars/eulerr/issues>
+if you know of any other loss function that you think should be included
+in the package.

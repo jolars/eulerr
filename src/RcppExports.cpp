@@ -44,15 +44,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // optim_final_loss
-double optim_final_loss(const std::vector<double>& par, const std::vector<double>& areas, const bool circle);
-RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP) {
+double optim_final_loss(const std::vector<double>& par, const std::vector<double>& areas, const bool circle, const std::string loss);
+RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP, SEXP lossSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::vector<double>& >::type par(parSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle));
+    Rcpp::traits::input_parameter< const std::string >::type loss(lossSEXP);
+    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle, loss));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -110,7 +111,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_repel_boxes", (DL_FUNC) &_eulerr_repel_boxes, 9},
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
-    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 3},
+    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 4},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},
