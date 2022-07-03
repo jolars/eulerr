@@ -173,11 +173,10 @@ optim_final_loss(const std::vector<double>& par,
       fit.end(),
       areas.begin(),
       0.0,
-      [](double a, double b) { return std::sum(a, b); },
+      [](double a, double b) { return a + b; },
       [=](double a, double b) {
         return std::abs(a / sum_fit - b / sum_areas);
       });
-  } else {
   } else if (loss == "max_reg") {
     // diagError from EulerAPE
     double sum_fit   = std::accumulate(fit.begin(), fit.end(), 0.0);

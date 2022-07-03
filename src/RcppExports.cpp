@@ -30,6 +30,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// euler_diagram_cpp
+void euler_diagram_cpp(std::vector<std::string> combination_names, std::vector<double> combination_values);
+RcppExport SEXP _eulerr_euler_diagram_cpp(SEXP combination_namesSEXP, SEXP combination_valuesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type combination_names(combination_namesSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type combination_values(combination_valuesSEXP);
+    euler_diagram_cpp(combination_names, combination_values);
+    return R_NilValue;
+END_RCPP
+}
 // intersect_ellipses
 std::vector<double> intersect_ellipses(const std::vector<double>& par, const bool circle, const bool approx);
 RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP, SEXP approxSEXP) {
@@ -110,6 +121,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_repel_boxes", (DL_FUNC) &_eulerr_repel_boxes, 9},
+    {"_eulerr_euler_diagram_cpp", (DL_FUNC) &_eulerr_euler_diagram_cpp, 2},
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 4},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},

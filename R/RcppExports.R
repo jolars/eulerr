@@ -61,6 +61,10 @@ repel_boxes <- function(boxes, xlim, ylim, hjust, vjust, force_push = 1e-7, forc
     .Call(`_eulerr_repel_boxes`, boxes, xlim, ylim, hjust, vjust, force_push, force_pull, maxiter, direction)
 }
 
+euler_diagram_cpp <- function(combination_names, combination_values) {
+    invisible(.Call(`_eulerr_euler_diagram_cpp`, combination_names, combination_values))
+}
+
 intersect_ellipses <- function(par, circle, approx = FALSE) {
     .Call(`_eulerr_intersect_ellipses`, par, circle, approx)
 }
