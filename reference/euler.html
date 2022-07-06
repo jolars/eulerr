@@ -79,35 +79,35 @@ relationships. The shape of the diagram may be a circle or an ellipse.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">euler</span><span class="op">(</span>
-  <span class="va">combinations</span>,
-  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disjoint"</span>, <span class="st">"union"</span><span class="op">)</span>,
-  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"circle"</span>, <span class="st">"ellipse"</span><span class="op">)</span>,
-  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">euler</span><span class="op">(</span>
-  <span class="va">combinations</span>,
-  weights <span class="op">=</span> <span class="cn">NULL</span>,
-  by <span class="op">=</span> <span class="cn">NULL</span>,
-  sep <span class="op">=</span> <span class="st">"_"</span>,
-  factor_names <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for table</span>
-<span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for list</span>
-<span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">euler</span><span class="op">(</span></span>
+<span>  <span class="va">combinations</span>,</span>
+<span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disjoint"</span>, <span class="st">"union"</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"circle"</span>, <span class="st">"ellipse"</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">euler</span><span class="op">(</span></span>
+<span>  <span class="va">combinations</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sep <span class="op">=</span> <span class="st">"_"</span>,</span>
+<span>  factor_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for table</span></span>
+<span><span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for list</span></span>
+<span><span class="fu">euler</span><span class="op">(</span><span class="va">combinations</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -115,13 +115,21 @@ relationships. The shape of the diagram may be a circle or an ellipse.</p>
     <dl><dt>combinations</dt>
 <dd><p>set relationships as a named numeric vector, matrix, or
 data.frame (see <strong>methods (by class)</strong>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>arguments passed down to other methods</p></dd>
+
+
 <dt>input</dt>
 <dd><p>type of input: disjoint identities
 (<code>'disjoint'</code>) or unions (<code>'union'</code>).</p></dd>
+
+
 <dt>shape</dt>
 <dd><p>geometric shape used in the diagram</p></dd>
+
+
 <dt>control</dt>
 <dd><p>a list of control parameters.</p><ul><li><p><code>extraopt</code>: should the more thorough optimizer (currently
 <code><a href="https://rdrr.io/pkg/GenSA/man/GenSA.html" class="external-link">GenSA::GenSA()</a></code>) kick in (provided <code>extraopt_threshold</code> is exceeded)? The
@@ -134,38 +142,56 @@ that the extra optimizer will kick in if there is <em>any</em> error. A value of
 <li><p><code>extraopt_control</code>: a list of control parameters to pass to the
 extra optimizer, such as <code>max.call</code>. See <code><a href="https://rdrr.io/pkg/GenSA/man/GenSA.html" class="external-link">GenSA::GenSA()</a></code>.</p></li>
 </ul></dd>
+
+
 <dt>weights</dt>
 <dd><p>a numeric vector of weights of the same length as
 the number of rows in <code>combinations</code>.</p></dd>
+
+
 <dt>by</dt>
 <dd><p>a factor or character matrix to be used in <code><a href="https://rdrr.io/r/base/by.html" class="external-link">base::by()</a></code> to
 split the data.frame or matrix of set combinations</p></dd>
+
+
 <dt>sep</dt>
 <dd><p>a character to use to separate the dummy-coded factors
 if there are factor or character vectors in 'combinations'.</p></dd>
+
+
 <dt>factor_names</dt>
 <dd><p>whether to include factor names when
 constructing dummy codes</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list object of class <code>'euler'</code> with the following parameters.</p>
+    
+
+<p>A list object of class <code>'euler'</code> with the following parameters.</p>
 <dl><dt>ellipses</dt>
 <dd><p>a matrix of <code>h</code> and <code>k</code> (x and y-coordinates for the
 centers of the shapes), semiaxes <code>a</code> and <code>b</code>, and rotation angle <code>phi</code></p></dd>
+
 <dt>original.values</dt>
 <dd><p>set relationships in the input</p></dd>
+
 <dt>fitted.values</dt>
 <dd><p>set relationships in the solution</p></dd>
+
 <dt>residuals</dt>
 <dd><p>residuals</p></dd>
+
 <dt>regionError</dt>
 <dd><p>the difference in percentage points between each
 disjoint subset in the input and the respective area in the output</p></dd>
+
 <dt>diagError</dt>
 <dd><p>the largest <code>regionError</code></p></dd>
+
 <dt>stress</dt>
 <dd><p>normalized residual sums of squares</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -213,11 +239,11 @@ that set (with no duplicates). Vectors in the list must be named.</p></li>
     <p>Wilkinson L. Exact and Approximate Area-Proportional Circular
 Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
 Graphics (Internet). 2012 Feb (cited 2016 Apr 9);18(2):321-31. Available
-from: doi: <a href="https://doi.org/10.1109/TVCG.2011.56" class="external-link">10.1109/TVCG.2011.56</a></p>
+from: <a href="https://doi.org/10.1109/TVCG.2011.56" class="external-link">doi:10.1109/TVCG.2011.56</a></p>
 <p>Micallef L, Rodgers P. eulerAPE: Drawing Area-Proportional 3-Venn Diagrams
 Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 10);9(7):e101717. Available from:
-doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">10.1371/journal.pone.0101717</a></p>
+<a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">doi:10.1371/journal.pone.0101717</a></p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -226,12 +252,12 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Fit a diagram with circles</span></span>
-<span class="r-in"><span class="va">combo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">2</span>, B <span class="op">=</span> <span class="fl">2</span>, C <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu">euler</span><span class="op">(</span><span class="va">combo</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Investigate the fit</span></span>
-<span class="r-in"><span class="va">fit1</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Fit a diagram with circles</span></span></span>
+<span class="r-in"><span><span class="va">combo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">2</span>, B <span class="op">=</span> <span class="fl">2</span>, C <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu">euler</span><span class="op">(</span><span class="va">combo</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Investigate the fit</span></span></span>
+<span class="r-in"><span><span class="va">fit1</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A            2  2.076    -0.076       0.021</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> B            2  2.076    -0.076       0.021</span>
@@ -243,12 +269,12 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0.058 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0.049 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Refit using ellipses instead</span></span>
-<span class="r-in"><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu">euler</span><span class="op">(</span><span class="va">combo</span>, shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Investigate the fit again (which is now exact)</span></span>
-<span class="r-in"><span class="va">fit2</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Refit using ellipses instead</span></span></span>
+<span class="r-in"><span><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu">euler</span><span class="op">(</span><span class="va">combo</span>, shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Investigate the fit again (which is now exact)</span></span></span>
+<span class="r-in"><span><span class="va">fit2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A            2      2         0           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> B            2      2         0           0</span>
@@ -260,15 +286,15 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Plot it</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot it</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="euler-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># A set with no perfect solution</span></span>
-<span class="r-in"><span class="fu">euler</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span> <span class="op">=</span> <span class="fl">3491</span>, <span class="st">"b"</span> <span class="op">=</span> <span class="fl">3409</span>, <span class="st">"c"</span> <span class="op">=</span> <span class="fl">3503</span>,</span>
-<span class="r-in">        <span class="st">"a&amp;b"</span> <span class="op">=</span> <span class="fl">120</span>, <span class="st">"a&amp;c"</span> <span class="op">=</span> <span class="fl">114</span>, <span class="st">"b&amp;c"</span> <span class="op">=</span> <span class="fl">132</span>,</span>
-<span class="r-in">        <span class="st">"a&amp;b&amp;c"</span> <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># A set with no perfect solution</span></span></span>
+<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span> <span class="op">=</span> <span class="fl">3491</span>, <span class="st">"b"</span> <span class="op">=</span> <span class="fl">3409</span>, <span class="st">"c"</span> <span class="op">=</span> <span class="fl">3503</span>,</span></span>
+<span class="r-in"><span>        <span class="st">"a&amp;b"</span> <span class="op">=</span> <span class="fl">120</span>, <span class="st">"a&amp;c"</span> <span class="op">=</span> <span class="fl">114</span>, <span class="st">"b&amp;c"</span> <span class="op">=</span> <span class="fl">132</span>,</span></span>
+<span class="r-in"><span>        <span class="st">"a&amp;b&amp;c"</span> <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> a         3491   3491         0       0.001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> b         3409   3409         0       0.001</span>
@@ -280,10 +306,10 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0.005 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0 </span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Using grouping via the 'by' argument through the data.frame method</span></span>
-<span class="r-in"><span class="fu">euler</span><span class="op">(</span><span class="va">fruits</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">sex</span>, <span class="va">age</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using grouping via the 'by' argument through the data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="va">fruits</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">sex</span>, <span class="va">age</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> female.adult </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> banana                     1  0.937     0.063       0.009</span>
@@ -335,10 +361,10 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0 </span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Using the matrix method</span></span>
-<span class="r-in"><span class="fu">euler</span><span class="op">(</span><span class="va">organisms</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using the matrix method</span></span></span>
+<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="va">organisms</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal                               0  0.582    -0.582       0.086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mammal                               0  0.302    -0.302       0.044</span>
@@ -374,9 +400,9 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0.143 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0.352 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Using weights</span></span>
-<span class="r-in"><span class="fu">euler</span><span class="op">(</span><span class="va">organisms</span>, weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">9</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using weights</span></span></span>
+<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="va">organisms</span>, weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">9</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal                               0  0.789    -0.789       0.019</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mammal                               0  0.360    -0.360       0.009</span>
@@ -412,9 +438,9 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0.197 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0.1 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The table method</span></span>
-<span class="r-in"><span class="fu">euler</span><span class="op">(</span><span class="va">pain</span>, factor_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The table method</span></span></span>
+<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="va">pain</span>, factor_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          original  fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> widespread                    204 204.002    -0.002           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> regional                      229 229.002    -0.002           0</span>
@@ -426,9 +452,9 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># A euler diagram from a list of sample spaces (the list method)</span></span>
-<span class="r-in"><span class="fu">euler</span><span class="op">(</span><span class="va">plants</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"erigenia"</span>, <span class="st">"solanum"</span>, <span class="st">"cynodon"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># A euler diagram from a list of sample spaces (the list method)</span></span></span>
+<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="va">plants</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"erigenia"</span>, <span class="st">"solanum"</span>, <span class="st">"cynodon"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> erigenia                        0      0         0           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> solanum                        16     16         0           0</span>
@@ -454,7 +480,7 @@ doi: <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

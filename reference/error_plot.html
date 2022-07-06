@@ -81,13 +81,13 @@ which areas in the diagram to be skeptical about.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">error_plot</span><span class="op">(</span>
-  <span class="va">x</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"regionError"</span>, <span class="st">"residuals"</span><span class="op">)</span>,
-  quantities <span class="op">=</span> <span class="cn">TRUE</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">error_plot</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"regionError"</span>, <span class="st">"residuals"</span><span class="op">)</span>,</span>
+<span>  quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -95,21 +95,32 @@ which areas in the diagram to be skeptical about.</p>
     <dl><dt>x</dt>
 <dd><p>an object of class <code>euler</code>, typically the result of
 a call to <code><a href="euler.html">euler()</a></code>.</p></dd>
+
+
 <dt>type</dt>
 <dd><p>error metric. <code>'regionError'</code> is the difference in
 <em>percentage points</em> from the input</p></dd>
+
+
 <dt>quantities</dt>
 <dd><p>whether to draw the error metric on the plot</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>color palette for the fills in the legend</p></dd>
+
+
 <dt>...</dt>
 <dd><p>arguments passed down to <code><a href="plot.euler.html">plot.euler()</a></code>. Currently,
 providing <code>fills</code>, <code>legend</code>, or <code>strips</code> are not allowed and
 will return a warning.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns an object of class <code>eulergram</code>, which will be
+    
+
+<p>Returns an object of class <code>eulergram</code>, which will be
 plotted on the device in the same manner as objects from
 <code><a href="plot.euler.html">plot.euler()</a></code>. See <code><a href="plot.eulergram.html">plot.eulergram()</a></code> for details.</p>
     </div>
@@ -129,7 +140,7 @@ is completely turned off.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">error_plot</span><span class="op">(</span><span class="fu"><a href="euler.html">euler</a></span><span class="op">(</span><span class="va">organisms</span><span class="op">)</span>, quantities <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">error_plot</span><span class="op">(</span><span class="fu"><a href="euler.html">euler</a></span><span class="op">(</span><span class="va">organisms</span><span class="op">)</span>, quantities <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="error_plot-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -145,7 +156,7 @@ is completely turned off.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

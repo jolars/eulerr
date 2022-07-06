@@ -97,7 +97,6 @@
 <div class="page-header"><h1 id="eulerr">eulerr<a class="anchor" aria-label="anchor" href="#eulerr"></a>
 </h1></div>
 <!-- badges: start -->
-
 <p><strong>eulerr</strong> generates area-proportional Euler diagrams that display set relationships (intersections, unions, and disjoints) with circles or ellipses. <a href="https://en.wikipedia.org/wiki/Euler_diagram" class="external-link">Euler diagrams</a> are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, <strong>eulerr</strong> sometimes produces Venn diagrams and sometimes not.</p>
 <p>With three or more sets intersecting, exact Euler diagrams are often impossible. For such cases <strong>eulerr</strong> attempts to provide a good approximation by numerically tuning the parameters of the ellipses or circles to minimize the error in the resulting diagram. Residuals and goodness of fit statistics are provided to assess whether the resulting diagram can be trusted.</p>
 <div class="section level2">
@@ -107,13 +106,13 @@
 <h3 id="cran-version">CRAN version<a class="anchor" aria-label="anchor" href="#cran-version"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"eulerr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"eulerr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jolars/eulerr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jolars/eulerr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
@@ -125,22 +124,22 @@
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span>
-<span class="co"># From Wilkinson 2012</span>
-<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">4</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">6</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"D"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"E"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"F"</span> <span class="op">=</span> <span class="fl">3</span>,
-               <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,
-               <span class="st">"B&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,
-               <span class="st">"A&amp;B&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
-             shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
+<span><span class="co"># From Wilkinson 2012</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">4</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">6</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"D"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"E"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"F"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>               <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>               <span class="st">"B&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>               <span class="st">"A&amp;B&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>             shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span></code></pre></div>
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit</span><span class="op">$</span><span class="va">stress</span>
-<span class="co">#&gt; [1] 6.27447e-14</span>
-<span class="va">fit</span><span class="op">$</span><span class="va">diagError</span>
-<span class="co">#&gt; [1] 4.418069e-08</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">stress</span></span>
+<span><span class="co">#&gt; [1] 6.27447e-14</span></span>
+<span><span class="va">fit</span><span class="op">$</span><span class="va">diagError</span></span>
+<span><span class="co">#&gt; [1] 4.418069e-08</span></span></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot_method-1.png"><!-- --></p>
 <p>Please see <a href="https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html" class="external-link">the introductory vignette</a> for a brief introduction or <a href="https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html" class="external-link"><em>eulerr under the hood</em></a> for details.</p>
 </div>
@@ -200,14 +199,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/jolars/eulerr/actions" class="external-link"><img src="https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://app.codecov.io/gh/jolars/eulerr" class="external-link"><img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
-<li><a href="https://cran.r-project.org/package=eulerr" class="external-link"><img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge"></a></li>
-</ul>
-</div>
+
 
   </div>
 </div>
@@ -220,7 +212,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

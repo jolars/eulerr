@@ -79,25 +79,34 @@ and the fitted values as well as <code>diagError</code> and <code>stress</code> 
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for euler</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, round <span class="op">=</span> <span class="fl">3</span>, vsep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/strrep.html" class="external-link">strrep</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="fl">0.75</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"width"</span><span class="op">)</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for euler</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, round <span class="op">=</span> <span class="fl">3</span>, vsep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/strrep.html" class="external-link">strrep</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="fl">0.75</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"width"</span><span class="op">)</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p><code>'euler'</code> object from <code><a href="euler.html">euler()</a></code></p></dd>
+
+
 <dt>round</dt>
 <dd><p>number of decimal places to round to</p></dd>
+
+
 <dt>vsep</dt>
 <dd><p>character string to paste in between <code>euler</code> objects
 when <code>x</code> is a nested <code>euler</code> object</p></dd>
+
+
 <dt>...</dt>
 <dd><p>arguments passed to <code><a href="https://rdrr.io/r/base/print.dataframe.html" class="external-link">base::print.data.frame()</a></code></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Summary statistics of the fitted Euler diagram are printed to
+    
+
+<p>Summary statistics of the fitted Euler diagram are printed to
 screen.</p>
     </div>
     <div id="see-also">
@@ -107,7 +116,7 @@ screen.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="euler.html">euler</a></span><span class="op">(</span><span class="va">organisms</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="euler.html">euler</a></span><span class="op">(</span><span class="va">organisms</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal                               0  0.582    -0.582       0.086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mammal                               0  0.302    -0.302       0.044</span>
@@ -157,7 +166,7 @@ screen.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

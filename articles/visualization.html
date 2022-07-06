@@ -93,7 +93,7 @@
       <h1 data-toc-skip>Visualizing Euler diagrams with eulerr</h1>
                         <h4 data-toc-skip class="author">Johan Larsson</h4>
             
-            <h4 data-toc-skip class="date">2022-03-11</h4>
+            <h4 data-toc-skip class="date">2022-07-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/HEAD/vignettes/visualization.Rmd" class="external-link"><code>vignettes/visualization.Rmd</code></a></small>
       <div class="hidden name"><code>visualization.Rmd</code></div>
@@ -136,12 +136,12 @@ k + b \sin{\theta}
 <p>The issue with color, however, is that it cannot be perceived perfectly by all. Eight percent of men and 0.4% of women in European Caucasian countries, for instance, suffer the most common form, red–green color deficiency. Moreover, color is often printed at a premium in scientific publications and adds no utility to a diagram of two shapes.</p>
 <p>For these reasons, <strong>eulerr</strong> defaults to distinguishing ellipses with color using a manually tuned color palette.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span>
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span>, D <span class="op">=</span> <span class="fl">1</span>, E <span class="op">=</span> <span class="fl">1</span>, F <span class="op">=</span> <span class="fl">1</span>, G <span class="op">=</span> <span class="fl">1</span>, H <span class="op">=</span> <span class="fl">1</span>,
-         <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">0.2</span>,
-         <span class="st">"F&amp;G"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"G&amp;H"</span> <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span>, D <span class="op">=</span> <span class="fl">1</span>, E <span class="op">=</span> <span class="fl">1</span>, F <span class="op">=</span> <span class="fl">1</span>, G <span class="op">=</span> <span class="fl">1</span>, H <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>         <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>         <span class="st">"F&amp;G"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"G&amp;H"</span> <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="visualization_files/figure-html/colorexamle-1.png" alt="The eight first colors of the default color palette" width="700"><p class="caption">
 The eight first colors of the default color palette
@@ -193,7 +193,7 @@ The eight first colors of the default color palette
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>
