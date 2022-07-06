@@ -44,7 +44,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // optim_final_loss
-double optim_final_loss(const std::vector<double>& par, const std::vector<double>& areas, const bool circle, const std::string loss);
+double optim_final_loss(const std::vector<double>& par, const std::vector<double>& areas, const bool circle, const std::string& loss);
 RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP, SEXP lossSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -52,7 +52,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const std::vector<double>& >::type par(parSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type areas(areasSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
-    Rcpp::traits::input_parameter< const std::string >::type loss(lossSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type loss(lossSEXP);
     rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle, loss));
     return rcpp_result_gen;
 END_RCPP

@@ -121,7 +121,7 @@ double
 optim_final_loss(const std::vector<double>& par,
                  const std::vector<double>& areas,
                  const bool circle,
-                 const std::string loss = "sse")
+                 const std::string& loss = "sum_sq")
 {
   auto fit = intersect_ellipses(par, circle, false);
 
@@ -168,16 +168,14 @@ optim_final_loss(const std::vector<double>& par,
     double sum_fit   = std::accumulate(fit.begin(), fit.end(), 0.0);
     double sum_areas = std::accumulate(areas.begin(), areas.end(), 0.0);
 
-    obj = std::inner_product(
-      fit.begin(),
-      fit.end(),
-      areas.begin(),
-      0.0,
-      [](double a, double b) { return std::sum(a, b); },
-      [=](double a, double b) {
-        return std::abs(a / sum_fit - b / sum_areas);
-      });
-  } else {
+    obj = std::inner_product(fit.begin(),
+                             fit.end(),
+                             areas.begin(),
+                             0.0,
+                             std::plus<double>(),
+                             [=](double a, double b) {
+                               return std::abs(a / sum_fit - b / sum_areas);
+                             });
   } else if (loss == "max_reg") {
     // diagError from EulerAPE
     double sum_fit   = std::accumulate(fit.begin(), fit.end(), 0.0);

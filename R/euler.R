@@ -13,9 +13,10 @@
 #' }{
 #'   \sum (A_i - \omega_i)^2,
 #' }
-#' where \eqn{\omega_i} the size of the ith disjoint subset, and \eqn{A_i} the
-#' corresponding area in the diagram, that is, the unique contribution to the
-#' total area from this overlap.
+#' by default, where \eqn{\omega_i} the size of the ith disjoint subset, and
+#' \eqn{A_i} the corresponding area in the diagram, that is, the unique
+#' contribution to the total area from this overlap. The loss function
+#' can, however, be controlled via the `loss` argument.
 #'
 #' [euler()] also returns `stress` (from \pkg{venneuler}), as well as
 #' `diagError`, and `regionError` from \pkg{eulerAPE}.
@@ -51,6 +52,12 @@
 #' @param input type of input: disjoint identities
 #'   (`'disjoint'`) or unions (`'union'`).
 #' @param shape geometric shape used in the diagram
+#' @param loss type of loss to minimize over. Losses starting with `sum` and
+#'   `max` minimize over the sum and max of the type of loss. Losses ending
+#'   with `sq` minimize the squares of the difference between the input and
+#'   the result in the diagram. Losses ending with `abs` minimize the
+#'   absolute value of the difference. Losses ending with `reg` minimize the
+# "   `regionError` metric, which is de
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the more thorough optimizer (currently
 #'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
@@ -95,9 +102,11 @@
 #' plot(fit2)
 #'
 #' # A set with no perfect solution
-#' euler(c("a" = 3491, "b" = 3409, "c" = 3503,
-#'         "a&b" = 120, "a&c" = 114, "b&c" = 132,
-#'         "a&b&c" = 50))
+#' euler(c(
+#'   "a" = 3491, "b" = 3409, "c" = 3503,
+#'   "a&b" = 120, "a&c" = 114, "b&c" = 132,
+#'   "a&b&c" = 50
+#' ))
 #'
 #' @references Wilkinson L. Exact and Approximate Area-Proportional Circular
 #'   Venn and Euler Diagrams. IEEE Transactions on Visualization and Computer
@@ -123,20 +132,24 @@ euler.default <- function(combinations,
                           loss = c(
                             "sum_sq",
                             "sum_abs",
+                            "sum_reg",
                             "max_sq",
                             "max_abs",
-                            "diag_error"
+                            "max_reg"
                           ),
                           control = list(),
-                          ...)
-{
-  fit_diagram(combinations,
-              "euler",
-              input,
-              shape,
-              loss,
-              control,
-              ...)
+                          ...) {
+  loss <- match.arg(loss)
+
+  fit_diagram(
+    combinations,
+    "euler",
+    input,
+    shape,
+    loss,
+    control,
+    ...
+  )
 }
 
 #' @describeIn euler a `data.frame` of logicals, binary integers, or
@@ -158,17 +171,18 @@ euler.data.frame <- function(combinations,
                              by = NULL,
                              sep = "_",
                              factor_names = TRUE,
-                             ...)
-{
+                             ...) {
   by <- substitute(by)
   facs <- eval(by, combinations)
 
-  combinations <- parse_dataframe(combinations,
-                                  weights,
-                                  by,
-                                  facs,
-                                  sep,
-                                  factor_names)
+  combinations <- parse_dataframe(
+    combinations,
+    weights,
+    by,
+    facs,
+    sep,
+    factor_names
+  )
 
   if (is.list(combinations)) {
     out <- lapply(combinations, euler, ...)
@@ -192,8 +206,7 @@ euler.data.frame <- function(combinations,
 #'
 #' # Using weights
 #' euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
-euler.matrix <- function(combinations, ...)
-{
+euler.matrix <- function(combinations, ...) {
   euler(as.data.frame(combinations), ...)
 }
 
@@ -204,8 +217,7 @@ euler.matrix <- function(combinations, ...)
 #'
 #' # The table method
 #' euler(pain, factor_names = FALSE)
-euler.table <- function(combinations, ...)
-{
+euler.table <- function(combinations, ...) {
   x <- as.data.frame(combinations)
   euler(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
 }
@@ -217,8 +229,7 @@ euler.table <- function(combinations, ...)
 #'
 #' # A euler diagram from a list of sample spaces (the list method)
 #' euler(plants[c("erigenia", "solanum", "cynodon")])
-euler.list <- function(combinations, ...)
-{
+euler.list <- function(combinations, ...) {
   out <- parse_list(combinations)
   euler(out, input = "union", ...)
 }

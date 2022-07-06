@@ -7,15 +7,16 @@
 #'   named numeric vector.
 #' @keywords internal
 tally_combinations <- function(sets, weights) {
-  if (!is.matrix(sets))
+  if (!is.matrix(sets)) {
     sets <- as.matrix(sets)
+  }
 
   id <- bit_indexr(NCOL(sets))
   tally <- double(NROW(id))
 
   for (i in seq_len(NROW(id))) {
     tally[i] <-
-      sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets))*weights)
+      sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets)) * weights)
     names(tally)[i] <- paste0(colnames(sets)[id[i, ]], collapse = "&")
   }
   tally
@@ -30,7 +31,7 @@ tally_combinations <- function(sets, weights) {
 #' @return Rescaled vector
 #' @keywords internal
 rescale <- function(x, new_min, new_max) {
-  (new_max - new_min)/(max(x) - min(x))*(x - max(x)) + new_max
+  (new_max - new_min) / (max(x) - min(x)) * (x - max(x)) + new_max
 }
 
 #' Update list with input
@@ -45,12 +46,15 @@ rescale <- function(x, new_min, new_max) {
 #' @return Returns an updated list.
 #' @keywords internal
 update_list <- function(old, new) {
-  if (is.null(old))
+  if (is.null(old)) {
     old <- list()
-  if (!is.list(new))
+  }
+  if (!is.list(new)) {
     tryCatch(new <- as.list(new))
-  if (!is.list(old))
+  }
+  if (!is.list(old)) {
     tryCatch(old <- as.list(old))
+  }
   utils::modifyList(old, new)
 }
 
@@ -84,8 +88,7 @@ is_false <- function(x) {
 #'
 #' @return TRUE of FALSE.
 #' @keywords internal
-is_integer <- function(x, tol = .Machine$double.eps^0.5)
-{
+is_integer <- function(x, tol = .Machine$double.eps^0.5) {
   all(abs(x - round(x)) < tol)
 }
 
@@ -121,7 +124,7 @@ bit_indexr <- function(n) {
 #' @return regionError
 #' @keywords internal
 regionError <- function(fit, orig) {
-  abs(fit/sum(fit) - orig/sum(orig))
+  abs(fit / sum(fit) - orig / sum(orig))
 }
 
 #' diagError
@@ -133,10 +136,10 @@ regionError <- function(fit, orig) {
 #' @return diagError
 #' @keywords internal
 diagError <- function(fit, orig, regionError = NULL) {
-  if(!is.null(regionError)) {
+  if (!is.null(regionError)) {
     max(regionError)
   } else {
-    max(abs(fit/sum(fit) - orig/sum(orig)))
+    max(abs(fit / sum(fit) - orig / sum(orig)))
   }
 }
 
@@ -159,34 +162,34 @@ n_sets <- function(combinations) {
 #' @return A list of lower and upper constraints
 #' @keywords internal
 get_constraints <- function(newpars) {
-  h   <- newpars[, 1L]
-  k   <- newpars[, 2L]
-  a   <- newpars[, 3L]
-  b   <- newpars[, 4L]
+  h <- newpars[, 1L]
+  k <- newpars[, 2L]
+  a <- newpars[, 3L]
+  b <- newpars[, 4L]
   phi <- newpars[, 5L]
 
   n <- length(h)
 
-  xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
-  ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+  xlim <- sqrt(a^2 * cos(phi)^2 + b^2 * sin(phi)^2)
+  ylim <- sqrt(a^2 * sin(phi)^2 + b^2 * cos(phi)^2)
   xbnd <- range(xlim + h, -xlim + h)
   ybnd <- range(ylim + k, -ylim + k)
 
-  lwr <- upr <- double(5L*n)
+  lwr <- upr <- double(5L * n)
 
   for (i in seq_along(h)) {
-    ii <- 5L*(i - 1L)
+    ii <- 5L * (i - 1L)
 
     lwr[ii + 1L] <- xbnd[1L]
     lwr[ii + 2L] <- ybnd[1L]
-    lwr[ii + 3L] <- a[i]/3
-    lwr[ii + 4L] <- b[i]/3
+    lwr[ii + 3L] <- a[i] / 3
+    lwr[ii + 4L] <- b[i] / 3
     lwr[ii + 5L] <- 0
 
     upr[ii + 1L] <- xbnd[2L]
     upr[ii + 2L] <- ybnd[2L]
-    upr[ii + 3L] <- a[i]*3
-    upr[ii + 4L] <- b[i]*3
+    upr[ii + 3L] <- a[i] * 3
+    upr[ii + 4L] <- b[i] * 3
     upr[ii + 5L] <- pi
   }
   list(lwr = lwr, upr = upr)
@@ -199,7 +202,7 @@ get_constraints <- function(newpars) {
 #' @return A normalized angle.
 #' @keywords internal
 normalize_angle <- function(x) {
-  a <- (x + pi) %% (2*pi)
+  a <- (x + pi) %% (2 * pi)
   ifelse(a >= 0, a - pi, a + pi)
 }
 
@@ -287,21 +290,26 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
   if (isTRUE(factor_names)) {
     for (i in seq_along(dummy_names)) {
       dummy_names[[i]] <- paste(names(dummy_levels)[i],
-                                dummy_levels[[i]],
-                                sep = sep)
+        dummy_levels[[i]],
+        sep = sep
+      )
     }
   }
 
   dummy_names <- unlist(dummy_names)
 
-  if (any(duplicated(dummy_names)))
-    stop(paste("duplicated names for dummy coded factors were generated;",
-               "please consider specifying 'factor_names = TRUE'."))
+  if (any(duplicated(dummy_names))) {
+    stop(paste(
+      "duplicated names for dummy coded factors were generated;",
+      "please consider specifying 'factor_names = TRUE'."
+    ))
+  }
 
   out <- matrix(FALSE,
-                nrow(x),
-                n_levels_tot,
-                dimnames = list(NULL, dummy_names))
+    nrow(x),
+    n_levels_tot,
+    dimnames = list(NULL, dummy_names)
+  )
 
   k <- 1
 
@@ -324,15 +332,24 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
 #' @return Stress metric.
 #'
 #' @keywords internal
-stress <- function(orig, fit)
-{
+stress <- function(orig, fit) {
   sst <- sum(fit^2)
-  slope <- sum(orig*fit)/sum(orig^2)
-  sse   <- sum((fit - orig*slope)^2)
-  sse/sst
+  slope <- sum(orig * fit) / sum(orig^2)
+  sse <- sum((fit - orig * slope)^2)
+  sse / sst
 }
-
 
 nonzero_fit <- function(x) {
   abs(x) / sum(abs(x) + .Machine$double.eps) > 1e-4
+}
+
+make_symmetric <- function(m, from = c("lower", "upper")) {
+  from <- match.arg(from)
+  if (from == "lower") {
+    m[upper.tri(m)] <- t(m)[upper.tri(m)]
+  } else {
+    m[lower.tri(m)] <- t(m)[lower.tri(m)]
+  }
+
+  m
 }
