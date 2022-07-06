@@ -27,18 +27,18 @@ We list the combinations below, which consists of 5 different sets,
 
 ```{r}
 combos <- c(
-  "agc" = 9,
-  "camk" = 17,
-  "cmgc" = 16,
-  "tk" = 16,
-  "tkl" = 23,
-  "agc&camk" = 1,
-  "camk&tk" = 1,
-  "tk&tkl" = 1,
-  "camk&cmgc&tkl" = 1,
-  "camk&tk&tkl" = 2,
-  "agc&camk&tk&tkl" = 1,
-  "camk&cmgc&tk&tkl" = 3,
+  "agc"                  = 9,
+  "camk"                 = 17,
+  "cmgc"                 = 16,
+  "tk"                   = 16,
+  "tkl"                  = 23,
+  "agc&camk"             = 1,
+  "camk&tk"              = 1,
+  "tk&tkl"               = 1,
+  "camk&cmgc&tkl"        = 1,
+  "camk&tk&tkl"          = 2,
+  "agc&camk&tk&tkl"      = 1,
+  "camk&cmgc&tk&tkl"     = 3,
   "agc&camk&cmgc&tk&tkl" = 1
 )
 ```
@@ -70,13 +70,14 @@ loss metrics, which can be provided to the `loss` argument in `euler()`.
 
 Table: Loss functions in **eulerr**
 
-Loss                    Input          Definition
-----------------------  ------------   -----------------------------
-Sum of squared errors   `sum_sq`       $\sum_i (y_i - \hat y_i)^2$
-Sum of absolute errors  `sum_abs`      $\sum_i |y_i - \hat y_i|$
-Maximum squared error   `max_sq`       $\max_i (y_i - \hat y_i)^2$
-Maximum absolute error  `max_sq`       $\max_i |y_i - \hat y_i|$
-diagError               `diag_error`   $\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|$
+Loss                              Input          Definition
+----------------------            ------------   -----------------------------
+Sum of squared errors             `sum_sq`       $\sum_i (y_i - \hat y_i)^2$
+Sum of absolute errors            `sum_abs`      $\sum_i |y_i - \hat y_i|$
+Sum of regionErrors               `sum_reg`      $\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|$
+Maximum squared error             `max_sq`       $\max_i (y_i - \hat y_i)^2$
+Maximum absolute error            `max_sq`       $\max_i |y_i - \hat y_i|$
+Maximum regionError (diagError)   `sum_reg`      $\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|$
 
 To see what these different choices mean for the combination that we have
 looked at, we now refit the diagram for each combination.
@@ -85,9 +86,10 @@ looked at, we now refit the diagram for each combination.
 metrics <- c(
   "sum_sq",
   "sum_abs",
+  "sum_reg",
   "max_sq",
   "max_abs",
-  "diag_error"
+  "max_reg"
 )
 
 for (loss in metrics) {
@@ -96,12 +98,12 @@ for (loss in metrics) {
 }
 ```
 
-As you can see, the errors that sum either the absolute or squared errors result
-in very similar fits and keep the existing two-set intersections and drop
-everything else. The `max_abs` and `max_sq` errors, meanwhile, produce
-fits that are much more unpredictable since they only care about the
-largest error. Finally, `diag_error` results in a diagram that tries to
-include many more intersections.
+As you can see, the errors that sum either the absolute or squared errors
+result in very similar fits and keep the existing two-set intersections and
+drop everything else. The `max_abs` and `max_sq` errors, meanwhile, produce
+fits that are much more unpredictable since they only care about the largest
+error. Finally, `max/sum_reg` results diagrams that tries to include many more
+intersections.
 
 Feel free to raise a request at <https://github.com/jolars/eulerr/issues>
 if you know of any other loss function that you think should be included

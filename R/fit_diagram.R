@@ -3,15 +3,15 @@ fit_diagram <- function(combinations,
                         input = c("disjoint", "union"),
                         shape = c("circle", "ellipse"),
                         loss = c(
-                            "sum_sq",
-                            "sum_abs",
-                            "max_sq",
-                            "max_abs",
-                            "diag_error"
+                          "sum_sq",
+                          "sum_abs",
+                          "sum_reg",
+                          "max_sq",
+                          "max_abs",
+                          "max_reg"
                         ),
                         control = list(),
-                        ...)
-{
+                        ...) {
   input <- match.arg(input)
   shape <- match.arg(shape)
   type <- match.arg(type)
@@ -20,17 +20,21 @@ fit_diagram <- function(combinations,
   n_restarts <- 10L # should this be made an argument?
   small <- sqrt(.Machine$double.eps)
 
-  if (!is.numeric(combinations))
+  if (!is.numeric(combinations)) {
     stop("`combinations` must be numeric")
+  }
 
-  if (any(combinations < 0))
+  if (any(combinations < 0)) {
     stop("values in `combinations` cannot be negative")
+  }
 
-  if (is.null(attr(combinations, "names")) || any(names(combinations) == ""))
+  if (is.null(attr(combinations, "names")) || any(names(combinations) == "")) {
     stop("every element in `combinations` needs to be named")
+  }
 
-  if (any(duplicated(names(combinations))))
+  if (any(duplicated(names(combinations)))) {
     stop("names of elements in `combinations` cannot be duplicated")
+  }
 
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_names, use.names = FALSE))
@@ -65,8 +69,9 @@ fit_diagram <- function(combinations,
       prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
       areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
     }
-    if (any(areas_disjoint < 0))
+    if (any(areas_disjoint < 0)) {
       stop("Check your set configuration. Some disjoint areas are negative.")
+    }
   }
 
   # setup return values
@@ -82,10 +87,13 @@ fit_diagram <- function(combinations,
 
     orig[] <- areas_disjoint
 
-    out <- structure(list(ellipses = fpar,
-                          original.values = orig,
-                          fitted.values = rep(1, length(orig))),
-                     class = c("venn", "euler", "list"))
+    out <- structure(list(
+      ellipses = fpar,
+      original.values = orig,
+      fitted.values = rep(1, length(orig))
+    ),
+    class = c("venn", "euler", "list")
+    )
     return(out)
   }
 
@@ -108,10 +116,13 @@ fit_diagram <- function(combinations,
   areas_disjoint <- areas_disjoint[!empty_subsets]
 
   control <- utils::modifyList(
-    list(extraopt = (n == 3) && (match.arg(shape) == "ellipse"),
-         extraopt_threshold = 0.001,
-         extraopt_control = list()),
-    control)
+    list(
+      extraopt = (n == 3) && (match.arg(shape) == "ellipse"),
+      extraopt_threshold = 0.001,
+      extraopt_control = list()
+    ),
+    control
+  )
 
   if (n > 1L) {
     if (all(areas == 0)) {
@@ -122,7 +133,7 @@ fit_diagram <- function(combinations,
       ones <- id_sums == 1L
       twos <- id_sums == 2L
       two <- choose_two(1:n)
-      r <- sqrt(areas[ones]/pi)
+      r <- sqrt(areas[ones] / pi)
 
       # Establish identities of disjoint and subset sets
       subset <- disjoint <- matrix(FALSE, ncol = n, nrow = n)
@@ -135,21 +146,25 @@ fit_diagram <- function(combinations,
       subset[lwrtri] <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
       disjoint[lwrtri] <- areas[twos] == 0
       distances[lwrtri] <- mapply(separate_two_discs,
-                                  r1 = r[two[, 1L]],
-                                  r2 = r[two[, 2L]],
-                                  overlap = areas[twos],
-                                  USE.NAMES = FALSE)
+        r1 = r[two[, 1L]],
+        r2 = r[two[, 2L]],
+        overlap = areas[twos],
+        USE.NAMES = FALSE
+      )
+      subset <- make_symmetric(subset)
+      disjoint <- make_symmetric(disjoint)
+      distances <- make_symmetric(distances)
 
       # Starting layout
       obj <- Inf
       initial_layouts <- vector("list", n_restarts)
-      bnd <- sqrt(sum(r^2*pi))
+      bnd <- sqrt(sum(r^2 * pi))
 
       i <- 1L
       while (obj > small && i <= n_restarts) {
         initial_layouts[[i]] <- stats::nlm(
           f = optim_init,
-          p = stats::runif(n*2, 0, bnd),
+          p = stats::runif(n * 2, 0, bnd),
           d = distances,
           disjoint = disjoint,
           subset = subset,
@@ -161,9 +176,11 @@ fit_diagram <- function(combinations,
       }
 
       # Find the best initial layout
-      best_init <- which.min(lapply(initial_layouts[1L:(i - 1L)],
-                                    "[[",
-                                    "minimum"))
+      best_init <- which.min(lapply(
+        initial_layouts[1L:(i - 1L)],
+        "[[",
+        "minimum"
+      ))
       initial_layout <- initial_layouts[[best_init]]
 
       # Final layout
@@ -171,40 +188,50 @@ fit_diagram <- function(combinations,
 
       if (circle) {
         pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L,
-                                 byrow = TRUE))
+          byrow = TRUE
+        ))
         lwr <- rep.int(0, 3L)
         upr <- rep.int(bnd, 3L)
       } else {
         pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L,
-                                       byrow = TRUE),
-                                r, r, 0, deparse.level = 0L))
-        lwr <- c(rep.int(0, 4L), -2*pi)
-        upr <- c(rep.int(bnd, 4L), 2*pi)
+          byrow = TRUE
+        ),
+        r, r, 0,
+        deparse.level = 0L
+        ))
+        lwr <- c(rep.int(0, 4L), -2 * pi)
+        upr <- c(rep.int(bnd, 4L), 2 * pi)
       }
 
       orig[!empty_subsets] <- areas_disjoint
 
       # Try to find a solution using nlm() first (faster)
       # TODO: Allow user options here?
-      nlm_solution <- stats::nlm(f = optim_final_loss,
-                                 p = pars,
-                                 areas = areas_disjoint,
-                                 circle = circle,
-                                 loss = loss,
-                                 iterlim = 1e6)$estimate
+      nlm_solution <- stats::nlm(
+        f = optim_final_loss,
+        p = pars,
+        areas = areas_disjoint,
+        circle = circle,
+        loss = loss,
+        iterlim = 1e6
+      )$estimate
 
       tpar <- as.data.frame(matrix(
         data = nlm_solution,
         ncol = if (circle) 3L else 5L,
-        dimnames = list(setnames[!empty_sets],
-                        if (circle)
-                          c("h", "k", "r")
-                        else
-                          c("h", "k", "a", "b", "phi")),
+        dimnames = list(
+          setnames[!empty_sets],
+          if (circle) {
+            c("h", "k", "r")
+          } else {
+            c("h", "k", "a", "b", "phi")
+          }
+        ),
         byrow = TRUE
       ), stringsAsFactors = TRUE)
-      if (circle)
+      if (circle) {
         tpar <- cbind(tpar, tpar[, 3L], 0)
+      }
 
       # Normalize layout
       nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
@@ -215,7 +242,7 @@ fit_diagram <- function(combinations,
 
       # If inadequate solution, try with a second optimizer (slower, better)
       if (!circle && control$extraopt &&
-          nlm_diagError > control$extraopt_threshold) {
+        nlm_diagError > control$extraopt_threshold) {
         # Set bounds for the parameters
         newpars <- matrix(
           data = as.vector(t(nlm_pars)),
@@ -235,15 +262,19 @@ fit_diagram <- function(combinations,
           areas = areas_disjoint,
           loss = loss,
           control = utils::modifyList(
-            list(threshold.stop = sqrt(.Machine$double.eps),
-                 max.call = 1e7,
-                 trace.mat = FALSE),
+            list(
+              threshold.stop = sqrt(.Machine$double.eps),
+              max.call = 1e7,
+              trace.mat = FALSE
+            ),
             control$extraopt_control
           )
         )$par
 
-        last_ditch_fit <- as.vector(intersect_ellipses(last_ditch_effort,
-                                                       circle))
+        last_ditch_fit <- as.vector(intersect_ellipses(
+          last_ditch_effort,
+          circle
+        ))
         last_ditch_diagError <- diagError(last_ditch_fit, orig)
 
         # Check for the best solution
@@ -266,12 +297,15 @@ fit_diagram <- function(combinations,
       diagError <- diagError(regionError = regionError)
       stress <- stress(orig, fit)
 
-      temp <- matrix(data = final_par,
-                     ncol = if (circle) 3L else 5L,
-                     byrow = TRUE)
+      temp <- matrix(
+        data = final_par,
+        ncol = if (circle) 3L else 5L,
+        byrow = TRUE
+      )
 
-      if (circle)
+      if (circle) {
         temp <- cbind(temp, temp[, 3L], 0)
+      }
 
       # Normalize semiaxes and rotation
       temp <- normalize_pars(temp)
@@ -287,19 +321,22 @@ fit_diagram <- function(combinations,
     if (length(areas) == 0) {
       fpar[] <- 0
     } else {
-      fpar[!empty_sets, ] <- c(0, 0, sqrt(areas/pi), sqrt(areas/pi), 0)
+      fpar[!empty_sets, ] <- c(0, 0, sqrt(areas / pi), sqrt(areas / pi), 0)
       orig[!empty_subsets] <- fit[!empty_subsets] <- areas
     }
     regionError <- diagError <- stress <- 0
   }
 
   # Return eulerr structure
-  structure(list(ellipses = fpar,
-                 original.values = orig,
-                 fitted.values = fit,
-                 residuals = orig - fit,
-                 regionError = regionError,
-                 diagError = diagError,
-                 stress = stress),
-            class = c("euler", "list"))
+  structure(list(
+    ellipses = fpar,
+    original.values = orig,
+    fitted.values = fit,
+    residuals = orig - fit,
+    regionError = regionError,
+    diagError = diagError,
+    stress = stress
+  ),
+  class = c("euler", "list")
+  )
 }

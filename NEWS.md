@@ -1,3 +1,11 @@
+# eulerr (development version)
+
+## New Features
+
+- It is now possible to set the loss function to be used when trying to
+  optimize the Euler diagram layout via `loss`. There is a new vignette
+  that showcases this new feature.
+
 # eulerr 6.1.1
 
 ## Minor changes
