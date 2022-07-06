@@ -24,6 +24,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -36,23 +38,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">eulerr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.1.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">6.1.1.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -63,6 +59,9 @@
     </li>
     <li>
       <a href="articles/introduction.html">Introducing eulerr</a>
+    </li>
+    <li>
+      <a href="articles/loss-functions.html">loss-functions</a>
     </li>
     <li>
       <a href="articles/under-the-hood.html">eulerr under the hood</a>
@@ -81,7 +80,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jolars/eulerr/">
+  <a href="https://github.com/jolars/eulerr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -98,130 +97,133 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="eulerr" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#eulerr" class="anchor"></a>eulerr</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="eulerr">eulerr<a class="anchor" aria-label="anchor" href="#eulerr"></a>
+</h1></div>
 <!-- badges: start -->
-
-<p><strong>eulerr</strong> generates area-proportional Euler diagrams that display set relationships (intersections, unions, and disjoints) with circles or ellipses. <a href="https://en.wikipedia.org/wiki/Euler_diagram">Euler diagrams</a> are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, <strong>eulerr</strong> sometimes produces Venn diagrams and sometimes not.</p>
+<p><strong>eulerr</strong> generates area-proportional Euler diagrams that display set relationships (intersections, unions, and disjoints) with circles or ellipses. <a href="https://en.wikipedia.org/wiki/Euler_diagram" class="external-link">Euler diagrams</a> are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, <strong>eulerr</strong> sometimes produces Venn diagrams and sometimes not.</p>
 <p>With three or more sets intersecting, exact Euler diagrams are often impossible. For such cases <strong>eulerr</strong> attempts to provide a good approximation by numerically tuning the parameters of the ellipses or circles to minimize the error in the resulting diagram. Residuals and goodness of fit statistics are provided to assess whether the resulting diagram can be trusted.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<div id="cran-version" class="section level3">
-<h3 class="hasAnchor">
-<a href="#cran-version" class="anchor"></a>CRAN version</h3>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="section level3">
+<h3 id="cran-version">CRAN version<a class="anchor" aria-label="anchor" href="#cran-version"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"eulerr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"eulerr"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="development-version" class="section level3">
-<h3 class="hasAnchor">
-<a href="#development-version" class="anchor"></a>Development version</h3>
+<div class="section level3">
+<h3 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jolars/eulerr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jolars/eulerr"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="shiny-app" class="section level3">
-<h3 class="hasAnchor">
-<a href="#shiny-app" class="anchor"></a>Shiny app</h3>
-<p>eulerr is also available as a shiny app hosted at <a href="http://eulerr.co">eulerr.co</a>.</p>
+<div class="section level3">
+<h3 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
+</h3>
+<p>eulerr is also available as a shiny app hosted at <a href="http://eulerr.co" class="external-link">eulerr.co</a>.</p>
 </div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr">eulerr</a></span><span class="op">)</span>
-<span class="co"># From Wilkinson 2012</span>
-<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">4</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">6</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"D"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"E"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"F"</span> <span class="op">=</span> <span class="fl">3</span>,
-               <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,
-               <span class="st">"B&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,
-               <span class="st">"A&amp;B&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
-             shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
+<span><span class="co"># From Wilkinson 2012</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">4</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">6</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">3</span>, <span class="st">"D"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"E"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"F"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>               <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>               <span class="st">"B&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>               <span class="st">"A&amp;B&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>             shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span></code></pre></div>
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit</span><span class="op">$</span><span class="va">stress</span>
-<span class="co">#&gt; [1] 2.612816e-14</span>
-<span class="va">fit</span><span class="op">$</span><span class="va">diagError</span>
-<span class="co">#&gt; [1] 2.616605e-08</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">stress</span></span>
+<span><span class="co">#&gt; [1] 6.27447e-14</span></span>
+<span><span class="va">fit</span><span class="op">$</span><span class="va">diagError</span></span>
+<span><span class="co">#&gt; [1] 4.418069e-08</span></span></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot_method-1.png"><!-- --></p>
-<p>Please see <a href="https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html">the introductory vignette</a> for a brief introduction or <a href="https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html"><em>eulerr under the hood</em></a> for details.</p>
+<p>Please see <a href="https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html" class="external-link">the introductory vignette</a> for a brief introduction or <a href="https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html" class="external-link"><em>eulerr under the hood</em></a> for details.</p>
 </div>
-<div id="license" class="section level2">
-<h2 class="hasAnchor">
-<a href="#license" class="anchor"></a>License</h2>
-<p>eulerr is open source software, licensed under <a href="https://github.com/jolars/eulerr/blob/master/LICENSE">GPL-3</a>.</p>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>eulerr is open source software, licensed under <a href="https://github.com/jolars/eulerr/blob/master/LICENSE" class="external-link">GPL-3</a>.</p>
 </div>
-<div id="versioning" class="section level2">
-<h2 class="hasAnchor">
-<a href="#versioning" class="anchor"></a>Versioning</h2>
-<p>eulerr uses <a href="http://semver.org">semantic versioning</a>.</p>
+<div class="section level2">
+<h2 id="versioning">Versioning<a class="anchor" aria-label="anchor" href="#versioning"></a>
+</h2>
+<p>eulerr uses <a href="https://semver.org" class="external-link">semantic versioning</a>.</p>
 </div>
-<div id="code-of-conduct" class="section level2">
-<h2 class="hasAnchor">
-<a href="#code-of-conduct" class="anchor"></a>Code of conduct</h2>
-<p>Please note that this project is released with a <a href="https://github.com/jolars/eulerr/blob/master/CONDUCT.md">Contributor Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
+<div class="section level2">
+<h2 id="code-of-conduct">Code of conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
+</h2>
+<p>Please note that this project is released with a <a href="https://github.com/jolars/eulerr/blob/master/CONDUCT.md" class="external-link">Contributor Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
 </div>
-<div id="acknowledgements" class="section level2">
-<h2 class="hasAnchor">
-<a href="#acknowledgements" class="anchor"></a>Acknowledgements</h2>
-<p>eulerr would not be possible without Ben Frederickson’s work on <a href="http://www.benfrederickson.com">venn.js</a> or Leland Wilkinson’s <a href="https://cran.r-project.org/package=venneuler">venneuler</a>.</p>
+<div class="section level2">
+<h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
+</h2>
+<p>eulerr would not be possible without Ben Frederickson’s work on <a href="http://www.benfrederickson.com" class="external-link">venn.js</a> or Leland Wilkinson’s <a href="https://cran.r-project.org/package=venneuler" class="external-link">venneuler</a>.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=eulerr">https://​cloud.r-project.org/​package=eulerr</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/jolars/eulerr/">https://​github.com/​jolars/​eulerr/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/jolars/eulerr/issues">https://​github.com/​jolars/​eulerr/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
-</ul>
-</div>
-<div class="citation">
-<h2>Citation</h2>
-<ul class="list-unstyled">
-<li><a href="authors.html">Citing eulerr</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Johan Larsson <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4029-5945" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="https://cloud.r-project.org/package=eulerr" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/jolars/eulerr/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/jolars/eulerr/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/jolars/eulerr/actions"><img src="https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/gh/jolars/eulerr"><img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
-<li><a href="https://cran.r-project.org/package=eulerr"><img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge"></a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing eulerr</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Johan Larsson <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4029-5945" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/jolars/eulerr/actions" class="external-link"><img src="https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://app.codecov.io/gh/jolars/eulerr" class="external-link"><img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
+<li><a href="https://cran.r-project.org/package=eulerr" class="external-link"><img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Johan Larsson.</p>
+  <p></p>
+<p>Developed by Johan Larsson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>
@@ -229,6 +231,8 @@
 
   
 
+
+  
 
   </body>
 </html>

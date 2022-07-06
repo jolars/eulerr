@@ -1,11 +1,12 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1
+pkgdown: 2.0.5
 pkgdown_sha: ~
 articles:
   gallery: gallery.html
   introduction: introduction.html
+  loss-functions: loss-functions.html
   under-the-hood: under-the-hood.html
   venn-diagrams: venn-diagrams.html
   visualization: visualization.html
-last_built: 2021-06-11T06:40Z
+last_built: 2022-07-06T20:33Z
 
