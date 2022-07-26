@@ -144,6 +144,10 @@ setup_geometry <- function(x,
     if (do_quantities) {
       digits <- options("digits")$digits
 
+      # get round parameter from options("round"), if not set, use default value 0
+      round <- ifelse(is.null(options("round")$round) != TRUE,
+                      options("round")$round,
+                      0)
       num <- orig[centers$id[singles | others]]
 
       if (is.null(quantities$labels)) {
@@ -151,7 +155,7 @@ setup_geometry <- function(x,
 
         if ("percent" %in% type) {
           perc <- num/sum(num, na.rm = TRUE)*100
-          perc <- ifelse(perc >= 1, as.character(round(perc)), "< 1")
+          perc <- ifelse(perc >= 1, as.character(round(perc,round)), "< 1")# add rounding option to adjust precision of percentage
           perc <- sapply(perc[!is.na(perc)], function(x) paste0(x, " %"))
         }
 
