@@ -13,8 +13,7 @@ table.
 Westergren H, Larsson J, Freeman M, Carlsson A, Jöud A,
 Malmström E-M. Sex-based differences in pain distribution in a cohort of
 patients with persistent post-traumatic neck pain. Disability and
-Rehabilitation. 2017 Jan 27; Available
-from: \url{https://www.tandfonline.com/eprint/RK8tusJswJCsa9YakGDW/full}
+Rehabilitation. 2017 Jan 27
 }
 \usage{
 pain
