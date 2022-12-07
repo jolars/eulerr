@@ -89,6 +89,7 @@ relationships. The shape of the diagram may be a circle or an ellipse.</p>
 <span>  <span class="va">combinations</span>,</span>
 <span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disjoint"</span>, <span class="st">"union"</span><span class="op">)</span>,</span>
 <span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"circle"</span>, <span class="st">"ellipse"</span><span class="op">)</span>,</span>
+<span>  loss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sum_sq"</span>, <span class="st">"sum_abs"</span>, <span class="st">"sum_reg"</span>, <span class="st">"max_sq"</span>, <span class="st">"max_abs"</span>, <span class="st">"max_reg"</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -131,6 +132,14 @@ data.frame (see <strong>methods (by class)</strong>)</p></dd>
 
 <dt>shape</dt>
 <dd><p>geometric shape used in the diagram</p></dd>
+
+
+<dt>loss</dt>
+<dd><p>type of loss to minimize over. Losses starting with <code>sum</code> and
+<code>max</code> minimize over the sum and max of the type of loss. Losses ending
+with <code>sq</code> minimize the squares of the difference between the input and
+the result in the diagram. Losses ending with <code>abs</code> minimize the
+absolute value of the difference. Losses ending with <code>reg</code> minimize the</p></dd>
 
 
 <dt>control</dt>
@@ -204,9 +213,10 @@ the function returns a list of euler diagrams.</p>
 $$
   \sum_{i=1}^n (A_i - \omega_i)^2,
 $$
-where \(\omega_i\) the size of the ith disjoint subset, and \(A_i\) the
-corresponding area in the diagram, that is, the unique contribution to the
-total area from this overlap.</p>
+by default, where \(\omega_i\) the size of the ith disjoint subset, and
+\(A_i\) the corresponding area in the diagram, that is, the unique
+contribution to the total area from this overlap. The loss function
+can, however, be controlled via the <code>loss</code> argument.</p>
 <p><code>euler()</code> also returns <code>stress</code> (from <span class="pkg">venneuler</span>), as well as
 <code>diagError</code>, and <code>regionError</code> from <span class="pkg">eulerAPE</span>.</p>
 <p>The <em>stress</em> statistic is computed as</p>
@@ -226,15 +236,15 @@ $$</p>
     <div id="methods-by-class-">
     <h2>Methods (by class)</h2>
     
-<ul><li><p><code>default</code>: a named numeric vector, with
+<ul><li><p><code>euler(default)</code>: a named numeric vector, with
 combinations separated by an ampersand, for instance <code>A&amp;B = 10</code>.
 Missing combinations are treated as being 0.</p></li>
-<li><p><code>data.frame</code>: a <code>data.frame</code> of logicals, binary integers, or
+<li><p><code>euler(data.frame)</code>: a <code>data.frame</code> of logicals, binary integers, or
 factors.</p></li>
-<li><p><code>matrix</code>: a matrix that can be converted to a data.frame of logicals
+<li><p><code>euler(matrix)</code>: a matrix that can be converted to a data.frame of logicals
 (as in the description above) via <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">base::as.data.frame.matrix()</a></code>.</p></li>
-<li><p><code>table</code>: A table with <code>max(dim(x)) &lt; 3</code>.</p></li>
-<li><p><code>list</code>: a list of vectors, each vector giving the contents of
+<li><p><code>euler(table)</code>: A table with <code>max(dim(x)) &lt; 3</code>.</p></li>
+<li><p><code>euler(list)</code>: a list of vectors, each vector giving the contents of
 that set (with no duplicates). Vectors in the list must be named.</p></li>
 </ul></div>
     <div id="references">
@@ -295,9 +305,11 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 <span class="r-plt img"><img src="euler-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># A set with no perfect solution</span></span></span>
-<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span> <span class="op">=</span> <span class="fl">3491</span>, <span class="st">"b"</span> <span class="op">=</span> <span class="fl">3409</span>, <span class="st">"c"</span> <span class="op">=</span> <span class="fl">3503</span>,</span></span>
-<span class="r-in"><span>        <span class="st">"a&amp;b"</span> <span class="op">=</span> <span class="fl">120</span>, <span class="st">"a&amp;c"</span> <span class="op">=</span> <span class="fl">114</span>, <span class="st">"b&amp;c"</span> <span class="op">=</span> <span class="fl">132</span>,</span></span>
-<span class="r-in"><span>        <span class="st">"a&amp;b&amp;c"</span> <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"a"</span> <span class="op">=</span> <span class="fl">3491</span>, <span class="st">"b"</span> <span class="op">=</span> <span class="fl">3409</span>, <span class="st">"c"</span> <span class="op">=</span> <span class="fl">3503</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"a&amp;b"</span> <span class="op">=</span> <span class="fl">120</span>, <span class="st">"a&amp;c"</span> <span class="op">=</span> <span class="fl">114</span>, <span class="st">"b&amp;c"</span> <span class="op">=</span> <span class="fl">132</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"a&amp;b&amp;c"</span> <span class="op">=</span> <span class="fl">50</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       original fitted residuals regionError</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> a         3491   3491         0       0.001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> b         3409   3409         0       0.001</span>
@@ -483,7 +495,7 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
