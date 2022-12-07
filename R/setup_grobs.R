@@ -16,7 +16,6 @@ setup_grobs <- function(x,
                         labels,
                         quantities,
                         number,
-                        adjust_labels,
                         merged_sets) {
   data_edges <- x$edges
   data_fills <- x$fills
@@ -117,7 +116,6 @@ setup_grobs <- function(x,
 
     tags_gtree <- gTree(xlim = xlim,
                         ylim = ylim,
-                        adjust_labels = adjust_labels,
                         children = tag_grobs,
                         name = paste("tags"),
                         cl = "EulerTags")

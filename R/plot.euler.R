@@ -128,7 +128,9 @@ plot.euler <- function(x,
                        adjust_labels = TRUE,
                        ...) {
 
-  stopifnot(is.logical(adjust_labels))
+  if (!missing(adjust_labels)) {
+    warning("`adjust_labels` is deprecated and no longer has any effect.")
+  }
 
   # retrieve default options
   opar <- eulerr_options()
@@ -463,7 +465,6 @@ plot.euler <- function(x,
                                               labels = labels,
                                               quantities = quantities,
                                               number = i,
-                                              adjust_labels = adjust_labels,
                                               merged_sets = merged_sets)
     }
     euler_grob <- grid::gTree(grid::nullGrob(),
@@ -482,7 +483,6 @@ plot.euler <- function(x,
                               labels = labels,
                               quantities = quantities,
                               number = 1,
-                              adjust_labels = adjust_labels,
                               merged_sets = merged_sets)
     euler_grob <- grid::grobTree(euler_grob,
                                  name = "canvas.grob")
@@ -794,6 +794,10 @@ plot.venn <- function(x,
                       adjust_labels = TRUE,
                       ...)
 {
+  if (!missing(adjust_labels)) {
+    warning("`adjust_labels` is deprecated and no longer has any effect.")
+  }
+
   NextMethod("plot", ..., quantities = quantities)
 }
 

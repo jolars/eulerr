@@ -1,10 +1,15 @@
-# eulerr (development version)
+# eulerr 7.0.0
 
 ## New Features
 
 - It is now possible to set the loss function to be used when trying to
   optimize the Euler diagram layout via `loss`. There is a new vignette
   that showcases this new feature.
+
+## Bug Fixes
+
+- Label repelling via `adjust_labels` in `plot.euler()` has been
+  deprecated and removed to fix sanitizer warnings. 
 
 # eulerr 6.1.1
 

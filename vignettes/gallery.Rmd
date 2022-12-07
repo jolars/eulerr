@@ -86,20 +86,13 @@ plot(one_contained,
 
 ### Russian doll
 
-Sets intersecting inside other sets. This example also exemplifies how
-the automatic label adjustment algorithm (borrowed from the excellent
-**ggrepel** package) works.
+Sets intersecting inside other sets. 
 
 ```{r}
 russian_doll <- euler(c("A" = 15, "B" = 0, C = 0, 
                         "A&B" = 10, "A&C" = 0, "B&C" = 0,
                         "A&B&C" = 5))
-plot(russian_doll,
-     labels = c(
-       "A long and complicated\nlabel that is likely to have to be repelled",
-       "Another, very\ntall label that\nprobably will intrude\ninto other\nlabels",
-       "The spectacle before us\nwas indeed sublime")
-     )
+plot(russian_doll)
 ```
 
 ### Wilkinson set relationship

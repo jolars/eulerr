@@ -75,22 +75,22 @@ Venn diagrams, however, the areas in the diagram are also
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: a named numeric vector, with
+\item \code{venn(default)}: a named numeric vector, with
 combinations separated by an ampersand, for instance \code{A&B = 10}.
 Missing combinations are treated as being 0.
 
-\item \code{table}: A table with \code{max(dim(x)) < 3}.
+\item \code{venn(table)}: A table with \code{max(dim(x)) < 3}.
 
-\item \code{data.frame}: a \code{data.frame} of logicals, binary integers, or
+\item \code{venn(data.frame)}: a \code{data.frame} of logicals, binary integers, or
 factors.
 
-\item \code{matrix}: a matrix that can be converted to a data.frame of logicals
+\item \code{venn(matrix)}: a matrix that can be converted to a data.frame of logicals
 (as in the description above) via \code{\link[base:as.data.frame]{base::as.data.frame.matrix()}}.
 
-\item \code{list}: a list of vectors, each vector giving the contents of
+\item \code{venn(list)}: a list of vectors, each vector giving the contents of
 that set (with no duplicates). Vectors in the list do not need to be named.
-}}
 
+}}
 \examples{
 # The trivial version
 f1 <- venn(5, names = letters[1:5])

@@ -11,25 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// repel_boxes
-Rcpp::DataFrame repel_boxes(Rcpp::NumericMatrix boxes, Rcpp::NumericVector xlim, Rcpp::NumericVector ylim, Rcpp::NumericVector hjust, Rcpp::NumericVector vjust, double force_push, double force_pull, int maxiter, std::string direction);
-RcppExport SEXP _eulerr_repel_boxes(SEXP boxesSEXP, SEXP xlimSEXP, SEXP ylimSEXP, SEXP hjustSEXP, SEXP vjustSEXP, SEXP force_pushSEXP, SEXP force_pullSEXP, SEXP maxiterSEXP, SEXP directionSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type boxes(boxesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type xlim(xlimSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type ylim(ylimSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type hjust(hjustSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type vjust(vjustSEXP);
-    Rcpp::traits::input_parameter< double >::type force_push(force_pushSEXP);
-    Rcpp::traits::input_parameter< double >::type force_pull(force_pullSEXP);
-    Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
-    Rcpp::traits::input_parameter< std::string >::type direction(directionSEXP);
-    rcpp_result_gen = Rcpp::wrap(repel_boxes(boxes, xlim, ylim, hjust, vjust, force_push, force_pull, maxiter, direction));
-    return rcpp_result_gen;
-END_RCPP
-}
 // intersect_ellipses
 std::vector<double> intersect_ellipses(const std::vector<double>& par, const bool circle, const bool approx);
 RcppExport SEXP _eulerr_intersect_ellipses(SEXP parSEXP, SEXP circleSEXP, SEXP approxSEXP) {
@@ -109,7 +90,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_eulerr_repel_boxes", (DL_FUNC) &_eulerr_repel_boxes, 9},
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
     {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 4},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
