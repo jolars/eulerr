@@ -7,6 +7,7 @@
 #include "geometry.h"
 #include "helpers.h"
 #include "intersections.h"
+#include "loss.h"
 #include "point.h"
 
 // Intersect any number of ellipses or circles
@@ -119,80 +120,16 @@ intersect_ellipses(const std::vector<double>& par,
 // [[Rcpp::export]]
 double
 optim_final_loss(const std::vector<double>& par,
-                 const std::vector<double>& areas,
+                 const std::vector<double>& data,
                  const bool circle,
-                 const std::string& loss = "sum_sq")
+                 const std::string& loss_type            = "squared_error",
+                 const std::string& loss_aggregator_type = "sum")
 {
   auto fit = intersect_ellipses(par, circle, false);
 
-  double obj{ 0 };
+  auto loss            = eulerr::makeLoss(loss_type, data, fit);
+  auto loss_aggregator = eulerr::makeLossAggregator(loss_aggregator_type);
 
-  if (loss == "sum_sq") {
-    // sums of squared errors
-    obj =
-      std::inner_product(fit.begin(),
-                         fit.end(),
-                         areas.begin(),
-                         0.0,
-                         std::plus<double>(),
-                         [](double a, double b) { return (a - b) * (a - b); });
-  } else if (loss == "max_sq") {
-    // maximum squared error
-    obj = std::inner_product(
-      fit.begin(),
-      fit.end(),
-      areas.begin(),
-      0.0,
-      [](double a, double b) { return std::max(a, b); },
-      [](double a, double b) { return (a - b) * (a - b); });
-  } else if (loss == "sum_abs") {
-    // sum of absolute errors
-    obj =
-      std::inner_product(fit.begin(),
-                         fit.end(),
-                         areas.begin(),
-                         0.0,
-                         std::plus<double>(),
-                         [](double a, double b) { return std::abs(a - b); });
-  } else if (loss == "max_abs") {
-    // maximum absolute error
-    obj = std::inner_product(
-      fit.begin(),
-      fit.end(),
-      areas.begin(),
-      0.0,
-      [](double a, double b) { return std::max(a, b); },
-      [](double a, double b) { return std::abs(a - b); });
-  } else if (loss == "sum_reg") {
-    // sum of region errors
-    double sum_fit   = std::accumulate(fit.begin(), fit.end(), 0.0);
-    double sum_areas = std::accumulate(areas.begin(), areas.end(), 0.0);
-
-    obj = std::inner_product(fit.begin(),
-                             fit.end(),
-                             areas.begin(),
-                             0.0,
-                             std::plus<double>(),
-                             [=](double a, double b) {
-                               return std::abs(a / sum_fit - b / sum_areas);
-                             });
-  } else if (loss == "max_reg") {
-    // diagError from EulerAPE
-    double sum_fit   = std::accumulate(fit.begin(), fit.end(), 0.0);
-    double sum_areas = std::accumulate(areas.begin(), areas.end(), 0.0);
-
-    obj = std::inner_product(
-      fit.begin(),
-      fit.end(),
-      areas.begin(),
-      0.0,
-      [](double a, double b) { return std::max(a, b); },
-      [=](double a, double b) {
-        return std::abs(a / sum_fit - b / sum_areas);
-      });
-  } else {
-    Rcpp::stop("loss metric does not exist");
-  }
-
-  return obj;
+  return std::inner_product(
+    fit.begin(), fit.end(), data.begin(), 0.0, loss_aggregator, loss);
 }

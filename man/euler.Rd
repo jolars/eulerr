@@ -15,7 +15,8 @@ euler(combinations, ...)
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
-  loss = c("sum_sq", "sum_abs", "sum_reg", "max_sq", "max_abs", "max_reg"),
+  loss = c("square", "abs", "region"),
+  loss_aggregator = c("sum", "max"),
   control = list(),
   ...
 )
@@ -46,11 +47,12 @@ data.frame (see \strong{methods (by class)})}
 
 \item{shape}{geometric shape used in the diagram}
 
-\item{loss}{type of loss to minimize over. Losses starting with \code{sum} and
-\code{max} minimize over the sum and max of the type of loss. Losses ending
-with \code{sq} minimize the squares of the difference between the input and
-the result in the diagram. Losses ending with \code{abs} minimize the
-absolute value of the difference. Losses ending with \code{reg} minimize the}
+\item{loss}{type of loss to minimize over. If \code{"square"} is used together
+with the value \code{"sum"} for \code{loss_aggregator}, then the resulting loss
+function is the sum of squared errors, which is the default.}
+
+\item{loss_aggregator}{how the final loss is computed. \code{"sum"} indicates that
+the sum of the losses computed by \code{loss} are summed up. \code{"max"} indicates}
 
 \item{control}{a list of control parameters.
 \itemize{

@@ -52,12 +52,12 @@
 #' @param input type of input: disjoint identities
 #'   (`'disjoint'`) or unions (`'union'`).
 #' @param shape geometric shape used in the diagram
-#' @param loss type of loss to minimize over. Losses starting with `sum` and
-#'   `max` minimize over the sum and max of the type of loss. Losses ending
-#'   with `sq` minimize the squares of the difference between the input and
-#'   the result in the diagram. Losses ending with `abs` minimize the
-#'   absolute value of the difference. Losses ending with `reg` minimize the
-# "   `regionError` metric, which is de
+#' @param loss type of loss to minimize over. If `"square"` is used together
+#'   with the value `"sum"` for `loss_aggregator`, then the resulting loss
+#'   function is the sum of squared errors, which is the default.
+#' @param loss_aggregator how the final loss is computed. `"sum"` indicates that
+#'   the sum of the losses computed by `loss` are summed up. `"max"` indicates
+#"   that only the maximum value computed by the loss function is used.
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the more thorough optimizer (currently
 #'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
@@ -129,14 +129,8 @@ euler <- function(combinations, ...) UseMethod("euler")
 euler.default <- function(combinations,
                           input = c("disjoint", "union"),
                           shape = c("circle", "ellipse"),
-                          loss = c(
-                            "sum_sq",
-                            "sum_abs",
-                            "sum_reg",
-                            "max_sq",
-                            "max_abs",
-                            "max_reg"
-                          ),
+                          loss = c("square", "abs", "region"),
+                          loss_aggregator = c("sum", "max"),
                           control = list(),
                           ...) {
   loss <- match.arg(loss)
@@ -147,6 +141,7 @@ euler.default <- function(combinations,
     input,
     shape,
     loss,
+    loss_aggregator,
     control,
     ...
   )

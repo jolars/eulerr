@@ -25,16 +25,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // optim_final_loss
-double optim_final_loss(const std::vector<double>& par, const std::vector<double>& areas, const bool circle, const std::string& loss);
-RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP areasSEXP, SEXP circleSEXP, SEXP lossSEXP) {
+double optim_final_loss(const std::vector<double>& par, const std::vector<double>& data, const bool circle, const std::string& loss_type, const std::string& loss_aggregator_type);
+RcppExport SEXP _eulerr_optim_final_loss(SEXP parSEXP, SEXP dataSEXP, SEXP circleSEXP, SEXP loss_typeSEXP, SEXP loss_aggregator_typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::vector<double>& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< const std::vector<double>& >::type areas(areasSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type data(dataSEXP);
     Rcpp::traits::input_parameter< const bool >::type circle(circleSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type loss(lossSEXP);
-    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, areas, circle, loss));
+    Rcpp::traits::input_parameter< const std::string& >::type loss_type(loss_typeSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type loss_aggregator_type(loss_aggregator_typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(optim_final_loss(par, data, circle, loss_type, loss_aggregator_type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -91,7 +92,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_eulerr_intersect_ellipses", (DL_FUNC) &_eulerr_intersect_ellipses, 3},
-    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 4},
+    {"_eulerr_optim_final_loss", (DL_FUNC) &_eulerr_optim_final_loss, 5},
     {"_eulerr_optim_init", (DL_FUNC) &_eulerr_optim_init, 4},
     {"_eulerr_choose_two", (DL_FUNC) &_eulerr_choose_two, 1},
     {"_eulerr_discdisc", (DL_FUNC) &_eulerr_discdisc, 4},

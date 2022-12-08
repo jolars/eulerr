@@ -2,20 +2,15 @@ fit_diagram <- function(combinations,
                         type = c("euler", "venn"),
                         input = c("disjoint", "union"),
                         shape = c("circle", "ellipse"),
-                        loss = c(
-                          "sum_sq",
-                          "sum_abs",
-                          "sum_reg",
-                          "max_sq",
-                          "max_abs",
-                          "max_reg"
-                        ),
+                        loss = c("square", "abs", "region"),
+                        loss_aggregator = c("sum", "max"),
                         control = list(),
                         ...) {
   input <- match.arg(input)
   shape <- match.arg(shape)
   type <- match.arg(type)
   loss <- match.arg(loss)
+  loss_aggregator <- match.arg(loss_aggregator)
 
   n_restarts <- 10L # should this be made an argument?
   small <- sqrt(.Machine$double.eps)
@@ -210,9 +205,10 @@ fit_diagram <- function(combinations,
       nlm_solution <- stats::nlm(
         f = optim_final_loss,
         p = pars,
-        areas = areas_disjoint,
+        data = areas_disjoint,
         circle = circle,
-        loss = loss,
+        loss_type = loss,
+        loss_aggregator_type = loss_aggregator,
         iterlim = 1e6
       )$estimate
 
@@ -259,8 +255,9 @@ fit_diagram <- function(combinations,
           lower = constraints$lwr,
           upper = constraints$upr,
           circle = circle,
-          areas = areas_disjoint,
-          loss = loss,
+          data = areas_disjoint,
+          loss_type = loss,
+          loss_aggregator_type = loss_aggregator,
           control = utils::modifyList(
             list(
               threshold.stop = sqrt(.Machine$double.eps),
