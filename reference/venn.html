@@ -22,7 +22,7 @@ non-proportional to the input; this is also the case here."><!-- mathjax --><scr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">7.0.0</span>
       </span>
     </div>
 
@@ -41,6 +41,9 @@ non-proportional to the input; this is also the case here."><!-- mathjax --><scr
     </li>
     <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
+    </li>
+    <li>
+      <a href="../articles/loss-functions.html">Loss Functions</a>
     </li>
     <li>
       <a href="../articles/under-the-hood.html">eulerr under the hood</a>
@@ -176,15 +179,15 @@ centers of the shapes), semiaxes <code>a</code> and <code>b</code>, and rotation
     <div id="methods-by-class-">
     <h2>Methods (by class)</h2>
     
-<ul><li><p><code>default</code>: a named numeric vector, with
+<ul><li><p><code>venn(default)</code>: a named numeric vector, with
 combinations separated by an ampersand, for instance <code>A&amp;B = 10</code>.
 Missing combinations are treated as being 0.</p></li>
-<li><p><code>table</code>: A table with <code>max(dim(x)) &lt; 3</code>.</p></li>
-<li><p><code>data.frame</code>: a <code>data.frame</code> of logicals, binary integers, or
+<li><p><code>venn(table)</code>: A table with <code>max(dim(x)) &lt; 3</code>.</p></li>
+<li><p><code>venn(data.frame)</code>: a <code>data.frame</code> of logicals, binary integers, or
 factors.</p></li>
-<li><p><code>matrix</code>: a matrix that can be converted to a data.frame of logicals
+<li><p><code>venn(matrix)</code>: a matrix that can be converted to a data.frame of logicals
 (as in the description above) via <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">base::as.data.frame.matrix()</a></code>.</p></li>
-<li><p><code>list</code>: a list of vectors, each vector giving the contents of
+<li><p><code>venn(list)</code>: a list of vectors, each vector giving the contents of
 that set (with no duplicates). Vectors in the list do not need to be named.</p></li>
 </ul></div>
     <div id="see-also">
@@ -290,7 +293,7 @@ that set (with no duplicates). Vectors in the list do not need to be named.</p><
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

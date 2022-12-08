@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">6.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">7.0.0</span>
       </span>
     </div>
 
@@ -54,6 +54,9 @@
     </li>
     <li>
       <a href="../articles/introduction.html">Introducing eulerr</a>
+    </li>
+    <li>
+      <a href="../articles/loss-functions.html">Loss Functions</a>
     </li>
     <li>
       <a href="../articles/under-the-hood.html">eulerr under the hood</a>
@@ -172,17 +175,12 @@
 <div class="section level3">
 <h3 id="russian-doll">Russian doll<a class="anchor" aria-label="anchor" href="#russian-doll"></a>
 </h3>
-<p>Sets intersecting inside other sets. This example also exemplifies how the automatic label adjustment algorithm (borrowed from the excellent <strong>ggrepel</strong> package) works.</p>
+<p>Sets intersecting inside other sets.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">russian_doll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">0</span>, C <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>                        <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">10</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>                        <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">russian_doll</span>,</span>
-<span>     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>       <span class="st">"A long and complicated\nlabel that is likely to have to be repelled"</span>,</span>
-<span>       <span class="st">"Another, very\ntall label that\nprobably will intrude\ninto other\nlabels"</span>,</span>
-<span>       <span class="st">"The spectacle before us\nwas indeed sublime"</span><span class="op">)</span></span>
-<span>     <span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">russian_doll</span><span class="op">)</span></span></code></pre></div>
 <p><img src="gallery_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -279,7 +277,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
