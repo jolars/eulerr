@@ -90,11 +90,12 @@
 
       
 
-      </header><script src="under-the-hood_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>eulerr under the hood</h1>
-                        <h4 data-toc-skip class="author">Johan Larsson</h4>
+                        <h4 data-toc-skip class="author">Johan
+Larsson</h4>
             
             <h4 data-toc-skip class="date">2022-12-08</h4>
       
@@ -108,13 +109,22 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><strong>eulerr</strong> relies on an extensive machinery to turn user input into a pretty Euler diagram. Little of this requires any tinkering from the user. To make that happen, however, <strong>eulerr</strong> needs to make several well-formed decisions about the design of the diagram on behalf of the user, which is not a trivial task.</p>
-<p>This document outlines the implementation of <strong>eulerr</strong> from input to output. It is designed to be an evolving documentation on the innards of the program.</p>
+<p><strong>eulerr</strong> relies on an extensive machinery to turn user
+input into a pretty Euler diagram. Little of this requires any tinkering
+from the user. To make that happen, however, <strong>eulerr</strong>
+needs to make several well-formed decisions about the design of the
+diagram on behalf of the user, which is not a trivial task.</p>
+<p>This document outlines the implementation of <strong>eulerr</strong>
+from input to output. It is designed to be an evolving documentation on
+the innards of the program.</p>
 </div>
 <div class="section level2">
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
-<p>Euler diagrams present relationships between sets, wherefore the data must describe these relationships, either directly or indirectly. <strong>eulerr</strong> allows several alternatives for this data, namely,</p>
+<p>Euler diagrams present relationships between sets, wherefore the data
+must describe these relationships, either directly or indirectly.
+<strong>eulerr</strong> allows several alternatives for this data,
+namely,</p>
 <ul>
 <li><p>intersections and relative complements <span class="math display">\[
 A \setminus B = 3 \quad B \setminus A = 2 \quad A \cap B=1,
@@ -162,61 +172,127 @@ A=4 \quad B=3 \quad A \cap B=1,
 </table>
 </li>
 </ul>
-<p>As an additional feature for the matrix form, the user may supply a factor variable with which to split the data set before fitting the diagram, which sometimes improves diagrams where the set relationships vary across categories.</p>
-<p>Whichever type of input is provided, <strong>eulerr</strong> will translate it to the first and second types, <em>intersections and relative complements</em> and <em>unions and identities</em>, which will be used in the steps to come.</p>
-<p>The Euler diagram is then fit in two steps: first, an initial layout is formed with circles using only the sets’ pairwise relationships. Second, this layout is fine-tuned taking all <span class="math inline">\(2^N-1\)</span> intersections into consideration.</p>
+<p>As an additional feature for the matrix form, the user may supply a
+factor variable with which to split the data set before fitting the
+diagram, which sometimes improves diagrams where the set relationships
+vary across categories.</p>
+<p>Whichever type of input is provided, <strong>eulerr</strong> will
+translate it to the first and second types, <em>intersections and
+relative complements</em> and <em>unions and identities</em>, which will
+be used in the steps to come.</p>
+<p>The Euler diagram is then fit in two steps: first, an initial layout
+is formed with circles using only the sets’ pairwise relationships.
+Second, this layout is fine-tuned taking all <span class="math inline">\(2^N-1\)</span> intersections into
+consideration.</p>
 </div>
 <div class="section level2">
 <h2 id="initial-layout">Initial layout<a class="anchor" aria-label="anchor" href="#initial-layout"></a>
 </h2>
-<p>For our initial layout, we adopt a constrained version of multi-dimensional scaling (MDS) that has been adapted from <strong>venn.js</strong> <span class="citation">(Frederickson 2016)</span>, which in turn is a modification of an algorithm used in <strong>venneuler</strong> <span class="citation">(Wilkinson 2012)</span>. In it, we consider only the pairwise intersections between sets, attempting to position their respective shapes so as to minimize the difference between the separation between their centers required to obtain an optimal overlap and the actual overlap of the shapes in the diagram.</p>
-<p>This problem is unfortunately intractable for ellipses, being that there is an infinite number of ways by which we can position two ellipses to obtain a given overlap. Thus, we restrict ourselves to circles in our initial layout, for which we can use the circle–circle overlap formula to numerically find the required distance, <span class="math inline">\(d\)</span>, for each pairwise relationship.</p>
+<p>For our initial layout, we adopt a constrained version of
+multi-dimensional scaling (MDS) that has been adapted from
+<strong>venn.js</strong> <span class="citation">(Frederickson
+2016)</span>, which in turn is a modification of an algorithm used in
+<strong>venneuler</strong> <span class="citation">(Wilkinson
+2012)</span>. In it, we consider only the pairwise intersections between
+sets, attempting to position their respective shapes so as to minimize
+the difference between the separation between their centers required to
+obtain an optimal overlap and the actual overlap of the shapes in the
+diagram.</p>
+<p>This problem is unfortunately intractable for ellipses, being that
+there is an infinite number of ways by which we can position two
+ellipses to obtain a given overlap. Thus, we restrict ourselves to
+circles in our initial layout, for which we can use the circle–circle
+overlap formula to numerically find the required distance, <span class="math inline">\(d\)</span>, for each pairwise relationship.</p>
 <p><span class="math display">\[
 \begin{aligned}
-O_{ij} = &amp; r_i^2\arccos\left(\frac{d_{ij}^2 + r_i^2 - r_j^2}{2d_{ij}r_i}\right) +
+O_{ij} = &amp; r_i^2\arccos\left(\frac{d_{ij}^2 + r_i^2 -
+r_j^2}{2d_{ij}r_i}\right) +
 r_j^2\arccos\left(\frac{d_{ij}^2 + r_j^2 - r_i^2}{2d_{ij}r_j}\right) -\\
-&amp;\quad \frac{1}{2}\sqrt{(-d_{ij} + r_i + r_j)(d_{ij} + r_i - r_j)(d_{ij} - r_i + r_j)(d_{ij} + r_i + r_j)},
+&amp;\quad \frac{1}{2}\sqrt{(-d_{ij} + r_i + r_j)(d_{ij} + r_i -
+r_j)(d_{ij} - r_i + r_j)(d_{ij} + r_i + r_j)},
 \end{aligned}
 \]</span></p>
-<p>where <span class="math inline">\(r_i\)</span> and <span class="math inline">\(r_j\)</span> are the radii of the circles representing the <span class="math inline">\(i\)</span><sup>th</sup> and <span class="math inline">\(j\)</span><sup>th</sup> sets respectively, <span class="math inline">\(O_{ij}\)</span> their overlap, and <span class="math inline">\(d_{ij}\)</span> their separation.</p>
+<p>where <span class="math inline">\(r_i\)</span> and <span class="math inline">\(r_j\)</span> are the radii of the circles
+representing the <span class="math inline">\(i\)</span><sup>th</sup> and
+<span class="math inline">\(j\)</span><sup>th</sup> sets respectively,
+<span class="math inline">\(O_{ij}\)</span> their overlap, and <span class="math inline">\(d_{ij}\)</span> their separation.</p>
 <div class="figure">
 <img src="under-the-hood_files/figure-html/unnamed-chunk-1-1.png" alt="The circle--circle overlap is computed as a function of the discs' separation ($d_{ij}$), radii ($r_i,r_j$), and area of overlap ($O_{ij}$)." width="288"><p class="caption">
-The circle–circle overlap is computed as a function of the discs’ separation (<span class="math inline">\(d_{ij}\)</span>), radii (<span class="math inline">\(r_i,r_j\)</span>), and area of overlap (<span class="math inline">\(O_{ij}\)</span>).
+The circle–circle overlap is computed as a function of the discs’
+separation (<span class="math inline">\(d_{ij}\)</span>), radii (<span class="math inline">\(r_i,r_j\)</span>), and area of overlap (<span class="math inline">\(O_{ij}\)</span>).
 </p>
 </div>
-<p>Setting <span class="math inline">\(r_i = \sqrt{F_i/\pi}\)</span>, where <span class="math inline">\(F_i\)</span> is the size of the <span class="math inline">\(i\)</span><sup>th</sup> set, we are able to obtain <span class="math inline">\(d\)</span> numerically using the squared difference between <span class="math inline">\(O\)</span> and the desired overlap as loss function,</p>
+<p>Setting <span class="math inline">\(r_i = \sqrt{F_i/\pi}\)</span>,
+where <span class="math inline">\(F_i\)</span> is the size of the <span class="math inline">\(i\)</span><sup>th</sup> set, we are able to obtain
+<span class="math inline">\(d\)</span> numerically using the squared
+difference between <span class="math inline">\(O\)</span> and the
+desired overlap as loss function,</p>
 <p><span class="math display">\[
-\mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i &lt;
+\mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad
+\text{for } i &lt;
 j \leq n,
 \]</span></p>
 <p>which we optimize using <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
-<p>For a two-set combination, this is all we need to plot an exact diagram, given that we now have the two circles’ radii and separation and may place the circles arbitrarily as long as their separation, <span class="math inline">\(d\)</span>, remains the same. This is not, however, the case with more than two sets.</p>
-<p>With three or more sets, the circles need to be arranged so that they interfere minimally with one another. In some cases, the set configuration allows this to be accomplished flawlessly, but often, compromises must me made. As is often the case in this context, this turns out to be another optimization problem. It can be tackled in many ways; <strong>eulerr</strong>’s approach is based on a method developed by <span class="citation">Frederickson (2015)</span>, which the author describes as constrained multi-dimensional scaling.</p>
-<p>The algorithm tries to position the circles so that the separation between each pair of circles matches the separation required from the separation equation. If the two sets are disjoint, however, the algorithm is indifferent to the relative locations of those circles as long as they do not intersect. The equivalent applies to subset sets: as long as the circle representing the smaller set remains within the larger circle, their locations are free to vary. In all other cases, the loss function is the residual sums of squares of the optimal separation of circles, <span class="math inline">\(d\)</span>, that we found in the overlap equation, and the actual distance in the layout we are currently exploring.</p>
+<p>For a two-set combination, this is all we need to plot an exact
+diagram, given that we now have the two circles’ radii and separation
+and may place the circles arbitrarily as long as their separation, <span class="math inline">\(d\)</span>, remains the same. This is not,
+however, the case with more than two sets.</p>
+<p>With three or more sets, the circles need to be arranged so that they
+interfere minimally with one another. In some cases, the set
+configuration allows this to be accomplished flawlessly, but often,
+compromises must me made. As is often the case in this context, this
+turns out to be another optimization problem. It can be tackled in many
+ways; <strong>eulerr</strong>’s approach is based on a method developed
+by <span class="citation">Frederickson (2015)</span>, which the author
+describes as constrained multi-dimensional scaling.</p>
+<p>The algorithm tries to position the circles so that the separation
+between each pair of circles matches the separation required from the
+separation equation. If the two sets are disjoint, however, the
+algorithm is indifferent to the relative locations of those circles as
+long as they do not intersect. The equivalent applies to subset sets: as
+long as the circle representing the smaller set remains within the
+larger circle, their locations are free to vary. In all other cases, the
+loss function is the residual sums of squares of the optimal separation
+of circles, <span class="math inline">\(d\)</span>, that we found in the
+overlap equation, and the actual distance in the layout we are currently
+exploring.</p>
 <p><span class="math display">\[
 \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i&lt;j\leq N}}
 \begin{cases}
 0 &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
-0 &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
-\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)^2  &amp; \text{otherwise} \\
+0 &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and }
+O_{ij}=0\\
+\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)^2  &amp;
+\text{otherwise} \\
 \end{cases}.
 \]</span></p>
-<p>The analytical gradient is retrieved as usual by taking the derivative of the loss function,</p>
+<p>The analytical gradient is retrieved as usual by taking the
+derivative of the loss function,</p>
 <p><span class="math display">\[
 \vec{\nabla} f(h_i) = \sum_{j=1}^N
 \begin{cases}
 \vec{0} &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
-\vec{0} &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
-4\left(h_i-h_j\right)\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right) &amp; \text{otherwise}, \\
+\vec{0} &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{
+and } O_{ij}=0\\
+4\left(h_i-h_j\right)\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)
+&amp; \text{otherwise}, \\
 \end{cases}
 \]</span></p>
-<p>where <span class="math inline">\(\vec{\nabla} f(k_i)\)</span> is found as in the gradient with <span class="math inline">\(h_i\)</span> swapped for <span class="math inline">\(k_i\)</span> (and vice versa).</p>
-<p>The Hessian for our loss function is given next. However, because the current release of R suffers from a bug<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> causing the analytical Hessian to be updated improperly, the current release of <strong>eulerr</strong> instead relies on the numerical approximation of the Hessian offered by the optimizer.</p>
+<p>where <span class="math inline">\(\vec{\nabla} f(k_i)\)</span> is
+found as in the gradient with <span class="math inline">\(h_i\)</span>
+swapped for <span class="math inline">\(k_i\)</span> (and vice
+versa).</p>
+<p>The Hessian for our loss function is given next. However, because the
+current release of R suffers from a bug<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> causing the analytical
+Hessian to be updated improperly, the current release of
+<strong>eulerr</strong> instead relies on the numerical approximation of
+the Hessian offered by the optimizer.</p>
 <p><span class="math display">\[
 \small
 \mathbf{H}(h,k) = \ell{\sum_{1\leq i&lt;j\leq N}}
 \begin{bmatrix}
-4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(h_i-h_j\right)^2 &amp;
+4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(h_i-h_j\right)^2
+&amp;
 \cdots &amp;
 8\left(h_i-h_j\right)\left(k_i-k_j\right)\\
 \vdots &amp; \ddots &amp; \vdots \\
@@ -225,15 +301,34 @@ j \leq n,
 4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(k_i-k_j\right)^2
 \end{bmatrix}.
 \]</span></p>
-<p>Note that the constraints given in loss and gradients still apply to each element of the Hessian and have been omitted for convenience only.</p>
-<p>We optimize the loss function using the nonlinear optimizer <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> from the R core package <strong>stats</strong>. The underlying code for <code>nlm</code> was written by <span class="citation">Schnabel, Koonatz, and Weiss (1985)</span>. It was ported to R by Saikat DebRoy and the R Core team <span class="citation">(R Core Team 2017)</span> from a previous FORTRAN to C translation by Richard H. Jones. <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> consists of a system of Newton-type algorithms and performs well for difficult problems <span class="citation">(Nash 2014)</span>.</p>
-<p>The initial layout outlined above will sometimes turn up perfect diagrams, but only reliably so when the diagram is completely determined by its pairwise intersections. More pertinently, we have not yet considered the higher-order intersections in our algorithm and neither have we approached the problem of using ellipses—as we set out to do.</p>
+<p>Note that the constraints given in loss and gradients still apply to
+each element of the Hessian and have been omitted for convenience
+only.</p>
+<p>We optimize the loss function using the nonlinear optimizer
+<code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> from the R core package <strong>stats</strong>. The
+underlying code for <code>nlm</code> was written by <span class="citation">Schnabel, Koonatz, and Weiss (1985)</span>. It was
+ported to R by Saikat DebRoy and the R Core team <span class="citation">(R Core Team 2017)</span> from a previous FORTRAN to C
+translation by Richard H. Jones. <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> consists of a system
+of Newton-type algorithms and performs well for difficult problems <span class="citation">(Nash 2014)</span>.</p>
+<p>The initial layout outlined above will sometimes turn up perfect
+diagrams, but only reliably so when the diagram is completely determined
+by its pairwise intersections. More pertinently, we have not yet
+considered the higher-order intersections in our algorithm and neither
+have we approached the problem of using ellipses—as we set out to
+do.</p>
 </div>
 <div class="section level2">
 <h2 id="final-layout">Final layout<a class="anchor" aria-label="anchor" href="#final-layout"></a>
 </h2>
-<p>We now need to account for all the sets’ intersections and, consequently, all the overlaps in the diagram. The goal is to map each area uniquely to a subset of the data from the input and for this purpose we will use the sets’ intersections and the relative complements of these intersections, for which we will use the shorthand <span class="math inline">\(\omega\)</span>. We introduced this form in the <em>input</em> section, but now define it rigorously.</p>
-<p>For a family of <em>N</em> sets, <span class="math inline">\(F = F_1, F_2, \dots, F_N\)</span>, and their <span class="math inline">\(n=2^N-1\)</span> intersections, we define <span class="math inline">\(\omega\)</span> as the intersections of these sets and their relative complements, such that</p>
+<p>We now need to account for all the sets’ intersections and,
+consequently, all the overlaps in the diagram. The goal is to map each
+area uniquely to a subset of the data from the input and for this
+purpose we will use the sets’ intersections and the relative complements
+of these intersections, for which we will use the shorthand <span class="math inline">\(\omega\)</span>. We introduced this form in the
+<em>input</em> section, but now define it rigorously.</p>
+<p>For a family of <em>N</em> sets, <span class="math inline">\(F = F_1,
+F_2, \dots, F_N\)</span>, and their <span class="math inline">\(n=2^N-1\)</span> intersections, we define <span class="math inline">\(\omega\)</span> as the intersections of these sets
+and their relative complements, such that</p>
 <p><span class="math display">\[
 \begin{aligned}
 \omega_{1} &amp; = F_1 \setminus \bigcap_{i=2}^N F_i  \\
@@ -246,28 +341,43 @@ j \leq n,
 <p><span class="math display">\[
 \sum_{i = 1}^n \omega_i =  \bigcup_{j=1}^N F_i.
 \]</span></p>
-<p>Analogously to <span class="math inline">\(\omega\)</span>, we also introduce the <span class="math inline">\(\&amp;\)</span>-operator, such that</p>
+<p>Analogously to <span class="math inline">\(\omega\)</span>, we also
+introduce the <span class="math inline">\(\&amp;\)</span>-operator, such
+that</p>
 <p><span class="math display">\[
 F_i \&amp; F_j = (F_i \cap F_j)\setminus (F_i \cap F_j)^\textsf{c}.
 \]</span></p>
-<p>The fitted diagram’s area-equivalents for <span class="math inline">\(\omega\)</span> will be defined as <span class="math inline">\(A\)</span>, so that an exact diagram requires that <span class="math inline">\(\omega_i = A_i\)</span> for <span class="math inline">\(i=1,2,\dots,2^N-1\)</span>, where <span class="math inline">\(N\)</span> is the number of sets in the input.</p>
-<p>In our initial configuration, we restricted ourselves to circles but now extend ourselves also to ellipses. From now on, we abandon the practice of treating circles separately—they are only a special case of ellipses, and, hence, everything that applies to an ellipse does so equally for a circle.</p>
+<p>The fitted diagram’s area-equivalents for <span class="math inline">\(\omega\)</span> will be defined as <span class="math inline">\(A\)</span>, so that an exact diagram requires that
+<span class="math inline">\(\omega_i = A_i\)</span> for <span class="math inline">\(i=1,2,\dots,2^N-1\)</span>, where <span class="math inline">\(N\)</span> is the number of sets in the input.</p>
+<p>In our initial configuration, we restricted ourselves to circles but
+now extend ourselves also to ellipses. From now on, we abandon the
+practice of treating circles separately—they are only a special case of
+ellipses, and, hence, everything that applies to an ellipse does so
+equally for a circle.</p>
 <div class="section level3">
 <h3 id="intersecting-ellipses">Intersecting ellipses<a class="anchor" aria-label="anchor" href="#intersecting-ellipses"></a>
 </h3>
-<p>We now need the ellipses’ points of intersections. <strong>eulerr</strong>’s approach to this is outlined in <span class="citation">(Richter-Gebert 2011)</span> and based in <em>projective</em>, as opposed to <em>Euclidean</em>, geometry.</p>
-<p>To collect all the intersection points, we naturally need only to consider two ellipses at a time. The canonical form of an ellipse is given by</p>
+<p>We now need the ellipses’ points of intersections.
+<strong>eulerr</strong>’s approach to this is outlined in <span class="citation">(Richter-Gebert 2011)</span> and based in
+<em>projective</em>, as opposed to <em>Euclidean</em>, geometry.</p>
+<p>To collect all the intersection points, we naturally need only to
+consider two ellipses at a time. The canonical form of an ellipse is
+given by</p>
 <p><span class="math display">\[
 \frac{\left[ (x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2}+
 \frac{\left[(x-h) \sin{\phi}-(y-k) \cos{\phi}\right]^2}{b^2} = 1,
 \]</span></p>
-<p>where <span class="math inline">\(\phi\)</span> is the counter-clockwise angle from the positive x-axis to the semi-major axis <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> is the semi-minor axis, and <span class="math inline">\(h, k\)</span> are the x- and y-coordinates, respectively, of ellipse’s center.</p>
+<p>where <span class="math inline">\(\phi\)</span> is the
+counter-clockwise angle from the positive x-axis to the semi-major axis
+<span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> is the semi-minor axis, and <span class="math inline">\(h, k\)</span> are the x- and y-coordinates,
+respectively, of ellipse’s center.</p>
 <div class="figure">
 <img src="under-the-hood_files/figure-html/unnamed-chunk-2-1.png" alt="A rotated ellipse with semimajor axis $a$, semiminor axis $b$, rotation $\phi$, and center $h,k$." width="288"><p class="caption">
 A rotated ellipse with semimajor axis <span class="math inline">\(a\)</span>, semiminor axis <span class="math inline">\(b\)</span>, rotation <span class="math inline">\(\phi\)</span>, and center <span class="math inline">\(h,k\)</span>.
 </p>
 </div>
-<p>However, because an ellipse is a conic<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> it can be represented in quadric form,</p>
+<p>However, because an ellipse is a conic<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> it can be represented
+in quadric form,</p>
 <p><span class="math display">\[
 Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
 \]</span></p>
@@ -279,111 +389,203 @@ B/2 &amp; C   &amp; E/2 \\
 D/2 &amp; E/2 &amp; F
 \end{bmatrix},
 \]</span></p>
-<p>which is the form we need to intersect our ellipses. We now proceed to form three degenerate conics from a linear combination of the two ellipses we wish to intersect, split one of these degenerate conics into two lines, and intersect one of the ellipses with these lines, yielding 0 to 4 intersection points points.</p>
+<p>which is the form we need to intersect our ellipses. We now proceed
+to form three degenerate conics from a linear combination of the two
+ellipses we wish to intersect, split one of these degenerate conics into
+two lines, and intersect one of the ellipses with these lines, yielding
+0 to 4 intersection points points.</p>
 <div class="figure">
 <img src="under-the-hood_files/figure-html/intersect-1-1.png" alt="The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011." width="192"><img src="under-the-hood_files/figure-html/intersect-1-2.png" alt="The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011." width="192"><img src="under-the-hood_files/figure-html/intersect-1-3.png" alt="The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011." width="192"><p class="caption">
-The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter–Gebert 2011.
+The process used to intersect two ellipses, here yielding four points.
+This figure was inspired by an example from Richter–Gebert 2011.
 </p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="overlap-areas">Overlap areas<a class="anchor" aria-label="anchor" href="#overlap-areas"></a>
 </h3>
-<p>Using the intersection points of a set of ellipses that we retrieved in, we can now find the overlap of these ellipses. We are only interested in the points that are <em>contained within all of these ellipses</em>, which together form a geometric shape consisting of a convex polygon, the sides of which are made up of straight lines between consecutive points, and a set of elliptical arcs—one for each pair of points.</p>
+<p>Using the intersection points of a set of ellipses that we retrieved
+in, we can now find the overlap of these ellipses. We are only
+interested in the points that are <em>contained within all of these
+ellipses</em>, which together form a geometric shape consisting of a
+convex polygon, the sides of which are made up of straight lines between
+consecutive points, and a set of elliptical arcs—one for each pair of
+points.</p>
 <div class="figure">
 <img src="under-the-hood_files/figure-html/polyarea-1.png" alt="The overlap area between three ellipses is the sum of a convex polygon (in grey) and 2--3 ellipse segments (in blue)." width="288"><p class="caption">
-The overlap area between three ellipses is the sum of a convex polygon (in grey) and 2–3 ellipse segments (in blue).
+The overlap area between three ellipses is the sum of a convex polygon
+(in grey) and 2–3 ellipse segments (in blue).
 </p>
 </div>
-<p>We continue by ordering the points around their centroid. It is then trivial to find the area of the polygon section since it is always convex. Now, because each elliptical segment is formed from the arcs that connect successive points, we can establish the segments’ areas algorithmically <span class="citation">(Eberly 2016)</span>. For each ellipse and its related pair of points (located at angles <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\theta_1\)</span> from the semimajor axis), we proceed to find its area by</p>
+<p>We continue by ordering the points around their centroid. It is then
+trivial to find the area of the polygon section since it is always
+convex. Now, because each elliptical segment is formed from the arcs
+that connect successive points, we can establish the segments’ areas
+algorithmically <span class="citation">(Eberly 2016)</span>. For each
+ellipse and its related pair of points (located at angles <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\theta_1\)</span> from the semimajor axis), we
+proceed to find its area by</p>
 <ol style="list-style-type: decimal">
-<li>centering the ellipse at <span class="math inline">\((0, 0)\)</span>,</li>
-<li>normalizing its rotation, which is not needed to compute the area,</li>
-<li>integrating the ellipse over [<span class="math inline">\(0,\theta_0\)</span>] and [<span class="math inline">\(0,\theta_1\)</span>], producing elliptical sectors <span class="math inline">\(F(\theta_0)\)</span> and <span class="math inline">\(F(\theta_1)\)</span>,</li>
-<li>subtracting the smaller (<span class="math inline">\(F(\theta_0\)</span>)) of these sectors from the larger (<span class="math inline">\(F(\theta_0\)</span>), and</li>
-<li>subtracting the triangle section to finally find the segment area, <span class="math display">\[
+<li>centering the ellipse at <span class="math inline">\((0,
+0)\)</span>,</li>
+<li>normalizing its rotation, which is not needed to compute the
+area,</li>
+<li>integrating the ellipse over [<span class="math inline">\(0,\theta_0\)</span>] and [<span class="math inline">\(0,\theta_1\)</span>], producing elliptical sectors
+<span class="math inline">\(F(\theta_0)\)</span> and <span class="math inline">\(F(\theta_1)\)</span>,</li>
+<li>subtracting the smaller (<span class="math inline">\(F(\theta_0\)</span>)) of these sectors from the
+larger (<span class="math inline">\(F(\theta_0\)</span>), and</li>
+<li>subtracting the triangle section to finally find the segment area,
+<span class="math display">\[
 F(\theta_1) - F(\theta_0) - \frac{1}{2}\left|x_1y_0 - x_0y_1\right|,
 \]</span> where <span class="math display">\[
-F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
+F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b -
+a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
 \]</span>
 </li>
 </ol>
-<p>This procedure is illustrated in the following figure. Note that there are situations where this algorithm is altered, such that when the sector angle ranges beyond <span class="math inline">\(\pi\)</span>—we refer the interested reader to <span class="citation">Eberly (2016)</span>.</p>
+<p>This procedure is illustrated in the following figure. Note that
+there are situations where this algorithm is altered, such that when the
+sector angle ranges beyond <span class="math inline">\(\pi\)</span>—we
+refer the interested reader to <span class="citation">Eberly
+(2016)</span>.</p>
 <div class="figure">
 <img src="under-the-hood_files/figure-html/ellipsesegment-1.png" alt="The elliptical segment in blue is found by first subtracting the elliptical sector from $(a, 0)$ to $\theta_0$ from the one from $(a, 0)$ to $\theta_1$ and then subtracting the triangle part (in grey)." width="288"><p class="caption">
-The elliptical segment in blue is found by first subtracting the elliptical sector from <span class="math inline">\((a, 0)\)</span> to <span class="math inline">\(\theta_0\)</span> from the one from <span class="math inline">\((a, 0)\)</span> to <span class="math inline">\(\theta_1\)</span> and then subtracting the triangle part (in grey).
+The elliptical segment in blue is found by first subtracting the
+elliptical sector from <span class="math inline">\((a, 0)\)</span> to
+<span class="math inline">\(\theta_0\)</span> from the one from <span class="math inline">\((a, 0)\)</span> to <span class="math inline">\(\theta_1\)</span> and then subtracting the
+triangle part (in grey).
 </p>
 </div>
-<p>Finally, the area of the overlap is then obtained by adding the area of the polygon and all the elliptical arcs together.</p>
-<p>Note that this does not yet give us the areas that we require, namely <span class="math inline">\(A\)</span>: the area-equivalents to the set intersections and relative complements from our definition of the intersections. For this, we must decompose the overlap areas so that each area maps uniquely to a subspace of the set configuration. This, however, is simply a matter of transversing down the hierarchy of overlaps and subtracting the higher-order overlaps from the lower-order ones. For a three-set relationship of sets <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>, and <span class="math inline">\(C\)</span>, for instance, this means subtracting the <span class="math inline">\(A\cap B \cap C\)</span> overlap from the <span class="math inline">\(A \cap B\)</span> one to retrieve the equivalent of <span class="math inline">\((A \cap B) \setminus C\)</span>.</p>
-<p>The exact algorithm may in rare instances<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>, break down, the culprit being numerical precision issues that occur when ellipses are tangent or completely overlap. In these cases, the algorithm will approximate the area of the involved overlap by</p>
+<p>Finally, the area of the overlap is then obtained by adding the area
+of the polygon and all the elliptical arcs together.</p>
+<p>Note that this does not yet give us the areas that we require, namely
+<span class="math inline">\(A\)</span>: the area-equivalents to the set
+intersections and relative complements from our definition of the
+intersections. For this, we must decompose the overlap areas so that
+each area maps uniquely to a subspace of the set configuration. This,
+however, is simply a matter of transversing down the hierarchy of
+overlaps and subtracting the higher-order overlaps from the lower-order
+ones. For a three-set relationship of sets <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>, and <span class="math inline">\(C\)</span>, for instance, this means subtracting
+the <span class="math inline">\(A\cap B \cap C\)</span> overlap from the
+<span class="math inline">\(A \cap B\)</span> one to retrieve the
+equivalent of <span class="math inline">\((A \cap B) \setminus
+C\)</span>.</p>
+<p>The exact algorithm may in rare instances<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>, break down, the
+culprit being numerical precision issues that occur when ellipses are
+tangent or completely overlap. In these cases, the algorithm will
+approximate the area of the involved overlap by</p>
 <ol style="list-style-type: decimal">
 <li>spreading points across the ellipses using Vogel’s method.</li>
-<li>identifying the points that are inside the intersection via the inequality <span class="math display">\[
+<li>identifying the points that are inside the intersection via the
+inequality <span class="math display">\[
 \begin{aligned}
-&amp;\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
-&amp;\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} &lt; 1,
+&amp;\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} +
+&amp;\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2}
+&lt; 1,
 \end{aligned}
-\]</span> where <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are the coordinates of the sampled points, and finally</li>
-<li>approximating the area by multiplying the proportion of points inside the overlap with the area of the ellipse.</li>
+\]</span> where <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are the coordinates of the sampled
+points, and finally</li>
+<li>approximating the area by multiplying the proportion of points
+inside the overlap with the area of the ellipse.</li>
 </ol>
-<p>With this in place, we are now able to compute the areas of all intersections and their relative complements, <span class="math inline">\(\omega\)</span>, up to numerical precision.</p>
+<p>With this in place, we are now able to compute the areas of all
+intersections and their relative complements, <span class="math inline">\(\omega\)</span>, up to numerical precision.</p>
 </div>
 <div class="section level3">
 <h3 id="final-optimization">Final optimization<a class="anchor" aria-label="anchor" href="#final-optimization"></a>
 </h3>
-<p>We feed the initial layout to the optimizer—once again we employ <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> from <strong>stats</strong> but now also provide the option to use ellipses rather than circles, allowing the “circles” to rotate and the relation between the semiaxes to vary, altogether rendering five parameters to optimize per set and ellipse (or three if we restrict ourselves to circles). For each iteration of the optimizer, the areas of all intersections are analyzed and a measure of loss returned. The loss we use is the same as in <strong>venneuler</strong> <span class="citation">(Frederickson 2016)</span>, namely the residual sums of squares.</p>
-<p>If the fitted diagram is still inexact after the procedure, we offer a final step in which we pass the parameters on to a last-ditch optimizer. The weapon of choice<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> is <em>stress</em> <span class="citation">(Wilkinson 2012)</span>, which is also the loss metric we use in our final optimization step and is used in <strong>venneuler</strong>, as well as <em>diagError</em> <span class="citation">(Micallef and Rodgers 2014)</span>, which is used by <strong>eulerAPE</strong>.</p>
-<p>The stress metric is not easily grasped but can be transformed into a rough analogue of the correlation coefficient via <span class="math inline">\(r = \sqrt{1-\text{stress}^2}\)</span>.</p>
+<p>We feed the initial layout to the optimizer—once again we employ
+<code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> from <strong>stats</strong> but now also provide the
+option to use ellipses rather than circles, allowing the “circles” to
+rotate and the relation between the semiaxes to vary, altogether
+rendering five parameters to optimize per set and ellipse (or three if
+we restrict ourselves to circles). For each iteration of the optimizer,
+the areas of all intersections are analyzed and a measure of loss
+returned. The loss we use is the same as in <strong>venneuler</strong>
+<span class="citation">(Frederickson 2016)</span>, namely the residual
+sums of squares.</p>
+<p>If the fitted diagram is still inexact after the procedure, we offer
+a final step in which we pass the parameters on to a last-ditch
+optimizer. The weapon of choice<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> is <em>stress</em> <span class="citation">(Wilkinson 2012)</span>, which is also the loss metric
+we use in our final optimization step and is used in
+<strong>venneuler</strong>, as well as <em>diagError</em> <span class="citation">(Micallef and Rodgers 2014)</span>, which is used by
+<strong>eulerAPE</strong>.</p>
+<p>The stress metric is not easily grasped but can be transformed into a
+rough analogue of the correlation coefficient via <span class="math inline">\(r = \sqrt{1-\text{stress}^2}\)</span>.</p>
 <p>diagError, meanwhile, is given by</p>
 <p><span class="math display">\[
 {\max_{i = 1, 2, \dots, n}}\left|
-\frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i} \right|,
+\frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i}
+\right|,
 \]</span></p>
-<p>which is the maximum <em>absolute</em> difference of the proportion of any <span class="math inline">\(\omega\)</span> to the respective unique area of the diagram.</p>
+<p>which is the maximum <em>absolute</em> difference of the proportion
+of any <span class="math inline">\(\omega\)</span> to the respective
+unique area of the diagram.</p>
 </div>
 </div>
 <div class="section level2 unnumbered">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Eberly_2016">
-<p>Eberly, David. 2016. “The Area of Intersecting Ellipses.” <em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf" class="external-link">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Eberly_2016" class="csl-entry">
+Eberly, David. 2016. <span>“The Area of Intersecting Ellipses.”</span>
+<em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf" class="external-link">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.
 </div>
-<div id="ref-Frederickson_2015">
-<p>Frederickson, Ben. 2015. “Venn Diagrams with D3.Js.” http://www.benfrederickson.com/venn-diagrams-with-d3.js/.</p>
+<div id="ref-Frederickson_2015" class="csl-entry">
+Frederickson, Ben. 2015. <span>“Venn <span>Diagrams</span> with
+<span>D3</span>.js.”</span>
+http://www.benfrederickson.com/venn-diagrams-with-d3.js/.
 </div>
-<div id="ref-Frederickson_2016">
-<p>———. 2016. “Venn.Js Area Proportional Venn and Euler Diagrams in JavaScript.”</p>
+<div id="ref-Frederickson_2016" class="csl-entry">
+———. 2016. <span>“Venn.js <span>Area</span> Proportional
+<span>Venn</span> and <span>Euler</span> Diagrams in
+<span>JavaScript</span>.”</span>
 </div>
-<div id="ref-Micallef_2014a">
-<p>Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing Area-Proportional 3-Venn Diagrams Using Ellipses.” <em>PLOS ONE</em> 9 (7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">https://doi.org/10.1371/journal.pone.0101717</a>.</p>
+<div id="ref-Micallef_2014a" class="csl-entry">
+Micallef, Luana, and Peter Rodgers. 2014. <span>“<span class="nocase">eulerAPE</span>: Drawing Area-Proportional
+3-<span>Venn</span> Diagrams Using Ellipses.”</span> <em>PLOS ONE</em> 9
+(7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">https://doi.org/10.1371/journal.pone.0101717</a>.
 </div>
-<div id="ref-Nash_2014">
-<p>Nash, John C. 2014. <em>Nonlinear Parameter Optimization Using R Tools</em>. 1st ed. Chichester, West Sussex: Wiley.</p>
+<div id="ref-Nash_2014" class="csl-entry">
+Nash, John C. 2014. <em>Nonlinear Parameter Optimization Using
+<span>R</span> Tools</em>. 1st ed. Chichester, West Sussex: Wiley.
 </div>
-<div id="ref-RCT_2017">
-<p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.</p>
+<div id="ref-RCT_2017" class="csl-entry">
+R Core Team. 2017. <em><span>R</span>: A Language and Environment for
+Statistical Computing</em>. Vienna, Austria: R Foundation for
+Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
 </div>
-<div id="ref-Richter-Gebert_2011">
-<p>Richter-Gebert, Jurgen. 2011. <em>Perspectives on Projective Geometry: A Guided Tour Through Real and Complex Geometry</em>. 1st ed. Berlin, Germany: Springer.</p>
+<div id="ref-Richter-Gebert_2011" class="csl-entry">
+Richter-Gebert, Jurgen. 2011. <em>Perspectives on Projective Geometry: A
+Guided Tour Through Real and Complex Geometry</em>. 1st ed. Berlin,
+Germany: Springer.
 </div>
-<div id="ref-Schnabel_1985">
-<p>Schnabel, Robert B., John E. Koonatz, and Barry E. Weiss. 1985. “A Modular System of Algorithms for Unconstrained Minimization.” <em>ACM Trans Math Softw</em> 11 (4): 419–40. <a href="https://doi.org/10.1145/6187.6192" class="external-link">https://doi.org/10.1145/6187.6192</a>.</p>
+<div id="ref-Schnabel_1985" class="csl-entry">
+Schnabel, Robert B., John E. Koonatz, and Barry E. Weiss. 1985. <span>“A
+Modular System of Algorithms for Unconstrained Minimization.”</span>
+<em>ACM Trans Math Softw</em> 11 (4): 419–40. <a href="https://doi.org/10.1145/6187.6192" class="external-link">https://doi.org/10.1145/6187.6192</a>.
 </div>
-<div id="ref-wilkinson_exact_2012">
-<p>Wilkinson, L. 2012. “Exact and Approximate Area-Proportional Circular Venn and Euler Diagrams.” <em>IEEE Transactions on Visualization and Computer Graphics</em> 18 (2): 321–31. <a href="https://doi.org/10.1109/TVCG.2011.56" class="external-link">https://doi.org/10.1109/TVCG.2011.56</a>.</p>
+<div id="ref-wilkinson_exact_2012" class="csl-entry">
+Wilkinson, L. 2012. <span>“Exact and <span>Approximate
+Area</span>-<span>Proportional Circular Venn</span> and <span>Euler
+Diagrams</span>.”</span> <em>IEEE Transactions on Visualization and
+Computer Graphics</em> 18 (2): 321–31. <a href="https://doi.org/10.1109/TVCG.2011.56" class="external-link">https://doi.org/10.1109/TVCG.2011.56</a>.
 </div>
 </div>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p>According to the documentation, <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code> consists of a “combination of golden section search and successive parabolic interpolation.” from <strong>stats</strong>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>The current development version of R features a fix for this bug; <strong>eulerr</strong> will be updated to use the analytical Hessian as soon as it is introduced in a stable version of R.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>The circle, parabola, and hyperbola are the other types of conics.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>According to the documentation, <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code>
+consists of a “combination of golden section search and successive
+parabolic interpolation.” from <strong>stats</strong>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>The current development version of R features a fix for
+this bug; <strong>eulerr</strong> will be updated to use the analytical
+Hessian as soon as it is introduced in a stable version of R.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>The circle, parabola, and hyperbola are the other types
+of conics.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
 <li id="fn4"><p>1 out of approximately 7000 in our simulations.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p>We conducted thorough benchmarking, that we opt not to report here, to decide upon an algorithm for this step.<a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>We conducted thorough benchmarking, that we opt not to
+report here, to decide upon an algorithm for this step.<a href="#fnref5" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>

@@ -76,10 +76,12 @@
 <h2 class="page-header" data-toc-text="7.0.0" id="eulerr-700">eulerr 7.0.0<a class="anchor" aria-label="anchor" href="#eulerr-700"></a></h2>
 <div class="section level3">
 <h3 id="new-features-7-0-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-7-0-0"></a></h3>
-<ul><li>It is now possible to set the loss function to be used when trying to optimize the Euler diagram layout via <code>loss</code> and <code>loss_aggregator</code>. There is a new vignette that showcases this new feature.</li></ul></div>
+<ul><li>It is now possible to set the loss function to be used when trying to optimize the Euler diagram layout via <code>loss</code> and <code>loss_aggregator</code>. There is a new vignette that showcases this new feature.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-7-0-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-7-0-0"></a></h3>
-<ul><li>Label repelling via <code>adjust_labels</code> in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> has been deprecated and removed to fix sanitizer warnings.</li></ul></div>
+<ul><li>Label repelling via <code>adjust_labels</code> in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> has been deprecated and removed to fix sanitizer warnings.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="6.1.1" id="eulerr-611">eulerr 6.1.1<small>2021-09-06</small><a class="anchor" aria-label="anchor" href="#eulerr-611"></a></h2>
@@ -92,16 +94,19 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-6-1-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-6-1-1"></a></h3>
-<ul><li>error in documentation for list method has been fixed, thanks <a href="https://github.com/gprezza" class="external-link">@gprezza</a> (<a href="https://github.com/jolars/eulerr/issues/77" class="external-link">#77</a>)</li></ul></div>
+<ul><li>error in documentation for list method has been fixed, thanks <a href="https://github.com/gprezza" class="external-link">@gprezza</a> (<a href="https://github.com/jolars/eulerr/issues/77" class="external-link">#77</a>)</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="6.1.0" id="eulerr-610">eulerr 6.1.0<small>2020-03-09</small><a class="anchor" aria-label="anchor" href="#eulerr-610"></a></h2>
 <div class="section level3">
 <h3 id="minor-changes-6-1-0">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-6-1-0"></a></h3>
-<ul><li>Label repelling (activated by calling <code><a href="../reference/euler.html">euler()</a></code> with <code>adjust_labels = TRUE</code>) no longer repels text labels away from the edges of the shapes in the diagram.</li></ul></div>
+<ul><li>Label repelling (activated by calling <code><a href="../reference/euler.html">euler()</a></code> with <code>adjust_labels = TRUE</code>) no longer repels text labels away from the edges of the shapes in the diagram.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-6-1-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-6-1-0"></a></h3>
-<ul><li>Rectify sanitizer error from clang-ASAN test environment.</li></ul></div>
+<ul><li>Rectify sanitizer error from clang-ASAN test environment.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="6.0.2" id="eulerr-602">eulerr 6.0.2<small>2020-03-04</small><a class="anchor" aria-label="anchor" href="#eulerr-602"></a></h2>
@@ -120,7 +125,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-6-0-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-6-0-1"></a></h3>
-<ul><li>Correctly handle <code>data.frame</code> inputs to <code><a href="../reference/euler.html">euler()</a></code> when categorical variables are character vectors and not factors.</li></ul></div>
+<ul><li>Correctly handle <code>data.frame</code> inputs to <code><a href="../reference/euler.html">euler()</a></code> when categorical variables are character vectors and not factors.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="6.0.0" id="eulerr-600">eulerr 6.0.0<small>2019-09-27</small><a class="anchor" aria-label="anchor" href="#eulerr-600"></a></h2>
@@ -142,14 +148,16 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-6-0-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-6-0-0"></a></h3>
-<ul><li>An error in layout normalization that occurred sometimes with ellipses has been fixed.</li></ul></div>
+<ul><li>An error in layout normalization that occurred sometimes with ellipses has been fixed.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="5.1.0" id="eulerr-510">eulerr 5.1.0<small>2019-02-04</small><a class="anchor" aria-label="anchor" href="#eulerr-510"></a></h2>
 <div class="section level3">
 <h3 id="new-features-5-1-0">New features<a class="anchor" aria-label="anchor" href="#new-features-5-1-0"></a></h3>
 <ul><li>
-<code><a href="../reference/venn.html">venn()</a></code> is a new function that produces Venn diagrams for up to 5 sets. The interface is almost identical to <code><a href="../reference/euler.html">euler()</a></code> except that a single integer can also be provided. A new vignette, <em>Venn diagrams with eulerr</em>, exemplifies its use.</li></ul></div>
+<code><a href="../reference/venn.html">venn()</a></code> is a new function that produces Venn diagrams for up to 5 sets. The interface is almost identical to <code><a href="../reference/euler.html">euler()</a></code> except that a single integer can also be provided. A new vignette, <em>Venn diagrams with eulerr</em>, exemplifies its use.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="minor-changes-5-1-0">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-5-1-0"></a></h3>
 <ul><li>Calculations for the strips in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> when a list of Euler diagrams is given has been improved. Setting <code>fontsize</code> or <code>cex</code> now results in appropriately sized strips as one would expect.</li>
@@ -170,7 +178,8 @@
 <div class="section level3">
 <h3 id="new-features-5-0-0">New features<a class="anchor" aria-label="anchor" href="#new-features-5-0-0"></a></h3>
 <ul><li>
-<code><a href="../reference/error_plot.html">error_plot()</a></code> is a new function that offers diagnostic plots of fits from <code><a href="../reference/euler.html">euler()</a></code>, letting the user visualize the error in the resulting Euler diagram.</li></ul></div>
+<code><a href="../reference/error_plot.html">error_plot()</a></code> is a new function that offers diagnostic plots of fits from <code><a href="../reference/euler.html">euler()</a></code>, letting the user visualize the error in the resulting Euler diagram.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="major-changes-5-0-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-5-0-0"></a></h3>
 <ul><li>
@@ -237,7 +246,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-4-0-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-0"></a></h3>
-<ul><li>Providing custom labels to <code>quantities</code> and <code>labels</code> arguments of <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now works correctly (<a href="https://github.com/jolars/eulerr/issues/20" class="external-link">#20</a>).</li></ul></div>
+<ul><li>Providing custom labels to <code>quantities</code> and <code>labels</code> arguments of <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now works correctly (<a href="https://github.com/jolars/eulerr/issues/20" class="external-link">#20</a>).</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.1.0" id="eulerr-310">eulerr 3.1.0<small>2018-01-02</small><a class="anchor" aria-label="anchor" href="#eulerr-310"></a></h2>
@@ -264,7 +274,8 @@
 <h2 class="page-header" data-toc-text="3.0.1" id="eulerr-301">eulerr 3.0.1<small>2017-11-15</small><a class="anchor" aria-label="anchor" href="#eulerr-301"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-3-0-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-3-0-1"></a></h3>
-<ul><li>Added the missing %\VignetteEngine{knitr::knitr} to both vignettes. It had mistakenly been left out, which had mangled the resulting vignettes.</li></ul></div>
+<ul><li>Added the missing %\VignetteEngine{knitr::knitr} to both vignettes. It had mistakenly been left out, which had mangled the resulting vignettes.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.0.0" id="eulerr-300">eulerr 3.0.0<small>2017-11-15</small><a class="anchor" aria-label="anchor" href="#eulerr-300"></a></h2>
@@ -295,7 +306,8 @@
 <h3 id="major-changes-2-0-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-2-0-0"></a></h3>
 <ul><li>
 <code><a href="../reference/eulerr-package.html">eulerr()</a></code> has been replaced with <code><a href="../reference/euler.html">euler()</a></code> (see update 1.1.0) and made defunct.</li>
-<li>There are two new methods for <code>euler</code>:<ul><li>
+<li>There are two new methods for <code>euler</code>:
+<ul><li>
 <code><a href="../reference/euler.html">euler.list()</a></code> produces diagrams from a list of sample spaces.</li>
 <li>
 <code><a href="../reference/euler.html">euler.table()</a></code> produces diagrams from a <code>table</code> object, as long as there are no dimensions with values greater than 2.</li>
@@ -318,7 +330,8 @@
 <div class="section level3">
 <h3 id="bug-fixes-2-0-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-0"></a></h3>
 <ul><li>
-<code>border</code> argument in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> works again (<a href="https://github.com/jolars/eulerr/issues/7" class="external-link">#7</a>).</li></ul></div>
+<code>border</code> argument in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> works again (<a href="https://github.com/jolars/eulerr/issues/7" class="external-link">#7</a>).</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.0" id="eulerr-110">eulerr 1.1.0<small>2017-02-05</small><a class="anchor" aria-label="anchor" href="#eulerr-110"></a></h2>
@@ -369,7 +382,8 @@
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="eulerr-010">eulerr 0.1.0<small>2016-10-16</small><a class="anchor" aria-label="anchor" href="#eulerr-010"></a></h2>
-<ul><li>The first release.</li></ul></div>
+<ul><li>The first release.</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

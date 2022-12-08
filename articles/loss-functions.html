@@ -90,7 +90,7 @@
 
       
 
-      </header><script src="loss-functions_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Loss Functions</h1>
@@ -103,8 +103,12 @@
 
     
     
-<p>eulerr features multiple loss functions, which result in different diagrams for many combinations. In this vignette, we visualize the effect of the loss function on an example from an issue <a href="https://github.com/jolars/eulerr/issues/93" class="external-link">posted on the GitHub repository for eulerr</a>.</p>
-<p>We list the combinations below, which consists of 5 different sets, <em>agc</em>, <em>camk</em>, <em>cmgc</em>, and <em>tk</em>.</p>
+<p>eulerr features multiple loss functions, which result in different
+diagrams for many combinations. In this vignette, we visualize the
+effect of the loss function on an example from an issue <a href="https://github.com/jolars/eulerr/issues/93" class="external-link">posted on the GitHub
+repository for eulerr</a>.</p>
+<p>We list the combinations below, which consists of 5 different sets,
+<em>agc</em>, <em>camk</em>, <em>cmgc</em>, and <em>tk</em>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"agc"</span>                  <span class="op">=</span> <span class="fl">9</span>,</span>
@@ -121,8 +125,18 @@
 <span>  <span class="st">"camk&amp;cmgc&amp;tk&amp;tkl"</span>     <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  <span class="st">"agc&amp;camk&amp;cmgc&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Notice that the sizes of most of the intersections are small compared to the size of the sets themselves and that many of the intersections are missing. Generating an exact Euler diagram that shows these intersections and at the same time omits the intersections that are here implicitly 0 is an impossible problem, which means that the best we can do is an approximation.</p>
-<p>What kind of approximation we get depends on the loss functions we use. If we use the default, which in <strong>eulerr</strong> is the sums of squared errors, we will almost certainly get a design in which the intersections involving many sets are missing since including them inevitably leads to larger errors from having to include other intersections that are not present.</p>
+<p>Notice that the sizes of most of the intersections are small compared
+to the size of the sets themselves and that many of the intersections
+are missing. Generating an exact Euler diagram that shows these
+intersections and at the same time omits the intersections that are here
+implicitly 0 is an impossible problem, which means that the best we can
+do is an approximation.</p>
+<p>What kind of approximation we get depends on the loss functions we
+use. If we use the default, which in <strong>eulerr</strong> is the sums
+of squared errors, we will almost certainly get a design in which the
+intersections involving many sets are missing since including them
+inevitably leads to larger errors from having to include other
+intersections that are not present.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
 <span></span>
@@ -130,10 +144,17 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="loss-functions_files/figure-html/unnamed-chunk-3-1.png" alt="An Euler diagram fit to the combination given earlier on, showing that only 1-by-1 intersections are present. This fit uses the default loss function, the sum of squared errors." width="700"><p class="caption">
-An Euler diagram fit to the combination given earlier on, showing that only 1-by-1 intersections are present. This fit uses the default loss function, the sum of squared errors.
+An Euler diagram fit to the combination given earlier on, showing that
+only 1-by-1 intersections are present. This fit uses the default loss
+function, the sum of squared errors.
 </p>
 </div>
-<p>If we rather want a diagram that includes these intersections, despite leading to errors for the zero-intersections, then we need to switch the loss function we use. In <strong>eulerr</strong>, you can do so via the two arguments <code>loss</code> and <code>loss_aggregator</code> in <code><a href="../reference/euler.html">euler()</a></code>. We start by listing the alternatives for the <code>loss</code> argument.</p>
+<p>If we rather want a diagram that includes these intersections,
+despite leading to errors for the zero-intersections, then we need to
+switch the loss function we use. In <strong>eulerr</strong>, you can do
+so via the two arguments <code>loss</code> and
+<code>loss_aggregator</code> in <code><a href="../reference/euler.html">euler()</a></code>. We start by
+listing the alternatives for the <code>loss</code> argument.</p>
 <table class="table">
 <caption>Loss functions in <strong>eulerr</strong>
 </caption>
@@ -146,23 +167,37 @@ An Euler diagram fit to the combination given earlier on, showing that only 1-by
 <tr class="odd">
 <td align="left">Squared errors</td>
 <td align="left"><code>square</code></td>
-<td align="left"><span class="math inline">\((y_i - \hat y_i)^2\)</span></td>
+<td align="left"><span class="math inline">\((y_i - \hat
+y_i)^2\)</span></td>
 </tr>
 <tr class="even">
 <td align="left">Absolute errors</td>
 <td align="left"><code>abs</code></td>
-<td align="left"><span class="math inline">\(|y_i - \hat y_i|\)</span></td>
+<td align="left"><span class="math inline">\(|y_i - \hat
+y_i|\)</span></td>
 </tr>
 <tr class="odd">
 <td align="left">RegionErrors</td>
 <td align="left"><code>region</code></td>
-<td align="left"><span class="math inline">\(\big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|\)</span></td>
+<td align="left"><span class="math inline">\(\big|y_i/\sum_k y_k - \hat
+y_i / \sum_k \hat y_k \big|\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>How the final loss is computed depends on the value of <code>loss_aggregator</code>, which is the function used to aggregate the values computed for each set intersection via the function used in <code>loss</code>. The two available settings are <code>"sum"</code> and <code>"max"</code>, which should be self-explanatory.</p>
-<p>That means that <code>loss = "square"</code> and <code>loss_aggregator = "sum"</code> leads to the sum of squared errors. <code>loss = "region"</code> uses <em>regionError</em>, which is a loss metric introduced by <span class="citation">(Micallef and Rodgers 2014)</span>. Together with <code>loss_aggregator = "max"</code>, <code><a href="../reference/euler.html">euler()</a></code> will use <em>diagError</em> (introduced in the same paper).</p>
-<p>To see what these different choices mean for the combination that we have looked at, we now refit the diagram for each combination.</p>
+<p>How the final loss is computed depends on the value of
+<code>loss_aggregator</code>, which is the function used to aggregate
+the values computed for each set intersection via the function used in
+<code>loss</code>. The two available settings are <code>"sum"</code> and
+<code>"max"</code>, which should be self-explanatory.</p>
+<p>That means that <code>loss = "square"</code> and
+<code>loss_aggregator = "sum"</code> leads to the sum of squared errors.
+<code>loss = "region"</code> uses <em>regionError</em>, which is a loss
+metric introduced by <span class="citation">(Micallef and Rodgers
+2014)</span>. Together with <code>loss_aggregator = "max"</code>,
+<code><a href="../reference/euler.html">euler()</a></code> will use <em>diagError</em> (introduced in the same
+paper).</p>
+<p>To see what these different choices mean for the combination that we
+have looked at, we now refit the diagram for each combination.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">losses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"square"</span>, <span class="st">"abs"</span>, <span class="st">"region"</span><span class="op">)</span></span>
 <span><span class="va">aggregators</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sum"</span>, <span class="st">"max"</span><span class="op">)</span></span>
@@ -175,14 +210,26 @@ An Euler diagram fit to the combination given earlier on, showing that only 1-by
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure">
 <img src="loss-functions_files/figure-html/unnamed-chunk-4-1.png" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-2.png" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-3.png" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-4.png" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-5.png" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-6.png" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><p class="caption">
-Euler diagrams fit to the combination above, using different loss function
+Euler diagrams fit to the combination above, using different loss
+function
 </p>
 </div>
-<p>As you can see, the errors that sum either the absolute or squared errors result in very similar fits and keep the existing two-set intersections and drop everything else. The <code>abs</code> + <code>max</code> and <code>max</code> + <code>square</code> combos, meanwhile, produce fits that are much more unpredictable since they only care about the largest error. Finally, <em>diagError</em> results in diagrams that tries to include many more intersections at the cost of reducing the goodness-of-fit of the larger intersections.</p>
-<p>Feel free to raise a request (or better yet, a pull request) at <a href="https://github.com/jolars/eulerr/issues" class="external-link uri">https://github.com/jolars/eulerr/issues</a> if you know of any other loss function that you think should be included in the package.</p>
-<div id="refs" class="references">
-<div id="ref-Micallef_2014a">
-<p>Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing Area-Proportional 3-Venn Diagrams Using Ellipses.” <em>PLOS ONE</em> 9 (7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">https://doi.org/10.1371/journal.pone.0101717</a>.</p>
+<p>As you can see, the errors that sum either the absolute or squared
+errors result in very similar fits and keep the existing two-set
+intersections and drop everything else. The <code>abs</code> +
+<code>max</code> and <code>max</code> + <code>square</code> combos,
+meanwhile, produce fits that are much more unpredictable since they only
+care about the largest error. Finally, <em>diagError</em> results in
+diagrams that tries to include many more intersections at the cost of
+reducing the goodness-of-fit of the larger intersections.</p>
+<p>Feel free to raise a request (or better yet, a pull request) at <a href="https://github.com/jolars/eulerr/issues" class="external-link uri">https://github.com/jolars/eulerr/issues</a> if you know of
+any other loss function that you think should be included in the
+package.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Micallef_2014a" class="csl-entry">
+Micallef, Luana, and Peter Rodgers. 2014. <span>“<span class="nocase">eulerAPE</span>: Drawing Area-Proportional
+3-<span>Venn</span> Diagrams Using Ellipses.”</span> <em>PLOS ONE</em> 9
+(7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">https://doi.org/10.1371/journal.pone.0101717</a>.
 </div>
 </div>
   </div>

@@ -90,11 +90,12 @@
 
       
 
-      </header><script src="visualization_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Visualizing Euler diagrams with eulerr</h1>
-                        <h4 data-toc-skip class="author">Johan Larsson</h4>
+                        <h4 data-toc-skip class="author">Johan
+Larsson</h4>
             
             <h4 data-toc-skip class="date">2022-12-08</h4>
       
@@ -105,8 +106,13 @@
 
     
     
-<p>Once we have ascertained that our Euler diagram fits well, we can turn to visualizing the solution. For this purpose, <strong>eulerr</strong> relies on the <strong>grid</strong> graphics system <span class="citation">(R Core Team 2017)</span> and offers intuitive and granular control over the output.</p>
-<p>Plotting the ellipses is straightforward using the parametrization of a rotated ellipse,</p>
+<p>Once we have ascertained that our Euler diagram fits well, we can
+turn to visualizing the solution. For this purpose,
+<strong>eulerr</strong> relies on the <strong>grid</strong> graphics
+system <span class="citation">(R Core Team 2017)</span> and offers
+intuitive and granular control over the output.</p>
+<p>Plotting the ellipses is straightforward using the parametrization of
+a rotated ellipse,</p>
 <p><span class="math display">\[
 \begin{bmatrix}
 x \\ y
@@ -116,17 +122,34 @@ h + a \cos{\theta} \\
 k + b \sin{\theta}
 \end{bmatrix},
 \]</span></p>
-<p>where <span class="math inline">\(\theta \in [0, 2\pi],\quad a,b&gt;0\)</span>.</p>
-<p>Most users will also prefer to label the ellipses and their intersections with text and this, however, is considerably more involved.</p>
+<p>where <span class="math inline">\(\theta \in [0, 2\pi],\quad
+a,b&gt;0\)</span>.</p>
+<p>Most users will also prefer to label the ellipses and their
+intersections with text and this, however, is considerably more
+involved.</p>
 <div class="section level3">
 <h3 id="labeling">Labeling<a class="anchor" aria-label="anchor" href="#labeling"></a>
 </h3>
-<p>Labeling the ellipses is complicated since the shapes of the intersections often are irregular, lacking well-defined centers; we know of no analytical solution to this problem. Instead, <strong>eulerr</strong> relies on the <strong>polylabelr</strong> package <span class="citation">(Larsson 2018)</span>, which was created by the author. It provides a simple wrapper for the <strong>polylabel</strong> <span class="citation">(Mapbox 2018)</span> C++ library from <em>Mapbox</em>.</p>
+<p>Labeling the ellipses is complicated since the shapes of the
+intersections often are irregular, lacking well-defined centers; we know
+of no analytical solution to this problem. Instead,
+<strong>eulerr</strong> relies on the <strong>polylabelr</strong>
+package <span class="citation">(Larsson 2018)</span>, which was created
+by the author. It provides a simple wrapper for the
+<strong>polylabel</strong> <span class="citation">(Mapbox 2018)</span>
+C++ library from <em>Mapbox</em>.</p>
 </div>
 <div class="section level3">
 <h3 id="aesthetics">Aesthetics<a class="anchor" aria-label="anchor" href="#aesthetics"></a>
 </h3>
-<p>Euler diagrams display both quantitative and qualitative data. The quantitative aspect is the quantities or sizes of the sets depicted in the diagram and is visualized by the relative sizes, and possibly the labels, of the areas of the shapes—this is the main focus of this paper. The qualitative aspects, meanwhile, consist of the mapping of each set to some quality or category, such as having a certain gene or not. In the diagram, these qualities can be separated through any of the following aesthetics:</p>
+<p>Euler diagrams display both quantitative and qualitative data. The
+quantitative aspect is the quantities or sizes of the sets depicted in
+the diagram and is visualized by the relative sizes, and possibly the
+labels, of the areas of the shapes—this is the main focus of this paper.
+The qualitative aspects, meanwhile, consist of the mapping of each set
+to some quality or category, such as having a certain gene or not. In
+the diagram, these qualities can be separated through any of the
+following aesthetics:</p>
 <ul>
 <li>color,</li>
 <li>border type,</li>
@@ -134,10 +157,20 @@ k + b \sin{\theta}
 <li>transparency,</li>
 <li>patterns,</li>
 </ul>
-<p>or a combination of these. The main purpose of these aesthetics is to separate out the different ellipses so that the audience may interpret the diagram with ease and clarity.</p>
-<p>Among these aesthetics, the best choice (from a viewer perspective) appears to be color <span class="citation">(Blake 2016)</span>, which provides useful information without extraneous chart junk.</p>
-<p>The issue with color, however, is that it cannot be perceived perfectly by all. Eight percent of men and 0.4% of women in European Caucasian countries, for instance, suffer the most common form, red–green color deficiency. Moreover, color is often printed at a premium in scientific publications and adds no utility to a diagram of two shapes.</p>
-<p>For these reasons, <strong>eulerr</strong> defaults to distinguishing ellipses with color using a manually tuned color palette.</p>
+<p>or a combination of these. The main purpose of these aesthetics is to
+separate out the different ellipses so that the audience may interpret
+the diagram with ease and clarity.</p>
+<p>Among these aesthetics, the best choice (from a viewer perspective)
+appears to be color <span class="citation">(Blake 2016)</span>, which
+provides useful information without extraneous chart junk.</p>
+<p>The issue with color, however, is that it cannot be perceived
+perfectly by all. Eight percent of men and 0.4% of women in European
+Caucasian countries, for instance, suffer the most common form,
+red–green color deficiency. Moreover, color is often printed at a
+premium in scientific publications and adds no utility to a diagram of
+two shapes.</p>
+<p>For these reasons, <strong>eulerr</strong> defaults to distinguishing
+ellipses with color using a manually tuned color palette.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
@@ -154,26 +187,41 @@ The eight first colors of the default color palette
 <div class="section level2">
 <h2 id="normalizing-dispersed-layouts">Normalizing dispersed layouts<a class="anchor" aria-label="anchor" href="#normalizing-dispersed-layouts"></a>
 </h2>
-<p>If there are disjoint clusters of ellipses, the optimizer will often spread these out more than is necessary, wasting space in our diagram. To tackle this, we use a SKYLINE-BL rectangle packing algorithm <span class="citation">(Jylänki 2010)</span> designed specifically for <strong>eulerr</strong>. In it, we surround each ellipse cluster with a bounding box, pack these boxes into a bin of appropriate size and aspect ratio, and adjust the coordinates of the ellipses in the clusters to compact our diagram. As a bonus, this increases the chance of having similar layouts for different function calls.</p>
+<p>If there are disjoint clusters of ellipses, the optimizer will often
+spread these out more than is necessary, wasting space in our diagram.
+To tackle this, we use a SKYLINE-BL rectangle packing algorithm <span class="citation">(Jylänki 2010)</span> designed specifically for
+<strong>eulerr</strong>. In it, we surround each ellipse cluster with a
+bounding box, pack these boxes into a bin of appropriate size and aspect
+ratio, and adjust the coordinates of the ellipses in the clusters to
+compact our diagram. As a bonus, this increases the chance of having
+similar layouts for different function calls.</p>
 </div>
 <div class="section level2 unnumbered">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Blake_2016">
-<p>Blake, Andrew. 2016. “The Impact of Graphical Choices on the Perception of Euler Diagrams.” Ph.D. dissertation, Brighton, UK: Brighton University. <a href="https://research.brighton.ac.uk/files/415740/main.pdf" class="external-link">https://research.brighton.ac.uk/files/415740/main.pdf</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Blake_2016" class="csl-entry">
+Blake, Andrew. 2016. <span>“The Impact of Graphical Choices on the
+Perception of <span>Euler</span> Diagrams.”</span> {Ph.D.} dissertation,
+Brighton, UK: Brighton University. <a href="https://research.brighton.ac.uk/files/415740/main.pdf" class="external-link">https://research.brighton.ac.uk/files/415740/main.pdf</a>.
 </div>
-<div id="ref-Jylaenki_2010">
-<p>Jylänki, Jukka. 2010. “A Thousand Ways to Pack the Bin – a Practical Approach to Two-Dimensional Rectangle Bin Packing.”</p>
+<div id="ref-Jylaenki_2010" class="csl-entry">
+Jylänki, Jukka. 2010. <span>“A Thousand Ways to Pack the Bin – a
+Practical Approach to Two-Dimensional Rectangle Bin Packing.”</span>
 </div>
-<div id="ref-larsson2018d">
-<p>Larsson, Johan. 2018. “polylabelr: Find the Pole of Inaccessibility (Visual Center) of a Polygon.”</p>
+<div id="ref-larsson2018d" class="csl-entry">
+Larsson, Johan. 2018. <span>“<span class="nocase">polylabelr</span>:
+Find the Pole of Inaccessibility (Visual Center) of a Polygon.”</span>
 </div>
-<div id="ref-mapbox2018">
-<p>Mapbox. 2018. “polylabel: A Fast Algorithm for Finding the Pole of Inaccessibility of a Polygon (in JavaScript and C++).” Mapbox.</p>
+<div id="ref-mapbox2018" class="csl-entry">
+Mapbox. 2018. <span>“<span class="nocase">polylabel</span>: A Fast
+Algorithm for Finding the Pole of Inaccessibility of a Polygon (in
+<span>JavaScript</span> and <span>C</span>++).”</span> Mapbox.
 </div>
-<div id="ref-RCT_2017">
-<p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.</p>
+<div id="ref-RCT_2017" class="csl-entry">
+R Core Team. 2017. <em><span>R</span>: A Language and Environment for
+Statistical Computing</em>. Vienna, Austria: R Foundation for
+Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
 </div>
 </div>
 </div>
