@@ -89,7 +89,8 @@ relationships. The shape of the diagram may be a circle or an ellipse.</p>
 <span>  <span class="va">combinations</span>,</span>
 <span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disjoint"</span>, <span class="st">"union"</span><span class="op">)</span>,</span>
 <span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"circle"</span>, <span class="st">"ellipse"</span><span class="op">)</span>,</span>
-<span>  loss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sum_sq"</span>, <span class="st">"sum_abs"</span>, <span class="st">"sum_reg"</span>, <span class="st">"max_sq"</span>, <span class="st">"max_abs"</span>, <span class="st">"max_reg"</span><span class="op">)</span>,</span>
+<span>  loss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"square"</span>, <span class="st">"abs"</span>, <span class="st">"region"</span><span class="op">)</span>,</span>
+<span>  loss_aggregator <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sum"</span>, <span class="st">"max"</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -135,11 +136,14 @@ data.frame (see <strong>methods (by class)</strong>)</p></dd>
 
 
 <dt>loss</dt>
-<dd><p>type of loss to minimize over. Losses starting with <code>sum</code> and
-<code>max</code> minimize over the sum and max of the type of loss. Losses ending
-with <code>sq</code> minimize the squares of the difference between the input and
-the result in the diagram. Losses ending with <code>abs</code> minimize the
-absolute value of the difference. Losses ending with <code>reg</code> minimize the</p></dd>
+<dd><p>type of loss to minimize over. If <code>"square"</code> is used together
+with the value <code>"sum"</code> for <code>loss_aggregator</code>, then the resulting loss
+function is the sum of squared errors, which is the default.</p></dd>
+
+
+<dt>loss_aggregator</dt>
+<dd><p>how the final loss is computed. <code>"sum"</code> indicates that
+the sum of the losses computed by <code>loss</code> are summed up. <code>"max"</code> indicates</p></dd>
 
 
 <dt>control</dt>
@@ -433,7 +437,7 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 <span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;spiny                         0  0.000     0.000       0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> plant&amp;sea                            2  0.000     2.000       0.034</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> plant&amp;spiny                          9  9.000     0.000       0.059</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sea&amp;spiny                            0  0.062    -0.062       0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sea&amp;spiny                            0  0.061    -0.061       0.001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;plant                  0  0.000     0.000       0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;sea                    0  0.431    -0.431       0.010</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;spiny                  0  0.100    -0.100       0.002</span>
@@ -445,7 +449,7 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 <span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;sea&amp;spiny                     0  0.000     0.000       0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> plant&amp;sea&amp;spiny                      0  0.098    -0.098       0.002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;plant&amp;sea              0  0.000     0.000       0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;plant&amp;spiny            0  0.054    -0.054       0.001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;plant&amp;spiny            0  0.055    -0.055       0.001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;sea&amp;spiny              0  0.000     0.000       0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;plant&amp;sea&amp;spiny               0  0.002    -0.002       0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;plant&amp;sea&amp;spiny               0  0.000     0.000       0.000</span>
