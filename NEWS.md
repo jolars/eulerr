@@ -6,6 +6,10 @@
   optimize the Euler diagram layout via `loss` and `loss_aggregator`.
   There is a new vignette that showcases this new feature.
 
+## Minor Changes
+
+- C++14 is now required for the package.
+
 ## Bug Fixes
 
 - Label repelling via `adjust_labels` in `plot.euler()` has been
