@@ -15,3 +15,5 @@ vignettes/figure/
 doc
 Meta
 compile_commands.json
+/doc/
+/Meta/

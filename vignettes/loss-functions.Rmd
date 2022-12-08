@@ -89,17 +89,14 @@ loss metric introduced by [@Micallef_2014a]. Together with
 To see what these different choices mean for the combination that we have
 looked at, we now refit the diagram for each combination.
 
-```{r fig.cap = "Euler diagrams fit to the combination above, using different loss function", fig.show = "hold"}
+```{r fig.cap = "Euler diagrams fit to the combination above, using different loss function", fig.show = "hold", fig.width = 3, fig.height = 3}
 losses <- c("square", "abs", "region")
 aggregators <- c("sum", "max")
 
 for (loss in losses) {
   for (aggregator in aggregators) {
     fit <- euler(combos, loss = loss, loss_aggregator = aggregator)
-    print(plot(
-      fit,
-      main = paste0("loss: ", loss, ", aggregator: ", aggregator)
-    ))
+    print(plot(fit, main = paste(aggregator, loss, sep = ", ")))
   }
 }
 ```
