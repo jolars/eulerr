@@ -1,4 +1,10 @@
-# eulerr (development version)
+# eulerr 8.0.0
+
+## Breaking Changes
+
+- GenSA has been replaced with DEoptim as the optimization method used when running
+  the extra (last-ditch) optimizer. This is a consequence of GenSA being scheduled for archival
+  on CRAN in the near future.
 
 # eulerr 7.0.0
 
@@ -15,7 +21,7 @@
 ## Bug Fixes
 
 - Label repelling via `adjust_labels` in `plot.euler()` has been
-  deprecated and removed to fix sanitizer warnings. 
+  deprecated and removed to fix sanitizer warnings.
 
 # eulerr 6.1.1
 

@@ -19,7 +19,7 @@ Description: Generate area-proportional Euler diagrams
 Depends:
     R (>= 3.3.0)
 Imports:
-    GenSA,
+    DEoptim,
     graphics,
     grDevices,
     grid,

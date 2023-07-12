@@ -199,7 +199,7 @@ test_that("a variety of sets can be reproduced", {
             shape = shape,
             loss = loss,
             loss_aggregator = loss_aggregator,
-            control = list(extraopt_control = list(max.call = 100))
+            control = list(extraopt_control = list(itermax = 1000))
           )
           expect_is(x, "euler")
           y <- expect_error(dont_print(x), NA)

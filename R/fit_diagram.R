@@ -82,12 +82,13 @@ fit_diagram <- function(combinations,
 
     orig[] <- areas_disjoint
 
-    out <- structure(list(
-      ellipses = fpar,
-      original.values = orig,
-      fitted.values = rep(1, length(orig))
-    ),
-    class = c("venn", "euler", "list")
+    out <- structure(
+      list(
+        ellipses = fpar,
+        original.values = orig,
+        fitted.values = rep(1, length(orig))
+      ),
+      class = c("venn", "euler", "list")
     )
     return(out)
   }
@@ -188,11 +189,12 @@ fit_diagram <- function(combinations,
         lwr <- rep.int(0, 3L)
         upr <- rep.int(bnd, 3L)
       } else {
-        pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L,
-          byrow = TRUE
-        ),
-        r, r, 0,
-        deparse.level = 0L
+        pars <- as.vector(rbind(
+          matrix(initial_layout$estimate, 2L,
+            byrow = TRUE
+          ),
+          r, r, 0,
+          deparse.level = 0L
         ))
         lwr <- c(rep.int(0, 4L), -2 * pi)
         upr <- c(rep.int(bnd, 4L), 2 * pi)
@@ -249,24 +251,26 @@ fit_diagram <- function(combinations,
 
         constraints <- get_constraints(compress_layout(newpars, id, nlm_fit))
 
-        last_ditch_effort <- GenSA::GenSA(
-          par = as.vector(newpars),
+        deoptim_control_in <- utils::modifyList(
+          list(
+            VTR = 0,
+            trace = FALSE
+          ),
+          control$extraopt_control
+        )
+
+        deoptim_control <- do.call(DEoptim::DEoptim.control, deoptim_control_in)
+
+        last_ditch_effort <- DEoptim::DEoptim(
           fn = optim_final_loss,
           lower = constraints$lwr,
           upper = constraints$upr,
+          control = deoptim_control,
           circle = circle,
           data = areas_disjoint,
           loss_type = loss,
-          loss_aggregator_type = loss_aggregator,
-          control = utils::modifyList(
-            list(
-              threshold.stop = sqrt(.Machine$double.eps),
-              max.call = 1e7,
-              trace.mat = FALSE
-            ),
-            control$extraopt_control
-          )
-        )$par
+          loss_aggregator_type = loss_aggregator
+        )$optim$bestmem
 
         last_ditch_fit <- as.vector(intersect_ellipses(
           last_ditch_effort,
@@ -325,15 +329,16 @@ fit_diagram <- function(combinations,
   }
 
   # Return eulerr structure
-  structure(list(
-    ellipses = fpar,
-    original.values = orig,
-    fitted.values = fit,
-    residuals = orig - fit,
-    regionError = regionError,
-    diagError = diagError,
-    stress = stress
-  ),
-  class = c("euler", "list")
+  structure(
+    list(
+      ellipses = fpar,
+      original.values = orig,
+      fitted.values = fit,
+      residuals = orig - fit,
+      regionError = regionError,
+      diagError = diagError,
+      stress = stress
+    ),
+    class = c("euler", "list")
   )
 }
