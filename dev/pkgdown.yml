@@ -1,5 +1,5 @@
-pandoc: 2.7.3
-pkgdown: 2.0.6
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   gallery: gallery.html
@@ -8,5 +8,5 @@ articles:
   under-the-hood: under-the-hood.html
   venn-diagrams: venn-diagrams.html
   visualization: visualization.html
-last_built: 2022-12-08T09:27Z
+last_built: 2023-09-20T13:44Z
 
