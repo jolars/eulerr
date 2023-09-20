@@ -40,7 +40,6 @@ Suggests:
 LinkingTo:
     Rcpp (>= 0.12.12),
     RcppArmadillo (>= 0.7.600.1.0)
-SystemRequirements: C++14
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
