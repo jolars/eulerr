@@ -7,9 +7,9 @@
 update_list(old, new)
 }
 \arguments{
-\item{x}{a list to be updated}
+\item{old}{a list to be updated}
 
-\item{val}{stuff to update \code{x} with}
+\item{new}{stuff to update \code{x} with}
 }
 \value{
 Returns an updated list.

@@ -6,7 +6,7 @@
 #' @param labels labels params
 #' @param quantities quantities params
 #' @param number current diagram number
-#' @param centers data.frame of data for labels and quantities
+#' @param merged_sets sets that are the same and have been merged
 #'
 #' @return A [grid::gList()] is returned.
 #' @keywords internal

@@ -73,8 +73,8 @@ ellipse <- function(h, k, a, b = a, phi = 0, n = 200L) {
 #' operations. It wraps around [polyclip::polyclip()], which is an
 #' interface to the **Clipper** C++ library.
 #'
-#' @param x polygon
-#' @param y polygon
+#' @param a polygon
+#' @param b polygon
 #' @param op operation
 #'
 #' @return A list of lists.

@@ -7,11 +7,11 @@
 poly_clip(a, b, op = c("intersection", "union", "minus", "xor"))
 }
 \arguments{
+\item{a}{polygon}
+
+\item{b}{polygon}
+
 \item{op}{operation}
-
-\item{x}{polygon}
-
-\item{y}{polygon}
 }
 \value{
 A list of lists.

@@ -12,8 +12,6 @@ setup_gpar(default = list(), user = list(), n)
 \item{user}{user-inputted values}
 
 \item{n}{required number of items}
-
-\item{x}{input}
 }
 \value{
 a \code{gpar} object

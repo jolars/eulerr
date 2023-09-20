@@ -19,7 +19,7 @@ setup_grobs(x, fills, edges, labels, quantities, number, merged_sets)
 
 \item{number}{current diagram number}
 
-\item{centers}{data.frame of data for labels and quantities}
+\item{merged_sets}{sets that are the same and have been merged}
 }
 \value{
 A \code{\link[grid:grid.grob]{grid::gList()}} is returned.

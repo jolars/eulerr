@@ -39,8 +39,8 @@ rescale <- function(x, new_min, new_max) {
 #' A wrapper for [utils::modifyList()] that attempts to coerce non-lists to
 #' lists before updating.
 #'
-#' @param x a list to be updated
-#' @param val stuff to update `x` with
+#' @param old a list to be updated
+#' @param new stuff to update `x` with
 #'
 #' @seealso [utils::modifyList()]
 #' @return Returns an updated list.
@@ -239,10 +239,9 @@ mix_colors <- function(rcol_in) {
 
 #' Setup gpars
 #'
-#' @param x input
-#' @param n required number of items
 #' @param default default values
 #' @param user user-inputted values
+#' @param n required number of items
 #'
 #' @return a `gpar` object
 #' @keywords internal
