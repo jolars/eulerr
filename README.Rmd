@@ -58,11 +58,15 @@ eulerr is also available as a shiny app hosted at
 ```{r specification}
 library(eulerr)
 # From Wilkinson 2012
-fit <- euler(c("A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
-               "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
-               "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
-               "A&B&F" = 1, "B&C&D" = 1),
-             shape = "ellipse")
+fit <- euler(
+  c(
+    "A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
+    "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
+    "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
+    "A&B&F" = 1, "B&C&D" = 1
+  ),
+  shape = "ellipse"
+)
 ```
 
 We can inspect the goodness-of-fit metrics *diagError* and *stress*
