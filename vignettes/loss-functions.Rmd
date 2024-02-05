@@ -2,7 +2,7 @@
 title: "Loss Functions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{loss-functions}
+  %\VignetteIndexEntry{Loss Functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: eulerr.bib
