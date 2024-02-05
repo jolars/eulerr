@@ -10,11 +10,12 @@
 separate_two_discs <- function(r1, r2, overlap) {
   if (r1 > 0 && r2 > 0) {
     stats::optimize(discdisc,
-                    interval = c(abs(r1 - r2), sum(r1, r2)),
-                    r1 = r1,
-                    r2 = r2,
-                    overlap = overlap,
-                    tol = sqrt(.Machine$double.eps))$minimum
+      interval = c(abs(r1 - r2), sum(r1, r2)),
+      r1 = r1,
+      r2 = r2,
+      overlap = overlap,
+      tol = sqrt(.Machine$double.eps)
+    )$minimum
   } else {
     0
   }
@@ -31,16 +32,20 @@ separate_two_discs <- function(r1, r2, overlap) {
 #' @return The bounding box as a list with xlim and ylim
 #' @keywords internal
 get_bounding_box <- function(h, k, a, b = NULL, phi = NULL) {
-  if (is.null(b))
+  if (is.null(b)) {
     b <- a
-  if (is.null(phi))
+  }
+  if (is.null(phi)) {
     phi <- 0
+  }
 
-  xlim <- sqrt(a^2*cos(phi)^2 + b^2*sin(phi)^2)
-  ylim <- sqrt(a^2*sin(phi)^2 + b^2*cos(phi)^2)
+  xlim <- sqrt(a^2 * cos(phi)^2 + b^2 * sin(phi)^2)
+  ylim <- sqrt(a^2 * sin(phi)^2 + b^2 * cos(phi)^2)
 
-  list(xlim = range(xlim + h, -xlim + h),
-       ylim = range(ylim + k, -ylim + k))
+  list(
+    xlim = range(xlim + h, -xlim + h),
+    ylim = range(ylim + k, -ylim + k)
+  )
 }
 
 #' Plotting coordinates for an ellipse
@@ -55,14 +60,14 @@ get_bounding_box <- function(h, k, a, b = NULL, phi = NULL) {
 #' @return A list of matrices of coordinates for the ellipses.
 #' @keywords internal
 ellipse <- function(h, k, a, b = a, phi = 0, n = 200L) {
-  theta <- seq.int(0, 2*pi, length.out = n)
+  theta <- seq.int(0, 2 * pi, length.out = n)
   m <- length(h)
   out <- vector("list", m)
   for (i in seq_along(h)) {
     out[[i]]$x <-
-      h[i] + a[i]*cos(theta)*cos(phi[i]) - b[i]*sin(theta)*sin(phi[i])
+      h[i] + a[i] * cos(theta) * cos(phi[i]) - b[i] * sin(theta) * sin(phi[i])
     out[[i]]$y <-
-      k[i] + b[i]*sin(theta)*cos(phi[i]) + a[i]*cos(theta)*sin(phi[i])
+      k[i] + b[i] * sin(theta) * cos(phi[i]) + a[i] * cos(theta) * sin(phi[i])
   }
   out
 }
@@ -85,23 +90,27 @@ poly_clip <- function(a, b, op = c("intersection", "union", "minus", "xor")) {
   b0 <- identical(length(b), 0L)
 
   if (op == "intersection") {
-    if (a0 || b0)
+    if (a0 || b0) {
       return(list())
+    }
   } else if (op == "union") {
-    if (a0 && !b0)
+    if (a0 && !b0) {
       return(b)
-    else if (!a0 && b0)
+    } else if (!a0 && b0) {
       return(a)
-    else if (!a0 && !b0) {
-      if (all(unlist(a) == unlist(b)))
+    } else if (!a0 && !b0) {
+      if (all(unlist(a) == unlist(b))) {
         return(a)
-    } else
+      }
+    } else {
       return(list())
+    }
   } else if (op == "minus") {
-    if (!a0 && b0)
+    if (!a0 && b0) {
       return(a)
-    else if (a0)
+    } else if (a0) {
       return(list())
+    }
   }
   polyclip::polyclip(a, b, op = op)
 }
