@@ -44,6 +44,7 @@ ellipse_arc <- function(saxes = c(1, 1),
                         rng = c(0, 2 * pi)) {
   b <- min(saxes[1], saxes[2])
   a <- max(saxes[1], saxes[2])
+  d2 <- (a - b) * (a + b)
   if (length(rng) == 1) {
     phi <- rng - theta
   } else {
@@ -570,7 +571,7 @@ for (i in 1:2) {
 }
 
 sel <- logical(nrow(pp))
-for (k in seq_along(pp)) {
+for (k in seq_len(nrow(pp))) {
   in_which <- ((pp[k, 1] - x) * cos(phi) + (pp[k, 2] - y) * sin(phi))^2 / ra^2 +
     ((pp[k, 1] - x) * sin(phi) - (pp[k, 2] - y) * cos(phi))^2 / rb^2 <= 1 + 0.1
   sel[k] <- all(in_which)
@@ -586,7 +587,7 @@ ord <- order(ang)
 pp <- pp[ord, ]
 
 j <- nrow(pp)
-for (i in seq_along(pp)) {
+for (i in seq_len(nrow(pp))) {
   k <- intersect(pp[i, 3:4], pp[j, 3:4])
   start <- atan2(pp[j, 2] - y[k], pp[j, 1] - x[k])
   stop <- atan2(pp[i, 2] - y[k], pp[i, 1] - x[k])
