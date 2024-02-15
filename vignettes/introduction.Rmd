@@ -41,7 +41,7 @@ The last of these (**venneuler**) was the primary inspiration for this
 package, along with the refinements that Fredrickson has presented on his
 [blog](http://www.benfrederickson.com/) and made available in his
 javascript [venn.js](https://github.com/benfred/venn.js).
-[eulerAPE](http://www.eulerdiagrams.org/eulerAPE/), which was the first
+[eulerAPE](https://www.eulerdiagrams.org/eulerAPE/), which was the first
 program to uses ellipses instead of circles, has also been instrumental in the
 design of **eulerr**. The downside to **eulerAPE** is that it only handles
 three sets that all need to intersect.
