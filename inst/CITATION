@@ -30,12 +30,6 @@ if (length(author)) {
                                                                e$role))
     }, aar)
 }
-if (length(author)) {
-  has_authors_at_R_field <- TRUE
-} else {
-  has_authors_at_R_field <- FALSE
-  author <- as.personList(meta$Author)
-}
 
 author <- format(author, include = c("given", "family"))
 if (length(author) > 1L)
@@ -56,8 +50,7 @@ bibentry(
   bibtype      = "inproceedings",
   title        = "A Case Study in Fitting Area-Proportional {{Euler}} Diagrams with Ellipses Using eulerr",
   booktitle    = "{Proceedings of {{International Workshop}} on {{Set Visualization}} and {{Reasoning}}}",
-  author       = personList(as.person("Johan Larsson"),
-                            as.person("Peter Gustafsson")),
+  author       = c(person("Johan", "Larsson"), person("Peter", "Gustafsson")),
   year         = 2018,
   month        = "apr",
   volume       = 2116,
