@@ -28,3 +28,4 @@
 .clang-format
 Makefile
 compile-commands.json
+^CRAN-SUBMISSION$
