@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">eulerr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">7.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">7.0.1</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
                         <h4 data-toc-skip class="author">Johan
 Larsson</h4>
             
-            <h4 data-toc-skip class="date">2022-12-12</h4>
+            <h4 data-toc-skip class="date">2024-02-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -132,8 +132,8 @@ and</li>
 inspiration for this package, along with the refinements that
 Fredrickson has presented on his <a href="http://www.benfrederickson.com/" class="external-link">blog</a> and made available in
 his javascript <a href="https://github.com/benfred/venn.js" class="external-link">venn.js</a>.
-<a href="http://www.eulerdiagrams.org/eulerAPE/" class="external-link">eulerAPE</a>, which was
-the first program to uses ellipses instead of circles, has also been
+<a href="https://www.eulerdiagrams.org/eulerAPE/" class="external-link">eulerAPE</a>, which
+was the first program to uses ellipses instead of circles, has also been
 instrumental in the design of <strong>eulerr</strong>. The downside to
 <strong>eulerAPE</strong> is that it only handles three sets that all
 need to intersect.</p>
@@ -172,9 +172,15 @@ and rows the set relationships for each observation,</li>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Input in the form of a named numeric vector</span></span>
-<span><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span> <span class="op">=</span> <span class="fl">25</span>, <span class="st">"B"</span> <span class="op">=</span> <span class="fl">5</span>, <span class="st">"C"</span> <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>                <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">5</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">5</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"A"</span> <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>  <span class="st">"B"</span> <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  <span class="st">"C"</span> <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Input as a matrix of logicals</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -201,12 +207,7 @@ and rows the set relationships for each observation,</li>
 <p>or directly access and plot the residuals.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Cleveland dot plot of the residuals</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://lattice.r-forge.r-project.org/" class="external-link">lattice</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html" class="external-link">dotplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">""</span>,</span>
-<span>        panel <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>          <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/panel.functions.html" class="external-link">panel.abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fl">0</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span>          <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/panel.dotplot.html" class="external-link">panel.dotplot</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
-<span>        <span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/dotchart.html" class="external-link">dotchart</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="introduction_files/figure-html/residual-plot-1.png" alt="Residuals for the fit diagram." width="700"><p class="caption">
 Residuals for the fit diagram.
@@ -228,10 +229,10 @@ however, the residuals are arguably of little concern.</p>
 retrieving their coordinates and radii.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         h       k     a     b phi</span></span>
-<span><span class="co">#&gt; A -0.5309 -0.2494 3.432 3.432 2.5</span></span>
-<span><span class="co">#&gt; B  1.1125 -0.2494 2.706 2.706 2.5</span></span>
-<span><span class="co">#&gt; C -1.5072  1.4101 1.493 1.493 2.5</span></span></code></pre></div>
+<span><span class="co">#&gt;        h       k     a     b   phi</span></span>
+<span><span class="co">#&gt; A -0.531 -0.2498 3.432 3.432 2.499</span></span>
+<span><span class="co">#&gt; B  1.112 -0.2498 2.706 2.706 2.499</span></span>
+<span><span class="co">#&gt; C -1.506  1.4113 1.493 1.493 2.499</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="goodness-of-fit">Goodness-of-fit<a class="anchor" aria-label="anchor" href="#goodness-of-fit"></a>
 </h3>
@@ -258,10 +259,24 @@ try to use ellipses instead. <span class="citation">(Wilkinson
 with a reasonably small error; with <strong>eulerr</strong>, however, we
 can get rid of that error entirely.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">wilkinson2012</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">4</span>, B <span class="op">=</span> <span class="fl">6</span>, C <span class="op">=</span> <span class="fl">3</span>, D <span class="op">=</span> <span class="fl">2</span>, E <span class="op">=</span> <span class="fl">7</span>, F <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                    <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"A&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                    <span class="st">"B&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                    <span class="st">"A&amp;B&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">wilkinson2012</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  A <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  B <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  C <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  D <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  E <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  F <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="st">"A&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"B&amp;F"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"A&amp;B&amp;F"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">fit3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">wilkinson2012</span>, shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit3</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -290,11 +305,13 @@ Customizing Euler plots is a breeze in eulerr.
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Remove fills, vary borders, display quantities, and switch font.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit2</span>,</span>
-<span>     quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>     fill <span class="op">=</span> <span class="st">"transparent"</span>,</span>
-<span>     lty <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,</span>
-<span>     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>font <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">fit2</span>,</span>
+<span>  quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  fill <span class="op">=</span> <span class="st">"transparent"</span>,</span>
+<span>  lty <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,</span>
+<span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>font <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="introduction_files/figure-html/eulerr-plot-2.png" alt="Customizing Euler plots is a breeze in eulerr." width="700"><p class="caption">
 Customizing Euler plots is a breeze in eulerr.
@@ -349,7 +366,7 @@ Computer Graphics</em> 18 (2): 321–31. <a href="https://doi.org/10.1109/TVCG.2
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
