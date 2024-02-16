@@ -1,6 +1,11 @@
 # Changelog
 
-## eulerr (development version)
+## eulerr 7.0.1
+
+### Minor Changes
+
+- Fixed some incorrect documentation of internal functions.
+- Corrected an url for eulerAPE.
 
 ## eulerr 7.0.0
 
