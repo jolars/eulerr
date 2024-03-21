@@ -546,7 +546,7 @@ plot.euler <- function(x,
                      name = "strip.top.vp",
                      layout = grid::grid.layout(nrow = 1, ncol = layout[2]))
 
-    lvls <- levels(strips$groups[[2]])
+    lvls <- levels(strips$groups[[ names(layout)[[2]] ]])
     n_lvls <- length(lvls)
     step <- 1/n_lvls
 
@@ -567,7 +567,7 @@ plot.euler <- function(x,
                      name = "strip.left.vp",
                      layout = grid::grid.layout(nrow = layout[1], ncol = 1))
 
-    lvls <- rev(levels(strips$groups[[1]]))
+    lvls <- rev(levels(strips$groups[[ names(layout)[[1]] ]]))
     n_lvls <- length(lvls)
     step <- 1/n_lvls
 
