@@ -1,10 +1,10 @@
-# eulerr (development version)
+# Changelog
 
-## Bug Fixes
+## eulerr (development version)
+
+### Bug Fixes
 
 - Fix order and layout of strips when grouping (#108, by @altairwei)
-
-# Changelog
 
 ## eulerr 7.0.1
 
