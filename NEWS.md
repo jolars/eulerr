@@ -1,6 +1,6 @@
 # Changelog
 
-## eulerr (development version)
+## eulerr 7.0.2
 
 ### Bug Fixes
 
