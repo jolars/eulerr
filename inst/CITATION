@@ -5,15 +5,17 @@ if (!length(year)) {
   year <- substring(meta$Built, i, i + 3)
 }
 
-if (!length(year))
-  year <- substr(Sys.Date(),1,4)
+if (!length(year)) {
+  year <- substr(Sys.Date(), 1, 4)
+}
 
 pkg <- meta$Package
 vers <- meta$Version
 title <- meta$Title
 
-if (is.null(vers))
+if (is.null(vers)) {
   vers <- packageVersion("eulerr")
+}
 
 vers <- paste("R package version", vers)
 
@@ -21,20 +23,28 @@ author <- meta$`Authors@R`
 if (length(author)) {
   aar <- .read_authors_at_R_field(author)
   author <- Filter(function(e) {
-    !(is.null(e$given) && is.null(e$family)) && !is.na(match("aut",
-                                                             e$role))
+    !(is.null(e$given) && is.null(e$family)) && !is.na(match(
+      "aut",
+      e$role
+    ))
   }, aar)
-  if (!length(author))
+  if (!length(author)) {
     author <- Filter(function(e) {
-      !(is.null(e$given) && is.null(e$family)) && !is.na(match("cre",
-                                                               e$role))
+      !(is.null(e$given) && is.null(e$family)) && !is.na(match(
+        "cre",
+        e$role
+      ))
     }, aar)
+  }
 }
 
 author <- format(author, include = c("given", "family"))
-if (length(author) > 1L)
+if (length(author) > 1L) {
   author <- paste(paste(head(author, -1L), collapse = ", "),
-                  tail(author, 1L), sep = " and ")
+    tail(author, 1L),
+    sep = " and "
+  )
+}
 
 bibentry(
   bibtype = "Manual",
@@ -60,5 +70,3 @@ bibentry(
   url          = "https://cran.r-project.org/package=eulerr",
   header       = "To cite the methodology behind eulerr in publications, please use:"
 )
-
-
