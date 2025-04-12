@@ -141,5 +141,3 @@ error_plot <- function(x,
                  legend = frame,
                  ...)
 }
-
-
