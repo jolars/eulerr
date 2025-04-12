@@ -1,11 +1,13 @@
-fit_diagram <- function(combinations,
-                        type = c("euler", "venn"),
-                        input = c("disjoint", "union"),
-                        shape = c("circle", "ellipse"),
-                        loss = c("square", "abs", "region"),
-                        loss_aggregator = c("sum", "max"),
-                        control = list(),
-                        ...) {
+fit_diagram <- function(
+  combinations,
+  type = c("euler", "venn"),
+  input = c("disjoint", "union"),
+  shape = c("circle", "ellipse"),
+  loss = c("square", "abs", "region"),
+  loss_aggregator = c("sum", "max"),
+  control = list(),
+  ...
+) {
   input <- match.arg(input)
   shape <- match.arg(shape)
   type <- match.arg(type)
@@ -82,23 +84,27 @@ fit_diagram <- function(combinations,
 
     orig[] <- areas_disjoint
 
-    out <- structure(list(
-      ellipses = fpar,
-      original.values = orig,
-      fitted.values = rep(1, length(orig))
-    ),
-    class = c("venn", "euler", "list")
+    out <- structure(
+      list(
+        ellipses = fpar,
+        original.values = orig,
+        fitted.values = rep(1, length(orig))
+      ),
+      class = c("venn", "euler", "list")
     )
     return(out)
   }
 
   # setup return object
-  fpar <- as.data.frame(matrix(
-    NA,
-    ncol = 5L,
-    nrow = n,
-    dimnames = list(setnames, c("h", "k", "a", "b", "phi"))
-  ), stringsAsFactors = TRUE)
+  fpar <- as.data.frame(
+    matrix(
+      NA,
+      ncol = 5L,
+      nrow = n,
+      dimnames = list(setnames, c("h", "k", "a", "b", "phi"))
+    ),
+    stringsAsFactors = TRUE
+  )
 
   # find empty sets
   empty_sets <- areas[seq_len(n)] < sqrt(.Machine$double.eps)
@@ -140,7 +146,8 @@ fit_diagram <- function(combinations,
 
       subset[lwrtri] <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
       disjoint[lwrtri] <- areas[twos] == 0
-      distances[lwrtri] <- mapply(separate_two_discs,
+      distances[lwrtri] <- mapply(
+        separate_two_discs,
         r1 = r[two[, 1L]],
         r2 = r[two[, 2L]],
         overlap = areas[twos],
@@ -182,17 +189,20 @@ fit_diagram <- function(combinations,
       circle <- match.arg(shape) == "circle"
 
       if (circle) {
-        pars <- as.vector(matrix(c(initial_layout$estimate, r), 3L,
+        pars <- as.vector(matrix(
+          c(initial_layout$estimate, r),
+          3L,
           byrow = TRUE
         ))
         lwr <- rep.int(0, 3L)
         upr <- rep.int(bnd, 3L)
       } else {
-        pars <- as.vector(rbind(matrix(initial_layout$estimate, 2L,
-          byrow = TRUE
-        ),
-        r, r, 0,
-        deparse.level = 0L
+        pars <- as.vector(rbind(
+          matrix(initial_layout$estimate, 2L, byrow = TRUE),
+          r,
+          r,
+          0,
+          deparse.level = 0L
         ))
         lwr <- c(rep.int(0, 4L), -2 * pi)
         upr <- c(rep.int(bnd, 4L), 2 * pi)
@@ -212,19 +222,22 @@ fit_diagram <- function(combinations,
         iterlim = 1e6
       )$estimate
 
-      tpar <- as.data.frame(matrix(
-        data = nlm_solution,
-        ncol = if (circle) 3L else 5L,
-        dimnames = list(
-          setnames[!empty_sets],
-          if (circle) {
-            c("h", "k", "r")
-          } else {
-            c("h", "k", "a", "b", "phi")
-          }
+      tpar <- as.data.frame(
+        matrix(
+          data = nlm_solution,
+          ncol = if (circle) 3L else 5L,
+          dimnames = list(
+            setnames[!empty_sets],
+            if (circle) {
+              c("h", "k", "r")
+            } else {
+              c("h", "k", "a", "b", "phi")
+            }
+          ),
+          byrow = TRUE
         ),
-        byrow = TRUE
-      ), stringsAsFactors = TRUE)
+        stringsAsFactors = TRUE
+      )
       if (circle) {
         tpar <- cbind(tpar, tpar[, 3L], 0)
       }
@@ -237,8 +250,11 @@ fit_diagram <- function(combinations,
       nlm_diagError <- diagError(nlm_fit, orig[!empty_subsets])
 
       # If inadequate solution, try with a second optimizer (slower, better)
-      if (!circle && control$extraopt &&
-        nlm_diagError > control$extraopt_threshold) {
+      if (
+        !circle &&
+          control$extraopt &&
+          nlm_diagError > control$extraopt_threshold
+      ) {
         # Set bounds for the parameters
         newpars <- matrix(
           data = as.vector(t(nlm_pars)),
@@ -325,15 +341,16 @@ fit_diagram <- function(combinations,
   }
 
   # Return eulerr structure
-  structure(list(
-    ellipses = fpar,
-    original.values = orig,
-    fitted.values = fit,
-    residuals = orig - fit,
-    regionError = regionError,
-    diagError = diagError,
-    stress = stress
-  ),
-  class = c("euler", "list")
+  structure(
+    list(
+      ellipses = fpar,
+      original.values = orig,
+      fitted.values = fit,
+      residuals = orig - fit,
+      regionError = regionError,
+      diagError = diagError,
+      stress = stress
+    ),
+    class = c("euler", "list")
   )
 }
