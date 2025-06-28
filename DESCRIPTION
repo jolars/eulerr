@@ -28,7 +28,7 @@ Imports:
     Rcpp,
     stats,
     utils
-Suggests: 
+Suggests:
     covr,
     knitr,
     lattice,
