@@ -29,3 +29,6 @@
 Makefile
 compile-commands.json
 ^CRAN-SUBMISSION$
+^.direnv$
+^flake.lock$
+^flake.nix$
