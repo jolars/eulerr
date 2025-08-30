@@ -16,36 +16,32 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          shellHook = ''
-            mkdir -p "$(pwd)/_libs"
-            export R_LIBS_USER="$(pwd)/_libs"
-          '';
           packages =
-            # let
-            #   SLOPE = (
-            #     pkgs.rPackages.buildRPackage {
-            #       name = "SLOPE";
-            #       src = ./.;
-            #       propagatedBuildInputs = with pkgs.rPackages; [
-            #         Matrix
-            #         Rcpp
-            #         RcppEigen
-            #         covr
-            #         knitr
-            #         rmarkdown
-            #         scales
-            #         spelling
-            #         testthat
-            #         SparseM
-            #         caret
-            #         e1071
-            #         bigmemory
-            #         BH
-            #       ];
-            #     }
-            #   );
-            # in
-            with pkgs; [
+            let
+              eulerr = (
+                pkgs.rPackages.buildRPackage {
+                  name = "eulerr";
+                  src = ./.;
+                  propagatedBuildInputs = with pkgs.rPackages; [
+                    GenSA
+                    polyclip
+                    polylabelr
+                    Rcpp
+                    RcppArmadillo
+                    knitr
+                    rmarkdown
+                    testthat
+                    lattice
+                    pBrackets
+                    RConics
+                    spelling
+                    covr
+                  ];
+                }
+              );
+            in
+            with pkgs;
+            [
               bashInteractive
               autoconf
               go-task
@@ -54,19 +50,7 @@
               (rWrapper.override {
                 packages = with rPackages; [
                   devtools
-                  GenSA
-                  polyclip
-                  polylabelr
-                  Rcpp
-                  RcppArmadillo
-                  covr
-                  knitr
-                  lattice
-                  pBrackets
-                  RConics
-                  rmarkdown
-                  spelling
-                  testthat
+                  eulerr
                 ];
               })
             ];
