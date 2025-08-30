@@ -1,3 +1,5 @@
 destination: docs
 development:
   mode: auto
+template:
+  bootstrap: 5
