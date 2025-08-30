@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+title: eulerr
+version: 7.0.2
+date-released: '2024-03-28'
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Johan
+    family-names: Larsson
+    email: johan@jolars.co
+    affiliation: University of Copenhagen
+    orcid: 'https://orcid.org/0000-0002-4029-5945'
+repository-code: 'https://github.com/jolars/eulerr'
+keywords:
+  - euler diagrams
+  - venn diagrams
+  - data visualization
+  - set visualization
+  - R
+  - ellipses
+license: GPL-3.0
+preferred-citation:
+  type: conference-paper
+  title: >-
+    A Case Study in Fitting Area-Proportional {{Euler}}
+    Diagrams with Ellipses Using eulerr
+  collection-title: Proceedings of international workshop on set visualization and reasoning 2018
+  authors:
+    - given-names: Johan
+      family-names: Larsson
+      email: johan@jolars.co
+      affiliation: University of Copenhagen
+      orcid: 'https://orcid.org/0000-0002-4029-5945'
+    - given-names: Peter
+      family-names: Gustafsson
+      affiliation: Lund University
+  year: 2018
+  conference:
+    name: Set visualization and reasoning 2018
+    city: Edinburgh
+    country: UK
+    date-start: '2018-06-18'
+    date-end: '2018-06-18'
+  url: 'http://ceur-ws.org/Vol-2116/paper7.pdf'
