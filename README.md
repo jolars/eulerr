@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# eulerr
+# eulerr <a href="https://jolars.github.io/eulerr/"><img src='man/figures/logo.svg' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -78,9 +78,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 3.476692e-13
+#> [1] 5.056831e-11
 fit$diagError
-#> [1] 1.134498e-07
+#> [1] 1.019054e-06
 ```
 
 and plot it
