@@ -5,8 +5,7 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg)](https://github.com/jolars/eulerr/actions)
+[![R-CMD-check](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml)
 [![Coverage
 Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jolars/eulerr)
 [![CRAN
@@ -51,11 +50,27 @@ eulerr is also available as a shiny app hosted at
 ``` r
 library(eulerr)
 # From Wilkinson 2012
-fit <- euler(c("A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
-               "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
-               "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
-               "A&B&F" = 1, "B&C&D" = 1),
-             shape = "ellipse")
+fit <- euler(
+  c(
+    "A" = 4,
+    "B" = 6,
+    "C" = 3,
+    "D" = 2,
+    "E" = 7,
+    "F" = 3,
+    "A&B" = 2,
+    "A&F" = 2,
+    "B&C" = 2,
+    "B&D" = 1,
+    "B&F" = 2,
+    "C&D" = 1,
+    "D&E" = 1,
+    "E&F" = 1,
+    "A&B&F" = 1,
+    "B&C&D" = 1
+  ),
+  shape = "ellipse"
+)
 ```
 
 We can inspect the goodness-of-fit metrics *diagError* and *stress* for
@@ -63,9 +78,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 6.27447e-14
+#> [1] 3.476692e-13
 fit$diagError
-#> [1] 4.418069e-08
+#> [1] 1.134498e-07
 ```
 
 and plot it

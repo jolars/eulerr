@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 # eulerr
 
 <!-- badges: start -->
-[![R build status](https://github.com/jolars/eulerr/workflows/R-CMD-check/badge.svg)](https://github.com/jolars/eulerr/actions)
+[![R-CMD-check](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml)
 [![Coverage Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jolars/eulerr)
 [![CRAN Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 <!-- badges: end -->
@@ -60,10 +60,22 @@ library(eulerr)
 # From Wilkinson 2012
 fit <- euler(
   c(
-    "A" = 4, "B" = 6, "C" = 3, "D" = 2, "E" = 7, "F" = 3,
-    "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
-    "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
-    "A&B&F" = 1, "B&C&D" = 1
+    "A" = 4,
+    "B" = 6,
+    "C" = 3,
+    "D" = 2,
+    "E" = 7,
+    "F" = 3,
+    "A&B" = 2,
+    "A&F" = 2,
+    "B&C" = 2,
+    "B&D" = 1,
+    "B&F" = 2,
+    "C&D" = 1,
+    "D&E" = 1,
+    "E&F" = 1,
+    "A&B&F" = 1,
+    "B&C&D" = 1
   ),
   shape = "ellipse"
 )
