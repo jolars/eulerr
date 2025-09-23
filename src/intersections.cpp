@@ -111,7 +111,7 @@ intersect(const eulerr::Conic& conic_A, const eulerr::Conic& conic_B)
 
   // Intersect one of the conics with each line to get 0 to 4 points
   std::vector<eulerr::Point> points;
-  if (is_finite(lines)) {
+  if (lines.is_finite()) {
     intersect_conic_line(A, lines.col(0), points);
     intersect_conic_line(A, lines.col(1), points);
   }
