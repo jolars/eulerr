@@ -9,6 +9,6 @@ bibentry(
   pages        = "84--91",
   publisher    = "{{CEUR Workshop Proceedings}}",
   address      = "{{Edinburgh, United Kingdom}}",
-  url          = "http://ceur-ws.org/Vol-2116/paper7.pdf",
+  url          = "https://ceur-ws.org/Vol-2116/paper7.pdf",
   header       = "To cite the methodology behind eulerr in publications, please use:"
 )
