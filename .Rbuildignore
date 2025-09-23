@@ -34,3 +34,4 @@
 ^flake\.nix$
 ^\.envrc$
 ^CITATION\.cff$
+^air\.toml$
