@@ -138,7 +138,7 @@ fit_diagram <- function(
 
       # Establish identities of disjoint and subset sets
       subset <- disjoint <- matrix(FALSE, ncol = n, nrow = n)
-      distances <- area_mat <- matrix(0, ncol = n, nrow = n)
+      distances <- matrix(0, ncol = n, nrow = n)
 
       lwrtri <- lower.tri(subset)
 
@@ -194,8 +194,6 @@ fit_diagram <- function(
           3L,
           byrow = TRUE
         ))
-        lwr <- rep.int(0, 3L)
-        upr <- rep.int(bnd, 3L)
       } else {
         pars <- as.vector(rbind(
           matrix(initial_layout$estimate, 2L, byrow = TRUE),
@@ -204,8 +202,6 @@ fit_diagram <- function(
           0,
           deparse.level = 0L
         ))
-        lwr <- c(rep.int(0, 4L), -2 * pi)
-        upr <- c(rep.int(bnd, 4L), 2 * pi)
       }
 
       orig[!empty_subsets] <- areas_disjoint
@@ -277,8 +273,7 @@ fit_diagram <- function(
           control = utils::modifyList(
             list(
               threshold.stop = sqrt(.Machine$double.eps),
-              max.call = 1e7,
-              trace.mat = FALSE
+              max.call = 1e7
             ),
             control$extraopt_control
           )
