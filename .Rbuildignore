@@ -33,3 +33,4 @@ compile-commands.json
 ^flake.lock$
 ^flake.nix$
 .envrc$
+^CITATION\.cff$
