@@ -1,92 +1,90 @@
-# Changelog
+# eulerr 7.0.3
 
-## eulerr 7.0.3
-
-### Bug Fixes
+## Bug Fixes
 
 - Fix deprecated use of `arma::is_finite()` in C++ code.
 - Fix URL link to eulerAPE in documentation.
 - Fix URL link to workshop paper in documentation and citation.
 
-## eulerr 7.0.2
+# eulerr 7.0.2
 
-### Bug Fixes
+## Bug Fixes
 
 - Fix order and layout of strips when grouping (#108, by @altairwei)
 
-## eulerr 7.0.1
+# eulerr 7.0.1
 
-### Minor Changes
+## Minor Changes
 
 - Fixed some incorrect documentation of internal functions.
 - Corrected an url for eulerAPE.
 
-## eulerr 7.0.0
+# eulerr 7.0.0
 
-### New Features
+## New Features
 
 - It is now possible to set the loss function to be used when trying to
   optimize the Euler diagram layout via `loss` and `loss_aggregator`.
   There is a new vignette that showcases this new feature.
 
-### Minor Changes
+## Minor Changes
 
 - C++14 is now required for the package.
 
-### Bug Fixes
+## Bug Fixes
 
 - Label repelling via `adjust_labels` in `plot.euler()` has been
   deprecated and removed to fix sanitizer warnings.
 
-## eulerr 6.1.1
+# eulerr 6.1.1
 
-### Minor changes
+## Minor changes
 
 - citation to conference paper added to `inst/CITATION`
 - error messages for erroneous input have been improved in several places
 - switched `PI` to `M_PI` to support `STRICT_R_HEADERS` in C++ code
   (#82, thanks @eddelbuettel)
 
-### Bug fixes
+## Bug fixes
 
 - error in documentation for list method has been fixed, thanks @gprezza (##77)
 
-## eulerr 6.1.0
+# eulerr 6.1.0
 
-### Minor changes
+## Minor changes
 
 - Label repelling (activated by calling `euler()` with `adjust_labels = TRUE`)
   no longer repels text labels away from the edges of the shapes in
   the diagram.
 
-### Bug fixes
+## Bug fixes
 
 - Rectify sanitizer error from clang-ASAN test environment.
 
-## eulerr 6.0.2
+# eulerr 6.0.2
 
-### Bug fixes
+## Bug fixes
 
 - Set `stringsAsFactors = TRUE` inside all relevant functions in `euler()`
   to avoid errors in upcoming R version.
 - Fix broken link in _eulerr under the hood_ vignette.
 
-## eulerr 6.0.1
+# eulerr 6.0.1
 
-### Minor changes
+## Minor changes
 
 - Throw an error message when the number of sets in `venn()` exceeds 5 (##65)
 - Performance improved when large lists are used as input to `euler()` and
   `venn()` (##64, @privefl)
 
-### Bug fixes
+## Bug fixes
 
 - Correctly handle `data.frame` inputs to `euler()` when categorical
   variables are character vectors and not factors.
 
-## eulerr 6.0.0
+# eulerr 6.0.0
 
-### New features
+## New features
 
 - In `plot.euler()`, percentages can be added to the plot in addition to or
   instead of counts by providing a `list` to the `quantities` argument
@@ -102,7 +100,7 @@
 - A new vignette featuring a gallery of plots from the package has been
   added.
 
-### Minor changes
+## Minor changes
 
 - The default `cex` for quantity labels has changed from 1.0 to 0.9.
 - Labels for sets that overlap are now merged (partly fixes ##45)
@@ -112,14 +110,14 @@
 - Plotting data has been exposed in a `data` slot in the object created
   by calling to `plot.euler()` (##57)
 
-### Bug fixes
+## Bug fixes
 
 - An error in layout normalization that occurred sometimes
   with ellipses has been fixed.
 
 ## eulerr 5.1.0
 
-### New features
+## New features
 
 - `venn()` is a new function that produces Venn diagrams for up to
   5 sets. The interface
@@ -127,7 +125,7 @@
   can also be provided. A new vignette, _Venn diagrams with eulerr_,
   exemplifies its use.
 
-### Minor changes
+## Minor changes
 
 - Calculations for the strips in `plot.euler()` when a list of
   Euler diagrams is given has been improved. Setting `fontsize` or
@@ -138,7 +136,7 @@
 - `eulergram()` objects from `plot.euler()` now have a proper grob name
   for the canvas grob, so that extracting information from them is easier.
 
-### Bug fixes
+## Bug fixes
 
 - Return value documentation for `euler()` now correctly says "ellipses"
   and not "coefficients".
@@ -146,15 +144,15 @@
   when values are numerical. (##42)
 - Fixed some spelling errors in news and vignettes.
 
-## eulerr 5.0.0
+# eulerr 5.0.0
 
-### New features
+## New features
 
 - `error_plot()` is a new function that offers diagnostic plots of
   fits from `euler()`, letting the user visualize the error in the
   resulting Euler diagram.
 
-### Major changes
+## Major changes
 
 - `euler()` once again uses the residual sums of squares, rather than the
   stress metric, as optimization objective, which means that
@@ -167,7 +165,7 @@
 - The c++ internals have been rewritten using more memory-efficient, performant
   and expressive code.
 
-### Minor changes
+## Minor changes
 
 - The `euler.data.frame()` method (and by proxy the `euler.matrix()` method)
   can now take matrices with factors in addition to the previously supported
@@ -190,7 +188,7 @@
 - Parts of the _eulerr under the hood_ vignette has been branched off into
   a new vignette regarding visualization.
 
-### Bug fixes
+## Bug fixes
 
 - Empty combinations can now be provided and will be plotted (generating
   completely blank plots).
@@ -199,9 +197,9 @@
 - Several spelling and grammar mistakes were corrected in vignettes and
   documentation.
 
-## eulerr 4.1.0
+# eulerr 4.1.0
 
-### Minor changes
+## Minor changes
 
 - `plot.euler()` now returns a `gTree` object. All of the plotting mechanisms
   are now also found in this function and `plot.eulergram()` and
@@ -215,16 +213,16 @@
 - The last-ditch optimizer has been switched back to `GenSA::GenSA()` from
   `RcppDE::DEoptim()`.
 
-### Bug fixes
+## Bug fixes
 
 - The **grid** parameters available for _edges_ are now correctly specified in
   the manual for `plot.euler()`.
 - `euler.data.frame()` now works as expected for tibbles (from the **tibble**
   package) when argument `by` is used.
 
-## eulerr 4.0.0
+# eulerr 4.0.0
 
-### Major changes
+## Major changes
 
 - `plot.euler()` has been rewritten completely from scratch, now using
   a custom **grid**-based implementation rather than **lattice**. As a result,
@@ -240,7 +238,7 @@
 - A new function `eulerr_options()` have been provided in order to set
   default graphical parameters for the diagrams.
 
-### Minor changes
+## Minor changes
 
 - Arguments `counts` and `outer_strips` to `plot.euler()` are now defunct.
 - `euler()` now always returns ellipse-based parameters
@@ -251,14 +249,14 @@
 - Layouts are now partially normalized so that diagrams will look
   approximately the same even with different random seeds.
 
-### Bug fixes
+## Bug fixes
 
 - Providing custom labels to `quantities` and `labels` arguments of
   `plot.euler()` now works correctly (##20).
 
-## eulerr 3.1.0
+# eulerr 3.1.0
 
-### Major changes
+## Major changes
 
 - The last-ditch optimizer switched from `GenSA::GenSA()` to
   `RcppDE::DEoptim()`.
@@ -267,12 +265,12 @@
 - In final optimization, we now use _stress_ instead of residual sums
   of squares as a target for our optimizer.
 
-### Minor changes
+## Minor changes
 
 - `label` is now a proper generic with an appropriate method (`label.euler()`).
 - The **eulerr under the hood** vignette has received a substantial update.
 
-### Bug fixes
+## Bug fixes
 
 - Fixed warnings resulting from the deprecated `counts` argument in one
   of the vignettes.
@@ -280,16 +278,16 @@
 - Corrected erroneous labeling when `auto.key = TRUE` and labels were
   _not_ in alphabetic order. (##15)
 
-## eulerr 3.0.1
+# eulerr 3.0.1
 
-### Bug fixes
+## Bug fixes
 
 - Added the missing %\\VignetteEngine{knitr::knitr} to both vignettes. It had
   mistakenly been left out, which had mangled the resulting vignettes.
 
-## eulerr 3.0.0
+# eulerr 3.0.0
 
-### Major changes
+## Major changes
 
 - Ellipses are now supported by setting the new argument `shape = "ellipse"`
   in `euler()`. This functionality accompanies an overhaul of the
@@ -308,7 +306,7 @@
 - The initial optimizer now uses an analytical Hessian in addition to
   gradient.
 
-### Minor changes
+## Minor changes
 
 - The initial optimizer now restarts up to 10 times and picks the best
   fit (unless it is perfect somewhere along the way).
@@ -327,9 +325,9 @@
   [v2.0.0](https://github.com/jolars/eulerr/releases/tag/v2.0.0) has been made
   defunct.
 
-## eulerr 2.0.0
+# eulerr 2.0.0
 
-### Major changes
+## Major changes
 
 - `eulerr()` has been replaced with `euler()` (see update 1.1.0) and made
   defunct.
@@ -343,7 +341,7 @@
 - Arguments `polygon_args`, `mar`, and `text_args` to `plot.euler()` have been
   made defunct.
 
-### Minor changes
+## Minor changes
 
 - `plot.euler()` handles conflicting arguments better.
 - c++ routines in `eulerr` now use registration.
@@ -356,13 +354,13 @@
 - Argument `fill_opacity` is softly deprecated and has been replaced with
   `fill_alpha` for consistency with other lattice functions.
 
-### Bug fixes
+## Bug fixes
 
 - `border` argument in `plot.euler()` works again (##7).
 
-## eulerr 1.1.0
+# eulerr 1.1.0
 
-### Major changes
+## Major changes
 
 - `eulerr()` and its related methods been deprecated and are being replaced by
   `euler()`, which takes slightly different input. Notably, the default is
@@ -373,7 +371,7 @@
   lattice. As a result, arguments `polygon_args`, `mar`, and `text_args` have been
   deprecated.
 
-### Minor changes
+## Minor changes
 
 - Added a `counts` argument to `plot.eulerr`, which intersections and
   complements with counts from the original set specification (##6).
@@ -392,15 +390,15 @@
 - `euler()` now uses `nlm()` instead of `optim(method = "Nelder-Mead")` for
   its final optimization.
 
-### Bug fixes
+## Bug fixes
 
 - The previous algorithm incorrectly computed loss from unions of sets. It now
   computes loss from disjoint class combinations.
 - Added missing row breaks in `print.eulerr`.
 
-## eulerr 1.0.0
+# eulerr 1.0.0
 
-### New features
+## New features
 
 - Final optimization routines have been completely rewritten in C++ using Rcpp
   and RcppArmadillo.
@@ -413,7 +411,7 @@
 - Improved label placement by using a two-dimensional kernel density estimation
   instead of means to calculate label centers.
 
-### Bug fixes and minor improvements
+## Bug fixes and minor improvements
 
 - Cleaned up typos and grammar errors in the _Introduction to eulerr_ vignette.
 - Added `mar` argument to `plot.eulerr` with a default that produces
@@ -424,6 +422,6 @@
 - Added a `print.eulerr` method.
 - Updated vignette to cover new features and changes.
 
-## eulerr 0.1.0
+# eulerr 0.1.0
 
 - The first release.
