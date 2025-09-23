@@ -1,7 +1,9 @@
 tmp <- tempfile()
 
-download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/plants/plants.data",
-              tmp)
+download.file(
+  "https://archive.ics.uci.edu/ml/machine-learning-databases/plants/plants.data",
+  tmp
+)
 
 d1 <- readLines(tmp)
 d2 <- strsplit(d1, ",", fixed = TRUE)

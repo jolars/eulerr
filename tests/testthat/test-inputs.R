@@ -27,9 +27,11 @@ test_that("normal use of euler() returns no errors", {
   expect_silent(dont_print(euler(dat, by = x)))
   expect_silent(dont_print(venn(dat, by = x)))
 
-  d <- data.frame(Apple = c(1, 0, 0, 1),
-                  Banana = c(0, 1, 0, 1),
-                  Orange = c(1, 0, 1, 0))
+  d <- data.frame(
+    Apple = c(1, 0, 0, 1),
+    Banana = c(0, 1, 0, 1),
+    Orange = c(1, 0, 1, 0)
+  )
   expect_silent(euler(d))
 })
 
@@ -64,8 +66,10 @@ test_that("all venn diagram sizes work", {
 })
 
 test_that("using weights works", {
-  dat2 <- data.frame(A = c(TRUE, FALSE, TRUE, TRUE),
-                     B = c(FALSE, TRUE, TRUE, FALSE))
+  dat2 <- data.frame(
+    A = c(TRUE, FALSE, TRUE, TRUE),
+    B = c(FALSE, TRUE, TRUE, FALSE)
+  )
   expect_is(euler(dat2, weights = c(3, 2, 1, 1)), "euler")
 })
 
@@ -85,16 +89,16 @@ test_that("zero-sized input is allowed", {
 })
 
 test_that("factors in euler.data.frame() are handled appropriately", {
-  d <- data.frame(A = sample(c(TRUE, FALSE), 90, TRUE),
-                  gender = gl(3, 30, 90, c("man", "woman", "transgender")),
-                  status = sample(gl(2, 45, 90, c("cohabitation", "single"))))
+  d <- data.frame(
+    A = sample(c(TRUE, FALSE), 90, TRUE),
+    gender = gl(3, 30, 90, c("man", "woman", "transgender")),
+    status = sample(gl(2, 45, 90, c("cohabitation", "single")))
+  )
   expect_silent(f <- euler(d, by = list(status)))
 })
 
 test_that("list method works appropriately", {
-  l <- list(A = c("a", "b", "c"),
-            B = c("b", "e"),
-            C = c("c"))
+  l <- list(A = c("a", "b", "c"), B = c("b", "e"), C = c("c"))
   expect_silent(euler(l))
 })
 

@@ -32,35 +32,52 @@
 #'
 #' @examples
 #' error_plot(euler(organisms), quantities = FALSE)
-error_plot <- function(x,
-                       type = c("regionError", "residuals"),
-                       quantities = TRUE,
-                       pal = NULL,
-                       ...)
-{
+error_plot <- function(
+  x,
+  type = c("regionError", "residuals"),
+  quantities = TRUE,
+  pal = NULL,
+  ...
+) {
   type <- match.arg(type)
   dots <- list(...)
   n <- 101 # number of colors in legend
 
-  if (!is.null(dots$fills))
+  if (!is.null(dots$fills)) {
     stop("values for 'fills' are not allowed here and will be ignored.")
+  }
 
-  if (!is.null(dots$legend))
+  if (!is.null(dots$legend)) {
     stop("values for 'legend' are not allowed here and will be ignored.")
+  }
 
-  if (!is.null(dots$strips))
+  if (!is.null(dots$strips)) {
     stop("values for 'strips' are not allowed here and will be ignored.")
+  }
 
-  r <- switch(type,
-              residuals = stats::residuals(x),
-              regionError = sign(stats::residuals(x))*x$regionError)
+  r <- switch(
+    type,
+    residuals = stats::residuals(x),
+    regionError = sign(stats::residuals(x)) * x$regionError
+  )
 
   if (is.null(pal)) {
-    pal <- grDevices::colorRampPalette(c("#67001F", "#B2182B", "#D6604D",
-                                         "#F4A582", "#FDDBC7", "#F7F7F7",
-                                         "#D1E5F0", "#92C5DE", "#4393C3",
-                                         "#2166AC", "#053061"),
-                                       space = "rgb")
+    pal <- grDevices::colorRampPalette(
+      c(
+        "#67001F",
+        "#B2182B",
+        "#D6604D",
+        "#F4A582",
+        "#FDDBC7",
+        "#F7F7F7",
+        "#D1E5F0",
+        "#92C5DE",
+        "#4393C3",
+        "#2166AC",
+        "#053061"
+      ),
+      space = "rgb"
+    )
   }
 
   lim <- max(c(abs(r), ifelse(type == "regionError", 0.01, 0)))
@@ -74,23 +91,30 @@ error_plot <- function(x,
 
   ind <- findInterval(r, s)
 
-  labels_grob <- grid::textGrob(label = labels,
-                                x = rep(0, length(labels)),
-                                y = labels,
-                                just = "left",
-                                vp = grid::viewport(yscale = rng),
-                                default.units = "native",
-                                name = paste("eulerr", "error_plot", sep = "."))
+  labels_grob <- grid::textGrob(
+    label = labels,
+    x = rep(0, length(labels)),
+    y = labels,
+    just = "left",
+    vp = grid::viewport(yscale = rng),
+    default.units = "native",
+    name = paste("eulerr", "error_plot", sep = ".")
+  )
 
   heights <- grid::unit(c(1, 1, 1), c("lines", "null", "lines"))
-  widths <- grid::unit(c(1, 1, 1),
-                       c("lines", "lines", "grobwidth"),
-                       data = list(NULL, NULL, labels_grob))
+  widths <- grid::unit(
+    c(1, 1, 1),
+    c("lines", "lines", "grobwidth"),
+    data = list(NULL, NULL, labels_grob)
+  )
 
-  layout <- grid::grid.layout(nrow = 3, ncol = 3,
-                              heights = heights,
-                              widths = widths,
-                              respect = TRUE)
+  layout <- grid::grid.layout(
+    nrow = 3,
+    ncol = 3,
+    heights = heights,
+    widths = widths,
+    respect = TRUE
+  )
 
   frame <- grid::frameGrob(
     layout = layout,
@@ -98,8 +122,8 @@ error_plot <- function(x,
     name = paste("eulerr", "error_plot", "key", sep = ".")
   )
 
-  step <- diff(range(s))/(n - 1)
-  y_rect <- seq(min(s) + step/2, max(s) - step/2, length.out = n - 1)
+  step <- diff(range(s)) / (n - 1)
+  y_rect <- seq(min(s) + step / 2, max(s) - step / 2, length.out = n - 1)
 
   ticks_grob <- grid::segmentsGrob(
     x0 = rep(0, n_labels),
@@ -134,10 +158,12 @@ error_plot <- function(x,
   frame <- grid::placeGrob(frame, ticks_grob, row = 2, col = 2)
   frame <- grid::placeGrob(frame, labels_grob, row = 2, col = 3)
 
-  graphics::plot(x,
-                 fills = pal(n)[ind],
-                 labels = TRUE,
-                 quantities = if (quantities) round(r, 3) else FALSE,
-                 legend = frame,
-                 ...)
+  graphics::plot(
+    x,
+    fills = pal(n)[ind],
+    labels = TRUE,
+    quantities = if (quantities) round(r, 3) else FALSE,
+    legend = frame,
+    ...
+  )
 }

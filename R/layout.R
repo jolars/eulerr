@@ -12,17 +12,19 @@ skyline_pack <- function(m) {
   n <- NCOL(m)
   w <- m[2L, ] - m[1L, ]
   h <- m[4L, ] - m[3L, ]
-  sizes <- h*w
+  sizes <- h * w
 
   # Add some padding for the rectangles
   #padding <- 1.6*sqrt(sum(sizes))*0.015
-  padding <- sum(w, na.rm = TRUE)*0.8*0.015
+  padding <- sum(w, na.rm = TRUE) * 0.8 * 0.015
 
   # Pick a maximum bin width. Make sure the largest rectangle fits.
   #bin_w <- max(1.6*sqrt(sum(sizes)), w + padding)
-  bin_w <- max(sum(w, na.rm = TRUE)*0.8,
-               sum(w[order(w, decreasing = TRUE)][1:2] + 2*padding),
-               w + padding)
+  bin_w <- max(
+    sum(w, na.rm = TRUE) * 0.8,
+    sum(w[order(w, decreasing = TRUE)][1:2] + 2 * padding),
+    w + padding
+  )
 
   w <- w + padding
   h <- h + padding
@@ -43,12 +45,12 @@ skyline_pack <- function(m) {
 
     looking <- TRUE
     while (looking) {
-      j <- which(ord == (1L + 2L*k) | ord == (2L + 2L*k))[1L]
+      j <- which(ord == (1L + 2L * k) | ord == (2L + 2L * k))[1L]
 
       p1 <- ord[ord == j]
       p2 <- ord[ord == j + 1L]
 
-      left  <- skyline[2L, 1L:p1] - skyline[2L, p1] > tol
+      left <- skyline[2L, 1L:p1] - skyline[2L, p1] > tol
       right <- skyline[2L, p2:NCOL(skyline)] - skyline[2L, p2] > tol
 
       if (any(left)) {
@@ -77,12 +79,16 @@ skyline_pack <- function(m) {
         skyline[2L, next_left + l] <- skyline[2L, p1] + h[i]
 
         newcols <-
-          rbind(c(skyline[1L, next_left] + w[i], skyline[1L, next_left] + w[i]),
-                c(skyline[2L, p2] + h[i], skyline[2L, p2]))
+          rbind(
+            c(skyline[1L, next_left] + w[i], skyline[1L, next_left] + w[i]),
+            c(skyline[2L, p2] + h[i], skyline[2L, p2])
+          )
 
-        skyline <- cbind(skyline[, seq(1L, next_left + l), drop = FALSE],
-                         newcols,
-                         skyline[, seq(p2, NCOL(skyline)), drop = FALSE])
+        skyline <- cbind(
+          skyline[, seq(1L, next_left + l), drop = FALSE],
+          newcols,
+          skyline[, seq(p2, NCOL(skyline)), drop = FALSE]
+        )
 
         # Check if there are any rooftops on the skyline beneath the new one
         underneath <- skyline[1L, ] > m[1L, i] & skyline[1L, ] < m[2L, i]
@@ -155,8 +161,8 @@ compress_layout <- function(fpar, id, fit) {
       if (length(h) > 1) {
         theta <- atan2(k[2] - k[1], h[2] - h[1])
 
-        h0 <- cos(-theta)*(h - h[1]) - sin(-theta)*(k - k[1]) + h[1]
-        k0 <- sin(-theta)*(h - h[1]) + cos(-theta)*(k - k[1]) + k[1]
+        h0 <- cos(-theta) * (h - h[1]) - sin(-theta) * (k - k[1]) + h[1]
+        k0 <- sin(-theta) * (h - h[1]) + cos(-theta) * (k - k[1]) + k[1]
         phi0 <- phi - theta
 
         h <- h0
@@ -224,14 +230,14 @@ center_layout <- function(pars) {
 
   cphi <- cos(phi)
   sphi <- sin(phi)
-  xlim <- range(c(h + a*cphi, h + b*cphi, h - a*cphi, h - b*cphi))
-  ylim <- range(c(k + a*sphi, k + b*sphi, k - a*sphi, k - b*sphi))
+  xlim <- range(c(h + a * cphi, h + b * cphi, h - a * cphi, h - b * cphi))
+  ylim <- range(c(k + a * sphi, k + b * sphi, k - a * sphi, k - b * sphi))
 
-  pars[!void, 1L] <- h + abs(xlim[1L] - xlim[2L])/2 - xlim[2L]
-  pars[!void, 2L] <- k + abs(ylim[1L] - ylim[2L])/2 - ylim[2L]
+  pars[!void, 1L] <- h + abs(xlim[1L] - xlim[2L]) / 2 - xlim[2L]
+  pars[!void, 2L] <- k + abs(ylim[1L] - ylim[2L]) / 2 - ylim[2L]
   if (any(!void)) {
-    pars[void, 1L] <- sum(pars[!void, 1L])/sum(!void)
-    pars[void, 2L] <- sum(pars[!void, 2L])/sum(!void)
+    pars[void, 1L] <- sum(pars[!void, 1L]) / sum(!void)
+    pars[void, 2L] <- sum(pars[!void, 2L]) / sum(!void)
   }
   pars
 }

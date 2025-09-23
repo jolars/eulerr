@@ -3,9 +3,11 @@ set.seed(1)
 n <- 100
 p <- 3
 
-fruits <- data.frame(banana = rbinom(),
-                     apple  = c(TRUE, FALSE, TRUE, FALSE),
-                     orange = c(TRUE, TRUE, TRUE, FALSE))
+fruits <- data.frame(
+  banana = rbinom(),
+  apple = c(TRUE, FALSE, TRUE, FALSE),
+  orange = c(TRUE, TRUE, TRUE, FALSE)
+)
 
 fruits <- as.data.frame(
   matrix(NA, n, p, dimnames = list(NULL, c("banana", "apple", "orange")))

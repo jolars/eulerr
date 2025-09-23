@@ -26,8 +26,7 @@
 #'
 #' # Using data (a numeric vector)
 #' f2 <- venn(c(A = 1, "B&C" = 3, "A&D" = 0.3))
-venn <- function(combinations, ...)
-{
+venn <- function(combinations, ...) {
   UseMethod("venn")
 }
 
@@ -38,48 +37,62 @@ venn <- function(combinations, ...)
 #'   length as 'combinations'. Must not be `NULL` if `combinations` is a
 #'   one-length numeric.
 #' @export
-venn.default <- function(combinations,
-                         input = c("disjoint", "union"),
-                         names = letters[length(combinations)],
-                         ...)
-{
+venn.default <- function(
+  combinations,
+  input = c("disjoint", "union"),
+  names = letters[length(combinations)],
+  ...
+) {
   if (is.numeric(combinations) && length(combinations) == 1) {
-    if (is.null(names))
-      stop("'names' must not be NULL when 'combinations' is a length ",
-           "one integer.")
+    if (is.null(names)) {
+      stop(
+        "'names' must not be NULL when 'combinations' is a length ",
+        "one integer."
+      )
+    }
 
-    if (combinations < 1)
-      stop("'combinations' cannot be less than 1 when 'combinations' is a ",
-           "length one integer.")
+    if (combinations < 1) {
+      stop(
+        "'combinations' cannot be less than 1 when 'combinations' is a ",
+        "length one integer."
+      )
+    }
 
-    if (combinations > 5)
+    if (combinations > 5) {
       stop("'venn()' only supports diagrams with up to five sets.")
+    }
 
-    if (length(names) != combinations)
+    if (length(names) != combinations) {
       stop("'names' must be as long as 'combinations'.")
+    }
 
     n <- combinations
     setnames <- names
     id <- bit_indexr(n)
 
-    combo_names <- unlist(lapply(apply(id, 1, function(x) names[x]),
-                                 paste,
-                                 collapse = "&"))
+    combo_names <- unlist(lapply(
+      apply(id, 1, function(x) names[x]),
+      paste,
+      collapse = "&"
+    ))
     combinations <- rep.int(1, nrow(id))
     names(combinations) <- combo_names
   } else {
     n_combinations <- length(unique(unlist(strsplit(names(combinations), "&"))))
 
-    if (n_combinations > 5)
+    if (n_combinations > 5) {
       stop("'venn()' only supports diagrams with up to five sets")
+    }
   }
 
-  fit_diagram(combinations,
-              type = "venn",
-              input = input,
-              shape = "ellipse",
-              control = list(),
-              ...)
+  fit_diagram(
+    combinations,
+    type = "venn",
+    input = input,
+    shape = "ellipse",
+    control = list(),
+    ...
+  )
 }
 
 #' @describeIn venn A table with `max(dim(x)) < 3`.
@@ -89,8 +102,7 @@ venn.default <- function(combinations,
 #'
 #' # The table method
 #' venn(pain, factor_names = FALSE)
-venn.table <- function(combinations, ...)
-{
+venn.table <- function(combinations, ...) {
   x <- as.data.frame(combinations)
   venn(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
 }
@@ -103,22 +115,25 @@ venn.table <- function(combinations, ...)
 #' # Using grouping via the 'by' argument through the data.frame method
 #' venn(fruits, by = list(sex, age))
 #'
-venn.data.frame <- function(combinations,
-                            weights = NULL,
-                            by = NULL,
-                            sep = "_",
-                            factor_names = TRUE,
-                            ...)
-{
+venn.data.frame <- function(
+  combinations,
+  weights = NULL,
+  by = NULL,
+  sep = "_",
+  factor_names = TRUE,
+  ...
+) {
   by <- substitute(by)
   facs <- eval(by, combinations)
 
-  combinations <- parse_dataframe(combinations,
-                                  weights,
-                                  by,
-                                  facs,
-                                  sep,
-                                  factor_names)
+  combinations <- parse_dataframe(
+    combinations,
+    weights,
+    by,
+    facs,
+    sep,
+    factor_names
+  )
 
   if (is.list(combinations)) {
     out <- lapply(combinations, venn, ...)
@@ -143,8 +158,7 @@ venn.data.frame <- function(combinations,
 #'
 #' # Using weights
 #' venn(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
-venn.matrix <- function(combinations, ...)
-{
+venn.matrix <- function(combinations, ...) {
   venn(as.data.frame(combinations), ...)
 }
 
@@ -156,7 +170,6 @@ venn.matrix <- function(combinations, ...)
 #'
 #' # A venn diagram from a list of sample spaces (the list method)
 #' venn(plants[c("erigenia", "solanum", "cynodon")])
-venn.list <- function(combinations, ...)
-{
+venn.list <- function(combinations, ...) {
   venn(parse_list(combinations), input = "union", ...)
 }

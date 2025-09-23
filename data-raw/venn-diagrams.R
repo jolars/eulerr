@@ -30,9 +30,15 @@ s2[, 5] <- 1
 
 # Three sets --------------------------------------------------------------
 
-f3 <- euler(c(A = 1, B = 1, C = 1,
-              "A&B" = 1, "A&C" = 1, "B&C" = 1,
-              "A&B&C" = 1))
+f3 <- euler(c(
+  A = 1,
+  B = 1,
+  C = 1,
+  "A&B" = 1,
+  "A&C" = 1,
+  "B&C" = 1,
+  "A&B&C" = 1
+))
 
 s3 <- f3$ellipses <- round(f3$ellipses, 2)
 
@@ -45,7 +51,7 @@ s4[, 1] <- c(-0.8, 0.8, 0, 0)
 s4[, 2] <- c(0, 0, 1, 1)
 s4[, 3] <- 1.2
 s4[, 4] <- 2
-s4[, 5] <- round(c(pi/4, -pi/4), 3)
+s4[, 5] <- round(c(pi / 4, -pi / 4), 3)
 
 # f4 <- euler(c(A = 1, B = 1, C = 1, D = 1))
 # f4$ellipses <- s4
@@ -53,13 +59,13 @@ s4[, 5] <- round(c(pi/4, -pi/4), 3)
 
 # Five sets ---------------------------------------------------------------
 
-t <- seq(0, 2*pi, length.out = 6)[-6]
+t <- seq(0, 2 * pi, length.out = 6)[-6]
 r <- 0.2
 
 s5 <- ell(5)
 
-s5[, 1] <- r*cos(t + 0.5)
-s5[, 2] <- r*sin(t + 0.5)
+s5[, 1] <- r * cos(t + 0.5)
+s5[, 2] <- r * sin(t + 0.5)
 s5[, 3] <- 1
 s5[, 4] <- 0.6
 s5[, 5] <- t
@@ -71,10 +77,6 @@ s5 <- round(s5, 3)
 
 # Save specifications -----------------------------------------------------
 
-venn_spec <- list(one = s1,
-                  two = s2,
-                  three = s3,
-                  four = s4,
-                  five = s5)
+venn_spec <- list(one = s1, two = s2, three = s3, four = s4, five = s5)
 
 usethis::use_data(venn_spec, internal = TRUE, overwrite = TRUE)

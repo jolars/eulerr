@@ -11,14 +11,16 @@
 #'
 #' @return a list object with slots for the various objects
 #' @keywords internal
-setup_geometry <- function(x,
-                           fills,
-                           edges,
-                           labels,
-                           quantities,
-                           n,
-                           id,
-                           merged_sets) {
+setup_geometry <- function(
+  x,
+  fills,
+  edges,
+  labels,
+  quantities,
+  n,
+  id,
+  merged_sets
+) {
   dd <- x$ellipses
   empty_sets <- is.na(dd[, 1L]) & !merged_sets
   empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
@@ -54,8 +56,9 @@ setup_geometry <- function(x,
   limits <- get_bounding_box(h, k, a, b, phi)
 
   # setup edges
-  if (do_edges)
+  if (do_edges) {
     edges <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
+  }
 
   if (do_fills || do_labels || do_quantities) {
     # decompose ellipse polygons into intersections
@@ -101,7 +104,7 @@ setup_geometry <- function(x,
     width <- abs(limits$xlim[1] - limits$xlim[2])
     height <- abs(limits$ylim[1] - limits$ylim[2])
 
-    prec <- max(width, height)/100
+    prec <- max(width, height) / 100
 
     centers <- lapply(pieces, locate_centers, precision = prec)
 
@@ -109,15 +112,17 @@ setup_geometry <- function(x,
     centers_y <- vapply(centers, "[[", "y", FUN.VALUE = double(1))
     centers_id <- seq_len(n_id)
 
-    centers <- data.frame(x = centers_x,
-                          y = centers_y,
-                          id = centers_id,
-                          labels = NA_character_,
-                          quantities = NA,
-                          labels_par_id = NA_integer_,
-                          quantities_par_id = NA_integer_,
-                          row.names = names(orig),
-                          stringsAsFactors = FALSE)
+    centers <- data.frame(
+      x = centers_x,
+      y = centers_y,
+      id = centers_id,
+      labels = NA_character_,
+      quantities = NA,
+      labels_par_id = NA_integer_,
+      quantities_par_id = NA_integer_,
+      row.names = names(orig),
+      stringsAsFactors = FALSE
+    )
 
     has_center <- !is.na(centers$x) & !is.na(centers$y)
 
@@ -150,7 +155,7 @@ setup_geometry <- function(x,
         type <- quantities$type
 
         if ("percent" %in% type) {
-          perc <- num/sum(num, na.rm = TRUE)*100
+          perc <- num / sum(num, na.rm = TRUE) * 100
           perc <- ifelse(perc >= 1, as.character(round(perc)), "< 1")
           perc <- sapply(perc[!is.na(perc)], function(x) paste0(x, " %"))
         }
@@ -169,7 +174,6 @@ setup_geometry <- function(x,
             centers$quantities[singles | others] <- signif(num, digits)
           }
         }
-
       } else {
         centers$quantities[singles | others] <-
           quantities$labels[which(!empty_subsets)][centers$id[singles | others]]
@@ -181,8 +185,9 @@ setup_geometry <- function(x,
     centers$quantities_par_id[!is.na(centers$quantities)] <-
       seq_len(sum(others | singles))
 
-    naornull <- function(x)
+    naornull <- function(x) {
       is.na(x) | is.null(x)
+    }
 
     has_tag <- !naornull(centers$quantities) | !naornull(centers$labels)
 
@@ -191,16 +196,18 @@ setup_geometry <- function(x,
     centers <- NULL
   }
 
-  list(ellipses = dd,
-       fitted.values = fitted,
-       original.values = orig,
-       fills = fills,
-       edges = edges,
-       labels = labels,
-       quantities = quantities,
-       centers = centers,
-       empty_sets = empty_sets,
-       empty_subsets = empty_subsets,
-       xlim = limits$xlim,
-       ylim = limits$ylim)
+  list(
+    ellipses = dd,
+    fitted.values = fitted,
+    original.values = orig,
+    fills = fills,
+    edges = edges,
+    labels = labels,
+    quantities = quantities,
+    centers = centers,
+    empty_sets = empty_sets,
+    empty_subsets = empty_subsets,
+    xlim = limits$xlim,
+    ylim = limits$ylim
+  )
 }

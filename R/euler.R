@@ -126,13 +126,15 @@ euler <- function(combinations, ...) UseMethod("euler")
 #'   Missing combinations are treated as being 0.
 #'
 #' @export
-euler.default <- function(combinations,
-                          input = c("disjoint", "union"),
-                          shape = c("circle", "ellipse"),
-                          loss = c("square", "abs", "region"),
-                          loss_aggregator = c("sum", "max"),
-                          control = list(),
-                          ...) {
+euler.default <- function(
+  combinations,
+  input = c("disjoint", "union"),
+  shape = c("circle", "ellipse"),
+  loss = c("square", "abs", "region"),
+  loss_aggregator = c("sum", "max"),
+  control = list(),
+  ...
+) {
   loss <- match.arg(loss)
 
   fit_diagram(
@@ -161,12 +163,14 @@ euler.default <- function(combinations,
 #' # Using grouping via the 'by' argument through the data.frame method
 #' euler(fruits, by = list(sex, age))
 #'
-euler.data.frame <- function(combinations,
-                             weights = NULL,
-                             by = NULL,
-                             sep = "_",
-                             factor_names = TRUE,
-                             ...) {
+euler.data.frame <- function(
+  combinations,
+  weights = NULL,
+  by = NULL,
+  sep = "_",
+  factor_names = TRUE,
+  ...
+) {
   by <- substitute(by)
   facs <- eval(by, combinations)
 

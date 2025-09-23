@@ -17,26 +17,35 @@
 #' @export
 #' @examples
 #' euler(organisms)
-print.euler <- function(x,
-                        round = 3,
-                        vsep = strrep("-", 0.75*getOption("width")),
-                        ...)
-{
+print.euler <- function(
+  x,
+  round = 3,
+  vsep = strrep("-", 0.75 * getOption("width")),
+  ...
+) {
   stopifnot(is.numeric(round), length(round) == 1L, round > 0)
 
   if (!is.null(attr(x, "groups"))) {
     for (i in seq_along(x)) {
-      if (i != 1L && !is.null(vsep))
+      if (i != 1L && !is.null(vsep)) {
         cat(vsep, "\n")
+      }
       cat(names(x)[i], "\n")
       print(x[[i]], round = round, ...)
     }
   } else {
-    print(round(data.frame("original" = x$original.values,
-                           "fitted" = x$fitted.values,
-                           "residuals" = x$residuals,
-                           "regionError" = x$regionError),
-                digits = round), ...)
+    print(
+      round(
+        data.frame(
+          "original" = x$original.values,
+          "fitted" = x$fitted.values,
+          "residuals" = x$residuals,
+          "regionError" = x$regionError
+        ),
+        digits = round
+      ),
+      ...
+    )
     cat("\n")
     cat("diagError:", round(x$diagError, digits = round), "\n")
     cat("stress:   ", round(x$stress, digits = round), "\n")
@@ -65,17 +74,19 @@ print.euler <- function(x,
 #'
 #' @examples
 #' venn(organisms)
-print.venn <- function(x,
-                       round = 3,
-                       vsep = strrep("-", 0.75*getOption("width")),
-                       ...)
-{
+print.venn <- function(
+  x,
+  round = 3,
+  vsep = strrep("-", 0.75 * getOption("width")),
+  ...
+) {
   stopifnot(is.numeric(round), length(round) == 1L, round > 0)
 
   if (!is.null(attr(x, "groups"))) {
     for (i in seq_along(x)) {
-      if (i != 1L && !is.null(vsep))
+      if (i != 1L && !is.null(vsep)) {
         cat(vsep, "\n")
+      }
       cat(names(x)[i], "\n")
       print(x[[i]], round = round, ...)
     }
@@ -86,4 +97,3 @@ print.venn <- function(x,
   }
   invisible(x)
 }
-

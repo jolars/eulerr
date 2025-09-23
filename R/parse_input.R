@@ -1,16 +1,21 @@
-parse_list <- function(combinations)
-{
-  if (is.null(attr(combinations, "names")))
-    stop("when `combinations` is a list, all vectors in that list must be named")
+parse_list <- function(combinations) {
+  if (is.null(attr(combinations, "names"))) {
+    stop(
+      "when `combinations` is a list, all vectors in that list must be named"
+    )
+  }
 
-  if (any(names(combinations) == ""))
+  if (any(names(combinations) == "")) {
     stop("all elements of `combinations` must be named")
+  }
 
-  if (!all(sapply(combinations, anyDuplicated) == 0))
+  if (!all(sapply(combinations, anyDuplicated) == 0)) {
     stop("vectors in `combinations` cannot contain duplicates")
+  }
 
-  if (any(duplicated(names(combinations))))
+  if (any(duplicated(names(combinations)))) {
     stop("names of elements in `combinations` must be unique")
+  }
 
   sets <- names(combinations)
   n <- length(sets)
@@ -25,7 +30,8 @@ parse_list <- function(combinations)
   compute_intersect <- function(bool) {
     ind <- which(bool)
     nm <- paste(sets[ind], collapse = "&")
-    if (identical(intersect_sets[[nm]], -1)) { # not computed yet
+    if (identical(intersect_sets[[nm]], -1)) {
+      # not computed yet
       if (length(ind) == 1) {
         intersect_sets[[nm]] <<- combinations[[ind]]
       } else {
@@ -44,31 +50,35 @@ parse_list <- function(combinations)
   apply(id, 1, function(x) length(compute_intersect(x)))
 }
 
-parse_dataframe <- function(combinations,
-                            weights = NULL,
-                            by = NULL,
-                            facs,
-                            sep = "_",
-                            factor_names = TRUE,
-                            ...)
-{
-  if (any(grepl("&", colnames(combinations), fixed = TRUE)))
+parse_dataframe <- function(
+  combinations,
+  weights = NULL,
+  by = NULL,
+  facs,
+  sep = "_",
+  factor_names = TRUE,
+  ...
+) {
+  if (any(grepl("&", colnames(combinations), fixed = TRUE))) {
     stop("names of columns in `combinations` must not contain '$'")
+  }
 
   if (!is.null(facs)) {
     if (is.list(facs)) {
-      if (!is.null(names(facs)))
+      if (!is.null(names(facs))) {
         nms <- names(facs)
-      else {
+      } else {
         nms <- sapply(by[-1L], deparse)
       }
-    } else
+    } else {
       nms <- deparse(by)
+    }
 
-    if (is.list(facs))
+    if (is.list(facs)) {
       stopifnot(length(facs) < 3)
-    else
+    } else {
       facs <- list(facs)
+    }
 
     dd <- as.data.frame(facs, col.names = nms, stringsAsFactors = TRUE)
     groups <- unique(dd)
@@ -81,30 +91,34 @@ parse_dataframe <- function(combinations,
     for (i in seq_len(NROW(groups))) {
       ind <- apply(dd, 1, function(x) all(x == groups[i, ]))
       out[[i]] <- combinations[ind, -by_ind, drop = FALSE]
-      names(out)[[i]] <- paste(unlist(groups[i, , drop = TRUE]),
-                               collapse = ".")
+      names(out)[[i]] <- paste(unlist(groups[i, , drop = TRUE]), collapse = ".")
     }
 
     attr(out, "groups") <- groups
   } else {
-    is_factor <- vapply(combinations,
-                        function(x) is.factor(x) || is.character(x),
-                        logical(1))
+    is_factor <- vapply(
+      combinations,
+      function(x) is.factor(x) || is.character(x),
+      logical(1)
+    )
 
-    reals <- vapply(combinations,
-                    is_real,
-                    FUN.VALUE = logical(1))
+    reals <- vapply(combinations, is_real, FUN.VALUE = logical(1))
 
-    if (any(reals))
+    if (any(reals)) {
       stop("you cannot use non-integer numeric variables.")
+    }
 
-    if (any(is_factor))
-      combinations <- dummy_code(combinations,
-                                 sep = sep,
-                                 factor_names = factor_names)
+    if (any(is_factor)) {
+      combinations <- dummy_code(
+        combinations,
+        sep = sep,
+        factor_names = factor_names
+      )
+    }
 
-    if (is.null(weights))
+    if (is.null(weights)) {
       weights <- rep.int(1L, NROW(combinations))
+    }
 
     out <- tally_combinations(combinations, weights)
   }

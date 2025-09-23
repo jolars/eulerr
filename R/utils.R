@@ -288,7 +288,8 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
 
   if (isTRUE(factor_names)) {
     for (i in seq_along(dummy_names)) {
-      dummy_names[[i]] <- paste(names(dummy_levels)[i],
+      dummy_names[[i]] <- paste(
+        names(dummy_levels)[i],
         dummy_levels[[i]],
         sep = sep
       )
@@ -304,7 +305,8 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
     ))
   }
 
-  out <- matrix(FALSE,
+  out <- matrix(
+    FALSE,
     nrow(x),
     n_levels_tot,
     dimnames = list(NULL, dummy_names)

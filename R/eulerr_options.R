@@ -41,32 +41,39 @@
 #' eulerr_options(n_threads = 2)
 eulerr_options <- function(...) {
   new <- list(...)
-  if (is.null(names(new)) && length(new) == 1L && is.list(new[[1L]]))
+  if (is.null(names(new)) && length(new) == 1L && is.list(new[[1L]])) {
     new <- new[[1L]]
+  }
   old <- .eulerr_env$options
-  if (length(new) == 0L)
+  if (length(new) == 0L) {
     return(old)
+  }
   nm <- names(new)
-  if (is.null(nm))
+  if (is.null(nm)) {
     return(old[unlist(new)])
+  }
   is_named <- nm != ""
-  if (any(!is_named))
+  if (any(!is_named)) {
     nm[!is_named] <- unlist(new[!is_named])
+  }
   out <- old[nm]
   names(out) <- nm
   nm <- nm[is_named]
   .eulerr_env$options <- update_list(old, new[nm])
   pointsize <- new$pointsize
-  if (!is.null(pointsize))
+  if (!is.null(pointsize)) {
     .eulerr_env$options <- update_list(
       .eulerr_env$options,
-      list(labels = list(fontsize = pointsize),
-           quantities = list(fontsize = pointsize),
-           strips = list(fontsize = pointsize),
-           legend = list(fontsize = pointsize),
-           main = list(fontsize = pointsize),
-           pointsize = pointsize)
+      list(
+        labels = list(fontsize = pointsize),
+        quantities = list(fontsize = pointsize),
+        strips = list(fontsize = pointsize),
+        legend = list(fontsize = pointsize),
+        main = list(fontsize = pointsize),
+        pointsize = pointsize
+      )
     )
+  }
   invisible(out)
 }
 
@@ -79,7 +86,8 @@ eulerr_default_options <- function() {
     pointsize = 12,
     fills = list(
       fill = function(n) {
-        c("white",
+        c(
+          "white",
           "grey85",
           "lightblue",
           "lightcoral",
@@ -90,7 +98,8 @@ eulerr_default_options <- function() {
           "steelblue2",
           "lightsalmon",
           "lightpink",
-          "lightgoldenrod")[seq_len(n)]
+          "lightgoldenrod"
+        )[seq_len(n)]
       },
       alpha = 1
     ),
@@ -168,4 +177,3 @@ eulerr_default_options <- function() {
     padding = grid::unit(0.4, "lines")
   )
 }
-

@@ -4,10 +4,11 @@ test_that("normal plotting works without errors", {
 
   f1 <- euler(c("A" = 10, "B" = 5, "A&B" = 2))
 
-  expect_silent(plot(f1,
-                     fills = list(fill = c("black", "blue"),
-                                  alpha = 0.3),
-                     labels = list(font = 4)))
+  expect_silent(plot(
+    f1,
+    fills = list(fill = c("black", "blue"), alpha = 0.3),
+    labels = list(font = 4)
+  ))
 
   expect_silent(plot(f1))
   expect_silent(plot(f1, legend = TRUE, quantities = TRUE))
@@ -24,19 +25,23 @@ test_that("normal plotting works without errors", {
 
   expect_error(plot(f1, quantities = list(type = c("asdf"))))
 
-  grid <- expand.grid(labels = c(TRUE, FALSE),
-                      quantities = c(TRUE, FALSE),
-                      legend = c(TRUE, FALSE),
-                      fills = c(TRUE, FALSE),
-                      edges = c(TRUE, FALSE))
+  grid <- expand.grid(
+    labels = c(TRUE, FALSE),
+    quantities = c(TRUE, FALSE),
+    legend = c(TRUE, FALSE),
+    fills = c(TRUE, FALSE),
+    edges = c(TRUE, FALSE)
+  )
 
   for (i in seq_len(nrow(grid))) {
-    expect_silent(plot(f1,
-                       labels = grid$labels[!!i],
-                       quantities = grid$quantities[!!i],
-                       legend = grid$legend[!!i],
-                       fills = grid$fills[!!i],
-                       edges = grid$edges[!!i]))
+    expect_silent(plot(
+      f1,
+      labels = grid$labels[!!i],
+      quantities = grid$quantities[!!i],
+      legend = grid$legend[!!i],
+      fills = grid$fills[!!i],
+      edges = grid$edges[!!i]
+    ))
   }
 
   dat <- data.frame(
@@ -49,14 +54,16 @@ test_that("normal plotting works without errors", {
   f2 <- euler(dat[, 1:3], by = list(Gender))
   f3 <- euler(dat, by = list(Gender, Nation))
 
-  expect_silent(plot(f2,
-                     edges = list(fill = "transparent",
-                                  lty = c(1, 2),
-                                  lwd = c(1, 2))))
+  expect_silent(plot(
+    f2,
+    edges = list(fill = "transparent", lty = c(1, 2), lwd = c(1, 2))
+  ))
 
-  grid <- expand.grid(side = c(NA, "right", "left", "top", "bottom"),
-                      main = c("Title", FALSE),
-                      stringsAsFactors = FALSE)
+  grid <- expand.grid(
+    side = c(NA, "right", "left", "top", "bottom"),
+    main = c("Title", FALSE),
+    stringsAsFactors = FALSE
+  )
 
   for (i in seq_len(nrow(grid))) {
     if (is.na(grid$side[i])) {
@@ -94,8 +101,10 @@ test_that("error_plot functions normally", {
   f <- euler(organisms)
 
   expect_silent(error_plot(f))
-  expect_silent(error_plot(f,
-                           pal = grDevices::colorRampPalette(c("red", "blue"))))
+  expect_silent(error_plot(
+    f,
+    pal = grDevices::colorRampPalette(c("red", "blue"))
+  ))
   expect_silent(error_plot(f, quantities = FALSE))
   expect_silent(error_plot(f, edges = FALSE))
 

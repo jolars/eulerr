@@ -116,18 +116,19 @@
 #'
 #' # Plots using 'by' argument
 #' plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
-plot.euler <- function(x,
-                       fills = TRUE,
-                       edges = TRUE,
-                       legend = FALSE,
-                       labels = identical(legend, FALSE),
-                       quantities = FALSE,
-                       strips = NULL,
-                       main = NULL,
-                       n = 200L,
-                       adjust_labels = TRUE,
-                       ...) {
-
+plot.euler <- function(
+  x,
+  fills = TRUE,
+  edges = TRUE,
+  legend = FALSE,
+  labels = identical(legend, FALSE),
+  quantities = FALSE,
+  strips = NULL,
+  main = NULL,
+  n = 200L,
+  adjust_labels = TRUE,
+  ...
+) {
   if (!missing(adjust_labels)) {
     warning("`adjust_labels` is deprecated and no longer has any effect.")
   }
@@ -170,7 +171,6 @@ plot.euler <- function(x,
     })
 
     nonzero <- apply(do.call(rbind, res), 2, any)
-
   } else {
     empty_sets <- is.na(x$ellipses[, 1L])
     empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
@@ -201,8 +201,7 @@ plot.euler <- function(x,
     merge_sets <- id[complete_overlaps, ] & single_mass
 
     if (any(merge_sets)) {
-      setnames[merge_sets] <- paste(setnames[merge_sets],
-                                    collapse = ",")
+      setnames[merge_sets] <- paste(setnames[merge_sets], collapse = ",")
       merged_sets[which(merge_sets)[length(which(merge_sets))]] <- TRUE
     }
   }
@@ -212,20 +211,21 @@ plot.euler <- function(x,
   # setup fills
   if (do_fills) {
     fills_out <- replace_list(
-      list(fill = opar$fills$fill,
-           alpha = opar$fills$alpha),
-      if (is.list(fills))
+      list(fill = opar$fills$fill, alpha = opar$fills$alpha),
+      if (is.list(fills)) {
         fills
-      else if (isTRUE(fills))
+      } else if (isTRUE(fills)) {
         list()
-      else
+      } else {
         list(fill = fills)
+      }
     )
     fills_out <- replace_list(fills_out, dots)
     fills_out$col <- "transparent"
 
-    if (is.function(fills_out$fill))
+    if (is.function(fills_out$fill)) {
       fills_out$fill <- fills_out$fill(n_e)
+    }
 
     n_fills <- length(fills_out$fill)
     if (n_fills < n_id) {
@@ -241,21 +241,26 @@ plot.euler <- function(x,
 
   # setup edges
   if (do_edges) {
-    if (isTRUE(edges))
+    if (isTRUE(edges)) {
       edges_out <- list()
-    else if (!is.list(edges))
+    } else if (!is.list(edges)) {
       edges_out <- list(col = edges)
-    else
+    } else {
       edges_out <- edges
+    }
 
     edges <- list()
-    edges$gp <- setup_gpar(list(col = opar$edges$col,
-                                alpha = opar$edges$alpha,
-                                lex = opar$edges$lex,
-                                lwd = opar$edges$lwd,
-                                lty = opar$edges$lty),
-                           update_list(edges_out, dots),
-                           n_e)
+    edges$gp <- setup_gpar(
+      list(
+        col = opar$edges$col,
+        alpha = opar$edges$alpha,
+        lex = opar$edges$lex,
+        lwd = opar$edges$lwd,
+        lty = opar$edges$lty
+      ),
+      update_list(edges_out, dots),
+      n_e
+    )
   } else {
     edges <- NULL
   }
@@ -267,8 +272,10 @@ plot.euler <- function(x,
   }
 
   if (do_strips) {
-    strips <- list(gp = setup_gpar(opar$strips, strips, n_levels),
-                   groups = groups)
+    strips <- list(
+      gp = setup_gpar(opar$strips, strips, n_levels),
+      groups = groups
+    )
   } else {
     strips <- NULL
   }
@@ -276,27 +283,30 @@ plot.euler <- function(x,
   # setup labels
   if (do_labels) {
     if (is.list(labels)) {
-      labels <- update_list(list(labels = setnames,
-                                 rot = opar$labels$rot),
-                            labels)
+      labels <- update_list(
+        list(labels = setnames, rot = opar$labels$rot),
+        labels
+      )
     } else if (isTRUE(labels)) {
-      labels <- list(labels = setnames,
-                     rot = opar$labels$rot)
+      labels <- list(labels = setnames, rot = opar$labels$rot)
     } else {
-      labels <- list(labels = labels,
-                     rot = opar$labels$rot)
+      labels <- list(labels = labels, rot = opar$labels$rot)
     }
 
     labels$rot <- rep_len(labels$rot, n_e)
-    labels$gp <- setup_gpar(list(col = opar$labels$col,
-                                 alpha = opar$labels$alpha,
-                                 fontsize = opar$labels$fontsize,
-                                 cex = opar$labels$cex,
-                                 fontfamily = opar$labels$fontfamily,
-                                 lineheight = opar$labels$lineheight,
-                                 font = opar$labels$font),
-                            labels,
-                            n_e)
+    labels$gp <- setup_gpar(
+      list(
+        col = opar$labels$col,
+        alpha = opar$labels$alpha,
+        fontsize = opar$labels$fontsize,
+        cex = opar$labels$cex,
+        fontfamily = opar$labels$fontfamily,
+        lineheight = opar$labels$lineheight,
+        font = opar$labels$font
+      ),
+      labels,
+      n_e
+    )
   } else {
     labels <- NULL
   }
@@ -305,21 +315,23 @@ plot.euler <- function(x,
   if (do_quantities) {
     if (is.list(quantities)) {
       if (!is.null(quantities$type)) {
-        if (!all(quantities$type %in% c("counts", "percent")))
+        if (!all(quantities$type %in% c("counts", "percent"))) {
           stop("'type' must be one or both of 'counts' and 'percent")
+        }
 
-        quantities_type <- match.arg(quantities$type,
-                                     c("counts", "percent"),
-                                     several.ok = TRUE)
+        quantities_type <- match.arg(
+          quantities$type,
+          c("counts", "percent"),
+          several.ok = TRUE
+        )
       } else {
         quantities_type <- opar$quantities$type
       }
 
-      quantities <- update_list(list(labels = NULL,
-                                     type = quantities_type,
-                                     rot = opar$quantities$rot),
-                                quantities)
-
+      quantities <- update_list(
+        list(labels = NULL, type = quantities_type, rot = opar$quantities$rot),
+        quantities
+      )
     } else if (isTRUE(quantities)) {
       quantities <- list(labels = NULL, rot = opar$quantities$rot)
     } else {
@@ -327,15 +339,19 @@ plot.euler <- function(x,
     }
     quantities$rot <- rep_len(quantities$rot, n_id)
 
-    quantities$gp <- setup_gpar(list(col = opar$quantities$col,
-                                     alpha = opar$quantities$alpha,
-                                     fontsize = opar$quantities$fontsize,
-                                     cex = opar$quantities$cex,
-                                     fontfamily = opar$quantities$fontfamily,
-                                     lineheight = opar$quantities$lineheight,
-                                     font = opar$quantities$font),
-                                quantities,
-                                n_id)
+    quantities$gp <- setup_gpar(
+      list(
+        col = opar$quantities$col,
+        alpha = opar$quantities$alpha,
+        fontsize = opar$quantities$fontsize,
+        cex = opar$quantities$cex,
+        fontfamily = opar$quantities$fontfamily,
+        lineheight = opar$quantities$lineheight,
+        font = opar$quantities$font
+      ),
+      quantities,
+      n_id
+    )
   } else {
     quantities <- NULL
   }
@@ -347,39 +363,48 @@ plot.euler <- function(x,
     # TODO: create a better, custom legend
 
     legend <- update_list(
-      list(labels = setnames[!empty_sets & !merged_sets],
-           side = opar$legend$side,
-           nrow = sum(!empty_sets),
-           ncol = 1L,
-           byrow = opar$legend$byrow,
-           do.lines = opar$legend$do.lines,
-           lines.first = opar$legend$lines.first,
-           hgap = opar$legend$hgap,
-           vgap = opar$legend$vgap,
-           default.units = opar$legend$default.units,
-           pch = opar$legend$pch),
+      list(
+        labels = setnames[!empty_sets & !merged_sets],
+        side = opar$legend$side,
+        nrow = sum(!empty_sets),
+        ncol = 1L,
+        byrow = opar$legend$byrow,
+        do.lines = opar$legend$do.lines,
+        lines.first = opar$legend$lines.first,
+        hgap = opar$legend$hgap,
+        vgap = opar$legend$vgap,
+        default.units = opar$legend$default.units,
+        pch = opar$legend$pch
+      ),
       legend
     )
 
     legend$gp <- setup_gpar(
       list(
-        fill = if (do_fills) fills$gp$fill[!empty_sets & !merged_sets] else "transparent",
-        alpha = if (do_fills)
+        fill = if (do_fills) {
+          fills$gp$fill[!empty_sets & !merged_sets]
+        } else {
+          "transparent"
+        },
+        alpha = if (do_fills) {
           fills$gp$alpha[!empty_sets & !merged_sets]
-        else if (do_edges)
+        } else if (do_edges) {
           edges$gp$alpha[!empty_sets & !merged_sets]
-        else
-          0,
+        } else {
+          0
+        },
         cex = opar$legend$cex,
-        fontsize =
-          opar$legend$fontsize/opar$legend$cex,
+        fontsize = opar$legend$fontsize / opar$legend$cex,
         font = opar$legend$font,
         fontfamily = opar$legend$fontfamily,
         lwd = if (do_edges) edges$gp$lwd[!empty_sets & !merged_sets] else 0,
         lex = if (do_edges) edges$gp$lex[!empty_sets & !merged_sets] else 0,
-        col = if (do_edges)
+        col = if (do_edges) {
           edges$gp$col[!empty_sets & !merged_sets]
-          else "transparent"),
+        } else {
+          "transparent"
+        }
+      ),
       legend,
       sum(!empty_sets)
     )
@@ -389,28 +414,31 @@ plot.euler <- function(x,
 
   if (do_main) {
     if (is.list(main)) {
-      if (length(main) == 1 && is.null(names(main)))
+      if (length(main) == 1 && is.null(names(main))) {
         label <- main[[1]]
-      else
+      } else {
         label <- main$label
+      }
 
-      if (is.null(label))
+      if (is.null(label)) {
         stop("you need to provide a 'label' item if 'main' is a list.")
-
+      }
     } else {
       label <- main
     }
 
     main <- update_list(
-      list(label = label,
-           x = opar$main$x,
-           y = opar$main$y,
-           just = opar$main$just,
-           hjust = opar$main$hjust,
-           vjust = opar$main$vjust,
-           rot = opar$main$rot,
-           check.overlap = opar$main$check.overlap,
-           default.units = opar$main$default.units),
+      list(
+        label = label,
+        x = opar$main$x,
+        y = opar$main$y,
+        just = opar$main$just,
+        hjust = opar$main$hjust,
+        vjust = opar$main$vjust,
+        rot = opar$main$rot,
+        check.overlap = opar$main$check.overlap,
+        default.units = opar$main$default.units
+      ),
       main
     )
 
@@ -433,24 +461,28 @@ plot.euler <- function(x,
 
   # set up geometry for diagrams
   if (do_groups) {
-    data <- lapply(x,
-                   setup_geometry,
-                   fills = fills,
-                   edges = edges,
-                   labels = labels,
-                   quantities = quantities,
-                   n = n,
-                   id = id,
-                   merged_sets = merged_sets)
+    data <- lapply(
+      x,
+      setup_geometry,
+      fills = fills,
+      edges = edges,
+      labels = labels,
+      quantities = quantities,
+      n = n,
+      id = id,
+      merged_sets = merged_sets
+    )
   } else {
-    data <- setup_geometry(x,
-                           fills = fills,
-                           edges = edges,
-                           labels = labels,
-                           quantities = quantities,
-                           n = n,
-                           id = id,
-                           merged_sets = merged_sets)
+    data <- setup_geometry(
+      x,
+      fills = fills,
+      edges = edges,
+      labels = labels,
+      quantities = quantities,
+      n = n,
+      id = id,
+      merged_sets = merged_sets
+    )
   }
 
   # start setting up grobs
@@ -459,33 +491,39 @@ plot.euler <- function(x,
     n_groups <- length(data)
     euler_grob_children <- grid::gList()
     for (i in seq_len(n_groups)) {
-      euler_grob_children[[i]] <- setup_grobs(data[[i]],
-                                              fills = fills,
-                                              edges = edges,
-                                              labels = labels,
-                                              quantities = quantities,
-                                              number = i,
-                                              merged_sets = merged_sets)
+      euler_grob_children[[i]] <- setup_grobs(
+        data[[i]],
+        fills = fills,
+        edges = edges,
+        labels = labels,
+        quantities = quantities,
+        number = i,
+        merged_sets = merged_sets
+      )
     }
-    euler_grob <- grid::gTree(grid::nullGrob(),
-                              name = "canvas.grob",
-                              children = euler_grob_children)
+    euler_grob <- grid::gTree(
+      grid::nullGrob(),
+      name = "canvas.grob",
+      children = euler_grob_children
+    )
     pos <- vapply(groups, as.numeric, numeric(NROW(groups)), USE.NAMES = FALSE)
     layout <- lengths(lapply(groups, unique))
-    if (length(layout) == 1L)
+    if (length(layout) == 1L) {
       layout <- c(1L, layout)
+    }
     xlim <- range(unlist(lapply(data, "[[", "xlim")))
     ylim <- range(unlist(lapply(data, "[[", "ylim")))
   } else {
-    euler_grob <- setup_grobs(data,
-                              fills = fills,
-                              edges = edges,
-                              labels = labels,
-                              quantities = quantities,
-                              number = 1,
-                              merged_sets = merged_sets)
-    euler_grob <- grid::grobTree(euler_grob,
-                                 name = "canvas.grob")
+    euler_grob <- setup_grobs(
+      data,
+      fills = fills,
+      edges = edges,
+      labels = labels,
+      quantities = quantities,
+      number = 1,
+      merged_sets = merged_sets
+    )
+    euler_grob <- grid::grobTree(euler_grob, name = "canvas.grob")
 
     xlim <- data$xlim
     ylim <- data$ylim
@@ -503,7 +541,7 @@ plot.euler <- function(x,
     ylim <- xlim <- c(0, 1)
   }
 
-  ar <- xrng/yrng
+  ar <- xrng / yrng
   # adjust <- layout[1L]/layout[2]
 
   do_strip_left <- layout[1L] > 1L && do_strips
@@ -513,7 +551,7 @@ plot.euler <- function(x,
 
   nrow <- ncol <- 1
   heights <- grid::unit(1, "null")
-  widths <- grid::unit(1*ar*layout[2]/layout[1], "null")
+  widths <- grid::unit(1 * ar * layout[2] / layout[1], "null")
   diagram_col <- 1
   diagram_row <- 1
 
@@ -541,45 +579,57 @@ plot.euler <- function(x,
   # draw strips
   if (do_strip_top) {
     strip_top_vp <-
-      grid::viewport(layout.pos.row = strip_top_row,
-                     layout.pos.col = strip_top_col,
-                     name = "strip.top.vp",
-                     layout = grid::grid.layout(nrow = 1, ncol = layout[2]))
+      grid::viewport(
+        layout.pos.row = strip_top_row,
+        layout.pos.col = strip_top_col,
+        name = "strip.top.vp",
+        layout = grid::grid.layout(nrow = 1, ncol = layout[2])
+      )
 
-    lvls <- levels(strips$groups[[ names(layout)[[2]] ]])
+    lvls <- levels(strips$groups[[names(layout)[[2]]]])
     n_lvls <- length(lvls)
-    step <- 1/n_lvls
+    step <- 1 / n_lvls
 
-    strip_top_grob <- grid::textGrob(lvls,
-                                     x = step/2 + (seq(0, n_lvls - 1)*step),
-                                     name = "strip.top.grob",
-                                     gp = do.call(grid::gpar, strips$gp),
-                                     vp = strip_top_vp)
+    strip_top_grob <- grid::textGrob(
+      lvls,
+      x = step / 2 + (seq(0, n_lvls - 1) * step),
+      name = "strip.top.grob",
+      gp = do.call(grid::gpar, strips$gp),
+      vp = strip_top_vp
+    )
 
-    heights <- grid::unit.c(grid::unit(2, "grobheight", list(strip_top_grob)),
-                            heights)
+    heights <- grid::unit.c(
+      grid::unit(2, "grobheight", list(strip_top_grob)),
+      heights
+    )
   }
 
   if (do_strip_left) {
     strip_left_vp <-
-      grid::viewport(layout.pos.row = strip_left_row,
-                     layout.pos.col = strip_left_col,
-                     name = "strip.left.vp",
-                     layout = grid::grid.layout(nrow = layout[1], ncol = 1))
+      grid::viewport(
+        layout.pos.row = strip_left_row,
+        layout.pos.col = strip_left_col,
+        name = "strip.left.vp",
+        layout = grid::grid.layout(nrow = layout[1], ncol = 1)
+      )
 
-    lvls <- rev(levels(strips$groups[[ names(layout)[[1]] ]]))
+    lvls <- rev(levels(strips$groups[[names(layout)[[1]]]]))
     n_lvls <- length(lvls)
-    step <- 1/n_lvls
+    step <- 1 / n_lvls
 
-    strip_left_grob <- grid::textGrob(lvls,
-                                      y = step/2 + (seq(0, n_lvls - 1)*step),
-                                      name = "strip.left.grob",
-                                      rot = 90,
-                                      gp = do.call(grid::gpar, strips$gp),
-                                      vp = strip_left_vp)
+    strip_left_grob <- grid::textGrob(
+      lvls,
+      y = step / 2 + (seq(0, n_lvls - 1) * step),
+      name = "strip.left.grob",
+      rot = 90,
+      gp = do.call(grid::gpar, strips$gp),
+      vp = strip_left_vp
+    )
 
-    widths <- grid::unit.c(grid::unit(2, "grobwidth", list(strip_left_grob)),
-                           widths)
+    widths <- grid::unit.c(
+      grid::unit(2, "grobwidth", list(strip_left_grob)),
+      widths
+    )
   }
 
   if (do_legend) {
@@ -601,88 +651,103 @@ plot.euler <- function(x,
     }
 
     legend_grob$name <- "legend.grob"
-    if (do_strip_top)
-      legend_row <- 2 + 2*do_main
+    if (do_strip_top) {
+      legend_row <- 2 + 2 * do_main
+    }
 
     if (legend$side == "right") {
       # legend on right (default)
       ncol <- ncol + 2L
       legend_row <- nrow
       legend_col <- ncol
-      widths <- grid::unit.c(widths, grid::unit(c(1, 1),
-                                                c("lines", "grobwidth"),
-                                                list(NULL, legend_grob)))
+      widths <- grid::unit.c(
+        widths,
+        grid::unit(c(1, 1), c("lines", "grobwidth"), list(NULL, legend_grob))
+      )
     } else if (legend$side == "left") {
       # legend on left
       ncol <- ncol + 2L
-      legend_row <- if (do_strip_top) 2L + 2*do_main else 1L + 2*do_main
+      legend_row <- if (do_strip_top) 2L + 2 * do_main else 1L + 2 * do_main
       legend_col <- 1
       diagram_col <- diagram_col + 2L
-      if (do_strip_left)
+      if (do_strip_left) {
         strip_left_col <- strip_left_col + 2L
-      if (do_strip_top)
+      }
+      if (do_strip_top) {
         strip_top_col <- strip_top_col + 2L
-      widths <- grid::unit.c(grid::unit(c(1, 1),
-                                        c("grobwidth", "lines"),
-                                        list(legend_grob, NULL)), widths)
+      }
+      widths <- grid::unit.c(
+        grid::unit(c(1, 1), c("grobwidth", "lines"), list(legend_grob, NULL)),
+        widths
+      )
     } else if (legend$side == "top") {
       # legend on top
       nrow <- nrow + 2L
-      legend_row <- 1L + do_main*2
+      legend_row <- 1L + do_main * 2
       legend_col <- if (do_strip_left) 2L else 1L
       diagram_row <- diagram_row + 2L
-      if (do_strip_top)
+      if (do_strip_top) {
         strip_top_row <- strip_top_row + 2L
-      if (do_strip_left)
+      }
+      if (do_strip_left) {
         strip_left_row <- strip_left_row + 2L
-      heights <- grid::unit.c(grid::unit(c(1, 1),
-                                         c("grobheight", "lines"),
-                                         list(legend_grob, NULL)),
-                              heights)
+      }
+      heights <- grid::unit.c(
+        grid::unit(c(1, 1), c("grobheight", "lines"), list(legend_grob, NULL)),
+        heights
+      )
     } else {
       # legend on bottom
       nrow <- nrow + 2L
       legend_row <- nrow
       legend_col <- if (do_strip_left) 2L else 1L
-      heights <- grid::unit.c(heights,
-                              grid::unit(c(1, 1),
-                                         c("lines", "grobheight"),
-                                         list(NULL, legend_grob)))
+      heights <- grid::unit.c(
+        heights,
+        grid::unit(c(1, 1), c("lines", "grobheight"), list(NULL, legend_grob))
+      )
     }
-    legend_grob$vp <- grid::viewport(layout.pos.row = legend_row,
-                                     layout.pos.col = legend_col,
-                                     name = "legend.vp")
+    legend_grob$vp <- grid::viewport(
+      layout.pos.row = legend_row,
+      layout.pos.col = legend_col,
+      name = "legend.vp"
+    )
   }
 
   if (do_main) {
-    main_grob <- grid::textGrob(label = main$label,
-                                x = main$x,
-                                y = main$y,
-                                just = main$just,
-                                hjust = main$hjust,
-                                vjust = main$vjust,
-                                rot = main$rot,
-                                check.overlap = FALSE,
-                                default.units = main$default.units,
-                                gp = main$gp,
-                                name = "main.grob")
-    heights <- grid::unit.c(grid::unit(c(1, 1),
-                                       c("lines", "grobheight"),
-                                       list(NULL, main_grob)),
-                            heights)
-    main_grob$vp <- grid::viewport(layout.pos.row = 1,
-                                   layout.pos.col = diagram_col,
-                                   name = "main.vp")
+    main_grob <- grid::textGrob(
+      label = main$label,
+      x = main$x,
+      y = main$y,
+      just = main$just,
+      hjust = main$hjust,
+      vjust = main$vjust,
+      rot = main$rot,
+      check.overlap = FALSE,
+      default.units = main$default.units,
+      gp = main$gp,
+      name = "main.grob"
+    )
+    heights <- grid::unit.c(
+      grid::unit(c(1, 1), c("lines", "grobheight"), list(NULL, main_grob)),
+      heights
+    )
+    main_grob$vp <- grid::viewport(
+      layout.pos.row = 1,
+      layout.pos.col = diagram_col,
+      name = "main.vp"
+    )
   }
 
   canvas_vp <- grid::viewport(
     layout.pos.row = diagram_row,
     layout.pos.col = diagram_col,
     name = "canvas.vp",
-    layout = grid::grid.layout(nrow = layout[1L],
-                               ncol = layout[2L],
-                               widths = rep(1/ar, layout[1L]),
-                               heights = rep(1, layout[2L]))
+    layout = grid::grid.layout(
+      nrow = layout[1L],
+      ncol = layout[2L],
+      widths = rep(1 / ar, layout[1L]),
+      heights = rep(1, layout[2L])
+    )
   )
 
   for (i in seq_along(euler_grob$children)) {
@@ -716,12 +781,16 @@ plot.euler <- function(x,
   grid::gTree(
     data = data,
     children = children,
-    vp = grid::viewport(layout = grid::grid.layout(nrow = nrow,
-                                                   ncol = ncol,
-                                                   widths = widths,
-                                                   heights = heights,
-                                                   respect = TRUE),
-                        name = "euler.vp"),
+    vp = grid::viewport(
+      layout = grid::grid.layout(
+        nrow = nrow,
+        ncol = ncol,
+        widths = widths,
+        heights = heights,
+        respect = TRUE
+      ),
+      name = "euler.vp"
+    ),
     cl = "eulergram",
     name = "euler.diagram"
   )
@@ -745,7 +814,6 @@ locate_centers <- function(p, precision = 1) {
   if (n_p == 1) {
     polylabelr::poi(p[[1]]$x, p[[1]]$y, precision = precision)
   } else if (n_p > 1) {
-
     intersects <- matrix(TRUE, ncol = n_p, nrow = n_p)
 
     for (i in 1:(n_p - 1)) {
@@ -774,7 +842,6 @@ locate_centers <- function(p, precision = 1) {
     })
 
     res[[which.max(unlist(lapply(res, "[[", "dist")))]]
-
   } else {
     grDevices::xy.coords(NA, NA)
   }
@@ -782,18 +849,19 @@ locate_centers <- function(p, precision = 1) {
 
 #' @rdname plot.euler
 #' @export
-plot.venn <- function(x,
-                      fills = TRUE,
-                      edges = TRUE,
-                      legend = FALSE,
-                      labels = identical(legend, FALSE),
-                      quantities = TRUE,
-                      strips = NULL,
-                      main = NULL,
-                      n = 200L,
-                      adjust_labels = TRUE,
-                      ...)
-{
+plot.venn <- function(
+  x,
+  fills = TRUE,
+  edges = TRUE,
+  legend = FALSE,
+  labels = identical(legend, FALSE),
+  quantities = TRUE,
+  strips = NULL,
+  main = NULL,
+  n = 200L,
+  adjust_labels = TRUE,
+  ...
+) {
   if (!missing(adjust_labels)) {
     warning("`adjust_labels` is deprecated and no longer has any effect.")
   }
@@ -815,8 +883,9 @@ plot.venn <- function(x,
 #' @return A plot is drawn on the current device using [grid::Grid()] graphics.
 #' @export
 plot.eulergram <- function(x, newpage = TRUE, ...) {
-  if (isTRUE(newpage))
+  if (isTRUE(newpage)) {
     grid::grid.newpage()
+  }
   grid::grid.draw(x)
 }
 
@@ -825,4 +894,3 @@ plot.eulergram <- function(x, newpage = TRUE, ...) {
 print.eulergram <- function(x, ...) {
   graphics::plot(x, ...)
 }
-

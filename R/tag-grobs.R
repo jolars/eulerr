@@ -8,7 +8,6 @@
 #' @return A [grid::gTree()] object
 #' @keywords internal
 setup_tag <- function(data, labels, quantities, number) {
-
   x <- data$x
   y <- data$y
 
@@ -44,11 +43,11 @@ setup_tag <- function(data, labels, quantities, number) {
     )
 
     if (do_quantities) {
-      labels_grob$y <- labels_grob$y + 0.5*stringHeight(label) +
-        0.5*grobHeight(quantities_grob) +
+      labels_grob$y <- labels_grob$y +
+        0.5 * stringHeight(label) +
+        0.5 * grobHeight(quantities_grob) +
         padding
     }
-
   } else {
     labels_grob <- nullGrob()
   }
@@ -58,9 +57,11 @@ setup_tag <- function(data, labels, quantities, number) {
     quantity = quantities_grob
   )
 
-  gTree(children = grobs,
-        name = paste("tag", "number", number, sep = "."),
-        cl = "EulerTag")
+  gTree(
+    children = grobs,
+    name = paste("tag", "number", number, sep = "."),
+    cl = "EulerTag"
+  )
 }
 
 #' Avoid overlap for labels
@@ -70,7 +71,6 @@ setup_tag <- function(data, labels, quantities, number) {
 #' @export
 #' @keywords internal
 makeContent.EulerTags <- function(x) {
-
   xlim <- x$xlim
   ylim <- x$ylim
 
