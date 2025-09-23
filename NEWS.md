@@ -1,5 +1,13 @@
 # Changelog
 
+## eulerr 7.0.3
+
+### Bug Fixes
+
+- Fix deprecated use of `arma::is_finite()` in C++ code.
+- Fix URL link to eulerAPE in documentation.
+- Fix URL link to workshop paper in documentation and citation.
+
 ## eulerr 7.0.2
 
 ### Bug Fixes
