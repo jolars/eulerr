@@ -1,3 +1,9 @@
+# eulerr 7.0.4
+
+## Bug Fixes
+
+- Ignore `air.toml` in `Rbuildignore` to fix R CMD check warning.
+
 # eulerr 7.0.3
 
 ## Bug Fixes
