@@ -2,8 +2,8 @@ ASAN
 Acknowledgements
 Bxy
 CIELab
+CMD
 Carlsson
-Changelog
 Cy
 DebRoy
 Dua
@@ -27,8 +27,6 @@ PLOS
 Rcpp
 RcppArmadillo
 RegionErrors
-Rescale
-Rescaled
 Saikat
 Taniskidou
 UCI
@@ -50,11 +48,9 @@ bigcup
 bmatrix
 camk
 cdots
-centroid
 cex
 cmgc
 colorfulVennPlot
-customizable
 ddots
 deuteranopia
 diagError
@@ -88,7 +84,6 @@ mathcal
 mathsf
 memcheck
 nabla
-optimizers
 params
 performant
 polyclip
