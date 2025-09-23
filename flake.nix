@@ -50,6 +50,7 @@
               (rWrapper.override {
                 packages = with rPackages; [
                   devtools
+                  languageserver
                   eulerr
                 ];
               })
