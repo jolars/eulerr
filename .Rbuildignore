@@ -32,3 +32,4 @@ compile-commands.json
 ^.direnv$
 ^flake.lock$
 ^flake.nix$
+.envrc$
