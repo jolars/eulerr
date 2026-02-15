@@ -24,7 +24,7 @@
 #' The various [grid::gpar()] values that are available for each argument
 #' are:
 #'
-#' \tabular{lccccccccc}{
+#' \tabular{lccccccc}{
 #'              \tab fills \tab edges \tab labels \tab quantities  \tab strips \tab legend \tab main \cr
 #'   col        \tab       \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
 #'   fill       \tab x     \tab       \tab        \tab             \tab        \tab        \tab      \cr
