@@ -6,6 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Introducing eulerr • eulerr</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -64,9 +69,9 @@
                         <h4 data-toc-skip class="author">Johan
 Larsson</h4>
             
-            <h4 data-toc-skip class="date">2025-09-23</h4>
+            <h4 data-toc-skip class="date">2026-02-15</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/v7.0.4/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
     </div>
 
@@ -175,7 +180,7 @@ and rows the set relationships for each observation,</li>
 <code class="sourceCode R"><span><span class="co"># Cleveland dot plot of the residuals</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/dotchart.html" class="external-link">dotchart</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_files/figure-html/residual-plot-1.png" alt="Residuals for the fit diagram." width="700"><p class="caption">
+<img src="introduction_files/figure-html/residual-plot-1.png" class="r-plt" alt="Residuals for the fit diagram." width="700"><p class="caption">
 Residuals for the fit diagram.
 </p>
 </div>
@@ -184,7 +189,7 @@ Residuals for the fit diagram.
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/error_plot.html">error_plot</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_files/figure-html/error-plot-1.png" alt="A plot from `error_plot()`." width="700"><p class="caption">
+<img src="introduction_files/figure-html/error-plot-1.png" class="r-plt" alt="A plot from `error_plot()`." width="700"><p class="caption">
 A plot from <code><a href="../reference/error_plot.html">error_plot()</a></code>.
 </p>
 </div>
@@ -248,7 +253,7 @@ can get rid of that error entirely.</p>
 <span><span class="va">fit3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">wilkinson2012</span>, shape <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit3</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_files/figure-html/unnamed-chunk-2-1.png" alt="A difficult combination from Wilkinson 2012." width="700"><p class="caption">
+<img src="introduction_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="A difficult combination from Wilkinson 2012." width="700"><p class="caption">
 A difficult combination from Wilkinson 2012.
 </p>
 </div>
@@ -266,7 +271,7 @@ parameters can easily be adjusted to suit anybody’s needs.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_files/figure-html/eulerr-plot-1.png" alt="Customizing Euler plots is a breeze in eulerr." width="700"><p class="caption">
+<img src="introduction_files/figure-html/eulerr-plot-1.png" class="r-plt" alt="Customizing Euler plots is a breeze in eulerr." width="700"><p class="caption">
 Customizing Euler plots is a breeze in eulerr.
 </p>
 </div>
@@ -281,7 +286,7 @@ Customizing Euler plots is a breeze in eulerr.
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>font <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_files/figure-html/eulerr-plot-2.png" alt="Customizing Euler plots is a breeze in eulerr." width="700"><p class="caption">
+<img src="introduction_files/figure-html/eulerr-plot-2.png" class="r-plt" alt="Customizing Euler plots is a breeze in eulerr." width="700"><p class="caption">
 Customizing Euler plots is a breeze in eulerr.
 </p>
 </div>
@@ -326,7 +331,7 @@ Computer Graphics</em> 18 (2): 321–31. <a href="https://doi.org/10.1109/TVCG.2
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
