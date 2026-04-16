@@ -59,13 +59,14 @@ default are the original values in the input to \code{\link[=euler]{euler()}}. I
 to plain vectors, \code{quantities$labels} can also be a named vector keyed by
 subset names (e.g., \code{"A"}, \code{"B"}, \code{"A&B"}), which is useful for supplying
 custom text for overlap regions. If \code{quantities$labels} is \code{NULL},
-\code{quantities$counts} and \code{quantities$percent} can be used to control
-formatting for each quantity type. Both are lists with an item \code{fun}
-(a function such as \code{\link[=signif]{signif()}} or \code{\link[=round]{round()}}) and optional extra arguments
-passed to that function.
+\code{quantities$format} can be used to control number formatting as a list with
+an item \code{fun} (a function such as \code{\link[=signif]{signif()}} or \code{\link[=round]{round()}}) and optional
+extra arguments passed to that function. \code{quantities$total} can be used to
+set an external
+denominator for percent/fraction quantities (instead of the plotted total).
 to arguments that apply to \code{\link[grid:grid.text]{grid::grid.text()}}, an argument \code{type} may
-also be used which should be a combination of \code{"counts"} and
-\code{"percent"}. The first item will be printed first and the second
+also be used which should be a combination of \code{"counts"}, \code{"percent"},
+and \code{"fraction"}. The first item will be printed first and the second
 will be printed thereafter inside brackets. The default is
 \code{type = "counts"}.}
 

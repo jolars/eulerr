@@ -112,7 +112,7 @@ test_that("quantity formatters can be customized", {
     f,
     quantities = list(
       type = "percent",
-      percent = list(fun = round, digits = 1)
+      format = list(fun = round, digits = 1)
     )
   )
   q <- p$data$centers$quantities
@@ -123,15 +123,52 @@ test_that("quantity formatters can be customized", {
     f,
     quantities = list(
       type = "counts",
-      counts = list(fun = round, digits = -1)
+      format = list(fun = round, digits = -1)
     )
   )
   q <- p$data$centers$quantities
   names(q) <- rownames(p$data$centers)
   expect_equal(unname(q[c("A", "B", "A&B")]), c("10", "10", "0"))
 
-  expect_error(plot(f, quantities = list(counts = 1)))
-  expect_error(plot(f, quantities = list(percent = list(fun = 1))))
+  p <- plot(
+    f,
+    quantities = list(
+      type = "percent",
+      total = 100,
+      format = list(fun = round, digits = 1)
+    )
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(unname(q[c("A", "B", "A&B")]), c("10 %", "8 %", "3 %"))
+
+  p <- plot(
+    f,
+    quantities = list(
+      type = "fraction",
+      total = 100,
+      format = list(fun = round, digits = 2)
+    )
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(unname(q[c("A", "B", "A&B")]), c("0.1", "0.08", "0.03"))
+
+  p <- plot(
+    f,
+    quantities = list(
+      type = c("counts", "fraction"),
+      total = 100,
+      format = list(fun = round, digits = 2)
+    )
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(unname(q[c("A", "B", "A&B")]), c("10 (0.1)", "8 (0.08)", "3 (0.03)"))
+
+  expect_error(plot(f, quantities = list(format = 1)))
+  expect_error(plot(f, quantities = list(format = list(fun = 1))))
+  expect_error(plot(f, quantities = list(total = 0)))
 
   dev.off()
   unlink(tmp)

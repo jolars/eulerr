@@ -14,7 +14,7 @@
 #'   \item{labels}{a list of items `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
 #'   `lineheight`, and `font`}
-#'   \item{quantities}{a list of items `type`, `rot`,
+#'   \item{quantities}{a list of items `type`, `format`, `total`, `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
@@ -121,7 +121,9 @@ eulerr_default_options <- function() {
       font = 2
     ),
     quantities = list(
-      type = "numbers",
+      type = "counts",
+      format = NULL,
+      total = NULL,
       rot = 0,
       col = 1L,
       alpha = 1,

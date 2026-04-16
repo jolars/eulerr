@@ -30,7 +30,7 @@ some margin sizes in the resulting plot}#'
 \item{labels}{a list of items \code{rot},
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily}, \code{fontface},
 \code{lineheight}, and \code{font}}
-\item{quantities}{a list of items \code{type}, \code{rot},
+\item{quantities}{a list of items \code{type}, \code{format}, \code{total}, \code{rot},
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
 \item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},

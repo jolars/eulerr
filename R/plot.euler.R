@@ -68,13 +68,14 @@
 #'   to plain vectors, `quantities$labels` can also be a named vector keyed by
 #'   subset names (e.g., `"A"`, `"B"`, `"A&B"`), which is useful for supplying
 #'   custom text for overlap regions. If `quantities$labels` is `NULL`,
-#'   `quantities$counts` and `quantities$percent` can be used to control
-#'   formatting for each quantity type. Both are lists with an item `fun`
-#'   (a function such as [signif()] or [round()]) and optional extra arguments
-#'   passed to that function.
+#'   `quantities$format` can be used to control number formatting as a list with
+#'   an item `fun` (a function such as [signif()] or [round()]) and optional
+#'   extra arguments passed to that function. `quantities$total` can be used to
+#'   set an external
+#'   denominator for percent/fraction quantities (instead of the plotted total).
 #'   to arguments that apply to [grid::grid.text()], an argument `type` may
-#'   also be used which should be a combination of `"counts"` and
-#'   `"percent"`. The first item will be printed first and the second
+#'   also be used which should be a combination of `"counts"`, `"percent"`,
+#'   and `"fraction"`. The first item will be printed first and the second
 #'   will be printed thereafter inside brackets. The default is
 #'   `type = "counts"`.
 #' @param strips a list, ignored unless the `'by'` argument
@@ -324,38 +325,39 @@ plot.euler <- function(
 
   # setup quantities
   if (do_quantities) {
-    normalize_quantity_formatter <- function(formatter, default_fun, default_args) {
+    normalize_quantity_formatter <- function(formatter) {
       if (is.null(formatter)) {
         formatter <- list()
       }
 
       if (!is.list(formatter)) {
-        stop("`quantities$counts` and `quantities$percent` must be lists.")
+        stop("`quantities$format` must be a list.")
       }
 
       if (is.null(formatter$fun)) {
-        fun <- default_fun
+        fun <- NULL
       } else {
         fun <- formatter$fun
       }
 
-      if (!is.function(fun)) {
-        stop("`quantities$counts$fun` and `quantities$percent$fun` must be functions.")
+      if (!is.null(fun) && !is.function(fun)) {
+        stop("`quantities$format$fun` must be a function.")
       }
 
       args <- formatter[setdiff(names(formatter), "fun")]
-      list(fun = fun, args = update_list(default_args, args))
+      list(fun = fun, args = args)
     }
 
     if (is.list(quantities)) {
       if (!is.null(quantities$type)) {
-        if (!all(quantities$type %in% c("counts", "percent"))) {
-          stop("'type' must be one or both of 'counts' and 'percent")
+        quantities$type[quantities$type == "numbers"] <- "counts"
+        if (!all(quantities$type %in% c("counts", "percent", "fraction"))) {
+          stop("'type' must be one or more of 'counts', 'percent', and 'fraction'")
         }
 
         quantities_type <- match.arg(
           quantities$type,
-          c("counts", "percent"),
+          c("counts", "percent", "fraction"),
           several.ok = TRUE
         )
       } else {
@@ -367,8 +369,8 @@ plot.euler <- function(
           labels = NULL,
           type = quantities_type,
           rot = opar$quantities$rot,
-          counts = NULL,
-          percent = NULL
+          format = NULL,
+          total = NULL
         ),
         quantities
       )
@@ -377,29 +379,29 @@ plot.euler <- function(
         labels = NULL,
         type = opar$quantities$type,
         rot = opar$quantities$rot,
-        counts = NULL,
-        percent = NULL
+        format = NULL,
+        total = NULL
       )
     } else {
       quantities <- list(
         labels = quantities,
         type = opar$quantities$type,
         rot = opar$quantities$rot,
-        counts = NULL,
-        percent = NULL
+        format = NULL,
+        total = NULL
       )
     }
 
-    quantities$counts <- normalize_quantity_formatter(
-      quantities$counts,
-      signif,
-      list(digits = options("digits")$digits)
-    )
-    quantities$percent <- normalize_quantity_formatter(
-      quantities$percent,
-      function(x) ifelse(x >= 1, as.character(round(x)), "< 1"),
-      list()
-    )
+    quantities$type[quantities$type == "numbers"] <- "counts"
+    quantities$format <- normalize_quantity_formatter(quantities$format)
+
+    if (!is.null(quantities$total) &&
+      (!is.numeric(quantities$total) ||
+        length(quantities$total) != 1 ||
+        is.na(quantities$total) ||
+        quantities$total <= 0)) {
+      stop("`quantities$total` must be a single positive number.")
+    }
 
     quantities$rot <- rep_len(quantities$rot, n_id)
 

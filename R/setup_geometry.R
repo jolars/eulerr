@@ -151,36 +151,65 @@ setup_geometry <- function(
 
       if (is.null(quantities$labels)) {
         type <- quantities$type
+        perc <- frac <- NULL
+        fmt_fun <- quantities$format$fun
+        fmt_args <- quantities$format$args
+
+        total <- quantities$total
+        if (is.null(total)) {
+          total <- sum(num, na.rm = TRUE)
+        }
+
+        format_numeric <- function(x, default_fun, default_args = list()) {
+          if (is.null(fmt_fun)) {
+            out <- do.call(default_fun, c(list(x), default_args))
+          } else {
+            out <- do.call(fmt_fun, c(list(x), fmt_args))
+          }
+          as.character(out)
+        }
 
         if ("percent" %in% type) {
-          perc <- num / sum(num, na.rm = TRUE) * 100
-          perc <- do.call(
-            quantities$percent$fun,
-            c(list(perc), quantities$percent$args)
+          perc <- num / total * 100
+          perc <- format_numeric(
+            perc,
+            function(x) ifelse(x >= 1, as.character(round(x)), "< 1")
           )
-          perc <- as.character(perc)
           perc <- sapply(perc[!is.na(perc)], function(x) paste0(x, " %"))
         }
 
-        cnt <- do.call(
-          quantities$counts$fun,
-          c(list(num), quantities$counts$args)
-        )
-        cnt <- as.character(cnt)
+        if ("fraction" %in% type) {
+          frac <- num / total
+          frac <- format_numeric(
+            frac,
+            signif,
+            list(digits = options("digits")$digits)
+          )
+        }
 
-        if (length(type) == 2) {
-          if (type[1] == "counts") {
-            qnt <- paste0(cnt, " (", perc, ")")
-          } else {
-            qnt <- paste0(perc, " (", cnt, ")")
-          }
+        cnt <- format_numeric(
+          num,
+          signif,
+          list(digits = options("digits")$digits)
+        )
+
+        values <- list(counts = cnt, percent = perc, fraction = frac)
+
+        if (length(type) == 1) {
+          centers$quantities[singles | others] <- values[[type]]
+        } else if (length(type) == 2) {
+          qnt <- paste0(values[[type[1]]], " (", values[[type[2]]], ")")
           centers$quantities[singles | others] <- qnt
         } else {
-          if ("percent" %in% type) {
-            centers$quantities[singles | others] <- perc
-          } else {
-            centers$quantities[singles | others] <- cnt
-          }
+          qnt <- paste0(
+            values[[type[1]]],
+            " (",
+            values[[type[2]]],
+            "; ",
+            values[[type[3]]],
+            ")"
+          )
+          centers$quantities[singles | others] <- qnt
         }
       } else {
         if (!is.null(names(quantities$labels))) {
