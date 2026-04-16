@@ -23,6 +23,7 @@ plot(
   labels = identical(legend, FALSE),
   quantities = FALSE,
   strips = NULL,
+  bg = FALSE,
   main = NULL,
   n = 200L,
   adjust_labels = TRUE,
@@ -38,6 +39,7 @@ plot(
   labels = identical(legend, FALSE),
   quantities = TRUE,
   strips = NULL,
+  bg = FALSE,
   main = NULL,
   n = 200L,
   adjust_labels = TRUE,
@@ -96,6 +98,11 @@ plot(
 
   a list, ignored unless the `'by'` argument was used in
   [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md)
+
+- bg:
+
+  a logical, character, or list controlling the background grob.
+  Character values are interpreted as the background fill color.
 
 - main:
 
