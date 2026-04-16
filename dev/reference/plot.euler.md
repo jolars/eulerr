@@ -86,8 +86,13 @@ plot(
   [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md).
   In addition to plain vectors, `quantities$labels` can also be a named
   vector keyed by subset names (e.g., `"A"`, `"B"`, `"A&B"`), which is
-  useful for supplying custom text for overlap regions. to arguments
-  that apply to
+  useful for supplying custom text for overlap regions. If
+  `quantities$labels` is `NULL`, `quantities$counts` and
+  `quantities$percent` can be used to control formatting for each
+  quantity type. Both are lists with an item `fun` (a function such as
+  [`signif()`](https://rdrr.io/r/base/Round.html) or
+  [`round()`](https://rdrr.io/r/base/Round.html)) and optional extra
+  arguments passed to that function. to arguments that apply to
   [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html), an
   argument `type` may also be used which should be a combination of
   `"counts"` and `"percent"`. The first item will be printed first and
