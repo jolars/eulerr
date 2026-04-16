@@ -75,6 +75,8 @@
 #'   `type = "counts"`.
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]
+#' @param bg a logical, character, or list controlling the background grob.
+#'   Character values are interpreted as the background fill color.
 #' @param n number of vertices for the `edges` and `fills`
 #' @param main a title for the plot in the form of a
 #'   character, expression, list or something that can be
@@ -127,6 +129,7 @@ plot.euler <- function(
   labels = identical(legend, FALSE),
   quantities = FALSE,
   strips = NULL,
+  bg = FALSE,
   main = NULL,
   n = 200L,
   adjust_labels = TRUE,
@@ -151,6 +154,7 @@ plot.euler <- function(
   do_legend <- !is_false(legend) && !is.null(legend)
   do_groups <- !is.null(groups)
   do_strips <- !is_false(strips) && do_groups
+  do_bg <- !is_false(bg) && !is.null(bg)
   do_main <- is.character(main) || is.expression(main) || is.list(main)
 
   ellipses <- if (do_groups) x[[1L]]$ellipses else x$ellipses
@@ -460,6 +464,23 @@ plot.euler <- function(
     )
   } else {
     main <- NULL
+  }
+
+  if (do_bg) {
+    if (isTRUE(bg)) {
+      bg <- list()
+    } else if (!is.list(bg)) {
+      bg <- list(fill = bg)
+    }
+
+    bg_grob <- grid::rectGrob(
+      gp = setup_gpar(
+        list(fill = "white", col = "transparent", alpha = 1),
+        bg,
+        1
+      ),
+      name = "bg.grob"
+    )
   }
 
   # set up geometry for diagrams
@@ -774,6 +795,7 @@ plot.euler <- function(
 
   # return a gTree object
   children <- gList(
+    if (do_bg) bg_grob = bg_grob,
     if (do_main) main_grob = main_grob,
     if (do_strip_top) strip_top_grob = strip_top_grob,
     if (do_strip_left) strip_left_grob = strip_left_grob,
@@ -860,6 +882,7 @@ plot.venn <- function(
   labels = identical(legend, FALSE),
   quantities = TRUE,
   strips = NULL,
+  bg = FALSE,
   main = NULL,
   n = 200L,
   adjust_labels = TRUE,

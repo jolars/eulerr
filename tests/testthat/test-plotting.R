@@ -20,6 +20,8 @@ test_that("normal plotting works without errors", {
   expect_silent(plot(f1, main = "Hello"))
   expect_silent(plot(f1, expression = "phi[1]"))
   expect_silent(plot(f1, edges = c("white", "blue")))
+  expect_silent(plot(f1, bg = "grey95"))
+  expect_silent(plot(f1, bg = list(fill = "grey95", alpha = 0.8)))
   expect_silent(plot(f1, quantities = list(type = "percent")))
   expect_silent(plot(f1, quantities = list(type = "counts")))
   expect_silent(plot(f1, quantities = list(type = c("percent", "counts"))))

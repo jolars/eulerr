@@ -13,6 +13,7 @@
   labels = identical(legend, FALSE),
   quantities = FALSE,
   strips = NULL,
+  bg = FALSE,
   main = NULL,
   n = 200L,
   adjust_labels = TRUE,
@@ -27,6 +28,7 @@
   labels = identical(legend, FALSE),
   quantities = TRUE,
   strips = NULL,
+  bg = FALSE,
   main = NULL,
   n = 200L,
   adjust_labels = TRUE,
@@ -65,6 +67,9 @@ will be printed thereafter inside brackets. The default is
 
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}}
+
+\item{bg}{a logical, character, or list controlling the background grob.
+Character values are interpreted as the background fill color.}
 
 \item{main}{a title for the plot in the form of a
 character, expression, list or something that can be
