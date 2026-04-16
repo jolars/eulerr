@@ -206,3 +206,26 @@ test_that("plots with euler lists works", {
   dev.off()
   unlink(tmp)
 })
+
+test_that("venn plotting prefers eulerr class dispatch", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- venn(c(A = 10, B = 5, "A&B" = 2))
+  expect_is(f, "eulerr_venn")
+  expect_silent(plot(f))
+
+  dev.off()
+  unlink(tmp)
+})
+
+test_that("legacy plot.venn warns", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- venn(c(A = 10, B = 5, "A&B" = 2))
+  expect_warning(plot.venn(f), "deprecated")
+
+  dev.off()
+  unlink(tmp)
+})

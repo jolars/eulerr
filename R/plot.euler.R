@@ -933,7 +933,7 @@ locate_centers <- function(p, precision = 1) {
 
 #' @rdname plot.euler
 #' @export
-plot.venn <- function(
+plot.eulerr_venn <- function(
   x,
   fills = TRUE,
   edges = TRUE,
@@ -951,7 +951,29 @@ plot.venn <- function(
     warning("`adjust_labels` is deprecated and no longer has any effect.")
   }
 
-  NextMethod("plot", ..., quantities = quantities)
+  plot.euler(
+    x = x,
+    fills = fills,
+    edges = edges,
+    legend = legend,
+    labels = labels,
+    quantities = quantities,
+    strips = strips,
+    bg = bg,
+    main = main,
+    n = n,
+    ...
+  )
+}
+
+#' @rdname plot.euler
+#' @export
+plot.venn <- function(...) {
+  warning(
+    "`plot.venn()` is deprecated and will be removed in a future release. ",
+    "Use `plot()` on objects from `venn()` instead."
+  )
+  plot.eulerr_venn(...)
 }
 
 #' Print (plot) Euler diagram

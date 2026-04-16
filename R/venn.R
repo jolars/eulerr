@@ -9,13 +9,13 @@
 #'
 #' @inheritParams euler
 #'
-#' @return Returns an object of class `'venn', 'euler'` with items
+#' @return Returns an object of class `'eulerr_venn', 'venn', 'euler'` with items
 #'   \item{ellipses}{a matrix of `h` and `k` (x and y-coordinates for the
 #'     centers of the shapes), semiaxes `a` and `b`, and rotation angle `phi`}
 #'   \item{original.values}{set relationships in the input}
 #'   \item{fitted.values}{set relationships in the solution}
 #'
-#' @seealso [plot.venn()], [print.venn()], [euler()]
+#' @seealso [plot.eulerr_venn()], [print.eulerr_venn()], [euler()]
 #'
 #' @export
 #'
@@ -137,7 +137,7 @@ venn.data.frame <- function(
 
   if (is.list(combinations)) {
     out <- lapply(combinations, venn, ...)
-    class(out) <- c("venn", "euler", "list")
+    class(out) <- c("eulerr_venn", "venn", "euler", "list")
     attr(out, "groups") <- attr(combinations, "groups")
   } else {
     out <- venn(combinations, ...)

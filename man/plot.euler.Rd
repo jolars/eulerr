@@ -2,6 +2,7 @@
 % Please edit documentation in R/plot.euler.R
 \name{plot.euler}
 \alias{plot.euler}
+\alias{plot.eulerr_venn}
 \alias{plot.venn}
 \title{Plot Euler and Venn diagrams}
 \usage{
@@ -20,7 +21,7 @@
   ...
 )
 
-\method{plot}{venn}(
+\method{plot}{eulerr_venn}(
   x,
   fills = TRUE,
   edges = TRUE,
@@ -34,6 +35,8 @@
   adjust_labels = TRUE,
   ...
 )
+
+\method{plot}{venn}(...)
 }
 \arguments{
 \item{x}{an object of class \code{'euler'}, generated from \code{\link[=euler]{euler()}}}

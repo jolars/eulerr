@@ -22,8 +22,8 @@ plot(fit, quantities = list(labels = lbl), legend = FALSE)
 plot(
   fit,
   quantities = list(
-    type = c("counts", "percent"),
-    total = 1615,
-    percent = list(fun = round, digits = 2)
+    type = c("counts", "percent"), # or "fraction"
+    total = 1615, # optional external denominator
+    format = list(fun = round, digits = 2)
   )
 )

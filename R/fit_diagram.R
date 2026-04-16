@@ -90,7 +90,7 @@ fit_diagram <- function(
         original.values = orig,
         fitted.values = rep(1, length(orig))
       ),
-      class = c("venn", "euler", "list")
+      class = c("eulerr_venn", "venn", "euler", "list")
     )
     return(out)
   }

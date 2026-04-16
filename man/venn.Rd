@@ -59,7 +59,7 @@ if there are factor or character vectors in 'combinations'.}
 constructing dummy codes}
 }
 \value{
-Returns an object of class \verb{'venn', 'euler'} with items
+Returns an object of class \verb{'eulerr_venn', 'venn', 'euler'} with items
 \item{ellipses}{a matrix of \code{h} and \code{k} (x and y-coordinates for the
 centers of the shapes), semiaxes \code{a} and \code{b}, and rotation angle \code{phi}}
 \item{original.values}{set relationships in the input}
@@ -116,5 +116,5 @@ venn(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 venn(plants[c("erigenia", "solanum", "cynodon")])
 }
 \seealso{
-\code{\link[=plot.venn]{plot.venn()}}, \code{\link[=print.venn]{print.venn()}}, \code{\link[=euler]{euler()}}
+\code{\link[=plot.eulerr_venn]{plot.eulerr_venn()}}, \code{\link[=print.eulerr_venn]{print.eulerr_venn()}}, \code{\link[=euler]{euler()}}
 }

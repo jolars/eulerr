@@ -59,7 +59,7 @@ print.euler <- function(
 #' from [venn()] and provides a simple description of the number of
 #' sets and the specifications for the ellipses of the Venn diagram.
 #'
-#' @param x an object of class `'venn'`
+#' @param x an object of class `'eulerr_venn'`
 #' @param round number of digits to round the ellipse specification to
 #' @param vsep character string to paste in between `euler` objects
 #'   when `x` is a nested `euler` object
@@ -74,7 +74,7 @@ print.euler <- function(
 #'
 #' @examples
 #' venn(organisms)
-print.venn <- function(
+print.eulerr_venn <- function(
   x,
   round = 3,
   vsep = strrep("-", 0.75 * getOption("width")),
@@ -96,4 +96,14 @@ print.venn <- function(
     print(round(x$ellipses, digits = round), ...)
   }
   invisible(x)
+}
+
+#' @rdname print.venn
+#' @export
+print.venn <- function(...) {
+  warning(
+    "`print.venn()` is deprecated and will be removed in a future release. ",
+    "Use `print()` on objects from `venn()` instead."
+  )
+  print.eulerr_venn(...)
 }

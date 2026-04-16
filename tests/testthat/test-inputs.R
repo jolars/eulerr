@@ -36,6 +36,7 @@ test_that("normal use of euler() returns no errors", {
 })
 
 test_that("normal use of venn() returns no errors", {
+  expect_is(venn(organisms), "eulerr_venn")
   expect_silent(venn(organisms))
   expect_silent(venn(c(A = 1, B = 2)))
   expect_silent(venn(pain))
