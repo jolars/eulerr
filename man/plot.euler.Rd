@@ -54,6 +54,9 @@ text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
 \item{quantities}{a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
 default are the original values in the input to \code{\link[=euler]{euler()}}. In addition
+to plain vectors, \code{quantities$labels} can also be a named vector keyed by
+subset names (e.g., \code{"A"}, \code{"B"}, \code{"A&B"}), which is useful for supplying
+custom text for overlap regions.
 to arguments that apply to \code{\link[grid:grid.text]{grid::grid.text()}}, an argument \code{type} may
 also be used which should be a combination of \code{"counts"} and
 \code{"percent"}. The first item will be printed first and the second

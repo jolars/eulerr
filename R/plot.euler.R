@@ -65,6 +65,9 @@
 #' @param quantities a logical, vector, or list. Vectors are assumed to be
 #'   text for the quantities' labels, which by
 #'   default are the original values in the input to [euler()]. In addition
+#'   to plain vectors, `quantities$labels` can also be a named vector keyed by
+#'   subset names (e.g., `"A"`, `"B"`, `"A&B"`), which is useful for supplying
+#'   custom text for overlap regions.
 #'   to arguments that apply to [grid::grid.text()], an argument `type` may
 #'   also be used which should be a combination of `"counts"` and
 #'   `"percent"`. The first item will be printed first and the second

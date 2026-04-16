@@ -24,6 +24,10 @@ test_that("normal plotting works without errors", {
   expect_silent(plot(f1, quantities = list(type = "counts")))
   expect_silent(plot(f1, quantities = list(type = c("percent", "counts"))))
   expect_silent(plot(f1, quantities = list(type = c("counts", "percent"))))
+  expect_silent(plot(
+    f1,
+    quantities = list(labels = c(A = "foo", B = "bar", "A&B" = "baz"))
+  ))
 
   expect_error(plot(f1, quantities = list(type = c("asdf"))))
 

@@ -175,8 +175,13 @@ setup_geometry <- function(
           }
         }
       } else {
-        centers$quantities[singles | others] <-
-          quantities$labels[which(!empty_subsets)][centers$id[singles | others]]
+        if (!is.null(names(quantities$labels))) {
+          centers$quantities[singles | others] <-
+            unname(quantities$labels[rownames(centers)[singles | others]])
+        } else {
+          centers$quantities[singles | others] <-
+            quantities$labels[which(!empty_subsets)][centers$id[singles | others]]
+        }
       }
     }
 
