@@ -14,8 +14,10 @@ setup_tag <- function(data, labels, quantities, number) {
   label <- data$labels
   quantity <- data$quantities
 
-  do_labels <- !is.null(labels) & !is.na(label)
-  do_quantities <- !is.null(quantities) & !is.na(quantity)
+  # Parameter ids are only assigned for drawable tags, which avoids NA checks
+  # on expression labels (is.na(expression(...)) is warning-prone).
+  do_labels <- !is.null(labels) && !is.na(data$labels_par_id)
+  do_quantities <- !is.null(quantities) && !is.na(data$quantities_par_id)
 
   padding <- eulerr_options()$padding
 

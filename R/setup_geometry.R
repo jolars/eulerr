@@ -185,11 +185,7 @@ setup_geometry <- function(
     centers$quantities_par_id[!is.na(centers$quantities)] <-
       seq_len(sum(others | singles))
 
-    naornull <- function(x) {
-      is.na(x) | is.null(x)
-    }
-
-    has_tag <- !naornull(centers$quantities) | !naornull(centers$labels)
+    has_tag <- !is.na(centers$quantities_par_id) | !is.na(centers$labels_par_id)
 
     centers <- centers[has_tag, , drop = FALSE]
   } else {

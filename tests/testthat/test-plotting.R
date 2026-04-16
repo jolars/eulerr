@@ -15,6 +15,8 @@ test_that("normal plotting works without errors", {
   expect_silent(plot(f1, legend = FALSE, quantities = TRUE))
   expect_silent(plot(f1, legend = TRUE, labels = FALSE))
   expect_silent(plot(f1, labels = c("asdf", "qwer")))
+  expect_silent(plot(f1, labels = str2expression(c("A", "B"))))
+  expect_silent(plot(f1, labels = list(labels = str2expression(c("A", "B")))))
   expect_silent(plot(f1, main = "Hello"))
   expect_silent(plot(f1, expression = "phi[1]"))
   expect_silent(plot(f1, edges = c("white", "blue")))
