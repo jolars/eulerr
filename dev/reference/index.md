@@ -26,6 +26,7 @@
   Plants
 
 - [`plot(`*`<euler>`*`)`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md)
+  [`plot(`*`<eulerr_venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md)
   [`plot(`*`<venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md)
   : Plot Euler and Venn diagrams
 
@@ -36,7 +37,7 @@
 - [`print(`*`<euler>`*`)`](https://jolars.github.io/eulerr/dev/reference/print.euler.md)
   : Print a summary of an Euler diagram
 
-- [`print(`*`<venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/print.venn.md)
+- [`print(`*`<eulerr_venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/print.eulerr_venn.md)
   : Print a summary of a Venn diagram
 
 - [`venn()`](https://jolars.github.io/eulerr/dev/reference/venn.md) :

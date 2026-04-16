@@ -30,7 +30,7 @@ plot(
   ...
 )
 
-# S3 method for class 'venn'
+# S3 method for class 'eulerr_venn'
 plot(
   x,
   fills = TRUE,
@@ -45,6 +45,9 @@ plot(
   adjust_labels = TRUE,
   ...
 )
+
+# S3 method for class 'venn'
+plot(...)
 ```
 
 ## Arguments
