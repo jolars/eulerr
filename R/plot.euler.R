@@ -67,7 +67,11 @@
 #'   default are the original values in the input to [euler()]. In addition
 #'   to plain vectors, `quantities$labels` can also be a named vector keyed by
 #'   subset names (e.g., `"A"`, `"B"`, `"A&B"`), which is useful for supplying
-#'   custom text for overlap regions.
+#'   custom text for overlap regions. If `quantities$labels` is `NULL`,
+#'   `quantities$counts` and `quantities$percent` can be used to control
+#'   formatting for each quantity type. Both are lists with an item `fun`
+#'   (a function such as [signif()] or [round()]) and optional extra arguments
+#'   passed to that function.
 #'   to arguments that apply to [grid::grid.text()], an argument `type` may
 #'   also be used which should be a combination of `"counts"` and
 #'   `"percent"`. The first item will be printed first and the second
@@ -320,6 +324,29 @@ plot.euler <- function(
 
   # setup quantities
   if (do_quantities) {
+    normalize_quantity_formatter <- function(formatter, default_fun, default_args) {
+      if (is.null(formatter)) {
+        formatter <- list()
+      }
+
+      if (!is.list(formatter)) {
+        stop("`quantities$counts` and `quantities$percent` must be lists.")
+      }
+
+      if (is.null(formatter$fun)) {
+        fun <- default_fun
+      } else {
+        fun <- formatter$fun
+      }
+
+      if (!is.function(fun)) {
+        stop("`quantities$counts$fun` and `quantities$percent$fun` must be functions.")
+      }
+
+      args <- formatter[setdiff(names(formatter), "fun")]
+      list(fun = fun, args = update_list(default_args, args))
+    }
+
     if (is.list(quantities)) {
       if (!is.null(quantities$type)) {
         if (!all(quantities$type %in% c("counts", "percent"))) {
@@ -336,14 +363,44 @@ plot.euler <- function(
       }
 
       quantities <- update_list(
-        list(labels = NULL, type = quantities_type, rot = opar$quantities$rot),
+        list(
+          labels = NULL,
+          type = quantities_type,
+          rot = opar$quantities$rot,
+          counts = NULL,
+          percent = NULL
+        ),
         quantities
       )
     } else if (isTRUE(quantities)) {
-      quantities <- list(labels = NULL, rot = opar$quantities$rot)
+      quantities <- list(
+        labels = NULL,
+        type = opar$quantities$type,
+        rot = opar$quantities$rot,
+        counts = NULL,
+        percent = NULL
+      )
     } else {
-      quantities <- list(labels = quantities, rot = opar$quantities$rot)
+      quantities <- list(
+        labels = quantities,
+        type = opar$quantities$type,
+        rot = opar$quantities$rot,
+        counts = NULL,
+        percent = NULL
+      )
     }
+
+    quantities$counts <- normalize_quantity_formatter(
+      quantities$counts,
+      signif,
+      list(digits = options("digits")$digits)
+    )
+    quantities$percent <- normalize_quantity_formatter(
+      quantities$percent,
+      function(x) ifelse(x >= 1, as.character(round(x)), "< 1"),
+      list()
+    )
+
     quantities$rot <- rep_len(quantities$rot, n_id)
 
     quantities$gp <- setup_gpar(

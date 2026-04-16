@@ -147,8 +147,6 @@ setup_geometry <- function(
     others <- has_center & !singles & !empty
 
     if (do_quantities) {
-      digits <- options("digits")$digits
-
       num <- orig[centers$id[singles | others]]
 
       if (is.null(quantities$labels)) {
@@ -156,22 +154,32 @@ setup_geometry <- function(
 
         if ("percent" %in% type) {
           perc <- num / sum(num, na.rm = TRUE) * 100
-          perc <- ifelse(perc >= 1, as.character(round(perc)), "< 1")
+          perc <- do.call(
+            quantities$percent$fun,
+            c(list(perc), quantities$percent$args)
+          )
+          perc <- as.character(perc)
           perc <- sapply(perc[!is.na(perc)], function(x) paste0(x, " %"))
         }
 
+        cnt <- do.call(
+          quantities$counts$fun,
+          c(list(num), quantities$counts$args)
+        )
+        cnt <- as.character(cnt)
+
         if (length(type) == 2) {
           if (type[1] == "counts") {
-            qnt <- paste0(signif(num, digits), " (", perc, ")")
+            qnt <- paste0(cnt, " (", perc, ")")
           } else {
-            qnt <- paste0(perc, " (", num, ")")
+            qnt <- paste0(perc, " (", cnt, ")")
           }
           centers$quantities[singles | others] <- qnt
         } else {
           if ("percent" %in% type) {
             centers$quantities[singles | others] <- perc
           } else {
-            centers$quantities[singles | others] <- signif(num, digits)
+            centers$quantities[singles | others] <- cnt
           }
         }
       } else {

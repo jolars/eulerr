@@ -102,6 +102,41 @@ test_that("plotting zero-fits works", {
   unlink(tmp)
 })
 
+test_that("quantity formatters can be customized", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- euler(c(A = 10, B = 8, "A&B" = 3), input = "disjoint")
+
+  p <- plot(
+    f,
+    quantities = list(
+      type = "percent",
+      percent = list(fun = round, digits = 1)
+    )
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(unname(q[c("A", "B", "A&B")]), c("47.6 %", "38.1 %", "14.3 %"))
+
+  p <- plot(
+    f,
+    quantities = list(
+      type = "counts",
+      counts = list(fun = round, digits = -1)
+    )
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(unname(q[c("A", "B", "A&B")]), c("10", "10", "0"))
+
+  expect_error(plot(f, quantities = list(counts = 1)))
+  expect_error(plot(f, quantities = list(percent = list(fun = 1))))
+
+  dev.off()
+  unlink(tmp)
+})
+
 test_that("error_plot functions normally", {
   tmp <- tempfile()
   png(tmp)
