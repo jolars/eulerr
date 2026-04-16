@@ -82,7 +82,10 @@ plot(
   quantities' labels, which by default are the original values in the
   input to
   [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md).
-  In addition to arguments that apply to
+  In addition to plain vectors, `quantities$labels` can also be a named
+  vector keyed by subset names (e.g., `"A"`, `"B"`, `"A&B"`), which is
+  useful for supplying custom text for overlap regions. to arguments
+  that apply to
   [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html), an
   argument `type` may also be used which should be a combination of
   `"counts"` and `"percent"`. The first item will be printed first and

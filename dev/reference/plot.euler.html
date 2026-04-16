@@ -128,6 +128,9 @@ text for the labels. See <code><a href="https://rdrr.io/r/grid/grid.text.html" c
 <dd><p>a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
 default are the original values in the input to <code><a href="euler.html">euler()</a></code>. In addition
+to plain vectors, <code>quantities$labels</code> can also be a named vector keyed by
+subset names (e.g., <code>"A"</code>, <code>"B"</code>, <code>"A&amp;B"</code>), which is useful for supplying
+custom text for overlap regions.
 to arguments that apply to <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::grid.text()</a></code>, an argument <code>type</code> may
 also be used which should be a combination of <code>"counts"</code> and
 <code>"percent"</code>. The first item will be printed first and the second
