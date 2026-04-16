@@ -45,6 +45,7 @@
               bashInteractive
               autoconf
               go-task
+              panache
               quartoMinimal
               llvmPackages.openmp
               (rWrapper.override {
