@@ -16,46 +16,33 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          packages =
-            let
-              eulerr = (
-                pkgs.rPackages.buildRPackage {
-                  name = "eulerr";
-                  src = ./.;
-                  propagatedBuildInputs = with pkgs.rPackages; [
-                    GenSA
-                    polyclip
-                    polylabelr
-                    Rcpp
-                    RcppArmadillo
-                    knitr
-                    rmarkdown
-                    testthat
-                    lattice
-                    pBrackets
-                    RConics
-                    spelling
-                    covr
-                  ];
-                }
-              );
-            in
-            with pkgs;
-            [
-              bashInteractive
-              autoconf
-              go-task
-              panache
-              quartoMinimal
-              llvmPackages.openmp
-              (rWrapper.override {
-                packages = with rPackages; [
-                  devtools
-                  languageserver
-                  eulerr
-                ];
-              })
-            ];
+          packages = with pkgs; [
+            bashInteractive
+            autoconf
+            go-task
+            panache
+            quartoMinimal
+            llvmPackages.openmp
+            (rWrapper.override {
+              packages = with rPackages; [
+                devtools
+                languageserver
+                GenSA
+                polyclip
+                polylabelr
+                Rcpp
+                RcppArmadillo
+                knitr
+                rmarkdown
+                testthat
+                lattice
+                pBrackets
+                RConics
+                spelling
+                covr
+              ];
+            })
+          ];
         };
       }
     );
