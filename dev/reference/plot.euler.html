@@ -133,13 +133,14 @@ default are the original values in the input to <code><a href="euler.html">euler
 to plain vectors, <code>quantities$labels</code> can also be a named vector keyed by
 subset names (e.g., <code>"A"</code>, <code>"B"</code>, <code>"A&amp;B"</code>), which is useful for supplying
 custom text for overlap regions. If <code>quantities$labels</code> is <code>NULL</code>,
-<code>quantities$counts</code> and <code>quantities$percent</code> can be used to control
-formatting for each quantity type. Both are lists with an item <code>fun</code>
-(a function such as <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif()</a></code> or <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">round()</a></code>) and optional extra arguments
-passed to that function.
+<code>quantities$format</code> can be used to control number formatting as a list with
+an item <code>fun</code> (a function such as <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif()</a></code> or <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">round()</a></code>) and optional
+extra arguments passed to that function. <code>quantities$total</code> can be used to
+set an external
+denominator for percent/fraction quantities (instead of the plotted total).
 to arguments that apply to <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::grid.text()</a></code>, an argument <code>type</code> may
-also be used which should be a combination of <code>"counts"</code> and
-<code>"percent"</code>. The first item will be printed first and the second
+also be used which should be a combination of <code>"counts"</code>, <code>"percent"</code>,
+and <code>"fraction"</code>. The first item will be printed first and the second
 will be printed thereafter inside brackets. The default is
 <code>type = "counts"</code>.</p></dd>
 
