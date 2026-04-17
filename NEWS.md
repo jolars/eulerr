@@ -1,20 +1,4 @@
-# eulerr 7.1
-
-## Features
-
-- allow setting plot options via named vector ([`3b7a32e`](https://github.com/jolars/eulerr/commit/3b7a32e945931171f86b1716a47d47807453d9f9)), closes [#111](https://github.com/jolars/eulerr/issues/111)
-- implement patterns ([`caf1c76`](https://github.com/jolars/eulerr/commit/caf1c76dd7c07c24b4f88d114a5d7fac9ab8844d)), closes [#83](https://github.com/jolars/eulerr/issues/83)
-- set venn diagram class to `venn_eulerr` ([`244a657`](https://github.com/jolars/eulerr/commit/244a65758129b75156ada498039baf8b5d47c9db)), closes [#78](https://github.com/jolars/eulerr/issues/78)
-- add `quantities$format` for number formatting ([`b01e69b`](https://github.com/jolars/eulerr/commit/b01e69b8072ea0d45aed27dc74c2a04d09fc2c28)), closes [#75](https://github.com/jolars/eulerr/issues/75)
-- allow rounding numbers ([`6e297a5`](https://github.com/jolars/eulerr/commit/6e297a5b84c63cec0595c38ec1e235be572cda33)), closes [#76](https://github.com/jolars/eulerr/issues/76)
-- add `bg` option for `plot.euler()` ([`bf70290`](https://github.com/jolars/eulerr/commit/bf70290b94e40dc0cf7fd09ba86dbcd29c8adc55)), closes [#74](https://github.com/jolars/eulerr/issues/74)
-- allow named labels in `quantities` ([`4c7d091`](https://github.com/jolars/eulerr/commit/4c7d091d78f286fbdc8a73cacfbeabedaaddeb4a)), fixes [#112](https://github.com/jolars/eulerr/issues/112)
-- allow expression vectors in `plot.euler()` + `labels` ([`cea5e43`](https://github.com/jolars/eulerr/commit/cea5e43313ea1730035d37f0d08b6dc21f8a3623)), closes [#118](https://github.com/jolars/eulerr/issues/118)
-
-## Bug fixes
-
-- strictly map colors to set identities ([`a58fce5`](https://github.com/jolars/eulerr/commit/a58fce5f44decf449bad6fb3a4d54c041f888d5b)), closes [#109](https://github.com/jolars/eulerr/issues/109)
-- use correct number of columns in tabular ([`4880f5e`](https://github.com/jolars/eulerr/commit/4880f5ebeeebd381665df3affad6841e3dbdd401)), closes [#116](https://github.com/jolars/eulerr/issues/116)
+# eulerr (development version)
 
 # eulerr 7.0.4
 
