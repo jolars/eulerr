@@ -90,7 +90,15 @@ intersecting_inside <- euler(c(
 plot(
   intersecting_inside,
   fills = list(
-    fill = c("lavenderblush2", "lightblue2", "lightsalmon", "", "", "", "plum2")
+    fill = c(
+      "lavenderblush2",
+      "lightblue2",
+      "lightsalmon",
+      "orange",
+      "steelblue4",
+      "white",
+      "plum2"
+    )
   ),
   legend = list(side = "right")
 )
