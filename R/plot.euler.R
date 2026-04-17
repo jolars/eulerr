@@ -54,6 +54,10 @@
 #' @param fills a logical, vector, or list of graphical parameters for the fills
 #'   in the diagram. Vectors are assumed to be colors for the fills.
 #'   See [grid::grid.path()].
+#' @param patterns a logical, vector, or list of graphical parameters for
+#'   fill patterns in the diagram. Vectors are assumed to be pattern types
+#'   (currently `"stripes"` or `NA`), where `NA` means no pattern.
+#'   Supported list items are `type`, `angle`, `col`, `lwd`, and `alpha`.
 #' @param edges a logical, vector, or list of graphical parameters for the edges
 #'   in the diagram. Vectors are assumed to be colors for the edges.
 #'   See [grid::grid.polyline()].
@@ -129,6 +133,7 @@
 plot.euler <- function(
   x,
   fills = TRUE,
+  patterns = FALSE,
   edges = TRUE,
   legend = FALSE,
   labels = identical(legend, FALSE),
@@ -148,11 +153,13 @@ plot.euler <- function(
   opar <- eulerr_options()
 
   groups <- attr(x, "groups")
+  fills_user <- fills
   dots <- list(...)
 
   do_custom_legend <- grid::is.grob(legend)
 
   do_fills <- !is_false(fills) && !is.null(fills)
+  do_patterns <- !is_false(patterns) && !is.null(patterns)
   do_edges <- !is_false(edges) && !is.null(edges)
   do_labels <- !is_false(labels) && !is.null(labels)
   do_quantities <- !is_false(quantities) && !is.null(quantities)
@@ -220,10 +227,15 @@ plot.euler <- function(
 
   stopifnot(n > 0, is.numeric(n) && length(n) == 1)
 
+  fills_out <- NULL
+
   # setup fills
   if (do_fills) {
     fills_out <- replace_list(
-      list(fill = opar$fills$fill, alpha = opar$fills$alpha),
+      list(
+        fill = opar$fills$fill,
+        alpha = opar$fills$alpha
+      ),
       if (is.list(fills)) {
         fills
       } else if (isTRUE(fills)) {
@@ -240,15 +252,174 @@ plot.euler <- function(
     }
 
     n_fills <- length(fills_out$fill)
-    if (n_fills < n_id) {
+    if (n_fills == n_e && n_fills < n_id) {
       for (i in (n_fills + 1L):n_id) {
         fills_out$fill[i] <- mix_colors(fills_out$fill[which(id[i, ])])
       }
+    } else if (!(n_fills %in% c(1L, n_id))) {
+      stop("`fills$fill` must have length 1, n_sets, or n_subsets.")
     }
     fills <- list()
     fills$gp <- setup_gpar(fills_out, list(), n_id)
   } else {
     fills <- NULL
+  }
+
+  legacy_patterns <- list(
+    type = if (is.list(fills_user) && !is.null(fills_user$pattern)) {
+      fills_user$pattern
+    } else {
+      NULL
+    },
+    angle = if (is.list(fills_user) && !is.null(fills_user$angle)) {
+      fills_user$angle
+    } else {
+      NULL
+    },
+    col = if (is.list(fills_user) && !is.null(fills_user$pattern_col)) {
+      fills_user$pattern_col
+    } else {
+      NULL
+    },
+    lwd = if (is.list(fills_user) && !is.null(fills_user$pattern_lwd)) {
+      fills_user$pattern_lwd
+    } else {
+      NULL
+    }
+  )
+  do_legacy_patterns <- any(!vapply(legacy_patterns, is.null, logical(1)))
+  do_patterns <- do_patterns || do_legacy_patterns
+
+  # setup patterns
+  if (do_patterns && !do_fills) {
+    stop("`patterns` requires `fills` to be enabled.")
+  }
+
+  if (do_patterns) {
+    patterns_out <- replace_list(
+      list(
+        type = opar$patterns$type,
+        angle = opar$patterns$angle,
+        col = opar$patterns$col,
+        lwd = opar$patterns$lwd,
+        alpha = opar$patterns$alpha
+      ),
+      if (is.list(patterns)) {
+        patterns
+      } else if (isTRUE(patterns)) {
+        list(type = "stripes")
+      } else {
+        list(type = patterns)
+      }
+    )
+
+    if (do_legacy_patterns) {
+      warning(
+        "`fills$pattern`, `fills$angle`, `fills$pattern_col`, and ",
+        "`fills$pattern_lwd` are deprecated; use `patterns` instead."
+      )
+      if (!is.null(legacy_patterns$type)) {
+        patterns_out$type <- legacy_patterns$type
+      }
+      if (!is.null(legacy_patterns$angle)) {
+        patterns_out$angle <- legacy_patterns$angle
+      }
+      if (!is.null(legacy_patterns$col)) {
+        patterns_out$col <- legacy_patterns$col
+      }
+      if (!is.null(legacy_patterns$lwd)) patterns_out$lwd <- legacy_patterns$lwd
+    }
+
+    patterns_out <- replace_list(patterns_out, dots)
+    expand_pattern_param <- function(x, name, by_set, default = NULL) {
+      n_x <- length(x)
+      if (!(n_x %in% c(1L, n_e, n_id))) {
+        stop("`patterns$", name, "` must have length 1, n_sets, or n_subsets.")
+      }
+      if (n_x == 1L || n_x == n_id) {
+        return(rep_len(x, n_id))
+      }
+
+      out <- vector(mode = mode(x), length = n_id)
+      for (ii in seq_len(n_id)) {
+        active <- which(id[ii, ] & by_set)
+        if (length(active) == 0L) {
+          if (is.null(default)) {
+            out[ii] <- x[1L]
+          } else if (is.character(default)) {
+            out[ii] <- default[1L]
+          } else {
+            out[ii] <- as.vector(default)[1L]
+          }
+        } else if (is.character(x)) {
+          out[ii] <- if (length(active) == 1L) {
+            x[active]
+          } else {
+            mix_colors(x[active])
+          }
+        } else {
+          out[ii] <- mean(x[active])
+        }
+      }
+      out
+    }
+
+    n_types <- length(patterns_out$type)
+    if (!(n_types %in% c(1L, n_e, n_id))) {
+      stop("`patterns$type` must have length 1, n_sets, or n_subsets.")
+    }
+
+    if (n_types %in% c(1L, n_id)) {
+      pattern_mode <- "intersection"
+      patterns_out$type <- rep_len(patterns_out$type, n_id)
+      patterns_out$angle <- expand_pattern_param(patterns_out$angle, "angle", rep(TRUE, n_e))
+      patterns_out$col <- expand_pattern_param(patterns_out$col, "col", rep(TRUE, n_e), default = NA_character_)
+      patterns_out$lwd <- expand_pattern_param(patterns_out$lwd, "lwd", rep(TRUE, n_e))
+      patterns_out$alpha <- expand_pattern_param(patterns_out$alpha, "alpha", rep(TRUE, n_e))
+    } else {
+      pattern_mode <- "shape"
+      patterns_out$type <- tolower(patterns_out$type)
+      patterns_out$angle <- rep_len(patterns_out$angle, n_e)
+      patterns_out$col <- rep_len(patterns_out$col, n_e)
+      patterns_out$lwd <- rep_len(patterns_out$lwd, n_e)
+      patterns_out$alpha <- rep_len(patterns_out$alpha, n_e)
+    }
+
+    patterns <- list()
+    patterns$mode <- pattern_mode
+
+    if (pattern_mode == "intersection") {
+      patterns_out$type[is.na(patterns_out$type)] <- "none"
+      patterns_out$type <- tolower(patterns_out$type)
+
+      if (any(!patterns_out$type %in% c("none", "stripes"))) {
+        stop("`patterns$type` must be one of: 'stripes', NA.")
+      }
+
+      if (all(is.na(patterns_out$col))) {
+        patterns_out$col <- fills$gp$fill
+      } else {
+        na_col <- is.na(patterns_out$col) | patterns_out$col == "NA"
+        patterns_out$col[na_col] <- fills$gp$fill[na_col]
+      }
+
+      patterns$gp <- setup_gpar(patterns_out, list(), n_id)
+    } else {
+      patterns_out$type[is.na(patterns_out$type)] <- "none"
+      if (any(!patterns_out$type %in% c("none", "stripes"))) {
+        stop("`patterns$type` must be one of: 'stripes', NA.")
+      }
+      if (all(is.na(patterns_out$col))) {
+        patterns_out$col <- fills$gp$fill[seq_len(n_e)]
+      } else {
+        na_col <- is.na(patterns_out$col) | patterns_out$col == "NA"
+        patterns_out$col[na_col] <- fills$gp$fill[which(na_col)]
+      }
+      patterns$set_gp <- setup_gpar(patterns_out, list(), n_e)
+      patterns$gp <- patterns$set_gp
+    }
+  } else {
+    patterns <- NULL
   }
 
   # setup edges
@@ -352,7 +523,9 @@ plot.euler <- function(
       if (!is.null(quantities$type)) {
         quantities$type[quantities$type == "numbers"] <- "counts"
         if (!all(quantities$type %in% c("counts", "percent", "fraction"))) {
-          stop("'type' must be one or more of 'counts', 'percent', and 'fraction'")
+          stop(
+            "'type' must be one or more of 'counts', 'percent', and 'fraction'"
+          )
         }
 
         quantities_type <- match.arg(
@@ -395,11 +568,13 @@ plot.euler <- function(
     quantities$type[quantities$type == "numbers"] <- "counts"
     quantities$format <- normalize_quantity_formatter(quantities$format)
 
-    if (!is.null(quantities$total) &&
-      (!is.numeric(quantities$total) ||
-        length(quantities$total) != 1 ||
-        is.na(quantities$total) ||
-        quantities$total <= 0)) {
+    if (
+      !is.null(quantities$total) &&
+        (!is.numeric(quantities$total) ||
+          length(quantities$total) != 1 ||
+          is.na(quantities$total) ||
+          quantities$total <= 0)
+    ) {
       stop("`quantities$total` must be a single positive number.")
     }
 
@@ -469,6 +644,31 @@ plot.euler <- function(
           edges$gp$col[!empty_sets & !merged_sets]
         } else {
           "transparent"
+        },
+        pattern_type = if (do_patterns) {
+          patterns$gp$type[!empty_sets & !merged_sets]
+        } else {
+          "none"
+        },
+        pattern_angle = if (do_patterns) {
+          patterns$gp$angle[!empty_sets & !merged_sets]
+        } else {
+          45
+        },
+        pattern_col = if (do_patterns) {
+          patterns$gp$col[!empty_sets & !merged_sets]
+        } else {
+          "transparent"
+        },
+        pattern_lwd = if (do_patterns) {
+          patterns$gp$lwd[!empty_sets & !merged_sets]
+        } else {
+          0
+        },
+        pattern_alpha = if (do_patterns) {
+          patterns$gp$alpha[!empty_sets & !merged_sets]
+        } else {
+          0
         }
       ),
       legend,
@@ -577,6 +777,7 @@ plot.euler <- function(
       euler_grob_children[[i]] <- setup_grobs(
         data[[i]],
         fills = fills,
+        patterns = patterns,
         edges = edges,
         labels = labels,
         quantities = quantities,
@@ -600,6 +801,7 @@ plot.euler <- function(
     euler_grob <- setup_grobs(
       data,
       fills = fills,
+      patterns = patterns,
       edges = edges,
       labels = labels,
       quantities = quantities,
@@ -731,6 +933,9 @@ plot.euler <- function(
         pch = legend$pch,
         gp = legend$gp
       )
+      if (do_patterns) {
+        legend_grob <- add_legend_patterns(legend_grob, legend$gp)
+      }
     }
 
     legend_grob$name <- "legend.grob"
@@ -931,11 +1136,99 @@ locate_centers <- function(p, precision = 1) {
   }
 }
 
+add_legend_patterns <- function(legend_grob, gp) {
+  point_cells <- which(vapply(
+    legend_grob$children,
+    function(cell) {
+      inherits(cell$children[[1]], "points") ||
+        inherits(cell$children[[1]], "gTree")
+    },
+    logical(1)
+  ))
+
+  if (length(point_cells) == 0L) {
+    return(legend_grob)
+  }
+
+  for (i in seq_along(point_cells)) {
+    t <- seq(0, 2 * pi, length.out = 64)
+    circle <- list(
+      x = 0.5 + 0.48 * cos(t),
+      y = 0.5 + 0.48 * sin(t)
+    )
+
+    cell <- legend_grob$children[[point_cells[i]]]
+    point_vp <- cell$children[[1]]$vp
+
+    base_symbol <- grid::pathGrob(
+      x = circle$x,
+      y = circle$y,
+      default.units = "npc",
+      gp = grid::gpar(
+        fill = gp$fill[i],
+        col = gp$col[i],
+        lwd = gp$lwd[i],
+        lex = gp$lex[i],
+        alpha = gp$alpha[i]
+      )
+    )
+
+    symbol_children <- grid::gList(base_symbol)
+
+    if (gp$pattern_type[i] == "stripes") {
+      pcol <- gp$pattern_col[i]
+      if (is.na(pcol)) {
+        pcol <- gp$fill[i]
+      }
+
+      clipped <- apply_stripe_pattern(
+        fill_data = list(
+          x = circle$x,
+          y = circle$y,
+          id.lengths = length(circle$x)
+        ),
+        pattern_gp = list(
+          type = "stripes",
+          angle = gp$pattern_angle[i],
+          col = pcol,
+          lwd = gp$pattern_lwd[i],
+          alpha = gp$pattern_alpha[i]
+        ),
+        spacing_scale = 3
+      )
+
+      if (!is.null(clipped)) {
+        stripe_grob <- grid::pathGrob(
+          x = unlist(lapply(clipped, "[[", "x"), use.names = FALSE),
+          y = unlist(lapply(clipped, "[[", "y"), use.names = FALSE),
+          id.lengths = lengths(lapply(clipped, "[[", "x")),
+          default.units = "npc",
+          gp = grid::gpar(
+            fill = pcol,
+            col = "transparent",
+            alpha = gp$pattern_alpha[i]
+          )
+        )
+        symbol_children <- grid::gList(base_symbol, stripe_grob)
+      }
+    }
+
+    cell$children[[1]] <- grid::grobTree(
+      children = symbol_children,
+      vp = point_vp
+    )
+    legend_grob$children[[point_cells[i]]] <- cell
+  }
+
+  legend_grob
+}
+
 #' @rdname plot.euler
 #' @export
 plot.eulerr_venn <- function(
   x,
   fills = TRUE,
+  patterns = FALSE,
   edges = TRUE,
   legend = FALSE,
   labels = identical(legend, FALSE),
@@ -954,6 +1247,7 @@ plot.eulerr_venn <- function(
   plot.euler(
     x = x,
     fills = fills,
+    patterns = patterns,
     edges = edges,
     legend = legend,
     labels = labels,

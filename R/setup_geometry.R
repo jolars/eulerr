@@ -236,6 +236,7 @@ setup_geometry <- function(
 
   list(
     ellipses = dd,
+    set_polygons = e,
     fitted.values = fitted,
     original.values = orig,
     fills = fills,

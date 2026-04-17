@@ -9,6 +9,7 @@
 \method{plot}{euler}(
   x,
   fills = TRUE,
+  patterns = FALSE,
   edges = TRUE,
   legend = FALSE,
   labels = identical(legend, FALSE),
@@ -24,6 +25,7 @@
 \method{plot}{eulerr_venn}(
   x,
   fills = TRUE,
+  patterns = FALSE,
   edges = TRUE,
   legend = FALSE,
   labels = identical(legend, FALSE),
@@ -44,6 +46,11 @@
 \item{fills}{a logical, vector, or list of graphical parameters for the fills
 in the diagram. Vectors are assumed to be colors for the fills.
 See \code{\link[grid:grid.path]{grid::grid.path()}}.}
+
+\item{patterns}{a logical, vector, or list of graphical parameters for
+fill patterns in the diagram. Vectors are assumed to be pattern types
+(currently \code{"stripes"} or \code{NA}), where \code{NA} means no pattern.
+Supported list items are \code{type}, \code{angle}, \code{col}, \code{lwd}, and \code{alpha}.}
 
 \item{edges}{a logical, vector, or list of graphical parameters for the edges
 in the diagram. Vectors are assumed to be colors for the edges.

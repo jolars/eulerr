@@ -32,6 +32,8 @@ test_that("normal plotting works without errors", {
   ))
 
   expect_error(plot(f1, quantities = list(type = c("asdf"))))
+  expect_error(plot(f1, fills = list(fill = c("red", "blue", "green", "black"))))
+  expect_error(plot(f1, patterns = list(type = c("stripes", NA, "stripes", NA))))
 
   grid <- expand.grid(
     labels = c(TRUE, FALSE),
@@ -98,6 +100,89 @@ test_that("plotting zero-fits works", {
 
   s <- c(a = 0, b = 0)
   expect_is(plot(euler(s)), "gTree")
+  dev.off()
+  unlink(tmp)
+})
+
+test_that("stripe fill patterns can be added", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- euler(c(A = 10, B = 8, "A&B" = 3))
+  expect_silent(plot(
+    f,
+    fills = list(
+      fill = c("grey90", "grey90")
+    ),
+    patterns = list(type = "stripes", angle = 30)
+  ))
+
+  dev.off()
+  unlink(tmp)
+})
+
+test_that("set-level pattern types propagate to intersections", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- euler(c(A = 10, B = 8, "A&B" = 3))
+  p <- plot(
+    f,
+    fills = list(fill = c("grey90", "grey90")),
+    patterns = list(type = c("stripes", NA), angle = c(25, 0), col = "black", lwd = 1),
+    labels = FALSE,
+    quantities = FALSE,
+    edges = FALSE,
+    legend = FALSE
+  )
+
+  g <- p$children$canvas.grob$children$diagram.grob.1$children
+  expect_true(any(grepl("^set\\.pattern\\.grob\\.", names(g))))
+
+  dev.off()
+  unlink(tmp)
+})
+
+test_that("legacy fill pattern arguments still work with deprecation warning", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- euler(c(A = 10, B = 8, "A&B" = 3))
+  expect_warning(plot(
+    f,
+    fills = list(
+      fill = c("grey90", "grey90"),
+      pattern = "stripes",
+      angle = 30,
+      pattern_col = "black",
+      pattern_lwd = 0.8
+    )
+  ), "deprecated")
+
+  dev.off()
+  unlink(tmp)
+})
+
+test_that("legend keys support patterns", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- euler(c(A = 10, B = 8, "A&B" = 3))
+  p <- plot(
+    f,
+    fills = list(fill = c("grey90", "grey90")),
+    patterns = list(type = "stripes", col = "black", lwd = 0.8),
+    legend = TRUE,
+    quantities = FALSE
+  )
+
+  legend_grob <- p$children$legend.grob
+  point_cells <- legend_grob$children[vapply(legend_grob$children, function(cell) {
+    inherits(cell$children[[1]], "gTree")
+  }, logical(1))]
+
+  expect_true(length(point_cells) > 0)
+
   dev.off()
   unlink(tmp)
 })

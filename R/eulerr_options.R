@@ -10,6 +10,7 @@
 #'   \item{pointsize}{size in pts to be used as basis for fontsizes and
 #'   some margin sizes in the resulting plot}#'
 #'   \item{fills}{a list of items `fill` and `alpha`}
+#'   \item{patterns}{a list of items `type`, `angle`, `col`, `lwd`, and `alpha`}
 #'   \item{edges}{a list of items `col`, `alpha`, `lex`, `lwd`, and `lty`}
 #'   \item{labels}{a list of items `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `fontface`,
@@ -102,6 +103,14 @@ eulerr_default_options <- function() {
         )[seq_len(n)]
       },
       alpha = 1
+    ),
+    patterns = list(
+      type = NA_character_,
+      angle = 45,
+      col = 1L,
+      lwd = 0.5,
+      alpha = 1,
+      lex = 1
     ),
     edges = list(
       col = 1L,
