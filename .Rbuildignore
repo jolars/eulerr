@@ -39,3 +39,6 @@
 ^devenv\.nix$
 ^devenv\.yaml$
 ^\.direnv$
+^versionary.jsonc$
+^panache.toml$
+^.versionary-manifest.json$
