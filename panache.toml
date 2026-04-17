@@ -1,4 +1,7 @@
 flavor = "rmarkdown"
 
+[flavor-overrides]
+"README.md" = "gfm"
+
 [formatters]
 r = "air"
