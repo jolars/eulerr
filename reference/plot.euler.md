@@ -18,11 +18,30 @@ argument.
 plot(
   x,
   fills = TRUE,
+  patterns = FALSE,
   edges = TRUE,
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = FALSE,
   strips = NULL,
+  bg = FALSE,
+  main = NULL,
+  n = 200L,
+  adjust_labels = TRUE,
+  ...
+)
+
+# S3 method for class 'eulerr_venn'
+plot(
+  x,
+  fills = TRUE,
+  patterns = FALSE,
+  edges = TRUE,
+  legend = FALSE,
+  labels = identical(legend, FALSE),
+  quantities = TRUE,
+  strips = NULL,
+  bg = FALSE,
   main = NULL,
   n = 200L,
   adjust_labels = TRUE,
@@ -30,19 +49,7 @@ plot(
 )
 
 # S3 method for class 'venn'
-plot(
-  x,
-  fills = TRUE,
-  edges = TRUE,
-  legend = FALSE,
-  labels = identical(legend, FALSE),
-  quantities = TRUE,
-  strips = NULL,
-  main = NULL,
-  n = 200L,
-  adjust_labels = TRUE,
-  ...
-)
+plot(...)
 ```
 
 ## Arguments
@@ -57,6 +64,13 @@ plot(
   a logical, vector, or list of graphical parameters for the fills in
   the diagram. Vectors are assumed to be colors for the fills. See
   [`grid::grid.path()`](https://rdrr.io/r/grid/grid.path.html).
+
+- patterns:
+
+  a logical, vector, or list of graphical parameters for fill patterns
+  in the diagram. Vectors are assumed to be pattern types (currently
+  `"stripes"` or `NA`), where `NA` means no pattern. Supported list
+  items are `type`, `angle`, `col`, `lwd`, and `alpha`.
 
 - edges:
 
@@ -82,17 +96,32 @@ plot(
   quantities' labels, which by default are the original values in the
   input to
   [`euler()`](https://jolars.github.io/eulerr/reference/euler.md). In
-  addition to arguments that apply to
+  addition to plain vectors, `quantities$labels` can also be a named
+  vector keyed by subset names (e.g., `"A"`, `"B"`, `"A&B"`), which is
+  useful for supplying custom text for overlap regions. If
+  `quantities$labels` is `NULL`, `quantities$format` can be used to
+  control number formatting as a list with an item `fun` (a function
+  such as [`signif()`](https://rdrr.io/r/base/Round.html) or
+  [`round()`](https://rdrr.io/r/base/Round.html)) and optional extra
+  arguments passed to that function (for example,
+  `list(fun = prettyNum, big.mark = ",")`). `quantities$total` can be
+  used to set an external denominator for percent/fraction quantities
+  (instead of the plotted total). to arguments that apply to
   [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html), an
   argument `type` may also be used which should be a combination of
-  `"counts"` and `"percent"`. The first item will be printed first and
-  the second will be printed thereafter inside brackets. The default is
-  `type = "counts"`.
+  `"counts"`, `"percent"`, and `"fraction"`. The first item will be
+  printed first and the second will be printed thereafter inside
+  brackets. The default is `type = "counts"`.
 
 - strips:
 
   a list, ignored unless the `'by'` argument was used in
   [`euler()`](https://jolars.github.io/eulerr/reference/euler.md)
+
+- bg:
+
+  a logical, character, or list controlling the background grob.
+  Character values are interpreted as the background fill color.
 
 - main:
 

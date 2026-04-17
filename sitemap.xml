@@ -10,6 +10,7 @@
 <url><loc>https://jolars.github.io/eulerr/articles/venn-diagrams.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/articles/visualization.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/authors.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/copilot-instructions.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/index.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/news/index.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/bit_indexr.html</loc></url>
@@ -45,7 +46,7 @@
 <url><loc>https://jolars.github.io/eulerr/reference/plot.eulergram.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/poly_clip.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/print.euler.html</loc></url>
-<url><loc>https://jolars.github.io/eulerr/reference/print.venn.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/reference/print.eulerr_venn.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/regionError.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/replace_list.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/rescale.html</loc></url>

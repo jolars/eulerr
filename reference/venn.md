@@ -86,7 +86,7 @@ venn(combinations, ...)
 
 ## Value
 
-Returns an object of class `'venn', 'euler'` with items
+Returns an object of class `'eulerr_venn', 'venn', 'euler'` with items
 
 - ellipses:
 
@@ -122,8 +122,8 @@ Returns an object of class `'venn', 'euler'` with items
 
 ## See also
 
-[`plot.venn()`](https://jolars.github.io/eulerr/reference/plot.euler.md),
-[`print.venn()`](https://jolars.github.io/eulerr/reference/print.venn.md),
+[`plot.eulerr_venn()`](https://jolars.github.io/eulerr/reference/plot.euler.md),
+[`print.eulerr_venn()`](https://jolars.github.io/eulerr/reference/print.eulerr_venn.md),
 [`euler()`](https://jolars.github.io/eulerr/reference/euler.md)
 
 ## Examples

@@ -37,6 +37,10 @@ Currently, the following items will be considered:
 
   a list of items `fill` and `alpha`
 
+- patterns:
+
+  a list of items `type`, `angle`, `col`, `lwd`, and `alpha`
+
 - edges:
 
   a list of items `col`, `alpha`, `lex`, `lwd`, and `lty`
@@ -48,8 +52,8 @@ Currently, the following items will be considered:
 
 - quantities:
 
-  a list of items `type`, `rot`, `col`, `alpha`, `fontsize`, `cex`,
-  `fontfamily`, `lineheight`, and `font`
+  a list of items `type`, `format`, `total`, `rot`, `col`, `alpha`,
+  `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`
 
 - strips:
 

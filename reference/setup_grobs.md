@@ -5,7 +5,7 @@ Grobify Euler objects
 ## Usage
 
 ``` r
-setup_grobs(x, fills, edges, labels, quantities, number, merged_sets)
+setup_grobs(x, fills, patterns, edges, labels, quantities, number, merged_sets)
 ```
 
 ## Arguments
@@ -17,6 +17,10 @@ setup_grobs(x, fills, edges, labels, quantities, number, merged_sets)
 - fills:
 
   fills params
+
+- patterns:
+
+  pattern params
 
 - edges:
 
