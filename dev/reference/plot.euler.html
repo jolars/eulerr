@@ -111,14 +111,17 @@ to learn about the individual settings for each argument.</p>
 <dt id="arg-fills">fills<a class="anchor" aria-label="anchor" href="#arg-fills"></a></dt>
 <dd><p>a logical, vector, or list of graphical parameters for the fills
 in the diagram. Vectors are assumed to be colors for the fills.
-See <code><a href="https://rdrr.io/r/grid/grid.path.html" class="external-link">grid::grid.path()</a></code>.</p></dd>
+See <code><a href="https://rdrr.io/r/grid/grid.path.html" class="external-link">grid::grid.path()</a></code>. Named fill vectors can be matched in
+<code>fills$mode = "disjoint"</code> (default) or <code>fills$mode = "union"</code>.</p></dd>
 
 
 <dt id="arg-patterns">patterns<a class="anchor" aria-label="anchor" href="#arg-patterns"></a></dt>
 <dd><p>a logical, vector, or list of graphical parameters for
 fill patterns in the diagram. Vectors are assumed to be pattern types
 (currently <code>"stripes"</code> or <code>NA</code>), where <code>NA</code> means no pattern.
-Supported list items are <code>type</code>, <code>angle</code>, <code>col</code>, <code>lwd</code>, and <code>alpha</code>.</p></dd>
+Supported list items are <code>type</code>, <code>angle</code>, <code>col</code>, <code>lwd</code>, and <code>alpha</code>.
+Named pattern vectors can be matched in
+<code>patterns$mode = "disjoint"</code> (default) or <code>patterns$mode = "union"</code>.</p></dd>
 
 
 <dt id="arg-edges">edges<a class="anchor" aria-label="anchor" href="#arg-edges"></a></dt>
