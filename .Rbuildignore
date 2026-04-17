@@ -35,3 +35,7 @@
 ^\.envrc$
 ^CITATION\.cff$
 ^air\.toml$
+^devenv\.lock$
+^devenv\.nix$
+^devenv\.yaml$
+^\.direnv$
