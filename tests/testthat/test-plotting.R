@@ -219,6 +219,34 @@ test_that("venn plotting prefers eulerr class dispatch", {
   unlink(tmp)
 })
 
+test_that("empty singleton sets do not override overlap fill colors", {
+  tmp <- tempfile()
+  png(tmp)
+
+  fit <- euler(c(A = 0, B = 16, C = 12, "A&B" = 25, "A&C" = 39, "B&C" = 1, "A&B&C" = 40))
+  p <- plot(
+    fit,
+    fills = list(fill = c("#E41A1C", "#377EB8", "#4DAF4A")),
+    labels = FALSE,
+    quantities = FALSE,
+    edges = FALSE,
+    legend = FALSE
+  )
+
+  g <- p$children$canvas.grob$children$diagram.grob.1$children
+  fills <- vapply(
+    g[grepl("^fills\\.grob\\.", names(g))],
+    function(x) if (length(x$gp$fill) == 0) NA_character_ else x$gp$fill,
+    character(1)
+  )
+
+  expect_equal(unname(fills[["fills.grob.4"]]), "#AF5E6A")
+  expect_equal(unname(fills[["fills.grob.5"]]), "#AE7E31")
+
+  dev.off()
+  unlink(tmp)
+})
+
 test_that("legacy plot.venn warns", {
   tmp <- tempfile()
   png(tmp)

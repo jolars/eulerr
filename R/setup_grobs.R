@@ -37,7 +37,6 @@ setup_grobs <- function(
 
   n_e <- NROW(x$ellipses)
   n_id <- 2L^n_e - 1L
-  id <- bit_indexr(n_e)
 
   #edges
   if (do_edges) {
@@ -70,26 +69,6 @@ setup_grobs <- function(
       ))
     } else {
       fills_grob <- vector("list", n_id)
-      fill_id <- seq_len(n_id)
-      empty <- !nonzero_fit(fitted)
-      empty_cols <- colSums(id & !empty) == 0 | merged_sets
-      # skip <- rowSums(id[, empty_cols, drop = FALSE]) > 0
-      for (i in seq_len(n_e)) {
-        if (empty[i] && !empty_cols[i]) {
-          idx <- id[i, ]
-          n_idx <- sum(idx)
-          sub_id <- rowSums(id[, idx, drop = FALSE]) == n_idx
-          next_num <- min(rowSums(id[
-            sub_id & rowSums(id) > n_idx & !empty,
-            ,
-            drop = FALSE
-          ]))
-          next_level <- rowSums(id) == next_num & sub_id
-          if (any(next_level)) {
-            fill_id[next_level] <- fill_id[i]
-          }
-        }
-      }
 
       for (i in seq_len(n_id)) {
         if (is.null(data_fills[[i]])) {
@@ -101,7 +80,7 @@ setup_grobs <- function(
             id.lengths = data_fills[[i]]$id.lengths,
             default.units = "native",
             name = paste0("fills.grob.", i),
-            gp = fills$gp[which(!empty_subsets)][fill_id[i]]
+            gp = fills$gp[which(!empty_subsets)][i]
           )
         }
       }
