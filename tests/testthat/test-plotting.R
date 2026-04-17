@@ -30,9 +30,67 @@ test_that("normal plotting works without errors", {
     f1,
     quantities = list(labels = c(A = "foo", B = "bar", "A&B" = "baz"))
   ))
+  expect_silent(plot(
+    f1,
+    quantities = c(A = "foo", "A&B" = "baz")
+  ))
 
   expect_error(plot(f1, quantities = list(type = c("asdf"))))
+  expect_error(plot(
+    f1,
+    quantities = list(labels = c("foo", A = "bar"))
+  ))
+  expect_error(plot(
+    f1,
+    quantities = c("foo", A = "bar")
+  ))
+  p_named_fill <- plot(f1, fills = c(A = "black"), labels = FALSE, quantities = FALSE, edges = FALSE, legend = FALSE)
+  fill_children <- p_named_fill$children$canvas.grob$children$diagram.grob.1$children
+  fill_cols <- vapply(fill_children, function(g) {
+    if (inherits(g, "gTree")) g$children[[1]]$gp$fill else g$gp$fill
+  }, character(1))
+  expect_equal(unname(fill_cols[1]), "black")
+  expect_false(all(fill_cols == "black"))
+
+  p_named_pattern <- plot(
+    f1,
+    fills = TRUE,
+    patterns = c(A = "stripes"),
+    labels = FALSE,
+    quantities = FALSE,
+    edges = FALSE,
+    legend = FALSE
+  )
+  pattern_children <- p_named_pattern$children$canvas.grob$children$diagram.grob.1$children
+  pattern_count <- sum(vapply(pattern_children, function(g) {
+    inherits(g, "gTree") && length(g$children) > 1L
+  }, logical(1)))
+  expect_equal(pattern_count, 1L)
+
+  p_named_pattern_union <- plot(
+    f1,
+    fills = TRUE,
+    patterns = list(type = c(A = "stripes"), mode = "union"),
+    labels = FALSE,
+    quantities = FALSE,
+    edges = FALSE,
+    legend = FALSE
+  )
+  pattern_children_union <- p_named_pattern_union$children$canvas.grob$children$diagram.grob.1$children
+  pattern_count_union <- sum(vapply(pattern_children_union, function(g) {
+    inherits(g, "gTree") && length(g$children) > 1L
+  }, logical(1)))
+  expect_equal(pattern_count_union, 0L)
+
   expect_error(plot(f1, fills = list(fill = c("red", "blue", "green", "black"))))
+  bad_named_fills <- c("black", "blue")
+  names(bad_named_fills) <- c("A", "")
+  expect_error(plot(f1, fills = bad_named_fills))
+  expect_error(plot(f1, fills = list(fill = c(A = "black"), mode = "asdf")))
+  bad_named_patterns <- c("stripes", NA_character_)
+  names(bad_named_patterns) <- c("A", "")
+  expect_error(plot(f1, patterns = bad_named_patterns))
+  expect_error(plot(f1, patterns = list(type = c(A = "stripes"), mode = "asdf")))
   expect_error(plot(f1, patterns = list(type = c("stripes", NA, "stripes", NA))))
 
   grid <- expand.grid(

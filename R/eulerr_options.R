@@ -102,7 +102,8 @@ eulerr_default_options <- function() {
           "lightgoldenrod"
         )[seq_len(n)]
       },
-      alpha = 1
+      alpha = 1,
+      mode = "disjoint"
     ),
     patterns = list(
       type = NA_character_,
@@ -110,7 +111,8 @@ eulerr_default_options <- function() {
       col = 1L,
       lwd = 0.5,
       alpha = 1,
-      lex = 1
+      lex = 1,
+      mode = "disjoint"
     ),
     edges = list(
       col = 1L,

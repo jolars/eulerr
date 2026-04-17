@@ -213,8 +213,12 @@ setup_geometry <- function(
         }
       } else {
         if (!is.null(names(quantities$labels))) {
-          centers$quantities[singles | others] <-
-            unname(quantities$labels[rownames(centers)[singles | others]])
+          named_quantities <- quantities$labels[rownames(centers)[singles | others]]
+          centers$quantities[singles | others] <- ifelse(
+            is.na(named_quantities),
+            NA_character_,
+            unname(named_quantities)
+          )
         } else {
           centers$quantities[singles | others] <-
             quantities$labels[which(!empty_subsets)][centers$id[singles | others]]
@@ -224,8 +228,10 @@ setup_geometry <- function(
 
     centers <- centers[has_center, , drop = FALSE]
 
-    centers$quantities_par_id[!is.na(centers$quantities)] <-
-      seq_len(sum(others | singles))
+    n_q <- sum(!is.na(centers$quantities))
+    if (n_q > 0L) {
+      centers$quantities_par_id[!is.na(centers$quantities)] <- seq_len(n_q)
+    }
 
     has_tag <- !is.na(centers$quantities_par_id) | !is.na(centers$labels_par_id)
 

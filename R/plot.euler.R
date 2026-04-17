@@ -53,11 +53,14 @@
 #' @param x an object of class `'euler'`, generated from [euler()]
 #' @param fills a logical, vector, or list of graphical parameters for the fills
 #'   in the diagram. Vectors are assumed to be colors for the fills.
-#'   See [grid::grid.path()].
+#'   See [grid::grid.path()]. Named fill vectors can be matched in
+#'   `fills$mode = "disjoint"` (default) or `fills$mode = "union"`.
 #' @param patterns a logical, vector, or list of graphical parameters for
 #'   fill patterns in the diagram. Vectors are assumed to be pattern types
 #'   (currently `"stripes"` or `NA`), where `NA` means no pattern.
 #'   Supported list items are `type`, `angle`, `col`, `lwd`, and `alpha`.
+#'   Named pattern vectors can be matched in
+#'   `patterns$mode = "disjoint"` (default) or `patterns$mode = "union"`.
 #' @param edges a logical, vector, or list of graphical parameters for the edges
 #'   in the diagram. Vectors are assumed to be colors for the edges.
 #'   See [grid::grid.polyline()].
@@ -177,6 +180,8 @@ plot.euler <- function(
   id <- bit_indexr(n_e)
 
   setnames <- rownames(ellipses)
+  colnames(id) <- setnames
+  rownames(id) <- apply(id, 1L, function(i) paste(setnames[i], collapse = "&"))
 
   if (do_groups) {
     res <- lapply(x, function(xi) is.na(xi$ellipses)[, 1L])
@@ -235,7 +240,8 @@ plot.euler <- function(
     fills_out <- replace_list(
       list(
         fill = opar$fills$fill,
-        alpha = opar$fills$alpha
+        alpha = opar$fills$alpha,
+        mode = opar$fills$mode
       ),
       if (is.list(fills)) {
         fills
@@ -252,6 +258,59 @@ plot.euler <- function(
       fills_out$fill <- fills_out$fill(n_e)
     }
 
+    fill_names <- names(fills_out$fill)
+    if (!is.null(fill_names)) {
+      all_named <- all(nzchar(fill_names))
+      any_named <- any(nzchar(fill_names))
+      if (any_named && !all_named) {
+        stop("`fills$fill` must be either fully named or fully unnamed.")
+      }
+      if (all_named) {
+        if (!fills_out$mode %in% c("disjoint", "union")) {
+          stop("`fills$mode` must be either 'disjoint' or 'union'.")
+        }
+        subset_names <- rownames(id)
+        valid_fill_names <- c(setnames, subset_names)
+        unknown <- setdiff(fill_names, valid_fill_names)
+        if (length(unknown) > 0L) {
+          stop(
+            "`fills$fill` has unknown names: ",
+            paste(unknown, collapse = ", ")
+          )
+        }
+
+        default_fill <- opar$fills$fill
+        if (is.function(default_fill)) {
+          default_fill <- default_fill(n_e)
+        }
+        n_default <- length(default_fill)
+        if (n_default == n_e && n_default < n_id) {
+          default_map <- rep(NA_character_, n_id)
+          default_map[seq_len(n_e)] <- default_fill
+          for (ii in (n_e + 1L):n_id) {
+            default_map[ii] <- mix_colors(default_map[which(id[ii, ])])
+          }
+          default_fill <- default_map
+        } else if (n_default == 1L || n_default == n_id) {
+          default_fill <- rep_len(default_fill, n_id)
+        } else {
+          stop("Default `fills$fill` must have length 1, n_sets, or n_subsets.")
+        }
+
+        fill_map <- default_fill
+        names(fill_map) <- subset_names
+        named_sets <- intersect(fill_names, setnames)
+        if (identical(fills_out$mode, "union") && length(named_sets) > 0L) {
+          for (set_name in named_sets) {
+            fill_map[id[, set_name]] <- fills_out$fill[[set_name]]
+          }
+        }
+        named_subsets <- intersect(fill_names, subset_names)
+        fill_map[named_subsets] <- unname(fills_out$fill[named_subsets])
+        fills_out$fill <- fill_map
+      }
+    }
+
     n_fills <- length(fills_out$fill)
     if (n_fills == n_e && n_fills < n_id) {
       for (i in (n_fills + 1L):n_id) {
@@ -261,7 +320,9 @@ plot.euler <- function(
       stop("`fills$fill` must have length 1, n_sets, or n_subsets.")
     }
     fills <- list()
-    fills$gp <- setup_gpar(fills_out, list(), n_id)
+    fills_gp <- fills_out
+    fills_gp$mode <- NULL
+    fills$gp <- setup_gpar(fills_gp, list(), n_id)
   } else {
     fills <- NULL
   }
@@ -303,7 +364,8 @@ plot.euler <- function(
         angle = opar$patterns$angle,
         col = opar$patterns$col,
         lwd = opar$patterns$lwd,
-        alpha = opar$patterns$alpha
+        alpha = opar$patterns$alpha,
+        mode = opar$patterns$mode
       ),
       if (is.list(patterns)) {
         patterns
@@ -332,6 +394,62 @@ plot.euler <- function(
     }
 
     patterns_out <- replace_list(patterns_out, dots)
+
+    pattern_type_names <- names(patterns_out$type)
+    if (!is.null(pattern_type_names)) {
+      all_named <- all(nzchar(pattern_type_names))
+      any_named <- any(nzchar(pattern_type_names))
+      if (any_named && !all_named) {
+        stop("`patterns$type` must be either fully named or fully unnamed.")
+      }
+      if (all_named) {
+        if (!patterns_out$mode %in% c("disjoint", "union")) {
+          stop("`patterns$mode` must be either 'disjoint' or 'union'.")
+        }
+        subset_names <- rownames(id)
+        valid_pattern_names <- c(setnames, subset_names)
+        unknown <- setdiff(pattern_type_names, valid_pattern_names)
+        if (length(unknown) > 0L) {
+          stop(
+            "`patterns$type` has unknown names: ",
+            paste(unknown, collapse = ", ")
+          )
+        }
+        named_sets <- intersect(pattern_type_names, setnames)
+        named_subsets <- intersect(pattern_type_names, subset_names)
+
+        if (identical(patterns_out$mode, "union") &&
+          all(pattern_type_names %in% setnames)) {
+          set_default <- rep_len(opar$patterns$type, n_e)
+          names(set_default) <- setnames
+          set_default[named_sets] <- unname(patterns_out$type[named_sets])
+          patterns_out$type <- unname(set_default)
+        } else {
+          default_type <- opar$patterns$type
+          n_default <- length(default_type)
+          if (n_default == n_e && n_default < n_id) {
+            default_map <- rep(NA_character_, n_id)
+            default_map[seq_len(n_e)] <- default_type
+            default_type <- default_map
+          } else if (n_default == 1L || n_default == n_id) {
+            default_type <- rep_len(default_type, n_id)
+          } else {
+            stop("Default `patterns$type` must have length 1, n_sets, or n_subsets.")
+          }
+
+          type_map <- default_type
+          names(type_map) <- subset_names
+          if (identical(patterns_out$mode, "union") && length(named_sets) > 0L) {
+            for (set_name in named_sets) {
+              type_map[id[, set_name]] <- patterns_out$type[[set_name]]
+            }
+          }
+          type_map[named_subsets] <- unname(patterns_out$type[named_subsets])
+          patterns_out$type <- type_map
+        }
+      }
+    }
+
     expand_pattern_param <- function(x, name, by_set, default = NULL) {
       n_x <- length(x)
       if (!(n_x %in% c(1L, n_e, n_id))) {
@@ -404,7 +522,9 @@ plot.euler <- function(
         patterns_out$col[na_col] <- fills$gp$fill[na_col]
       }
 
-      patterns$gp <- setup_gpar(patterns_out, list(), n_id)
+      patterns_gp <- patterns_out
+      patterns_gp$mode <- NULL
+      patterns$gp <- setup_gpar(patterns_gp, list(), n_id)
     } else {
       patterns_out$type[is.na(patterns_out$type)] <- "none"
       if (any(!patterns_out$type %in% c("none", "stripes"))) {
@@ -416,7 +536,9 @@ plot.euler <- function(
         na_col <- is.na(patterns_out$col) | patterns_out$col == "NA"
         patterns_out$col[na_col] <- fills$gp$fill[which(na_col)]
       }
-      patterns$set_gp <- setup_gpar(patterns_out, list(), n_e)
+      patterns_set_gp <- patterns_out
+      patterns_set_gp$mode <- NULL
+      patterns$set_gp <- setup_gpar(patterns_set_gp, list(), n_e)
       patterns$gp <- patterns$set_gp
     }
   } else {
@@ -568,6 +690,17 @@ plot.euler <- function(
 
     quantities$type[quantities$type == "numbers"] <- "counts"
     quantities$format <- normalize_quantity_formatter(quantities$format)
+
+    if (!is.null(quantities$labels)) {
+      lbl_names <- names(quantities$labels)
+      if (!is.null(lbl_names)) {
+        all_named <- all(nzchar(lbl_names))
+        any_named <- any(nzchar(lbl_names))
+        if (any_named && !all_named) {
+          stop("`quantities$labels` must be either fully named or fully unnamed.")
+        }
+      }
+    }
 
     if (
       !is.null(quantities$total) &&
