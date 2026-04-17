@@ -103,9 +103,10 @@ plot(...)
   control number formatting as a list with an item `fun` (a function
   such as [`signif()`](https://rdrr.io/r/base/Round.html) or
   [`round()`](https://rdrr.io/r/base/Round.html)) and optional extra
-  arguments passed to that function. `quantities$total` can be used to
-  set an external denominator for percent/fraction quantities (instead
-  of the plotted total). to arguments that apply to
+  arguments passed to that function (for example,
+  `list(fun = prettyNum, big.mark = ",")`). `quantities$total` can be
+  used to set an external denominator for percent/fraction quantities
+  (instead of the plotted total). to arguments that apply to
   [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html), an
   argument `type` may also be used which should be a combination of
   `"counts"`, `"percent"`, and `"fraction"`. The first item will be

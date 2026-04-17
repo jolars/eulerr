@@ -147,7 +147,8 @@ subset names (e.g., <code>"A"</code>, <code>"B"</code>, <code>"A&amp;B"</code>),
 custom text for overlap regions. If <code>quantities$labels</code> is <code>NULL</code>,
 <code>quantities$format</code> can be used to control number formatting as a list with
 an item <code>fun</code> (a function such as <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif()</a></code> or <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">round()</a></code>) and optional
-extra arguments passed to that function. <code>quantities$total</code> can be used to
+extra arguments passed to that function (for example,
+<code>list(fun = prettyNum, big.mark = ",")</code>). <code>quantities$total</code> can be used to
 set an external
 denominator for percent/fraction quantities (instead of the plotted total).
 to arguments that apply to <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::grid.text()</a></code>, an argument <code>type</code> may
