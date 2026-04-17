@@ -12,9 +12,15 @@ of the various options for customization that are available.
 ### Uniform intersections
 
 ``` r
-uniform_intersections <- euler(c("A" = 10, "B" = 10, "C" = 10,
-                                 "A&B" = 4, "A&C" = 4, "B&C" = 4,
-                                 "A&B&C" = 2))
+uniform_intersections <- euler(c(
+  "A" = 10,
+  "B" = 10,
+  "C" = 10,
+  "A&B" = 4,
+  "A&C" = 4,
+  "B&C" = 4,
+  "A&B&C" = 2
+))
 plot(uniform_intersections)
 ```
 
@@ -24,9 +30,11 @@ plot(uniform_intersections)
 
 ``` r
 disjoint_sets <- euler(c(A = 1, B = 1, C = 1))
-plot(disjoint_sets, 
-     labels = c("Tom", "Greg", "Alberta"),
-     edges = list(lty = 1:3))
+plot(
+  disjoint_sets,
+  labels = c("Tom", "Greg", "Alberta"),
+  edges = list(lty = 1:3)
+)
 ```
 
 ![](gallery_files/figure-html/unnamed-chunk-3-1.png)
@@ -34,13 +42,21 @@ plot(disjoint_sets,
 ### A set contained in the intersection of two sets
 
 ``` r
-completely_contained <- euler(c("A" = 15, "B" = 15, "C" = 0,
-                                "A&B" = 3, "A&C" = 0, "B&C" = 0,
-                                "A&B&C" = 3))
-plot(completely_contained,
-     labels = list(col = c("white", "black", "black")),
-     edges = list(col = "white", lex = 2),
-     fills = c("black", "cyan", "orange"))
+completely_contained <- euler(c(
+  "A" = 15,
+  "B" = 15,
+  "C" = 0,
+  "A&B" = 3,
+  "A&C" = 0,
+  "B&C" = 0,
+  "A&B&C" = 3
+))
+plot(
+  completely_contained,
+  labels = list(col = c("white", "black", "black")),
+  edges = list(col = "white", lex = 2),
+  fills = c("black", "cyan", "orange")
+)
 ```
 
 ![](gallery_files/figure-html/unnamed-chunk-4-1.png)
@@ -48,47 +64,64 @@ plot(completely_contained,
 ### Two sets intersecting inside a third
 
 ``` r
-intersecting_inside <- euler(c("A" = 15, "B" = 0, "C" = 0,
-                               "A&B" = 3, "A&C" = 3, "B&C" = 0,
-                                "A&B&C" = 2))
-plot(intersecting_inside,
-     fills = list(fill = c("lavenderblush2", 
-                           "lightblue2", 
-                           "lightsalmon",
-                           "", 
-                           "", 
-                           "",
-                           "plum2")),
-     legend = list(side = "right"))
+intersecting_inside <- euler(c(
+  "A" = 15,
+  "B" = 0,
+  "C" = 0,
+  "A&B" = 3,
+  "A&C" = 3,
+  "B&C" = 0,
+  "A&B&C" = 2
+))
+plot(
+  intersecting_inside,
+  fills = list(
+    fill = c(
+      "lavenderblush2",
+      "lightblue2",
+      "lightsalmon",
+      "orange",
+      "steelblue4",
+      "white",
+      "plum2"
+    )
+  ),
+  legend = list(side = "right")
+)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-5-1.png)
+![](gallery_files/figure-html/intersecting_inside-1.png)
 
 ### Difficult set (for circles!)
 
 ``` r
-one_contained <- euler(c("A" = 7, B = 6, C = 0, 
-                         "A&B" = 0, "A&C" = 1, "B&C" = 1,
-                         "A&B&C" = 2),
-                       shape = "ellipse")
-plot(one_contained,
-     quantities = list(type = "percent"))
+one_contained <- euler(
+  c("A" = 7, B = 6, C = 0, "A&B" = 0, "A&C" = 1, "B&C" = 1, "A&B&C" = 2),
+  shape = "ellipse"
+)
+plot(one_contained, quantities = list(type = "percent"))
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-6-1.png)
+![](gallery_files/figure-html/unnamed-chunk-5-1.png)
 
 ### Russian doll
 
 Sets intersecting inside other sets.
 
 ``` r
-russian_doll <- euler(c("A" = 15, "B" = 0, C = 0, 
-                        "A&B" = 10, "A&C" = 0, "B&C" = 0,
-                        "A&B&C" = 5))
+russian_doll <- euler(c(
+  "A" = 15,
+  "B" = 0,
+  C = 0,
+  "A&B" = 10,
+  "A&C" = 0,
+  "B&C" = 0,
+  "A&B&C" = 5
+))
 plot(russian_doll)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-7-1.png)
+![](gallery_files/figure-html/unnamed-chunk-6-1.png)
 
 ### Wilkinson set relationship
 
@@ -96,73 +129,128 @@ This set relationship is taken from Wilkinson et al. It works best with
 ellipses.
 
 ``` r
-wilkinson <- euler(c(A = 4, B = 6, C = 3, D = 2, E = 7, F = 3,
-                     "A&B" = 2, "A&F" = 2, "B&C" = 2, "B&D" = 1,
-                     "B&F" = 2, "C&D" = 1, "D&E" = 1, "E&F" = 1,
-                     "A&B&F" = 1, "B&C&D" = 1),
-                   shape = "ellipse")
-plot(wilkinson, 
-     labels = list(fontfamily = "serif"),
-     edges = list(lty = 3),
-     quantities = list(type = "percent", 
-                       font = 3))
+wilkinson <- euler(
+  c(
+    A = 4,
+    B = 6,
+    C = 3,
+    D = 2,
+    E = 7,
+    F = 3,
+    "A&B" = 2,
+    "A&F" = 2,
+    "B&C" = 2,
+    "B&D" = 1,
+    "B&F" = 2,
+    "C&D" = 1,
+    "D&E" = 1,
+    "E&F" = 1,
+    "A&B&F" = 1,
+    "B&C&D" = 1
+  ),
+  shape = "ellipse"
+)
+plot(
+  wilkinson,
+  labels = list(fontfamily = "serif"),
+  edges = list(lty = 3),
+  quantities = list(type = "percent", font = 3)
+)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-8-1.png)
+![](gallery_files/figure-html/unnamed-chunk-7-1.png)
 
 ### Gene set
 
 ``` r
-genes <- euler(c("SE" = 13, "Treat" = 28, "Anti-CCP" = 101, "DAS28" = 91,
-                 "SE&Treat" = 1, "SE&DAS28" = 14, "Treat&Anti-CCP" = 6,
-                 "SE&Anti-CCP&DAS28" = 1))
-plot(genes,
-     quantities = list(type = c("percent", "counts")))
+genes <- euler(c(
+  "SE" = 13,
+  "Treat" = 28,
+  "Anti-CCP" = 101,
+  "DAS28" = 91,
+  "SE&Treat" = 1,
+  "SE&DAS28" = 14,
+  "Treat&Anti-CCP" = 6,
+  "SE&Anti-CCP&DAS28" = 1
+))
+plot(genes, quantities = list(type = c("percent", "counts")))
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-9-1.png)
+![](gallery_files/figure-html/unnamed-chunk-8-1.png)
 
 ### Three sets intersecting inside a fourth
 
 ``` r
-three_inside_fourth <- euler(c("A" = 30,
-                               "A&B" = 3, "A&C" = 3, "A&D" = 3,
-                               "A&B&C" = 2, "A&B&D" = 2, "A&C&D" = 2,
-                               "A&B&C&D" = 1))
+three_inside_fourth <- euler(c(
+  "A" = 30,
+  "A&B" = 3,
+  "A&C" = 3,
+  "A&D" = 3,
+  "A&B&C" = 2,
+  "A&B&D" = 2,
+  "A&C&D" = 2,
+  "A&B&C&D" = 1
+))
 plot(three_inside_fourth)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-10-1.png)
+![](gallery_files/figure-html/unnamed-chunk-9-1.png)
 
 ### eulerAPE combination
 
 A combination taken from the eulerAPE article.
 
 ``` r
-eulerape <- euler(c("a" = 3491, "b" = 3409, "c" = 3503,
-                    "a&b" = 120, "a&c" = 114, "b&c" = 132,
-                    "a&b&c" = 126),
-                  shape = "ellipse",
-                  control = list(extraopt = FALSE))
+eulerape <- euler(
+  c(
+    "a" = 3491,
+    "b" = 3409,
+    "c" = 3503,
+    "a&b" = 120,
+    "a&c" = 114,
+    "b&c" = 132,
+    "a&b&c" = 126
+  ),
+  shape = "ellipse",
+  control = list(extraopt = FALSE)
+)
 plot(eulerape)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-11-1.png)
+![](gallery_files/figure-html/unnamed-chunk-10-1.png)
 
 ### Four uniform interactions
 
 ``` r
-uniform <- euler(c("A" = 10, "B" = 10, "C" = 10, "D" = 10,
-                   "A&B" = 3, "A&C" = 3, "A&D" = 0, "B&C" = 0, "B&D" = 3, "C&D" = 3,
-                   "A&B&C" = 1, "A&B&D" = 1, "A&C&D" = 1, "B&C&D" = 1,
-                   "A&B&C&D" = 1))
-plot(uniform, labels = list(labels = c("Frodo", "Sam", "Merry", "Pippin"),
-                            font = 1:4,
-                            col = 1:4,
-                            cex = seq(1, 1.5, length.out = 4)))
+uniform <- euler(c(
+  "A" = 10,
+  "B" = 10,
+  "C" = 10,
+  "D" = 10,
+  "A&B" = 3,
+  "A&C" = 3,
+  "A&D" = 0,
+  "B&C" = 0,
+  "B&D" = 3,
+  "C&D" = 3,
+  "A&B&C" = 1,
+  "A&B&D" = 1,
+  "A&C&D" = 1,
+  "B&C&D" = 1,
+  "A&B&C&D" = 1
+))
+plot(
+  uniform,
+  labels = list(
+    labels = c("Frodo", "Sam", "Merry", "Pippin"),
+    font = 1:4,
+    col = 1:4,
+    cex = seq(1, 1.5, length.out = 4)
+  )
+)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-12-1.png)
+![](gallery_files/figure-html/unnamed-chunk-11-1.png)
 
 ### Two circles intersecting completely
 
@@ -171,4 +259,4 @@ two_overlapping <- euler(c("A" = 0, "B" = 0, "A&B" = 10))
 plot(two_overlapping)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-13-1.png)
+![](gallery_files/figure-html/unnamed-chunk-12-1.png)

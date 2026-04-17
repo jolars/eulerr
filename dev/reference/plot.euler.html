@@ -66,6 +66,7 @@ to learn about the individual settings for each argument.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  fills <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  patterns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  edges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">legend</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
@@ -82,6 +83,7 @@ to learn about the individual settings for each argument.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  fills <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  patterns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  edges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">legend</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
@@ -110,6 +112,13 @@ to learn about the individual settings for each argument.</p>
 <dd><p>a logical, vector, or list of graphical parameters for the fills
 in the diagram. Vectors are assumed to be colors for the fills.
 See <code><a href="https://rdrr.io/r/grid/grid.path.html" class="external-link">grid::grid.path()</a></code>.</p></dd>
+
+
+<dt id="arg-patterns">patterns<a class="anchor" aria-label="anchor" href="#arg-patterns"></a></dt>
+<dd><p>a logical, vector, or list of graphical parameters for
+fill patterns in the diagram. Vectors are assumed to be pattern types
+(currently <code>"stripes"</code> or <code>NA</code>), where <code>NA</code> means no pattern.
+Supported list items are <code>type</code>, <code>angle</code>, <code>col</code>, <code>lwd</code>, and <code>alpha</code>.</p></dd>
 
 
 <dt id="arg-edges">edges<a class="anchor" aria-label="anchor" href="#arg-edges"></a></dt>

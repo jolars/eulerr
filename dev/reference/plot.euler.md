@@ -18,6 +18,7 @@ argument.
 plot(
   x,
   fills = TRUE,
+  patterns = FALSE,
   edges = TRUE,
   legend = FALSE,
   labels = identical(legend, FALSE),
@@ -34,6 +35,7 @@ plot(
 plot(
   x,
   fills = TRUE,
+  patterns = FALSE,
   edges = TRUE,
   legend = FALSE,
   labels = identical(legend, FALSE),
@@ -62,6 +64,13 @@ plot(...)
   a logical, vector, or list of graphical parameters for the fills in
   the diagram. Vectors are assumed to be colors for the fills. See
   [`grid::grid.path()`](https://rdrr.io/r/grid/grid.path.html).
+
+- patterns:
+
+  a logical, vector, or list of graphical parameters for fill patterns
+  in the diagram. Vectors are assumed to be pattern types (currently
+  `"stripes"` or `NA`), where `NA` means no pattern. Supported list
+  items are `type`, `angle`, `col`, `lwd`, and `alpha`.
 
 - edges:
 

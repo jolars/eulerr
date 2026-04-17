@@ -51,9 +51,8 @@ computational core (via Rcpp):
   builds diagram data in two phases:
   1.  [`setup_geometry()`](https://jolars.github.io/eulerr/dev/reference/setup_geometry.md)
       computes polygons/centers/bounds.
-  2.  [`setup_grobs()`](https://jolars.github.io/eulerr/dev/reference/setup_grobs.md)
-      converts geometry to grid grobs. It returns an `eulergram` gTree
-      that
+  2.  `setup_grobs()` converts geometry to grid grobs. It returns an
+      `eulergram` gTree that
       [`plot.eulergram()`](https://jolars.github.io/eulerr/dev/reference/plot.eulergram.md)/[`print.eulergram()`](https://jolars.github.io/eulerr/dev/reference/plot.eulergram.md)
       draws.
 - **Global plotting defaults:**
@@ -74,9 +73,7 @@ computational core (via Rcpp):
 - Plotting is implemented with **grid grobs** (`eulergram`) rather than
   base graphics; preserve the
   [`setup_geometry()`](https://jolars.github.io/eulerr/dev/reference/setup_geometry.md)
-  →
-  [`setup_grobs()`](https://jolars.github.io/eulerr/dev/reference/setup_grobs.md)
-  separation when changing plotting behavior.
+  → `setup_grobs()` separation when changing plotting behavior.
 - Input combination naming uses `&` delimiters (e.g., `"A&B&C"`).
   Parsing/validation assumes this format across
   [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md),
