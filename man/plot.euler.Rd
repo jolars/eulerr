@@ -45,12 +45,15 @@
 
 \item{fills}{a logical, vector, or list of graphical parameters for the fills
 in the diagram. Vectors are assumed to be colors for the fills.
-See \code{\link[grid:grid.path]{grid::grid.path()}}.}
+See \code{\link[grid:grid.path]{grid::grid.path()}}. Named fill vectors can be matched in
+\code{fills$mode = "disjoint"} (default) or \code{fills$mode = "union"}.}
 
 \item{patterns}{a logical, vector, or list of graphical parameters for
 fill patterns in the diagram. Vectors are assumed to be pattern types
 (currently \code{"stripes"} or \code{NA}), where \code{NA} means no pattern.
-Supported list items are \code{type}, \code{angle}, \code{col}, \code{lwd}, and \code{alpha}.}
+Supported list items are \code{type}, \code{angle}, \code{col}, \code{lwd}, and \code{alpha}.
+Named pattern vectors can be matched in
+\code{patterns$mode = "disjoint"} (default) or \code{patterns$mode = "union"}.}
 
 \item{edges}{a logical, vector, or list of graphical parameters for the edges
 in the diagram. Vectors are assumed to be colors for the edges.
