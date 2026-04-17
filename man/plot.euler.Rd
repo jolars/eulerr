@@ -71,7 +71,8 @@ subset names (e.g., \code{"A"}, \code{"B"}, \code{"A&B"}), which is useful for s
 custom text for overlap regions. If \code{quantities$labels} is \code{NULL},
 \code{quantities$format} can be used to control number formatting as a list with
 an item \code{fun} (a function such as \code{\link[=signif]{signif()}} or \code{\link[=round]{round()}}) and optional
-extra arguments passed to that function. \code{quantities$total} can be used to
+extra arguments passed to that function (for example,
+\code{list(fun = prettyNum, big.mark = ",")}). \code{quantities$total} can be used to
 set an external
 denominator for percent/fraction quantities (instead of the plotted total).
 to arguments that apply to \code{\link[grid:grid.text]{grid::grid.text()}}, an argument \code{type} may

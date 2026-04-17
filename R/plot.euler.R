@@ -74,7 +74,8 @@
 #'   custom text for overlap regions. If `quantities$labels` is `NULL`,
 #'   `quantities$format` can be used to control number formatting as a list with
 #'   an item `fun` (a function such as [signif()] or [round()]) and optional
-#'   extra arguments passed to that function. `quantities$total` can be used to
+#'   extra arguments passed to that function (for example,
+#'   `list(fun = prettyNum, big.mark = ",")`). `quantities$total` can be used to
 #'   set an external
 #'   denominator for percent/fraction quantities (instead of the plotted total).
 #'   to arguments that apply to [grid::grid.text()], an argument `type` may
