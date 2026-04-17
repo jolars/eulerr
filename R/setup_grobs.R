@@ -1,16 +1,3 @@
-#' Grobify Euler objects
-#'
-#' @param x geometry data
-#' @param fills fills params
-#' @param patterns pattern params
-#' @param edges edges params
-#' @param labels labels params
-#' @param quantities quantities params
-#' @param number current diagram number
-#' @param merged_sets sets that are the same and have been merged
-#'
-#' @return A [grid::gList()] is returned.
-#' @keywords internal
 stripe_segments <- function(
   xlim,
   ylim,
@@ -93,13 +80,18 @@ stripe_segments <- function(
 
 split_fill_paths <- function(fill_data) {
   idx <- cumsum(fill_data$id.lengths)
-  starts <- c(1L, head(idx + 1L, -1L))
-  mapply(function(s, e) {
-    list(
-      x = fill_data$x[s:e],
-      y = fill_data$y[s:e]
-    )
-  }, starts, idx, SIMPLIFY = FALSE)
+  starts <- c(1L, utils::head(idx + 1L, -1L))
+  mapply(
+    function(s, e) {
+      list(
+        x = fill_data$x[s:e],
+        y = fill_data$y[s:e]
+      )
+    },
+    starts,
+    idx,
+    SIMPLIFY = FALSE
+  )
 }
 
 stripe_polygons <- function(
@@ -165,7 +157,8 @@ apply_stripe_pattern <- function(fill_data, pattern_gp, spacing_scale = 25) {
     return(NULL)
   }
 
-  spacing <- max(diff(range(fill_data$x)), diff(range(fill_data$y))) / spacing_scale
+  spacing <- max(diff(range(fill_data$x)), diff(range(fill_data$y))) /
+    spacing_scale
   stripe_width <- spacing * pattern_gp$lwd / 2
 
   stripes <- stripe_polygons(
@@ -221,6 +214,19 @@ add_fill_pattern <- function(fill_grob, fill_data, pattern_gp) {
   grid::grobTree(fill_grob, stripe_grob)
 }
 
+#' Grobify Euler objects
+#'
+#' @param x geometry data
+#' @param fills fills params
+#' @param patterns pattern params
+#' @param edges edges params
+#' @param labels labels params
+#' @param quantities quantities params
+#' @param number current diagram number
+#' @param merged_sets sets that are the same and have been merged
+#'
+#' @return A [grid::gList()] is returned.
+#' @keywords internal
 setup_grobs <- function(
   x,
   fills,
@@ -276,10 +282,20 @@ setup_grobs <- function(
 
     for (i in seq_len(n_e)) {
       set_data <- data_sets[[i]]
-      set_fill <- list(x = set_data$x, y = set_data$y, id.lengths = length(set_data$x))
-      clipped <- apply_stripe_pattern(set_fill, patterns$set_gp[i], spacing_scale = 25)
+      set_fill <- list(
+        x = set_data$x,
+        y = set_data$y,
+        id.lengths = length(set_data$x)
+      )
+      clipped <- apply_stripe_pattern(
+        set_fill,
+        patterns$set_gp[i],
+        spacing_scale = 25
+      )
       if (is.null(clipped)) {
-        pattern_grobs[[i]] <- grid::nullGrob(name = paste0("set.pattern.grob.", i))
+        pattern_grobs[[i]] <- grid::nullGrob(
+          name = paste0("set.pattern.grob.", i)
+        )
       } else {
         pattern_grobs[[i]] <- grid::pathGrob(
           x = unlist(lapply(clipped, "[[", "x"), use.names = FALSE),
@@ -314,7 +330,9 @@ setup_grobs <- function(
       fill_grob <- add_fill_pattern(
         fill_grob = fill_grob,
         fill_data = data_fills[[1]],
-        pattern_gp = if (do_patterns && identical(patterns$mode, "intersection")) {
+        pattern_gp = if (
+          do_patterns && identical(patterns$mode, "intersection")
+        ) {
           patterns$gp[fill_idx]
         } else {
           NULL
@@ -340,7 +358,9 @@ setup_grobs <- function(
           fills_grob[[i]] <- add_fill_pattern(
             fill_grob = fill_grob,
             fill_data = data_fills[[i]],
-            pattern_gp = if (do_patterns && identical(patterns$mode, "intersection")) {
+            pattern_gp = if (
+              do_patterns && identical(patterns$mode, "intersection")
+            ) {
               patterns$gp[fill_idx]
             } else {
               NULL
