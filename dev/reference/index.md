@@ -38,6 +38,7 @@
   : Print a summary of an Euler diagram
 
 - [`print(`*`<eulerr_venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/print.eulerr_venn.md)
+  [`print(`*`<venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/print.eulerr_venn.md)
   : Print a summary of a Venn diagram
 
 - [`venn()`](https://jolars.github.io/eulerr/dev/reference/venn.md) :
