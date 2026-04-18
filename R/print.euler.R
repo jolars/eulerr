@@ -98,7 +98,7 @@ print.eulerr_venn <- function(
   invisible(x)
 }
 
-#' @rdname print.venn
+#' @rdname print.eulerr_venn
 #' @export
 print.venn <- function(...) {
   warning(

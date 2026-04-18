@@ -2,9 +2,12 @@
 % Please edit documentation in R/print.euler.R
 \name{print.eulerr_venn}
 \alias{print.eulerr_venn}
+\alias{print.venn}
 \title{Print a summary of a Venn diagram}
 \usage{
 \method{print}{eulerr_venn}(x, round = 3, vsep = strrep("-", 0.75 * getOption("width")), ...)
+
+\method{print}{venn}(...)
 }
 \arguments{
 \item{x}{an object of class \code{'eulerr_venn'}}
