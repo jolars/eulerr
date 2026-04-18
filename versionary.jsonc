@@ -2,6 +2,5 @@
   "$schema": "https://raw.githubusercontent.com/jolars/versionary/main/schemas/config.json",
   "version": 1,
   "release-type": "r",
-  "release-draft": true,
   "bootstrap-sha": "79ab2e96f95d00489ec9290561be96495a40ed39"
 }
