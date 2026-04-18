@@ -6,7 +6,7 @@
 #'   listing the states in the US and Canada in which they occur. The names in
 #'   the list specify the species or genus of the plant.
 #'
-#' @source USDA, NRCS. 2008. The PLANTS Database (<http://plants.usda.gov/>, 31
+#' @source USDA, NRCS. 2008. The PLANTS Database, 31
 #'   December 2008). National Plant Data Center, Baton Rouge, LA 70874-4490 USA.
 #' @source Dua, D. and Karra Taniskidou, E. (2017). UCI Machine Learning
 #' Repository <http://archive.ics.uci.edu/ml/>. Irvine, CA: University of
