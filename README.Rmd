@@ -51,7 +51,7 @@ devtools::install_github("jolars/eulerr")
 ### Shiny app
 
 eulerr is also available as a shiny app hosted at
-[eulerr.co](https://eulerr.co).
+[eulerr.co](http://eulerr.co).
 
 ## Usage
 
