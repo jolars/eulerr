@@ -92,7 +92,7 @@
 <div class="section level3">
 <h3 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
 </h3>
-<p>eulerr is also available as a shiny app hosted at <a href="https://eulerr.co" class="external-link">eulerr.co</a>.</p>
+<p>eulerr is also available as a shiny app hosted at <a href="http://eulerr.co" class="external-link">eulerr.co</a>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -121,13 +121,37 @@
 <span>    <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  shape <span class="op">=</span> <span class="st">"ellipse"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;          [,1]     [,2]     [,3]     [,4]     [,5]     [,6]</span></span>
+<span><span class="co">#&gt; [1,] 0.000000 2.431149 3.185274 3.074545 3.385137 1.872972</span></span>
+<span><span class="co">#&gt; [2,] 2.431149 0.000000 2.180277 2.417538 3.877666 2.431149</span></span>
+<span><span class="co">#&gt; [3,] 3.185274 2.180277 0.000000 1.658273 3.185274 3.185274</span></span>
+<span><span class="co">#&gt; [4,] 3.074545 2.417538 1.658273 0.000000 2.337734 3.074545</span></span>
+<span><span class="co">#&gt; [5,] 3.385137 3.877666 3.185274 2.337734 0.000000 2.677298</span></span>
+<span><span class="co">#&gt; [6,] 1.872972 2.431149 3.185274 3.074545 2.677298 0.000000</span></span>
+<span><span class="co">#&gt; $minimum</span></span>
+<span><span class="co">#&gt; [1] 0.01234691</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $estimate</span></span>
+<span><span class="co">#&gt;  [1] 5.1740141 2.7706299 0.6023102 1.1415200 2.2857921 4.2059822 4.1508525</span></span>
+<span><span class="co">#&gt;  [8] 4.5172251 4.2891969 2.7210386 0.6741519 2.5474379</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $gradient</span></span>
+<span><span class="co">#&gt;  [1] -1.476519e-06  5.573794e-06  8.483983e-07 -4.816617e-06  2.730104e-06</span></span>
+<span><span class="co">#&gt;  [6] -2.859160e-06  2.824661e-06  9.229413e-08 -1.655492e-06 -4.657942e-06</span></span>
+<span><span class="co">#&gt; [11]  9.740097e-06 -6.343618e-06</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $code</span></span>
+<span><span class="co">#&gt; [1] 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $iterations</span></span>
+<span><span class="co">#&gt; [1] 36</span></span></code></pre></div>
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">stress</span></span>
-<span><span class="co">#&gt; [1] 5.056831e-11</span></span>
+<span><span class="co">#&gt; [1] 1.031469e-11</span></span>
 <span><span class="va">fit</span><span class="op">$</span><span class="va">diagError</span></span>
-<span><span class="co">#&gt; [1] 1.019054e-06</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 9.220587e-07</span></span></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>

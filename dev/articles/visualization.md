@@ -95,7 +95,7 @@ calls.
 
 Blake, Andrew. 2016. “The Impact of Graphical Choices on the Perception
 of Euler Diagrams.” {Ph.D.} dissertation, Brighton, UK: Brighton
-University. <https://research.brighton.ac.uk/files/415740/main.pdf>.
+University.
 
 Jylänki, Jukka. 2010. “A Thousand Ways to Pack the Bin – a Practical
 Approach to Two-Dimensional Rectangle Bin Packing.”
