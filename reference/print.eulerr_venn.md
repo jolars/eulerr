@@ -10,6 +10,9 @@ specifications for the ellipses of the Venn diagram.
 ``` r
 # S3 method for class 'eulerr_venn'
 print(x, round = 3, vsep = strrep("-", 0.75 * getOption("width")), ...)
+
+# S3 method for class 'venn'
+print(...)
 ```
 
 ## Arguments
