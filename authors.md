@@ -20,7 +20,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/jolars/eulerr/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/jolars/eulerr/blob/v7.1.0/inst/CITATION)
 
 Larsson J, Gustafsson P (2018). “A Case Study in Fitting
 Area-Proportional Euler Diagrams with Ellipses Using eulerr.” In
