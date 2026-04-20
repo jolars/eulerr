@@ -20,6 +20,7 @@
             bashInteractive
             autoconf
             go-task
+            html-tidy
             panache
             quartoMinimal
             llvmPackages.openmp
