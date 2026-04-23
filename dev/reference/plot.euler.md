@@ -120,7 +120,11 @@ plot(...)
 - strips:
 
   a list, ignored unless the `'by'` argument was used in
-  [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md)
+  [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md).
+  In addition to graphical parameters, this argument can include
+  `labels = list(top = ..., left = ...)` for custom strip labels.
+  Unnamed labels are interpreted in display order. Named labels are
+  matched by factor levels and then reordered to display order.
 
 - bg:
 

@@ -163,7 +163,10 @@ will be printed thereafter inside brackets. The default is
 
 <dt id="arg-strips">strips<a class="anchor" aria-label="anchor" href="#arg-strips"></a></dt>
 <dd><p>a list, ignored unless the <code>'by'</code> argument
-was used in <code><a href="euler.html">euler()</a></code></p></dd>
+was used in <code><a href="euler.html">euler()</a></code>. In addition to graphical parameters, this
+argument can include <code>labels = list(top = ..., left = ...)</code> for custom
+strip labels. Unnamed labels are interpreted in display order. Named
+labels are matched by factor levels and then reordered to display order.</p></dd>
 
 
 <dt id="arg-bg">bg<a class="anchor" aria-label="anchor" href="#arg-bg"></a></dt>
