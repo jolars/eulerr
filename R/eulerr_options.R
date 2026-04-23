@@ -21,7 +21,8 @@
 #'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
-#'   `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`}
+#'   `fontsize`, `cex`, `symbol_size` (symbol size multiplier, independent of text
+#'   size; defaults to `cex` if `NULL`), `fontfamily`, `lineheight`, and `font`}
 #'   \item{main}{arguments to [grid::textGrob()]}
 #'   \item{padding}{a [grid::unit()] giving the padding between various
 #'   elements in plots from [plot.euler()], which you can change
@@ -157,6 +158,7 @@ eulerr_default_options <- function() {
     legend = list(
       side = "right",
       cex = 1,
+      symbol_size = NULL,
       fontsize = 12,
       font = 1,
       fontfamily = "",

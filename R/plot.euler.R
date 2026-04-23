@@ -64,8 +64,9 @@
 #' @param edges a logical, vector, or list of graphical parameters for the edges
 #'   in the diagram. Vectors are assumed to be colors for the edges.
 #'   See [grid::grid.polyline()].
-#' @param legend a logical scalar or list. If a list,
-#'   the item `side` can be used to set the location of the legend. See
+#' @param legend a logical scalar or list. If a list, the item `side` can be
+#'   used to set the location of the legend and `symbol_size` can be used to scale
+#'   the legend symbols independently of the text size. See
 #'   [grid::grid.legend()].
 #' @param labels a logical, vector, or list. Vectors are assumed to be
 #'   text for the labels. See [grid::grid.text()].
@@ -777,10 +778,14 @@ plot.euler <- function(
         hgap = opar$legend$hgap,
         vgap = opar$legend$vgap,
         default.units = opar$legend$default.units,
-        pch = opar$legend$pch
+        pch = opar$legend$pch,
+        symbol_size = opar$legend$symbol_size
       ),
       legend
     )
+
+    symbol_size <- if (!is.null(legend$symbol_size)) legend$symbol_size else opar$legend$cex
+    legend$symbol_size <- NULL
 
     legend$gp <- setup_gpar(
       list(
@@ -797,7 +802,7 @@ plot.euler <- function(
           0
         },
         cex = opar$legend$cex,
-        fontsize = opar$legend$fontsize / opar$legend$cex,
+        fontsize = opar$legend$fontsize,
         font = opar$legend$font,
         fontfamily = opar$legend$fontfamily,
         lwd = if (do_edges) edges$gp$lwd[!empty_sets & !merged_sets] else 0,
@@ -1134,6 +1139,7 @@ plot.euler <- function(
       if (do_patterns) {
         legend_grob <- add_legend_patterns(legend_grob, legend$gp)
       }
+      legend_grob <- apply_legend_symbol_size(legend_grob, symbol_size)
     }
 
     legend_grob$name <- "legend.grob"
@@ -1417,6 +1423,44 @@ add_legend_patterns <- function(legend_grob, gp) {
     )
     legend_grob$children[[point_cells[i]]] <- cell
   }
+
+  legend_grob
+}
+
+apply_legend_symbol_size <- function(legend_grob, symbol_size) {
+  if (is.null(symbol_size) || symbol_size == 1) {
+    return(legend_grob)
+  }
+
+  sym_unit <- grid::unit(symbol_size, "char")
+
+  point_cells <- which(vapply(
+    legend_grob$children,
+    function(cell) inherits(cell$children[[1]], "points"),
+    logical(1)
+  ))
+
+  if (length(point_cells) == 0L) {
+    return(legend_grob)
+  }
+
+  for (idx in point_cells) {
+    cell <- legend_grob$children[[idx]]
+    cell$children[[1]]$size <- sym_unit
+    legend_grob$children[[idx]] <- cell
+  }
+
+  orig_widths <- legend_grob$framevp$layout$widths
+  legend_grob$framevp$layout$widths <- grid::unit.c(
+    sym_unit + grid::unit(0.5, "lines"),
+    orig_widths[-1]
+  )
+
+  n_rows <- length(legend_grob$framevp$layout$heights)
+  legend_grob$framevp$layout$heights <- do.call(
+    grid::unit.c,
+    rep(list(sym_unit + grid::unit(0.25, "lines")), n_rows)
+  )
 
   legend_grob
 }
