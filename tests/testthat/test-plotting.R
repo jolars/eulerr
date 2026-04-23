@@ -469,3 +469,17 @@ test_that("legacy plot.venn warns", {
   dev.off()
   unlink(tmp)
 })
+
+test_that("rotate parameter works", {
+  tmp <- tempfile()
+  png(tmp)
+
+  fit <- euler(c(A = 10, B = 5, "A&B" = 3))
+  expect_silent(plot(fit, rotate = 0))
+  expect_silent(plot(fit, rotate = 90))
+  expect_silent(plot(fit, rotate = 45))
+  expect_silent(plot(fit, rotate = -30))
+
+  dev.off()
+  unlink(tmp)
+})

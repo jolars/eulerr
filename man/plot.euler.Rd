@@ -17,6 +17,7 @@
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  rotate = 0,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -99,6 +100,10 @@ sensibly converted to a label via \code{\link[grDevices:as.graphicsAnnot]{grDevi
 list of length one can be provided, in which case its only element
 is used as the label. If a list of longer length is provided, an item
 named \code{'label'} must be provided (and will be used for the actual text).}
+
+\item{rotate}{a numeric value giving the angle in degrees by which to rotate
+the entire diagram layout. Positive values rotate counter-clockwise.
+Defaults to \code{0} (no rotation).}
 
 \item{n}{number of vertices for the \code{edges} and \code{fills}}
 

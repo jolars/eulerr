@@ -103,6 +103,9 @@
 #' @param ... parameters to update `fills` and `edges` with and thereby a shortcut
 #'   to set these parameters
 #'   [grid::grid.text()].
+#' @param rotate a numeric value giving the angle in degrees by which to rotate
+#'   the entire diagram layout. Positive values rotate counter-clockwise.
+#'   Defaults to `0` (no rotation).
 #' @param adjust_labels a logical. If `TRUE`, adjustment will be made to avoid
 #'   overlaps or out-of-limits plotting of labels, quantities, and
 #'   percentages.
@@ -148,6 +151,7 @@ plot.euler <- function(
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  rotate = 0,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -898,6 +902,28 @@ plot.euler <- function(
       ),
       name = "bg.grob"
     )
+  }
+
+  # apply layout rotation if requested
+  if (rotate != 0) {
+    theta <- rotate * pi / 180
+    ct <- cos(theta)
+    st <- sin(theta)
+    rotate_ellipses <- function(dd) {
+      h_new <- dd$h * ct - dd$k * st
+      dd$k <- dd$h * st + dd$k * ct
+      dd$h <- h_new
+      dd$phi <- dd$phi + theta
+      dd
+    }
+    if (do_groups) {
+      x <- lapply(x, function(xi) {
+        xi$ellipses <- rotate_ellipses(xi$ellipses)
+        xi
+      })
+    } else {
+      x$ellipses <- rotate_ellipses(x$ellipses)
+    }
   }
 
   # set up geometry for diagrams
