@@ -27,6 +27,7 @@
             (rWrapper.override {
               packages = with rPackages; [
                 devtools
+                reprex
                 languageserver
                 GenSA
                 polyclip
