@@ -86,7 +86,8 @@ plot(...)
 - legend:
 
   a logical scalar or list. If a list, the item `side` can be used to
-  set the location of the legend. See
+  set the location of the legend and `symbol_size` can be used to scale
+  the legend symbols independently of the text size. See
   [`grid::grid.legend()`](https://rdrr.io/r/grid/legendGrob.html).
 
 - labels:

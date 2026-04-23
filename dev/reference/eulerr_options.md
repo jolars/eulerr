@@ -64,8 +64,9 @@ Currently, the following items will be considered:
 
   arguments to
   [`grid::legendGrob()`](https://rdrr.io/r/grid/legendGrob.html) as well
-  as `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, and
-  `font`
+  as `col`, `alpha`, `fontsize`, `cex`, `symbol_size` (symbol size
+  multiplier, independent of text size; defaults to `cex` if `NULL`),
+  `fontfamily`, `lineheight`, and `font`
 
 - main:
 
