@@ -1125,21 +1125,16 @@ plot.euler <- function(
       legend_grob <- legend
       legend <- list(side = "right")
     } else {
-      legend_grob <- grid::legendGrob(
+      legend_grob <- euler_legend_grob(
         labels = legend$labels,
-        do.lines = legend$do.lines,
-        ncol = legend$ncol,
-        nrow = legend$nrow,
+        gp = legend$gp,
+        symbol_size = symbol_size,
         hgap = legend$hgap,
         vgap = legend$vgap,
-        default.units = legend$default.units,
-        pch = legend$pch,
-        gp = legend$gp
+        ncol = legend$ncol,
+        nrow = legend$nrow,
+        byrow = legend$byrow
       )
-      if (do_patterns) {
-        legend_grob <- add_legend_patterns(legend_grob, legend$gp)
-      }
-      legend_grob <- apply_legend_symbol_size(legend_grob, symbol_size)
     }
 
     legend_grob$name <- "legend.grob"
@@ -1338,131 +1333,6 @@ locate_centers <- function(p, precision = 1) {
   } else {
     grDevices::xy.coords(NA, NA)
   }
-}
-
-add_legend_patterns <- function(legend_grob, gp) {
-  point_cells <- which(vapply(
-    legend_grob$children,
-    function(cell) {
-      inherits(cell$children[[1]], "points") ||
-        inherits(cell$children[[1]], "gTree")
-    },
-    logical(1)
-  ))
-
-  if (length(point_cells) == 0L) {
-    return(legend_grob)
-  }
-
-  for (i in seq_along(point_cells)) {
-    t <- seq(0, 2 * pi, length.out = 64)
-    circle <- list(
-      x = 0.5 + 0.48 * cos(t),
-      y = 0.5 + 0.48 * sin(t)
-    )
-
-    cell <- legend_grob$children[[point_cells[i]]]
-    point_vp <- cell$children[[1]]$vp
-
-    base_symbol <- grid::pathGrob(
-      x = circle$x,
-      y = circle$y,
-      default.units = "npc",
-      gp = grid::gpar(
-        fill = gp$fill[i],
-        col = gp$col[i],
-        lwd = gp$lwd[i],
-        lex = gp$lex[i],
-        alpha = gp$alpha[i]
-      )
-    )
-
-    symbol_children <- grid::gList(base_symbol)
-
-    if (gp$pattern_type[i] == "stripes") {
-      pcol <- gp$pattern_col[i]
-      if (is.na(pcol)) {
-        pcol <- gp$fill[i]
-      }
-
-      clipped <- apply_stripe_pattern(
-        fill_data = list(
-          x = circle$x,
-          y = circle$y,
-          id.lengths = length(circle$x)
-        ),
-        pattern_gp = list(
-          type = "stripes",
-          angle = gp$pattern_angle[i],
-          col = pcol,
-          lwd = gp$pattern_lwd[i],
-          alpha = gp$pattern_alpha[i]
-        ),
-        spacing_scale = 3
-      )
-
-      if (!is.null(clipped)) {
-        stripe_grob <- grid::pathGrob(
-          x = unlist(lapply(clipped, "[[", "x"), use.names = FALSE),
-          y = unlist(lapply(clipped, "[[", "y"), use.names = FALSE),
-          id.lengths = lengths(lapply(clipped, "[[", "x")),
-          default.units = "npc",
-          gp = grid::gpar(
-            fill = pcol,
-            col = "transparent",
-            alpha = gp$pattern_alpha[i]
-          )
-        )
-        symbol_children <- grid::gList(base_symbol, stripe_grob)
-      }
-    }
-
-    cell$children[[1]] <- grid::grobTree(
-      children = symbol_children,
-      vp = point_vp
-    )
-    legend_grob$children[[point_cells[i]]] <- cell
-  }
-
-  legend_grob
-}
-
-apply_legend_symbol_size <- function(legend_grob, symbol_size) {
-  if (is.null(symbol_size) || symbol_size == 1) {
-    return(legend_grob)
-  }
-
-  sym_unit <- grid::unit(symbol_size, "char")
-
-  point_cells <- which(vapply(
-    legend_grob$children,
-    function(cell) inherits(cell$children[[1]], "points"),
-    logical(1)
-  ))
-
-  if (length(point_cells) == 0L) {
-    return(legend_grob)
-  }
-
-  for (idx in point_cells) {
-    cell <- legend_grob$children[[idx]]
-    cell$children[[1]]$size <- sym_unit
-    legend_grob$children[[idx]] <- cell
-  }
-
-  orig_widths <- legend_grob$framevp$layout$widths
-  legend_grob$framevp$layout$widths <- grid::unit.c(
-    sym_unit + grid::unit(0.5, "lines"),
-    orig_widths[-1]
-  )
-
-  n_rows <- length(legend_grob$framevp$layout$heights)
-  legend_grob$framevp$layout$heights <- do.call(
-    grid::unit.c,
-    rep(list(sym_unit + grid::unit(0.25, "lines")), n_rows)
-  )
-
-  legend_grob
 }
 
 resolve_strip_labels <- function(labels, levels, display_levels, axis) {

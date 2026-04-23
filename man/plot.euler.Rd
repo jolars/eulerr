@@ -60,8 +60,9 @@ Named pattern vectors can be matched in
 in the diagram. Vectors are assumed to be colors for the edges.
 See \code{\link[grid:grid.lines]{grid::grid.polyline()}}.}
 
-\item{legend}{a logical scalar or list. If a list,
-the item \code{side} can be used to set the location of the legend. See
+\item{legend}{a logical scalar or list. If a list, the item \code{side} can be
+used to set the location of the legend and \code{symbol_size} can be used to scale
+the legend symbols independently of the text size. See
 \code{\link[grid:legendGrob]{grid::grid.legend()}}.}
 
 \item{labels}{a logical, vector, or list. Vectors are assumed to be
