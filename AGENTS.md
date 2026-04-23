@@ -1,4 +1,4 @@
-# Copilot Instructions for `eulerr`
+# Agent Instructions for `eulerr`
 
 ## Build, test, and check commands
 
