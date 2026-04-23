@@ -1,4 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://jolars.github.io/eulerr/dev/AGENTS.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/CLAUDE.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/CONDUCT.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/LICENSE-text.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/articles/gallery.html</loc></url>
@@ -9,7 +11,6 @@
 <url><loc>https://jolars.github.io/eulerr/dev/articles/venn-diagrams.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/articles/visualization.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/authors.html</loc></url>
-<url><loc>https://jolars.github.io/eulerr/dev/copilot-instructions.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/index.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/news/index.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/bit_indexr.html</loc></url>

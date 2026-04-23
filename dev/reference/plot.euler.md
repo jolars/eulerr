@@ -26,6 +26,7 @@ plot(
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  rotate = 0,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -140,6 +141,12 @@ plot(...)
   is used as the label. If a list of longer length is provided, an item
   named `'label'` must be provided (and will be used for the actual
   text).
+
+- rotate:
+
+  a numeric value giving the angle in degrees by which to rotate the
+  entire diagram layout. Positive values rotate counter-clockwise.
+  Defaults to `0` (no rotation).
 
 - n:
 

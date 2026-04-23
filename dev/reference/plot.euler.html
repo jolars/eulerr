@@ -74,6 +74,7 @@ to learn about the individual settings for each argument.</p>
 <span>  strips <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rotate <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">200L</span>,</span>
 <span>  adjust_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -181,6 +182,12 @@ sensibly converted to a label via <code><a href="https://rdrr.io/r/grDevices/as.
 list of length one can be provided, in which case its only element
 is used as the label. If a list of longer length is provided, an item
 named <code>'label'</code> must be provided (and will be used for the actual text).</p></dd>
+
+
+<dt id="arg-rotate">rotate<a class="anchor" aria-label="anchor" href="#arg-rotate"></a></dt>
+<dd><p>a numeric value giving the angle in degrees by which to rotate
+the entire diagram layout. Positive values rotate counter-clockwise.
+Defaults to <code>0</code> (no rotation).</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
