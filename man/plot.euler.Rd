@@ -85,7 +85,10 @@ will be printed thereafter inside brackets. The default is
 \code{type = "counts"}.}
 
 \item{strips}{a list, ignored unless the \code{'by'} argument
-was used in \code{\link[=euler]{euler()}}}
+was used in \code{\link[=euler]{euler()}}. In addition to graphical parameters, this
+argument can include \code{labels = list(top = ..., left = ...)} for custom
+strip labels. Unnamed labels are interpreted in display order. Named
+labels are matched by factor levels and then reordered to display order.}
 
 \item{bg}{a logical, character, or list controlling the background grob.
 Character values are interpreted as the background fill color.}

@@ -87,7 +87,10 @@
 #'   will be printed thereafter inside brackets. The default is
 #'   `type = "counts"`.
 #' @param strips a list, ignored unless the `'by'` argument
-#'   was used in [euler()]
+#'   was used in [euler()]. In addition to graphical parameters, this
+#'   argument can include `labels = list(top = ..., left = ...)` for custom
+#'   strip labels. Unnamed labels are interpreted in display order. Named
+#'   labels are matched by factor levels and then reordered to display order.
 #' @param bg a logical, character, or list controlling the background grob.
 #'   Character values are interpreted as the background fill color.
 #' @param n number of vertices for the `edges` and `fills`
@@ -578,9 +581,30 @@ plot.euler <- function(
   }
 
   if (do_strips) {
+    strip_labels <- NULL
+    if (is.list(strips) && "labels" %in% names(strips)) {
+      strip_labels <- strips$labels
+      strips$labels <- NULL
+
+      if (!is.null(strip_labels)) {
+        if (!is.list(strip_labels)) {
+          stop("`strips$labels` must be a list with optional `top` and `left` entries.")
+        }
+        strip_label_names <- names(strip_labels)
+        if (is.null(strip_label_names) || any(!nzchar(strip_label_names))) {
+          stop("`strips$labels` must be a named list with optional `top` and `left` entries.")
+        }
+        bad_labels <- setdiff(strip_label_names, c("top", "left"))
+        if (length(bad_labels) > 0L) {
+          stop("`strips$labels` only supports `top` and `left` entries.")
+        }
+      }
+    }
+
     strips <- list(
       gp = setup_gpar(opar$strips, strips, n_levels),
-      groups = groups
+      groups = groups,
+      labels = strip_labels
     )
   } else {
     strips <- NULL
@@ -1005,7 +1029,14 @@ plot.euler <- function(
         layout = grid::grid.layout(nrow = 1, ncol = layout[2])
       )
 
-    lvls <- levels(strips$groups[[names(layout)[[2]]]])
+    top_group_name <- names(layout)[[2L]]
+    top_levels <- levels(strips$groups[[top_group_name]])
+    lvls <- resolve_strip_labels(
+      labels = strips$labels$top,
+      levels = top_levels,
+      display_levels = top_levels,
+      axis = "top"
+    )
     n_lvls <- length(lvls)
     step <- 1 / n_lvls
 
@@ -1032,7 +1063,14 @@ plot.euler <- function(
         layout = grid::grid.layout(nrow = layout[1], ncol = 1)
       )
 
-    lvls <- rev(levels(strips$groups[[names(layout)[[1]]]]))
+    left_group_name <- names(layout)[[1L]]
+    left_levels <- levels(strips$groups[[left_group_name]])
+    lvls <- resolve_strip_labels(
+      labels = strips$labels$left,
+      levels = left_levels,
+      display_levels = rev(left_levels),
+      axis = "left"
+    )
     n_lvls <- length(lvls)
     step <- 1 / n_lvls
 
@@ -1355,6 +1393,50 @@ add_legend_patterns <- function(legend_grob, gp) {
   }
 
   legend_grob
+}
+
+resolve_strip_labels <- function(labels, levels, display_levels, axis) {
+  if (is.null(labels)) {
+    return(display_levels)
+  }
+
+  label_names <- names(labels)
+  has_names <- !is.null(label_names) && any(nzchar(label_names))
+
+  if (has_names) {
+    if (any(!nzchar(label_names))) {
+      stop(sprintf("`strips$labels$%s` must be fully named when names are used.", axis))
+    }
+    if (anyDuplicated(label_names)) {
+      stop(sprintf("`strips$labels$%s` must have unique names.", axis))
+    }
+
+    unknown_levels <- setdiff(label_names, levels)
+    if (length(unknown_levels) > 0L) {
+      stop(sprintf("`strips$labels$%s` has unknown level names.", axis))
+    }
+
+    missing_levels <- setdiff(levels, label_names)
+    if (length(missing_levels) > 0L) {
+      stop(sprintf("`strips$labels$%s` must provide labels for all levels.", axis))
+    }
+
+    labels <- labels[match(display_levels, label_names)]
+    names(labels) <- NULL
+    return(labels)
+  }
+
+  if (length(labels) != length(display_levels)) {
+    stop(
+      sprintf(
+        "`strips$labels$%s` must have length %d.",
+        axis,
+        length(display_levels)
+      )
+    )
+  }
+
+  labels
 }
 
 #' @rdname plot.euler

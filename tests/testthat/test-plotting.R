@@ -350,6 +350,75 @@ test_that("plots with euler lists works", {
   unlink(tmp)
 })
 
+test_that("strip labels can be customized", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- euler(fruits[, 1:5], by = list(age, sex))
+
+  p <- plot(
+    f,
+    strips = list(
+      labels = list(
+        top = c("Women", "Men"),
+        left = c("Children", "Adults")
+      )
+    )
+  )
+  expect_equal(p$children$strip.top.grob$label, c("Women", "Men"))
+  expect_equal(p$children$strip.left.grob$label, c("Children", "Adults"))
+
+  top_named <- c(male = "Men", female = "Women")
+  left_named <- c(adult = "Adults", child = "Children")
+  p_named <- plot(f, strips = list(labels = list(top = top_named, left = left_named)))
+  expect_equal(p_named$children$strip.top.grob$label, c("Women", "Men"))
+  expect_equal(p_named$children$strip.left.grob$label, c("Children", "Adults"))
+
+  top_expr <- str2expression(c("alpha[1]", "beta[2]"))
+  left_expr <- str2expression(c("gamma", "delta"))
+  p_expr <- plot(
+    f,
+    strips = list(labels = list(top = top_expr, left = left_expr))
+  )
+  expect_equal(p_expr$children$strip.top.grob$label, top_expr)
+  expect_equal(p_expr$children$strip.left.grob$label, left_expr)
+
+  expect_error(
+    plot(f, strips = list(labels = list(top = "Women"))),
+    "`strips\\$labels\\$top` must have length 2"
+  )
+  expect_error(
+    plot(f, strips = list(labels = "foo")),
+    "`strips\\$labels` must be a list"
+  )
+  expect_error(
+    plot(f, strips = list(labels = list("Women", "Men"))),
+    "`strips\\$labels` must be a named list"
+  )
+  expect_error(
+    plot(
+      f,
+      strips = list(labels = list(top = c(female = "Women", "Men")))
+    ),
+    "must be fully named"
+  )
+  expect_error(
+    plot(f, strips = list(labels = list(top = c(female = "Women", female = "Men")))),
+    "must have unique names"
+  )
+  expect_error(
+    plot(f, strips = list(labels = list(top = c(female = "Women", foo = "Men")))),
+    "unknown level names"
+  )
+  expect_error(
+    plot(f, strips = list(labels = list(top = c(female = "Women")))),
+    "must provide labels for all levels"
+  )
+
+  dev.off()
+  unlink(tmp)
+})
+
 test_that("venn plotting prefers eulerr class dispatch", {
   tmp <- tempfile()
   png(tmp)
