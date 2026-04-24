@@ -1,4 +1,10 @@
-# eulerr (development version)
+# eulerr 7.2
+
+## Features
+
+- **plotting:** add `symbol_size` to configure legend symbol ([`1491a49`](https://github.com/jolars/eulerr/commit/1491a494d6fb4d722279fe5d1478dfcb8a792c53)), closes [#60](https://github.com/jolars/eulerr/issues/60)
+- **plotting:** add `rotate` parameter ([`706735c`](https://github.com/jolars/eulerr/commit/706735cce7bbfbdf41165f0623a1f5221aaa471e)), closes [#12](https://github.com/jolars/eulerr/issues/12)
+- **plots:** support `top` and `left` for labeling strips ([`c1a87fb`](https://github.com/jolars/eulerr/commit/c1a87fb68f41dabda740095bd56adef7b2ec937b)), closes [#123](https://github.com/jolars/eulerr/issues/123)
 
 # eulerr 7.1
 
