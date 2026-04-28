@@ -1,4 +1,6 @@
-# Agent Instructions for `eulerr`
+# AGENTS.md
+
+This file provides guidance to agents when working with code in this repository.
 
 ## Build, test, and check commands
 
@@ -6,39 +8,84 @@
 - Build package tarball: `make build`
 - Build CRAN-style tarball: `make build-cran`
 - Generate docs/namespace: `make document`
-- Regenerate Rcpp exports: `make compile-attributes`
 - Run tests: `make test` (calls `devtools::test()`)
 - Run package checks: `make check` (calls `devtools::check()`)
 
 Single-test workflows:
 
-- Run one test file: `Rscript -e 'devtools::test(filter = "plotting")'`
-- Run one test file directly: `Rscript -e 'testthat::test_file("tests/testthat/test-plotting.R")'`
+- Run one test file by filter:
+  `Rscript -e 'devtools::test(filter = "plotting")'`
+- Run one test file directly:
+  `Rscript -e 'testthat::test_file("tests/testthat/test-plotting.R")'`
 
-CI equivalents:
+Rust-binding workflows:
 
-- Main CI uses `r-lib/actions/check-r-package@v2` (`.github/workflows/R-CMD-check.yaml`)
-- Docs site uses `pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)` (`.github/workflows/pkgdown.yaml`)
+- Regenerate extendr wrappers (`R/extendr-wrappers.R` and the Rust
+  `extendr_module!`): `Rscript -e 'rextendr::document()'`. The Makefile's
+  `compile-attributes` target still runs `Rcpp::compileAttributes()` from before
+  the Rust port --- prefer `rextendr::document()` until that target is updated.
+- Build for development with debug profile + permissive Cargo flags: set
+  `DEBUG=1` (or `NOT_CRAN=1`) before `make install`. `tools/config.R` reads
+  these env vars to switch between CRAN-safe and dev builds, and writes
+  `src/Makevars` from `src/Makevars.in`.
+
+CI: main CI uses `r-lib/actions/check-r-package@v2`
+(`.github/workflows/R-CMD-check.yaml`); the docs site uses
+`pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)`
+(`.github/workflows/pkgdown.yaml`).
 
 ## High-level architecture
 
-`eulerr` is an R package with an R orchestration layer and a C++ computational core (via Rcpp):
+`eulerr` is an R package with an R orchestration layer and a Rust computational
+core (via extendr-api), built on top of the `eunoia` Rust crate.
 
-- **User entry points:** `euler()` and `venn()` S3 generics (`R/euler.R`, `R/venn.R`) with methods for vectors, data frames, matrices, tables, and lists.
-- **Input normalization:** methods convert varied inputs into named overlap vectors (`R/parse_input.R` + helpers in `R/utils.R`), with combination names joined by `&`.
-- **Fitting pipeline:** `fit_diagram()` (`R/fit_diagram.R`) validates input, converts between union/disjoint representations, initializes layout, optimizes geometry, and computes fit metrics (`regionError`, `diagError`, `stress`).
-- **Numerical engine:** geometry/intersection/loss routines are in `src/*.cpp`, exposed through generated Rcpp bindings in `R/RcppExports.R` and `src/RcppExports.cpp`. `nlm()` is attempted first; optional `GenSA` refinement is used for hard ellipse fits.
-- **Rendering pipeline:** `plot.euler()` builds diagram data in two phases:
-  1. `setup_geometry()` computes polygons/centers/bounds.
-  2. `setup_grobs()` converts geometry to grid grobs.
-  It returns an `eulergram` gTree that `plot.eulergram()`/`print.eulergram()` draws.
-- **Global plotting defaults:** `eulerr_options()` and `.eulerr_env$options` (`R/eulerr_options.R`, `R/zzz.R`) provide package-wide visual defaults used by plotting code.
+- **User entry points:** `euler()` and `venn()` S3 generics (`R/euler.R`,
+  `R/venn.R`) with methods for vectors, data frames, matrices, tables, and
+  lists.
+- **Input normalization:** methods convert varied inputs into named overlap
+  vectors (`R/parse_input.R` + helpers in `R/utils.R`); combination names are
+  joined by `&` (e.g., `"A&B&C"`).
+- **Fitting pipeline:** `fit_diagram()` (`R/fit_diagram.R`) validates input,
+  dispatches to the Rust backend via `fit_euler_diagram()` (declared in
+  `R/extendr-wrappers.R`), and computes fit metrics (`regionError`, `diagError`,
+  `stress`).
+- **Numerical engine (Rust):** `src/rust/src/lib.rs` is a thin extendr shim that
+  converts R inputs into a `eunoia::DiagramSpec`, runs `eunoia::Fitter`, and
+  returns geometry back to R. The heavy geometry/optimization lives in the
+  `eunoia` crate (`src/rust/Cargo.toml` depends on `eunoia`).
+- **Build glue:** `configure` invokes `tools/config.R`, which reads
+  `DESCRIPTION` `SystemRequirements`, validates the installed `rustc` version,
+  and renders `src/Makevars{.in,.win.in}` → `src/Makevars{,.win}`. The resulting
+  Makevars runs `cargo build --manifest-path=./rust/Cargo.toml` to produce
+  `libeulerr.a`, which is linked into `eulerr.so` via `src/entrypoint.c`.
+- **Rendering pipeline:** `plot.euler()` (`R/plot.euler.R`) builds diagram data
+  in two phases:
+  1. `setup_geometry()` (`R/setup_geometry.R`) computes polygons/centers/bounds
+     (uses `polyclip` and `polylabelr`).
+  2. `setup_grobs()` (`R/setup_grobs.R`) converts geometry to grid grobs.
+     Returns an `eulergram` gTree drawn by
+     `plot.eulergram()`/`print.eulergram()`. The package ships its own legend
+     grob implementation (`R/legend.R`) rather than using `grid::legendGrob`.
+- **Global plotting defaults:** `eulerr_options()` and `.eulerr_env$options`
+  (`R/eulerr_options.R`, `R/zzz.R`) provide package-wide visual defaults
+  consumed by the plotting code.
 
-## Key repository conventions
+## Repository conventions
 
-- This is a **roxygen2-managed package**. `NAMESPACE` is generated; update roxygen comments in `R/*.R` and run `make document` instead of editing `NAMESPACE` manually.
-- `RcppExports` files are generated by `Rcpp::compileAttributes()`; do not hand-edit `R/RcppExports.R` or `src/RcppExports.cpp`.
-- `README.md` is generated from `README.Rmd`; edit `README.Rmd` for README changes.
-- Plotting is implemented with **grid grobs** (`eulergram`) rather than base graphics; preserve the `setup_geometry()` → `setup_grobs()` separation when changing plotting behavior.
-- Input combination naming uses `&` delimiters (e.g., `"A&B&C"`). Parsing/validation assumes this format across `euler()`, `fit_diagram()`, and parsing helpers.
-- Styling for R files follows `air.toml` (`line-width = 80`, `indent-width = 2`).
+- Roxygen2-managed package: `NAMESPACE` and `man/*.Rd` are generated. Update
+  roxygen comments in `R/*.R` and run `make document`; do not hand-edit
+  `NAMESPACE`.
+- `R/extendr-wrappers.R` and the corresponding Rust `extendr_module!` block are
+  generated by `rextendr::document()` --- do not hand-edit either side; edit the
+  `#[extendr]` functions in `src/rust/src/lib.rs` and regenerate.
+- `README.md` is generated from `README.Rmd`; edit `README.Rmd` for README
+  changes.
+- Plotting is implemented with **grid grobs** (`eulergram`), not base graphics.
+  Preserve the `setup_geometry()` → `setup_grobs()` separation when changing
+  plotting behavior.
+- Combination naming uses `&` delimiters across `euler()`, `fit_diagram()`,
+  `parse_input()`, and the Rust side (which splits on `&` to recover set names).
+- R style follows `air.toml`: `line-width = 80`, `indent-width = 2`, spaces.
+  Format with `air format` (or via the air LSP).
+- Rust MSRV is declared in `DESCRIPTION` `SystemRequirements` (currently
+  `rustc >= 1.81.0`); `tools/msrv.R` enforces it at configure time.

@@ -56,16 +56,14 @@ the sum of the losses computed by \code{loss} are summed up. \code{"max"} indica
 
 \item{control}{a list of control parameters.
 \itemize{
-\item \code{extraopt}: should the more thorough optimizer (currently
-\code{\link[GenSA:GenSA]{GenSA::GenSA()}}) kick in (provided \code{extraopt_threshold} is exceeded)? The
-default is \code{TRUE} for ellipses and three sets and \code{FALSE} otherwise.
+\item \code{extraopt}: should the global-search fallback optimizer (CMA-ES) kick
+in when the primary optimizer's \code{diagError} exceeds \code{extraopt_threshold}?
+The default is \code{TRUE} for three-set ellipse fits and \code{FALSE} otherwise.
 \item \code{extraopt_threshold}: threshold, in terms of \code{diagError}, for when
-the extra optimizer kicks in. This will almost always slow down the
-process considerably. A value of 0 means
-that the extra optimizer will kick in if there is \emph{any} error. A value of
-1 means that it will never kick in. The default is \code{0.001}.
-\item \code{extraopt_control}: a list of control parameters to pass to the
-extra optimizer, such as \code{max.call}. See \code{\link[GenSA:GenSA]{GenSA::GenSA()}}.
+the CMA-ES fallback kicks in. A value of 0 means it will kick in for
+\emph{any} error; a value of 1 means it will never kick in. Default \code{0.001}.
+\item \code{tolerance}: convergence tolerance passed to the underlying solver.
+Tighter values give more accurate fits at higher cost. Default \code{1e-8}.
 }}
 
 \item{weights}{a numeric vector of weights of the same length as

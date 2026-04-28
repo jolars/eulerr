@@ -1,27 +1,3 @@
-#' Optimize Distance Between Circles Based On Overlap
-#'
-#' @param r1 radius of circle one
-#' @param r2 radius of circle two
-#' @param overlap overlap (area) of the two circles
-#'
-#' @return The necessary distance between sets to achieve the desired overlap
-#'   area.
-#' @keywords internal
-separate_two_discs <- function(r1, r2, overlap) {
-  if (r1 > 0 && r2 > 0) {
-    stats::optimize(
-      discdisc,
-      interval = c(abs(r1 - r2), sum(r1, r2)),
-      r1 = r1,
-      r2 = r2,
-      overlap = overlap,
-      tol = sqrt(.Machine$double.eps)
-    )$minimum
-  } else {
-    0
-  }
-}
-
 #' Get the bounding box of an ellipse
 #'
 #' @param h x-coordinate for the center

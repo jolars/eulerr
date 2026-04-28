@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #' @useDynLib eulerr, .registration = TRUE
-#' @importFrom Rcpp sourceCpp
 #' @import grid
 NULL
 

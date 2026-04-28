@@ -111,36 +111,9 @@ is_real <- function(x, tol = .Machine$double.eps^0.5) {
 #' @return A matrix of logicals.
 #' @keywords internal
 bit_indexr <- function(n) {
-  m <- bit_index_cpp(n)
+  m <- bit_index_rust(n)
   mode(m) <- "logical"
   m
-}
-
-#' regionError
-#'
-#' @param fit fitted values
-#' @param orig original values
-#'
-#' @return regionError
-#' @keywords internal
-regionError <- function(fit, orig) {
-  abs(fit / sum(fit) - orig / sum(orig))
-}
-
-#' diagError
-#'
-#' @param fit fitted values
-#' @param orig original values
-#' @param regionError regionError
-#'
-#' @return diagError
-#' @keywords internal
-diagError <- function(fit, orig, regionError = NULL) {
-  if (!is.null(regionError)) {
-    max(regionError)
-  } else {
-    max(abs(fit / sum(fit) - orig / sum(orig)))
-  }
 }
 
 #' Get the number of sets in he input
@@ -152,75 +125,6 @@ diagError <- function(fit, orig, regionError = NULL) {
 n_sets <- function(combinations) {
   combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
   length(unique(unlist(combo_names, use.names = FALSE)))
-}
-
-
-#' Set up constraints for optimization
-#'
-#' @param newpars parameters from the first optimizer
-#'
-#' @return A list of lower and upper constraints
-#' @keywords internal
-get_constraints <- function(newpars) {
-  h <- newpars[, 1L]
-  k <- newpars[, 2L]
-  a <- newpars[, 3L]
-  b <- newpars[, 4L]
-  phi <- newpars[, 5L]
-
-  n <- length(h)
-
-  xlim <- sqrt(a^2 * cos(phi)^2 + b^2 * sin(phi)^2)
-  ylim <- sqrt(a^2 * sin(phi)^2 + b^2 * cos(phi)^2)
-  xbnd <- range(xlim + h, -xlim + h)
-  ybnd <- range(ylim + k, -ylim + k)
-
-  lwr <- upr <- double(5L * n)
-
-  for (i in seq_along(h)) {
-    ii <- 5L * (i - 1L)
-
-    lwr[ii + 1L] <- xbnd[1L]
-    lwr[ii + 2L] <- ybnd[1L]
-    lwr[ii + 3L] <- a[i] / 3
-    lwr[ii + 4L] <- b[i] / 3
-    lwr[ii + 5L] <- 0
-
-    upr[ii + 1L] <- xbnd[2L]
-    upr[ii + 2L] <- ybnd[2L]
-    upr[ii + 3L] <- a[i] * 3
-    upr[ii + 4L] <- b[i] * 3
-    upr[ii + 5L] <- pi
-  }
-  list(lwr = lwr, upr = upr)
-}
-
-#' Normalize an angle to [-pi, pi)
-#'
-#' @param x angle in radians
-#'
-#' @return A normalized angle.
-#' @keywords internal
-normalize_angle <- function(x) {
-  a <- (x + pi) %% (2 * pi)
-  ifelse(a >= 0, a - pi, a + pi)
-}
-
-#' Normalize parameters (semiaxes and rotation)
-#'
-#' @param m pars
-#'
-#' @return `m`, normalized
-#' @keywords internal
-normalize_pars <- function(m) {
-  n <- NCOL(m)
-  if (n == 3L) {
-    m[, 3L] <- abs(m[, 3L])
-  } else {
-    m[, 3L:4L] <- abs(m[, 3L:4L])
-    m[, 5L] <- normalize_angle(m[, 5L])
-  }
-  m
 }
 
 #' Blend (average) colors
@@ -325,32 +229,6 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
   cbind(x[, !fac_chr, drop = FALSE], out)
 }
 
-#' Stress
-#'
-#' @param orig original values
-#' @param fit fitted values
-#'
-#' @return Stress metric.
-#'
-#' @keywords internal
-stress <- function(orig, fit) {
-  sst <- sum(fit^2)
-  slope <- sum(orig * fit) / sum(orig^2)
-  sse <- sum((fit - orig * slope)^2)
-  sse / sst
-}
-
 nonzero_fit <- function(x) {
   abs(x) / sum(abs(x) + .Machine$double.eps) > 1e-4
-}
-
-make_symmetric <- function(m, from = c("lower", "upper")) {
-  from <- match.arg(from)
-  if (from == "lower") {
-    m[upper.tri(m)] <- t(m)[upper.tri(m)]
-  } else {
-    m[lower.tri(m)] <- t(m)[lower.tri(m)]
-  }
-
-  m
 }

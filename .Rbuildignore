@@ -39,6 +39,12 @@
 ^devenv\.nix$
 ^devenv\.yaml$
 ^\.direnv$
+^\.devenv$
 ^versionary.jsonc$
 ^panache.toml$
 ^.versionary-manifest.json$
+^src/\.cargo$
+^src/rust/vendor$
+^src/rust/target$
+^src/Makevars$
+^src/Makevars\.win$

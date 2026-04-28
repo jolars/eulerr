@@ -14,9 +14,6 @@ fit_diagram <- function(
   loss <- match.arg(loss)
   loss_aggregator <- match.arg(loss_aggregator)
 
-  n_restarts <- 10L # should this be made an argument?
-  small <- sqrt(.Machine$double.eps)
-
   if (!is.numeric(combinations)) {
     stop("`combinations` must be numeric")
   }
@@ -33,318 +30,132 @@ fit_diagram <- function(
     stop("names of elements in `combinations` cannot be duplicated")
   }
 
-  combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
-  setnames <- unique(unlist(combo_names, use.names = FALSE))
-
-  # setup preliminary return pars
-
+  combo_name_parts <- strsplit(names(combinations), split = "&", fixed = TRUE)
+  setnames <- unique(unlist(combo_name_parts, use.names = FALSE))
   n <- length(setnames)
-  id <- bit_indexr(n)
-  N <- NROW(id)
 
-  areas <- double(N)
-  for (i in 1L:N) {
-    s <- setnames[id[i, ]]
-    for (j in seq_along(combo_names)) {
-      if (setequal(s, combo_names[[j]])) {
-        areas[i] <- combinations[j]
+  # Venn early return (uses lookup table, no optimization)
+  if (type == "venn") {
+    id <- bit_indexr(n)
+    N <- NROW(id)
+
+    areas <- double(N)
+    for (i in seq_len(N)) {
+      s <- setnames[id[i, ]]
+      for (j in seq_along(combo_name_parts)) {
+        if (setequal(s, combo_name_parts[[j]])) {
+          areas[i] <- combinations[j]
+        }
       }
     }
-  }
 
-  # Decompose or collect set volumes depending on input
-  if (input == "disjoint") {
-    areas_disjoint <- areas
-    areas[] <- 0
-    for (i in rev(seq_along(areas))) {
-      prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
-      areas[i] <- sum(areas_disjoint[prev_areas])
+    if (input == "disjoint") {
+      areas_disjoint <- areas
+    } else {
+      areas_disjoint <- double(N)
+      for (i in rev(seq_along(areas))) {
+        prev <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
+        areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev])
+      }
+      if (any(areas_disjoint < 0)) {
+        stop("Check your set configuration. Some disjoint areas are negative.")
+      }
     }
-  } else if (input == "union") {
-    areas_disjoint <- double(length(areas))
-    for (i in rev(seq_along(areas))) {
-      prev_areas <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
-      areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev_areas])
-    }
-    if (any(areas_disjoint < 0)) {
-      stop("Check your set configuration. Some disjoint areas are negative.")
-    }
-  }
 
-  # setup return values
-  orig <- rep.int(0, N)
-  fit <- rep.int(0, N)
-  names(orig) <- names(fit) <-
-    apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
+    combo_labels <- apply(id, 1L, function(x) {
+      paste0(setnames[x], collapse = "&")
+    })
+    orig <- setNames(areas_disjoint, combo_labels)
 
-  # return venn diagram early if requested
-  if (type == "venn") {
     fpar <- venn_spec[[n]]
     rownames(fpar) <- setnames
 
-    orig[] <- areas_disjoint
-
-    out <- structure(
+    return(structure(
       list(
         ellipses = fpar,
         original.values = orig,
-        fitted.values = rep(1, length(orig))
+        fitted.values = rep(1, N)
       ),
       class = c("eulerr_venn", "venn", "euler", "list")
-    )
-    return(out)
+    ))
   }
 
-  # setup return object
-  fpar <- as.data.frame(
-    matrix(
-      NA,
-      ncol = 5L,
-      nrow = n,
-      dimnames = list(setnames, c("h", "k", "a", "b", "phi"))
-    ),
-    stringsAsFactors = TRUE
-  )
-
-  # find empty sets
-  empty_sets <- areas[seq_len(n)] < sqrt(.Machine$double.eps)
-  empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
-
-  id <- id[!empty_subsets, !empty_sets, drop = FALSE]
-  N <- NROW(id)
-  n <- sum(!empty_sets)
-  areas <- areas[!empty_subsets]
-  areas_disjoint <- areas_disjoint[!empty_subsets]
-
+  # Euler fit: delegate to Rust
   control <- utils::modifyList(
     list(
-      extraopt = (n == 3) && (match.arg(shape) == "ellipse"),
+      extraopt = (n == 3) && (shape == "ellipse"),
       extraopt_threshold = 0.001,
-      extraopt_control = list()
+      extraopt_control = list(),
+      tolerance = 1e-6
     ),
     control
   )
 
-  if (n > 1L) {
-    if (all(areas == 0)) {
-      # all sets are zero
-      fpar[] <- 0
-    } else {
-      id_sums <- rowSums(id)
-      ones <- id_sums == 1L
-      twos <- id_sums == 2L
-      two <- choose_two(1:n)
-      r <- sqrt(areas[ones] / pi)
-
-      # Establish identities of disjoint and subset sets
-      subset <- disjoint <- matrix(FALSE, ncol = n, nrow = n)
-      distances <- matrix(0, ncol = n, nrow = n)
-
-      lwrtri <- lower.tri(subset)
-
-      tmp <- matrix(areas[ones][two], ncol = 2L)
-
-      subset[lwrtri] <- areas[twos] == tmp[, 1L] | areas[twos] == tmp[, 2L]
-      disjoint[lwrtri] <- areas[twos] == 0
-      distances[lwrtri] <- mapply(
-        separate_two_discs,
-        r1 = r[two[, 1L]],
-        r2 = r[two[, 2L]],
-        overlap = areas[twos],
-        USE.NAMES = FALSE
-      )
-      subset <- make_symmetric(subset)
-      disjoint <- make_symmetric(disjoint)
-      distances <- make_symmetric(distances)
-
-      # Starting layout
-      obj <- Inf
-      initial_layouts <- vector("list", n_restarts)
-      bnd <- sqrt(sum(r^2 * pi))
-
-      i <- 1L
-      while (obj > small && i <= n_restarts) {
-        initial_layouts[[i]] <- stats::nlm(
-          f = optim_init,
-          p = stats::runif(n * 2, 0, bnd),
-          d = distances,
-          disjoint = disjoint,
-          subset = subset,
-          iterlim = 1000L,
-          check.analyticals = FALSE
-        )
-        obj <- initial_layouts[[i]]$minimum
-        i <- i + 1L
-      }
-
-      # Find the best initial layout
-      best_init <- which.min(lapply(
-        initial_layouts[1L:(i - 1L)],
-        "[[",
-        "minimum"
-      ))
-      initial_layout <- initial_layouts[[best_init]]
-
-      # Final layout
-      circle <- match.arg(shape) == "circle"
-
-      if (circle) {
-        pars <- as.vector(matrix(
-          c(initial_layout$estimate, r),
-          3L,
-          byrow = TRUE
-        ))
-      } else {
-        pars <- as.vector(rbind(
-          matrix(initial_layout$estimate, 2L, byrow = TRUE),
-          r,
-          r,
-          0,
-          deparse.level = 0L
-        ))
-      }
-
-      orig[!empty_subsets] <- areas_disjoint
-
-      # Try to find a solution using nlm() first (faster)
-      # TODO: Allow user options here?
-      nlm_solution <- stats::nlm(
-        f = optim_final_loss,
-        p = pars,
-        data = areas_disjoint,
-        circle = circle,
-        loss_type = loss,
-        loss_aggregator_type = loss_aggregator,
-        iterlim = 1e6
-      )$estimate
-
-      tpar <- as.data.frame(
-        matrix(
-          data = nlm_solution,
-          ncol = if (circle) 3L else 5L,
-          dimnames = list(
-            setnames[!empty_sets],
-            if (circle) {
-              c("h", "k", "r")
-            } else {
-              c("h", "k", "a", "b", "phi")
-            }
-          ),
-          byrow = TRUE
-        ),
-        stringsAsFactors = TRUE
-      )
-      if (circle) {
-        tpar <- cbind(tpar, tpar[, 3L], 0)
-      }
-
-      # Normalize layout
-      nlm_fit <- as.vector(intersect_ellipses(nlm_solution, circle))
-
-      nlm_pars <- compress_layout(normalize_pars(tpar), id, nlm_fit)
-
-      nlm_diagError <- diagError(nlm_fit, orig[!empty_subsets])
-
-      # If inadequate solution, try with a second optimizer (slower, better)
-      if (
-        !circle &&
-          control$extraopt &&
-          nlm_diagError > control$extraopt_threshold
-      ) {
-        # Set bounds for the parameters
-        newpars <- matrix(
-          data = as.vector(t(nlm_pars)),
-          ncol = 5L,
-          dimnames = list(setnames, c("h", "k", "a", "b", "phi")),
-          byrow = TRUE
-        )
-
-        constraints <- get_constraints(compress_layout(newpars, id, nlm_fit))
-
-        last_ditch_effort <- GenSA::GenSA(
-          par = as.vector(newpars),
-          fn = optim_final_loss,
-          lower = constraints$lwr,
-          upper = constraints$upr,
-          circle = circle,
-          data = areas_disjoint,
-          loss_type = loss,
-          loss_aggregator_type = loss_aggregator,
-          control = utils::modifyList(
-            list(
-              threshold.stop = sqrt(.Machine$double.eps),
-              max.call = 1e7
-            ),
-            control$extraopt_control
-          )
-        )$par
-
-        last_ditch_fit <- as.vector(intersect_ellipses(
-          last_ditch_effort,
-          circle
-        ))
-        last_ditch_diagError <- diagError(last_ditch_fit, orig)
-
-        # Check for the best solution
-        if (last_ditch_diagError < nlm_diagError) {
-          final_par <- last_ditch_effort
-          fit[!empty_subsets] <- last_ditch_fit
-        } else {
-          final_par <- nlm_solution
-          fit[!empty_subsets] <- nlm_fit
-        }
-      } else {
-        final_par <- nlm_solution
-        fit[!empty_subsets] <- nlm_fit
-      }
-
-      # names(orig) <- names(fit) <-
-      #   apply(id, 1L, function(x) paste0(setnames[x], collapse = "&"))
-
-      regionError <- regionError(fit, orig)
-      diagError <- diagError(regionError = regionError)
-      stress <- stress(orig, fit)
-
-      temp <- matrix(
-        data = final_par,
-        ncol = if (circle) 3L else 5L,
-        byrow = TRUE
-      )
-
-      if (circle) {
-        temp <- cbind(temp, temp[, 3L], 0)
-      }
-
-      # Normalize semiaxes and rotation
-      temp <- normalize_pars(temp)
-
-      # Find disjoint clusters and compress the layout
-      temp <- compress_layout(temp, id, fit[!empty_subsets])
-
-      # Center the solution on the coordinate plane
-      fpar[!empty_sets, ] <- center_layout(temp)
-    }
+  extraopt_threshold <- if (isTRUE(control$extraopt) && shape == "ellipse") {
+    as.numeric(control$extraopt_threshold)
   } else {
-    # One set
-    if (length(areas) == 0) {
-      fpar[] <- 0
-    } else {
-      fpar[!empty_sets, ] <- c(0, 0, sqrt(areas / pi), sqrt(areas / pi), 0)
-      orig[!empty_subsets] <- fit[!empty_subsets] <- areas
-    }
-    regionError <- diagError <- stress <- 0
+    NULL
   }
 
-  # Return eulerr structure
+  tolerance <- if (is.null(control$tolerance)) {
+    NULL
+  } else {
+    as.numeric(control$tolerance)
+  }
+
+  # Derive integer seed from R's RNG so set.seed() works
+  seed <- sample.int(.Machine$integer.max, 1L)
+
+  result <- fit_euler_diagram(
+    combo_names = names(combinations),
+    combo_values = as.double(combinations),
+    input = input,
+    shape = shape,
+    loss = loss,
+    loss_aggregator = loss_aggregator,
+    extraopt_threshold = extraopt_threshold,
+    tolerance = tolerance,
+    seed = seed
+  )
+
+  # Assemble ellipses data frame. Initial values:
+  #   - 0 if no sets were fitted at all (all-zero input) — matches legacy behavior
+  #   - NA otherwise; non-empty rows are filled in below
+  n_all <- length(result$all_set_names)
+  init <- if (length(result$fitted_set_names) == 0L) 0 else NA_real_
+
+  fpar <- data.frame(
+    h = rep(init, n_all),
+    k = rep(init, n_all),
+    a = rep(init, n_all),
+    b = rep(init, n_all),
+    phi = rep(init, n_all),
+    row.names = result$all_set_names,
+    stringsAsFactors = TRUE
+  )
+
+  if (length(result$fitted_set_names) > 0L) {
+    fidx <- match(result$fitted_set_names, result$all_set_names)
+    fpar$h[fidx] <- result$h
+    fpar$k[fidx] <- result$k
+    fpar$a[fidx] <- result$a
+    fpar$b[fidx] <- result$b
+    fpar$phi[fidx] <- result$phi
+  }
+
+  labs <- result$combo_labels
+  orig <- setNames(result$original_values, labs)
+  fit <- setNames(result$fitted_values, labs)
+
   structure(
     list(
       ellipses = fpar,
       original.values = orig,
       fitted.values = fit,
-      residuals = orig - fit,
-      regionError = regionError,
-      diagError = diagError,
-      stress = stress
+      residuals = setNames(result$residuals, labs),
+      regionError = setNames(result$region_error, labs),
+      diagError = result$diag_error,
+      stress = result$stress
     ),
     class = c("euler", "list")
   )

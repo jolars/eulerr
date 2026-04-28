@@ -59,16 +59,14 @@
 #'   the sum of the losses computed by `loss` are summed up. `"max"` indicates
 #"   that only the maximum value computed by the loss function is used.
 #' @param control a list of control parameters.
-#'   * `extraopt`: should the more thorough optimizer (currently
-#'   [GenSA::GenSA()]) kick in (provided `extraopt_threshold` is exceeded)? The
-#'   default is `TRUE` for ellipses and three sets and `FALSE` otherwise.
+#'   * `extraopt`: should the global-search fallback optimizer (CMA-ES) kick
+#'   in when the primary optimizer's `diagError` exceeds `extraopt_threshold`?
+#'   The default is `TRUE` for three-set ellipse fits and `FALSE` otherwise.
 #'   * `extraopt_threshold`: threshold, in terms of `diagError`, for when
-#'   the extra optimizer kicks in. This will almost always slow down the
-#'   process considerably. A value of 0 means
-#'   that the extra optimizer will kick in if there is *any* error. A value of
-#'   1 means that it will never kick in. The default is `0.001`.
-#'   * `extraopt_control`: a list of control parameters to pass to the
-#'   extra optimizer, such as `max.call`. See [GenSA::GenSA()].
+#'   the CMA-ES fallback kicks in. A value of 0 means it will kick in for
+#'   *any* error; a value of 1 means it will never kick in. Default `0.001`.
+#'   * `tolerance`: convergence tolerance passed to the underlying solver.
+#'   Tighter values give more accurate fits at higher cost. Default `1e-8`.
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.

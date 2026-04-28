@@ -17,15 +17,13 @@ Description: Generate area-proportional Euler diagrams
     represented. Diagrams may be fit with ellipses and circles via
     a wide range of inputs and can be visualized in numerous ways.
 Depends:
-    R (>= 3.3.0)
+    R (>= 4.2)
 Imports:
-    GenSA,
     graphics,
     grDevices,
     grid,
     polyclip,
     polylabelr,
-    Rcpp,
     stats,
     utils
 Suggests:
@@ -37,9 +35,6 @@ Suggests:
     rmarkdown,
     testthat,
     spelling
-LinkingTo:
-    Rcpp (>= 0.12.12),
-    RcppArmadillo (>= 0.7.600.1.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -49,3 +44,5 @@ BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Language: en-US
+Config/rextendr/version: 0.4.2
+SystemRequirements: Cargo (Rust's package manager), rustc >= 1.81.0

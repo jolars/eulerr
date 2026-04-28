@@ -74,3 +74,6 @@ devenv.local.yaml
 
 # pre-commit
 .pre-commit-config.yaml
+src/rust/vendor
+src/Makevars
+src/Makevars.win
