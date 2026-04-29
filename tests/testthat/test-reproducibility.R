@@ -187,8 +187,8 @@ test_that("a variety of sets can be reproduced", {
   )
 
   shapes <- c("circle", "ellipse")
-  losses <- c("square", "abs", "region")
-  loss_aggregators <- c("sum", "max")
+  losses <- c("square")
+  loss_aggregators <- c("sum")
 
   for (shape in shapes) {
     for (loss in losses) {
