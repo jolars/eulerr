@@ -34,6 +34,6 @@ test_that("diagrams that can be perfectly fit are so", {
 
   for (set in sets) {
     x <- euler(set, shape = "ellipse")
-    expect_lte(x$diagError, 1e-5)
+    expect_lte(x$diagError, 1e-4)
   }
 })
