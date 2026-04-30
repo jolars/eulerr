@@ -1,6 +1,7 @@
 # A Gallery of Euler and Venn Diagrams
 
 ``` r
+
 library(eulerr)
 ```
 
@@ -12,6 +13,7 @@ of the various options for customization that are available.
 ### Uniform intersections
 
 ``` r
+
 uniform_intersections <- euler(c(
   "A" = 10,
   "B" = 10,
@@ -29,6 +31,7 @@ plot(uniform_intersections)
 ### Disjoint sets
 
 ``` r
+
 disjoint_sets <- euler(c(A = 1, B = 1, C = 1))
 plot(
   disjoint_sets,
@@ -42,6 +45,7 @@ plot(
 ### A set contained in the intersection of two sets
 
 ``` r
+
 completely_contained <- euler(c(
   "A" = 15,
   "B" = 15,
@@ -64,6 +68,7 @@ plot(
 ### Two sets intersecting inside a third
 
 ``` r
+
 intersecting_inside <- euler(c(
   "A" = 15,
   "B" = 0,
@@ -95,6 +100,7 @@ plot(
 ### Difficult set (for circles!)
 
 ``` r
+
 one_contained <- euler(
   c("A" = 7, B = 6, C = 0, "A&B" = 0, "A&C" = 1, "B&C" = 1, "A&B&C" = 2),
   shape = "ellipse"
@@ -109,6 +115,7 @@ plot(one_contained, quantities = list(type = "percent"))
 Sets intersecting inside other sets.
 
 ``` r
+
 russian_doll <- euler(c(
   "A" = 15,
   "B" = 0,
@@ -129,6 +136,7 @@ This set relationship is taken from Wilkinson et al. It works best with
 ellipses.
 
 ``` r
+
 wilkinson <- euler(
   c(
     A = 4,
@@ -163,6 +171,7 @@ plot(
 ### Gene set
 
 ``` r
+
 genes <- euler(c(
   "SE" = 13,
   "Treat" = 28,
@@ -181,6 +190,7 @@ plot(genes, quantities = list(type = c("percent", "counts")))
 ### Three sets intersecting inside a fourth
 
 ``` r
+
 three_inside_fourth <- euler(c(
   "A" = 30,
   "A&B" = 3,
@@ -201,6 +211,7 @@ plot(three_inside_fourth)
 A combination taken from the eulerAPE article.
 
 ``` r
+
 eulerape <- euler(
   c(
     "a" = 3491,
@@ -222,6 +233,7 @@ plot(eulerape)
 ### Four uniform interactions
 
 ``` r
+
 uniform <- euler(c(
   "A" = 10,
   "B" = 10,
@@ -255,6 +267,7 @@ plot(
 ### Two circles intersecting completely
 
 ``` r
+
 two_overlapping <- euler(c("A" = 0, "B" = 0, "A&B" = 10))
 plot(two_overlapping)
 ```

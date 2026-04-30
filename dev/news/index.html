@@ -254,7 +254,7 @@
 <ul><li>
 <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now returns a <code>gTree</code> object. All of the plotting mechanisms are now also found in this function and <code><a href="../reference/plot.eulergram.html">plot.eulergram()</a></code> and <code><a href="../reference/plot.eulergram.html">print.eulergram()</a></code> basically just call <code><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid::grid.draw()</a></code> on the result of <code><a href="../reference/plot.euler.html">plot.euler()</a></code>. This change means that functions such as <code>gridExtra::grid.arrange()</code> now work as one would intuit on the objects produced by <code><a href="../reference/plot.euler.html">plot.euler()</a></code>.</li>
 <li>Fitting and plotting Euler diagrams with empty sets is now allowed (##23). Empty sets in the input will be returned as <code>NA</code> in the resulting <code>data.frame</code> of ellipses.</li>
-<li>The last-ditch optimizer has been switched back to <code><a href="https://rdrr.io/pkg/GenSA/man/GenSA.html" class="external-link">GenSA::GenSA()</a></code> from <code>RcppDE::DEoptim()</code>.</li>
+<li>The last-ditch optimizer has been switched back to <code>GenSA::GenSA()</code> from <code>RcppDE::DEoptim()</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-4-1-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-4-1-0"></a></h3>
@@ -288,7 +288,7 @@
 <h2 class="pkg-version" data-toc-text="3.1.0" id="eulerr-310">eulerr 3.1.0<a class="anchor" aria-label="anchor" href="#eulerr-310"></a></h2><p class="text-muted">CRAN release: 2018-01-02</p>
 <div class="section level3">
 <h3 id="major-changes-3-1-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-3-1-0"></a></h3>
-<ul><li>The last-ditch optimizer switched from <code><a href="https://rdrr.io/pkg/GenSA/man/GenSA.html" class="external-link">GenSA::GenSA()</a></code> to <code>RcppDE::DEoptim()</code>.</li>
+<ul><li>The last-ditch optimizer switched from <code>GenSA::GenSA()</code> to <code>RcppDE::DEoptim()</code>.</li>
 <li>The optimizer used in all the remaining cases, including all circular diagrams and initial layouts, was switched back to <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">stats::nlm()</a></code> again.</li>
 <li>In final optimization, we now use <em>stress</em> instead of residual sums of squares as a target for our optimizer.</li>
 </ul></div>
@@ -319,7 +319,7 @@
 <ul><li>Ellipses are now supported by setting the new argument <code>shape = "ellipse"</code> in <code><a href="../reference/euler.html">euler()</a></code>. This functionality accompanies an overhaul of the innards of the function.</li>
 <li>Initial optimization function and gradient have been ported to C++.</li>
 <li>The initial optimizer has been switched from <code>stats::optim(..., method = "L-BFGS-B")</code> to <code><a href="https://rdrr.io/r/stats/nlminb.html" class="external-link">stats::nlminb()</a></code>.</li>
-<li>The final optimizer now falls back to <code><a href="https://rdrr.io/pkg/GenSA/man/GenSA.html" class="external-link">GenSA::GenSA()</a></code> when the fit from <code><a href="https://rdrr.io/r/stats/nlminb.html" class="external-link">nlminb()</a></code> isn’t good enough, by default for 3 sets and ellipses, but this behavior can be controlled via a new argument <code>control</code>.</li>
+<li>The final optimizer now falls back to <code>GenSA::GenSA()</code> when the fit from <code><a href="https://rdrr.io/r/stats/nlminb.html" class="external-link">nlminb()</a></code> isn’t good enough, by default for 3 sets and ellipses, but this behavior can be controlled via a new argument <code>control</code>.</li>
 <li>A packing algorithm has been introduced to arrange disjoint clusters of ellipses/circles.</li>
 <li>The label placement algorithm has been rewritten to handle ellipses and been ported to C++. It now uses numerical optimization, which should provide slightly more accurate locations.</li>
 <li>The initial optimizer now uses an analytical Hessian in addition to gradient.</li>

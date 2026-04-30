@@ -10,6 +10,7 @@ We list the combinations below, which consists of 5 different sets,
 *agc*, *camk*, *cmgc*, and *tk*.
 
 ``` r
+
 combos <- c(
   "agc"                  = 9,
   "camk"                 = 17,
@@ -42,6 +43,7 @@ larger errors from having to include other intersections that are not
 present.
 
 ``` r
+
 library(eulerr)
 
 fit <- euler(combos)
@@ -64,13 +66,13 @@ loss function we use. In **eulerr**, you can do so via the two arguments
 [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md). We
 start by listing the alternatives for the `loss` argument.
 
-| Loss            | Input    | Definition                                                            |
-|:----------------|:---------|:----------------------------------------------------------------------|
-| Squared errors  | `square` | $\left( y_{i} - {\widehat{y}}_{i} \right)^{2}$                        |
-| Absolute errors | `abs`    | $\left| y_{i} - {\widehat{y}}_{i} \right|$                            |
-| RegionErrors    | `region` | $|y_{i}/\sum_{k}y_{k} - {\widehat{y}}_{i}/\sum_{k}{\widehat{y}}_{k}|$ |
+| Loss | Input | Definition |
+|:---|:---|:---|
+| Squared errors | `square` | $`(y_i - \hat y_i)^2`$ |
+| Absolute errors | `abs` | $`|y_i - \hat y_i|`$ |
+| RegionErrors | `region` | $`\big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|`$ |
 
-Loss functions in **eulerr**
+Loss functions in **eulerr** {.table}
 
 How the final loss is computed depends on the value of
 `loss_aggregator`, which is the function used to aggregate the values
@@ -89,6 +91,7 @@ To see what these different choices mean for the combination that we
 have looked at, we now refit the diagram for each combination.
 
 ``` r
+
 losses <- c("square", "abs", "region")
 aggregators <- c("sum", "max")
 

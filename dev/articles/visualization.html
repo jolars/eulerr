@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Johan
 Larsson</h4>
             
-            <h4 data-toc-skip class="date">2026-04-24</h4>
+            <h4 data-toc-skip class="date">2026-04-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/visualization.Rmd" class="external-link"><code>vignettes/visualization.Rmd</code></a></small>
       <div class="d-none name"><code>visualization.Rmd</code></div>
@@ -85,7 +85,7 @@ system <span class="citation">(R Core Team 2017)</span> and offers
 intuitive and granular control over the output.</p>
 <p>Plotting the ellipses is straightforward using the parametrization of
 a rotated ellipse,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>x</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>y</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>h</mi><mo>+</mo><mi>a</mi><mo>cos</mo><mi>θ</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>k</mi><mo>+</mo><mi>b</mi><mo>sin</mo><mi>θ</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>x</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>y</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>h</mi><mo>+</mo><mi>a</mi><mrow><mi mathvariant="normal">cos</mi><mo>⁡</mo></mrow><mi>θ</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>k</mi><mo>+</mo><mi>b</mi><mrow><mi mathvariant="normal">sin</mi><mo>⁡</mo></mrow><mi>θ</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \begin{bmatrix}
 x \\ y
 \end{bmatrix} =
@@ -95,7 +95,7 @@ k + b \sin{\theta}
 \end{bmatrix},
 </annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>∈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mi>π</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mi>a</mi><mo>,</mo><mi>b</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta \in [0, 2\pi],\quad a,b&gt;0</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>∈</mo><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mi>π</mi><mo stretchy="false" form="postfix">]</mo><mo>,</mo><mspace width="1.0em"></mspace><mi>a</mi><mo>,</mo><mi>b</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta \in [0, 2\pi],\quad a,b&gt;0</annotation></semantics></math>.</p>
 <p>Most users will also prefer to label the ellipses and their
 intersections with text and this, however, is considerably more
 involved.</p>
@@ -171,29 +171,28 @@ similar layouts for different function calls.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Blake_2016" class="csl-entry">
 Blake, Andrew. 2016. <span>“The Impact of Graphical Choices on the
 Perception of <span>Euler</span> Diagrams.”</span> {Ph.D.} dissertation,
-Brighton, UK: Brighton University.
+Brighton University.
 </div>
 <div id="ref-Jylaenki_2010" class="csl-entry">
-Jylänki, Jukka. 2010. <span>“A Thousand Ways to Pack the Bin – a
-Practical Approach to Two-Dimensional Rectangle Bin Packing.”</span>
+Jylänki, Jukka. 2010. <em>A Thousand Ways to Pack the Bin – a Practical
+Approach to Two-Dimensional Rectangle Bin Packing</em>.
 </div>
 <div id="ref-larsson2018d" class="csl-entry">
-Larsson, Johan. 2018. <span>“<span class="nocase">polylabelr</span>:
-Find the Pole of Inaccessibility (Visual Center) of a Polygon.”</span>
+Larsson, Johan. 2018. <em><span class="nocase">polylabelr</span>: Find
+the Pole of Inaccessibility (Visual Center) of a Polygon</em>.
 </div>
 <div id="ref-mapbox2018" class="csl-entry">
-Mapbox. 2018. <span>“<span class="nocase">polylabel</span>: A Fast
+Mapbox. 2018. <em><span class="nocase">polylabel</span>: A Fast
 Algorithm for Finding the Pole of Inaccessibility of a Polygon (in
-<span>JavaScript</span> and <span>C</span>++).”</span> Mapbox.
+<span>JavaScript</span> and <span>C</span>++)</em>. Mapbox.
 </div>
 <div id="ref-RCT_2017" class="csl-entry">
 R Core Team. 2017. <em><span>R</span>: A Language and Environment for
-Statistical Computing</em>. Vienna, Austria: R Foundation for
-Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
+Statistical Computing</em>. R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
 </div>
 </div>
 </div>

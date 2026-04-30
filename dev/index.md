@@ -19,12 +19,14 @@ diagram can be trusted.
 ### CRAN version
 
 ``` r
+
 install.packages("eulerr")
 ```
 
 ### Development version
 
 ``` r
+
 devtools::install_github("jolars/eulerr")
 ```
 
@@ -35,6 +37,7 @@ eulerr is also available as a shiny app hosted at eulerr.co
 ## Usage
 
 ``` r
+
 library(eulerr)
 # From Wilkinson 2012
 fit <- euler(
@@ -88,6 +91,7 @@ We can inspect the goodness-of-fit metrics *diagError* and *stress* for
 the solution,
 
 ``` r
+
 fit$stress
 #> [1] 5.485311e-12
 fit$diagError
@@ -97,6 +101,7 @@ fit$diagError
 and plot it
 
 ``` r
+
 plot(fit)
 ```
 

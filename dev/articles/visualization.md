@@ -8,15 +8,17 @@ granular control over the output.
 Plotting the ellipses is straightforward using the parametrization of a
 rotated ellipse,
 
-$$\begin{bmatrix}
-x \\
-y
-\end{bmatrix} = \begin{bmatrix}
-{h + a\cos\theta} \\
-{k + b\sin\theta}
-\end{bmatrix},$$
+``` math
+\begin{bmatrix}
+x \\ y
+\end{bmatrix} =
+\begin{bmatrix}
+h + a \cos{\theta} \\
+k + b \sin{\theta}
+\end{bmatrix},
+```
 
-where $\theta \in \lbrack 0,2\pi\rbrack,\quad a,b > 0$.
+where $`\theta \in [0, 2\pi],\quad a,b>0`$.
 
 Most users will also prefer to label the ellipses and their
 intersections with text and this, however, is considerably more
@@ -66,6 +68,7 @@ For these reasons, **eulerr** defaults to distinguishing ellipses with
 color using a manually tuned color palette.
 
 ``` r
+
 set.seed(2)
 library(eulerr)
 con <- c(A = 1, B = 1, C = 1, D = 1, E = 1, F = 1, G = 1, H = 1,
@@ -94,18 +97,17 @@ calls.
 ## References
 
 Blake, Andrew. 2016. “The Impact of Graphical Choices on the Perception
-of Euler Diagrams.” {Ph.D.} dissertation, Brighton, UK: Brighton
-University.
+of Euler Diagrams.” {Ph.D.} dissertation, Brighton University.
 
-Jylänki, Jukka. 2010. “A Thousand Ways to Pack the Bin – a Practical
-Approach to Two-Dimensional Rectangle Bin Packing.”
+Jylänki, Jukka. 2010. *A Thousand Ways to Pack the Bin – a Practical
+Approach to Two-Dimensional Rectangle Bin Packing*.
 
-Larsson, Johan. 2018. “polylabelr: Find the Pole of Inaccessibility
-(Visual Center) of a Polygon.”
+Larsson, Johan. 2018. *polylabelr: Find the Pole of Inaccessibility
+(Visual Center) of a Polygon*.
 
-Mapbox. 2018. “polylabel: A Fast Algorithm for Finding the Pole of
-Inaccessibility of a Polygon (in JavaScript and C++).” Mapbox.
+Mapbox. 2018. *polylabel: A Fast Algorithm for Finding the Pole of
+Inaccessibility of a Polygon (in JavaScript and C++)*. Mapbox.
 
 R Core Team. 2017. *R: A Language and Environment for Statistical
-Computing*. Vienna, Austria: R Foundation for Statistical Computing.
+Computing*. R Foundation for Statistical Computing.
 <https://www.R-project.org/>.

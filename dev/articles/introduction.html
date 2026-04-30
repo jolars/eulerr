@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Johan
 Larsson</h4>
             
-            <h4 data-toc-skip class="date">2026-04-24</h4>
+            <h4 data-toc-skip class="date">2026-04-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
@@ -201,16 +201,16 @@ however, the residuals are arguably of little concern.</p>
 retrieving their coordinates and radii.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        h       k     a     b   phi</span></span>
-<span><span class="co">#&gt; A -0.531 -0.2498 3.432 3.432 2.499</span></span>
-<span><span class="co">#&gt; B  1.112 -0.2498 2.706 2.706 2.499</span></span>
-<span><span class="co">#&gt; C -1.506  1.4113 1.493 1.493 2.499</span></span></code></pre></div>
+<span><span class="co">#&gt;         h      k     a     b phi</span></span>
+<span><span class="co">#&gt; A -0.4587 0.0000 3.432 3.432   0</span></span>
+<span><span class="co">#&gt; B  1.1847 0.0000 2.706 2.706   0</span></span>
+<span><span class="co">#&gt; C -1.8956 0.3587 1.493 1.493   0</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="goodness-of-fit">Goodness-of-fit<a class="anchor" aria-label="anchor" href="#goodness-of-fit"></a>
 </h3>
 <p>To tell if we can trust our solution, we use two goodness-of-fit
 measures: the stress statistic from <strong>venneuler</strong> <span class="citation">(Wilkinson 2012)</span>,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msubsup><mi>y</mi><mi>i</mi><mn>2</mn></msubsup></mrow></mfrac><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msubsup><mi>y</mi><mi>i</mi><mn>2</mn></msubsup></mrow></mfrac><annotation encoding="application/x-tex">
 \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
 </annotation></semantics></math></p>
 <p>where
@@ -220,7 +220,7 @@ areas on the original areas that is being explored during
 optimization,</p>
 <p>and the <em>diagError</em> statistic from <strong>eulerAPE</strong>
 <span class="citation">(Micallef and Rodgers 2014)</span>:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mo>max</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">|</mo><mfrac><msub><mi>y</mi><mi>i</mi></msub><mrow><mo>∑</mo><msub><mi>y</mi><mi>i</mi></msub></mrow></mfrac><mo>−</mo><mfrac><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mrow><mo>∑</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">|</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mi mathvariant="normal">max</mi><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">|</mo><mfrac><msub><mi>y</mi><mi>i</mi></msub><mrow><mo>∑</mo><msub><mi>y</mi><mi>i</mi></msub></mrow></mfrac><mo>−</mo><mfrac><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mrow><mo>∑</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">|</mo></mrow></mrow><annotation encoding="application/x-tex">
 \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
 \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
 </annotation></semantics></math></p>
@@ -307,7 +307,7 @@ Fredrickson’s work on <strong>venn.js</strong> or Leland Wilkinson’s
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Micallef_2014a" class="csl-entry">
 Micallef, Luana, and Peter Rodgers. 2014. <span>“<span class="nocase">eulerAPE</span>: Drawing Area-Proportional
 3-<span>Venn</span> Diagrams Using Ellipses.”</span> <em>PLOS ONE</em> 9

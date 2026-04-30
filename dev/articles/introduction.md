@@ -57,6 +57,7 @@ either
 - a table.
 
 ``` r
+
 library(eulerr)
 
 # Input in the form of a named numeric vector
@@ -83,6 +84,7 @@ fit2 <- euler(mat)
 We inspect our results by printing the eulerr object
 
 ``` r
+
 fit2
 #>       original fitted residuals regionError
 #> A           13     13         0       0.008
@@ -100,6 +102,7 @@ fit2
 or directly access and plot the residuals.
 
 ``` r
+
 # Cleveland dot plot of the residuals
 dotchart(resid(fit2))
 ```
@@ -114,6 +117,7 @@ We can also use **eulerr**’s built in
 function to diagnose the fit.
 
 ``` r
+
 error_plot(fit2)
 ```
 
@@ -131,11 +135,12 @@ As an alternative, we could plot the circles in another program by
 retrieving their coordinates and radii.
 
 ``` r
+
 coef(fit2)
-#>        h       k     a     b   phi
-#> A -0.531 -0.2498 3.432 3.432 2.499
-#> B  1.112 -0.2498 2.706 2.706 2.499
-#> C -1.506  1.4113 1.493 1.493 2.499
+#>         h      k     a     b phi
+#> A -0.4587 0.0000 3.432 3.432   0
+#> B  1.1847 0.0000 2.706 2.706   0
+#> C -1.8956 0.3587 1.493 1.493   0
 ```
 
 ### Goodness-of-fit
@@ -143,16 +148,21 @@ coef(fit2)
 To tell if we can trust our solution, we use two goodness-of-fit
 measures: the stress statistic from **venneuler** (Wilkinson 2012),
 
-$$\frac{\sum\limits_{i = 1}^{n}\left( y_{i} - {\widehat{y}}_{i} \right)^{2}}{\sum\limits_{i = 1}^{n}y_{i}^{2}}$$
+``` math
+\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
+```
 
-where ${\widehat{y}}_{i}$ is an ordinary least squares estimate from the
+where $`\hat{y}_i`$ is an ordinary least squares estimate from the
 regression of the fitted areas on the original areas that is being
 explored during optimization,
 
 and the *diagError* statistic from **eulerAPE** (Micallef and Rodgers
 2014):
 
-$$\max\limits_{i = 1,2,\ldots,n}\left| \frac{y_{i}}{\sum y_{i}} - \frac{{\widehat{y}}_{i}}{\sum{\widehat{y}}_{i}} \right|$$
+``` math
+\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
+\frac{\hat{y}_i}{\sum \hat{y}_i} \right|
+```
 
 In our example, the diagError is and our stress is 0.002, suggesting
 that the fit is accurate.
@@ -164,6 +174,7 @@ it manages to fit with a reasonably small error; with **eulerr**,
 however, we can get rid of that error entirely.
 
 ``` r
+
 wilkinson2012 <- c(
   A = 4,
   B = 6,
@@ -203,6 +214,7 @@ as highly customizable, with **eulerr**. The default parameters can
 easily be adjusted to suit anybody’s needs.
 
 ``` r
+
 plot(fit2)
 ```
 
@@ -212,6 +224,7 @@ eulerr.](introduction_files/figure-html/eulerr-plot-1.png)
 Customizing Euler plots is a breeze in eulerr.
 
 ``` r
+
 
 # Remove fills, vary borders, display quantities, and switch font.
 plot(

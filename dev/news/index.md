@@ -326,9 +326,8 @@ CRAN release: 2018-04-20
 - Fitting and plotting Euler diagrams with empty sets is now allowed
   (##23). Empty sets in the input will be returned as `NA` in the
   resulting `data.frame` of ellipses.
-- The last-ditch optimizer has been switched back to
-  [`GenSA::GenSA()`](https://rdrr.io/pkg/GenSA/man/GenSA.html) from
-  `RcppDE::DEoptim()`.
+- The last-ditch optimizer has been switched back to `GenSA::GenSA()`
+  from `RcppDE::DEoptim()`.
 
 ### Bug fixes
 
@@ -391,8 +390,7 @@ CRAN release: 2018-01-02
 
 ### Major changes
 
-- The last-ditch optimizer switched from
-  [`GenSA::GenSA()`](https://rdrr.io/pkg/GenSA/man/GenSA.html) to
+- The last-ditch optimizer switched from `GenSA::GenSA()` to
   `RcppDE::DEoptim()`.
 - The optimizer used in all the remaining cases, including all circular
   diagrams and initial layouts, was switched back to
@@ -440,9 +438,8 @@ CRAN release: 2017-11-15
 - The initial optimizer has been switched from
   `stats::optim(..., method = "L-BFGS-B")` to
   [`stats::nlminb()`](https://rdrr.io/r/stats/nlminb.html).
-- The final optimizer now falls back to
-  [`GenSA::GenSA()`](https://rdrr.io/pkg/GenSA/man/GenSA.html) when the
-  fit from [`nlminb()`](https://rdrr.io/r/stats/nlminb.html) isn’t good
+- The final optimizer now falls back to `GenSA::GenSA()` when the fit
+  from [`nlminb()`](https://rdrr.io/r/stats/nlminb.html) isn’t good
   enough, by default for 3 sets and ellipses, but this behavior can be
   controlled via a new argument `control`.
 - A packing algorithm has been introduced to arrange disjoint clusters
