@@ -62,7 +62,6 @@ rsconnect/
 # autoconf files
 config.log
 config.status
-configure
 
 # Devenv
 .devenv*
