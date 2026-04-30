@@ -3,3 +3,4 @@
 *.dll
 .cargo/
 Makevars
+Makevars.win
