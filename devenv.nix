@@ -41,8 +41,6 @@
             polyclip
             polylabelr
             RConics
-            Rcpp
-            RcppArmadillo
             reprex
             rextendr
             rmarkdown
