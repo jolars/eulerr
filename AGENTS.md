@@ -21,9 +21,7 @@ Single-test workflows:
 Rust-binding workflows:
 
 - Regenerate extendr wrappers (`R/extendr-wrappers.R` and the Rust
-  `extendr_module!`): `Rscript -e 'rextendr::document()'`. The Makefile's
-  `compile-attributes` target still runs `Rcpp::compileAttributes()` from before
-  the Rust port --- prefer `rextendr::document()` until that target is updated.
+  `extendr_module!`): `Rscript -e 'rextendr::document()'`.
 - Build for development with debug profile + permissive Cargo flags: set
   `DEBUG=1` (or `NOT_CRAN=1`) before `make install`. `tools/config.R` reads
   these env vars to switch between CRAN-safe and dev builds, and writes

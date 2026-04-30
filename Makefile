@@ -8,11 +8,8 @@ all: install
 clean:
 	$(DELETE) src/*.o src/*.so
 
-document: 
+document:
 	Rscript -e 'devtools::document(roclets = c("rd", "collate", "namespace"))'
-
-compile-attributes: 
-	Rscript -e 'Rcpp::compileAttributes()'
 
 build: document compile-attributes
 	cd ..;\
@@ -37,5 +34,3 @@ test: compile-attributes
 
 vignettes:
 	Rscript -e 'devtools::build_vignettes()'
-
-
