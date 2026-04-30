@@ -35,7 +35,7 @@ fn parse_input_type(input: &str) -> std::result::Result<InputType, Error> {
 
 fn parse_loss_type(loss: &str, agg: &str) -> std::result::Result<LossType, Error> {
     match (loss, agg) {
-        ("square", "sum") => Ok(LossType::NormalizedSumSquared),
+        ("square", "sum") => Ok(LossType::SumSquared),
         ("square", "max") => Ok(LossType::MaxSquared),
         ("abs", "sum") => Ok(LossType::SumAbsoute),
         ("abs", "max") => Ok(LossType::MaxAbsolute),

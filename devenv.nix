@@ -11,6 +11,7 @@
     pkgs.cargo-deny
     pkgs.cargo-flamegraph
     pkgs.cargo-llvm-cov
+    pkgs.cargo-msrv
     pkgs.go-task
     pkgs.jarl
     pkgs.llvmPackages.bintools
