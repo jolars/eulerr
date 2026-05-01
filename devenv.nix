@@ -7,6 +7,7 @@
   packages = [
     pkgs.air-formatter
     pkgs.bashInteractive
+    pkgs.checkbashisms
     pkgs.cargo-audit
     pkgs.cargo-deny
     pkgs.cargo-flamegraph
