@@ -174,13 +174,29 @@ apply_stripe_pattern <- function(fill_data, pattern_gp, spacing_scale = 25) {
   }
 
   fill_paths <- split_fill_paths(fill_data)
+  subject_x <- unlist(lapply(fill_paths, "[[", "x"), use.names = FALSE)
+  subject_y <- unlist(lapply(fill_paths, "[[", "y"), use.names = FALSE)
+  subject_id_lengths <- as.integer(lengths(lapply(fill_paths, "[[", "x")))
+
   clipped <- list()
   idx <- 1L
   for (stripe in stripes) {
-    piece <- poly_clip(fill_paths, list(stripe), op = "intersection")
-    if (length(piece) > 0L) {
-      for (j in seq_along(piece)) {
-        clipped[[idx]] <- piece[[j]]
+    piece <- polygon_clip_rust(
+      subject_x = subject_x,
+      subject_y = subject_y,
+      subject_id_lengths = subject_id_lengths,
+      clip_x = stripe$x,
+      clip_y = stripe$y,
+      op = "intersection"
+    )
+    n_pieces <- length(piece$id_lengths)
+    if (n_pieces > 0L) {
+      starts <- c(1L, utils::head(cumsum(piece$id_lengths) + 1L, -1L))
+      ends <- cumsum(piece$id_lengths)
+      for (j in seq_len(n_pieces)) {
+        s <- starts[j]
+        e <- ends[j]
+        clipped[[idx]] <- list(x = piece$x[s:e], y = piece$y[s:e])
         idx <- idx + 1L
       }
     }

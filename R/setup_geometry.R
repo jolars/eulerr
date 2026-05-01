@@ -49,51 +49,58 @@ setup_geometry <- function(
   n_e <- NROW(dd)
   n_id <- 2L^n_e - 1L
 
-  e <- ellipse(h, k, a, b, phi, n)
-  e_x <- c(lapply(e, "[[", "x"), recursive = TRUE)
-  e_y <- c(lapply(e, "[[", "y"), recursive = TRUE)
-
   limits <- get_bounding_box(h, k, a, b, phi)
+
+  width <- abs(limits$xlim[1] - limits$xlim[2])
+  height <- abs(limits$ylim[1] - limits$ylim[2])
+
+  if (n_e > 0L) {
+    plot_data <- euler_plot_data(
+      set_names = rownames(dd),
+      h = h,
+      k = k,
+      a = a,
+      b = b,
+      phi = phi,
+      n_vertices = as.integer(n),
+      label_precision = max(width, height) / 100
+    )
+    set_polygons <- plot_data$set_polygons
+    region_polygons <- plot_data$region_polygons
+    region_centers_x <- plot_data$region_centers_x
+    region_centers_y <- plot_data$region_centers_y
+  } else {
+    set_polygons <- list()
+    region_polygons <- list()
+    region_centers_x <- double(0)
+    region_centers_y <- double(0)
+  }
+
+  e_x <- c(lapply(set_polygons, "[[", "x"), recursive = TRUE)
+  e_y <- c(lapply(set_polygons, "[[", "y"), recursive = TRUE)
 
   # setup edges
   if (do_edges) {
-    edges <- list(x = e_x, y = e_y, id.lengths = rep.int(n, n_e))
+    edges <- list(
+      x = e_x,
+      y = e_y,
+      id.lengths = vapply(set_polygons, function(p) length(p$x), integer(1))
+    )
   }
 
   if (do_fills || do_labels || do_quantities) {
-    # decompose ellipse polygons into intersections
-    pieces <- fills <- vector("list", n_id)
-    for (i in rev(seq_len(n_id))) {
-      if (nonzero[i]) {
-        idx <- which(id[i, ])
-        n_idx <- length(idx)
-
-        if (n_idx == 1L) {
-          pieces[[i]] <- list(e[[idx[1]]])
-        } else {
-          pieces[[i]] <- poly_clip(e[[idx[1L]]], e[[idx[2L]]], "intersection")
-          if (n_idx > 2L) {
-            for (j in 3L:n_idx) {
-              pieces[[i]] <- poly_clip(pieces[[i]], e[[idx[j]]], "intersection")
-            }
-          }
-        }
-
-        for (j in which(!id[i, ])) {
-          pieces[[i]] <- poly_clip(pieces[[i]], e[[j]], "minus")
-        }
+    fills <- vector("list", n_id)
+    for (i in seq_len(n_id)) {
+      if (!nonzero[i]) {
+        next
       }
-    }
-
-    for (i in seq_along(pieces)) {
-      x0 <- lapply(pieces[[i]], "[[", "x")
-      y0 <- lapply(pieces[[i]], "[[", "y")
-
-      if (length(x0) > 0L) {
-        fills[[i]]$x <- c(x0, recursive = TRUE)
-        fills[[i]]$y <- c(y0, recursive = TRUE)
-        fills[[i]]$id.lengths <- lengths(x0)
+      rp <- region_polygons[[i]]
+      if (is.null(rp) || length(rp$id_lengths) == 0L) {
+        next
       }
+      fills[[i]]$x <- rp$x
+      fills[[i]]$y <- rp$y
+      fills[[i]]$id.lengths <- rp$id_lengths
     }
   }
 
@@ -101,15 +108,10 @@ setup_geometry <- function(
     n_singles <- sum(rowSums(id) == 1)
     empty <- !nonzero_fit(fitted)
 
-    width <- abs(limits$xlim[1] - limits$xlim[2])
-    height <- abs(limits$ylim[1] - limits$ylim[2])
-
-    prec <- max(width, height) / 100
-
-    centers <- lapply(pieces, locate_centers, precision = prec)
-
-    centers_x <- vapply(centers, "[[", "x", FUN.VALUE = double(1))
-    centers_y <- vapply(centers, "[[", "y", FUN.VALUE = double(1))
+    centers_x <- region_centers_x
+    centers_y <- region_centers_y
+    centers_x[!nonzero] <- NA_real_
+    centers_y[!nonzero] <- NA_real_
     centers_id <- seq_len(n_id)
 
     centers <- data.frame(
@@ -242,7 +244,7 @@ setup_geometry <- function(
 
   list(
     ellipses = dd,
-    set_polygons = e,
+    set_polygons = set_polygons,
     fitted.values = fitted,
     original.values = orig,
     fills = fills,

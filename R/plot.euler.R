@@ -1284,57 +1284,6 @@ plot.euler <- function(
   )
 }
 
-#' Test if two polygons are intersecting or not
-#'
-#' @param a first polygon
-#' @param b second polygon
-#'
-#' @return `TRUE` if polygon `a` and `b` are intersecting, `FALSE` otherwise.
-#' @keywords internal
-#' @noRd
-test_intersection <- function(a, b) {
-  length(poly_clip(a, b, "intersection")) > 0
-}
-
-locate_centers <- function(p, precision = 1) {
-  n_p <- length(p)
-
-  if (n_p == 1) {
-    polylabelr::poi(p[[1]]$x, p[[1]]$y, precision = precision)
-  } else if (n_p > 1) {
-    intersects <- matrix(TRUE, ncol = n_p, nrow = n_p)
-
-    for (i in 1:(n_p - 1)) {
-      for (j in (i + 1):n_p) {
-        intersects[i, j] <- test_intersection(p[[i]], p[[j]])
-      }
-    }
-
-    intersects[lower.tri(intersects)] <- intersects[upper.tri(intersects)]
-
-    clusters <- unique(lapply(split(intersects, row(intersects)), which))
-
-    res <- lapply(clusters, function(cluster) {
-      n_c <- length(cluster)
-      x <- y <- double(0)
-
-      for (i in seq_len(n_c)) {
-        x <- c(x, p[[cluster[i]]]$x)
-        y <- c(y, p[[cluster[i]]]$y)
-        if (i < n_c) {
-          x <- c(x, NA)
-          y <- c(y, NA)
-        }
-      }
-      polylabelr::poi(x, y, precision = precision)
-    })
-
-    res[[which.max(unlist(lapply(res, "[[", "dist")))]]
-  } else {
-    grDevices::xy.coords(NA, NA)
-  }
-}
-
 resolve_strip_labels <- function(labels, levels, display_levels, axis) {
   if (is.null(labels)) {
     return(display_levels)

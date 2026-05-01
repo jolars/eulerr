@@ -19,15 +19,28 @@ test_that("bounding box computations work as expected", {
   )
 })
 
-test_that("polygon clipping matches our expectations", {
-  empty <- list()
-  triangle <- list(x = c(-1, 0, 1), y = c(0, 1, 0))
-  square <- list(x = c(-1, -1, 0, 0), y = c(0, 1, 1, 0))
+test_that("polygon_clip_rust delegates to eunoia for basic ops", {
+  square_a <- list(x = c(0, 2, 2, 0), y = c(0, 0, 2, 2))
+  square_b <- list(x = c(1, 3, 3, 1), y = c(1, 1, 3, 3))
 
-  expect_equal(eulerr:::poly_clip(empty, square, "intersection"), list())
-  expect_equal(eulerr:::poly_clip(empty, square, "union"), square)
-  expect_equal(eulerr:::poly_clip(square, empty, "union"), square)
-  expect_equal(eulerr:::poly_clip(square, square, "union"), square)
-  expect_is(eulerr:::poly_clip(square, triangle, "intersection"), "list")
-  expect_equal(eulerr:::poly_clip(empty, empty, "minus"), empty)
+  inter <- eulerr:::polygon_clip_rust(
+    subject_x = square_a$x,
+    subject_y = square_a$y,
+    subject_id_lengths = length(square_a$x),
+    clip_x = square_b$x,
+    clip_y = square_b$y,
+    op = "intersection"
+  )
+  expect_equal(length(inter$id_lengths), 1L)
+  expect_equal(sum(inter$id_lengths), length(inter$x))
+
+  empty <- eulerr:::polygon_clip_rust(
+    subject_x = double(0),
+    subject_y = double(0),
+    subject_id_lengths = integer(0),
+    clip_x = square_b$x,
+    clip_y = square_b$y,
+    op = "intersection"
+  )
+  expect_equal(length(empty$id_lengths), 0L)
 })

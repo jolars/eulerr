@@ -44,9 +44,9 @@ with text and this, however, is considerably more involved.
 
 Labeling the ellipses is complicated since the shapes of the intersections
 often are irregular, lacking well-defined centers; we know of no analytical
-solution to this problem. Instead, **eulerr** relies on the **polylabelr**
-package [@larsson2018d], which was created by the author. It provides a simple 
-wrapper for the **polylabel** [@mapbox2018] C++ library from *Mapbox*.
+solution to this problem. Instead, **eulerr** uses the *pole of inaccessibility*
+algorithm [@mapbox2018] (originally from *Mapbox*'s **polylabel** C++ library),
+implemented in the **eunoia** Rust crate that powers eulerr's geometry layer.
 
 ### Aesthetics
 

@@ -2,10 +2,12 @@ use extendr_api::prelude::*;
 use extendr_api::throw_r_error;
 use eunoia::{
     geometry::{
-        shapes::{Circle, Ellipse},
+        primitives::Point,
+        shapes::{Circle, Ellipse, Polygon},
         traits::DiagramShape,
     },
     loss::LossType,
+    plotting::{decompose_regions, polygon_clip, ClipOperation},
     spec::DiagramSpec,
     Combination, DiagramSpecBuilder, Fitter, InputType,
 };
@@ -468,11 +470,222 @@ fn fit_euler_diagram(
     }
 }
 
+/// Compute the input-order bitmask of a region's set membership over
+/// `set_names`. Each region is keyed by a `Combination` whose set names are
+/// alphabetically sorted; we recover eulerr's positional row index by ORing
+/// `1 << j` for each set's input-order index `j`.
+fn region_mask_in_input_order(combo: &Combination, set_names: &[String]) -> Option<usize> {
+    let mut mask = 0usize;
+    for s in combo.sets() {
+        let j = set_names.iter().position(|n| n == s)?;
+        mask |= 1usize << j;
+    }
+    Some(mask)
+}
+
+/// Flatten a list of polygons into eulerr's `(x, y, id_lengths)` triple.
+/// Empty polygons are skipped; coordinate vectors are concatenated in order.
+fn polygons_to_xy_list(polygons: &[Polygon]) -> List {
+    let mut x: Vec<f64> = Vec::new();
+    let mut y: Vec<f64> = Vec::new();
+    let mut id_lengths: Vec<i32> = Vec::new();
+    for poly in polygons {
+        let verts = poly.vertices();
+        if verts.is_empty() {
+            continue;
+        }
+        for v in verts {
+            x.push(v.x());
+            y.push(v.y());
+        }
+        id_lengths.push(verts.len() as i32);
+    }
+    list!(x = x, y = y, id_lengths = id_lengths)
+}
+
+/// Build a minimal `DiagramSpec` from a list of set names. The plotting
+/// path's `decompose_regions` ignores the spec's areas and only consults the
+/// set names, so dummy values are fine.
+fn build_dummy_spec(set_names: &[String]) -> std::result::Result<DiagramSpec, Error> {
+    let mut builder = DiagramSpecBuilder::new();
+    for name in set_names {
+        builder = builder.set(name.as_str(), 1.0);
+    }
+    builder
+        .input_type(InputType::Exclusive)
+        .build()
+        .map_err(|e| format!("eunoia spec build error: {}", e).into())
+}
+
+/// Compute polygon geometry and label anchors for plotting a fitted Euler
+/// diagram.
+///
+/// Inputs are the fitted shape parameters for the **non-empty** sets only,
+/// in the order eulerr stores them (`x$ellipses` rows after dropping rows
+/// with NA). The output is positional over `2^n - 1` rows in eulerr's
+/// `bit_indexr(n)` order, with `NULL` entries for regions the fitted
+/// geometry doesn't populate.
+///
+/// @keywords internal
+#[extendr]
+#[allow(clippy::too_many_arguments)]
+fn euler_plot_data(
+    set_names: Vec<String>,
+    h: Vec<f64>,
+    k: Vec<f64>,
+    a: Vec<f64>,
+    b: Vec<f64>,
+    phi: Vec<f64>,
+    n_vertices: i32,
+    label_precision: f64,
+) -> extendr_api::Result<List> {
+    let n = set_names.len();
+    if n == 0 {
+        return Ok(list!(
+            set_polygons = List::new(0),
+            region_polygons = List::new(0),
+            region_centers_x = Vec::<f64>::new(),
+            region_centers_y = Vec::<f64>::new(),
+        ));
+    }
+    if h.len() != n || k.len() != n || a.len() != n || b.len() != n || phi.len() != n {
+        return Err(
+            "set_names and shape parameter vectors must all have the same length".into(),
+        );
+    }
+
+    let n_vertices = n_vertices.max(3) as usize;
+
+    let ellipses: Vec<Ellipse> = (0..n)
+        .map(|i| Ellipse::new(Point::new(h[i], k[i]), a[i], b[i], phi[i]))
+        .collect();
+
+    // Per-set polygon outlines (input order).
+    let set_polygons: Vec<Robj> = ellipses
+        .iter()
+        .map(|e| {
+            use eunoia::geometry::traits::Polygonize;
+            let p = e.polygonize(n_vertices);
+            let mut x: Vec<f64> = Vec::with_capacity(p.vertices().len());
+            let mut y: Vec<f64> = Vec::with_capacity(p.vertices().len());
+            for v in p.vertices() {
+                x.push(v.x());
+                y.push(v.y());
+            }
+            list!(x = x, y = y).into()
+        })
+        .collect();
+
+    let spec = build_dummy_spec(&set_names)?;
+    let regions = decompose_regions(&ellipses, &set_names, &spec, n_vertices);
+    let anchors = regions.label_points(label_precision);
+
+    let masks = legacy_subset_masks(n);
+    let n_id = masks.len();
+
+    // Map mask -> row index in legacy positional order.
+    let mut mask_to_row: HashMap<usize, usize> = HashMap::with_capacity(n_id);
+    for (row, &m) in masks.iter().enumerate() {
+        mask_to_row.insert(m, row);
+    }
+
+    let mut region_polygons: Vec<Robj> = (0..n_id).map(|_| Robj::from(())).collect();
+    let mut centers_x: Vec<f64> = vec![f64::na(); n_id];
+    let mut centers_y: Vec<f64> = vec![f64::na(); n_id];
+
+    for (combo, polys) in regions.iter() {
+        let Some(mask) = region_mask_in_input_order(combo, &set_names) else {
+            continue;
+        };
+        let Some(&row) = mask_to_row.get(&mask) else {
+            continue;
+        };
+        region_polygons[row] = polygons_to_xy_list(polys).into();
+        if let Some(point) = anchors.get(combo) {
+            centers_x[row] = point.x();
+            centers_y[row] = point.y();
+        }
+    }
+
+    Ok(list!(
+        set_polygons = List::from_values(set_polygons),
+        region_polygons = List::from_values(region_polygons),
+        region_centers_x = centers_x,
+        region_centers_y = centers_y,
+    ))
+}
+
+/// Clip a (possibly multi-polygon) subject path against a single clip
+/// polygon. Mirrors the slice of `polyclip::polyclip` behavior eulerr
+/// actually uses at the stripe-pattern site.
+///
+/// @keywords internal
+#[extendr]
+fn polygon_clip_rust(
+    subject_x: Vec<f64>,
+    subject_y: Vec<f64>,
+    subject_id_lengths: Vec<i32>,
+    clip_x: Vec<f64>,
+    clip_y: Vec<f64>,
+    op: &str,
+) -> extendr_api::Result<List> {
+    if subject_x.len() != subject_y.len() {
+        return Err("subject_x and subject_y must have the same length".into());
+    }
+    if clip_x.len() != clip_y.len() {
+        return Err("clip_x and clip_y must have the same length".into());
+    }
+    let total_subject: usize = subject_id_lengths.iter().map(|&n| n as usize).sum();
+    if total_subject != subject_x.len() {
+        return Err(
+            "sum(subject_id_lengths) must equal length(subject_x)".into(),
+        );
+    }
+
+    let operation = match op {
+        "intersection" => ClipOperation::Intersection,
+        "union" => ClipOperation::Union,
+        "minus" | "difference" => ClipOperation::Difference,
+        "xor" => ClipOperation::Xor,
+        other => return Err(format!("Unknown clip operation: {}", other).into()),
+    };
+
+    let clip_poly = if clip_x.is_empty() {
+        Polygon::new(Vec::new())
+    } else {
+        Polygon::new(
+            clip_x
+                .iter()
+                .zip(clip_y.iter())
+                .map(|(&x, &y)| Point::new(x, y))
+                .collect(),
+        )
+    };
+
+    // Split the subject into individual polygons by id_lengths.
+    let mut result_polys: Vec<Polygon> = Vec::new();
+    let mut cursor = 0usize;
+    for &len in &subject_id_lengths {
+        let len = len as usize;
+        let verts: Vec<Point> = (cursor..cursor + len)
+            .map(|i| Point::new(subject_x[i], subject_y[i]))
+            .collect();
+        cursor += len;
+        let subject_poly = Polygon::new(verts);
+        let pieces = polygon_clip(&subject_poly, &clip_poly, operation);
+        result_polys.extend(pieces);
+    }
+
+    Ok(polygons_to_xy_list(&result_polys))
+}
+
 // Macro to generate exports.
 extendr_module! {
     mod eulerr;
     fn bit_index_rust;
     fn fit_euler_diagram;
+    fn euler_plot_data;
+    fn polygon_clip_rust;
 }
 
 #[cfg(test)]
