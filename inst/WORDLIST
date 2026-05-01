@@ -2,6 +2,7 @@ ASAN
 Acknowledgements
 Bxy
 CIELab
+CMA
 CMD
 Carlsson
 Cy
@@ -60,13 +61,14 @@ emptyset
 et
 euler
 eulerAPE
+eunoia
 fontfamily
 fontsize
 fontsizes
-fpar
 frac
 ggrepel
 gpars
+i's
 ij
 indexr
 interpretability
@@ -84,6 +86,7 @@ mathcal
 mathsf
 memcheck
 nabla
+optimizer's
 params
 performant
 polyclip
