@@ -18,9 +18,9 @@
 <url><loc>https://jolars.github.io/eulerr/dev/reference/bit_indexr.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/coef.euler.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/dummy_code.html</loc></url>
-<url><loc>https://jolars.github.io/eulerr/dev/reference/ellipse.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/error_plot.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/euler.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/euler_plot_data.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/eulerr-package.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/eulerr_default_options.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/eulerr_deprecated.html</loc></url>
@@ -41,7 +41,7 @@
 <url><loc>https://jolars.github.io/eulerr/dev/reference/plants.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/plot.euler.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/plot.eulergram.html</loc></url>
-<url><loc>https://jolars.github.io/eulerr/dev/reference/poly_clip.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/polygon_clip_rust.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/print.euler.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/print.eulerr_venn.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/replace_list.html</loc></url>

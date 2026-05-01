@@ -105,11 +105,11 @@ involved.</p>
 <p>Labeling the ellipses is complicated since the shapes of the
 intersections often are irregular, lacking well-defined centers; we know
 of no analytical solution to this problem. Instead,
-<strong>eulerr</strong> relies on the <strong>polylabelr</strong>
-package <span class="citation">(Larsson 2018)</span>, which was created
-by the author. It provides a simple wrapper for the
-<strong>polylabel</strong> <span class="citation">(Mapbox 2018)</span>
-C++ library from <em>Mapbox</em>.</p>
+<strong>eulerr</strong> uses the <em>pole of inaccessibility</em>
+algorithm <span class="citation">(Mapbox 2018)</span> (originally from
+<em>Mapbox</em>’s <strong>polylabel</strong> C++ library), implemented
+in the <strong>eunoia</strong> Rust crate that powers eulerr’s geometry
+layer.</p>
 </div>
 <div class="section level3">
 <h3 id="aesthetics">Aesthetics<a class="anchor" aria-label="anchor" href="#aesthetics"></a>
@@ -180,10 +180,6 @@ Brighton University.
 <div id="ref-Jylaenki_2010" class="csl-entry">
 Jylänki, Jukka. 2010. <em>A Thousand Ways to Pack the Bin – a Practical
 Approach to Two-Dimensional Rectangle Bin Packing</em>.
-</div>
-<div id="ref-larsson2018d" class="csl-entry">
-Larsson, Johan. 2018. <em><span class="nocase">polylabelr</span>: Find
-the Pole of Inaccessibility (Visual Center) of a Polygon</em>.
 </div>
 <div id="ref-mapbox2018" class="csl-entry">
 Mapbox. 2018. <em><span class="nocase">polylabel</span>: A Fast

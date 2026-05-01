@@ -28,10 +28,10 @@ involved.
 
 Labeling the ellipses is complicated since the shapes of the
 intersections often are irregular, lacking well-defined centers; we know
-of no analytical solution to this problem. Instead, **eulerr** relies on
-the **polylabelr** package (Larsson 2018), which was created by the
-author. It provides a simple wrapper for the **polylabel** (Mapbox 2018)
-C++ library from *Mapbox*.
+of no analytical solution to this problem. Instead, **eulerr** uses the
+*pole of inaccessibility* algorithm (Mapbox 2018) (originally from
+*Mapbox*’s **polylabel** C++ library), implemented in the **eunoia**
+Rust crate that powers eulerr’s geometry layer.
 
 ### Aesthetics
 
@@ -101,9 +101,6 @@ of Euler Diagrams.” {Ph.D.} dissertation, Brighton University.
 
 Jylänki, Jukka. 2010. *A Thousand Ways to Pack the Bin – a Practical
 Approach to Two-Dimensional Rectangle Bin Packing*.
-
-Larsson, Johan. 2018. *polylabelr: Find the Pole of Inaccessibility
-(Visual Center) of a Polygon*.
 
 Mapbox. 2018. *polylabel: A Fast Algorithm for Finding the Pole of
 Inaccessibility of a Polygon (in JavaScript and C++)*. Mapbox.

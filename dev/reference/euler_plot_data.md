@@ -1,0 +1,13 @@
+# Compute polygon geometry and label anchors for plotting a fitted Euler diagram.
+
+Inputs are the fitted shape parameters for the **non-empty** sets only,
+in the order eulerr stores them (`x$ellipses` rows after dropping rows
+with NA). The output is positional over `2^n - 1` rows in eulerr's
+`bit_indexr(n)` order, with `NULL` entries for regions the fitted
+geometry doesn't populate.
+
+## Usage
+
+``` r
+euler_plot_data(set_names, h, k, a, b, phi, n_vertices, label_precision)
+```
