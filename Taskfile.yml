@@ -1,0 +1,65 @@
+version: "3"
+
+tasks:
+  default:
+    deps: [install]
+
+  document:
+    desc: Regenerate roxygen docs and NAMESPACE
+    cmds:
+      - Rscript -e 'devtools::document(roclets = c("rd", "collate", "namespace"))'
+
+  extendr-document:
+    desc: Regenerate extendr R wrappers and Rust extendr_module!
+    cmds:
+      - Rscript -e 'rextendr::document()'
+
+  vendor-pkgs:
+    desc: Re-vendor Rust dependencies into src/rust/vendor.tar.xz
+    cmds:
+      - rm -rf src/.cargo src/vendor
+      - Rscript -e 'rextendr::vendor_pkgs()'
+
+  build:
+    desc: Build package tarball (no manual)
+    deps: [document]
+    dir: ..
+    cmds:
+      - R CMD build --no-manual {{.TASKFILE_DIR | base}}
+
+  build-cran:
+    desc: Build CRAN-style tarball
+    dir: ..
+    cmds:
+      - R CMD build {{.TASKFILE_DIR | base}}
+
+  install:
+    desc: Install the package
+    dir: ..
+    cmds:
+      - R CMD INSTALL --no-multiarch --with-keep.source {{.TASKFILE_DIR | base}}
+
+  clean-install:
+    desc: Install with --preclean
+    cmds:
+      - R CMD INSTALL --preclean --no-multiarch --with-keep.source .
+
+  check:
+    desc: Run R CMD check via devtools
+    cmds:
+      - Rscript -e 'devtools::check()'
+
+  test:
+    desc: Run testthat tests
+    cmds:
+      - Rscript -e 'devtools::test()'
+
+  vignettes:
+    desc: Build vignettes
+    cmds:
+      - Rscript -e 'devtools::build_vignettes()'
+
+  clean:
+    desc: Remove build artifacts (objects, shared libs, Rust target, stale vendor state)
+    cmds:
+      - rm -rf src/*.o src/*.so src/rust/target src/.cargo src/vendor
