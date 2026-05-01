@@ -86,7 +86,7 @@ fit_diagram <- function(
       extraopt = (n == 3) && (shape == "ellipse"),
       extraopt_threshold = 0.001,
       extraopt_control = list(),
-      tolerance = 1e-6
+      tolerance = 1e-3
     ),
     control
   )
