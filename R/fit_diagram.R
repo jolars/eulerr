@@ -65,7 +65,7 @@ fit_diagram <- function(
     combo_labels <- apply(id, 1L, function(x) {
       paste0(setnames[x], collapse = "&")
     })
-    orig <- setNames(areas_disjoint, combo_labels)
+    orig <- stats::setNames(areas_disjoint, combo_labels)
 
     fpar <- venn_spec[[n]]
     rownames(fpar) <- setnames
@@ -144,16 +144,16 @@ fit_diagram <- function(
   }
 
   labs <- result$combo_labels
-  orig <- setNames(result$original_values, labs)
-  fit <- setNames(result$fitted_values, labs)
+  orig <- stats::setNames(result$original_values, labs)
+  fit <- stats::setNames(result$fitted_values, labs)
 
   structure(
     list(
       ellipses = fpar,
       original.values = orig,
       fitted.values = fit,
-      residuals = setNames(result$residuals, labs),
-      regionError = setNames(result$region_error, labs),
+      residuals = stats::setNames(result$residuals, labs),
+      regionError = stats::setNames(result$region_error, labs),
       diagError = result$diag_error,
       stress = result$stress
     ),
