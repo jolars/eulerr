@@ -48,3 +48,8 @@
 ^src/rust/target$
 ^src/Makevars$
 ^src/Makevars\.win$
+^\.claude$
+^AGENTS\.md$
+^CLAUDE\.md$
+^TODO\.md$
+^Taskfile\.yml$
