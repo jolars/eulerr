@@ -48,31 +48,31 @@ Summary statistics of the fitted Euler diagram are printed to screen.
 ``` r
 euler(organisms)
 #>                               original fitted residuals regionError
-#> animal                               0  0.472    -0.472       0.075
-#> mammal                               0  0.222    -0.222       0.035
-#> plant                                0  0.373    -0.373       0.059
-#> sea                                  0  0.337    -0.337       0.054
-#> spiny                                0  0.178    -0.178       0.028
-#> animal&mammal                        2  1.911     0.089       0.019
+#> animal                               0  0.463    -0.463       0.075
+#> mammal                               0  0.215    -0.215       0.035
+#> plant                                0  0.371    -0.371       0.060
+#> sea                                  0  0.330    -0.330       0.053
+#> spiny                                0  0.175    -0.175       0.028
+#> animal&mammal                        2  1.904     0.096       0.022
 #> animal&plant                         0  0.000     0.000       0.000
 #> mammal&plant                         0  0.000     0.000       0.000
-#> animal&sea                           1  0.590     0.410       0.049
+#> animal&sea                           1  0.570     0.430       0.051
 #> mammal&sea                           1  0.000     1.000       0.143
-#> plant&sea                            1  0.815     0.185       0.013
+#> plant&sea                            1  0.804     0.196       0.013
 #> animal&spiny                         0  0.000     0.000       0.000
 #> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&spiny                          1  0.881     0.119       0.002
+#> plant&spiny                          1  0.875     0.125       0.002
 #> sea&spiny                            0  0.000     0.000       0.000
 #> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  0.257    -0.257       0.041
-#> animal&plant&sea                     0  0.037    -0.037       0.006
+#> animal&mammal&sea                    0  0.250    -0.250       0.040
+#> animal&plant&sea                     0  0.034    -0.034       0.006
 #> mammal&plant&sea                     0  0.000     0.000       0.000
 #> animal&mammal&spiny                  0  0.000     0.000       0.000
 #> animal&plant&spiny                   0  0.000     0.000       0.000
 #> mammal&plant&spiny                   0  0.000     0.000       0.000
 #> animal&sea&spiny                     1  0.000     1.000       0.143
 #> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.206    -0.206       0.033
+#> plant&sea&spiny                      0  0.203    -0.203       0.033
 #> animal&mammal&plant&sea              0  0.000     0.000       0.000
 #> animal&mammal&plant&spiny            0  0.000     0.000       0.000
 #> animal&mammal&sea&spiny              0  0.000     0.000       0.000

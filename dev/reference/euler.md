@@ -224,7 +224,7 @@ fit1
 #> A&B          1  0.605     0.395       0.040
 #> A&C          1  0.605     0.395       0.040
 #> B&C          1  0.605     0.395       0.040
-#> A&B&C        0  0.494    -0.494       0.058
+#> A&B&C        0  0.495    -0.495       0.058
 #> 
 #> diagError: 0.058 
 #> stress:    0.049 
@@ -277,11 +277,11 @@ euler(fruits, by = list(sex, age))
 #> apple                      2  1.968     0.032       0.009
 #> orange                     2  1.974     0.026       0.009
 #> banana&apple               4  4.028    -0.028       0.010
-#> banana&orange              0  0.268    -0.268       0.024
+#> banana&orange              0  0.267    -0.267       0.023
 #> apple&orange               0  0.260    -0.260       0.023
-#> banana&apple&orange        2  1.961     0.039       0.010
+#> banana&apple&orange        2  1.960     0.040       0.010
 #> 
-#> diagError: 0.024 
+#> diagError: 0.023 
 #> stress:    0.005 
 #> ------------------------------------------------------------ 
 #> male.child 
@@ -327,31 +327,31 @@ euler(fruits, by = list(sex, age))
 # Using the matrix method
 euler(organisms)
 #>                               original fitted residuals regionError
-#> animal                               0  0.471    -0.471       0.075
-#> mammal                               0  0.222    -0.222       0.035
-#> plant                                0  0.373    -0.373       0.059
-#> sea                                  0  0.337    -0.337       0.054
-#> spiny                                0  0.178    -0.178       0.028
-#> animal&mammal                        2  1.911     0.089       0.019
+#> animal                               0  0.468    -0.468       0.075
+#> mammal                               0  0.219    -0.219       0.035
+#> plant                                0  0.372    -0.372       0.060
+#> sea                                  0  0.335    -0.335       0.054
+#> spiny                                0  0.177    -0.177       0.028
+#> animal&mammal                        2  1.909     0.091       0.020
 #> animal&plant                         0  0.000     0.000       0.000
 #> mammal&plant                         0  0.000     0.000       0.000
-#> animal&sea                           1  0.590     0.410       0.049
+#> animal&sea                           1  0.581     0.419       0.050
 #> mammal&sea                           1  0.000     1.000       0.143
-#> plant&sea                            1  0.815     0.185       0.013
+#> plant&sea                            1  0.810     0.190       0.013
 #> animal&spiny                         0  0.000     0.000       0.000
 #> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&spiny                          1  0.881     0.119       0.003
+#> plant&spiny                          1  0.878     0.122       0.002
 #> sea&spiny                            0  0.000     0.000       0.000
 #> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  0.257    -0.257       0.041
-#> animal&plant&sea                     0  0.037    -0.037       0.006
+#> animal&mammal&sea                    0  0.254    -0.254       0.041
+#> animal&plant&sea                     0  0.035    -0.035       0.006
 #> mammal&plant&sea                     0  0.000     0.000       0.000
 #> animal&mammal&spiny                  0  0.000     0.000       0.000
 #> animal&plant&spiny                   0  0.000     0.000       0.000
 #> mammal&plant&spiny                   0  0.000     0.000       0.000
 #> animal&sea&spiny                     1  0.000     1.000       0.143
 #> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.205    -0.205       0.033
+#> plant&sea&spiny                      0  0.204    -0.204       0.033
 #> animal&mammal&plant&sea              0  0.000     0.000       0.000
 #> animal&mammal&plant&spiny            0  0.000     0.000       0.000
 #> animal&mammal&sea&spiny              0  0.000     0.000       0.000
@@ -365,23 +365,23 @@ euler(organisms)
 # Using weights
 euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 #>                               original fitted residuals regionError
-#> animal                               0  1.305    -1.305       0.027
-#> mammal                               0  2.959    -2.959       0.060
-#> plant                                0  0.178    -0.178       0.004
-#> sea                                  0  1.075    -1.075       0.022
-#> spiny                                0  0.381    -0.381       0.008
-#> animal&mammal                       30 29.761     0.239       0.090
+#> animal                               0  1.239    -1.239       0.025
+#> mammal                               0  2.841    -2.841       0.058
+#> plant                                0  0.193    -0.193       0.004
+#> sea                                  0  1.356    -1.356       0.028
+#> spiny                                0  0.362    -0.362       0.007
+#> animal&mammal                       30 29.713     0.287       0.093
 #> animal&plant                         0  0.000     0.000       0.000
 #> mammal&plant                         0  0.000     0.000       0.000
 #> animal&sea                           4  0.000     4.000       0.069
-#> mammal&sea                           8  1.420     6.580       0.109
+#> mammal&sea                           8  1.322     6.678       0.111
 #> plant&sea                            2  0.000     2.000       0.034
 #> animal&spiny                         0  0.000     0.000       0.000
 #> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&spiny                          9  8.962     0.038       0.028
-#> sea&spiny                            0  0.329    -0.329       0.007
+#> plant&spiny                          9  9.053    -0.053       0.031
+#> sea&spiny                            0  0.280    -0.280       0.006
 #> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  1.724    -1.724       0.035
+#> animal&mammal&sea                    0  1.588    -1.588       0.033
 #> animal&plant&sea                     0  0.000     0.000       0.000
 #> mammal&plant&sea                     0  0.000     0.000       0.000
 #> animal&mammal&spiny                  0  0.000     0.000       0.000
@@ -389,7 +389,7 @@ euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 #> mammal&plant&spiny                   0  0.000     0.000       0.000
 #> animal&sea&spiny                     5  0.000     5.000       0.086
 #> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.944    -0.944       0.019
+#> plant&sea&spiny                      0  0.741    -0.741       0.015
 #> animal&mammal&plant&sea              0  0.000     0.000       0.000
 #> animal&mammal&plant&spiny            0  0.000     0.000       0.000
 #> animal&mammal&sea&spiny              0  0.000     0.000       0.000
@@ -397,7 +397,7 @@ euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 #> mammal&plant&sea&spiny               0  0.000     0.000       0.000
 #> animal&mammal&plant&sea&spiny        0  0.000     0.000       0.000
 #> 
-#> diagError: 0.109 
+#> diagError: 0.111 
 #> stress:    0.096 
 
 # The table method
