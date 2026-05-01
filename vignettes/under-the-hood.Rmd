@@ -599,9 +599,13 @@ for (i in seq_len(nrow(pp))) {
   j <- i
 }
 
-els <- eulerr:::ellipse(x, y, ra, rb, phi)
-x0 <- c(lapply(els, "[[", "x"), recursive = TRUE)
-y0 <- c(lapply(els, "[[", "y"), recursive = TRUE)
+theta <- seq.int(0, 2 * pi, length.out = 200L)
+x0 <- as.vector(sapply(seq_along(x), function(i) {
+  x[i] + ra[i] * cos(theta) * cos(phi[i]) - rb[i] * sin(theta) * sin(phi[i])
+}))
+y0 <- as.vector(sapply(seq_along(y), function(i) {
+  y[i] + rb[i] * sin(theta) * cos(phi[i]) + ra[i] * cos(theta) * sin(phi[i])
+}))
 
 xyplot(
   y ~ x,
