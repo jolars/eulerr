@@ -4,3 +4,4 @@
 .cargo/
 Makevars
 Makevars.win
+vendor/
