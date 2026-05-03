@@ -42,6 +42,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="eulerr-development-version">eulerr (development version)<a class="anchor" aria-label="anchor" href="#eulerr-development-version"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>
+<p>The named numeric vectors <code>original.values</code>, <code>fitted.values</code>, <code>residuals</code>, and <code>regionError</code> returned by <code><a href="../reference/euler.html">euler()</a></code> are now <strong>sparse</strong>: they contain only entries for combinations that were either requested by the user or fitted to a non-zero area. Previously they always contained all <code>2^n - 1</code> entries (with zeros for absent combinations). Named lookup such as <code>result$fitted.values["A&amp;B"]</code> continues to work; positional iteration by <code>seq_len(2^n - 1)</code> no longer does. This unlocks support for diagrams with many sets but only a few populated overlaps — <code><a href="../reference/euler.html">euler()</a></code> now scales with the number of input combinations, not with <code>2^n</code>.</p>
+<p>To recover the previous dense form for a small diagram, use <code>fitted(x, dense = TRUE)</code> (likewise <code>residuals(x, dense = TRUE)</code>), which pads to all <code>2^n - 1</code> combinations of the non-empty sets.</p>
+</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="7.1" id="eulerr-71">eulerr 7.1<a class="anchor" aria-label="anchor" href="#eulerr-71"></a></h2>

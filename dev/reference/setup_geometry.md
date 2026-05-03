@@ -5,7 +5,7 @@ Compute geometries and label locations
 ## Usage
 
 ``` r
-setup_geometry(x, fills, edges, labels, quantities, n, id, merged_sets)
+setup_geometry(x, fills, edges, labels, quantities, n, merged_sets)
 ```
 
 ## Arguments
@@ -32,11 +32,7 @@ setup_geometry(x, fills, edges, labels, quantities, n, id, merged_sets)
 
 - n:
 
-  number of sets
-
-- id:
-
-  identity matrix
+  number of vertices to use to render each ellipse
 
 - merged_sets:
 

@@ -234,14 +234,13 @@ fit2 <- euler(combo, shape = "ellipse")
 
 # Investigate the fit again (which is now exact)
 fit2
-#>       original fitted residuals regionError
-#> A            2      2         0           0
-#> B            2      2         0           0
-#> C            2      2         0           0
-#> A&B          1      1         0           0
-#> A&C          1      1         0           0
-#> B&C          1      1         0           0
-#> A&B&C        0      0         0           0
+#>     original fitted residuals regionError
+#> A          2      2         0           0
+#> B          2      2         0           0
+#> C          2      2         0           0
+#> A&B        1      1         0           0
+#> A&C        1      1         0           0
+#> B&C        1      1         0           0
 #> 
 #> diagError: 0 
 #> stress:    0 
@@ -303,7 +302,6 @@ euler(fruits, by = list(sex, age))
 #> apple                      2  2.003    -0.003       0.000
 #> orange                     0  0.016    -0.016       0.001
 #> banana&apple              10 10.000     0.000       0.001
-#> banana&orange              0  0.000     0.000       0.000
 #> apple&orange               1  0.996     0.004       0.000
 #> banana&apple&orange        1  1.002    -0.002       0.000
 #> 
@@ -317,7 +315,6 @@ euler(fruits, by = list(sex, age))
 #> orange                     1      1         0           0
 #> banana&apple               4      4         0           0
 #> banana&orange              1      1         0           0
-#> apple&orange               0      0         0           0
 #> banana&apple&orange        2      2         0           0
 #> 
 #> diagError: 0 
@@ -326,76 +323,43 @@ euler(fruits, by = list(sex, age))
 
 # Using the matrix method
 euler(organisms)
-#>                               original fitted residuals regionError
-#> animal                               0  0.468    -0.468       0.075
-#> mammal                               0  0.219    -0.219       0.035
-#> plant                                0  0.372    -0.372       0.060
-#> sea                                  0  0.335    -0.335       0.054
-#> spiny                                0  0.177    -0.177       0.028
-#> animal&mammal                        2  1.909     0.091       0.020
-#> animal&plant                         0  0.000     0.000       0.000
-#> mammal&plant                         0  0.000     0.000       0.000
-#> animal&sea                           1  0.581     0.419       0.050
-#> mammal&sea                           1  0.000     1.000       0.143
-#> plant&sea                            1  0.810     0.190       0.013
-#> animal&spiny                         0  0.000     0.000       0.000
-#> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&spiny                          1  0.878     0.122       0.002
-#> sea&spiny                            0  0.000     0.000       0.000
-#> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  0.254    -0.254       0.041
-#> animal&plant&sea                     0  0.035    -0.035       0.006
-#> mammal&plant&sea                     0  0.000     0.000       0.000
-#> animal&mammal&spiny                  0  0.000     0.000       0.000
-#> animal&plant&spiny                   0  0.000     0.000       0.000
-#> mammal&plant&spiny                   0  0.000     0.000       0.000
-#> animal&sea&spiny                     1  0.000     1.000       0.143
-#> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.204    -0.204       0.033
-#> animal&mammal&plant&sea              0  0.000     0.000       0.000
-#> animal&mammal&plant&spiny            0  0.000     0.000       0.000
-#> animal&mammal&sea&spiny              0  0.000     0.000       0.000
-#> animal&plant&sea&spiny               0  0.000     0.000       0.000
-#> mammal&plant&sea&spiny               0  0.000     0.000       0.000
-#> animal&mammal&plant&sea&spiny        0  0.000     0.000       0.000
+#>                   original fitted residuals regionError
+#> animal                   0  0.468    -0.468       0.075
+#> mammal                   0  0.219    -0.219       0.035
+#> plant                    0  0.372    -0.372       0.060
+#> sea                      0  0.335    -0.335       0.054
+#> spiny                    0  0.177    -0.177       0.028
+#> animal&mammal            2  1.909     0.091       0.020
+#> animal&sea               1  0.581     0.419       0.050
+#> mammal&sea               1  0.000     1.000       0.143
+#> plant&sea                1  0.810     0.190       0.013
+#> plant&spiny              1  0.878     0.122       0.002
+#> animal&mammal&sea        0  0.254    -0.254       0.041
+#> animal&plant&sea         0  0.035    -0.035       0.006
+#> animal&sea&spiny         1  0.000     1.000       0.143
+#> plant&sea&spiny          0  0.204    -0.204       0.033
 #> 
 #> diagError: 0.143 
 #> stress:    0.321 
 
 # Using weights
 euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
-#>                               original fitted residuals regionError
-#> animal                               0  1.239    -1.239       0.025
-#> mammal                               0  2.841    -2.841       0.058
-#> plant                                0  0.193    -0.193       0.004
-#> sea                                  0  1.356    -1.356       0.028
-#> spiny                                0  0.362    -0.362       0.007
-#> animal&mammal                       30 29.713     0.287       0.093
-#> animal&plant                         0  0.000     0.000       0.000
-#> mammal&plant                         0  0.000     0.000       0.000
-#> animal&sea                           4  0.000     4.000       0.069
-#> mammal&sea                           8  1.322     6.678       0.111
-#> plant&sea                            2  0.000     2.000       0.034
-#> animal&spiny                         0  0.000     0.000       0.000
-#> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&spiny                          9  9.053    -0.053       0.031
-#> sea&spiny                            0  0.280    -0.280       0.006
-#> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  1.588    -1.588       0.033
-#> animal&plant&sea                     0  0.000     0.000       0.000
-#> mammal&plant&sea                     0  0.000     0.000       0.000
-#> animal&mammal&spiny                  0  0.000     0.000       0.000
-#> animal&plant&spiny                   0  0.000     0.000       0.000
-#> mammal&plant&spiny                   0  0.000     0.000       0.000
-#> animal&sea&spiny                     5  0.000     5.000       0.086
-#> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.741    -0.741       0.015
-#> animal&mammal&plant&sea              0  0.000     0.000       0.000
-#> animal&mammal&plant&spiny            0  0.000     0.000       0.000
-#> animal&mammal&sea&spiny              0  0.000     0.000       0.000
-#> animal&plant&sea&spiny               0  0.000     0.000       0.000
-#> mammal&plant&sea&spiny               0  0.000     0.000       0.000
-#> animal&mammal&plant&sea&spiny        0  0.000     0.000       0.000
+#>                   original fitted residuals regionError
+#> animal                   0  1.239    -1.239       0.025
+#> mammal                   0  2.841    -2.841       0.058
+#> plant                    0  0.193    -0.193       0.004
+#> sea                      0  1.356    -1.356       0.028
+#> spiny                    0  0.362    -0.362       0.007
+#> animal&mammal           30 29.713     0.287       0.093
+#> animal&sea               4  0.000     4.000       0.069
+#> mammal&sea               8  1.322     6.678       0.111
+#> plant&sea                2  0.000     2.000       0.034
+#> plant&spiny              9  9.053    -0.053       0.031
+#> sea&spiny                0  0.280    -0.280       0.006
+#> animal&mammal&sea        0  1.588    -1.588       0.033
+#> animal&sea&spiny         5  0.000     5.000       0.086
+#> mammal&sea&spiny         0  0.000     0.000       0.000
+#> plant&sea&spiny          0  0.741    -0.741       0.015
 #> 
 #> diagError: 0.111 
 #> stress:    0.096 
@@ -406,7 +370,6 @@ euler(pain, factor_names = FALSE)
 #> widespread                    204 204.002    -0.002           0
 #> regional                      229 229.002    -0.002           0
 #> male                           48  48.032    -0.032           0
-#> widespread&regional             0   0.000     0.000           0
 #> widespread&male                78  77.984     0.016           0
 #> regional&male                 143 142.992     0.008           0
 #> widespread&regional&male        0   0.247    -0.247           0
@@ -421,7 +384,6 @@ euler(plants[c("erigenia", "solanum", "cynodon")])
 #> solanum                        16     16         0           0
 #> cynodon                         1      1         0           0
 #> erigenia&solanum                2      2         0           0
-#> erigenia&cynodon                0      0         0           0
 #> solanum&cynodon                25     25         0           0
 #> erigenia&solanum&cynodon       20     20         0           0
 #> 

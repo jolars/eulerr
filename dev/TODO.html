@@ -44,7 +44,7 @@
 
 <div class="section level2">
 <h2 id="eliminate-eager-2n-bit-index-materialization">Eliminate eager 2^n bit-index materialization<a class="anchor" aria-label="anchor" href="#eliminate-eager-2n-bit-index-materialization"></a></h2>
-<p><code><a href="reference/bit_indexr.html">bit_indexr()</a></code> (R/utils.R) builds a <code>2^n × n</code> logical matrix used by 6 call sites to enumerate region combinations:</p>
+<p><code>bit_indexr()</code> (R/utils.R) builds a <code>2^n × n</code> logical matrix used by 6 call sites to enumerate region combinations:</p>
 <ul><li>
 <code>R/utils.R:tally_combinations</code> — building tallies for matrix/data.frame input</li>
 <li>

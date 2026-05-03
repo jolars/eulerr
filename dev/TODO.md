@@ -2,9 +2,8 @@
 
 ## Eliminate eager 2^n bit-index materialization
 
-[`bit_indexr()`](https://jolars.github.io/eulerr/dev/reference/bit_indexr.md)
-(R/utils.R) builds a `2^n × n` logical matrix used by 6 call sites to
-enumerate region combinations:
+`bit_indexr()` (R/utils.R) builds a `2^n × n` logical matrix used by 6
+call sites to enumerate region combinations:
 
 - `R/utils.R:tally_combinations` — building tallies for
   matrix/data.frame input

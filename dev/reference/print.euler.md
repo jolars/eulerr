@@ -47,38 +47,21 @@ Summary statistics of the fitted Euler diagram are printed to screen.
 
 ``` r
 euler(organisms)
-#>                               original fitted residuals regionError
-#> animal                               0  0.463    -0.463       0.075
-#> mammal                               0  0.215    -0.215       0.035
-#> plant                                0  0.371    -0.371       0.060
-#> sea                                  0  0.330    -0.330       0.053
-#> spiny                                0  0.175    -0.175       0.028
-#> animal&mammal                        2  1.904     0.096       0.022
-#> animal&plant                         0  0.000     0.000       0.000
-#> mammal&plant                         0  0.000     0.000       0.000
-#> animal&sea                           1  0.570     0.430       0.051
-#> mammal&sea                           1  0.000     1.000       0.143
-#> plant&sea                            1  0.804     0.196       0.013
-#> animal&spiny                         0  0.000     0.000       0.000
-#> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&spiny                          1  0.875     0.125       0.002
-#> sea&spiny                            0  0.000     0.000       0.000
-#> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  0.250    -0.250       0.040
-#> animal&plant&sea                     0  0.034    -0.034       0.006
-#> mammal&plant&sea                     0  0.000     0.000       0.000
-#> animal&mammal&spiny                  0  0.000     0.000       0.000
-#> animal&plant&spiny                   0  0.000     0.000       0.000
-#> mammal&plant&spiny                   0  0.000     0.000       0.000
-#> animal&sea&spiny                     1  0.000     1.000       0.143
-#> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.203    -0.203       0.033
-#> animal&mammal&plant&sea              0  0.000     0.000       0.000
-#> animal&mammal&plant&spiny            0  0.000     0.000       0.000
-#> animal&mammal&sea&spiny              0  0.000     0.000       0.000
-#> animal&plant&sea&spiny               0  0.000     0.000       0.000
-#> mammal&plant&sea&spiny               0  0.000     0.000       0.000
-#> animal&mammal&plant&sea&spiny        0  0.000     0.000       0.000
+#>                   original fitted residuals regionError
+#> animal                   0  0.463    -0.463       0.075
+#> mammal                   0  0.215    -0.215       0.035
+#> plant                    0  0.371    -0.371       0.060
+#> sea                      0  0.330    -0.330       0.053
+#> spiny                    0  0.175    -0.175       0.028
+#> animal&mammal            2  1.904     0.096       0.022
+#> animal&sea               1  0.570     0.430       0.051
+#> mammal&sea               1  0.000     1.000       0.143
+#> plant&sea                1  0.804     0.196       0.013
+#> plant&spiny              1  0.875     0.125       0.002
+#> animal&mammal&sea        0  0.250    -0.250       0.040
+#> animal&plant&sea         0  0.034    -0.034       0.006
+#> animal&sea&spiny         1  0.000     1.000       0.143
+#> plant&sea&spiny          0  0.203    -0.203       0.033
 #> 
 #> diagError: 0.143 
 #> stress:    0.321 

@@ -13,6 +13,9 @@
 - [`eulerr_options()`](https://jolars.github.io/eulerr/dev/reference/eulerr_options.md)
   : Get or set global graphical parameters for eulerr
 
+- [`fitted(`*`<euler>`*`)`](https://jolars.github.io/eulerr/dev/reference/fitted.euler.md)
+  : Fitted values of euler object
+
 - [`fruits`](https://jolars.github.io/eulerr/dev/reference/fruits.md) :
   Fruits
 
@@ -40,6 +43,9 @@
 - [`print(`*`<eulerr_venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/print.eulerr_venn.md)
   [`print(`*`<venn>`*`)`](https://jolars.github.io/eulerr/dev/reference/print.eulerr_venn.md)
   : Print a summary of a Venn diagram
+
+- [`residuals(`*`<euler>`*`)`](https://jolars.github.io/eulerr/dev/reference/residuals.euler.md)
+  : Residuals of euler object
 
 - [`venn()`](https://jolars.github.io/eulerr/dev/reference/venn.md) :
   Venn diagrams

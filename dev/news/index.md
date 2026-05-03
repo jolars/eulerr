@@ -2,6 +2,25 @@
 
 ## eulerr (development version)
 
+### Breaking changes
+
+- The named numeric vectors `original.values`, `fitted.values`,
+  `residuals`, and `regionError` returned by
+  [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md)
+  are now **sparse**: they contain only entries for combinations that
+  were either requested by the user or fitted to a non-zero area.
+  Previously they always contained all `2^n - 1` entries (with zeros for
+  absent combinations). Named lookup such as
+  `result$fitted.values["A&B"]` continues to work; positional iteration
+  by `seq_len(2^n - 1)` no longer does. This unlocks support for
+  diagrams with many sets but only a few populated overlaps —
+  [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md)
+  now scales with the number of input combinations, not with `2^n`.
+
+  To recover the previous dense form for a small diagram, use
+  `fitted(x, dense = TRUE)` (likewise `residuals(x, dense = TRUE)`),
+  which pads to all `2^n - 1` combinations of the non-empty sets.
+
 ## eulerr 7.1
 
 ### Features
