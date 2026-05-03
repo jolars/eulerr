@@ -560,17 +560,24 @@ fn euler_plot_data(
         .map(|i| Ellipse::new(Point::new(h[i], k[i]), a[i], b[i], phi[i]))
         .collect();
 
-    // Per-set polygon outlines (input order).
+    // Per-set polygon outlines (input order). eunoia doesn't repeat the first
+    // vertex; close the ring here so polylineGrob (used for edges) draws the
+    // closing segment instead of leaving a visible gap.
     let set_polygons: Vec<Robj> = ellipses
         .iter()
         .map(|e| {
             use eunoia::geometry::traits::Polygonize;
             let p = e.polygonize(n_vertices);
-            let mut x: Vec<f64> = Vec::with_capacity(p.vertices().len());
-            let mut y: Vec<f64> = Vec::with_capacity(p.vertices().len());
-            for v in p.vertices() {
+            let verts = p.vertices();
+            let mut x: Vec<f64> = Vec::with_capacity(verts.len() + 1);
+            let mut y: Vec<f64> = Vec::with_capacity(verts.len() + 1);
+            for v in verts {
                 x.push(v.x());
                 y.push(v.y());
+            }
+            if let Some(first) = verts.first() {
+                x.push(first.x());
+                y.push(first.y());
             }
             list!(x = x, y = y).into()
         })
