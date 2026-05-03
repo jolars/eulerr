@@ -196,9 +196,9 @@ three_inside_fourth <- euler(c(
   "A&B" = 3,
   "A&C" = 3,
   "A&D" = 3,
-  "A&B&C" = 2,
-  "A&B&D" = 2,
-  "A&C&D" = 2,
+  "A&B&C" = 0.4,
+  "A&B&D" = 0.4,
+  "A&C&D" = 0.4,
   "A&B&C&D" = 1
 ))
 plot(three_inside_fourth)
