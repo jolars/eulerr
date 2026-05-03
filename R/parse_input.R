@@ -18,36 +18,32 @@ parse_list <- function(combinations) {
   }
 
   sets <- names(combinations)
-  n <- length(sets)
 
-  id <- bit_indexr(n)
+  all_elems <- unlist(lapply(combinations, as.character), use.names = FALSE)
+  all_set_idx <- rep.int(seq_along(combinations), lengths(combinations))
 
-  out <- integer(nrow(id))
-  rownames(id) <- apply(id, 1L, function(x) paste(sets[x], collapse = "&"))
-
-  intersect_sets <- as.list(rep(-1, nrow(id)))
-  names(intersect_sets) <- rownames(id)
-  compute_intersect <- function(bool) {
-    ind <- which(bool)
-    nm <- paste(sets[ind], collapse = "&")
-    if (identical(intersect_sets[[nm]], -1)) {
-      # not computed yet
-      if (length(ind) == 1) {
-        intersect_sets[[nm]] <<- combinations[[ind]]
-      } else {
-        bool[] <- FALSE
-        bool[ind[1]] <- TRUE
-        part1 <- compute_intersect(bool)
-        bool[ind] <- TRUE
-        bool[ind[1]] <- FALSE
-        part2 <- compute_intersect(bool)
-        intersect_sets[[nm]] <<- intersect(part1, part2)
-      }
-    }
-    intersect_sets[[nm]]
+  if (length(all_elems) == 0L) {
+    counts <- numeric(0)
+  } else {
+    by_elem <- split(all_set_idx, all_elems)
+    patterns <- vapply(
+      by_elem,
+      function(idx) paste(sets[sort.int(unique(idx))], collapse = "&"),
+      character(1)
+    )
+    tab <- table(patterns)
+    counts <- as.numeric(tab)
+    names(counts) <- names(tab)
   }
 
-  apply(id, 1, function(x) length(compute_intersect(x)))
+  singletons <- stats::setNames(numeric(length(sets)), sets)
+  shared <- intersect(sets, names(counts))
+  if (length(shared) > 0L) {
+    singletons[shared] <- counts[shared]
+  }
+  multi <- counts[setdiff(names(counts), sets)]
+
+  c(singletons, multi)
 }
 
 parse_dataframe <- function(

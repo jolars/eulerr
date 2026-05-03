@@ -36,36 +36,39 @@ fit_diagram <- function(
 
   # Venn early return (uses lookup table, no optimization)
   if (type == "venn") {
-    id <- bit_indexr(n)
-    N <- NROW(id)
+    combo_labels <- all_set_combinations(setnames)
+    N <- length(combo_labels)
+    combo_set_lists <- strsplit(combo_labels, "&", fixed = TRUE)
+    cards <- lengths(combo_set_lists)
 
-    areas <- double(N)
-    for (i in seq_len(N)) {
-      s <- setnames[id[i, ]]
-      for (j in seq_along(combo_name_parts)) {
-        if (setequal(s, combo_name_parts[[j]])) {
-          areas[i] <- combinations[j]
-        }
-      }
+    areas <- numeric(N)
+    for (j in seq_along(combo_name_parts)) {
+      parts <- combo_name_parts[[j]]
+      hit <- vapply(
+        combo_set_lists,
+        function(s) length(s) == length(parts) && all(s %in% parts),
+        logical(1)
+      )
+      areas[hit] <- combinations[j]
     }
 
     if (input == "disjoint") {
       areas_disjoint <- areas
     } else {
-      areas_disjoint <- double(N)
-      for (i in rev(seq_along(areas))) {
-        prev <- rowSums(id[, id[i, ], drop = FALSE]) == sum(id[i, ])
-        areas_disjoint[i] <- areas[i] - sum(areas_disjoint[prev])
+      areas_disjoint <- numeric(N)
+      for (i in order(cards, decreasing = TRUE)) {
+        this_sets <- combo_set_lists[[i]]
+        is_strict_super <- cards > cards[i] &
+          vapply(combo_set_lists, function(s) all(this_sets %in% s), logical(1))
+        areas_disjoint[i] <- areas[i] - sum(areas_disjoint[is_strict_super])
       }
       if (any(areas_disjoint < 0)) {
         stop("Check your set configuration. Some disjoint areas are negative.")
       }
     }
 
-    combo_labels <- apply(id, 1L, function(x) {
-      paste0(setnames[x], collapse = "&")
-    })
     orig <- stats::setNames(areas_disjoint, combo_labels)
+    fit <- stats::setNames(rep.int(1, N), combo_labels)
 
     fpar <- venn_spec[[n]]
     rownames(fpar) <- setnames
@@ -74,7 +77,7 @@ fit_diagram <- function(
       list(
         ellipses = fpar,
         original.values = orig,
-        fitted.values = rep(1, N)
+        fitted.values = fit
       ),
       class = c("eulerr_venn", "venn", "euler", "list")
     ))

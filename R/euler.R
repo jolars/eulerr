@@ -228,5 +228,5 @@ euler.table <- function(combinations, ...) {
 #' euler(plants[c("erigenia", "solanum", "cynodon")])
 euler.list <- function(combinations, ...) {
   out <- parse_list(combinations)
-  euler(out, input = "union", ...)
+  euler(out, input = "disjoint", ...)
 }

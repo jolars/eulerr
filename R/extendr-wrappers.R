@@ -1,15 +1,7 @@
-#' Bit-index matrix: (2^n - 1) × n integer matrix where row i's column j
+#' Fit an Euler diagram using the eunoia Rust library.
 
 # nolint start
 
-#' indicates whether set j is included in subset i. Rows are in legacy
-#' cardinality-first order (see `legacy_subset_masks`) so that downstream
-#' positional code (`fills.grob.<i>`, plotter region indexing) keeps
-#' matching the legacy Rcpp/C++ behavior.
-#' @keywords internal
-bit_index_rust <- function(n) .Call(wrap__bit_index_rust, n)
-
-#' Fit an Euler diagram using the eunoia Rust library.
 #' @keywords internal
 fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, loss_aggregator, extraopt_threshold, tolerance, seed) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, loss_aggregator, extraopt_threshold, tolerance, seed)
 
@@ -18,9 +10,9 @@ fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, los
 #'
 #' Inputs are the fitted shape parameters for the **non-empty** sets only,
 #' in the order eulerr stores them (`x$ellipses` rows after dropping rows
-#' with NA). The output is positional over `2^n - 1` rows in eulerr's
-#' `bit_indexr(n)` order, with `NULL` entries for regions the fitted
-#' geometry doesn't populate.
+#' with NA). The output is a sparse, parallel set of vectors keyed by
+#' region label (set names joined by `&` in input order). Lengths equal the
+#' number of populated regions returned by `decompose_regions`.
 #'
 #' @keywords internal
 euler_plot_data <- function(set_names, h, k, a, b, phi, n_vertices, label_precision) .Call(wrap__euler_plot_data, set_names, h, k, a, b, phi, n_vertices, label_precision)

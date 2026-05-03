@@ -271,8 +271,7 @@ setup_grobs <- function(
   ylim <- x$ylim
 
   n_e <- NROW(x$ellipses)
-  n_id <- 2L^n_e - 1L
-  id <- bit_indexr(n_e)
+  n_id <- length(x$fitted.values)
 
   #edges
   if (do_edges) {

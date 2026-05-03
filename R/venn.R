@@ -66,17 +66,11 @@ venn.default <- function(
       stop("'names' must be as long as 'combinations'.")
     }
 
-    n <- combinations
-    setnames <- names
-    id <- bit_indexr(n)
-
-    combo_names <- unlist(lapply(
-      apply(id, 1, function(x) names[x]),
-      paste,
-      collapse = "&"
-    ))
-    combinations <- rep.int(1, nrow(id))
-    names(combinations) <- combo_names
+    combo_names <- all_set_combinations(names)
+    combinations <- stats::setNames(
+      rep.int(1, length(combo_names)),
+      combo_names
+    )
   } else {
     n_combinations <- length(unique(unlist(strsplit(names(combinations), "&"))))
 
@@ -171,5 +165,5 @@ venn.matrix <- function(combinations, ...) {
 #' # A venn diagram from a list of sample spaces (the list method)
 #' venn(plants[c("erigenia", "solanum", "cynodon")])
 venn.list <- function(combinations, ...) {
-  venn(parse_list(combinations), input = "union", ...)
+  venn(parse_list(combinations), input = "disjoint", ...)
 }

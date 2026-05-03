@@ -4,17 +4,24 @@
 \alias{fitted.euler}
 \title{Fitted values of euler object}
 \usage{
-\method{fitted}{euler}(object, ...)
+\method{fitted}{euler}(object, dense = FALSE, ...)
 }
 \arguments{
 \item{object}{object of class \code{'euler'}}
 
+\item{dense}{if \code{TRUE}, return a vector covering every combination of the
+non-empty sets (\code{2^n - 1} entries), filling absent combinations with 0.
+The default (\code{FALSE}) returns the sparse vector stored on the object,
+which only contains entries that were either requested as input or fit
+to a non-zero area. Use \code{dense = TRUE} only for diagrams with few sets
+--- the full enumeration is exponential in the number of non-empty sets.}
+
 \item{...}{ignored}
 }
 \value{
-fitted values
+A named numeric vector of fitted areas keyed by combination label
+(set names joined by \code{&}).
 }
 \description{
 Fitted values of euler object
 }
-\keyword{internal}

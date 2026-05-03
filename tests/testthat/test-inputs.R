@@ -106,3 +106,33 @@ test_that("list method works appropriately", {
 test_that("table method works appropriately", {
   expect_silent(euler(as.table(apply(Titanic, 2:4, sum))))
 })
+
+test_that("sparse inputs with many sets do not blow up", {
+  # 12 sets with only a few input overlaps. Pre-refactor this allocated a
+  # 4095-row id matrix and 4095-length result vectors per call.
+  sets <- paste0("S", 1:12)
+  input <- c(
+    stats::setNames(rep(10, 12), sets),
+    c("S1&S2" = 3, "S2&S3" = 2, "S1&S2&S3" = 1)
+  )
+  f <- euler(input)
+  expect_lt(length(f$fitted.values), 50L)
+  expect_lt(length(f$original.values), 50L)
+  expect_true(all(c("S1", "S1&S2", "S1&S2&S3") %in% names(f$fitted.values)))
+  expect_silent(plot(f))
+})
+
+test_that("fitted(dense = TRUE) expands to all 2^n - 1 combinations", {
+  f <- euler(c(A = 1, B = 1, "A&B" = 0.5))
+  sparse <- fitted(f)
+  dense <- fitted(f, dense = TRUE)
+  expect_setequal(names(dense), c("A", "B", "A&B"))
+  expect_identical(dense[names(sparse)], sparse)
+
+  # With absent combinations, dense fills 0.
+  f2 <- euler(c(A = 1, B = 1, C = 1, "A&B" = 0.5))
+  dense2 <- fitted(f2, dense = TRUE)
+  expect_length(dense2, 2L^3L - 1L)
+  expect_true(all(c("A&C", "B&C", "A&B&C") %in% names(dense2)))
+  expect_equal(dense2[["A&C"]], 0)
+})

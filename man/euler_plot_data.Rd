@@ -10,8 +10,8 @@ euler_plot_data(set_names, h, k, a, b, phi, n_vertices, label_precision)
 \description{
 Inputs are the fitted shape parameters for the \strong{non-empty} sets only,
 in the order eulerr stores them (\code{x$ellipses} rows after dropping rows
-with NA). The output is positional over \code{2^n - 1} rows in eulerr's
-\code{bit_indexr(n)} order, with \code{NULL} entries for regions the fitted
-geometry doesn't populate.
+with NA). The output is a sparse, parallel set of vectors keyed by
+region label (set names joined by \code{&} in input order). Lengths equal the
+number of populated regions returned by \code{decompose_regions}.
 }
 \keyword{internal}

@@ -1,13 +1,12 @@
 #' Compute geometries and label locations
 #'
+#' @param x an object of class 'euler'
 #' @param fills fills
 #' @param edges edges
 #' @param labels labels
 #' @param quantities quantities
-#' @param n number of sets
-#' @param id identity matrix
+#' @param n number of vertices to use to render each ellipse
 #' @param merged_sets which sets have been merged?
-#' @param x an object of class 'euler'
 #'
 #' @return a list object with slots for the various objects
 #' @keywords internal
@@ -18,18 +17,28 @@ setup_geometry <- function(
   labels,
   quantities,
   n,
-  id,
   merged_sets
 ) {
   dd <- x$ellipses
   empty_sets <- is.na(dd[, 1L]) & !merged_sets
-  empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
+  setnames_full <- rownames(dd)
+  empty_set_names <- setnames_full[empty_sets]
+
+  combo_labels_full <- names(x$fitted.values)
+  combo_sets_full <- strsplit(combo_labels_full, "&", fixed = TRUE)
+  empty_subsets <- vapply(
+    combo_sets_full,
+    function(s) any(s %in% empty_set_names),
+    logical(1)
+  )
 
   orig <- x$original.values[!empty_subsets]
   fitted <- x$fitted.values[!empty_subsets]
+  combo_labels <- combo_labels_full[!empty_subsets]
+  combo_sets <- combo_sets_full[!empty_subsets]
+
   dd <- dd[!empty_sets, , drop = FALSE]
 
-  # avoid plotting very small intersections
   nonzero <- nonzero_fit(fitted)
   nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
 
@@ -38,8 +47,6 @@ setup_geometry <- function(
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
 
-  id <- id[!empty_subsets, !empty_sets, drop = FALSE]
-
   h <- dd$h
   k <- dd$k
   a <- dd$a
@@ -47,7 +54,7 @@ setup_geometry <- function(
   phi <- dd$phi
 
   n_e <- NROW(dd)
-  n_id <- 2L^n_e - 1L
+  n_id <- length(combo_labels)
 
   limits <- get_bounding_box(h, k, a, b, phi)
 
@@ -66,9 +73,21 @@ setup_geometry <- function(
       label_precision = max(width, height) / 100
     )
     set_polygons <- plot_data$set_polygons
-    region_polygons <- plot_data$region_polygons
-    region_centers_x <- plot_data$region_centers_x
-    region_centers_y <- plot_data$region_centers_y
+    region_labels_geom <- plot_data$region_labels
+    region_polygons_geom <- plot_data$region_polygons
+    region_centers_x_geom <- plot_data$region_centers_x
+    region_centers_y_geom <- plot_data$region_centers_y
+
+    align_idx <- match(combo_labels, region_labels_geom)
+    region_polygons <- vector("list", n_id)
+    region_centers_x <- rep(NA_real_, n_id)
+    region_centers_y <- rep(NA_real_, n_id)
+    has_geom <- !is.na(align_idx)
+    if (any(has_geom)) {
+      region_polygons[has_geom] <- region_polygons_geom[align_idx[has_geom]]
+      region_centers_x[has_geom] <- region_centers_x_geom[align_idx[has_geom]]
+      region_centers_y[has_geom] <- region_centers_y_geom[align_idx[has_geom]]
+    }
   } else {
     set_polygons <- list()
     region_polygons <- list()
@@ -105,7 +124,6 @@ setup_geometry <- function(
   }
 
   if (do_labels || do_quantities) {
-    n_singles <- sum(rowSums(id) == 1)
     empty <- !nonzero_fit(fitted)
 
     centers_x <- region_centers_x
@@ -122,7 +140,7 @@ setup_geometry <- function(
       quantities = NA,
       labels_par_id = NA_integer_,
       quantities_par_id = NA_integer_,
-      row.names = names(orig),
+      row.names = combo_labels,
       stringsAsFactors = FALSE
     )
 
@@ -134,16 +152,19 @@ setup_geometry <- function(
 
     singles <- logical(NROW(centers))
 
-    for (i in seq_len(n_singles)) {
-      ind <- which((id[, i] & !empty & has_center))[1]
+    setnames <- rownames(dd)
+    for (i in seq_len(n_e)) {
+      set_i <- setnames[i]
+      in_set <- vapply(combo_sets, function(s) set_i %in% s, logical(1))
+      ind <- which(in_set & !empty & has_center)[1]
 
-      if (do_labels) {
-        centers$labels[ind] <- labels$labels[i]
-
-        centers$labels_par_id[ind] <- i
+      if (!is.na(ind)) {
+        if (do_labels) {
+          centers$labels[ind] <- labels$labels[i]
+          centers$labels_par_id[ind] <- i
+        }
+        singles[ind] <- TRUE
       }
-
-      singles[ind] <- TRUE
     }
 
     others <- has_center & !singles & !empty

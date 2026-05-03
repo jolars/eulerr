@@ -64,47 +64,55 @@ fn non_empty_set_names(spec: &DiagramSpec) -> Vec<String> {
         .collect()
 }
 
-/// Enumerate all 2^n - 1 non-empty subset bitmasks in legacy cardinality-first
-/// order (sorted by `(popcount, mask)`).
-///
-/// Matches the legacy C++ `bit_index` enumeration in `eulerr/src/helpers.cpp`,
-/// which looped over cardinality `i = 1..=n` and permuted a vector with `i`
-/// true bits via `std::prev_permutation`. For n = 3 this produces:
-/// `[0b001, 0b010, 0b100, 0b011, 0b101, 0b110, 0b111]`
-/// (i.e. A, B, C, A&B, A&C, B&C, A&B&C).
-///
-/// eulerr's plotting/fill code is positional — `fills.grob.<i>` is indexed by
-/// `bit_indexr(n)` rows — so the row order is part of the public contract.
-fn legacy_subset_masks(n: usize) -> Vec<usize> {
-    if n == 0 {
-        return Vec::new();
-    }
-    let total = (1usize << n) - 1;
-    let mut masks: Vec<usize> = (1..=total).collect();
-    masks.sort_by_key(|&m| (m.count_ones(), m));
-    masks
+/// Build a label for a Combination using set names ordered by their first
+/// appearance in `input_order`. Returns None if any set in the combination is
+/// missing from `input_order`.
+fn combo_label(combo: &Combination, input_order: &[String]) -> Option<String> {
+    let mut indices: Vec<usize> = combo
+        .sets()
+        .iter()
+        .map(|s| input_order.iter().position(|n| n == s))
+        .collect::<Option<Vec<_>>>()?;
+    indices.sort_unstable();
+    Some(
+        indices
+            .into_iter()
+            .map(|i| input_order[i].as_str())
+            .collect::<Vec<_>>()
+            .join("&"),
+    )
 }
 
-/// Enumerate all 2^n - 1 non-empty subsets of `all_set_names` in legacy
-/// cardinality-first order. Returns (combo_labels, combination_keys) —
-/// labels use input order of set names; keys use alphabetically-sorted
-/// names (Combination::new sorts internally).
-fn enumerate_combinations(all_set_names: &[String]) -> (Vec<String>, Vec<Combination>) {
-    let n = all_set_names.len();
-    let masks = legacy_subset_masks(n);
-    let mut labels = Vec::with_capacity(masks.len());
-    let mut keys = Vec::with_capacity(masks.len());
-
-    for &mask in &masks {
-        let subset: Vec<&str> = (0..n)
-            .filter(|&i| (mask >> i) & 1 == 1)
-            .map(|i| all_set_names[i].as_str())
-            .collect();
-        labels.push(subset.join("&"));
-        keys.push(Combination::new(&subset));
+/// Build a stable, deterministic ordering of the union of `requested` and
+/// `fitted` keys: by cardinality (ascending), then by input-order indices
+/// (lexicographic).
+fn ordered_combo_keys<'a>(
+    requested: &'a HashMap<Combination, f64>,
+    fitted: &'a HashMap<Combination, f64>,
+    input_order: &[String],
+) -> Vec<&'a Combination> {
+    let mut seen: HashSet<&Combination> = HashSet::new();
+    let mut keys: Vec<&Combination> = Vec::new();
+    for k in requested.keys() {
+        if seen.insert(k) {
+            keys.push(k);
+        }
     }
-
-    (labels, keys)
+    for k in fitted.keys() {
+        if seen.insert(k) {
+            keys.push(k);
+        }
+    }
+    keys.sort_by_key(|c| {
+        let mut indices: Vec<usize> = c
+            .sets()
+            .iter()
+            .map(|s| input_order.iter().position(|n| n == s).unwrap_or(usize::MAX))
+            .collect();
+        indices.sort_unstable();
+        (indices.len(), indices)
+    });
+    keys
 }
 
 /// Build the R list result from fitted shape params + metric HashMaps.
@@ -124,15 +132,19 @@ fn build_result_list(
     diag_error: f64,
     stress: f64,
 ) -> List {
-    let (combo_labels, combo_keys) = enumerate_combinations(all_set_names);
+    let combo_keys = ordered_combo_keys(requested, fitted, all_set_names);
     let n_combos = combo_keys.len();
 
+    let mut combo_labels = Vec::with_capacity(n_combos);
     let mut orig_vec = Vec::with_capacity(n_combos);
     let mut fit_vec = Vec::with_capacity(n_combos);
     let mut resid_vec = Vec::with_capacity(n_combos);
     let mut region_err_vec = Vec::with_capacity(n_combos);
 
     for combo in &combo_keys {
+        let label = combo_label(combo, all_set_names)
+            .unwrap_or_else(|| combo.sets().join("&"));
+        combo_labels.push(label);
         orig_vec.push(requested.get(combo).copied().unwrap_or(0.0));
         fit_vec.push(fitted.get(combo).copied().unwrap_or(0.0));
         resid_vec.push(residuals.get(combo).copied().unwrap_or(0.0));
@@ -157,32 +169,19 @@ fn build_result_list(
     )
 }
 
-/// Build result for edge cases (0 or 1 non-empty sets). Uses spec's exclusive
-/// areas for `original_values`; fitted/residuals/region_error are all zero.
+/// Build result for edge cases (0 or 1 non-empty sets). Sparse: only the
+/// combinations present in the spec's exclusive areas are returned.
 fn build_edge_case_list(
     all_set_names: &[String],
     spec: &DiagramSpec,
     non_empty: &[String],
 ) -> List {
-    let (combo_labels, combo_keys) = enumerate_combinations(all_set_names);
-    let n_combos = combo_keys.len();
+    // Treat the spec's exclusive areas as the "requested" map and produce an
+    // empty fitted map for the 0-set case (or fitted == requested for the
+    // single-set case below).
+    let requested: HashMap<Combination, f64> = spec.exclusive_areas().clone();
 
-    let mut orig_vec = Vec::with_capacity(n_combos);
-    for combo in &combo_keys {
-        orig_vec.push(
-            spec.exclusive_areas()
-                .get(combo)
-                .copied()
-                .unwrap_or(0.0),
-        );
-    }
-
-    let fit_vec = vec![0.0f64; n_combos];
-    let resid_vec = vec![0.0f64; n_combos];
-    let region_err_vec = vec![0.0f64; n_combos];
-
-    let (h, k, a, b, phi, fitted_set_names) = if non_empty.len() == 1 {
-        // Single set: circle at origin with radius sqrt(area/π)
+    let (h, k, a, b, phi, fitted_set_names, fitted_map) = if non_empty.len() == 1 {
         let name = &non_empty[0];
         let combo = Combination::new(&[name.as_str()]);
         let area = spec
@@ -191,6 +190,7 @@ fn build_edge_case_list(
             .copied()
             .unwrap_or(0.0);
         let r = (area / std::f64::consts::PI).sqrt();
+        // Fitted equals requested for the single-set perfect-fit case.
         (
             vec![0.0],
             vec![0.0],
@@ -198,34 +198,35 @@ fn build_edge_case_list(
             vec![r],
             vec![0.0],
             vec![name.clone()],
+            requested.clone(),
         )
     } else {
-        // All empty: no fitted shapes
-        (vec![], vec![], vec![], vec![], vec![], vec![])
+        (
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+            vec![],
+            HashMap::new(),
+        )
     };
 
-    // For single-set case, fitted == requested (perfect fit)
-    let fit_vec = if non_empty.len() == 1 {
-        orig_vec.clone()
-    } else {
-        fit_vec
-    };
-
-    list!(
-        all_set_names = all_set_names.to_vec(),
-        fitted_set_names = fitted_set_names,
-        h = h,
-        k = k,
-        a = a,
-        b = b,
-        phi = phi,
-        combo_labels = combo_labels,
-        original_values = orig_vec,
-        fitted_values = fit_vec,
-        residuals = resid_vec,
-        region_error = region_err_vec,
-        diag_error = 0.0,
-        stress = 0.0,
+    let zero_map: HashMap<Combination, f64> = HashMap::new();
+    build_result_list(
+        all_set_names,
+        fitted_set_names,
+        h,
+        k,
+        a,
+        b,
+        phi,
+        &requested,
+        &fitted_map,
+        &zero_map,
+        &zero_map,
+        0.0,
+        0.0,
     )
 }
 
@@ -237,34 +238,6 @@ fn shape_to_euler_params<S: DiagramShape>(shape: &S, is_circle: bool) -> [f64; 5
     } else {
         [p[0], p[1], p[2], p[3], p[4]]
     }
-}
-
-/// Bit-index matrix: (2^n - 1) × n integer matrix where row i's column j
-/// indicates whether set j is included in subset i. Rows are in legacy
-/// cardinality-first order (see `legacy_subset_masks`) so that downstream
-/// positional code (`fills.grob.<i>`, plotter region indexing) keeps
-/// matching the legacy Rcpp/C++ behavior.
-/// @keywords internal
-#[extendr]
-fn bit_index_rust(n: i32) -> Robj {
-    let n = n as usize;
-    if n == 0 {
-        let empty: Vec<i32> = vec![];
-        let mut robj: Robj = empty.into_robj();
-        robj.set_attrib("dim", [0i32, 0i32]).unwrap();
-        return robj;
-    }
-
-    let masks = legacy_subset_masks(n);
-    let nrows = masks.len();
-    // Column-major (R matrix convention).
-    let data: Vec<i32> = (0..n)
-        .flat_map(|col| masks.iter().map(move |&mask| ((mask >> col) & 1) as i32))
-        .collect();
-
-    let mut robj: Robj = data.into_robj();
-    robj.set_attrib("dim", [nrows as i32, n as i32]).unwrap();
-    robj
 }
 
 /// Fit an Euler diagram using the eunoia Rust library.
@@ -288,12 +261,10 @@ fn fit_euler_diagram(
     let all_set_names = extract_set_names(&combo_names);
     let n = all_set_names.len();
 
-    // Edge case: no sets at all
     if n == 0 {
-        // Build an empty spec-equivalent result
-        let combo_labels: Vec<String> = vec![];
         let empty_vec: Vec<f64> = vec![];
         let empty_names: Vec<String> = vec![];
+        let combo_labels: Vec<String> = vec![];
         return Ok(list!(
             all_set_names = empty_names.clone(),
             fitted_set_names = empty_names,
@@ -329,7 +300,6 @@ fn fit_euler_diagram(
 
     let seed_u64 = seed as u32 as u64;
 
-    // Build DiagramSpec
     let mut builder = DiagramSpecBuilder::new();
     for (name, &value) in combo_names.iter().zip(combo_values.iter()) {
         let sets: Vec<&str> = name.split('&').filter(|s| !s.is_empty()).collect();
@@ -347,14 +317,12 @@ fn fit_euler_diagram(
         .build()
         .unwrap_or_else(|e| throw_r_error(&format!("eunoia spec error: {}", e)));
 
-    // Determine non-empty sets and handle edge cases
     let non_empty = non_empty_set_names(&spec);
 
     if non_empty.len() <= 1 {
         return Ok(build_edge_case_list(&all_set_names, &spec, &non_empty));
     }
 
-    // Main fitting path: >= 2 non-empty sets
     match shape {
         "circle" => {
             let mut fitter = Fitter::<Circle>::new(&spec)
@@ -470,19 +438,6 @@ fn fit_euler_diagram(
     }
 }
 
-/// Compute the input-order bitmask of a region's set membership over
-/// `set_names`. Each region is keyed by a `Combination` whose set names are
-/// alphabetically sorted; we recover eulerr's positional row index by ORing
-/// `1 << j` for each set's input-order index `j`.
-fn region_mask_in_input_order(combo: &Combination, set_names: &[String]) -> Option<usize> {
-    let mut mask = 0usize;
-    for s in combo.sets() {
-        let j = set_names.iter().position(|n| n == s)?;
-        mask |= 1usize << j;
-    }
-    Some(mask)
-}
-
 /// Flatten a list of polygons into eulerr's `(x, y, id_lengths)` triple.
 /// Empty polygons are skipped; coordinate vectors are concatenated in order.
 fn polygons_to_xy_list(polygons: &[Polygon]) -> List {
@@ -522,9 +477,9 @@ fn build_dummy_spec(set_names: &[String]) -> std::result::Result<DiagramSpec, Er
 ///
 /// Inputs are the fitted shape parameters for the **non-empty** sets only,
 /// in the order eulerr stores them (`x$ellipses` rows after dropping rows
-/// with NA). The output is positional over `2^n - 1` rows in eulerr's
-/// `bit_indexr(n)` order, with `NULL` entries for regions the fitted
-/// geometry doesn't populate.
+/// with NA). The output is a sparse, parallel set of vectors keyed by
+/// region label (set names joined by `&` in input order). Lengths equal the
+/// number of populated regions returned by `decompose_regions`.
 ///
 /// @keywords internal
 #[extendr]
@@ -543,6 +498,7 @@ fn euler_plot_data(
     if n == 0 {
         return Ok(list!(
             set_polygons = List::new(0),
+            region_labels = Vec::<String>::new(),
             region_polygons = List::new(0),
             region_centers_x = Vec::<f64>::new(),
             region_centers_y = Vec::<f64>::new(),
@@ -587,35 +543,32 @@ fn euler_plot_data(
     let regions = decompose_regions(&ellipses, &set_names, &spec, n_vertices);
     let anchors = regions.label_points(label_precision);
 
-    let masks = legacy_subset_masks(n);
-    let n_id = masks.len();
-
-    // Map mask -> row index in legacy positional order.
-    let mut mask_to_row: HashMap<usize, usize> = HashMap::with_capacity(n_id);
-    for (row, &m) in masks.iter().enumerate() {
-        mask_to_row.insert(m, row);
-    }
-
-    let mut region_polygons: Vec<Robj> = (0..n_id).map(|_| Robj::from(())).collect();
-    let mut centers_x: Vec<f64> = vec![f64::na(); n_id];
-    let mut centers_y: Vec<f64> = vec![f64::na(); n_id];
+    // Walk regions once; collect parallel sparse vectors. Skip regions whose
+    // combination references a set not in `set_names` (shouldn't happen, but
+    // defensive).
+    let mut region_labels: Vec<String> = Vec::new();
+    let mut region_polygons: Vec<Robj> = Vec::new();
+    let mut centers_x: Vec<f64> = Vec::new();
+    let mut centers_y: Vec<f64> = Vec::new();
 
     for (combo, polys) in regions.iter() {
-        let Some(mask) = region_mask_in_input_order(combo, &set_names) else {
+        let Some(label) = combo_label(combo, &set_names) else {
             continue;
         };
-        let Some(&row) = mask_to_row.get(&mask) else {
-            continue;
-        };
-        region_polygons[row] = polygons_to_xy_list(polys).into();
+        region_labels.push(label);
+        region_polygons.push(polygons_to_xy_list(polys).into());
         if let Some(point) = anchors.get(combo) {
-            centers_x[row] = point.x();
-            centers_y[row] = point.y();
+            centers_x.push(point.x());
+            centers_y.push(point.y());
+        } else {
+            centers_x.push(f64::na());
+            centers_y.push(f64::na());
         }
     }
 
     Ok(list!(
         set_polygons = List::from_values(set_polygons),
+        region_labels = region_labels,
         region_polygons = List::from_values(region_polygons),
         region_centers_x = centers_x,
         region_centers_y = centers_y,
@@ -669,7 +622,6 @@ fn polygon_clip_rust(
         )
     };
 
-    // Split the subject into individual polygons by id_lengths.
     let mut result_polys: Vec<Polygon> = Vec::new();
     let mut cursor = 0usize;
     for &len in &subject_id_lengths {
@@ -689,45 +641,7 @@ fn polygon_clip_rust(
 // Macro to generate exports.
 extendr_module! {
     mod eulerr;
-    fn bit_index_rust;
     fn fit_euler_diagram;
     fn euler_plot_data;
     fn polygon_clip_rust;
-}
-
-#[cfg(test)]
-mod tests {
-    use super::legacy_subset_masks;
-
-    #[test]
-    fn legacy_subset_masks_n3_matches_cardinality_first_order() {
-        // Locked-down contract: positional plotter code in eulerr (`fills.grob.<i>`)
-        // depends on this exact order matching the legacy C++ `bit_index`.
-        // Order: cardinality 1 (A, B, C), then 2 (A&B, A&C, B&C), then 3 (A&B&C).
-        assert_eq!(
-            legacy_subset_masks(3),
-            vec![0b001, 0b010, 0b100, 0b011, 0b101, 0b110, 0b111]
-        );
-    }
-
-    #[test]
-    fn legacy_subset_masks_n0_is_empty() {
-        assert_eq!(legacy_subset_masks(0), Vec::<usize>::new());
-    }
-
-    #[test]
-    fn legacy_subset_masks_n1() {
-        assert_eq!(legacy_subset_masks(1), vec![0b1]);
-    }
-
-    #[test]
-    fn legacy_subset_masks_n4_first_and_last() {
-        let m = legacy_subset_masks(4);
-        // 4 singletons, then 6 pairs, then 4 triples, then 1 quadruple = 15
-        assert_eq!(m.len(), 15);
-        // First 4: singletons in increasing-bit order
-        assert_eq!(&m[..4], &[0b0001, 0b0010, 0b0100, 0b1000]);
-        // Last: full set
-        assert_eq!(*m.last().unwrap(), 0b1111);
-    }
 }

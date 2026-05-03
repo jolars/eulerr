@@ -184,21 +184,66 @@ plot.euler <- function(
   ellipses <- if (do_groups) x[[1L]]$ellipses else x$ellipses
 
   n_e <- NROW(ellipses)
-  n_id <- 2^n_e - 1
-  id <- bit_indexr(n_e)
 
   setnames <- rownames(ellipses)
-  colnames(id) <- setnames
-  rownames(id) <- apply(id, 1L, function(i) paste(setnames[i], collapse = "&"))
+  setnames_orig <- setnames
+
+  # Build a sparse combo_labels that places singletons (in input order) first,
+  # then multi-set combos in cardinality + lexicographic order. This is the
+  # working set of regions for the entire plot pipeline.
+  if (do_groups) {
+    all_labels <- unique(unlist(
+      lapply(x, function(xi) names(xi$fitted.values)),
+      use.names = FALSE
+    ))
+  } else {
+    all_labels <- names(x$fitted.values)
+  }
+  singletons_present <- intersect(setnames_orig, all_labels)
+  multi_labels <- setdiff(all_labels, singletons_present)
+  multi_card <- lengths(strsplit(multi_labels, "&", fixed = TRUE))
+  multi_labels <- multi_labels[order(multi_card, multi_labels)]
+  combo_labels <- c(singletons_present, multi_labels)
+  combo_sets <- strsplit(combo_labels, "&", fixed = TRUE)
+  n_id <- length(combo_labels)
+
+  # Sparse equivalent of the legacy bit_indexr `id` matrix: rows are populated
+  # combinations (in `combo_labels` order), columns are sets (in `setnames_orig`
+  # order). id[i, j] is TRUE iff combination i includes set j.
+  if (n_id > 0L && n_e > 0L) {
+    id <- t(vapply(
+      combo_sets,
+      function(s) setnames_orig %in% s,
+      logical(n_e)
+    ))
+    if (n_id == 1L) {
+      id <- matrix(id, nrow = 1L)
+    }
+    dimnames(id) <- list(combo_labels, setnames_orig)
+  } else {
+    id <- matrix(FALSE, nrow = n_id, ncol = n_e,
+      dimnames = list(combo_labels, setnames_orig)
+    )
+  }
+
+  align_fitted <- function(xi) {
+    out <- xi$fitted.values[combo_labels]
+    out[is.na(out)] <- 0
+    out
+  }
 
   if (do_groups) {
     res <- lapply(x, function(xi) is.na(xi$ellipses)[, 1L])
     empty_sets <- apply(do.call(rbind, res), 2, all)
 
-    empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
+    empty_subsets <- if (any(empty_sets)) {
+      rowSums(id[, empty_sets, drop = FALSE]) > 0
+    } else {
+      logical(n_id)
+    }
 
     res <- lapply(x, function(xi) {
-      fitted <- xi$fitted.values[!empty_subsets]
+      fitted <- align_fitted(xi)[!empty_subsets]
       nonzero <- nonzero_fit(fitted)
       ifelse(is.na(nonzero), FALSE, nonzero)
     })
@@ -206,8 +251,12 @@ plot.euler <- function(
     nonzero <- apply(do.call(rbind, res), 2, any)
   } else {
     empty_sets <- is.na(x$ellipses[, 1L])
-    empty_subsets <- rowSums(id[, empty_sets, drop = FALSE]) > 0
-    fitted <- x$fitted.values[!empty_subsets]
+    empty_subsets <- if (any(empty_sets)) {
+      rowSums(id[, empty_sets, drop = FALSE]) > 0
+    } else {
+      logical(n_id)
+    }
+    fitted <- align_fitted(x)[!empty_subsets]
     nonzero <- nonzero_fit(fitted)
     nonzero <- ifelse(is.na(nonzero), FALSE, nonzero)
   }
@@ -217,9 +266,9 @@ plot.euler <- function(
   if (!do_groups && any(nonzero)) {
     n_overlaps <- integer(n_id)
     single_mass <- logical(n_e)
+    nz <- nonzero_fit(align_fitted(x))
 
     for (i in seq_len(n_e)) {
-      nz <- nonzero_fit(x$fitted.values)
       nzi <- nz & id[, i]
 
       if (sum(nzi) == 1) {
@@ -230,12 +279,16 @@ plot.euler <- function(
     }
 
     complete_overlaps <- n_overlaps > 1
+    co_idx <- which(complete_overlaps)
 
-    merge_sets <- id[complete_overlaps, ] & single_mass
-
-    if (any(merge_sets)) {
-      setnames[merge_sets] <- paste(setnames[merge_sets], collapse = ",")
-      merged_sets[which(merge_sets)[length(which(merge_sets))]] <- TRUE
+    if (length(co_idx) > 0L) {
+      for (idx in co_idx) {
+        merge_sets <- id[idx, ] & single_mass
+        if (any(merge_sets)) {
+          setnames[merge_sets] <- paste(setnames[merge_sets], collapse = ",")
+          merged_sets[which(merge_sets)[length(which(merge_sets))]] <- TRUE
+        }
+      }
     }
   }
 
@@ -292,13 +345,17 @@ plot.euler <- function(
           default_fill <- default_fill(n_e)
         }
         n_default <- length(default_fill)
-        if (n_default == n_e && n_default < n_id) {
-          default_map <- rep(NA_character_, n_id)
-          default_map[seq_len(n_e)] <- default_fill
-          for (ii in (n_e + 1L):n_id) {
-            default_map[ii] <- mix_colors(default_map[which(id[ii, ])])
+        if (n_default == n_e && n_default != n_id) {
+          per_set <- default_fill
+          default_fill <- character(n_id)
+          for (ii in seq_len(n_id)) {
+            set_idx <- which(id[ii, ])
+            if (length(set_idx) == 1L) {
+              default_fill[ii] <- per_set[set_idx]
+            } else if (length(set_idx) > 1L) {
+              default_fill[ii] <- mix_colors(per_set[set_idx])
+            }
           }
-          default_fill <- default_map
         } else if (n_default == 1L || n_default == n_id) {
           default_fill <- rep_len(default_fill, n_id)
         } else {
@@ -320,9 +377,16 @@ plot.euler <- function(
     }
 
     n_fills <- length(fills_out$fill)
-    if (n_fills == n_e && n_fills < n_id) {
-      for (i in (n_fills + 1L):n_id) {
-        fills_out$fill[i] <- mix_colors(fills_out$fill[which(id[i, ])])
+    if (n_fills == n_e && n_fills != n_id) {
+      per_set <- fills_out$fill
+      fills_out$fill <- character(n_id)
+      for (i in seq_len(n_id)) {
+        set_idx <- which(id[i, ])
+        if (length(set_idx) == 1L) {
+          fills_out$fill[i] <- per_set[set_idx]
+        } else if (length(set_idx) > 1L) {
+          fills_out$fill[i] <- mix_colors(per_set[set_idx])
+        }
       }
     } else if (!(n_fills %in% c(1L, n_id))) {
       stop("`fills$fill` must have length 1, n_sets, or n_subsets.")
@@ -435,10 +499,15 @@ plot.euler <- function(
         } else {
           default_type <- opar$patterns$type
           n_default <- length(default_type)
-          if (n_default == n_e && n_default < n_id) {
-            default_map <- rep(NA_character_, n_id)
-            default_map[seq_len(n_e)] <- default_type
-            default_type <- default_map
+          if (n_default == n_e && n_default != n_id) {
+            per_set <- default_type
+            default_type <- rep(NA_character_, n_id)
+            for (ii in seq_len(n_id)) {
+              set_idx <- which(id[ii, ])
+              if (length(set_idx) == 1L) {
+                default_type[ii] <- per_set[set_idx]
+              }
+            }
           } else if (n_default == 1L || n_default == n_id) {
             default_type <- rep_len(default_type, n_id)
           } else {
@@ -941,7 +1010,6 @@ plot.euler <- function(
       labels = labels,
       quantities = quantities,
       n = n,
-      id = id,
       merged_sets = merged_sets
     )
   } else {
@@ -952,7 +1020,6 @@ plot.euler <- function(
       labels = labels,
       quantities = quantities,
       n = n,
-      id = id,
       merged_sets = merged_sets
     )
   }

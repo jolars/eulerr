@@ -10,16 +10,32 @@ tally_combinations <- function(sets, weights) {
   if (!is.matrix(sets)) {
     sets <- as.matrix(sets)
   }
+  setnames <- colnames(sets)
 
-  id <- bit_indexr(NCOL(sets))
-  tally <- double(NROW(id))
-
-  for (i in seq_len(NROW(id))) {
-    tally[i] <-
-      sum(as.numeric(colSums(t(sets) == id[i, ]) == NCOL(sets)) * weights)
-    names(tally)[i] <- paste0(colnames(sets)[id[i, ]], collapse = "&")
+  if (NROW(sets) == 0L || NCOL(sets) == 0L) {
+    return(numeric(0))
   }
-  tally
+
+  m <- sets != 0
+  patterns <- apply(m, 1L, function(row) paste(setnames[row], collapse = "&"))
+  keep <- nzchar(patterns)
+
+  if (any(keep)) {
+    tap <- tapply(weights[keep], patterns[keep], sum)
+    counts <- as.numeric(tap)
+    names(counts) <- names(tap)
+  } else {
+    counts <- numeric(0)
+  }
+
+  singletons <- stats::setNames(numeric(length(setnames)), setnames)
+  shared <- intersect(setnames, names(counts))
+  if (length(shared) > 0L) {
+    singletons[shared] <- counts[shared]
+  }
+  multi <- counts[setdiff(names(counts), setnames)]
+
+  c(singletons, multi)
 }
 
 #' Rescale values to new range
@@ -102,18 +118,28 @@ is_real <- function(x, tol = .Machine$double.eps^0.5) {
   is.numeric(x) && !is_integer(x, tol = )
 }
 
-#' Binary indices
+#' Enumerate all 2^n - 1 combination labels for a set of names
 #'
-#' Wraps around bit_indexr().
+#' Generates labels in cardinality-first order: singletons first, then pairs,
+#' then triples, etc. Within each cardinality, set names appear in their
+#' original order. Used only by the Venn path (bounded at n = 5).
 #'
-#' @param n number of items to generate permutations from
+#' @param setnames a character vector of set names
 #'
-#' @return A matrix of logicals.
+#' @return A character vector of length 2^n - 1.
 #' @keywords internal
-bit_indexr <- function(n) {
-  m <- bit_index_rust(n)
-  mode(m) <- "logical"
-  m
+all_set_combinations <- function(setnames) {
+  n <- length(setnames)
+  if (n == 0L) {
+    return(character(0))
+  }
+  out <- character(0)
+  for (k in seq_len(n)) {
+    cmb <- utils::combn(setnames, k)
+    labs <- if (k == 1L) as.vector(cmb) else apply(cmb, 2L, paste, collapse = "&")
+    out <- c(out, labs)
+  }
+  out
 }
 
 #' Get the number of sets in he input
