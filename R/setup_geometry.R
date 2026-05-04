@@ -56,7 +56,11 @@ setup_geometry <- function(
   n_e <- NROW(dd)
   n_id <- length(combo_labels)
 
-  limits <- get_bounding_box(h, k, a, b, phi)
+  if (n_e > 0L) {
+    limits <- get_bounding_box(h, k, a, b, phi)
+  } else {
+    limits <- list(xlim = c(-1, 1), ylim = c(-1, 1))
+  }
 
   width <- abs(limits$xlim[1] - limits$xlim[2])
   height <- abs(limits$ylim[1] - limits$ylim[2])
@@ -136,10 +140,10 @@ setup_geometry <- function(
       x = centers_x,
       y = centers_y,
       id = centers_id,
-      labels = NA_character_,
-      quantities = NA,
-      labels_par_id = NA_integer_,
-      quantities_par_id = NA_integer_,
+      labels = rep(NA_character_, n_id),
+      quantities = rep(NA, n_id),
+      labels_par_id = rep(NA_integer_, n_id),
+      quantities_par_id = rep(NA_integer_, n_id),
       row.names = combo_labels,
       stringsAsFactors = FALSE
     )

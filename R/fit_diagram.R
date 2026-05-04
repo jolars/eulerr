@@ -121,18 +121,17 @@ fit_diagram <- function(
     seed = seed
   )
 
-  # Assemble ellipses data frame. Initial values:
-  #   - 0 if no sets were fitted at all (all-zero input) — matches legacy behavior
-  #   - NA otherwise; non-empty rows are filled in below
+  # Empty sets stay NA so downstream code (setup_geometry, plotting) detects
+  # them via `is.na(ellipses$h)` and skips polygonization — eunoia rejects
+  # zero-radius ellipses, so we must not feed those through.
   n_all <- length(result$all_set_names)
-  init <- if (length(result$fitted_set_names) == 0L) 0 else NA_real_
 
   fpar <- data.frame(
-    h = rep(init, n_all),
-    k = rep(init, n_all),
-    a = rep(init, n_all),
-    b = rep(init, n_all),
-    phi = rep(init, n_all),
+    h = rep(NA_real_, n_all),
+    k = rep(NA_real_, n_all),
+    a = rep(NA_real_, n_all),
+    b = rep(NA_real_, n_all),
+    phi = rep(NA_real_, n_all),
     row.names = result$all_set_names,
     stringsAsFactors = TRUE
   )

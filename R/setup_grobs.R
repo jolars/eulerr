@@ -366,6 +366,7 @@ setup_grobs <- function(
             data_fills[[i]]$x,
             data_fills[[i]]$y,
             id.lengths = data_fills[[i]]$id.lengths,
+            rule = "winding",
             default.units = "native",
             name = paste0("fills.grob.", i),
             gp = fills$gp[fill_idx]

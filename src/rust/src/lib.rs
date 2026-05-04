@@ -7,9 +7,9 @@ use eunoia::{
         traits::DiagramShape,
     },
     loss::LossType,
-    plotting::{decompose_regions, polygon_clip, ClipOperation},
+    plotting::{decompose_regions, polygon_clip, ClipOperation, RegionPiece},
     spec::DiagramSpec,
-    Combination, DiagramSpecBuilder, Fitter, InputType,
+    Combination, DiagramError, DiagramSpecBuilder, Fitter, InputType,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -458,6 +458,33 @@ fn polygons_to_xy_list(polygons: &[Polygon]) -> List {
     list!(x = x, y = y, id_lengths = id_lengths)
 }
 
+/// Flatten a region's pieces (each an outer ring + zero-or-more holes) into
+/// eulerr's `(x, y, id_lengths)` triple. Outer rings are CCW and holes are
+/// CW (eunoia normalises them), so `grid::pathGrob` with the default
+/// `rule = "winding"` (nonzero) renders outer-minus-holes correctly.
+fn region_pieces_to_xy_list(pieces: &[RegionPiece]) -> List {
+    let mut x: Vec<f64> = Vec::new();
+    let mut y: Vec<f64> = Vec::new();
+    let mut id_lengths: Vec<i32> = Vec::new();
+    let push_ring = |verts: &[Point], x: &mut Vec<f64>, y: &mut Vec<f64>, id_lengths: &mut Vec<i32>| {
+        if verts.is_empty() {
+            return;
+        }
+        for v in verts {
+            x.push(v.x());
+            y.push(v.y());
+        }
+        id_lengths.push(verts.len() as i32);
+    };
+    for piece in pieces {
+        push_ring(piece.outer.vertices(), &mut x, &mut y, &mut id_lengths);
+        for hole in &piece.holes {
+            push_ring(hole.vertices(), &mut x, &mut y, &mut id_lengths);
+        }
+    }
+    list!(x = x, y = y, id_lengths = id_lengths)
+}
+
 /// Build a minimal `DiagramSpec` from a list of set names. The plotting
 /// path's `decompose_regions` ignores the spec's areas and only consults the
 /// set names, so dummy values are fine.
@@ -512,9 +539,24 @@ fn euler_plot_data(
 
     let n_vertices = n_vertices.max(3) as usize;
 
+    // Validate at the FFI boundary: shape params come from R, so use
+    // `try_new` and surface eunoia's `InvalidShapeParameter` as a readable R
+    // error rather than panicking inside `new`.
     let ellipses: Vec<Ellipse> = (0..n)
-        .map(|i| Ellipse::new(Point::new(h[i], k[i]), a[i], b[i], phi[i]))
-        .collect();
+        .map(|i| {
+            Ellipse::try_new(Point::new(h[i], k[i]), a[i], b[i], phi[i]).map_err(|e| match e {
+                DiagramError::InvalidShapeParameter {
+                    shape,
+                    param,
+                    value,
+                } => Error::from(format!(
+                    "invalid {} parameter `{}` for set `{}`: {}",
+                    shape, param, set_names[i], value
+                )),
+                other => Error::from(format!("eunoia ellipse error: {}", other)),
+            })
+        })
+        .collect::<extendr_api::Result<Vec<_>>>()?;
 
     // Per-set polygon outlines (input order). eunoia doesn't repeat the first
     // vertex; close the ring here so polylineGrob (used for edges) draws the
@@ -543,20 +585,21 @@ fn euler_plot_data(
     let regions = decompose_regions(&ellipses, &set_names, &spec, n_vertices);
     let anchors = regions.label_points(label_precision);
 
-    // Walk regions once; collect parallel sparse vectors. Skip regions whose
-    // combination references a set not in `set_names` (shouldn't happen, but
-    // defensive).
+    // Walk regions in canonical input order (singletons → pairs → triples,
+    // ties broken by input-order indices) so the output is deterministic
+    // without the R side having to sort. Skip regions whose combination
+    // references a set not in `set_names` (defensive; shouldn't happen).
     let mut region_labels: Vec<String> = Vec::new();
     let mut region_polygons: Vec<Robj> = Vec::new();
     let mut centers_x: Vec<f64> = Vec::new();
     let mut centers_y: Vec<f64> = Vec::new();
 
-    for (combo, polys) in regions.iter() {
+    for (combo, polys) in regions.iter_in_input_order(&set_names) {
         let Some(label) = combo_label(combo, &set_names) else {
             continue;
         };
         region_labels.push(label);
-        region_polygons.push(polygons_to_xy_list(polys).into());
+        region_polygons.push(region_pieces_to_xy_list(polys).into());
         if let Some(point) = anchors.get(combo) {
             centers_x.push(point.x());
             centers_y.push(point.y());
