@@ -483,3 +483,119 @@ test_that("rotate parameter works", {
   dev.off()
   unlink(tmp)
 })
+
+test_that("by_group applies per-panel overrides", {
+  tmp <- tempfile()
+  png(tmp)
+
+  fit <- euler(fruits[, 1:4], by = list(sex))
+
+  # Helper: extract the colors used by quantity textGrobs in panel `i`.
+  panel_quantity_cols <- function(g, i) {
+    panel <- g$children$canvas.grob$children[[i]]
+    tags <- panel$children$tags$children
+    out <- character(0)
+    for (tag in tags) {
+      q <- tag$children[[2]]
+      if (inherits(q, "text")) {
+        out <- c(out, q$gp$col)
+      }
+    }
+    unique(out)
+  }
+
+  # Per-panel overrides for `quantities`
+  g <- plot(
+    fit,
+    quantities = list(by_group = list(
+      male = list(col = "blue"),
+      female = list(col = "red")
+    ))
+  )
+  female_idx <- which(names(fit) == "female")
+  male_idx <- which(names(fit) == "male")
+  expect_equal(panel_quantity_cols(g, female_idx), "red")
+  expect_equal(panel_quantity_cols(g, male_idx), "blue")
+
+  # Top-level value applies to panels not listed in `by_group`
+  g <- plot(
+    fit,
+    quantities = list(
+      col = "gray",
+      by_group = list(male = list(col = "blue"))
+    )
+  )
+  expect_equal(panel_quantity_cols(g, female_idx), "gray")
+  expect_equal(panel_quantity_cols(g, male_idx), "blue")
+
+  # Multi-`by` uses dotted keys (factor levels joined by ".")
+  fit2 <- euler(fruits, by = list(sex, age))
+  g <- plot(
+    fit2,
+    quantities = list(
+      col = "darkgreen",
+      by_group = list("male.adult" = list(col = "navy"))
+    )
+  )
+  ma_idx <- which(names(fit2) == "male.adult")
+  fa_idx <- which(names(fit2) == "female.adult")
+  expect_equal(panel_quantity_cols(g, ma_idx), "navy")
+  expect_equal(panel_quantity_cols(g, fa_idx), "darkgreen")
+
+  # All five params accept `by_group` without error
+  expect_silent(plot(
+    fit,
+    fills = list(by_group = list(male = list(fill = "steelblue"))),
+    edges = list(by_group = list(male = list(lwd = 2))),
+    labels = list(by_group = list(male = list(col = "purple"))),
+    quantities = list(by_group = list(male = list(col = "purple"))),
+    patterns = list(
+      type = "stripes",
+      by_group = list(male = list(angle = 60))
+    )
+  ))
+
+  dev.off()
+  unlink(tmp)
+})
+
+test_that("by_group rejects invalid input", {
+  fit <- euler(fruits[, 1:4], by = list(sex))
+
+  # Unknown panel key
+  expect_error(
+    plot(fit, quantities = list(by_group = list(bogus = list(col = "red")))),
+    "unknown keys"
+  )
+
+  # Structural field
+  expect_error(
+    plot(
+      fit,
+      quantities = list(by_group = list(male = list(type = "percent")))
+    ),
+    "cannot be overridden per panel"
+  )
+
+  # by_group without `by =`
+  fit_plain <- euler(c(A = 1, B = 2, "A&B" = 1))
+  expect_error(
+    plot(
+      fit_plain,
+      quantities = list(by_group = list(any = list(col = "red")))
+    ),
+    "requires a diagram fit with `by ="
+  )
+
+  # Override is not a list
+  expect_error(
+    plot(fit, quantities = list(by_group = list(male = "red"))),
+    "must be a list"
+  )
+
+  # by_group itself unnamed
+  expect_error(
+    plot(fit, quantities = list(by_group = list(list(col = "red")))),
+    "fully named list"
+  )
+})

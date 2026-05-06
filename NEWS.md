@@ -1,5 +1,14 @@
 # eulerr (development version)
 
+## Features
+
+- `fills`, `patterns`, `edges`, `labels`, and `quantities` in `plot.euler()`
+  now accept a `by_group` entry for per-panel styling overrides on diagrams
+  fit with `by =`. Keys are panel names (the names of the fitted object,
+  e.g. `"male"` or `"male.adult"` for multi-`by`); panels not listed fall
+  through to the top-level setting,
+  closes [#125](https://github.com/jolars/eulerr/issues/125).
+
 ## Breaking changes
 
 - The named numeric vectors `original.values`, `fitted.values`, `residuals`,

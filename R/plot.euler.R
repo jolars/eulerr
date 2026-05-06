@@ -44,7 +44,15 @@
 #'
 #' If the diagram has been fit using the `data.frame` or `matrix` methods
 #' and using the `by` argument, the plot area will be split into panels for
-#' each combination of the one to two factors.
+#' each combination of the one to two factors. The `fills`, `patterns`, `edges`,
+#' `labels`, and `quantities` arguments each accept an optional `by_group`
+#' entry: a named list of override lists keyed by panel name (the names of the
+#' fitted object). For multi-`by` fits the panel name is the levels joined by
+#' `.`, e.g. `"Male.German"`. Panels not listed in `by_group` use the top-level
+#' settings unchanged. Only graphical fields (and `rot` for `labels` and
+#' `quantities`) may be overridden per panel; structural fields such as
+#' `quantities$type`, `quantities$format`, or named-by-subset `fills$fill` must
+#' be set at the top level.
 #'
 #' For users who are looking to plot their diagram using another package,
 #' all the necessary parameters can be collected if the result of this
@@ -141,6 +149,17 @@
 #'
 #' # Plots using 'by' argument
 #' plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
+#'
+#' # Per-panel styling with `by_group`
+#' plot(
+#'   venn(fruits[, 1:4], by = list(sex)),
+#'   quantities = list(
+#'     by_group = list(
+#'       male = list(col = "steelblue"),
+#'       female = list(col = "tomato")
+#'     )
+#'   )
+#' )
 plot.euler <- function(
   x,
   fills = TRUE,
@@ -165,7 +184,6 @@ plot.euler <- function(
   opar <- eulerr_options()
 
   groups <- attr(x, "groups")
-  fills_user <- fills
   dots <- list(...)
 
   do_custom_legend <- grid::is.grob(legend)
@@ -180,6 +198,96 @@ plot.euler <- function(
   do_strips <- !is_false(strips) && do_groups
   do_bg <- !is_false(bg) && !is.null(bg)
   do_main <- is.character(main) || is.expression(main) || is.list(main)
+
+  # Extract per-panel overrides (`by_group`) from each styling parameter so the
+  # existing normalization sees a clean list. These are re-applied later, once
+  # per panel, inside the setup_grobs loop.
+  panel_override_fields <- list(
+    fills = c("fill", "alpha"),
+    patterns = c("angle", "col", "lwd", "alpha"),
+    edges = c("col", "alpha", "lex", "lwd", "lty"),
+    labels = c(
+      "col", "alpha", "fontsize", "cex",
+      "fontfamily", "lineheight", "font", "rot"
+    ),
+    quantities = c(
+      "col", "alpha", "fontsize", "cex",
+      "fontfamily", "lineheight", "font", "rot"
+    )
+  )
+  pop_by_group <- function(param, name) {
+    if (!is.list(param) || is.null(param$by_group)) {
+      return(list(param = param, by_group = NULL))
+    }
+    by_group <- param$by_group
+    param$by_group <- NULL
+    if (!do_groups) {
+      stop(
+        "`", name, "$by_group` requires a diagram fit with `by =`."
+      )
+    }
+    if (!is.list(by_group) || length(by_group) == 0L) {
+      stop("`", name, "$by_group` must be a non-empty named list.")
+    }
+    keys <- names(by_group)
+    if (is.null(keys) || any(!nzchar(keys))) {
+      stop("`", name, "$by_group` must be a fully named list.")
+    }
+    valid_keys <- names(x)
+    unknown <- setdiff(keys, valid_keys)
+    if (length(unknown) > 0L) {
+      stop(
+        "`", name, "$by_group` has unknown keys: ",
+        paste(unknown, collapse = ", "),
+        ". Valid keys: ",
+        paste(valid_keys, collapse = ", "),
+        "."
+      )
+    }
+    allowed <- panel_override_fields[[name]]
+    for (key in keys) {
+      override <- by_group[[key]]
+      if (!is.list(override)) {
+        stop(
+          "`", name, "$by_group$", key, "` must be a list."
+        )
+      }
+      bad <- setdiff(names(override), allowed)
+      if (length(bad) > 0L) {
+        stop(
+          "`", name, "$by_group$", key,
+          "` contains fields that cannot be overridden per panel: ",
+          paste(bad, collapse = ", "),
+          ". Allowed fields: ",
+          paste(allowed, collapse = ", "),
+          "."
+        )
+      }
+    }
+    list(param = param, by_group = by_group)
+  }
+
+  fills_split <- pop_by_group(fills, "fills")
+  fills <- fills_split$param
+  fills_by_group <- fills_split$by_group
+
+  patterns_split <- pop_by_group(patterns, "patterns")
+  patterns <- patterns_split$param
+  patterns_by_group <- patterns_split$by_group
+
+  edges_split <- pop_by_group(edges, "edges")
+  edges <- edges_split$param
+  edges_by_group <- edges_split$by_group
+
+  labels_split <- pop_by_group(labels, "labels")
+  labels <- labels_split$param
+  labels_by_group <- labels_split$by_group
+
+  quantities_split <- pop_by_group(quantities, "quantities")
+  quantities <- quantities_split$param
+  quantities_by_group <- quantities_split$by_group
+
+  fills_user <- fills
 
   ellipses <- if (do_groups) x[[1L]]$ellipses else x$ellipses
 
@@ -1028,15 +1136,43 @@ plot.euler <- function(
 
   if (do_groups) {
     n_groups <- length(data)
+    group_keys <- names(x)
+    panel_override <- function(by_group, key) {
+      if (is.null(by_group)) {
+        return(NULL)
+      }
+      by_group[[key]]
+    }
     euler_grob_children <- grid::gList()
     for (i in seq_len(n_groups)) {
+      key_i <- group_keys[i]
+      fills_i <- apply_panel_overrides(
+        fills,
+        panel_override(fills_by_group, key_i)
+      )
+      patterns_i <- apply_panel_overrides(
+        patterns,
+        panel_override(patterns_by_group, key_i)
+      )
+      edges_i <- apply_panel_overrides(
+        edges,
+        panel_override(edges_by_group, key_i)
+      )
+      labels_i <- apply_panel_overrides(
+        labels,
+        panel_override(labels_by_group, key_i)
+      )
+      quantities_i <- apply_panel_overrides(
+        quantities,
+        panel_override(quantities_by_group, key_i)
+      )
       euler_grob_children[[i]] <- setup_grobs(
         data[[i]],
-        fills = fills,
-        patterns = patterns,
-        edges = edges,
-        labels = labels,
-        quantities = quantities,
+        fills = fills_i,
+        patterns = patterns_i,
+        edges = edges_i,
+        labels = labels_i,
+        quantities = quantities_i,
         number = i,
         merged_sets = merged_sets
       )

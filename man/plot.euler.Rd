@@ -168,7 +168,15 @@ be set globally using \code{\link[=eulerr_options]{eulerr_options()}}.
 
 If the diagram has been fit using the \code{data.frame} or \code{matrix} methods
 and using the \code{by} argument, the plot area will be split into panels for
-each combination of the one to two factors.
+each combination of the one to two factors. The \code{fills}, \code{patterns}, \code{edges},
+\code{labels}, and \code{quantities} arguments each accept an optional \code{by_group}
+entry: a named list of override lists keyed by panel name (the names of the
+fitted object). For multi-\code{by} fits the panel name is the levels joined by
+\code{.}, e.g. \code{"Male.German"}. Panels not listed in \code{by_group} use the top-level
+settings unchanged. Only graphical fields (and \code{rot} for \code{labels} and
+\code{quantities}) may be overridden per panel; structural fields such as
+\code{quantities$type}, \code{quantities$format}, or named-by-subset \code{fills$fill} must
+be set at the top level.
 
 For users who are looking to plot their diagram using another package,
 all the necessary parameters can be collected if the result of this
@@ -196,6 +204,17 @@ diagram_description <- plot(fit)
 
 # Plots using 'by' argument
 plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
+
+# Per-panel styling with `by_group`
+plot(
+  venn(fruits[, 1:4], by = list(sex)),
+  quantities = list(
+    by_group = list(
+      male = list(col = "steelblue"),
+      female = list(col = "tomato")
+    )
+  )
+)
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[=plot.eulergram]{plot.eulergram()}}, \code{\link[grid:gpar]{grid::gpar()}},

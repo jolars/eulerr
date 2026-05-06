@@ -187,6 +187,49 @@ setup_gpar <- function(default = list(), user = list(), n) {
   do.call(grid::gpar, lapply(gp, rep_len, n))
 }
 
+#' Overlay per-panel overrides onto a styling parameter
+#'
+#' Used to apply `by_group` overrides to `fills`, `patterns`, `edges`, `labels`,
+#' and `quantities` for a single panel produced by `euler(..., by = ...)`. The
+#' override list contains gpar-level fields (and optionally `rot`), which are
+#' overlaid onto `param$gp` (and `param$set_gp` for shape-mode patterns).
+#' Structural fields are not overlaid here — they must be filtered upstream.
+#'
+#' @param param a list with `$gp` (a `grid::gpar`) and optionally `$rot` and/or
+#'   `$set_gp`.
+#' @param override a flat named list of fields to overlay.
+#'
+#' @return The param list with overlaid fields.
+#' @keywords internal
+apply_panel_overrides <- function(param, override) {
+  if (is.null(param) || is.null(override) || length(override) == 0L) {
+    return(param)
+  }
+  overlay_gp <- function(gp) {
+    if (is.null(gp)) {
+      return(gp)
+    }
+    n <- if (length(gp) > 0L) max(lengths(gp), 1L) else 1L
+    for (nm in names(override)) {
+      if (nm == "rot") {
+        next
+      }
+      gp[[nm]] <- rep_len(override[[nm]], n)
+    }
+    gp
+  }
+  if (!is.null(param$gp)) {
+    param$gp <- overlay_gp(param$gp)
+  }
+  if (!is.null(param$set_gp)) {
+    param$set_gp <- overlay_gp(param$set_gp)
+  }
+  if (!is.null(override$rot) && !is.null(param$rot)) {
+    param$rot <- rep_len(override$rot, length(param$rot))
+  }
+  param
+}
+
 #' Dummy code a data.frame
 #'
 #' @param x a data.frame
