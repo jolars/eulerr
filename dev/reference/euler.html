@@ -128,6 +128,11 @@ the CMA-ES fallback kicks in. A value of 0 means it will kick in for
 <em>any</em> error; a value of 1 means it will never kick in. Default <code>0.001</code>.</p></li>
 <li><p><code>tolerance</code>: convergence tolerance passed to the underlying solver.
 Tighter values give more accurate fits at higher cost. Default <code>1e-8</code>.</p></li>
+<li><p><code>max_sets</code>: maximum number of sets the underlying engine will accept.
+Defaults to <code>NULL</code>, which uses the engine's built-in default of 32.
+Region masks are stored in a bitset, so values may be raised up to 63
+(the absolute hard cap). Going higher is rarely useful in practice
+since fully-overlapping diagrams have <code>2^n - 1</code> regions.</p></li>
 </ul></dd>
 
 
