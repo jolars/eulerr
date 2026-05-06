@@ -213,7 +213,15 @@ be set globally using
 
 If the diagram has been fit using the `data.frame` or `matrix` methods
 and using the `by` argument, the plot area will be split into panels for
-each combination of the one to two factors.
+each combination of the one to two factors. The `fills`, `patterns`,
+`edges`, `labels`, and `quantities` arguments each accept an optional
+`by_group` entry: a named list of override lists keyed by panel name
+(the names of the fitted object). For multi-`by` fits the panel name is
+the levels joined by `.`, e.g. `"Male.German"`. Panels not listed in
+`by_group` use the top-level settings unchanged. Only graphical fields
+(and `rot` for `labels` and `quantities`) may be overridden per panel;
+structural fields such as `quantities$type`, `quantities$format`, or
+named-by-subset `fills$fill` must be set at the top level.
 
 For users who are looking to plot their diagram using another package,
 all the necessary parameters can be collected if the result of this
@@ -257,4 +265,16 @@ diagram_description <- plot(fit)
 
 # Plots using 'by' argument
 plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
+
+
+# Per-panel styling with `by_group`
+plot(
+  venn(fruits[, 1:4], by = list(sex)),
+  quantities = list(
+    by_group = list(
+      male = list(col = "steelblue"),
+      female = list(col = "tomato")
+    )
+  )
+)
 ```

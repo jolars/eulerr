@@ -43,6 +43,11 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="eulerr-development-version">eulerr (development version)<a class="anchor" aria-label="anchor" href="#eulerr-development-version"></a></h2>
 <div class="section level3">
+<h3 id="features-development-version">Features<a class="anchor" aria-label="anchor" href="#features-development-version"></a></h3>
+<ul><li>
+<code>fills</code>, <code>patterns</code>, <code>edges</code>, <code>labels</code>, and <code>quantities</code> in <code><a href="../reference/plot.euler.html">plot.euler()</a></code> now accept a <code>by_group</code> entry for per-panel styling overrides on diagrams fit with <code>by =</code>. Keys are panel names (the names of the fitted object, e.g. <code>"male"</code> or <code>"male.adult"</code> for multi-<code>by</code>); panels not listed fall through to the top-level setting, closes <a href="https://github.com/jolars/eulerr/issues/125" class="external-link">#125</a>.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
 <ul><li>
 <p>The named numeric vectors <code>original.values</code>, <code>fitted.values</code>, <code>residuals</code>, and <code>regionError</code> returned by <code><a href="../reference/euler.html">euler()</a></code> are now <strong>sparse</strong>: they contain only entries for combinations that were either requested by the user or fitted to a non-zero area. Previously they always contained all <code>2^n - 1</code> entries (with zeros for absent combinations). Named lookup such as <code>result$fitted.values["A&amp;B"]</code> continues to work; positional iteration by <code>seq_len(2^n - 1)</code> no longer does. This unlocks support for diagrams with many sets but only a few populated overlaps — <code><a href="../reference/euler.html">euler()</a></code> now scales with the number of input combinations, not with <code>2^n</code>.</p>
