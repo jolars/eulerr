@@ -3,7 +3,7 @@
 # nolint start
 
 #' @keywords internal
-fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, loss_aggregator, extraopt_threshold, tolerance, seed) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, loss_aggregator, extraopt_threshold, tolerance, seed)
+fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, loss_aggregator, extraopt_threshold, tolerance, max_sets, seed) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, loss_aggregator, extraopt_threshold, tolerance, max_sets, seed)
 
 #' Compute polygon geometry and label anchors for plotting a fitted Euler
 #' diagram.
@@ -23,6 +23,17 @@ euler_plot_data <- function(set_names, h, k, a, b, phi, n_vertices, label_precis
 #'
 #' @keywords internal
 polygon_clip_rust <- function(subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op) .Call(wrap__polygon_clip_rust, subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op)
+
+#' Default number of sets that `eunoia` accepts before rejecting a spec.
+#' Used by the R-side input validator so the cap is not hardcoded.
+#' @keywords internal
+max_sets_default <- function() .Call(wrap__max_sets_default)
+
+#' Absolute upper bound on the number of sets that `eunoia` can represent
+#' in a single diagram. Used by the R-side input validator so the cap is
+#' not hardcoded.
+#' @keywords internal
+max_sets_hard_cap <- function() .Call(wrap__max_sets_hard_cap)
 
 
 # nolint end

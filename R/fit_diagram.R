@@ -89,7 +89,8 @@ fit_diagram <- function(
       extraopt = (n == 3) && (shape == "ellipse"),
       extraopt_threshold = 0.001,
       extraopt_control = list(),
-      tolerance = 1e-3
+      tolerance = 1e-3,
+      max_sets = NULL
     ),
     control
   )
@@ -106,6 +107,38 @@ fit_diagram <- function(
     as.numeric(control$tolerance)
   }
 
+  hard_cap <- max_sets_hard_cap()
+  max_sets <- control$max_sets
+  if (!is.null(max_sets)) {
+    if (
+      !is.numeric(max_sets) ||
+        length(max_sets) != 1L ||
+        !is.finite(max_sets) ||
+        max_sets < 1 ||
+        max_sets != as.integer(max_sets)
+    ) {
+      stop("`control$max_sets` must be a positive integer scalar")
+    }
+    max_sets <- as.integer(max_sets)
+    if (max_sets > hard_cap) {
+      stop(sprintf(
+        "`control$max_sets` (%d) exceeds the hard cap of %d",
+        max_sets,
+        hard_cap
+      ))
+    }
+  }
+
+  effective_cap <- if (is.null(max_sets)) max_sets_default() else max_sets
+  if (n > effective_cap) {
+    stop(sprintf(
+      "too many sets: %d requested, but maximum supported is %d (raise `control$max_sets` up to %d to override)",
+      n,
+      effective_cap,
+      hard_cap
+    ))
+  }
+
   # Derive integer seed from R's RNG so set.seed() works
   seed <- sample.int(.Machine$integer.max, 1L)
 
@@ -118,6 +151,7 @@ fit_diagram <- function(
     loss_aggregator = loss_aggregator,
     extraopt_threshold = extraopt_threshold,
     tolerance = tolerance,
+    max_sets = if (is.null(max_sets)) NULL else as.numeric(max_sets),
     seed = seed
   )
 

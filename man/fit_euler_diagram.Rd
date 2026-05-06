@@ -13,6 +13,7 @@ fit_euler_diagram(
   loss_aggregator,
   extraopt_threshold,
   tolerance,
+  max_sets,
   seed
 )
 }

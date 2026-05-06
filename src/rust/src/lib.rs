@@ -1,6 +1,7 @@
 use extendr_api::prelude::*;
 use extendr_api::throw_r_error;
 use eunoia::{
+    constants::{MAX_SETS, MAX_SETS_HARD_CAP},
     geometry::{
         primitives::Point,
         shapes::{Circle, Ellipse, Polygon},
@@ -252,6 +253,7 @@ fn fit_euler_diagram(
     loss_aggregator: &str,
     extraopt_threshold: Robj,
     tolerance: Robj,
+    max_sets: Robj,
     seed: i32,
 ) -> extendr_api::Result<List> {
     if combo_names.len() != combo_values.len() {
@@ -298,6 +300,15 @@ fn fit_euler_diagram(
         tolerance.as_real()
     };
 
+    let max_sets_opt: Option<usize> = if max_sets.is_null() {
+        None
+    } else {
+        max_sets
+            .as_real()
+            .filter(|v| v.is_finite() && *v >= 1.0)
+            .map(|v| v as usize)
+    };
+
     let seed_u64 = seed as u32 as u64;
 
     let mut builder = DiagramSpecBuilder::new();
@@ -311,6 +322,9 @@ fn fit_euler_diagram(
         } else {
             builder = builder.intersection(&sets, value);
         }
+    }
+    if let Some(m) = max_sets_opt {
+        builder = builder.max_sets(m);
     }
     let spec = builder
         .input_type(input_type)
@@ -681,10 +695,29 @@ fn polygon_clip_rust(
     Ok(polygons_to_xy_list(&result_polys))
 }
 
+/// Default number of sets that `eunoia` accepts before rejecting a spec.
+/// Used by the R-side input validator so the cap is not hardcoded.
+/// @keywords internal
+#[extendr]
+fn max_sets_default() -> i32 {
+    MAX_SETS as i32
+}
+
+/// Absolute upper bound on the number of sets that `eunoia` can represent
+/// in a single diagram. Used by the R-side input validator so the cap is
+/// not hardcoded.
+/// @keywords internal
+#[extendr]
+fn max_sets_hard_cap() -> i32 {
+    MAX_SETS_HARD_CAP as i32
+}
+
 // Macro to generate exports.
 extendr_module! {
     mod eulerr;
     fn fit_euler_diagram;
     fn euler_plot_data;
     fn polygon_clip_rust;
+    fn max_sets_default;
+    fn max_sets_hard_cap;
 }

@@ -56,3 +56,41 @@ test_that("erroneous input to error_plot() throws", {
   expect_error(error_plot(f, legend = TRUE))
   expect_error(error_plot(f, strips = TRUE))
 })
+
+test_that("euler() guards against too many sets", {
+  default_cap <- max_sets_default()
+  hard_cap <- max_sets_hard_cap()
+
+  # Default cap rejects more than `default_cap` sets (guard fires R-side, no fit)
+  many <- stats::setNames(
+    rep.int(1, default_cap + 1L),
+    paste0("S", seq_len(default_cap + 1L))
+  )
+  expect_error(euler(many), "too many sets")
+
+  # Lowered cap rejects a small input that would otherwise fit
+  small <- c(A = 1, B = 1, C = 1, "A&B" = 0.5)
+  expect_error(
+    euler(small, control = list(max_sets = 2)),
+    "too many sets"
+  )
+
+  # Override at exactly n passes the guard
+  expect_s3_class(
+    euler(small, control = list(max_sets = 3)),
+    "euler"
+  )
+
+  # Override above the hard cap is rejected R-side
+  expect_error(
+    euler(small, control = list(max_sets = hard_cap + 1L)),
+    "exceeds the hard cap"
+  )
+
+  # Bad max_sets values are rejected
+  expect_error(euler(small, control = list(max_sets = 0)))
+  expect_error(euler(small, control = list(max_sets = -1)))
+  expect_error(euler(small, control = list(max_sets = 1.5)))
+  expect_error(euler(small, control = list(max_sets = c(10, 20))))
+  expect_error(euler(small, control = list(max_sets = "32")))
+})

@@ -67,6 +67,11 @@
 #'   *any* error; a value of 1 means it will never kick in. Default `0.001`.
 #'   * `tolerance`: convergence tolerance passed to the underlying solver.
 #'   Tighter values give more accurate fits at higher cost. Default `1e-8`.
+#'   * `max_sets`: maximum number of sets the underlying engine will accept.
+#'   Defaults to `NULL`, which uses the engine's built-in default of 32.
+#'   Region masks are stored in a bitset, so values may be raised up to 63
+#'   (the absolute hard cap). Going higher is rarely useful in practice
+#'   since fully-overlapping diagrams have `2^n - 1` regions.
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.
