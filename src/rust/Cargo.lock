@@ -108,9 +108,9 @@ dependencies = [
 
 [[package]]
 name = "eunoia"
-version = "0.12.0"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8157a9741c8fb3badbf51c4740eff947f8493982493c0b44fffd4e84c474760b"
+checksum = "f988cec4400805137f4ebffef05ee9260555e92f22360c64ff3db773c90703f3"
 dependencies = [
  "argmin",
  "argmin-math",
