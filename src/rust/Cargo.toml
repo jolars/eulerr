@@ -11,7 +11,7 @@ name = "eulerr"
 
 [dependencies]
 extendr-api = "0.9.0"
-eunoia = { version = "0.11.0", features = ["plotting"] }
+eunoia = { version = "0.12.0", features = ["plotting"] }
 
 [profile.release]
 lto = true
