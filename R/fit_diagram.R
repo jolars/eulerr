@@ -15,6 +15,7 @@ fit_diagram <- function(
     "diag_error"
   ),
   loss_aggregator = NULL,
+  complement = NULL,
   control = list(),
   ...
 ) {
@@ -39,9 +40,25 @@ fit_diagram <- function(
     stop("names of elements in `combinations` cannot be duplicated")
   }
 
+  if (!is.null(complement)) {
+    if (
+      !is.numeric(complement) ||
+        length(complement) != 1L ||
+        !is.finite(complement) ||
+        complement < 0
+    ) {
+      stop("`complement` must be a single non-negative number.")
+    }
+    complement <- as.double(complement)
+  }
+
   combo_name_parts <- strsplit(names(combinations), split = "&", fixed = TRUE)
   setnames <- unique(unlist(combo_name_parts, use.names = FALSE))
   n <- length(setnames)
+
+  if (type == "venn" && !is.null(complement)) {
+    stop("`complement` is not supported for `venn()` diagrams.")
+  }
 
   # Venn early return (uses lookup table, no optimization)
   if (type == "venn") {
@@ -160,6 +177,7 @@ fit_diagram <- function(
     extraopt_threshold = extraopt_threshold,
     tolerance = tolerance,
     max_sets = if (is.null(max_sets)) NULL else as.numeric(max_sets),
+    complement = complement,
     seed = seed
   )
 
@@ -191,6 +209,40 @@ fit_diagram <- function(
   orig <- stats::setNames(result$original_values, labs)
   fit <- stats::setNames(result$fitted_values, labs)
 
+  container <- if (isTRUE(result$has_container)) {
+    container_area <- result$container_width * result$container_height
+    list(
+      h = result$container_h,
+      k = result$container_k,
+      width = result$container_width,
+      height = result$container_height,
+      complement = complement,
+      complement_fitted = container_area - sum(result$fitted_values)
+    )
+  } else if (!is.null(complement)) {
+    # eunoia rejects 0-/1-set specs with a complement, so synthesise a
+    # square container around the (possibly empty) closed-form layout.
+    fitted_total <- sum(result$fitted_values)
+    side <- sqrt(fitted_total + complement)
+    if (length(result$h) >= 1L) {
+      cx <- mean(result$h)
+      cy <- mean(result$k)
+    } else {
+      cx <- 0
+      cy <- 0
+    }
+    list(
+      h = cx,
+      k = cy,
+      width = side,
+      height = side,
+      complement = complement,
+      complement_fitted = complement
+    )
+  } else {
+    NULL
+  }
+
   structure(
     list(
       ellipses = fpar,
@@ -199,7 +251,8 @@ fit_diagram <- function(
       residuals = stats::setNames(result$residuals, labs),
       regionError = stats::setNames(result$region_error, labs),
       diagError = result$diag_error,
-      stress = result$stress
+      stress = result$stress,
+      container = container
     ),
     class = c("euler", "list")
   )

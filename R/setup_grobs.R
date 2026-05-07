@@ -250,6 +250,7 @@ setup_grobs <- function(
   edges,
   labels,
   quantities,
+  complement = NULL,
   number,
   merged_sets
 ) {
@@ -412,11 +413,84 @@ setup_grobs <- function(
     )
   }
 
+  container_data <- x$container
+  do_container <- !is.null(container_data) && !is.null(complement)
+
+  container_fill_grob <- NULL
+  container_edge_grob <- NULL
+  container_label_grob <- NULL
+
+  if (do_container) {
+    cgp <- complement$gp
+
+    cp <- container_data$complement_polygon
+    if (length(cp$id_lengths) > 0L) {
+      container_fill_grob <- grid::pathGrob(
+        cp$x,
+        cp$y,
+        id.lengths = cp$id_lengths,
+        rule = "winding",
+        default.units = "native",
+        name = "complement.fill.grob",
+        gp = grid::gpar(
+          fill = cgp$fill[1L],
+          col = "transparent",
+          alpha = cgp$alpha[1L]
+        )
+      )
+    }
+
+    container_edge_grob <- grid::polylineGrob(
+      container_data$outline$x,
+      container_data$outline$y,
+      default.units = "native",
+      name = "container.edge.grob",
+      gp = grid::gpar(
+        col = cgp$col[1L],
+        lwd = cgp$lwd[1L],
+        lty = cgp$lty[1L],
+        lex = cgp$lex[1L],
+        alpha = cgp$alpha[1L]
+      )
+    )
+
+    label_text <- complement$label
+    if (is.null(label_text)) {
+      label_text <- container_data$quantity_label
+    }
+    if (
+      !is.null(label_text) &&
+        !is.na(label_text) &&
+        is.finite(container_data$label_x) &&
+        is.finite(container_data$label_y)
+    ) {
+      container_label_grob <- grid::textGrob(
+        label = label_text,
+        x = container_data$label_x,
+        y = container_data$label_y,
+        default.units = "native",
+        name = "complement.quantity.grob",
+        gp = grid::gpar(
+          col = cgp$col[1L],
+          alpha = cgp$alpha[1L],
+          fontsize = cgp$fontsize[1L],
+          cex = cgp$cex[1L],
+          fontfamily = cgp$fontfamily[1L],
+          lineheight = cgp$lineheight[1L],
+          font = cgp$font[1L]
+        )
+      )
+    }
+  }
+
   grid::grobTree(
+    if (do_container && !is.null(container_fill_grob)) container_fill_grob,
     if (do_fills) fills_grob,
     if (do_patterns && identical(patterns$mode, "shape")) patterns_grob,
     if (do_edges) edges_grob,
+    if (do_container && !is.null(container_edge_grob)) container_edge_grob,
     if (do_tags) tags_gtree,
+    if (do_container && !is.null(container_label_grob)) container_label_grob,
     name = paste0("diagram.grob.", number)
   )
 }

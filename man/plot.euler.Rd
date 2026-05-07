@@ -17,6 +17,7 @@
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
   rotate = 0,
   n = 200L,
   adjust_labels = TRUE,
@@ -34,6 +35,7 @@
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -101,6 +103,18 @@ sensibly converted to a label via \code{\link[grDevices:as.graphicsAnnot]{grDevi
 list of length one can be provided, in which case its only element
 is used as the label. If a list of longer length is provided, an item
 named \code{'label'} must be provided (and will be used for the actual text).}
+
+\item{complement}{a logical, character, or list controlling the
+container box and complement region for diagrams fit with
+\verb{complement =} in \code{\link[=euler]{euler()}}. \code{TRUE} (default) draws the container
+with a dashed outline (\code{lty = 2}), no fill, and the complement count
+inside the complement region. \code{FALSE} suppresses the container and
+its label entirely. A character value is treated as a fill color
+shorthand. A list accepts \code{fill}, \code{alpha}, \code{col}, \code{lty}, \code{lwd},
+\code{lex} (outline + label gpar), \code{fontsize}, \code{cex}, \code{font}, \code{fontfamily},
+\code{lineheight} (label only), and \code{label} (custom text — defaults to the
+complement count). Has no effect if the diagram was fit without
+\verb{complement =}. Defaults can be set via \code{eulerr_options(complement = ...)}.}
 
 \item{rotate}{a numeric value giving the angle in degrees by which to rotate
 the entire diagram layout. Positive values rotate counter-clockwise.

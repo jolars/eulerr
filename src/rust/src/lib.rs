@@ -4,8 +4,8 @@ use eunoia::{
     constants::{MAX_SETS, MAX_SETS_HARD_CAP},
     geometry::{
         primitives::Point,
-        shapes::{Circle, Ellipse, Polygon},
-        traits::DiagramShape,
+        shapes::{Circle, Ellipse, Polygon, Rectangle},
+        traits::{DiagramShape, Polygonize},
     },
     loss::LossType,
     plotting::{decompose_regions, polygon_clip, ClipOperation, RegionPiece},
@@ -89,7 +89,8 @@ fn combo_label(combo: &Combination, input_order: &[String]) -> Option<String> {
 
 /// Build a stable, deterministic ordering of the union of `requested` and
 /// `fitted` keys: by cardinality (ascending), then by input-order indices
-/// (lexicographic).
+/// (lexicographic). The empty combination (complement region) is skipped
+/// here — eulerr surfaces the complement via a dedicated result field.
 fn ordered_combo_keys<'a>(
     requested: &'a HashMap<Combination, f64>,
     fitted: &'a HashMap<Combination, f64>,
@@ -98,12 +99,12 @@ fn ordered_combo_keys<'a>(
     let mut seen: HashSet<&Combination> = HashSet::new();
     let mut keys: Vec<&Combination> = Vec::new();
     for k in requested.keys() {
-        if seen.insert(k) {
+        if !k.is_empty() && seen.insert(k) {
             keys.push(k);
         }
     }
     for k in fitted.keys() {
-        if seen.insert(k) {
+        if !k.is_empty() && seen.insert(k) {
             keys.push(k);
         }
     }
@@ -135,6 +136,7 @@ fn build_result_list(
     region_error: &HashMap<Combination, f64>,
     diag_error: f64,
     stress: f64,
+    container: Option<&Rectangle>,
 ) -> List {
     let combo_keys = ordered_combo_keys(requested, fitted, all_set_names);
     let n_combos = combo_keys.len();
@@ -155,6 +157,17 @@ fn build_result_list(
         region_err_vec.push(region_error.get(combo).copied().unwrap_or(0.0));
     }
 
+    let (container_h, container_k, container_w, container_height) = match container {
+        Some(rect) => (
+            rect.center().x(),
+            rect.center().y(),
+            rect.width(),
+            rect.height(),
+        ),
+        None => (f64::NAN, f64::NAN, f64::NAN, f64::NAN),
+    };
+    let has_container = container.is_some();
+
     list!(
         all_set_names = all_set_names.to_vec(),
         fitted_set_names = fitted_set_names,
@@ -170,6 +183,11 @@ fn build_result_list(
         region_error = region_err_vec,
         diag_error = diag_error,
         stress = stress,
+        container_h = container_h,
+        container_k = container_k,
+        container_width = container_w,
+        container_height = container_height,
+        has_container = has_container,
     )
 }
 
@@ -231,6 +249,7 @@ fn build_edge_case_list(
         &zero_map,
         0.0,
         0.0,
+        None,
     )
 }
 
@@ -247,6 +266,7 @@ fn shape_to_euler_params<S: DiagramShape>(shape: &S, is_circle: bool) -> [f64; 5
 /// Fit an Euler diagram using the eunoia Rust library.
 /// @keywords internal
 #[extendr]
+#[allow(clippy::too_many_arguments)]
 fn fit_euler_diagram(
     combo_names: Vec<String>,
     combo_values: Vec<f64>,
@@ -256,6 +276,7 @@ fn fit_euler_diagram(
     extraopt_threshold: Robj,
     tolerance: Robj,
     max_sets: Robj,
+    complement: Robj,
     seed: i32,
 ) -> extendr_api::Result<List> {
     if combo_names.len() != combo_values.len() {
@@ -284,6 +305,11 @@ fn fit_euler_diagram(
             region_error = empty_vec,
             diag_error = 0.0,
             stress = 0.0,
+            container_h = f64::NAN,
+            container_k = f64::NAN,
+            container_width = f64::NAN,
+            container_height = f64::NAN,
+            has_container = false,
         ));
     }
 
@@ -311,6 +337,12 @@ fn fit_euler_diagram(
             .map(|v| v as usize)
     };
 
+    let complement_opt: Option<f64> = if complement.is_null() {
+        None
+    } else {
+        complement.as_real()
+    };
+
     let seed_u64 = seed as u32 as u64;
 
     let mut builder = DiagramSpecBuilder::new();
@@ -328,6 +360,9 @@ fn fit_euler_diagram(
     if let Some(m) = max_sets_opt {
         builder = builder.max_sets(m);
     }
+    if let Some(c) = complement_opt {
+        builder = builder.complement(c);
+    }
     let spec = builder
         .input_type(input_type)
         .build()
@@ -335,6 +370,11 @@ fn fit_euler_diagram(
 
     let non_empty = non_empty_set_names(&spec);
 
+    // Edge cases (0 or 1 non-empty sets) have a perfect closed-form fit, so
+    // we bypass the optimizer. The current eunoia fitter rejects single-set
+    // specs even with a complement, so the bypass also covers that case;
+    // the R wrapper synthesises a container around the lone disk for the
+    // n_e == 1 path.
     if non_empty.len() <= 1 {
         return Ok(build_edge_case_list(&all_set_names, &spec, &non_empty));
     }
@@ -378,6 +418,7 @@ fn fit_euler_diagram(
             let region_error = layout.region_error();
             let diag_error = layout.diag_error();
             let stress = layout.stress();
+            let container = layout.container().copied();
 
             Ok(build_result_list(
                 &all_set_names,
@@ -393,6 +434,7 @@ fn fit_euler_diagram(
                 &region_error,
                 diag_error,
                 stress,
+                container.as_ref(),
             ))
         }
         "ellipse" => {
@@ -433,6 +475,7 @@ fn fit_euler_diagram(
             let region_error = layout.region_error();
             let diag_error = layout.diag_error();
             let stress = layout.stress();
+            let container = layout.container().copied();
 
             Ok(build_result_list(
                 &all_set_names,
@@ -448,6 +491,7 @@ fn fit_euler_diagram(
                 &region_error,
                 diag_error,
                 stress,
+                container.as_ref(),
             ))
         }
         other => Err(format!("Unknown shape: {}", other).into()),
@@ -501,28 +545,58 @@ fn region_pieces_to_xy_list(pieces: &[RegionPiece]) -> List {
     list!(x = x, y = y, id_lengths = id_lengths)
 }
 
-/// Build a minimal `DiagramSpec` from a list of set names. The plotting
-/// path's `decompose_regions` ignores the spec's areas and only consults the
-/// set names, so dummy values are fine.
-fn build_dummy_spec(set_names: &[String]) -> std::result::Result<DiagramSpec, Error> {
-    let mut builder = DiagramSpecBuilder::new();
-    for name in set_names {
-        builder = builder.set(name.as_str(), 1.0);
+fn empty_region_xy_list() -> List {
+    list!(
+        x = Vec::<f64>::new(),
+        y = Vec::<f64>::new(),
+        id_lengths = Vec::<i32>::new()
+    )
+}
+
+/// Read an `Option<f64>` from a possibly-NULL R scalar.
+fn read_optional_f64(obj: &Robj) -> Option<f64> {
+    if obj.is_null() {
+        None
+    } else {
+        obj.as_real()
     }
-    builder
-        .input_type(InputType::Exclusive)
-        .build()
-        .map_err(|e| format!("eunoia spec build error: {}", e).into())
+}
+
+/// Build the optional fitted container rectangle from raw R scalars. Returns
+/// `None` when any field is NULL/non-finite/non-positive — matches the
+/// "no container" branch on the R side.
+fn build_container(
+    container_h: &Robj,
+    container_k: &Robj,
+    container_width: &Robj,
+    container_height: &Robj,
+) -> Option<Rectangle> {
+    let ch = read_optional_f64(container_h)?;
+    let ck = read_optional_f64(container_k)?;
+    let cw = read_optional_f64(container_width)?;
+    let chh = read_optional_f64(container_height)?;
+    if !ch.is_finite() || !ck.is_finite() || !cw.is_finite() || !chh.is_finite() {
+        return None;
+    }
+    if cw <= 0.0 || chh <= 0.0 {
+        return None;
+    }
+    Some(Rectangle::new(Point::new(ch, ck), cw, chh))
 }
 
 /// Compute polygon geometry and label anchors for plotting a fitted Euler
-/// diagram.
+/// diagram, including the optional complement region inside a fitted
+/// container.
 ///
 /// Inputs are the fitted shape parameters for the **non-empty** sets only,
 /// in the order eulerr stores them (`x$ellipses` rows after dropping rows
-/// with NA). The output is a sparse, parallel set of vectors keyed by
-/// region label (set names joined by `&` in input order). Lengths equal the
-/// number of populated regions returned by `decompose_regions`.
+/// with NA). When `container_*` are non-NULL they describe the fitted
+/// universe-box rectangle; in that case the result also carries the
+/// complement region geometry (the area inside the rectangle outside every
+/// shape) and a label anchor for it. Eunoia's `decompose_regions` emits this
+/// region under the empty `Combination` whenever the spec carries a
+/// complement and a container is supplied — so eulerr no longer needs a
+/// hand-rolled rectangle-minus-shapes pass.
 ///
 /// @keywords internal
 #[extendr]
@@ -534,6 +608,10 @@ fn euler_plot_data(
     a: Vec<f64>,
     b: Vec<f64>,
     phi: Vec<f64>,
+    container_h: Robj,
+    container_k: Robj,
+    container_width: Robj,
+    container_height: Robj,
     n_vertices: i32,
     label_precision: f64,
 ) -> extendr_api::Result<List> {
@@ -545,6 +623,12 @@ fn euler_plot_data(
             region_polygons = List::new(0),
             region_centers_x = Vec::<f64>::new(),
             region_centers_y = Vec::<f64>::new(),
+            has_complement = false,
+            complement_polygon = empty_region_xy_list(),
+            complement_label_x = f64::NAN,
+            complement_label_y = f64::NAN,
+            container_outline_x = Vec::<f64>::new(),
+            container_outline_y = Vec::<f64>::new(),
         ));
     }
     if h.len() != n || k.len() != n || a.len() != n || b.len() != n || phi.len() != n {
@@ -574,13 +658,20 @@ fn euler_plot_data(
         })
         .collect::<extendr_api::Result<Vec<_>>>()?;
 
+    let container = build_container(
+        &container_h,
+        &container_k,
+        &container_width,
+        &container_height,
+    );
+    let has_complement = container.is_some();
+
     // Per-set polygon outlines (input order). eunoia doesn't repeat the first
     // vertex; close the ring here so polylineGrob (used for edges) draws the
     // closing segment instead of leaving a visible gap.
     let set_polygons: Vec<Robj> = ellipses
         .iter()
         .map(|e| {
-            use eunoia::geometry::traits::Polygonize;
             let p = e.polygonize(n_vertices);
             let verts = p.vertices();
             let mut x: Vec<f64> = Vec::with_capacity(verts.len() + 1);
@@ -597,26 +688,51 @@ fn euler_plot_data(
         })
         .collect();
 
-    let spec = build_dummy_spec(&set_names)?;
-    let regions = decompose_regions(&ellipses, &set_names, &spec, n_vertices);
-    let anchors = regions.label_points(label_precision);
+    // Build a spec just for region decomposition. The areas are dummies —
+    // `decompose_regions` reads only set names and `spec.complement()`. When a
+    // container is supplied, flag the spec with `.complement(...)` so eunoia
+    // emits the complement region under the empty `Combination`.
+    let mut builder = DiagramSpecBuilder::new();
+    for name in &set_names {
+        builder = builder.set(name.as_str(), 1.0);
+    }
+    if has_complement {
+        builder = builder.complement(1.0);
+    }
+    let spec = builder
+        .input_type(InputType::Exclusive)
+        .build()
+        .map_err(|e| Error::from(format!("eunoia spec build error: {}", e)))?;
+
+    let regions = decompose_regions(
+        &ellipses,
+        &set_names,
+        &spec,
+        container.as_ref(),
+        n_vertices,
+    );
+    let region_anchors = regions.label_points(label_precision);
 
     // Walk regions in canonical input order (singletons → pairs → triples,
     // ties broken by input-order indices) so the output is deterministic
-    // without the R side having to sort. Skip regions whose combination
-    // references a set not in `set_names` (defensive; shouldn't happen).
+    // without the R side having to sort. Skip the empty (complement)
+    // combination here — it's surfaced separately via the dedicated
+    // `complement_*`/`container_outline_*` fields.
     let mut region_labels: Vec<String> = Vec::new();
     let mut region_polygons: Vec<Robj> = Vec::new();
     let mut centers_x: Vec<f64> = Vec::new();
     let mut centers_y: Vec<f64> = Vec::new();
 
     for (combo, polys) in regions.iter_in_input_order(&set_names) {
+        if combo.is_empty() {
+            continue;
+        }
         let Some(label) = combo_label(combo, &set_names) else {
             continue;
         };
         region_labels.push(label);
         region_polygons.push(region_pieces_to_xy_list(polys).into());
-        if let Some(point) = anchors.get(combo) {
+        if let Some(point) = region_anchors.get(combo) {
             centers_x.push(point.x());
             centers_y.push(point.y());
         } else {
@@ -625,12 +741,66 @@ fn euler_plot_data(
         }
     }
 
+    let empty_combo = Combination::new(&[]);
+    let (complement_polygon, complement_label_x, complement_label_y, outline_x, outline_y) =
+        match container.as_ref() {
+            Some(rect) => {
+                let pieces = regions.get(&empty_combo);
+                let polygon_list = match pieces {
+                    Some(p) => region_pieces_to_xy_list(p),
+                    None => empty_region_xy_list(),
+                };
+                let cx = rect.center().x();
+                let cy = rect.center().y();
+                let half_w = rect.width() / 2.0;
+                let half_h = rect.height() / 2.0;
+                let (anchor_x, anchor_y) = match region_anchors.get(&empty_combo) {
+                    Some(p) => (p.x(), p.y()),
+                    None => {
+                        // No complement area / POI failed: fall back to a
+                        // top-right inset so the count label still has a
+                        // sensible anchor.
+                        let inset = rect.width().min(rect.height()) * 0.05;
+                        (cx + half_w - inset, cy + half_h - inset)
+                    }
+                };
+                let outline_x = vec![
+                    cx - half_w,
+                    cx + half_w,
+                    cx + half_w,
+                    cx - half_w,
+                    cx - half_w,
+                ];
+                let outline_y = vec![
+                    cy - half_h,
+                    cy - half_h,
+                    cy + half_h,
+                    cy + half_h,
+                    cy - half_h,
+                ];
+                (polygon_list, anchor_x, anchor_y, outline_x, outline_y)
+            }
+            None => (
+                empty_region_xy_list(),
+                f64::NAN,
+                f64::NAN,
+                Vec::new(),
+                Vec::new(),
+            ),
+        };
+
     Ok(list!(
         set_polygons = List::from_values(set_polygons),
         region_labels = region_labels,
         region_polygons = List::from_values(region_polygons),
         region_centers_x = centers_x,
         region_centers_y = centers_y,
+        has_complement = has_complement,
+        complement_polygon = complement_polygon,
+        complement_label_x = complement_label_x,
+        complement_label_y = complement_label_y,
+        container_outline_x = outline_x,
+        container_outline_y = outline_y,
     ))
 }
 

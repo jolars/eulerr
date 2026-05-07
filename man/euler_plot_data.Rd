@@ -3,15 +3,33 @@
 \name{euler_plot_data}
 \alias{euler_plot_data}
 \title{Compute polygon geometry and label anchors for plotting a fitted Euler
-diagram.}
+diagram, including the optional complement region inside a fitted
+container.}
 \usage{
-euler_plot_data(set_names, h, k, a, b, phi, n_vertices, label_precision)
+euler_plot_data(
+  set_names,
+  h,
+  k,
+  a,
+  b,
+  phi,
+  container_h,
+  container_k,
+  container_width,
+  container_height,
+  n_vertices,
+  label_precision
+)
 }
 \description{
 Inputs are the fitted shape parameters for the \strong{non-empty} sets only,
 in the order eulerr stores them (\code{x$ellipses} rows after dropping rows
-with NA). The output is a sparse, parallel set of vectors keyed by
-region label (set names joined by \code{&} in input order). Lengths equal the
-number of populated regions returned by \code{decompose_regions}.
+with NA). When \verb{container_*} are non-NULL they describe the fitted
+universe-box rectangle; in that case the result also carries the
+complement region geometry (the area inside the rectangle outside every
+shape) and a label anchor for it. Eunoia's \code{decompose_regions} emits this
+region under the empty \code{Combination} whenever the spec carries a
+complement and a container is supplied — so eulerr no longer needs a
+hand-rolled rectangle-minus-shapes pass.
 }
 \keyword{internal}

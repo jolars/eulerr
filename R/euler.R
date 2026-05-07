@@ -71,6 +71,14 @@
 #'   code that combined `loss` (`"square"`/`"abs"`/`"region"`) with
 #'   `loss_aggregator` (`"sum"`/`"max"`) still works but emits a warning;
 #'   the combination is mapped to the equivalent new `loss` value.
+#' @param complement an optional single non-negative number giving the area
+#'   of the *complement* — that is, the universe outside every named set.
+#'   When supplied, the fitter jointly optimizes a containing rectangle
+#'   together with the diagram shapes so that the area of the rectangle
+#'   minus the union of (clipped) shapes matches `complement`. This is the
+#'   classical "everything not in any set" region; see [plot.euler()] for
+#'   how it is rendered. Defaults to `NULL` (no container; classical
+#'   shape-only fit). Not supported for [venn()].
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the global-search fallback optimizer (CMA-ES) kick
 #'   in when the primary optimizer's `diagError` exceeds `extraopt_threshold`?
@@ -158,6 +166,7 @@ euler.default <- function(
     "diag_error"
   ),
   loss_aggregator = NULL,
+  complement = NULL,
   control = list(),
   ...
 ) {
@@ -168,7 +177,8 @@ euler.default <- function(
     shape,
     loss,
     loss_aggregator,
-    control,
+    complement = complement,
+    control = control,
     ...
   )
 }

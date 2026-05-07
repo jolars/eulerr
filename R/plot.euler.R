@@ -102,6 +102,17 @@
 #'   labels are matched by factor levels and then reordered to display order.
 #' @param bg a logical, character, or list controlling the background grob.
 #'   Character values are interpreted as the background fill color.
+#' @param complement a logical, character, or list controlling the
+#'   container box and complement region for diagrams fit with
+#'   `complement =` in [euler()]. `TRUE` (default) draws the container
+#'   with a dashed outline (`lty = 2`), no fill, and the complement count
+#'   inside the complement region. `FALSE` suppresses the container and
+#'   its label entirely. A character value is treated as a fill color
+#'   shorthand. A list accepts `fill`, `alpha`, `col`, `lty`, `lwd`,
+#'   `lex` (outline + label gpar), `fontsize`, `cex`, `font`, `fontfamily`,
+#'   `lineheight` (label only), and `label` (custom text — defaults to the
+#'   complement count). Has no effect if the diagram was fit without
+#'   `complement =`. Defaults can be set via `eulerr_options(complement = ...)`.
 #' @param n number of vertices for the `edges` and `fills`
 #' @param main a title for the plot in the form of a
 #'   character, expression, list or something that can be
@@ -171,6 +182,7 @@ plot.euler <- function(
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
   rotate = 0,
   n = 200L,
   adjust_labels = TRUE,
@@ -198,6 +210,15 @@ plot.euler <- function(
   do_strips <- !is_false(strips) && do_groups
   do_bg <- !is_false(bg) && !is.null(bg)
   do_main <- is.character(main) || is.expression(main) || is.list(main)
+
+  has_container <- if (do_groups) {
+    any(vapply(x, function(xi) !is.null(xi$container), logical(1)))
+  } else {
+    !is.null(x$container)
+  }
+  do_complement <- has_container &&
+    !is_false(complement) &&
+    !is.null(complement)
 
   # Extract per-panel overrides (`by_group`) from each styling parameter so the
   # existing normalization sees a clean list. These are re-applied later, once
@@ -1145,6 +1166,42 @@ plot.euler <- function(
     )
   }
 
+  # setup complement (container box + complement count label) styling.
+  # The label text override `label` lives outside the gpar list so it isn't
+  # passed to grid::gpar.
+  if (do_complement) {
+    complement_user <- if (is.list(complement)) {
+      complement
+    } else if (isTRUE(complement)) {
+      list()
+    } else {
+      list(fill = complement)
+    }
+    complement_label <- complement_user$label
+    complement_user$label <- NULL
+
+    complement <- list(label = complement_label)
+    complement$gp <- setup_gpar(
+      list(
+        fill = opar$complement$fill,
+        alpha = opar$complement$alpha,
+        col = opar$complement$col,
+        lty = opar$complement$lty,
+        lwd = opar$complement$lwd,
+        lex = opar$complement$lex,
+        fontsize = opar$complement$fontsize,
+        cex = opar$complement$cex,
+        font = opar$complement$font,
+        fontfamily = opar$complement$fontfamily,
+        lineheight = opar$complement$lineheight
+      ),
+      complement_user,
+      1
+    )
+  } else {
+    complement <- NULL
+  }
+
   # apply layout rotation if requested
   if (rotate != 0) {
     theta <- rotate * pi / 180
@@ -1232,6 +1289,7 @@ plot.euler <- function(
         edges = edges_i,
         labels = labels_i,
         quantities = quantities_i,
+        complement = complement,
         number = i,
         merged_sets = merged_sets
       )
@@ -1256,6 +1314,7 @@ plot.euler <- function(
       edges = edges,
       labels = labels,
       quantities = quantities,
+      complement = complement,
       number = 1,
       merged_sets = merged_sets
     )
@@ -1609,6 +1668,7 @@ plot.eulerr_venn <- function(
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -1628,6 +1688,7 @@ plot.eulerr_venn <- function(
     strips = strips,
     bg = bg,
     main = main,
+    complement = complement,
     n = n,
     ...
   )

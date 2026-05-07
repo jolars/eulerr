@@ -56,10 +56,22 @@ setup_geometry <- function(
   n_e <- NROW(dd)
   n_id <- length(combo_labels)
 
+  container <- x$container
+  do_container <- !is.null(container)
+
   if (n_e > 0L) {
     limits <- get_bounding_box(h, k, a, b, phi)
   } else {
     limits <- list(xlim = c(-1, 1), ylim = c(-1, 1))
+  }
+
+  if (do_container) {
+    cx_half <- container$width / 2
+    cy_half <- container$height / 2
+    container_xlim <- c(container$h - cx_half, container$h + cx_half)
+    container_ylim <- c(container$k - cy_half, container$k + cy_half)
+    limits$xlim <- range(c(limits$xlim, container_xlim))
+    limits$ylim <- range(c(limits$ylim, container_ylim))
   }
 
   width <- abs(limits$xlim[1] - limits$xlim[2])
@@ -73,6 +85,10 @@ setup_geometry <- function(
       a = a,
       b = b,
       phi = phi,
+      container_h = if (do_container) container$h else NULL,
+      container_k = if (do_container) container$k else NULL,
+      container_width = if (do_container) container$width else NULL,
+      container_height = if (do_container) container$height else NULL,
       n_vertices = as.integer(n),
       label_precision = max(width, height) / 100
     )
@@ -93,6 +109,7 @@ setup_geometry <- function(
       region_centers_y[has_geom] <- region_centers_y_geom[align_idx[has_geom]]
     }
   } else {
+    plot_data <- NULL
     set_polygons <- list()
     region_polygons <- list()
     region_centers_x <- double(0)
@@ -271,6 +288,81 @@ setup_geometry <- function(
     centers <- NULL
   }
 
+  container_data <- NULL
+  if (do_container) {
+    if (n_e > 0L) {
+      cd <- list(
+        outline_x = plot_data$container_outline_x,
+        outline_y = plot_data$container_outline_y,
+        complement_polygon = plot_data$complement_polygon,
+        label_x = plot_data$complement_label_x,
+        label_y = plot_data$complement_label_y
+      )
+    } else {
+      # No fitted shapes: the complement *is* the whole container, so the
+      # rectangle minus nothing is the rectangle itself. Synthesise it on the
+      # R side rather than calling into the (shape-driven) Rust pipeline.
+      cd <- list(
+        outline_x = c(
+          container$h - cx_half,
+          container$h + cx_half,
+          container$h + cx_half,
+          container$h - cx_half,
+          container$h - cx_half
+        ),
+        outline_y = c(
+          container$k - cy_half,
+          container$k - cy_half,
+          container$k + cy_half,
+          container$k + cy_half,
+          container$k - cy_half
+        ),
+        complement_polygon = list(
+          x = c(
+            container$h - cx_half,
+            container$h + cx_half,
+            container$h + cx_half,
+            container$h - cx_half
+          ),
+          y = c(
+            container$k - cy_half,
+            container$k - cy_half,
+            container$k + cy_half,
+            container$k + cy_half
+          ),
+          id_lengths = 4L
+        ),
+        label_x = container$h,
+        label_y = container$k
+      )
+    }
+
+    quantity_label <- NA_character_
+    val <- container$complement
+    if (is.null(val) || !is.finite(val)) {
+      val <- container$complement_fitted
+    }
+    if (is.finite(val)) {
+      quantity_label <- format(
+        signif(val, digits = options("digits")$digits)
+      )
+    }
+
+    container_data <- list(
+      h = container$h,
+      k = container$k,
+      width = container$width,
+      height = container$height,
+      complement = container$complement,
+      complement_fitted = container$complement_fitted,
+      outline = list(x = cd$outline_x, y = cd$outline_y),
+      complement_polygon = cd$complement_polygon,
+      label_x = cd$label_x,
+      label_y = cd$label_y,
+      quantity_label = quantity_label
+    )
+  }
+
   list(
     ellipses = dd,
     set_polygons = set_polygons,
@@ -283,6 +375,7 @@ setup_geometry <- function(
     centers = centers,
     empty_sets = empty_sets,
     empty_subsets = empty_subsets,
+    container = container_data,
     xlim = limits$xlim,
     ylim = limits$ylim
   )

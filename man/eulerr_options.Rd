@@ -40,6 +40,11 @@ some margin sizes in the resulting plot}#'
 \code{fontsize}, \code{cex}, \code{symbol_size} (symbol size multiplier, independent of text
 size; defaults to \code{cex} if \code{NULL}), \code{fontfamily}, \code{lineheight}, and \code{font}}
 \item{main}{arguments to \code{\link[grid:grid.text]{grid::textGrob()}}}
+\item{complement}{a list of styling defaults for the container box
+and its complement label drawn when \code{\link[=euler]{euler()}} is called with
+\verb{complement =}. Items: \code{fill}, \code{alpha}, \code{col}, \code{lty}, \code{lwd}, \code{lex},
+\code{fontsize}, \code{cex}, \code{font}, \code{fontfamily}, \code{lineheight}. The default
+\code{lty = 2} draws the container with a dashed outline.}
 \item{padding}{a \code{\link[grid:unit]{grid::unit()}} giving the padding between various
 elements in plots from \code{\link[=plot.euler]{plot.euler()}}, which you can change
 if you, for instance, want to increase spacing between labels,

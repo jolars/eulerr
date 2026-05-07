@@ -19,6 +19,7 @@ euler(combinations, ...)
     "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
     "stress", "diag_error"),
   loss_aggregator = NULL,
+  complement = NULL,
   control = list(),
   ...
 )
@@ -71,6 +72,15 @@ errors.
 code that combined \code{loss} (\code{"square"}/\code{"abs"}/\code{"region"}) with
 \code{loss_aggregator} (\code{"sum"}/\code{"max"}) still works but emits a warning;
 the combination is mapped to the equivalent new \code{loss} value.}
+
+\item{complement}{an optional single non-negative number giving the area
+of the \emph{complement} — that is, the universe outside every named set.
+When supplied, the fitter jointly optimizes a containing rectangle
+together with the diagram shapes so that the area of the rectangle
+minus the union of (clipped) shapes matches \code{complement}. This is the
+classical "everything not in any set" region; see \code{\link[=plot.euler]{plot.euler()}} for
+how it is rendered. Defaults to \code{NULL} (no container; classical
+shape-only fit). Not supported for \code{\link[=venn]{venn()}}.}
 
 \item{control}{a list of control parameters.
 \itemize{

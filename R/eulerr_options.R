@@ -24,6 +24,11 @@
 #'   `fontsize`, `cex`, `symbol_size` (symbol size multiplier, independent of text
 #'   size; defaults to `cex` if `NULL`), `fontfamily`, `lineheight`, and `font`}
 #'   \item{main}{arguments to [grid::textGrob()]}
+#'   \item{complement}{a list of styling defaults for the container box
+#'   and its complement label drawn when [euler()] is called with
+#'   `complement =`. Items: `fill`, `alpha`, `col`, `lty`, `lwd`, `lex`,
+#'   `fontsize`, `cex`, `font`, `fontfamily`, `lineheight`. The default
+#'   `lty = 2` draws the container with a dashed outline.}
 #'   \item{padding}{a [grid::unit()] giving the padding between various
 #'   elements in plots from [plot.euler()], which you can change
 #'   if you, for instance, want to increase spacing between labels,
@@ -188,6 +193,19 @@ eulerr_default_options <- function() {
       col = 1,
       lineheight = 1.2,
       alpha = 1
+    ),
+    complement = list(
+      fill = "transparent",
+      alpha = 1,
+      col = 1L,
+      lty = 2L,
+      lwd = 1,
+      lex = 1,
+      fontsize = 12,
+      cex = 1,
+      font = 1,
+      fontfamily = "",
+      lineheight = 1.2
     ),
     padding = grid::unit(0.4, "lines")
   )
