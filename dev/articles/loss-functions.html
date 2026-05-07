@@ -83,18 +83,18 @@ repository for eulerr</a>.</p>
 <em>agc</em>, <em>camk</em>, <em>cmgc</em>, and <em>tk</em>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"agc"</span>                  <span class="op">=</span> <span class="fl">9</span>,</span>
-<span>  <span class="st">"camk"</span>                 <span class="op">=</span> <span class="fl">17</span>,</span>
-<span>  <span class="st">"cmgc"</span>                 <span class="op">=</span> <span class="fl">16</span>,</span>
-<span>  <span class="st">"tk"</span>                   <span class="op">=</span> <span class="fl">16</span>,</span>
-<span>  <span class="st">"tkl"</span>                  <span class="op">=</span> <span class="fl">23</span>,</span>
-<span>  <span class="st">"agc&amp;camk"</span>             <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;tk"</span>              <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"tk&amp;tkl"</span>               <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;cmgc&amp;tkl"</span>        <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;tk&amp;tkl"</span>          <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  <span class="st">"agc&amp;camk&amp;tk&amp;tkl"</span>      <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;cmgc&amp;tk&amp;tkl"</span>     <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  <span class="st">"agc"</span> <span class="op">=</span> <span class="fl">9</span>,</span>
+<span>  <span class="st">"camk"</span> <span class="op">=</span> <span class="fl">17</span>,</span>
+<span>  <span class="st">"cmgc"</span> <span class="op">=</span> <span class="fl">16</span>,</span>
+<span>  <span class="st">"tk"</span> <span class="op">=</span> <span class="fl">16</span>,</span>
+<span>  <span class="st">"tkl"</span> <span class="op">=</span> <span class="fl">23</span>,</span>
+<span>  <span class="st">"agc&amp;camk"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;tk"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;cmgc&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="st">"agc&amp;camk&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;cmgc&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  <span class="st">"agc&amp;camk&amp;cmgc&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Notice that the sizes of most of the intersections are small compared
@@ -150,12 +150,13 @@ mirrors the loss functions provided by the underlying
 <tr class="odd">
 <td align="left">Sum of squared regErrors</td>
 <td align="left"><code>sum_squared_region_error</code></td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\right)^2</annotation></semantics></math></td>
+<td align="left">$_i (y_i/_k y_k - y_i / <em>k y</em>
+</td>
 </tr>
 <tr class="even">
 <td align="left">Sum of absolute regErrors</td>
 <td align="left"><code>sum_absolute_region_error</code></td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\big|</annotation></semantics></math></td>
+<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
 </tr>
 <tr class="odd">
 <td align="left">Max squared error</td>
@@ -180,14 +181,12 @@ mirrors the loss functions provided by the underlying
 <tr class="odd">
 <td align="left">diagError</td>
 <td align="left"><code>diag_error</code></td>
-<td align="left">
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mi>i</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\big|</annotation></semantics></math><span class="citation">(Micallef and Rodgers 2014)</span>
-</td>
+<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
 </tr>
 </tbody>
 </table>
 <p>The pre-1.0 <code>loss_aggregator</code> argument is deprecated;
-combine the behaviour you want into a single <code>loss</code> value
+combine the behavior you want into a single <code>loss</code> value
 instead. For example <code>loss = "square"</code> together with
 <code>loss_aggregator = "sum"</code> is now simply
 <code>loss = "sum_squared"</code>, and <code>loss = "region"</code> with
@@ -226,13 +225,6 @@ reducing the goodness-of-fit of the larger intersections.</p>
 <p>Feel free to raise a request (or better yet, a pull request) at <a href="https://github.com/jolars/eulerr/issues" class="external-link uri">https://github.com/jolars/eulerr/issues</a> if you know of
 any other loss function that you think should be included in the
 package.</p>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-Micallef_2014a" class="csl-entry">
-Micallef, Luana, and Peter Rodgers. 2014. <span>“<span class="nocase">eulerAPE</span>: Drawing Area-Proportional
-3-<span>Venn</span> Diagrams Using Ellipses.”</span> <em>PLOS ONE</em> 9
-(7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">https://doi.org/10.1371/journal.pone.0101717</a>.
-</div>
-</div>
   </main>
 </div>
 

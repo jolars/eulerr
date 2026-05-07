@@ -12,18 +12,18 @@ We list the combinations below, which consists of 5 different sets,
 ``` r
 
 combos <- c(
-  "agc"                  = 9,
-  "camk"                 = 17,
-  "cmgc"                 = 16,
-  "tk"                   = 16,
-  "tkl"                  = 23,
-  "agc&camk"             = 1,
-  "camk&tk"              = 1,
-  "tk&tkl"               = 1,
-  "camk&cmgc&tkl"        = 1,
-  "camk&tk&tkl"          = 2,
-  "agc&camk&tk&tkl"      = 1,
-  "camk&cmgc&tk&tkl"     = 3,
+  "agc" = 9,
+  "camk" = 17,
+  "cmgc" = 16,
+  "tk" = 16,
+  "tkl" = 23,
+  "agc&camk" = 1,
+  "camk&tk" = 1,
+  "tk&tkl" = 1,
+  "camk&cmgc&tkl" = 1,
+  "camk&tk&tkl" = 2,
+  "agc&camk&tk&tkl" = 1,
+  "camk&cmgc&tk&tkl" = 3,
   "agc&camk&cmgc&tk&tkl" = 1
 )
 ```
@@ -71,18 +71,18 @@ Rust crate.
 |:---|:---|:---|
 | Sum of squared errors | `sum_squared` (default) | $`\sum_i (y_i - \hat y_i)^2`$ |
 | Sum of absolute errors | `sum_absolute` | $`\sum_i |y_i - \hat y_i|`$ |
-| Sum of squared regErrors | `sum_squared_region_error` | $`\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\right)^2`$ |
-| Sum of absolute regErrors | `sum_absolute_region_error` | $`\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\big|`$ |
+| Sum of squared regErrors | `sum_squared_region_error` | \$\_i (y_i/\_k y_k - y_i / *k y* |
+| Sum of absolute regErrors | `sum_absolute_region_error` | \$\_i \|y_i/\_k y_k - y_i / \_k y_k |
 | Max squared error | `max_squared` | $`\max_i (y_i - \hat y_i)^2`$ |
 | Max absolute error | `max_absolute` | $`\max_i |y_i - \hat y_i|`$ |
 | Root-mean-squared error | `root_mean_squared` | $`\sqrt{\sum_i (y_i - \hat y_i)^2 / \sum_i y_i^2}`$ |
 | Stress | `stress` | venneuler-style stress |
-| diagError | `diag_error` | $`\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\big|`$(Micallef and Rodgers 2014) |
+| diagError | `diag_error` | \$\_i \|y_i/\_k y_k - y_i / \_k y_k |
 
 Loss functions in **eulerr** {.table}
 
 The pre-1.0 `loss_aggregator` argument is deprecated; combine the
-behaviour you want into a single `loss` value instead. For example
+behavior you want into a single `loss` value instead. For example
 `loss = "square"` together with `loss_aggregator = "sum"` is now simply
 `loss = "sum_squared"`, and `loss = "region"` with
 `loss_aggregator = "max"` is `loss = "diag_error"`.
@@ -135,7 +135,3 @@ intersections.
 Feel free to raise a request (or better yet, a pull request) at
 <https://github.com/jolars/eulerr/issues> if you know of any other loss
 function that you think should be included in the package.
-
-Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing
-Area-Proportional 3-Venn Diagrams Using Ellipses.” *PLOS ONE* 9 (7):
-e101717. <https://doi.org/10.1371/journal.pone.0101717>.
