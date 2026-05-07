@@ -11,7 +11,6 @@ fit_euler_diagram(
   input,
   shape,
   loss,
-  loss_aggregator,
   extraopt_threshold,
   tolerance,
   max_sets,

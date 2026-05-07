@@ -61,63 +61,67 @@ function, the sum of squared errors.
 
 If we rather want a diagram that includes these intersections, despite
 leading to errors for the zero-intersections, then we need to switch the
-loss function we use. In **eulerr**, you can do so via the two arguments
-`loss` and `loss_aggregator` in
-[`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md). We
-start by listing the alternatives for the `loss` argument.
+loss function we use. In **eulerr**, you can do so via the `loss`
+argument in
+[`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md),
+which mirrors the loss functions provided by the underlying `eunoia`
+Rust crate.
 
 | Loss | Input | Definition |
 |:---|:---|:---|
-| Squared errors | `square` | $`(y_i - \hat y_i)^2`$ |
-| Absolute errors | `abs` | $`|y_i - \hat y_i|`$ |
-| RegionErrors | `region` | $`\big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|`$ |
+| Sum of squared errors | `sum_squared` (default) | $`\sum_i (y_i - \hat y_i)^2`$ |
+| Sum of absolute errors | `sum_absolute` | $`\sum_i |y_i - \hat y_i|`$ |
+| Sum of squared regErrors | `sum_squared_region_error` | $`\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\right)^2`$ |
+| Sum of absolute regErrors | `sum_absolute_region_error` | $`\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\big|`$ |
+| Max squared error | `max_squared` | $`\max_i (y_i - \hat y_i)^2`$ |
+| Max absolute error | `max_absolute` | $`\max_i |y_i - \hat y_i|`$ |
+| Root-mean-squared error | `root_mean_squared` | $`\sqrt{\sum_i (y_i - \hat y_i)^2 / \sum_i y_i^2}`$ |
+| Stress | `stress` | venneuler-style stress |
+| diagError | `diag_error` | $`\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k\big|`$(Micallef and Rodgers 2014) |
 
 Loss functions in **eulerr** {.table}
 
-How the final loss is computed depends on the value of
-`loss_aggregator`, which is the function used to aggregate the values
-computed for each set intersection via the function used in `loss`. The
-two available settings are `"sum"` and `"max"`, which should be
-self-explanatory.
-
-That means that `loss = "square"` and `loss_aggregator = "sum"` leads to
-the sum of squared errors. `loss = "region"` uses *regionError*, which
-is a loss metric introduced by (Micallef and Rodgers 2014). Together
-with `loss_aggregator = "max"`,
-[`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md) will
-use *diagError* (introduced in the same paper).
+The pre-1.0 `loss_aggregator` argument is deprecated; combine the
+behaviour you want into a single `loss` value instead. For example
+`loss = "square"` together with `loss_aggregator = "sum"` is now simply
+`loss = "sum_squared"`, and `loss = "region"` with
+`loss_aggregator = "max"` is `loss = "diag_error"`.
 
 To see what these different choices mean for the combination that we
-have looked at, we now refit the diagram for each combination.
+have looked at, we now refit the diagram for each loss.
 
 ``` r
 
-losses <- c("square", "abs", "region")
-aggregators <- c("sum", "max")
+losses <- c(
+  "sum_squared",
+  "sum_absolute",
+  "sum_absolute_region_error",
+  "max_squared",
+  "max_absolute",
+  "diag_error"
+)
 
 for (loss in losses) {
-  for (aggregator in aggregators) {
-    fit <- euler(combos, loss = loss, loss_aggregator = aggregator)
-    print(plot(fit, main = paste(aggregator, loss, sep = ", ")))
-  }
+  fit <- euler(combos, loss = loss)
+  print(plot(fit, main = loss))
 }
 ```
 
 ![Euler diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-1.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-1.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-2.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-2.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-3.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-3.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-4.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-4.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-5.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-5.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-6.png)
+functions](loss-functions_files/figure-html/unnamed-chunk-4-6.png)
 
 Euler diagrams fit to the combination above, using different loss
-function
+functions
 
 As you can see, the errors that sum either the absolute or squared
 errors result in very similar fits and keep the existing two-set

@@ -12,6 +12,21 @@
   not listed fall through to the top-level setting, closes
   [\#125](https://github.com/jolars/eulerr/issues/125).
 
+### Deprecations
+
+- The `loss_aggregator` argument to
+  [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md) is
+  deprecated. The `loss` argument now accepts a single value that names
+  both the per-region loss and how it is aggregated, mirroring the loss
+  functions exposed by the underlying `eunoia` Rust crate. New values
+  are `"sum_squared"` (default), `"sum_absolute"`,
+  `"sum_absolute_region_error"`, `"sum_squared_region_error"`,
+  `"max_absolute"`, `"max_squared"`, `"root_mean_squared"`, `"stress"`,
+  and `"diag_error"`. The legacy `loss` values (`"square"`, `"abs"`,
+  `"region"`) and `loss_aggregator` values (`"sum"`, `"max"`) still work
+  but emit a deprecation warning and are translated to the equivalent
+  new `loss` value.
+
 ### Breaking changes
 
 - The named numeric vectors `original.values`, `fitted.values`,
@@ -138,7 +153,7 @@ CRAN release: 2021-09-06
   places
 - switched `PI` to `M_PI` to support `STRICT_R_HEADERS` in C++ code
   ([\#82](https://github.com/jolars/eulerr/issues/82), thanks
-  [@eddelbuettel](https://github.com/eddelbuettel))
+  1.  
 
 ### Bug fixes
 
@@ -329,7 +344,7 @@ CRAN release: 2018-11-05
   completely blank plots).
 - [`euler.list()`](https://jolars.github.io/eulerr/dev/reference/euler.md)
   now passes its ellipsis argument along properly. (##33, thanks,
-  [@banfai](https://github.com/banfai))
+  2.  
 - Several spelling and grammar mistakes were corrected in vignettes and
   documentation.
 
