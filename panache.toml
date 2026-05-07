@@ -2,6 +2,10 @@ flavor = "rmarkdown"
 
 [flavor-overrides]
 "README.md" = "gfm"
+"NEWS.md" = "gfm"
+"AGENTS.md" = "gfm"
+"CONDUCT.md" = "gfm"
+"TODO.md" = "gfm"
 
 [formatters]
 r = "air"
