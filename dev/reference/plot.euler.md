@@ -26,6 +26,7 @@ plot(
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
   rotate = 0,
   n = 200L,
   adjust_labels = TRUE,
@@ -44,6 +45,7 @@ plot(
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -142,6 +144,21 @@ plot(...)
   is used as the label. If a list of longer length is provided, an item
   named `'label'` must be provided (and will be used for the actual
   text).
+
+- complement:
+
+  a logical, character, or list controlling the container box and
+  complement region for diagrams fit with `complement =` in
+  [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md).
+  `TRUE` (default) draws the container with a dashed outline
+  (`lty = 2`), no fill, and the complement count inside the complement
+  region. `FALSE` suppresses the container and its label entirely. A
+  character value is treated as a fill color shorthand. A list accepts
+  `fill`, `alpha`, `col`, `lty`, `lwd`, `lex` (outline + label gpar),
+  `fontsize`, `cex`, `font`, `fontfamily`, `lineheight` (label only),
+  and `label` (custom text — defaults to the complement count). Has no
+  effect if the diagram was fit without `complement =`. Defaults can be
+  set via `eulerr_options(complement = ...)`.
 
 - rotate:
 

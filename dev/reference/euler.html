@@ -64,6 +64,7 @@ relationships. The shape of the diagram may be a circle or an ellipse.</p>
 <span>    <span class="st">"sum_squared_region_error"</span>, <span class="st">"max_absolute"</span>, <span class="st">"max_squared"</span>, <span class="st">"root_mean_squared"</span>,</span>
 <span>    <span class="st">"stress"</span>, <span class="st">"diag_error"</span><span class="op">)</span>,</span>
 <span>  loss_aggregator <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  complement <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -133,6 +134,17 @@ errors.</p></li>
 code that combined <code>loss</code> (<code>"square"</code>/<code>"abs"</code>/<code>"region"</code>) with
 <code>loss_aggregator</code> (<code>"sum"</code>/<code>"max"</code>) still works but emits a warning;
 the combination is mapped to the equivalent new <code>loss</code> value.</p></dd>
+
+
+<dt id="arg-complement">complement<a class="anchor" aria-label="anchor" href="#arg-complement"></a></dt>
+<dd><p>an optional single non-negative number giving the area
+of the <em>complement</em> — that is, the universe outside every named set.
+When supplied, the fitter jointly optimizes a containing rectangle
+together with the diagram shapes so that the area of the rectangle
+minus the union of (clipped) shapes matches <code>complement</code>. This is the
+classical "everything not in any set" region; see <code><a href="plot.euler.html">plot.euler()</a></code> for
+how it is rendered. Defaults to <code>NULL</code> (no container; classical
+shape-only fit). Not supported for <code><a href="venn.html">venn()</a></code>.</p></dd>
 
 
 <dt id="arg-control">control<a class="anchor" aria-label="anchor" href="#arg-control"></a></dt>

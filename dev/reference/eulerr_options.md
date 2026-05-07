@@ -73,6 +73,15 @@ Currently, the following items will be considered:
   arguments to
   [`grid::textGrob()`](https://rdrr.io/r/grid/grid.text.html)
 
+- complement:
+
+  a list of styling defaults for the container box and its complement
+  label drawn when
+  [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md) is
+  called with `complement =`. Items: `fill`, `alpha`, `col`, `lty`,
+  `lwd`, `lex`, `fontsize`, `cex`, `font`, `fontfamily`, `lineheight`.
+  The default `lty = 2` draws the container with a dashed outline.
+
 - padding:
 
   a [`grid::unit()`](https://rdrr.io/r/grid/unit.html) giving the

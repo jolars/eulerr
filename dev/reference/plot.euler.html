@@ -74,6 +74,7 @@ to learn about the individual settings for each argument.</p>
 <span>  strips <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  complement <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  rotate <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">200L</span>,</span>
 <span>  adjust_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -92,6 +93,7 @@ to learn about the individual settings for each argument.</p>
 <span>  strips <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  complement <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">200L</span>,</span>
 <span>  adjust_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -183,6 +185,20 @@ sensibly converted to a label via <code><a href="https://rdrr.io/r/grDevices/as.
 list of length one can be provided, in which case its only element
 is used as the label. If a list of longer length is provided, an item
 named <code>'label'</code> must be provided (and will be used for the actual text).</p></dd>
+
+
+<dt id="arg-complement">complement<a class="anchor" aria-label="anchor" href="#arg-complement"></a></dt>
+<dd><p>a logical, character, or list controlling the
+container box and complement region for diagrams fit with
+<code>complement =</code> in <code><a href="euler.html">euler()</a></code>. <code>TRUE</code> (default) draws the container
+with a dashed outline (<code>lty = 2</code>), no fill, and the complement count
+inside the complement region. <code>FALSE</code> suppresses the container and
+its label entirely. A character value is treated as a fill color
+shorthand. A list accepts <code>fill</code>, <code>alpha</code>, <code>col</code>, <code>lty</code>, <code>lwd</code>,
+<code>lex</code> (outline + label gpar), <code>fontsize</code>, <code>cex</code>, <code>font</code>, <code>fontfamily</code>,
+<code>lineheight</code> (label only), and <code>label</code> (custom text — defaults to the
+complement count). Has no effect if the diagram was fit without
+<code>complement =</code>. Defaults can be set via <code>eulerr_options(complement = ...)</code>.</p></dd>
 
 
 <dt id="arg-rotate">rotate<a class="anchor" aria-label="anchor" href="#arg-rotate"></a></dt>

@@ -12,6 +12,26 @@
   not listed fall through to the top-level setting, closes
   [\#125](https://github.com/jolars/eulerr/issues/125).
 
+- [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md)
+  now accepts a `complement` argument: a single non-negative number
+  giving the area of the universe outside every named set. When
+  supplied, the fitter jointly optimises a containing rectangle (the
+  “universe box”) together with the diagram shapes so that the
+  rectangle’s area minus the union of the fitted shapes matches
+  `complement`. The fitted rectangle is stored on the result as
+  `$container` and is drawn around the diagram by
+  [`plot.euler()`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md).
+  Closes [\#13](https://github.com/jolars/eulerr/issues/13).
+
+- [`plot.euler()`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md)
+  gains a `complement` argument that controls the styling of the
+  container box and complement label drawn for diagrams fit with
+  `complement =`. Accepts `TRUE` (default — dashed outline, no fill,
+  count inside the complement region), `FALSE` (suppresses the box and
+  label), a fill colour shorthand, or a list of gpar-style fields plus a
+  `label` override. Defaults can also be set globally via
+  `eulerr_options(complement = ...)`.
+
 ### Deprecations
 
 - The `loss_aggregator` argument to

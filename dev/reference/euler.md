@@ -19,6 +19,7 @@ euler(
     "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
     "stress", "diag_error"),
   loss_aggregator = NULL,
+  complement = NULL,
   control = list(),
   ...
 )
@@ -96,6 +97,19 @@ euler(combinations, ...)
   `loss` (`"square"`/`"abs"`/`"region"`) with `loss_aggregator`
   (`"sum"`/`"max"`) still works but emits a warning; the combination is
   mapped to the equivalent new `loss` value.
+
+- complement:
+
+  an optional single non-negative number giving the area of the
+  *complement* — that is, the universe outside every named set. When
+  supplied, the fitter jointly optimizes a containing rectangle together
+  with the diagram shapes so that the area of the rectangle minus the
+  union of (clipped) shapes matches `complement`. This is the classical
+  "everything not in any set" region; see
+  [`plot.euler()`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md)
+  for how it is rendered. Defaults to `NULL` (no container; classical
+  shape-only fit). Not supported for
+  [`venn()`](https://jolars.github.io/eulerr/dev/reference/venn.md).
 
 - control:
 

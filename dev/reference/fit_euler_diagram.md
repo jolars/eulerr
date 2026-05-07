@@ -14,6 +14,7 @@ fit_euler_diagram(
   extraopt_threshold,
   tolerance,
   max_sets,
+  complement,
   seed
 )
 ```

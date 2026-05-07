@@ -110,6 +110,13 @@ size; defaults to <code>cex</code> if <code>NULL</code>), <code>fontfamily</code
 <dt>main</dt>
 <dd><p>arguments to <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::textGrob()</a></code></p></dd>
 
+<dt>complement</dt>
+<dd><p>a list of styling defaults for the container box
+and its complement label drawn when <code><a href="euler.html">euler()</a></code> is called with
+<code>complement =</code>. Items: <code>fill</code>, <code>alpha</code>, <code>col</code>, <code>lty</code>, <code>lwd</code>, <code>lex</code>,
+<code>fontsize</code>, <code>cex</code>, <code>font</code>, <code>fontfamily</code>, <code>lineheight</code>. The default
+<code>lty = 2</code> draws the container with a dashed outline.</p></dd>
+
 <dt>padding</dt>
 <dd><p>a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code> giving the padding between various
 elements in plots from <code><a href="plot.euler.html">plot.euler()</a></code>, which you can change
