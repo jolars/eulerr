@@ -24,4 +24,3 @@ get_bounding_box <- function(h, k, a, b = NULL, phi = NULL) {
     ylim = range(ylim + k, -ylim + k)
   )
 }
-

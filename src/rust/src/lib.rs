@@ -36,15 +36,18 @@ fn parse_input_type(input: &str) -> std::result::Result<InputType, Error> {
     }
 }
 
-fn parse_loss_type(loss: &str, agg: &str) -> std::result::Result<LossType, Error> {
-    match (loss, agg) {
-        ("square", "sum") => Ok(LossType::SumSquared),
-        ("square", "max") => Ok(LossType::MaxSquared),
-        ("abs", "sum") => Ok(LossType::SumAbsoute),
-        ("abs", "max") => Ok(LossType::MaxAbsolute),
-        ("region", "sum") => Ok(LossType::SumAbsoluteRegionError),
-        ("region", "max") => Ok(LossType::DiagError),
-        _ => Err(format!("Unknown loss combination: {}/{}", loss, agg).into()),
+fn parse_loss_type(loss: &str) -> std::result::Result<LossType, Error> {
+    match loss {
+        "sum_squared" => Ok(LossType::SumSquared),
+        "sum_absolute" => Ok(LossType::SumAbsoute),
+        "sum_absolute_region_error" => Ok(LossType::SumAbsoluteRegionError),
+        "sum_squared_region_error" => Ok(LossType::SumSquaredRegionError),
+        "max_absolute" => Ok(LossType::MaxAbsolute),
+        "max_squared" => Ok(LossType::MaxSquared),
+        "root_mean_squared" => Ok(LossType::RootMeanSquared),
+        "stress" => Ok(LossType::Stress),
+        "diag_error" => Ok(LossType::DiagError),
+        other => Err(format!("Unknown loss type: {}", other).into()),
     }
 }
 
@@ -250,7 +253,6 @@ fn fit_euler_diagram(
     input: &str,
     shape: &str,
     loss: &str,
-    loss_aggregator: &str,
     extraopt_threshold: Robj,
     tolerance: Robj,
     max_sets: Robj,
@@ -286,7 +288,7 @@ fn fit_euler_diagram(
     }
 
     let input_type = parse_input_type(input)?;
-    let loss_type = parse_loss_type(loss, loss_aggregator)?;
+    let loss_type = parse_loss_type(loss)?;
 
     let cmaes_threshold: Option<f64> = if extraopt_threshold.is_null() {
         None

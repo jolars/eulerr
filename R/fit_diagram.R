@@ -3,16 +3,25 @@ fit_diagram <- function(
   type = c("euler", "venn"),
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
-  loss = c("square", "abs", "region"),
-  loss_aggregator = c("sum", "max"),
+  loss = c(
+    "sum_squared",
+    "sum_absolute",
+    "sum_absolute_region_error",
+    "sum_squared_region_error",
+    "max_absolute",
+    "max_squared",
+    "root_mean_squared",
+    "stress",
+    "diag_error"
+  ),
+  loss_aggregator = NULL,
   control = list(),
   ...
 ) {
   input <- match.arg(input)
   shape <- match.arg(shape)
   type <- match.arg(type)
-  loss <- match.arg(loss)
-  loss_aggregator <- match.arg(loss_aggregator)
+  loss <- resolve_loss(loss, loss_aggregator)
 
   if (!is.numeric(combinations)) {
     stop("`combinations` must be numeric")
@@ -148,7 +157,6 @@ fit_diagram <- function(
     input = input,
     shape = shape,
     loss = loss,
-    loss_aggregator = loss_aggregator,
     extraopt_threshold = extraopt_threshold,
     tolerance = tolerance,
     max_sets = if (is.null(max_sets)) NULL else as.numeric(max_sets),
@@ -195,4 +203,68 @@ fit_diagram <- function(
     ),
     class = c("euler", "list")
   )
+}
+
+# Translate the legacy (loss, loss_aggregator) pair into a single
+# eunoia-style loss name, warning on use of either deprecated form.
+resolve_loss <- function(loss, loss_aggregator) {
+  loss_choices <- c(
+    "sum_squared",
+    "sum_absolute",
+    "sum_absolute_region_error",
+    "sum_squared_region_error",
+    "max_absolute",
+    "max_squared",
+    "root_mean_squared",
+    "stress",
+    "diag_error"
+  )
+  legacy_loss <- c("square", "abs", "region")
+
+  # The unmodified default vector means the caller supplied no `loss`; pick
+  # the first option without requiring the upstream defaults to be a literal
+  # match for `loss_choices`.
+  if (length(loss) > 1L) {
+    if (!is.null(loss_aggregator)) {
+      warning(
+        "`loss_aggregator` is deprecated and will be removed in a future ",
+        "version of eulerr. Pick a `loss` value directly instead.",
+        call. = FALSE
+      )
+    }
+    return(loss_choices[1L])
+  }
+
+  if (!is.null(loss_aggregator)) {
+    warning(
+      "`loss_aggregator` is deprecated and will be removed in a future ",
+      "version of eulerr. Pick a `loss` value directly instead.",
+      call. = FALSE
+    )
+    loss_aggregator <- match.arg(loss_aggregator, c("sum", "max"))
+  }
+
+  if (loss %in% legacy_loss) {
+    agg <- if (is.null(loss_aggregator)) "sum" else loss_aggregator
+    new_loss <- switch(
+      paste(loss, agg, sep = "_"),
+      square_sum = "sum_squared",
+      square_max = "max_squared",
+      abs_sum = "sum_absolute",
+      abs_max = "max_absolute",
+      region_sum = "sum_absolute_region_error",
+      region_max = "diag_error"
+    )
+    warning(
+      "Loss value '",
+      loss,
+      "' is deprecated. Use loss = '",
+      new_loss,
+      "' instead.",
+      call. = FALSE
+    )
+    loss <- new_loss
+  }
+
+  match.arg(loss, loss_choices)
 }

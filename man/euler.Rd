@@ -15,8 +15,10 @@ euler(combinations, ...)
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
-  loss = c("square", "abs", "region"),
-  loss_aggregator = c("sum", "max"),
+  loss = c("sum_squared", "sum_absolute", "sum_absolute_region_error",
+    "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
+    "stress", "diag_error"),
+  loss_aggregator = NULL,
   control = list(),
   ...
 )
@@ -47,12 +49,28 @@ data.frame (see \strong{methods (by class)})}
 
 \item{shape}{geometric shape used in the diagram}
 
-\item{loss}{type of loss to minimize over. If \code{"square"} is used together
-with the value \code{"sum"} for \code{loss_aggregator}, then the resulting loss
-function is the sum of squared errors, which is the default.}
+\item{loss}{type of loss to minimize over. The default,
+\code{"sum_squared"}, minimizes the sum of squared errors. The available
+options mirror the loss functions exposed by the \code{eunoia} Rust crate
+that powers the optimizer:
+\itemize{
+\item \code{"sum_squared"} --- normalized sum of squared errors (default).
+\item \code{"sum_absolute"} --- normalized sum of absolute errors.
+\item \code{"sum_absolute_region_error"} --- normalized sum of absolute
+region errors.
+\item \code{"sum_squared_region_error"} --- normalized sum of squared region
+errors.
+\item \code{"max_absolute"} --- normalized maximum absolute error.
+\item \code{"max_squared"} --- normalized maximum squared error.
+\item \code{"root_mean_squared"} --- normalized root-mean-squared error.
+\item \code{"stress"} --- venneuler-style stress.
+\item \code{"diag_error"} --- eulerAPE-style \code{diagError}.
+}}
 
-\item{loss_aggregator}{how the final loss is computed. \code{"sum"} indicates that
-the sum of the losses computed by \code{loss} are summed up. \code{"max"} indicates}
+\item{loss_aggregator}{deprecated; use \code{loss} directly instead. Pre-1.0
+code that combined \code{loss} (\code{"square"}/\code{"abs"}/\code{"region"}) with
+\code{loss_aggregator} (\code{"sum"}/\code{"max"}) still works but emits a warning;
+the combination is mapped to the equivalent new \code{loss} value.}
 
 \item{control}{a list of control parameters.
 \itemize{

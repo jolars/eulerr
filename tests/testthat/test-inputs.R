@@ -122,6 +122,33 @@ test_that("sparse inputs with many sets do not blow up", {
   expect_silent(plot(f))
 })
 
+test_that("legacy loss / loss_aggregator arguments warn and still work", {
+  s <- c(A = 2, B = 2, "A&B" = 1)
+
+  # New-style loss values are silent
+  expect_silent(euler(s, loss = "sum_squared"))
+  expect_silent(euler(s, loss = "diag_error"))
+
+  # Legacy loss values warn and translate
+  expect_warning(euler(s, loss = "square"), "deprecated")
+  expect_warning(euler(s, loss = "region"), "deprecated")
+
+  # loss_aggregator on its own warns and is otherwise ignored
+  expect_warning(
+    euler(s, loss = "sum_squared", loss_aggregator = "sum"),
+    "loss_aggregator.*deprecated"
+  )
+
+  # Legacy combination produces the same fit as its new equivalent
+  set.seed(1)
+  new_fit <- euler(s, loss = "diag_error")
+  set.seed(1)
+  legacy_fit <- suppressWarnings(
+    euler(s, loss = "region", loss_aggregator = "max")
+  )
+  expect_equal(new_fit$ellipses, legacy_fit$ellipses)
+})
+
 test_that("fitted(dense = TRUE) expands to all 2^n - 1 combinations", {
   f <- euler(c(A = 1, B = 1, "A&B" = 0.5))
   sparse <- fitted(f)

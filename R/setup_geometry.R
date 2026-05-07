@@ -240,7 +240,9 @@ setup_geometry <- function(
         }
       } else {
         if (!is.null(names(quantities$labels))) {
-          named_quantities <- quantities$labels[rownames(centers)[singles | others]]
+          named_quantities <- quantities$labels[rownames(centers)[
+            singles | others
+          ]]
           centers$quantities[singles | others] <- ifelse(
             is.na(named_quantities),
             NA_character_,
@@ -248,7 +250,9 @@ setup_geometry <- function(
           )
         } else {
           centers$quantities[singles | others] <-
-            quantities$labels[which(!empty_subsets)][centers$id[singles | others]]
+            quantities$labels[which(!empty_subsets)][centers$id[
+              singles | others
+            ]]
         }
       }
     }

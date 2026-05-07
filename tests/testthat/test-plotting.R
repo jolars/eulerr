@@ -44,11 +44,22 @@ test_that("normal plotting works without errors", {
     f1,
     quantities = c("foo", A = "bar")
   ))
-  p_named_fill <- plot(f1, fills = c(A = "black"), labels = FALSE, quantities = FALSE, edges = FALSE, legend = FALSE)
+  p_named_fill <- plot(
+    f1,
+    fills = c(A = "black"),
+    labels = FALSE,
+    quantities = FALSE,
+    edges = FALSE,
+    legend = FALSE
+  )
   fill_children <- p_named_fill$children$canvas.grob$children$diagram.grob.1$children
-  fill_cols <- vapply(fill_children, function(g) {
-    if (inherits(g, "gTree")) g$children[[1]]$gp$fill else g$gp$fill
-  }, character(1))
+  fill_cols <- vapply(
+    fill_children,
+    function(g) {
+      if (inherits(g, "gTree")) g$children[[1]]$gp$fill else g$gp$fill
+    },
+    character(1)
+  )
   expect_equal(unname(fill_cols[1]), "black")
   expect_false(all(fill_cols == "black"))
 
@@ -62,9 +73,13 @@ test_that("normal plotting works without errors", {
     legend = FALSE
   )
   pattern_children <- p_named_pattern$children$canvas.grob$children$diagram.grob.1$children
-  pattern_count <- sum(vapply(pattern_children, function(g) {
-    inherits(g, "gTree") && length(g$children) > 1L
-  }, logical(1)))
+  pattern_count <- sum(vapply(
+    pattern_children,
+    function(g) {
+      inherits(g, "gTree") && length(g$children) > 1L
+    },
+    logical(1)
+  ))
   expect_equal(pattern_count, 1L)
 
   p_named_pattern_union <- plot(
@@ -77,12 +92,19 @@ test_that("normal plotting works without errors", {
     legend = FALSE
   )
   pattern_children_union <- p_named_pattern_union$children$canvas.grob$children$diagram.grob.1$children
-  pattern_count_union <- sum(vapply(pattern_children_union, function(g) {
-    inherits(g, "gTree") && length(g$children) > 1L
-  }, logical(1)))
+  pattern_count_union <- sum(vapply(
+    pattern_children_union,
+    function(g) {
+      inherits(g, "gTree") && length(g$children) > 1L
+    },
+    logical(1)
+  ))
   expect_equal(pattern_count_union, 0L)
 
-  expect_error(plot(f1, fills = list(fill = c("red", "blue", "green", "black"))))
+  expect_error(plot(
+    f1,
+    fills = list(fill = c("red", "blue", "green", "black"))
+  ))
   bad_named_fills <- c("black", "blue")
   names(bad_named_fills) <- c("A", "")
   expect_error(plot(f1, fills = bad_named_fills))
@@ -90,8 +112,14 @@ test_that("normal plotting works without errors", {
   bad_named_patterns <- c("stripes", NA_character_)
   names(bad_named_patterns) <- c("A", "")
   expect_error(plot(f1, patterns = bad_named_patterns))
-  expect_error(plot(f1, patterns = list(type = c(A = "stripes"), mode = "asdf")))
-  expect_error(plot(f1, patterns = list(type = c("stripes", NA, "stripes", NA))))
+  expect_error(plot(
+    f1,
+    patterns = list(type = c(A = "stripes"), mode = "asdf")
+  ))
+  expect_error(plot(
+    f1,
+    patterns = list(type = c("stripes", NA, "stripes", NA))
+  ))
 
   grid <- expand.grid(
     labels = c(TRUE, FALSE),
@@ -187,7 +215,12 @@ test_that("set-level pattern types propagate to intersections", {
   p <- plot(
     f,
     fills = list(fill = c("grey90", "grey90")),
-    patterns = list(type = c("stripes", NA), angle = c(25, 0), col = "black", lwd = 1),
+    patterns = list(
+      type = c("stripes", NA),
+      angle = c(25, 0),
+      col = "black",
+      lwd = 1
+    ),
     labels = FALSE,
     quantities = FALSE,
     edges = FALSE,
@@ -206,16 +239,19 @@ test_that("legacy fill pattern arguments still work with deprecation warning", {
   png(tmp)
 
   f <- euler(c(A = 10, B = 8, "A&B" = 3))
-  expect_warning(plot(
-    f,
-    fills = list(
-      fill = c("grey90", "grey90"),
-      pattern = "stripes",
-      angle = 30,
-      pattern_col = "black",
-      pattern_lwd = 0.8
-    )
-  ), "deprecated")
+  expect_warning(
+    plot(
+      f,
+      fills = list(
+        fill = c("grey90", "grey90"),
+        pattern = "stripes",
+        angle = 30,
+        pattern_col = "black",
+        pattern_lwd = 0.8
+      )
+    ),
+    "deprecated"
+  )
 
   dev.off()
   unlink(tmp)
@@ -235,9 +271,13 @@ test_that("legend keys support patterns", {
   )
 
   legend_grob <- p$children$legend.grob
-  point_cells <- legend_grob$children[vapply(legend_grob$children, function(cell) {
-    inherits(cell$children[[1]], "gTree")
-  }, logical(1))]
+  point_cells <- legend_grob$children[vapply(
+    legend_grob$children,
+    function(cell) {
+      inherits(cell$children[[1]], "gTree")
+    },
+    logical(1)
+  )]
 
   expect_true(length(point_cells) > 0)
 
@@ -307,7 +347,10 @@ test_that("quantity formatters can be customized", {
   )
   q <- p$data$centers$quantities
   names(q) <- rownames(p$data$centers)
-  expect_equal(unname(q[c("A", "B", "A&B")]), c("10 (0.1)", "8 (0.08)", "3 (0.03)"))
+  expect_equal(
+    unname(q[c("A", "B", "A&B")]),
+    c("10 (0.1)", "8 (0.08)", "3 (0.03)")
+  )
 
   expect_error(plot(f, quantities = list(format = 1)))
   expect_error(plot(f, quantities = list(format = list(fun = 1))))
@@ -370,7 +413,10 @@ test_that("strip labels can be customized", {
 
   top_named <- c(male = "Men", female = "Women")
   left_named <- c(adult = "Adults", child = "Children")
-  p_named <- plot(f, strips = list(labels = list(top = top_named, left = left_named)))
+  p_named <- plot(
+    f,
+    strips = list(labels = list(top = top_named, left = left_named))
+  )
   expect_equal(p_named$children$strip.top.grob$label, c("Women", "Men"))
   expect_equal(p_named$children$strip.left.grob$label, c("Children", "Adults"))
 
@@ -403,11 +449,17 @@ test_that("strip labels can be customized", {
     "must be fully named"
   )
   expect_error(
-    plot(f, strips = list(labels = list(top = c(female = "Women", female = "Men")))),
+    plot(
+      f,
+      strips = list(labels = list(top = c(female = "Women", female = "Men")))
+    ),
     "must have unique names"
   )
   expect_error(
-    plot(f, strips = list(labels = list(top = c(female = "Women", foo = "Men")))),
+    plot(
+      f,
+      strips = list(labels = list(top = c(female = "Women", foo = "Men")))
+    ),
     "unknown level names"
   )
   expect_error(
@@ -435,7 +487,15 @@ test_that("empty singleton sets do not override overlap fill colors", {
   tmp <- tempfile()
   png(tmp)
 
-  fit <- euler(c(A = 0, B = 16, C = 12, "A&B" = 25, "A&C" = 39, "B&C" = 1, "A&B&C" = 40))
+  fit <- euler(c(
+    A = 0,
+    B = 16,
+    C = 12,
+    "A&B" = 25,
+    "A&C" = 39,
+    "B&C" = 1,
+    "A&B&C" = 40
+  ))
   p <- plot(
     fit,
     fills = list(fill = c("#E41A1C", "#377EB8", "#4DAF4A")),
@@ -507,10 +567,12 @@ test_that("by_group applies per-panel overrides", {
   # Per-panel overrides for `quantities`
   g <- plot(
     fit,
-    quantities = list(by_group = list(
-      male = list(col = "blue"),
-      female = list(col = "red")
-    ))
+    quantities = list(
+      by_group = list(
+        male = list(col = "blue"),
+        female = list(col = "red")
+      )
+    )
   )
   female_idx <- which(names(fit) == "female")
   male_idx <- which(names(fit) == "male")

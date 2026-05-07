@@ -207,12 +207,24 @@ plot.euler <- function(
     patterns = c("angle", "col", "lwd", "alpha"),
     edges = c("col", "alpha", "lex", "lwd", "lty"),
     labels = c(
-      "col", "alpha", "fontsize", "cex",
-      "fontfamily", "lineheight", "font", "rot"
+      "col",
+      "alpha",
+      "fontsize",
+      "cex",
+      "fontfamily",
+      "lineheight",
+      "font",
+      "rot"
     ),
     quantities = c(
-      "col", "alpha", "fontsize", "cex",
-      "fontfamily", "lineheight", "font", "rot"
+      "col",
+      "alpha",
+      "fontsize",
+      "cex",
+      "fontfamily",
+      "lineheight",
+      "font",
+      "rot"
     )
   )
   pop_by_group <- function(param, name) {
@@ -223,7 +235,9 @@ plot.euler <- function(
     param$by_group <- NULL
     if (!do_groups) {
       stop(
-        "`", name, "$by_group` requires a diagram fit with `by =`."
+        "`",
+        name,
+        "$by_group` requires a diagram fit with `by =`."
       )
     }
     if (!is.list(by_group) || length(by_group) == 0L) {
@@ -237,7 +251,9 @@ plot.euler <- function(
     unknown <- setdiff(keys, valid_keys)
     if (length(unknown) > 0L) {
       stop(
-        "`", name, "$by_group` has unknown keys: ",
+        "`",
+        name,
+        "$by_group` has unknown keys: ",
         paste(unknown, collapse = ", "),
         ". Valid keys: ",
         paste(valid_keys, collapse = ", "),
@@ -249,13 +265,20 @@ plot.euler <- function(
       override <- by_group[[key]]
       if (!is.list(override)) {
         stop(
-          "`", name, "$by_group$", key, "` must be a list."
+          "`",
+          name,
+          "$by_group$",
+          key,
+          "` must be a list."
         )
       }
       bad <- setdiff(names(override), allowed)
       if (length(bad) > 0L) {
         stop(
-          "`", name, "$by_group$", key,
+          "`",
+          name,
+          "$by_group$",
+          key,
           "` contains fields that cannot be overridden per panel: ",
           paste(bad, collapse = ", "),
           ". Allowed fields: ",
@@ -329,7 +352,10 @@ plot.euler <- function(
     }
     dimnames(id) <- list(combo_labels, setnames_orig)
   } else {
-    id <- matrix(FALSE, nrow = n_id, ncol = n_e,
+    id <- matrix(
+      FALSE,
+      nrow = n_id,
+      ncol = n_e,
       dimnames = list(combo_labels, setnames_orig)
     )
   }
@@ -598,8 +624,10 @@ plot.euler <- function(
         named_sets <- intersect(pattern_type_names, setnames)
         named_subsets <- intersect(pattern_type_names, subset_names)
 
-        if (identical(patterns_out$mode, "union") &&
-          all(pattern_type_names %in% setnames)) {
+        if (
+          identical(patterns_out$mode, "union") &&
+            all(pattern_type_names %in% setnames)
+        ) {
           set_default <- rep_len(opar$patterns$type, n_e)
           names(set_default) <- setnames
           set_default[named_sets] <- unname(patterns_out$type[named_sets])
@@ -619,12 +647,16 @@ plot.euler <- function(
           } else if (n_default == 1L || n_default == n_id) {
             default_type <- rep_len(default_type, n_id)
           } else {
-            stop("Default `patterns$type` must have length 1, n_sets, or n_subsets.")
+            stop(
+              "Default `patterns$type` must have length 1, n_sets, or n_subsets."
+            )
           }
 
           type_map <- default_type
           names(type_map) <- subset_names
-          if (identical(patterns_out$mode, "union") && length(named_sets) > 0L) {
+          if (
+            identical(patterns_out$mode, "union") && length(named_sets) > 0L
+          ) {
             for (set_name in named_sets) {
               type_map[id[, set_name]] <- patterns_out$type[[set_name]]
             }
@@ -676,10 +708,27 @@ plot.euler <- function(
     if (n_types %in% c(1L, n_id)) {
       pattern_mode <- "intersection"
       patterns_out$type <- rep_len(patterns_out$type, n_id)
-      patterns_out$angle <- expand_pattern_param(patterns_out$angle, "angle", rep(TRUE, n_e))
-      patterns_out$col <- expand_pattern_param(patterns_out$col, "col", rep(TRUE, n_e), default = NA_character_)
-      patterns_out$lwd <- expand_pattern_param(patterns_out$lwd, "lwd", rep(TRUE, n_e))
-      patterns_out$alpha <- expand_pattern_param(patterns_out$alpha, "alpha", rep(TRUE, n_e))
+      patterns_out$angle <- expand_pattern_param(
+        patterns_out$angle,
+        "angle",
+        rep(TRUE, n_e)
+      )
+      patterns_out$col <- expand_pattern_param(
+        patterns_out$col,
+        "col",
+        rep(TRUE, n_e),
+        default = NA_character_
+      )
+      patterns_out$lwd <- expand_pattern_param(
+        patterns_out$lwd,
+        "lwd",
+        rep(TRUE, n_e)
+      )
+      patterns_out$alpha <- expand_pattern_param(
+        patterns_out$alpha,
+        "alpha",
+        rep(TRUE, n_e)
+      )
     } else {
       pattern_mode <- "shape"
       patterns_out$type <- tolower(patterns_out$type)
@@ -770,11 +819,15 @@ plot.euler <- function(
 
       if (!is.null(strip_labels)) {
         if (!is.list(strip_labels)) {
-          stop("`strips$labels` must be a list with optional `top` and `left` entries.")
+          stop(
+            "`strips$labels` must be a list with optional `top` and `left` entries."
+          )
         }
         strip_label_names <- names(strip_labels)
         if (is.null(strip_label_names) || any(!nzchar(strip_label_names))) {
-          stop("`strips$labels` must be a named list with optional `top` and `left` entries.")
+          stop(
+            "`strips$labels` must be a named list with optional `top` and `left` entries."
+          )
         }
         bad_labels <- setdiff(strip_label_names, c("top", "left"))
         if (length(bad_labels) > 0L) {
@@ -903,7 +956,9 @@ plot.euler <- function(
         all_named <- all(nzchar(lbl_names))
         any_named <- any(nzchar(lbl_names))
         if (any_named && !all_named) {
-          stop("`quantities$labels` must be either fully named or fully unnamed.")
+          stop(
+            "`quantities$labels` must be either fully named or fully unnamed."
+          )
         }
       }
     }
@@ -961,7 +1016,11 @@ plot.euler <- function(
       legend
     )
 
-    symbol_size <- if (!is.null(legend$symbol_size)) legend$symbol_size else opar$legend$cex
+    symbol_size <- if (!is.null(legend$symbol_size)) {
+      legend$symbol_size
+    } else {
+      opar$legend$cex
+    }
     legend$symbol_size <- NULL
 
     legend$gp <- setup_gpar(
@@ -1497,7 +1556,10 @@ resolve_strip_labels <- function(labels, levels, display_levels, axis) {
 
   if (has_names) {
     if (any(!nzchar(label_names))) {
-      stop(sprintf("`strips$labels$%s` must be fully named when names are used.", axis))
+      stop(sprintf(
+        "`strips$labels$%s` must be fully named when names are used.",
+        axis
+      ))
     }
     if (anyDuplicated(label_names)) {
       stop(sprintf("`strips$labels$%s` must have unique names.", axis))
@@ -1510,7 +1572,10 @@ resolve_strip_labels <- function(labels, levels, display_levels, axis) {
 
     missing_levels <- setdiff(levels, label_names)
     if (length(missing_levels) > 0L) {
-      stop(sprintf("`strips$labels$%s` must provide labels for all levels.", axis))
+      stop(sprintf(
+        "`strips$labels$%s` must provide labels for all levels.",
+        axis
+      ))
     }
 
     labels <- labels[match(display_levels, label_names)]

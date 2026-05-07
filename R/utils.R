@@ -136,7 +136,11 @@ all_set_combinations <- function(setnames) {
   out <- character(0)
   for (k in seq_len(n)) {
     cmb <- utils::combn(setnames, k)
-    labs <- if (k == 1L) as.vector(cmb) else apply(cmb, 2L, paste, collapse = "&")
+    labs <- if (k == 1L) {
+      as.vector(cmb)
+    } else {
+      apply(cmb, 2L, paste, collapse = "&")
+    }
     out <- c(out, labs)
   }
   out

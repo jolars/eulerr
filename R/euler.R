@@ -52,12 +52,25 @@
 #' @param input type of input: disjoint identities
 #'   (`'disjoint'`) or unions (`'union'`).
 #' @param shape geometric shape used in the diagram
-#' @param loss type of loss to minimize over. If `"square"` is used together
-#'   with the value `"sum"` for `loss_aggregator`, then the resulting loss
-#'   function is the sum of squared errors, which is the default.
-#' @param loss_aggregator how the final loss is computed. `"sum"` indicates that
-#'   the sum of the losses computed by `loss` are summed up. `"max"` indicates
-#"   that only the maximum value computed by the loss function is used.
+#' @param loss type of loss to minimize over. The default,
+#'   `"sum_squared"`, minimizes the sum of squared errors. The available
+#'   options mirror the loss functions exposed by the `eunoia` Rust crate
+#'   that powers the optimizer:
+#'   * `"sum_squared"` --- normalized sum of squared errors (default).
+#'   * `"sum_absolute"` --- normalized sum of absolute errors.
+#'   * `"sum_absolute_region_error"` --- normalized sum of absolute
+#'     region errors.
+#'   * `"sum_squared_region_error"` --- normalized sum of squared region
+#'     errors.
+#'   * `"max_absolute"` --- normalized maximum absolute error.
+#'   * `"max_squared"` --- normalized maximum squared error.
+#'   * `"root_mean_squared"` --- normalized root-mean-squared error.
+#'   * `"stress"` --- venneuler-style stress.
+#'   * `"diag_error"` --- eulerAPE-style `diagError`.
+#' @param loss_aggregator deprecated; use `loss` directly instead. Pre-1.0
+#'   code that combined `loss` (`"square"`/`"abs"`/`"region"`) with
+#'   `loss_aggregator` (`"sum"`/`"max"`) still works but emits a warning;
+#'   the combination is mapped to the equivalent new `loss` value.
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the global-search fallback optimizer (CMA-ES) kick
 #'   in when the primary optimizer's `diagError` exceeds `extraopt_threshold`?
@@ -133,13 +146,21 @@ euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
   shape = c("circle", "ellipse"),
-  loss = c("square", "abs", "region"),
-  loss_aggregator = c("sum", "max"),
+  loss = c(
+    "sum_squared",
+    "sum_absolute",
+    "sum_absolute_region_error",
+    "sum_squared_region_error",
+    "max_absolute",
+    "max_squared",
+    "root_mean_squared",
+    "stress",
+    "diag_error"
+  ),
+  loss_aggregator = NULL,
   control = list(),
   ...
 ) {
-  loss <- match.arg(loss)
-
   fit_diagram(
     combinations,
     "euler",

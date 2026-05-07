@@ -17,7 +17,8 @@ euler_legend_grob <- function(
 
   symbol_grobs <- lapply(seq_len(n), function(i) {
     base <- grid::pathGrob(
-      cx, cy,
+      cx,
+      cy,
       default.units = "npc",
       gp = grid::gpar(
         fill = gp$fill[i],
@@ -51,7 +52,11 @@ euler_legend_grob <- function(
           y = unlist(lapply(clipped, "[[", "y"), use.names = FALSE),
           id.lengths = lengths(lapply(clipped, "[[", "x")),
           default.units = "npc",
-          gp = grid::gpar(fill = pcol, col = "transparent", alpha = gp$pattern_alpha[i])
+          gp = grid::gpar(
+            fill = pcol,
+            col = "transparent",
+            alpha = gp$pattern_alpha[i]
+          )
         )
         children <- grid::gList(base, stripe_grob)
       }
@@ -67,7 +72,8 @@ euler_legend_grob <- function(
   text_grobs <- lapply(seq_len(n), function(i) {
     grid::textGrob(
       labels[i],
-      x = 0, y = 0.5,
+      x = 0,
+      y = 0.5,
       just = c("left", "centre"),
       gp = grid::gpar(
         fontsize = gp$fontsize[1L],
@@ -101,7 +107,7 @@ euler_legend_grob <- function(
   frame_widths <- vector("list", 4L * ncol - 1L)
   for (j in seq_len(ncol)) {
     base_fc <- (j - 1L) * 4L + 1L
-    frame_widths[[base_fc]]      <- sym_unit
+    frame_widths[[base_fc]] <- sym_unit
     frame_widths[[base_fc + 1L]] <- hgap
     frame_widths[[base_fc + 2L]] <- text_col_widths[[j]]
     if (j < ncol) {
@@ -124,7 +130,7 @@ euler_legend_grob <- function(
   }
   frame_heights <- do.call(grid::unit.c, frame_heights)
 
-  sym_frame_cols  <- (seq_len(ncol) - 1L) * 4L + 1L
+  sym_frame_cols <- (seq_len(ncol) - 1L) * 4L + 1L
   text_frame_cols <- (seq_len(ncol) - 1L) * 4L + 3L
 
   fg <- grid::frameGrob(
@@ -139,8 +145,18 @@ euler_legend_grob <- function(
   for (i in seq_len(n)) {
     frame_r <- 2L * entry_rows[i] - 1L
     j <- entry_cols[i]
-    fg <- grid::placeGrob(fg, symbol_grobs[[i]], row = frame_r, col = sym_frame_cols[j])
-    fg <- grid::placeGrob(fg, text_grobs[[i]], row = frame_r, col = text_frame_cols[j])
+    fg <- grid::placeGrob(
+      fg,
+      symbol_grobs[[i]],
+      row = frame_r,
+      col = sym_frame_cols[j]
+    )
+    fg <- grid::placeGrob(
+      fg,
+      text_grobs[[i]],
+      row = frame_r,
+      col = text_frame_cols[j]
+    )
   }
 
   fg
