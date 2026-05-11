@@ -96,7 +96,19 @@ plot(...)
 
   a logical, vector, or list. Vectors are assumed to be text for the
   labels. See
-  [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html).
+  [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html). In
+  addition to the [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html)
+  fields, the following placement controls are supported (delegated to
+  the `eunoia` Rust crate): `labels$placement` (`"raycast"` (default) or
+  `"force_directed"`) selects the exterior solver used when a label does
+  not fit inside its region; `labels$margin` (numeric) overrides the
+  per-region margin between an exterior label and the diagram (default
+  is half the larger of the label's width and height);
+  `labels$iterations` sets the iteration cap for the force-directed
+  solver; `labels$tether` (`"poi"` (default) or `"boundary"`) chooses
+  where the leader line attaches on the source region; and
+  `labels$leader` is a list (`col`, `alpha`, `lwd`, `lty`, `lex`)
+  styling the leader line drawn from the tether to the exterior label.
 
 - quantities:
 
@@ -156,9 +168,11 @@ plot(...)
   character value is treated as a fill color shorthand. A list accepts
   `fill`, `alpha`, `col`, `lty`, `lwd`, `lex` (outline + label gpar),
   `fontsize`, `cex`, `font`, `fontfamily`, `lineheight` (label only),
-  and `label` (custom text — defaults to the complement count). Has no
-  effect if the diagram was fit without `complement =`. Defaults can be
-  set via `eulerr_options(complement = ...)`.
+  and `label` (custom text — defaults to the complement count). Also
+  accepts the same placement controls as `labels` (`placement`,
+  `margin`, `iterations`, `tether`, `leader`) for the complement count
+  label. Has no effect if the diagram was fit without `complement =`.
+  Defaults can be set via `eulerr_options(complement = ...)`.
 
 - rotate:
 
@@ -272,17 +286,17 @@ plot(fit, quantities = TRUE)
 # Add a custom legend and retain quantities
 plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 
+#> Error in place_euler_labels(set_names = rownames(ellipses), h = ellipses$h,     k = ellipses$k, a = ellipses$a, b = ellipses$b, phi = ellipses$phi,     container_h = if (has_container) container$h else NULL, container_k = if (has_container) container$k else NULL,     container_width = if (has_container) container$width else NULL,     container_height = if (has_container) container$height else NULL,     n_vertices = as.integer(x$n_vertices), label_combos = combos[ok],     label_widths = widths[ok], label_heights = heights[ok], placement = placement_opts$placement,     placement_margin = placement_opts$margin, placement_iterations = placement_opts$iterations,     placement_tether = placement_opts$tether, label_precision = x$label_precision): Expected non zero length
 
 # Plot without fills and distinguish sets with border types instead
 plot(fit, fills = "transparent", lty = 1:2)
 
-
 # Save plot parameters to plot using some other method
 diagram_description <- plot(fit)
 
+
 # Plots using 'by' argument
 plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
-
 
 # Per-panel styling with `by_group`
 plot(
@@ -294,4 +308,5 @@ plot(
     )
   )
 )
+
 ```

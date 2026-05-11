@@ -1,31 +1,13 @@
-# Setup grobs for labels (labels, quantities, percentages)
+# Setup grobs for one tag (label + quantity + leader).
 
-Setup grobs for labels (labels, quantities, percentages)
+Builds the gList via
+[`build_tag_grobs()`](https://jolars.github.io/eulerr/dev/reference/build_tag_grobs.md)
+and stashes the text / gpar bundle on the resulting `EulerTag` gTree so
+[`makeContent.EulerTags()`](https://jolars.github.io/eulerr/dev/reference/makeContent.EulerTags.md)
+can rebuild it at draw time with fresh measurements.
 
 ## Usage
 
 ``` r
 setup_tag(data, labels, quantities, number)
 ```
-
-## Arguments
-
-- data:
-
-  data for the locations of points and more
-
-- labels:
-
-  plot parameters for labels
-
-- quantities:
-
-  plot parameters for quantities
-
-- number:
-
-  panel number, used for naming the resulting grob
-
-## Value
-
-A [`grid::gTree()`](https://rdrr.io/r/grid/grid-defunct.html) object

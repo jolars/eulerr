@@ -82,6 +82,11 @@ palette](visualization_files/figure-html/colorexamle-1.png)
 
 The eight first colors of the default color palette
 
+![The eight first colors of the default color
+palette](visualization_files/figure-html/colorexamle-2.png)
+
+The eight first colors of the default color palette
+
 ## Normalizing dispersed layouts
 
 If there are disjoint clusters of ellipses, the optimizer will often

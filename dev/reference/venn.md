@@ -134,6 +134,7 @@ f1 <- venn(5, names = letters[1:5])
 plot(f1)
 
 
+
 # Using data (a numeric vector)
 f2 <- venn(c(A = 1, "B&C" = 3, "A&D" = 0.3))
 

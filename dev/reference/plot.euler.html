@@ -142,7 +142,19 @@ the legend symbols independently of the text size. See
 
 <dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
 <dd><p>a logical, vector, or list. Vectors are assumed to be
-text for the labels. See <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::grid.text()</a></code>.</p></dd>
+text for the labels. See <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::grid.text()</a></code>. In addition to the
+<code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> fields, the following placement controls are
+supported (delegated to the <code>eunoia</code> Rust crate):
+<code>labels$placement</code> (<code>"raycast"</code> (default) or <code>"force_directed"</code>)
+selects the exterior solver used when a label does not fit inside
+its region; <code>labels$margin</code> (numeric) overrides the per-region
+margin between an exterior label and the diagram (default is half
+the larger of the label's width and height); <code>labels$iterations</code>
+sets the iteration cap for the force-directed solver;
+<code>labels$tether</code> (<code>"poi"</code> (default) or <code>"boundary"</code>) chooses where
+the leader line attaches on the source region; and <code>labels$leader</code>
+is a list (<code>col</code>, <code>alpha</code>, <code>lwd</code>, <code>lty</code>, <code>lex</code>) styling the leader
+line drawn from the tether to the exterior label.</p></dd>
 
 
 <dt id="arg-quantities">quantities<a class="anchor" aria-label="anchor" href="#arg-quantities"></a></dt>
@@ -197,8 +209,11 @@ its label entirely. A character value is treated as a fill color
 shorthand. A list accepts <code>fill</code>, <code>alpha</code>, <code>col</code>, <code>lty</code>, <code>lwd</code>,
 <code>lex</code> (outline + label gpar), <code>fontsize</code>, <code>cex</code>, <code>font</code>, <code>fontfamily</code>,
 <code>lineheight</code> (label only), and <code>label</code> (custom text — defaults to the
-complement count). Has no effect if the diagram was fit without
-<code>complement =</code>. Defaults can be set via <code>eulerr_options(complement = ...)</code>.</p></dd>
+complement count). Also accepts the same placement controls as
+<code>labels</code> (<code>placement</code>, <code>margin</code>, <code>iterations</code>, <code>tether</code>, <code>leader</code>)
+for the complement count label. Has no effect if the diagram was
+fit without <code>complement =</code>. Defaults can be set via
+<code>eulerr_options(complement = ...)</code>.</p></dd>
 
 
 <dt id="arg-rotate">rotate<a class="anchor" aria-label="anchor" href="#arg-rotate"></a></dt>
@@ -284,17 +299,17 @@ function is assigned to a variable (rather than printed to screen).</p>
 <span class="r-in"><span><span class="co"># Add a custom legend and retain quantities</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, quantities <span class="op">=</span> <span class="cn">TRUE</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.euler-3.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in place_euler_labels(set_names = rownames(ellipses), h = ellipses$h,     k = ellipses$k, a = ellipses$a, b = ellipses$b, phi = ellipses$phi,     container_h = if (has_container) container$h else NULL, container_k = if (has_container) container$k else NULL,     container_width = if (has_container) container$width else NULL,     container_height = if (has_container) container$height else NULL,     n_vertices = as.integer(x$n_vertices), label_combos = combos[ok],     label_widths = widths[ok], label_heights = heights[ok], placement = placement_opts$placement,     placement_margin = placement_opts$margin, placement_iterations = placement_opts$iterations,     placement_tether = placement_opts$tether, label_precision = x$label_precision):</span> Expected non zero length</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot without fills and distinguish sets with border types instead</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, fills <span class="op">=</span> <span class="st">"transparent"</span>, lty <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.euler-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Save plot parameters to plot using some other method</span></span></span>
 <span class="r-in"><span><span class="va">diagram_description</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.euler-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plots using 'by' argument</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="euler.html">euler</a></span><span class="op">(</span><span class="va">fruits</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">sex</span><span class="op">)</span><span class="op">)</span>, legend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.euler-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Per-panel styling with `by_group`</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span></span>
@@ -306,6 +321,7 @@ function is assigned to a variable (rather than printed to screen).</p>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.euler-5.png" alt="" width="700" height="433"></span>
 <span class="r-plt img"><img src="plot.euler-6.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

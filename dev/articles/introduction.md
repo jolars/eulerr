@@ -127,6 +127,12 @@ error_plot(fit2)
 A plot from
 [`error_plot()`](https://jolars.github.io/eulerr/dev/reference/error_plot.md).
 
+![A plot from
+\`error_plot()\`.](introduction_files/figure-html/error-plot-2.png)
+
+A plot from
+[`error_plot()`](https://jolars.github.io/eulerr/dev/reference/error_plot.md).
+
 This shows us that the intersection is somewhat overrepresented in .
 Given that these residuals are on the scale of the original values,
 however, the residuals are arguably of little concern.
@@ -202,6 +208,11 @@ plot(fit3)
 
 A difficult combination from Wilkinson 2012.
 
+![A difficult combination from Wilkinson
+2012.](introduction_files/figure-html/unnamed-chunk-2-2.png)
+
+A difficult combination from Wilkinson 2012.
+
 If we still lack a good fit after having tried ellipses, we would do
 best to stop here and look for another way to visualize our data. (I
 suggest the excellent
@@ -238,6 +249,11 @@ plot(
 
 ![Customizing Euler plots is a breeze in
 eulerr.](introduction_files/figure-html/eulerr-plot-2.png)
+
+Customizing Euler plots is a breeze in eulerr.
+
+![Customizing Euler plots is a breeze in
+eulerr.](introduction_files/figure-html/eulerr-plot-3.png)
 
 Customizing Euler plots is a breeze in eulerr.
 

@@ -5,7 +5,17 @@ Compute geometries and label locations
 ## Usage
 
 ``` r
-setup_geometry(x, fills, edges, labels, quantities, n, merged_sets)
+setup_geometry(
+  x,
+  fills,
+  edges,
+  labels,
+  quantities,
+  n,
+  merged_sets,
+  placement_opts = NULL,
+  do_complement_label = FALSE
+)
 ```
 
 ## Arguments
