@@ -98,6 +98,14 @@ is_false <- function(x) {
   identical(x, FALSE)
 }
 
+#' Null-coalesce: returns `y` when `x` is `NULL`, else `x`. Local
+#' polyfill so we keep the R >= 4.2 floor (base `%||%` is 4.4+).
+#' @keywords internal
+#' @noRd
+`%||%` <- function(x, y) {
+  if (is.null(x)) y else x
+}
+
 #' Check if a vector is an integer
 #'
 #' @param x a vector

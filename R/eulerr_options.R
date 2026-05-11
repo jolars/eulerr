@@ -135,7 +135,18 @@ eulerr_default_options <- function() {
       cex = 1,
       fontfamily = "",
       lineheight = 1.2,
-      font = 2
+      font = 2,
+      placement = "raycast",
+      margin = NULL,
+      iterations = NULL,
+      tether = "poi",
+      leader = list(
+        col = NULL,
+        alpha = 0.6,
+        lwd = 1,
+        lty = 2,
+        lex = 1
+      )
     ),
     quantities = list(
       type = "counts",
@@ -205,7 +216,18 @@ eulerr_default_options <- function() {
       cex = 1,
       font = 1,
       fontfamily = "",
-      lineheight = 1.2
+      lineheight = 1.2,
+      placement = "raycast",
+      margin = NULL,
+      iterations = NULL,
+      tether = "poi",
+      leader = list(
+        col = NULL,
+        alpha = 0.6,
+        lwd = 1,
+        lty = 2,
+        lex = 1
+      )
     ),
     padding = grid::unit(0.4, "lines")
   )

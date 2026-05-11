@@ -8,7 +8,10 @@ use eunoia::{
         traits::{DiagramShape, Polygonize},
     },
     loss::LossType,
-    plotting::{decompose_regions, polygon_clip, ClipOperation, RegionPiece},
+    plotting::{
+        decompose_regions, place_labels, placements_bbox, polygon_clip, ClipOperation,
+        ExteriorPolicy, PlacementKind, PlacementStrategy, RegionPiece, TetherSource,
+    },
     spec::DiagramSpec,
     Combination, DiagramError, DiagramSpecBuilder, Fitter, InputType,
 };
@@ -48,6 +51,29 @@ fn parse_loss_type(loss: &str) -> std::result::Result<LossType, Error> {
         "stress" => Ok(LossType::Stress),
         "diag_error" => Ok(LossType::DiagError),
         other => Err(format!("Unknown loss type: {}", other).into()),
+    }
+}
+
+/// Parse a placement-strategy string into the eunoia [`ExteriorPolicy`]
+/// variant, applying optional `margin` / `iterations` overrides.
+fn parse_placement(
+    placement: &str,
+    margin: Option<f64>,
+    iterations: Option<usize>,
+) -> std::result::Result<ExteriorPolicy, Error> {
+    match placement {
+        "raycast" => Ok(ExteriorPolicy::Raycast { margin }),
+        "force_directed" => Ok(ExteriorPolicy::ForceDirected { margin, iterations }),
+        other => Err(format!("Unknown placement strategy: {}", other).into()),
+    }
+}
+
+/// Parse a tether-source string into the eunoia [`TetherSource`] variant.
+fn parse_tether(tether: &str) -> std::result::Result<TetherSource, Error> {
+    match tether {
+        "poi" => Ok(TetherSource::Poi),
+        "boundary" => Ok(TetherSource::Boundary),
+        other => Err(format!("Unknown tether source: {}", other).into()),
     }
 }
 
@@ -804,6 +830,238 @@ fn euler_plot_data(
     ))
 }
 
+fn placement_kind_str(kind: PlacementKind) -> &'static str {
+    match kind {
+        PlacementKind::Interior => "interior",
+        PlacementKind::ExteriorRaycast => "exterior_raycast",
+        PlacementKind::ExteriorForceDirected => "exterior_force_directed",
+    }
+}
+
+/// Place per-region labels using eunoia's `place_labels` API.
+///
+/// Inputs mirror `euler_plot_data` for shape geometry and add per-region
+/// label sizes plus placement-strategy options. Returns, parallel to
+/// `label_combos`:
+///
+/// * `anchor_x` / `anchor_y` — placed label anchor (NA on miss);
+/// * `kind` — one of `"interior"`, `"exterior_raycast"`,
+///   `"exterior_force_directed"`; `""` if no placement was produced;
+/// * `tether_x` / `tether_y` — tether point for the leader line (NA for
+///   interior placements / misses).
+///
+/// Plus a canvas bbox (`canvas_bbox_h/k/width/height`) from eunoia's
+/// `placements_bbox` — NaN when no placements were produced — for the R
+/// side to grow `xlim/ylim` so exterior labels are never clipped.
+///
+/// The complement region is requested with `""` in `label_combos`; when
+/// `container_*` are non-NULL the spec is built with `.complement(1.0)`
+/// so eunoia emits the empty `Combination` from `decompose_regions`.
+///
+/// @keywords internal
+#[extendr]
+#[allow(clippy::too_many_arguments)]
+fn place_euler_labels(
+    set_names: Vec<String>,
+    h: Vec<f64>,
+    k: Vec<f64>,
+    a: Vec<f64>,
+    b: Vec<f64>,
+    phi: Vec<f64>,
+    container_h: Robj,
+    container_k: Robj,
+    container_width: Robj,
+    container_height: Robj,
+    n_vertices: i32,
+    label_combos: Vec<String>,
+    label_widths: Vec<f64>,
+    label_heights: Vec<f64>,
+    placement: &str,
+    placement_margin: Robj,
+    placement_iterations: Robj,
+    placement_tether: &str,
+    label_precision: f64,
+) -> extendr_api::Result<List> {
+    let n = set_names.len();
+    let n_labels = label_combos.len();
+
+    if label_widths.len() != n_labels || label_heights.len() != n_labels {
+        return Err(
+            "label_combos, label_widths and label_heights must have the same length".into(),
+        );
+    }
+
+    // Empty diagram: return NA-filled parallel vectors so the R side
+    // doesn't have to special-case.
+    if n == 0 || n_labels == 0 {
+        let nan_vec = vec![f64::NAN; n_labels];
+        let kind_vec = vec![String::new(); n_labels];
+        return Ok(list!(
+            anchor_x = nan_vec.clone(),
+            anchor_y = nan_vec.clone(),
+            kind = kind_vec,
+            tether_x = nan_vec.clone(),
+            tether_y = nan_vec,
+            canvas_bbox_h = f64::NAN,
+            canvas_bbox_k = f64::NAN,
+            canvas_bbox_width = f64::NAN,
+            canvas_bbox_height = f64::NAN,
+        ));
+    }
+
+    if h.len() != n || k.len() != n || a.len() != n || b.len() != n || phi.len() != n {
+        return Err(
+            "set_names and shape parameter vectors must all have the same length".into(),
+        );
+    }
+
+    let n_vertices = n_vertices.max(3) as usize;
+
+    let ellipses: Vec<Ellipse> = (0..n)
+        .map(|i| {
+            Ellipse::try_new(Point::new(h[i], k[i]), a[i], b[i], phi[i]).map_err(|e| match e {
+                DiagramError::InvalidShapeParameter {
+                    shape,
+                    param,
+                    value,
+                } => Error::from(format!(
+                    "invalid {} parameter `{}` for set `{}`: {}",
+                    shape, param, set_names[i], value
+                )),
+                other => Error::from(format!("eunoia ellipse error: {}", other)),
+            })
+        })
+        .collect::<extendr_api::Result<Vec<_>>>()?;
+
+    let container = build_container(
+        &container_h,
+        &container_k,
+        &container_width,
+        &container_height,
+    );
+
+    // Build a region-decomposition spec. Areas are dummies; eunoia reads
+    // only set names and `spec.complement()`. Setting `.complement(1.0)`
+    // when a container is provided makes `decompose_regions` emit the
+    // empty `Combination` (the complement region), which is what the
+    // caller needs for placement of the `""` key.
+    let mut builder = DiagramSpecBuilder::new();
+    for name in &set_names {
+        builder = builder.set(name.as_str(), 1.0);
+    }
+    if container.is_some() {
+        builder = builder.complement(1.0);
+    }
+    let spec = builder
+        .input_type(InputType::Exclusive)
+        .build()
+        .map_err(|e| Error::from(format!("eunoia spec build error: {}", e)))?;
+
+    let regions = decompose_regions(
+        &ellipses,
+        &set_names,
+        &spec,
+        container.as_ref(),
+        n_vertices,
+    );
+
+    // Build the size HashMap keyed by canonical Combination string form so
+    // place_labels' internal `key.parse::<Combination>()` finds each
+    // region. Input-order keys ("A&B" where A,B are in input order) round-
+    // trip cleanly because Combination::from_str sorts internally.
+    let mut sizes: HashMap<String, (f64, f64)> = HashMap::with_capacity(n_labels);
+    // Track the canonical key per caller-order index so we can read back
+    // placements in the same order the caller passed.
+    let mut canonical_keys: Vec<Option<String>> = Vec::with_capacity(n_labels);
+    for (i, raw) in label_combos.iter().enumerate() {
+        let w = label_widths[i];
+        let hh = label_heights[i];
+        if !(w.is_finite() && hh.is_finite()) || w <= 0.0 || hh <= 0.0 {
+            canonical_keys.push(None);
+            continue;
+        }
+        let combo: Combination = raw.parse().unwrap_or_else(|_| Combination::new(&[]));
+        let key = combo.to_string();
+        sizes.insert(key.clone(), (w, hh));
+        canonical_keys.push(Some(key));
+    }
+
+    let margin_opt: Option<f64> = read_optional_f64(&placement_margin);
+    let iterations_opt: Option<usize> = if placement_iterations.is_null() {
+        None
+    } else {
+        placement_iterations
+            .as_real()
+            .filter(|v| v.is_finite() && *v >= 1.0)
+            .map(|v| v as usize)
+    };
+
+    let exterior = parse_placement(placement, margin_opt, iterations_opt)?;
+    let tether_source = parse_tether(placement_tether)?;
+    let strategy = PlacementStrategy {
+        exterior,
+        precision: label_precision.max(f64::EPSILON),
+        tether: tether_source,
+    };
+
+    let placements = place_labels(&regions, &sizes, container.as_ref(), &strategy);
+
+    let mut anchor_x = Vec::with_capacity(n_labels);
+    let mut anchor_y = Vec::with_capacity(n_labels);
+    let mut kind = Vec::with_capacity(n_labels);
+    let mut tether_x = Vec::with_capacity(n_labels);
+    let mut tether_y = Vec::with_capacity(n_labels);
+
+    for canon in &canonical_keys {
+        match canon.as_ref().and_then(|k| placements.get(k)) {
+            Some(p) => {
+                anchor_x.push(p.anchor.x());
+                anchor_y.push(p.anchor.y());
+                kind.push(placement_kind_str(p.kind).to_string());
+                match p.tether {
+                    Some(t) => {
+                        tether_x.push(t.x());
+                        tether_y.push(t.y());
+                    }
+                    None => {
+                        tether_x.push(f64::NAN);
+                        tether_y.push(f64::NAN);
+                    }
+                }
+            }
+            None => {
+                anchor_x.push(f64::NAN);
+                anchor_y.push(f64::NAN);
+                kind.push(String::new());
+                tether_x.push(f64::NAN);
+                tether_y.push(f64::NAN);
+            }
+        }
+    }
+
+    let (cbb_h, cbb_k, cbb_w, cbb_height) = match placements_bbox(&placements, &sizes) {
+        Some(rect) => (
+            rect.center().x(),
+            rect.center().y(),
+            rect.width(),
+            rect.height(),
+        ),
+        None => (f64::NAN, f64::NAN, f64::NAN, f64::NAN),
+    };
+
+    Ok(list!(
+        anchor_x = anchor_x,
+        anchor_y = anchor_y,
+        kind = kind,
+        tether_x = tether_x,
+        tether_y = tether_y,
+        canvas_bbox_h = cbb_h,
+        canvas_bbox_k = cbb_k,
+        canvas_bbox_width = cbb_w,
+        canvas_bbox_height = cbb_height,
+    ))
+}
+
 /// Clip a (possibly multi-polygon) subject path against a single clip
 /// polygon. Mirrors the slice of `polyclip::polyclip` behavior eulerr
 /// actually uses at the stripe-pattern site.
@@ -889,6 +1147,7 @@ extendr_module! {
     mod eulerr;
     fn fit_euler_diagram;
     fn euler_plot_data;
+    fn place_euler_labels;
     fn polygon_clip_rust;
     fn max_sets_default;
     fn max_sets_hard_cap;

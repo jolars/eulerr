@@ -13,7 +13,9 @@ setup_grobs(
   quantities,
   complement = NULL,
   number,
-  merged_sets
+  merged_sets,
+  n_vertices = 200L,
+  placement_opts = NULL
 )
 }
 \arguments{

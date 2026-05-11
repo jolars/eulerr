@@ -48,6 +48,7 @@
             spelling
             testthat
             urlchecker
+            profvis
           ];
         }
       );

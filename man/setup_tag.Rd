@@ -2,23 +2,13 @@
 % Please edit documentation in R/tag-grobs.R
 \name{setup_tag}
 \alias{setup_tag}
-\title{Setup grobs for labels (labels, quantities, percentages)}
+\title{Setup grobs for one tag (label + quantity + leader).}
 \usage{
 setup_tag(data, labels, quantities, number)
 }
-\arguments{
-\item{data}{data for the locations of points and more}
-
-\item{labels}{plot parameters for labels}
-
-\item{quantities}{plot parameters for quantities}
-
-\item{number}{panel number, used for naming the resulting grob}
-}
-\value{
-A \code{\link[grid:grid.grob]{grid::gTree()}} object
-}
 \description{
-Setup grobs for labels (labels, quantities, percentages)
+Builds the gList via \code{\link[=build_tag_grobs]{build_tag_grobs()}} and stashes the text / gpar
+bundle on the resulting \code{EulerTag} gTree so \code{\link[=makeContent.EulerTags]{makeContent.EulerTags()}}
+can rebuild it at draw time with fresh measurements.
 }
 \keyword{internal}

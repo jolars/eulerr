@@ -78,7 +78,25 @@ test_that("plotting an euler with complement renders without error", {
 })
 
 diagram_children <- function(g) {
-  g$children$canvas.grob$children[[1]]$children
+  # Walk the diagram subtree and return a flat list keyed by grob name.
+  # The complement label moved inside the EulerTags subtree so the
+  # complement count can be re-placed at draw time alongside region
+  # tags; the legacy lookup path returned only the top-level children
+  # of `diagram.grob.<n>`.
+  diagram <- g$children$canvas.grob$children[[1]]
+  out <- list()
+  walk <- function(node) {
+    nm <- node$name
+    if (!is.null(nm) && nzchar(nm)) {
+      out[[nm]] <<- node
+    }
+    kids <- node$children
+    if (!is.null(kids)) {
+      for (i in seq_along(kids)) walk(kids[[i]])
+    }
+  }
+  walk(diagram)
+  out
 }
 
 test_that("complement = FALSE drops the container grobs", {

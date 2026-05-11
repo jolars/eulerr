@@ -1,3 +1,4 @@
+AABB
 ASAN
 Acknowledgements
 Bxy
@@ -13,6 +14,7 @@ Dx
 EulerAPE
 Eunoia's
 Ey
+FFI
 Frederickson's
 Frederickson’s
 Fredrickson
@@ -45,6 +47,7 @@ al
 algorithmically
 arccos
 arctan
+bbox
 benchmarking
 bigcap
 bigcup
@@ -67,6 +70,7 @@ euler
 eulerAPE
 eulerr's
 eunoia
+eunoia's
 fontfamily
 fontsize
 fontsizes
@@ -103,6 +107,7 @@ pre
 projective
 pts
 quadric
+raycast
 regErrors
 regionError
 semiaxes

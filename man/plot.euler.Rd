@@ -68,7 +68,19 @@ the legend symbols independently of the text size. See
 \code{\link[grid:legendGrob]{grid::grid.legend()}}.}
 
 \item{labels}{a logical, vector, or list. Vectors are assumed to be
-text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}.}
+text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}. In addition to the
+\code{grid::gpar()} fields, the following placement controls are
+supported (delegated to the \code{eunoia} Rust crate):
+\code{labels$placement} (\code{"raycast"} (default) or \code{"force_directed"})
+selects the exterior solver used when a label does not fit inside
+its region; \code{labels$margin} (numeric) overrides the per-region
+margin between an exterior label and the diagram (default is half
+the larger of the label's width and height); \code{labels$iterations}
+sets the iteration cap for the force-directed solver;
+\code{labels$tether} (\code{"poi"} (default) or \code{"boundary"}) chooses where
+the leader line attaches on the source region; and \code{labels$leader}
+is a list (\code{col}, \code{alpha}, \code{lwd}, \code{lty}, \code{lex}) styling the leader
+line drawn from the tether to the exterior label.}
 
 \item{quantities}{a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
@@ -113,8 +125,11 @@ its label entirely. A character value is treated as a fill color
 shorthand. A list accepts \code{fill}, \code{alpha}, \code{col}, \code{lty}, \code{lwd},
 \code{lex} (outline + label gpar), \code{fontsize}, \code{cex}, \code{font}, \code{fontfamily},
 \code{lineheight} (label only), and \code{label} (custom text — defaults to the
-complement count). Has no effect if the diagram was fit without
-\verb{complement =}. Defaults can be set via \code{eulerr_options(complement = ...)}.}
+complement count). Also accepts the same placement controls as
+\code{labels} (\code{placement}, \code{margin}, \code{iterations}, \code{tether}, \code{leader})
+for the complement count label. Has no effect if the diagram was
+fit without \verb{complement =}. Defaults can be set via
+\code{eulerr_options(complement = ...)}.}
 
 \item{rotate}{a numeric value giving the angle in degrees by which to rotate
 the entire diagram layout. Positive values rotate counter-clockwise.

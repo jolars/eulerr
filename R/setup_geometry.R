@@ -17,7 +17,9 @@ setup_geometry <- function(
   labels,
   quantities,
   n,
-  merged_sets
+  merged_sets,
+  placement_opts = NULL,
+  do_complement_label = FALSE
 ) {
   dd <- x$ellipses
   empty_sets <- is.na(dd[, 1L]) & !merged_sets
@@ -168,7 +170,7 @@ setup_geometry <- function(
     has_center <- !is.na(centers$x) & !is.na(centers$y)
 
     if (do_labels) {
-      labels <- list(labels = labels$labels[which(!empty_sets)])
+      labels$labels <- labels$labels[which(!empty_sets)]
     }
 
     singles <- logical(NROW(centers))
@@ -361,6 +363,33 @@ setup_geometry <- function(
       label_y = cd$label_y,
       quantity_label = quantity_label
     )
+  }
+
+  # Refine label positions via eunoia's `place_labels` API: anchors come
+  # from POI when the label fits inside its region, otherwise eunoia
+  # places them exterior with a leader line. Also widens xlim/ylim so
+  # exterior labels stay inside the panel viewport — labels are never
+  # clipped.
+  if (n_e > 0L) {
+    placement_label <- do_complement_label &&
+      !is.null(container_data) &&
+      !is.null(container_data$quantity_label) &&
+      !is.na(container_data$quantity_label)
+    placed <- apply_label_placement(
+      centers = centers,
+      container_data = container_data,
+      ellipses = dd,
+      labels = labels,
+      quantities = quantities,
+      placement_opts = placement_opts,
+      do_complement_label = placement_label,
+      limits = limits,
+      n_vertices = as.integer(n),
+      label_precision = max(width, height) / 100
+    )
+    centers <- placed$centers
+    container_data <- placed$container_data
+    limits <- placed$limits
   }
 
   list(

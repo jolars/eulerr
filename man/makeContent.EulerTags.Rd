@@ -2,11 +2,21 @@
 % Please edit documentation in R/tag-grobs.R
 \name{makeContent.EulerTags}
 \alias{makeContent.EulerTags}
-\title{Avoid overlap for labels}
+\title{Re-place tags at draw time so resizing the device doesn't clip labels.}
 \usage{
 \method{makeContent}{EulerTags}(x)
 }
 \description{
-This method for \code{\link[grid:makeContent]{grid::makeContent()}} sets up
+The panel viewport is active when \code{makeContent} fires, so we can
+measure each tag's footprint in current native units via
+\code{grid::convertWidth(grobWidth(...), "native")} and call eunoia's
+\code{\link[=place_euler_labels]{place_euler_labels()}} again. On resize, grid invalidates the tree
+and \code{makeContent} re-runs, so the placement tracks the current
+device automatically.
+}
+\details{
+Tags whose measured size is zero (or whose anchor / kind eunoia
+can't compute) keep the positions they were built with — typically
+the setup-time placement stored on \code{centers$x} / \code{centers$y}.
 }
 \keyword{internal}

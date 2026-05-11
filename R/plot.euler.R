@@ -77,7 +77,19 @@
 #'   the legend symbols independently of the text size. See
 #'   [grid::grid.legend()].
 #' @param labels a logical, vector, or list. Vectors are assumed to be
-#'   text for the labels. See [grid::grid.text()].
+#'   text for the labels. See [grid::grid.text()]. In addition to the
+#'   `grid::gpar()` fields, the following placement controls are
+#'   supported (delegated to the `eunoia` Rust crate):
+#'   `labels$placement` (`"raycast"` (default) or `"force_directed"`)
+#'   selects the exterior solver used when a label does not fit inside
+#'   its region; `labels$margin` (numeric) overrides the per-region
+#'   margin between an exterior label and the diagram (default is half
+#'   the larger of the label's width and height); `labels$iterations`
+#'   sets the iteration cap for the force-directed solver;
+#'   `labels$tether` (`"poi"` (default) or `"boundary"`) chooses where
+#'   the leader line attaches on the source region; and `labels$leader`
+#'   is a list (`col`, `alpha`, `lwd`, `lty`, `lex`) styling the leader
+#'   line drawn from the tether to the exterior label.
 #' @param quantities a logical, vector, or list. Vectors are assumed to be
 #'   text for the quantities' labels, which by
 #'   default are the original values in the input to [euler()]. In addition
@@ -111,8 +123,11 @@
 #'   shorthand. A list accepts `fill`, `alpha`, `col`, `lty`, `lwd`,
 #'   `lex` (outline + label gpar), `fontsize`, `cex`, `font`, `fontfamily`,
 #'   `lineheight` (label only), and `label` (custom text — defaults to the
-#'   complement count). Has no effect if the diagram was fit without
-#'   `complement =`. Defaults can be set via `eulerr_options(complement = ...)`.
+#'   complement count). Also accepts the same placement controls as
+#'   `labels` (`placement`, `margin`, `iterations`, `tether`, `leader`)
+#'   for the complement count label. Has no effect if the diagram was
+#'   fit without `complement =`. Defaults can be set via
+#'   `eulerr_options(complement = ...)`.
 #' @param n number of vertices for the `edges` and `fills`
 #' @param main a title for the plot in the form of a
 #'   character, expression, list or something that can be
@@ -879,6 +894,17 @@ plot.euler <- function(
       labels <- list(labels = labels, rot = opar$labels$rot)
     }
 
+    # Pull placement-related fields out so they don't leak into gpar.
+    placement_fields <- c(
+      "placement",
+      "margin",
+      "iterations",
+      "tether",
+      "leader"
+    )
+    placement_user <- labels[intersect(names(labels), placement_fields)]
+    labels[placement_fields] <- NULL
+
     labels$rot <- rep_len(labels$rot, n_e)
     labels$gp <- setup_gpar(
       list(
@@ -892,6 +918,17 @@ plot.euler <- function(
       ),
       labels,
       n_e
+    )
+
+    labels$placement <- placement_user$placement %||%
+      opar$labels$placement
+    labels$margin <- placement_user$margin %||% opar$labels$margin
+    labels$iterations <- placement_user$iterations %||%
+      opar$labels$iterations
+    labels$tether <- placement_user$tether %||% opar$labels$tether
+    labels$leader <- update_list(
+      opar$labels$leader %||% list(),
+      placement_user$leader %||% list()
     )
   } else {
     labels <- NULL
@@ -1180,6 +1217,20 @@ plot.euler <- function(
     complement_label <- complement_user$label
     complement_user$label <- NULL
 
+    # Pull placement fields out so they don't leak into gpar.
+    cplace_fields <- c(
+      "placement",
+      "margin",
+      "iterations",
+      "tether",
+      "leader"
+    )
+    cplace_user <- complement_user[intersect(
+      names(complement_user),
+      cplace_fields
+    )]
+    complement_user[cplace_fields] <- NULL
+
     complement <- list(label = complement_label)
     complement$gp <- setup_gpar(
       list(
@@ -1197,6 +1248,18 @@ plot.euler <- function(
       ),
       complement_user,
       1
+    )
+    complement$placement <- cplace_user$placement %||%
+      opar$complement$placement
+    complement$margin <- cplace_user$margin %||%
+      opar$complement$margin
+    complement$iterations <- cplace_user$iterations %||%
+      opar$complement$iterations
+    complement$tether <- cplace_user$tether %||%
+      opar$complement$tether
+    complement$leader <- update_list(
+      opar$complement$leader %||% list(),
+      cplace_user$leader %||% list()
     )
   } else {
     complement <- NULL
@@ -1225,6 +1288,12 @@ plot.euler <- function(
   }
 
   # set up geometry for diagrams
+  placement_opts <- list(
+    placement = labels$placement,
+    margin = labels$margin,
+    iterations = labels$iterations,
+    tether = labels$tether
+  )
   if (do_groups) {
     data <- lapply(
       x,
@@ -1234,7 +1303,9 @@ plot.euler <- function(
       labels = labels,
       quantities = quantities,
       n = n,
-      merged_sets = merged_sets
+      merged_sets = merged_sets,
+      placement_opts = placement_opts,
+      do_complement_label = isTRUE(do_complement)
     )
   } else {
     data <- setup_geometry(
@@ -1244,7 +1315,9 @@ plot.euler <- function(
       labels = labels,
       quantities = quantities,
       n = n,
-      merged_sets = merged_sets
+      merged_sets = merged_sets,
+      placement_opts = placement_opts,
+      do_complement_label = isTRUE(do_complement)
     )
   }
 
@@ -1291,7 +1364,9 @@ plot.euler <- function(
         quantities = quantities_i,
         complement = complement,
         number = i,
-        merged_sets = merged_sets
+        merged_sets = merged_sets,
+        n_vertices = as.integer(n),
+        placement_opts = placement_opts
       )
     }
     euler_grob <- grid::gTree(
@@ -1316,7 +1391,9 @@ plot.euler <- function(
       quantities = quantities,
       complement = complement,
       number = 1,
-      merged_sets = merged_sets
+      merged_sets = merged_sets,
+      n_vertices = as.integer(n),
+      placement_opts = placement_opts
     )
     euler_grob <- grid::grobTree(euler_grob, name = "canvas.grob")
 

@@ -1,93 +1,716 @@
-#' Setup grobs for labels (labels, quantities, percentages)
+#' Build the leader / label / quantity gList for one tag.
 #'
-#' @param data data for the locations of points and more
-#' @param labels plot parameters for labels
-#' @param number panel number, used for naming the resulting grob
-#' @param quantities plot parameters for quantities
+#' Shared between [setup_tag()] (initial construction in [setup_grobs()])
+#' and [makeContent.EulerTags()] (draw-time re-placement on resize).
+#' Pure factory — no measurement; takes anchor + tether already in
+#' native units, plus the stashed text / gpar bundle.
 #'
-#' @return A [grid::gTree()] object
 #' @keywords internal
-setup_tag <- function(data, labels, quantities, number) {
-  x <- data$x
-  y <- data$y
-
-  label <- data$labels
-  quantity <- data$quantities
-
-  # Parameter ids are only assigned for drawable tags, which avoids NA checks
-  # on expression labels (is.na(expression(...)) is warning-prone).
-  do_labels <- !is.null(labels) && !is.na(data$labels_par_id)
-  do_quantities <- !is.null(quantities) && !is.na(data$quantities_par_id)
-
-  padding <- eulerr_options()$padding
-
-  if (do_quantities) {
-    quantities_grob <- textGrob(
-      quantity,
-      x = unit(x, "native"),
-      y = unit(y, "native"),
-      rot = quantities$rot[data$quantities_par_id],
-      gp = quantities$gp[data$quantities_par_id],
-      name = paste0("tag.quantity.", data$quantities_par_id)
-    )
+build_tag_grobs <- function(
+  ax,
+  ay,
+  kind,
+  tx,
+  ty,
+  label_text,
+  quantity_text,
+  has_label,
+  has_quantity,
+  label_gp,
+  quantity_gp,
+  label_rot,
+  quantity_rot,
+  number,
+  leader_gp_list,
+  padding,
+  name_prefix = "tag"
+) {
+  qname <- if (identical(name_prefix, "complement")) {
+    "complement.quantity.grob"
   } else {
-    quantities_grob <- nullGrob()
+    paste0(name_prefix, ".quantity.", number)
+  }
+  lname <- if (identical(name_prefix, "complement")) {
+    "complement.label.grob"
+  } else {
+    paste0(name_prefix, ".label.", number)
+  }
+  leader_name <- if (identical(name_prefix, "complement")) {
+    "complement.leader.grob"
+  } else {
+    paste0(name_prefix, ".leader.", number)
   }
 
-  if (do_labels) {
-    labels_grob <- textGrob(
-      label,
-      x = unit(x, "native"),
-      y = unit(y, "native"),
-      rot = labels$rot[data$labels_par_id],
-      gp = labels$gp[data$labels_par_id],
-      name = paste0("tag.label.", data$labels_par_id)
+  if (has_quantity) {
+    quantity_grob <- grid::textGrob(
+      quantity_text,
+      x = grid::unit(ax, "native"),
+      y = grid::unit(ay, "native"),
+      rot = quantity_rot,
+      gp = quantity_gp,
+      name = qname
     )
+  } else {
+    quantity_grob <- grid::nullGrob(name = paste0(qname, ".null"))
+  }
 
-    if (do_quantities) {
-      labels_grob$y <- labels_grob$y +
-        0.5 * stringHeight(label) +
-        0.5 * grobHeight(quantities_grob) +
+  if (has_label) {
+    label_grob <- grid::textGrob(
+      label_text,
+      x = grid::unit(ax, "native"),
+      y = grid::unit(ay, "native"),
+      rot = label_rot,
+      gp = label_gp,
+      name = lname
+    )
+    if (has_quantity) {
+      label_grob$y <- label_grob$y +
+        0.5 * grid::stringHeight(label_text) +
+        0.5 * grid::grobHeight(quantity_grob) +
         padding
     }
   } else {
-    labels_grob <- nullGrob()
+    label_grob <- grid::nullGrob(name = paste0(lname, ".null"))
   }
 
-  grobs <- gList(
-    label = labels_grob,
-    quantity = quantities_grob
+  leader_grob <- build_leader_grob(
+    ax = ax,
+    ay = ay,
+    kind = kind,
+    tx = tx,
+    ty = ty,
+    leader_gp_list = leader_gp_list,
+    fallback_gp = if (has_label) label_gp else quantity_gp,
+    name = leader_name
   )
 
-  gTree(
+  grid::gList(
+    leader = leader_grob,
+    label = label_grob,
+    quantity = quantity_grob
+  )
+}
+
+#' Build the polyline leader for an exterior tag, or [grid::nullGrob()]
+#' for interior / missing-tether placements.
+#'
+#' Drawn before the text grobs so the text visually covers the leader's
+#' anchor end — a cheap substitute for proper AABB edge clipping.
+#' @keywords internal
+build_leader_grob <- function(
+  ax,
+  ay,
+  kind,
+  tx,
+  ty,
+  leader_gp_list,
+  fallback_gp,
+  name
+) {
+  is_exterior <- !is.null(kind) &&
+    !is.na(kind) &&
+    nzchar(kind) &&
+    !identical(kind, "interior")
+  if (!is_exterior) {
+    return(grid::nullGrob(name = name))
+  }
+  if (
+    is.null(tx) ||
+      is.null(ty) ||
+      !is.finite(tx) ||
+      !is.finite(ty)
+  ) {
+    return(grid::nullGrob(name = name))
+  }
+
+  fallback_col <- if (
+    !is.null(fallback_gp) &&
+      !is.null(fallback_gp$col) &&
+      length(fallback_gp$col) >= 1L
+  ) {
+    fallback_gp$col[1L]
+  } else {
+    "black"
+  }
+  pick <- function(field, default) {
+    if (!is.null(leader_gp_list) && !is.null(leader_gp_list[[field]])) {
+      leader_gp_list[[field]][1L]
+    } else {
+      default
+    }
+  }
+  gp <- grid::gpar(
+    col = pick("col", fallback_col),
+    alpha = pick("alpha", 0.6),
+    lwd = pick("lwd", 1),
+    lty = pick("lty", 2),
+    lex = pick("lex", 1)
+  )
+
+  grid::polylineGrob(
+    x = c(tx, ax),
+    y = c(ty, ay),
+    default.units = "native",
+    gp = gp,
+    name = name
+  )
+}
+
+#' Setup grobs for one tag (label + quantity + leader).
+#'
+#' Builds the gList via [build_tag_grobs()] and stashes the text / gpar
+#' bundle on the resulting `EulerTag` gTree so [makeContent.EulerTags()]
+#' can rebuild it at draw time with fresh measurements.
+#'
+#' @keywords internal
+setup_tag <- function(data, labels, quantities, number) {
+  has_label <- !is.null(labels) && !is.na(data$labels_par_id)
+  has_quantity <- !is.null(quantities) && !is.na(data$quantities_par_id)
+
+  label_text <- if (has_label) data$labels else NA
+  quantity_text <- if (has_quantity) data$quantities else NA
+  label_gp <- if (has_label) labels$gp[data$labels_par_id] else NULL
+  quantity_gp <- if (has_quantity) quantities$gp[data$quantities_par_id] else NULL
+  label_rot <- if (has_label) labels$rot[data$labels_par_id] else 0
+  quantity_rot <- if (has_quantity) {
+    quantities$rot[data$quantities_par_id]
+  } else {
+    0
+  }
+
+  padding <- eulerr_options()$padding
+  leader_gp_list <- if (!is.null(labels)) labels$leader else NULL
+
+  grobs <- build_tag_grobs(
+    ax = data$x,
+    ay = data$y,
+    kind = data$kind,
+    tx = data$tether_x,
+    ty = data$tether_y,
+    label_text = label_text,
+    quantity_text = quantity_text,
+    has_label = has_label,
+    has_quantity = has_quantity,
+    label_gp = label_gp,
+    quantity_gp = quantity_gp,
+    label_rot = label_rot,
+    quantity_rot = quantity_rot,
+    number = number,
+    leader_gp_list = leader_gp_list,
+    padding = padding
+  )
+
+  grid::gTree(
     children = grobs,
+    combo_key = rownames(data),
+    label_text = label_text,
+    quantity_text = quantity_text,
+    has_label = has_label,
+    has_quantity = has_quantity,
+    label_gp = label_gp,
+    quantity_gp = quantity_gp,
+    label_rot = label_rot,
+    quantity_rot = quantity_rot,
+    leader_gp_list = leader_gp_list,
+    padding = padding,
+    number = number,
     name = paste("tag", "number", number, sep = "."),
     cl = "EulerTag"
   )
 }
 
-#' Avoid overlap for labels
+#' Setup the complement-count tag, in the same shape as a region tag so
+#' it shares one [makeContent.EulerTags()] pass.
 #'
-#' This method for [grid::makeContent()] sets up
+#' Acts as a quantity-only tag with `combo_key = ""`. The complement
+#' label text comes either from `complement$label` (user override) or
+#' from `container_data$quantity_label` (the fitted complement count).
+#'
+#' @keywords internal
+setup_complement_tag <- function(container_data, complement, number) {
+  if (is.null(container_data)) {
+    return(NULL)
+  }
+  label_text <- complement$label
+  if (is.null(label_text)) {
+    label_text <- container_data$quantity_label
+  }
+  if (
+    is.null(label_text) ||
+      is.na(label_text) ||
+      !is.finite(container_data$label_x) ||
+      !is.finite(container_data$label_y)
+  ) {
+    return(NULL)
+  }
+  cgp <- complement$gp
+  quantity_gp <- grid::gpar(
+    col = cgp$col[1L],
+    alpha = cgp$alpha[1L],
+    fontsize = cgp$fontsize[1L],
+    cex = cgp$cex[1L],
+    fontfamily = cgp$fontfamily[1L],
+    lineheight = cgp$lineheight[1L],
+    font = cgp$font[1L]
+  )
+  leader_gp_list <- complement$leader
+  padding <- eulerr_options()$padding
+
+  grobs <- build_tag_grobs(
+    ax = container_data$label_x,
+    ay = container_data$label_y,
+    kind = container_data$kind,
+    tx = container_data$tether_x,
+    ty = container_data$tether_y,
+    label_text = NA,
+    quantity_text = label_text,
+    has_label = FALSE,
+    has_quantity = TRUE,
+    label_gp = NULL,
+    quantity_gp = quantity_gp,
+    label_rot = 0,
+    quantity_rot = 0,
+    number = number,
+    leader_gp_list = leader_gp_list,
+    padding = padding,
+    name_prefix = "complement"
+  )
+
+  grid::gTree(
+    children = grobs,
+    combo_key = "",
+    label_text = NA,
+    quantity_text = label_text,
+    has_label = FALSE,
+    has_quantity = TRUE,
+    label_gp = NULL,
+    quantity_gp = quantity_gp,
+    label_rot = 0,
+    quantity_rot = 0,
+    leader_gp_list = leader_gp_list,
+    padding = padding,
+    number = number,
+    name_prefix = "complement",
+    name = paste("tag", "number", number, "complement", sep = "."),
+    cl = "EulerTag"
+  )
+}
+
+#' Measure one tag's combined AABB in the current viewport's native units.
+#' @keywords internal
+measure_tag_native <- function(tag, padding_native) {
+  label_w <- 0
+  label_h <- 0
+  if (isTRUE(tag$has_label)) {
+    g <- grid::textGrob(tag$label_text, gp = tag$label_gp)
+    label_w <- grid::convertWidth(
+      grid::grobWidth(g),
+      "native",
+      valueOnly = TRUE
+    )
+    label_h <- grid::convertHeight(
+      grid::grobHeight(g),
+      "native",
+      valueOnly = TRUE
+    )
+  }
+  quant_w <- 0
+  quant_h <- 0
+  if (isTRUE(tag$has_quantity)) {
+    g <- grid::textGrob(tag$quantity_text, gp = tag$quantity_gp)
+    quant_w <- grid::convertWidth(
+      grid::grobWidth(g),
+      "native",
+      valueOnly = TRUE
+    )
+    quant_h <- grid::convertHeight(
+      grid::grobHeight(g),
+      "native",
+      valueOnly = TRUE
+    )
+  }
+  inter_pad <- if (label_h > 0 && quant_h > 0) padding_native else 0
+  list(w = max(label_w, quant_w), h = label_h + quant_h + inter_pad)
+}
+
+#' Find the `EulerTags` child of an `EulerPanel`, if any.
+#' @keywords internal
+find_eulertags <- function(panel) {
+  for (child in panel$children) {
+    if (inherits(child, "EulerTags")) {
+      return(child)
+    }
+  }
+  NULL
+}
+
+#' Measure every drawable tag inside `tags_grob` against the current
+#' viewport. Returns parallel vectors of combo / width / height suitable
+#' for handing to [place_euler_labels()].
+#' @keywords internal
+measure_all_tags <- function(tags_grob, padding) {
+  if (is.null(tags_grob) || length(tags_grob$children) == 0L) {
+    return(list(combos = character(), widths = numeric(), heights = numeric()))
+  }
+  padding_native <- grid::convertHeight(
+    padding,
+    "native",
+    valueOnly = TRUE
+  )
+  combos <- character()
+  widths <- numeric()
+  heights <- numeric()
+  for (child in tags_grob$children) {
+    sz <- measure_tag_native(child, padding_native)
+    if (sz$w > 0 && sz$h > 0 && is.finite(sz$w) && is.finite(sz$h)) {
+      combos <- c(combos, if (is.null(child$combo_key)) "" else child$combo_key)
+      widths <- c(widths, sz$w)
+      heights <- c(heights, sz$h)
+    }
+  }
+  list(combos = combos, widths = widths, heights = heights)
+}
+
+#' Set the panel viewport's `xscale`/`yscale` at draw time.
+#'
+#' Fires before grid pushes the panel viewport. We can therefore
+#' measure labels against the live cell, run eunoia's placement, and
+#' compute a viewport bbox that fits both the diagram and the labels.
+#' On window resize grid invalidates the gTree and `makeContext`
+#' re-runs, so the panel grows or shrinks to track the current device
+#' and exterior labels never extend past the viewport edge.
+#'
+#' Aspect preservation: the new bbox keeps `xrng / yrng` equal to the
+#' geometry's natural aspect (set by [setup_geometry()]) so that
+#' circles render as circles. The smaller dimension is padded if the
+#' label-driven canvas bbox is asymmetric.
+#'
+#' @export
+#' @keywords internal
+makeContext.EulerPanel <- function(x) {
+  ellipses <- x$ellipses
+  geom_xlim <- x$geom_xlim
+  geom_ylim <- x$geom_ylim
+  if (
+    is.null(geom_xlim) ||
+      is.null(geom_ylim) ||
+      !all(is.finite(c(geom_xlim, geom_ylim)))
+  ) {
+    return(x)
+  }
+
+  # Always emit a vp so grid has something to push. We update its
+  # xscale/yscale below; the layout.pos fields come from
+  # `plot.euler.R`.
+  if (is.null(x$vp)) {
+    x$vp <- grid::viewport(
+      xscale = geom_xlim,
+      yscale = geom_ylim,
+      name = x$name %||% "panel.vp"
+    )
+  } else {
+    x$vp$xscale <- geom_xlim
+    x$vp$yscale <- geom_ylim
+  }
+
+  tags_grob <- find_eulertags(x)
+  if (
+    is.null(tags_grob) ||
+      length(tags_grob$children) == 0L ||
+      is.null(ellipses) ||
+      NROW(ellipses) == 0L
+  ) {
+    return(x)
+  }
+
+  geom_xrng <- diff(geom_xlim)
+  geom_yrng <- diff(geom_ylim)
+  if (geom_xrng <= 0 || geom_yrng <= 0) {
+    return(x)
+  }
+  geom_ar <- geom_xrng / geom_yrng
+
+  # The cell's pt aspect is set by `canvas_vp`'s `grid.layout`. We must
+  # use that aspect for the new xlim/ylim so circles render as circles
+  # AND the panel viewport's pt extent matches what the cell can give
+  # us — otherwise exterior label anchors at the edge of `xscale`/
+  # `yscale` may map past the cell and clip at the device edge.
+  cell_vp <- grid::viewport(
+    layout.pos.row = x$vp$layout.pos.row,
+    layout.pos.col = x$vp$layout.pos.col
+  )
+  grid::pushViewport(cell_vp)
+  cell_w_pt <- grid::convertWidth(grid::unit(1, "npc"), "pt", valueOnly = TRUE)
+  cell_h_pt <- grid::convertHeight(grid::unit(1, "npc"), "pt", valueOnly = TRUE)
+  grid::popViewport()
+  if (
+    !is.finite(cell_w_pt) ||
+      !is.finite(cell_h_pt) ||
+      cell_w_pt <= 0 ||
+      cell_h_pt <= 0
+  ) {
+    cell_ar <- geom_ar
+  } else {
+    cell_ar <- cell_w_pt / cell_h_pt
+  }
+
+  container <- x$container
+  has_container <- !is.null(container)
+  placement_opts <- if (is.null(x$placement_opts)) {
+    default_placement_opts()
+  } else {
+    x$placement_opts
+  }
+  precision <- if (
+    is.null(x$label_precision) || !is.finite(x$label_precision)
+  ) {
+    max(geom_xrng, geom_yrng) / 100
+  } else {
+    x$label_precision
+  }
+
+  # Fixed-point loop. Each iteration measures labels at the current
+  # candidate xlim/ylim, runs placement, and grows the viewport to
+  # include `canvas_bbox`. Label native size scales with `xrng/yrng`
+  # (font is in pt; bigger native extent => bigger native label), so
+  # growing the viewport between iterations grows the next iteration's
+  # labels. The loop converges as long as the labels fit inside the
+  # cell at all; we cap at a small iteration count to keep extreme
+  # corner cases from spinning. Whether converged or not, the LAST
+  # iteration's xlim/ylim is what we pin on the viewport — that's also
+  # what `makeContent.EulerTags` will re-measure against, so panel
+  # bbox and label positions stay consistent.
+  # Cap each axis at 10x the geometry extent. When the label is wider
+  # than the cell (label_pt > cell_pt), the fixed-point iteration has
+  # no solution and the bbox would otherwise diverge. Clamping at a
+  # finite multiple gives a coherent (if zoomed-out) frame — the
+  # diagram still draws and the user can see what's happening rather
+  # than getting a runaway bbox.
+  max_iters <- 30L
+  cap_factor <- 20
+  cap_xrng <- geom_xrng * cap_factor
+  cap_yrng <- geom_yrng * cap_factor
+  current_xlim <- geom_xlim
+  current_ylim <- geom_ylim
+  for (iter in seq_len(max_iters)) {
+    meas_vp <- grid::viewport(
+      layout.pos.row = x$vp$layout.pos.row,
+      layout.pos.col = x$vp$layout.pos.col,
+      xscale = current_xlim,
+      yscale = current_ylim
+    )
+    grid::pushViewport(meas_vp)
+    measurements <- tryCatch(
+      measure_all_tags(tags_grob, x$padding),
+      error = function(e) NULL
+    )
+    grid::popViewport()
+    if (is.null(measurements) || length(measurements$combos) == 0L) {
+      break
+    }
+
+    placements <- tryCatch(
+      place_euler_labels(
+        set_names = rownames(ellipses),
+        h = ellipses$h,
+        k = ellipses$k,
+        a = ellipses$a,
+        b = ellipses$b,
+        phi = ellipses$phi,
+        container_h = if (has_container) container$h else NULL,
+        container_k = if (has_container) container$k else NULL,
+        container_width = if (has_container) container$width else NULL,
+        container_height = if (has_container) container$height else NULL,
+        n_vertices = as.integer(x$n_vertices),
+        label_combos = measurements$combos,
+        label_widths = measurements$widths,
+        label_heights = measurements$heights,
+        placement = placement_opts$placement,
+        placement_margin = placement_opts$margin,
+        placement_iterations = placement_opts$iterations,
+        placement_tether = placement_opts$tether,
+        label_precision = precision
+      ),
+      error = function(e) NULL
+    )
+    if (
+      is.null(placements) ||
+        !is.finite(placements$canvas_bbox_h) ||
+        !is.finite(placements$canvas_bbox_width) ||
+        placements$canvas_bbox_width <= 0 ||
+        placements$canvas_bbox_height <= 0
+    ) {
+      break
+    }
+
+    cb_xmin <- placements$canvas_bbox_h -
+      placements$canvas_bbox_width / 2
+    cb_xmax <- placements$canvas_bbox_h +
+      placements$canvas_bbox_width / 2
+    cb_ymin <- placements$canvas_bbox_k -
+      placements$canvas_bbox_height / 2
+    cb_ymax <- placements$canvas_bbox_k +
+      placements$canvas_bbox_height / 2
+
+    xmin <- min(geom_xlim[1], cb_xmin)
+    xmax <- max(geom_xlim[2], cb_xmax)
+    ymin <- min(geom_ylim[1], cb_ymin)
+    ymax <- max(geom_ylim[2], cb_ymax)
+    xrng <- xmax - xmin
+    yrng <- ymax - ymin
+    cx <- (xmin + xmax) / 2
+    cy <- (ymin + ymax) / 2
+    if (xrng / yrng > cell_ar) {
+      yrng <- xrng / cell_ar
+    } else {
+      xrng <- yrng * cell_ar
+    }
+    new_xlim <- c(cx - xrng / 2, cx + xrng / 2)
+    new_ylim <- c(cy - yrng / 2, cy + yrng / 2)
+
+    new_xrng <- diff(new_xlim)
+    new_yrng <- diff(new_ylim)
+    rel_change <- max(
+      abs(new_xrng - diff(current_xlim)) / max(diff(current_xlim), 1e-9),
+      abs(new_yrng - diff(current_ylim)) / max(diff(current_ylim), 1e-9)
+    )
+
+    # Clamp at cap. Once we hit the cap, stop iterating.
+    capped <- FALSE
+    if (new_xrng > cap_xrng) {
+      mid <- (new_xlim[1] + new_xlim[2]) / 2
+      new_xlim <- c(mid - cap_xrng / 2, mid + cap_xrng / 2)
+      capped <- TRUE
+    }
+    if (new_yrng > cap_yrng) {
+      mid <- (new_ylim[1] + new_ylim[2]) / 2
+      new_ylim <- c(mid - cap_yrng / 2, mid + cap_yrng / 2)
+      capped <- TRUE
+    }
+    current_xlim <- new_xlim
+    current_ylim <- new_ylim
+    if (rel_change < 0.005 || capped) {
+      break
+    }
+  }
+
+  x$vp$xscale <- current_xlim
+  x$vp$yscale <- current_ylim
+  x
+}
+
+#' Re-place tags at draw time so resizing the device doesn't clip labels.
+#'
+#' The panel viewport is active when `makeContent` fires, so we can
+#' measure each tag's footprint in current native units via
+#' `grid::convertWidth(grobWidth(...), "native")` and call eunoia's
+#' [place_euler_labels()] again. On resize, grid invalidates the tree
+#' and `makeContent` re-runs, so the placement tracks the current
+#' device automatically.
+#'
+#' Tags whose measured size is zero (or whose anchor / kind eunoia
+#' can't compute) keep the positions they were built with — typically
+#' the setup-time placement stored on `centers$x` / `centers$y`.
 #'
 #' @export
 #' @keywords internal
 makeContent.EulerTags <- function(x) {
-  xlim <- x$xlim
-  ylim <- x$ylim
+  n <- length(x$children)
+  if (n == 0L) {
+    return(x)
+  }
+  ellipses <- x$ellipses
+  if (is.null(ellipses) || NROW(ellipses) == 0L) {
+    return(x)
+  }
 
-  # vp <- current.parent()
-  #
-  # x0 <- convertX(vp$x, "native", TRUE)
-  # y0 <- convertY(vp$y, "native", TRUE)
-  # w <- convertWidth(vp$width, "native", TRUE)
-  # h <- convertHeight(vp$height, "native", TRUE)
-  #
-  # xlim <- c(x0 - w/2, x0 + w/2)
-  # ylim <- c(y0 - h/2, y0 + h/2)
+  padding_native <- grid::convertHeight(
+    x$padding,
+    "native",
+    valueOnly = TRUE
+  )
 
-  padding <- eulerr_options()$padding
-  padding <- convertHeight(padding, "native", TRUE)
+  combos <- character(n)
+  widths <- numeric(n)
+  heights <- numeric(n)
+  for (i in seq_len(n)) {
+    child <- x$children[[i]]
+    combos[i] <- if (is.null(child$combo_key)) "" else child$combo_key
+    sz <- measure_tag_native(child, padding_native)
+    widths[i] <- sz$w
+    heights[i] <- sz$h
+  }
+
+  ok <- widths > 0 & heights > 0 & is.finite(widths) & is.finite(heights)
+  if (!any(ok)) {
+    return(x)
+  }
+
+  container <- x$container
+  has_container <- !is.null(container)
+  placement_opts <- x$placement_opts
+  if (is.null(placement_opts)) {
+    placement_opts <- default_placement_opts()
+  }
+
+  placements <- place_euler_labels(
+    set_names = rownames(ellipses),
+    h = ellipses$h,
+    k = ellipses$k,
+    a = ellipses$a,
+    b = ellipses$b,
+    phi = ellipses$phi,
+    container_h = if (has_container) container$h else NULL,
+    container_k = if (has_container) container$k else NULL,
+    container_width = if (has_container) container$width else NULL,
+    container_height = if (has_container) container$height else NULL,
+    n_vertices = as.integer(x$n_vertices),
+    label_combos = combos[ok],
+    label_widths = widths[ok],
+    label_heights = heights[ok],
+    placement = placement_opts$placement,
+    placement_margin = placement_opts$margin,
+    placement_iterations = placement_opts$iterations,
+    placement_tether = placement_opts$tether,
+    label_precision = x$label_precision
+  )
+
+  ok_idx <- which(ok)
+  for (j in seq_along(ok_idx)) {
+    i <- ok_idx[j]
+    ax <- placements$anchor_x[j]
+    ay <- placements$anchor_y[j]
+    if (!is.finite(ax) || !is.finite(ay)) {
+      next
+    }
+    kind <- placements$kind[j]
+    tx <- placements$tether_x[j]
+    ty <- placements$tether_y[j]
+    child <- x$children[[i]]
+    new_children <- build_tag_grobs(
+      ax = ax,
+      ay = ay,
+      kind = kind,
+      tx = tx,
+      ty = ty,
+      label_text = child$label_text,
+      quantity_text = child$quantity_text,
+      has_label = isTRUE(child$has_label),
+      has_quantity = isTRUE(child$has_quantity),
+      label_gp = child$label_gp,
+      quantity_gp = child$quantity_gp,
+      label_rot = child$label_rot,
+      quantity_rot = child$quantity_rot,
+      number = child$number,
+      leader_gp_list = child$leader_gp_list,
+      padding = child$padding,
+      name_prefix = if (is.null(child$name_prefix)) "tag" else child$name_prefix
+    )
+    # `grid::setChildren()` updates the internal `childrenOrder` index
+    # alongside `$children`; direct `$children <-` assignment leaves
+    # the order stale and grid silently skips drawing the new grobs.
+    x$children[[i]] <- grid::setChildren(child, new_children)
+  }
 
   x
 }

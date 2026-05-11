@@ -556,9 +556,13 @@ test_that("by_group applies per-panel overrides", {
     tags <- panel$children$tags$children
     out <- character(0)
     for (tag in tags) {
-      q <- tag$children[[2]]
-      if (inherits(q, "text")) {
-        out <- c(out, q$gp$col)
+      for (child in tag$children) {
+        if (
+          inherits(child, "text") &&
+            grepl("^tag\\.quantity\\.", child$name)
+        ) {
+          out <- c(out, child$gp$col)
+        }
       }
     }
     unique(out)
