@@ -52,8 +52,8 @@ Currently, the following items will be considered:
 
 - quantities:
 
-  a list of items `type`, `format`, `total`, `rot`, `col`, `alpha`,
-  `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`
+  a list of items `type`, `template`, `format`, `total`, `rot`, `col`,
+  `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`
 
 - strips:
 

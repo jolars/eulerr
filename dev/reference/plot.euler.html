@@ -174,7 +174,13 @@ to arguments that apply to <code><a href="https://rdrr.io/r/grid/grid.text.html"
 also be used which should be a combination of <code>"counts"</code>, <code>"percent"</code>,
 and <code>"fraction"</code>. The first item will be printed first and the second
 will be printed thereafter inside brackets. The default is
-<code>type = "counts"</code>.</p></dd>
+<code>type = "counts"</code>.
+For finer control over the rendered text, set <code>quantities$template</code> to
+a string with <code>{counts}</code>, <code>{percent}</code>, and/or <code>{fraction}</code> placeholders,
+for example <code>"{counts}\n{percent}"</code> to put the count and percentage on
+separate lines or <code>"n={counts} ({percent})"</code> for arbitrary layout. When
+<code>template</code> is set it overrides <code>type</code>; the set of placeholders in the
+template determines which values are computed.</p></dd>
 
 
 <dt id="arg-strips">strips<a class="anchor" aria-label="anchor" href="#arg-strips"></a></dt>
