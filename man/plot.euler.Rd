@@ -98,7 +98,13 @@ to arguments that apply to \code{\link[grid:grid.text]{grid::grid.text()}}, an a
 also be used which should be a combination of \code{"counts"}, \code{"percent"},
 and \code{"fraction"}. The first item will be printed first and the second
 will be printed thereafter inside brackets. The default is
-\code{type = "counts"}.}
+\code{type = "counts"}.
+For finer control over the rendered text, set \code{quantities$template} to
+a string with \code{{counts}}, \code{{percent}}, and/or \code{{fraction}} placeholders,
+for example \code{"{counts}\\n{percent}"} to put the count and percentage on
+separate lines or \code{"n={counts} ({percent})"} for arbitrary layout. When
+\code{template} is set it overrides \code{type}; the set of placeholders in the
+template determines which values are computed.}
 
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}. In addition to graphical parameters, this

@@ -107,6 +107,12 @@
 #'   and `"fraction"`. The first item will be printed first and the second
 #'   will be printed thereafter inside brackets. The default is
 #'   `type = "counts"`.
+#'   For finer control over the rendered text, set `quantities$template` to
+#'   a string with `{counts}`, `{percent}`, and/or `{fraction}` placeholders,
+#'   for example `"{counts}\n{percent}"` to put the count and percentage on
+#'   separate lines or `"n={counts} ({percent})"` for arbitrary layout. When
+#'   `template` is set it overrides `type`; the set of placeholders in the
+#'   template determines which values are computed.
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]. In addition to graphical parameters, this
 #'   argument can include `labels = list(top = ..., left = ...)` for custom
@@ -981,6 +987,7 @@ plot.euler <- function(
         list(
           labels = NULL,
           type = quantities_type,
+          template = opar$quantities$template,
           rot = opar$quantities$rot,
           format = NULL,
           total = NULL
@@ -991,6 +998,7 @@ plot.euler <- function(
       quantities <- list(
         labels = NULL,
         type = opar$quantities$type,
+        template = opar$quantities$template,
         rot = opar$quantities$rot,
         format = NULL,
         total = NULL
@@ -999,6 +1007,7 @@ plot.euler <- function(
       quantities <- list(
         labels = quantities,
         type = opar$quantities$type,
+        template = opar$quantities$template,
         rot = opar$quantities$rot,
         format = NULL,
         total = NULL

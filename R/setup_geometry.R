@@ -196,7 +196,31 @@ setup_geometry <- function(
       num <- orig[centers$id[singles | others]]
 
       if (is.null(quantities$labels)) {
-        type <- quantities$type
+        template <- quantities$template
+        valid_types <- c("counts", "percent", "fraction")
+        if (!is.null(template)) {
+          if (!is.character(template) || length(template) != 1L) {
+            stop("`quantities$template` must be a single string.")
+          }
+          placeholders <- regmatches(
+            template,
+            gregexpr("\\{([^{}]+)\\}", template)
+          )[[1]]
+          placeholders <- gsub("[{}]", "", placeholders)
+          unknown <- setdiff(placeholders, valid_types)
+          if (length(unknown) > 0L) {
+            stop(
+              "Unknown placeholder(s) in `quantities$template`: ",
+              paste0("{", unknown, "}", collapse = ", "),
+              ". Valid placeholders: ",
+              paste0("{", valid_types, "}", collapse = ", "),
+              "."
+            )
+          }
+          type <- unique(placeholders)
+        } else {
+          type <- quantities$type
+        }
         perc <- frac <- NULL
         fmt_fun <- quantities$format$fun
         fmt_args <- quantities$format$args
@@ -241,7 +265,26 @@ setup_geometry <- function(
 
         values <- list(counts = cnt, percent = perc, fraction = frac)
 
-        if (length(type) == 1) {
+        if (!is.null(template)) {
+          n_q <- length(values[[type[1]]])
+          qnt <- vapply(
+            seq_len(n_q),
+            function(i) {
+              s <- template
+              for (t in type) {
+                s <- gsub(
+                  paste0("{", t, "}"),
+                  values[[t]][i],
+                  s,
+                  fixed = TRUE
+                )
+              }
+              s
+            },
+            character(1)
+          )
+          centers$quantities[singles | others] <- qnt
+        } else if (length(type) == 1) {
           centers$quantities[singles | others] <- values[[type]]
         } else if (length(type) == 2) {
           qnt <- paste0(values[[type[1]]], " (", values[[type[2]]], ")")

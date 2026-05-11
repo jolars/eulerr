@@ -360,6 +360,56 @@ test_that("quantity formatters can be customized", {
   unlink(tmp)
 })
 
+test_that("quantities$template controls rendered text", {
+  tmp <- tempfile()
+  png(tmp)
+
+  f <- euler(c(A = 10, B = 8, "A&B" = 3), input = "disjoint")
+
+  p <- plot(
+    f,
+    quantities = list(template = "{counts}\n{percent}")
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(
+    unname(q[c("A", "B", "A&B")]),
+    c("10\n48 %", "8\n38 %", "3\n14 %")
+  )
+
+  p <- plot(
+    f,
+    quantities = list(template = "n={counts} ({percent})")
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(
+    unname(q[c("A", "B", "A&B")]),
+    c("n=10 (48 %)", "n=8 (38 %)", "n=3 (14 %)")
+  )
+
+  # Template overrides type.
+  p <- plot(
+    f,
+    quantities = list(type = "counts", template = "{percent}")
+  )
+  q <- p$data$centers$quantities
+  names(q) <- rownames(p$data$centers)
+  expect_equal(unname(q[c("A", "B", "A&B")]), c("48 %", "38 %", "14 %"))
+
+  expect_error(
+    plot(f, quantities = list(template = "{counts} ({foo})")),
+    "Unknown placeholder"
+  )
+  expect_error(
+    plot(f, quantities = list(template = c("{counts}", "{percent}"))),
+    "single string"
+  )
+
+  dev.off()
+  unlink(tmp)
+})
+
 test_that("error_plot functions normally", {
   tmp <- tempfile()
   png(tmp)
