@@ -33,6 +33,10 @@
 #'   elements in plots from [plot.euler()], which you can change
 #'   if you, for instance, want to increase spacing between labels,
 #'   quantities, and percentages.}
+#'   \item{composition}{a list controlling how `eulergram` objects are
+#'   arranged when composed via `|`, `/`, or `+`. Contains a single
+#'   `spacing` item (a [grid::unit()]) that sets the gap between adjacent
+#'   plots.}
 #' }
 #'
 #' @param ... objects to update the global graphical parameters for \pkg{eulerr}
@@ -232,6 +236,9 @@ eulerr_default_options <- function() {
         lex = 1
       )
     ),
-    padding = grid::unit(0.4, "lines")
+    padding = grid::unit(0.4, "lines"),
+    composition = list(
+      spacing = grid::unit(1, "lines")
+    )
   )
 }

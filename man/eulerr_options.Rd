@@ -49,6 +49,10 @@ and its complement label drawn when \code{\link[=euler]{euler()}} is called with
 elements in plots from \code{\link[=plot.euler]{plot.euler()}}, which you can change
 if you, for instance, want to increase spacing between labels,
 quantities, and percentages.}
+\item{composition}{a list controlling how \code{eulergram} objects are
+arranged when composed via \code{|}, \code{/}, or \code{+}. Contains a single
+\code{spacing} item (a \code{\link[grid:unit]{grid::unit()}}) that sets the gap between adjacent
+plots.}
 }
 }
 \examples{

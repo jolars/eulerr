@@ -90,6 +90,36 @@ con <- c(A = 1, B = 1, C = 1, D = 1, E = 1, F = 1, G = 1, H = 1,
 plot(euler(con), labels = as.character(1:8))
 ```
 
+## Composing diagrams
+
+Several Euler diagrams can be arranged into a single figure using operator
+syntax inspired by the **patchwork** package. The `|` and `+` operators
+place plots side by side, while `/` stacks them vertically.
+
+```{r composition-basic, fig.cap = "Two diagrams arranged side by side"}
+p1 <- plot(euler(c(A = 1, B = 8, "A&B" = 1)), main = "First")
+p2 <- plot(euler(c(A = 1, C = 1, "A&C" = 1)), main = "Second")
+
+p1 | p2
+```
+
+Each operator returns an `eulergram`, so compositions nest freely:
+
+```{r composition-nested, fig.cap = "Nested composition: two plots on top, one below"}
+p3 <- plot(euler(c(X = 3, Y = 2, "X&Y" = 1)), main = "Third")
+
+(p1 | p2) / p3
+```
+
+Individual panels can be titled with the `main` argument to `plot()`, as
+above. The gap between adjacent plots is controlled by the
+`composition$spacing` entry of `eulerr_options()`:
+
+```{r composition-spacing, eval = FALSE}
+eulerr_options(composition = list(spacing = grid::unit(2, "lines")))
+p1 | p2
+```
+
 ## Normalizing dispersed layouts
 
 If there are disjoint clusters of ellipses, the optimizer will often

@@ -715,3 +715,82 @@ test_that("by_group rejects invalid input", {
     "fully named list"
   )
 })
+
+test_that("eulergrams can be composed with |, /, and +", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+  })
+
+  p1 <- plot(euler(c(A = 1, B = 8, "A&B" = 1)))
+  p2 <- plot(euler(c(A = 1, C = 1, "A&C" = 1)))
+  p3 <- plot(euler(c(X = 3, Y = 2, "X&Y" = 1)))
+
+  horiz <- p1 | p2
+  expect_s3_class(horiz, "eulergram")
+  expect_equal(horiz$name, "euler.composed")
+  expect_length(horiz$children, 2L)
+  expect_equal(horiz$children[[1]]$vp$layout.pos.col[1], 1L)
+  expect_equal(horiz$children[[2]]$vp$layout.pos.col[1], 3L)
+  expect_equal(horiz$vp$layout$ncol, 3L)
+  expect_equal(horiz$vp$layout$nrow, 1L)
+
+  vert <- p1 / p2
+  expect_s3_class(vert, "eulergram")
+  expect_equal(vert$vp$layout$nrow, 3L)
+  expect_equal(vert$vp$layout$ncol, 1L)
+  expect_equal(vert$children[[1]]$vp$layout.pos.row[1], 1L)
+  expect_equal(vert$children[[2]]$vp$layout.pos.row[1], 3L)
+
+  plus <- p1 + p2
+  expect_s3_class(plus, "eulergram")
+  expect_equal(plus$vp$layout$ncol, horiz$vp$layout$ncol)
+  expect_equal(plus$vp$layout$nrow, horiz$vp$layout$nrow)
+
+  nested <- (p1 | p2) / p3
+  expect_s3_class(nested, "eulergram")
+  expect_equal(nested$vp$layout$nrow, 3L)
+  inner <- nested$children[[1]]$children[[1]]
+  expect_s3_class(inner, "eulergram")
+  expect_equal(inner$vp$layout$ncol, 3L)
+
+  expect_silent({
+    grid::grid.newpage()
+    grid::grid.draw(nested)
+  })
+})
+
+test_that("composition spacing follows eulerr_options()", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+    eulerr_options(composition = list(spacing = grid::unit(1, "lines")))
+  })
+
+  p1 <- plot(euler(c(A = 1, B = 1, "A&B" = 1)))
+  p2 <- plot(euler(c(C = 1, D = 1, "C&D" = 1)))
+
+  eulerr_options(composition = list(spacing = grid::unit(2, "cm")))
+  composed <- p1 | p2
+  widths <- composed$vp$layout$widths
+  expect_match(as.character(widths[2]), "2")
+  expect_equal(grid::unitType(widths)[2], "cm")
+})
+
+test_that("composing non-eulergram operands fails", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+  })
+
+  p1 <- plot(euler(c(A = 1, B = 1, "A&B" = 1)))
+
+  expect_error(p1 | 1, "Both operands must be `eulergram`")
+  expect_error(p1 / "x", "Both operands must be `eulergram`")
+})
