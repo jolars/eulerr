@@ -10,7 +10,10 @@ vignette: >
 bibliography: eulerr.bib
 ---
 
-```{r setup, include = FALSE}
+```{r}
+#| label: setup
+#| include: false
+
 knitr::opts_chunk$set(
   echo = FALSE,
   warning = FALSE,
@@ -37,11 +40,13 @@ pal <- c(
   "#CC79A7"
 )
 
-ellipse_arc <- function(saxes = c(1, 1),
-                        loc = c(0, 0),
-                        theta = 0,
-                        n = 200,
-                        rng = c(0, 2 * pi)) {
+ellipse_arc <- function(
+  saxes = c(1, 1),
+  loc = c(0, 0),
+  theta = 0,
+  n = 200,
+  rng = c(0, 2 * pi)
+) {
   b <- min(saxes[1], saxes[2])
   a <- max(saxes[1], saxes[2])
   d2 <- (a - b) * (a + b)
@@ -58,9 +63,13 @@ ellipse_arc <- function(saxes = c(1, 1),
   P[, 2] <- r * sp
 
   if (theta != 0) {
-    P <- P %*% matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)),
-      byrow = TRUE, nrow = 2, ncol = 2
-    )
+    P <- P %*%
+      matrix(
+        c(cos(theta), sin(theta), -sin(theta), cos(theta)),
+        byrow = TRUE,
+        nrow = 2,
+        ncol = 2
+      )
   }
   P <- P + matrix(loc[1:2], nrow = nrow(P), ncol = 2, byrow = TRUE)
   P
@@ -82,19 +91,18 @@ is designed to be an evolving documentation on the innards of the program.
 ## Input
 
 Euler diagrams present relationships between sets, wherefore the data must
-describe these relationships, either directly or indirectly.  **eulerr** allows
+describe these relationships, either directly or indirectly. **eulerr** allows
 several alternatives for this data, namely,
 
-* intersections and relative complements 
+- intersections and relative complements
   $$
   A \setminus B = 3 \quad B \setminus A = 2 \quad A \cap B=1,
   $$
-* unions and identities
+- unions and identities
   $$
   A=4 \quad B=3 \quad A \cap B=1,
   $$
-* a matrix of binary (or boolean) indices,
-  $$
+- a matrix of binary (or boolean) indices, $$
   \begin{bmatrix}
     \mathbf{A} & \mathbf{B}\\
     1          & 0     \\
@@ -105,19 +113,18 @@ several alternatives for this data, namely,
     0          & 1,
   \end{bmatrix}
   $$
-* a list of sample spaces
-  $$
+- a list of sample spaces $$
   \begin{array}{l}
       A = \{a,\,b,\,c,\,d\}\\
       B = \{a,\,e,\,f,\}
     \end{array},
   $$
-* or a two- or three-way table
+- or a two- or three-way table
 
                     $A$      $A^\mathsf{c}$
-  ----------------  ---     ----------------
-          $B$        1             2
-   $A^\mathsf{c}$    3             0
+  --------------    ---     ----------------
+  $B$               1              2
+  $A^\mathsf{c}$    3              0
 
 As an additional feature for the matrix form, the user may supply a factor
 variable with which to split the data set before fitting the diagram, which
@@ -136,17 +143,16 @@ fine-tuned taking all $2^N-1$ intersections into consideration.
 For our initial layout, we adopt a constrained version of multi-dimensional
 scaling (MDS) that has been adapted from **venn.js** [@Frederickson_2016], which
 in turn is a modification of an algorithm used in **venneuler**
-[@wilkinson_exact_2012].  In it, we consider only the pairwise intersections
+[@wilkinson_exact_2012]. In it, we consider only the pairwise intersections
 between sets, attempting to position their respective shapes so as to minimize
 the difference between the separation between their centers required to obtain
 an optimal overlap and the actual overlap of the shapes in the diagram.
 
 This problem is unfortunately intractable for ellipses, being that there is an
 infinite number of ways by which we can position two ellipses to obtain a given
-overlap. Thus, we restrict ourselves to circles in our initial layout, for 
-which we can use the
-circle--circle overlap formula to numerically find the
-required distance, $d$, for each pairwise relationship.
+overlap. Thus, we restrict ourselves to circles in our initial layout, for which
+we can use the circle--circle overlap formula to numerically find the required
+distance, $d$, for each pairwise relationship.
 
 $$
 \begin{aligned}
@@ -157,9 +163,12 @@ r_j^2\arccos\left(\frac{d_{ij}^2 + r_j^2 - r_i^2}{2d_{ij}r_j}\right) -\\
 $$
 
 where $r_i$ and $r_j$ are the radii of the circles representing the $i$^th^ and
-$j$^th^ sets respectively, $O_{ij}$ their overlap, and $d_{ij}$ their separation.
+$j$^th^ sets respectively, $O_{ij}$ their overlap, and $d_{ij}$ their
+separation.
 
-```{r, fig.cap = "The circle--circle overlap is computed as a function of the discs' separation ($d_{ij}$), radii ($r_i,r_j$), and area of overlap ($O_{ij}$)."}
+```{r}
+#| fig-cap: "The circle--circle overlap is computed as a function of the discs' separation ($d_{ij}$), radii ($r_i,r_j$), and area of overlap ($O_{ij}$)."
+
 c0 <- ellipseToConicMatrix(c(1, 1), c(0, 0), 0)
 c1 <- ellipseToConicMatrix(c(0.7, 0.7), c(1.2, 0), 0)
 pp <- intersectConicConic(c0, c1)
@@ -180,21 +189,27 @@ ospot <- c(mean(seg[, 1]), mean(seg[, 2]))
 
 xyplot(
   1 ~ 1,
-  xlim = c(-1.1, 2), ylim = c(-1.5, 1.1), asp = "iso",
-  xlab = NULL, ylab = NULL,
+  xlim = c(-1.1, 2),
+  ylim = c(-1.5, 1.1),
+  asp = "iso",
+  xlab = NULL,
+  ylab = NULL,
   scales = list(draw = FALSE),
   par.settings = list(axis.line = list(col = "transparent")),
   panel = function() {
-    panel.polygon(seg,
-      col = "steelblue1", alpha = 0.5,
-      border = "transparent"
-    )
-    grid::grid.circle(0, 0,
-      r = 1, default.units = "native",
+    panel.polygon(seg, col = "steelblue1", alpha = 0.5, border = "transparent")
+    grid::grid.circle(
+      0,
+      0,
+      r = 1,
+      default.units = "native",
       gp = gpar(fill = "transparent")
     )
-    grid::grid.circle(1.2, 0,
-      r = 0.7, default.units = "native",
+    grid::grid.circle(
+      1.2,
+      0,
+      r = 0.7,
+      default.units = "native",
       gp = gpar(fill = "transparent")
     )
     pBrackets::grid.brackets(1.2, -1.2, 0, -1.2, h = 0.05)
@@ -202,30 +217,35 @@ xyplot(
     pBrackets::grid.brackets(1.2, 0, 1.9, 0, h = 0.05)
     panel.lines(c(0, 0), c(0, -1.2), lty = 2, col = "grey65")
     panel.lines(c(1.2, 1.2), c(0, -1.2), lty = 2, col = "grey65")
-    panel.text(0.6, unit(-1.3, "native"),
-      labels = expression(italic(d[ij])), pos = 1
+    panel.text(
+      0.6,
+      unit(-1.3, "native"),
+      labels = expression(italic(d[ij])),
+      pos = 1
     )
     panel.text(ospot[1], ospot[2], labels = expression(italic(O[ij])))
-    panel.text(-0.5, 0.1,
-      labels = expression(italic(r[i])), pos = 3,
+    panel.text(
+      -0.5,
+      0.1,
+      labels = expression(italic(r[i])),
+      pos = 3,
       default.units = "native"
     )
-    panel.text(1.55, 0.1,
-      labels = expression(italic(r[j])), pos = 3,
+    panel.text(
+      1.55,
+      0.1,
+      labels = expression(italic(r[j])),
+      pos = 3,
       default.units = "native"
     )
-    panel.points(c(0, 1.2), c(0, 0),
-      pch = 21, col = 1, cex = 1,
-      fill = "white"
-    )
+    panel.points(c(0, 1.2), c(0, 0), pch = 21, col = 1, cex = 1, fill = "white")
   }
 )
 ```
 
-Setting $r_i = \sqrt{F_i/\pi}$, where $F_i$ is
-the size of the $i$^th^ set, we are able to obtain $d$ numerically using
-the squared difference between $O$ and the desired overlap
-as loss function,
+Setting $r_i = \sqrt{F_i/\pi}$, where $F_i$ is the size of the $i$^th^ set, we
+are able to obtain $d$ numerically using the squared difference between $O$ and
+the desired overlap as loss function,
 
 $$
 \mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i <
@@ -250,14 +270,14 @@ be tackled in many ways; **eulerr**'s approach is based on a method developed by
 scaling.
 
 The algorithm tries to position the circles so that the separation between each
-pair of circles matches the separation required from the separation equation.
-If the two sets are disjoint, however, the algorithm is indifferent to the
-relative locations of those circles as long as they do not intersect. The
-equivalent applies to subset sets: as long as the circle representing the
-smaller set remains within the larger circle, their locations are free to vary.
-In all other cases, the loss function is the residual sums of squares of the
-optimal separation of circles, $d$, that we found in the overlap equation, and
-the actual distance in the layout we are currently exploring.
+pair of circles matches the separation required from the separation equation. If
+the two sets are disjoint, however, the algorithm is indifferent to the relative
+locations of those circles as long as they do not intersect. The equivalent
+applies to subset sets: as long as the circle representing the smaller set
+remains within the larger circle, their locations are free to vary. In all other
+cases, the loss function is the residual sums of squares of the optimal
+separation of circles, $d$, that we found in the overlap equation, and the
+actual distance in the layout we are currently exploring.
 
 $$
 \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i<j\leq N}}
@@ -381,7 +401,9 @@ where $\phi$ is the counter-clockwise angle from the positive x-axis to the
 semi-major axis $a$, $b$ is the semi-minor axis, and $h, k$ are the x- and
 y-coordinates, respectively, of ellipse's center.
 
-```{r, fig.cap = "A rotated ellipse with semimajor axis $a$, semiminor axis $b$, rotation $\\phi$, and center $h,k$."}
+```{r}
+#| fig-cap: "A rotated ellipse with semimajor axis $a$, semiminor axis $b$, rotation $\\phi$, and center $h,k$."
+
 h <- 0.7
 k <- 0.5
 a <- 1
@@ -392,8 +414,11 @@ ellipse <- RConics::ellipse(c(a, b), c(h, k), phi, n = n)
 
 xyplot(
   1 ~ 1,
-  xlim = c(-0.3, 1.7), ylim = c(-0.3, 1.3), asp = "iso",
-  xlab = NULL, ylab = NULL,
+  xlim = c(-0.3, 1.7),
+  ylim = c(-0.3, 1.3),
+  asp = "iso",
+  xlab = NULL,
+  ylab = NULL,
   par.settings = list(axis.line = list(col = "transparent")),
   scales = list(draw = FALSE),
   panel = function(x, y, ...) {
@@ -406,25 +431,39 @@ xyplot(
     theta <- ellipse_arc(c(a, b), c(h, k), phi, n = 1)
 
     panel.lines(
-      x = c(h, ellipse[1, 1]), y = c(k, ellipse[1, 2]), lty = 2,
+      x = c(h, ellipse[1, 1]),
+      y = c(k, ellipse[1, 2]),
+      lty = 2,
       col = "grey50"
     )
     panel.lines(
-      x = c(h, theta[1, 1]), y = c(k, theta[1, 2]), lty = 2,
+      x = c(h, theta[1, 1]),
+      y = c(k, theta[1, 2]),
+      lty = 2,
       col = "grey50"
     )
     panel.lines(arc, col = "grey50")
     panel.text(
-      x = arc[nrow(arc) / 2, 1] + 0.06, y = arc[nrow(arc) / 2, 2] + 0.02,
+      x = arc[nrow(arc) / 2, 1] + 0.06,
+      y = arc[nrow(arc) / 2, 2] + 0.02,
       labels = expression(italic(phi))
     )
 
     # semiaxes
-    pBrackets::grid.brackets(h, k, ellipse[n / 2, 1], ellipse[n / 2, 2],
+    pBrackets::grid.brackets(
+      h,
+      k,
+      ellipse[n / 2, 1],
+      ellipse[n / 2, 2],
       col = "grey50"
     )
-    pBrackets::grid.brackets(h, k, ellipse[n / 4, 1], ellipse[n / 4, 2],
-      h = 0.04, col = "grey50"
+    pBrackets::grid.brackets(
+      h,
+      k,
+      ellipse[n / 4, 1],
+      ellipse[n / 4, 2],
+      h = 0.04,
+      col = "grey50"
     )
 
     panel.text(0.37, 0.12, labels = "a", font = 3)
@@ -463,7 +502,13 @@ intersect, split one of these degenerate conics into two lines, and intersect
 one of the ellipses with these lines, yielding 0 to 4 intersection points
 points.
 
-```{r intersect-1, fig.cap = "The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011.", fig.width = 2, fig.height = 2, fig.show = "hold"}
+```{r}
+#| label: intersect-1
+#| fig-cap: "The process used to intersect two ellipses, here yielding four points. This figure was inspired by an example from Richter--Gebert 2011."
+#| fig-width: 2
+#| fig-height: 2
+#| fig-show: "hold"
+
 C1 <- ellipseToConicMatrix(c(8, 2), c(0, 0), -pi / 3)
 C2 <- ellipseToConicMatrix(c(5, 2), c(1, -2), pi / 5)
 
@@ -491,8 +536,12 @@ b <- b[c(1, 6, 3, 4, 2, 5)]
 
 xyplot(
   y ~ x,
-  data = ellipses, type = "l", groups = fac, asp = 1,
-  xlab = NULL, ylab = NULL,
+  data = ellipses,
+  type = "l",
+  groups = fac,
+  asp = 1,
+  xlab = NULL,
+  ylab = NULL,
   scales = list(draw = FALSE, axes = FALSE),
   par.settings = list(axis.line = list(col = "transparent")),
   panel = function(x, y, ...) {
@@ -502,9 +551,14 @@ xyplot(
   }
 )
 
-xyplot(y ~ x,
-  data = ellipses, type = "l", groups = fac, asp = 1,
-  xlab = NULL, ylab = NULL,
+xyplot(
+  y ~ x,
+  data = ellipses,
+  type = "l",
+  groups = fac,
+  asp = 1,
+  xlab = NULL,
+  ylab = NULL,
   scales = list(draw = FALSE, axes = FALSE),
   par.settings = list(axis.line = list(col = "transparent")),
   panel = function(x, y, ...) {
@@ -517,8 +571,12 @@ xyplot(y ~ x,
 
 xyplot(
   y ~ x,
-  data = ellipses, type = "l", groups = fac, asp = 1,
-  xlab = NULL, ylab = NULL,
+  data = ellipses,
+  type = "l",
+  groups = fac,
+  asp = 1,
+  xlab = NULL,
+  ylab = NULL,
   scales = list(draw = FALSE, axes = FALSE),
   par.settings = list(axis.line = list(col = "transparent")),
   panel = function(x, y, ...) {
@@ -539,7 +597,10 @@ geometric shape consisting of a convex polygon, the sides of which are made up
 of straight lines between consecutive points, and a set of elliptical arcs---one
 for each pair of points.
 
-```{r polyarea, fig.cap = "The overlap area between three ellipses is the sum of a convex polygon (in grey) and 2--3 ellipse segments (in blue)."}
+```{r}
+#| label: polyarea
+#| fig-cap: "The overlap area between three ellipses is the sum of a convex polygon (in grey) and 2--3 ellipse segments (in blue)."
+
 x <- c(0, -0.3, 0.2)
 y <- c(0, 0.1, 0.3)
 ra <- a <- c(0.3, 0.5, 0.4)
@@ -572,8 +633,10 @@ for (i in 1:2) {
 
 sel <- logical(nrow(pp))
 for (k in seq_len(nrow(pp))) {
-  in_which <- ((pp[k, 1] - x) * cos(phi) + (pp[k, 2] - y) * sin(phi))^2 / ra^2 +
-    ((pp[k, 1] - x) * sin(phi) - (pp[k, 2] - y) * cos(phi))^2 / rb^2 <= 1 + 0.1
+  in_which <- ((pp[k, 1] - x) * cos(phi) + (pp[k, 2] - y) * sin(phi))^2 /
+    ra^2 +
+    ((pp[k, 1] - x) * sin(phi) - (pp[k, 2] - y) * cos(phi))^2 / rb^2 <=
+    1 + 0.1
   sel[k] <- all(in_which)
 }
 
@@ -591,7 +654,9 @@ for (i in seq_len(nrow(pp))) {
   k <- intersect(pp[i, 3:4], pp[j, 3:4])
   start <- atan2(pp[j, 2] - y[k], pp[j, 1] - x[k])
   stop <- atan2(pp[i, 2] - y[k], pp[i, 1] - x[k])
-  arc <- ellipse_arc(c(a[k], b[k]), c(x[k], y[k]),
+  arc <- ellipse_arc(
+    c(a[k], b[k]),
+    c(x[k], y[k]),
     theta = phi[k],
     rng = c(start, stop)
   )
@@ -609,12 +674,18 @@ y0 <- as.vector(sapply(seq_along(y), function(i) {
 
 xyplot(
   y ~ x,
-  data = ee, asp = "iso",
-  xlim = extendrange(xlim, f = 0.01), ylim = extendrange(ylim, f = 0.01),
-  scales = list(draw = FALSE), xlab = NULL, ylab = NULL,
+  data = ee,
+  asp = "iso",
+  xlim = extendrange(xlim, f = 0.01),
+  ylim = extendrange(ylim, f = 0.01),
+  scales = list(draw = FALSE),
+  xlab = NULL,
+  ylab = NULL,
   par.settings = list(axis.line = list(col = "transparent")),
   panel = function(x, y, ...) {
-    grid.polygon(x0, y0,
+    grid.polygon(
+      x0,
+      y0,
       id.lengths = rep(200, 3),
       default.units = "native",
       gp = grid::gpar(fill = "transparent")
@@ -622,8 +693,11 @@ xyplot(
     panel.polygon(seglines, col = "slategray2")
     panel.polygon(pp[, 1:2], col = "grey90")
     panel.points(mid, pch = 4, col = 1, cex = 1.5)
-    panel.points(pp[, 1:2, drop = FALSE],
-      col = 1, pch = 21, fill = "white",
+    panel.points(
+      pp[, 1:2, drop = FALSE],
+      col = 1,
+      pch = 21,
+      fill = "white",
       cex = 1.5
     )
   }
@@ -633,29 +707,33 @@ xyplot(
 We continue by ordering the points around their centroid. It is then trivial to
 find the area of the polygon section since it is always convex. Now, because
 each elliptical segment is formed from the arcs that connect successive points,
-we can establish the segments' areas algorithmically [@Eberly_2016].  For each
+we can establish the segments' areas algorithmically [@Eberly_2016]. For each
 ellipse and its related pair of points (located at angles $\theta_0$ and
 $\theta_1$ from the semimajor axis), we proceed to find its area by
 
-1.  centering the ellipse at $(0, 0)$,
-2.  normalizing its rotation, which is not needed to compute the area,
-3.  integrating the ellipse over [$0,\theta_0$] and [$0,\theta_1$], producing
-    elliptical sectors $F(\theta_0)$ and $F(\theta_1)$,
-4.  subtracting the smaller ($F(\theta_0$)) of these sectors from the larger ($F(\theta_0$), and
-5.  subtracting the triangle section to finally find the segment area,
-    $$
-    F(\theta_1) - F(\theta_0) - \frac{1}{2}\left|x_1y_0 - x_0y_1\right|,
-    $$
-    where
-    $$
-    F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
-    $$
+1. centering the ellipse at $(0, 0)$,
+2. normalizing its rotation, which is not needed to compute the area,
+3. integrating the ellipse over [$0,\theta_0$] and [$0,\theta_1$], producing
+   elliptical sectors $F(\theta_0)$ and $F(\theta_1)$,
+4. subtracting the smaller ($F(\theta_0$)) of these sectors from the larger
+   ($F(\theta_0$), and
+5. subtracting the triangle section to finally find the segment area,
+   $$
+   F(\theta_1) - F(\theta_0) - \frac{1}{2}\left|x_1y_0 - x_0y_1\right|,
+   $$
+   where
+   $$
+   F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
+   $$
 
 This procedure is illustrated in the following figure. Note that there are
 situations where this algorithm is altered, such that when the sector angle
 ranges beyond $\pi$---we refer the interested reader to @Eberly_2016.
 
-```{r ellipsesegment, fig.cap = "The elliptical segment in blue is found by first subtracting the elliptical sector from $(a, 0)$ to $\\theta_0$ from the one from $(a, 0)$ to $\\theta_1$ and then subtracting the triangle part (in grey)."}
+```{r}
+#| label: ellipsesegment
+#| fig-cap: "The elliptical segment in blue is found by first subtracting the elliptical sector from $(a, 0)$ to $\\theta_0$ from the one from $(a, 0)$ to $\\theta_1$ and then subtracting the triangle part (in grey)."
+
 ellipse <- ellipse(c(1, 0.6), c(0, 0), 0)
 i0 <- 15
 i1 <- 45
@@ -668,8 +746,11 @@ tri <- rbind(
 
 xyplot(
   1 ~ 1,
-  xlim = c(-1.2, 1.2), ylim = c(-0.8, 0.8), asp = "iso",
-  xlab = NULL, ylab = NULL,
+  xlim = c(-1.2, 1.2),
+  ylim = c(-0.8, 0.8),
+  asp = "iso",
+  xlab = NULL,
+  ylab = NULL,
   par.settings = list(axis.line = list(col = "transparent")),
   scales = list(draw = FALSE),
   panel = function(x, y, ...) {
@@ -678,17 +759,15 @@ xyplot(
     panel.polygon(ellipse[i0:i1, ], col = "steelblue1", alpha = 0.5)
     panel.polygon(tri, col = "grey95")
     panel.points(ellipse[c(i0, i1), ], col = 1, pch = 21, fill = "white")
-    panel.text(ellipse[c(i0, i1), ],
+    panel.text(
+      ellipse[c(i0, i1), ],
       adj = c(-0.5, -0.5),
       labels = c(
         expression(italic(theta[0])),
         expression(italic(theta[1]))
       )
     )
-    pBrackets::grid.brackets(1, 0, 0, 0,
-      h = 0.05,
-      type = 1
-    )
+    pBrackets::grid.brackets(1, 0, 0, 0, h = 0.05, type = 1)
     pBrackets::grid.brackets(0, 0, 0, 0.6, h = 0.04)
     panel.text(0.5, unit(-0.05, "npc"), labels = "a", font = 3, pos = 1)
     panel.text(-0.05, unit(0.3, "native"), labels = "b", font = 3, pos = 2)
@@ -709,24 +788,20 @@ relationship of sets $A$, $B$, and $C$, for instance, this means subtracting the
 $A\cap B \cap C$ overlap from the $A \cap B$ one to retrieve the equivalent of
 $(A \cap B) \setminus C$.
 
-The exact algorithm may in rare instances^[1 out of approximately 7000 in
-our simulations.], break down, the culprit being numerical precision
-issues that occur when ellipses are tangent or
-completely overlap. In these cases, the algorithm will approximate
-the area of the involved overlap by
+The exact algorithm may in rare instances^[1 out of approximately 7000 in our
+simulations.], break down, the culprit being numerical precision issues that
+occur when ellipses are tangent or completely overlap. In these cases, the
+algorithm will approximate the area of the involved overlap by
 
-1.  spreading points across the ellipses using Vogel's
-    method.
-2.  identifying the points that are inside the intersection via the inequality
-    $$
+1. spreading points across the ellipses using Vogel's method.
+2. identifying the points that are inside the intersection via the inequality $$
     \begin{aligned}
     &\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
     &\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} < 1,
     \end{aligned}
-    $$
-    where $x$ and $y$ are the coordinates of the sampled points, and finally
-3.  approximating the area by multiplying the proportion of points inside the
-    overlap with the area of the ellipse.
+   $$ where $x$ and $y$ are the coordinates of the sampled points, and finally
+3. approximating the area by multiplying the proportion of points inside the
+   overlap with the area of the ellipse.
 
 With this in place, we are now able to compute the areas of all intersections
 and their relative complements, $\omega$, up to numerical precision.
@@ -750,9 +825,8 @@ which is also the loss metric we use in our final optimization step and is used
 in **venneuler**, as well as *diagError* [@Micallef_2014a], which is used by
 **eulerAPE**.
 
-The stress metric is not easily grasped but
-can be transformed into a rough analogue of the correlation coefficient
-via $r = \sqrt{1-\text{stress}^2}$.
+The stress metric is not easily grasped but can be transformed into a rough
+analogue of the correlation coefficient via $r = \sqrt{1-\text{stress}^2}$.
 
 diagError, meanwhile, is given by
 
@@ -761,7 +835,7 @@ $$
 \frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i} \right|,
 $$
 
-which is the maximum *absolute* difference of the proportion of any
-$\omega$ to the respective unique area of the diagram.
+which is the maximum *absolute* difference of the proportion of any $\omega$ to
+the respective unique area of the diagram.
 
 ## References

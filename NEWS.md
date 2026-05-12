@@ -16,13 +16,12 @@
   result as `$container` and is drawn around the diagram by `plot.euler()`.
   Closes [#13](https://github.com/jolars/eulerr/issues/13).
 
-- `plot.euler()` gains a `complement` argument that controls the styling of
-  the container box and complement label drawn for diagrams fit with
-  `complement =`. Accepts `TRUE` (default — dashed outline, no fill, count
-  inside the complement region), `FALSE` (suppresses the box and label),
-  a fill colour shorthand, or a list of gpar-style fields plus a `label`
-  override. Defaults can also be set globally via
-  `eulerr_options(complement = ...)`.
+- `plot.euler()` gains a `complement` argument that controls the styling of the
+  container box and complement label drawn for diagrams fit with `complement =`.
+  Accepts `TRUE` (default — dashed outline, no fill, count inside the complement
+  region), `FALSE` (suppresses the box and label), a fill colour shorthand, or a
+  list of gpar-style fields plus a `label` override. Defaults can also be set
+  globally via `eulerr_options(complement = ...)`.
 
 ## Deprecations
 
@@ -374,8 +373,9 @@
 
 ## Bug fixes
 
-- Added the missing %\\VignetteEngine{knitr::knitr} to both vignettes. It had
-  mistakenly been left out, which had mangled the resulting vignettes.
+- Added the missing %\\VignetteEngine{[knitr::knitr](knitr::knitr)} to both
+  vignettes. It had mistakenly been left out, which had mangled the resulting
+  vignettes.
 
 # eulerr 3.0.0
 

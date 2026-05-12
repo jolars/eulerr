@@ -10,7 +10,10 @@ vignette: >
 bibliography: eulerr.bib
 ---
 
-```{r setup, include = FALSE}
+```{r}
+#| label: setup
+#| include: false
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -18,9 +21,9 @@ knitr::opts_chunk$set(
 ```
 
 Once we have ascertained that our Euler diagram fits well, we can turn to
-visualizing the solution. For this purpose, **eulerr** relies on the
-**grid** graphics system [@RCT_2017] and offers intuitive and
-granular control over the output.
+visualizing the solution. For this purpose, **eulerr** relies on the **grid**
+graphics system [@RCT_2017] and offers intuitive and granular control over the
+output.
 
 Plotting the ellipses is straightforward using the parametrization of a rotated
 ellipse,
@@ -37,14 +40,14 @@ $$
 
 where $\theta \in [0, 2\pi],\quad a,b>0$.
 
-Most users will also prefer to label the ellipses and their intersections
-with text and this, however, is considerably more involved.
+Most users will also prefer to label the ellipses and their intersections with
+text and this, however, is considerably more involved.
 
 ### Labeling
 
-Labeling the ellipses is complicated since the shapes of the intersections
-often are irregular, lacking well-defined centers; we know of no analytical
-solution to this problem. Instead, **eulerr** uses the *pole of inaccessibility*
+Labeling the ellipses is complicated since the shapes of the intersections often
+are irregular, lacking well-defined centers; we know of no analytical solution
+to this problem. Instead, **eulerr** uses the *pole of inaccessibility*
 algorithm [@mapbox2018] (originally from *Mapbox*'s **polylabel** C++ library),
 implemented in the **eunoia** Rust crate that powers eulerr's geometry layer.
 
@@ -58,45 +61,65 @@ meanwhile, consist of the mapping of each set to some quality or category, such
 as having a certain gene or not. In the diagram, these qualities can be
 separated through any of the following aesthetics:
 
-* color,
-* border type,
-* text labeling,
-* transparency,
-* patterns,
+- color,
+- border type,
+- text labeling,
+- transparency,
+- patterns,
 
 or a combination of these. The main purpose of these aesthetics is to separate
 out the different ellipses so that the audience may interpret the diagram with
 ease and clarity.
 
 Among these aesthetics, the best choice (from a viewer perspective) appears to
-be color [@Blake_2016], which provides useful information without extraneous chart junk. 
+be color [@Blake_2016], which provides useful information without extraneous
+chart junk.
 
 The issue with color, however, is that it cannot be perceived perfectly by all.
-Eight percent of men and 0.4% of women in European Caucasian countries, for 
-instance, suffer the most common form, red--green color deficiency. 
-Moreover, color is often printed at a premium in scientific publications 
-and adds no utility
-to a diagram of two shapes.
+Eight percent of men and 0.4% of women in European Caucasian countries, for
+instance, suffer the most common form, red--green color deficiency. Moreover,
+color is often printed at a premium in scientific publications and adds no
+utility to a diagram of two shapes.
 
 For these reasons, **eulerr** defaults to distinguishing ellipses with color
 using a manually tuned color palette.
 
-```{r colorexamle, fig.cap = "The eight first colors of the default color palette"}
+```{r}
+#| label: colorexamle
+#| fig-cap: "The eight first colors of the default color palette"
+
 set.seed(2)
 library(eulerr)
-con <- c(A = 1, B = 1, C = 1, D = 1, E = 1, F = 1, G = 1, H = 1,
-         "A&B" = 0.2, "B&C" = 0.2, "C&D" = 0.2, "D&E" = 0.2, "E&F" = 0.2,
-         "F&G" = 0.2, "G&H" = 0.2)
+con <- c(
+  A = 1,
+  B = 1,
+  C = 1,
+  D = 1,
+  E = 1,
+  F = 1,
+  G = 1,
+  H = 1,
+  "A&B" = 0.2,
+  "B&C" = 0.2,
+  "C&D" = 0.2,
+  "D&E" = 0.2,
+  "E&F" = 0.2,
+  "F&G" = 0.2,
+  "G&H" = 0.2
+)
 plot(euler(con), labels = as.character(1:8))
 ```
 
 ## Composing diagrams
 
 Several Euler diagrams can be arranged into a single figure using operator
-syntax inspired by the **patchwork** package. The `|` and `+` operators
-place plots side by side, while `/` stacks them vertically.
+syntax inspired by the **patchwork** package. The `|` and `+` operators place
+plots side by side, while `/` stacks them vertically.
 
-```{r composition-basic, fig.cap = "Two diagrams arranged side by side"}
+```{r}
+#| label: composition-basic
+#| fig-cap: "Two diagrams arranged side by side"
+
 p1 <- plot(euler(c(A = 1, B = 8, "A&B" = 1)), main = "First")
 p2 <- plot(euler(c(A = 1, C = 1, "A&C" = 1)), main = "Second")
 
@@ -105,30 +128,36 @@ p1 | p2
 
 Each operator returns an `eulergram`, so compositions nest freely:
 
-```{r composition-nested, fig.cap = "Nested composition: two plots on top, one below"}
+```{r}
+#| label: composition-nested
+#| fig-cap: "Nested composition: two plots on top, one below"
+
 p3 <- plot(euler(c(X = 3, Y = 2, "X&Y" = 1)), main = "Third")
 
 (p1 | p2) / p3
 ```
 
-Individual panels can be titled with the `main` argument to `plot()`, as
-above. The gap between adjacent plots is controlled by the
-`composition$spacing` entry of `eulerr_options()`:
+Individual panels can be titled with the `main` argument to `plot()`, as above.
+The gap between adjacent plots is controlled by the `composition$spacing` entry
+of `eulerr_options()`:
 
-```{r composition-spacing, eval = FALSE}
+```{r}
+#| label: composition-spacing
+#| eval: false
+
 eulerr_options(composition = list(spacing = grid::unit(2, "lines")))
 p1 | p2
 ```
 
 ## Normalizing dispersed layouts
 
-If there are disjoint clusters of ellipses, the optimizer will often
-spread these out more than is necessary, wasting space in our diagram. To
-tackle this, we use a SKYLINE-BL rectangle packing algorithm [@Jylaenki_2010]
-designed specifically for **eulerr**. In it, we surround each ellipse cluster
-with a bounding box, pack these boxes into a bin of appropriate size and
-aspect ratio, and adjust the coordinates of the ellipses in the clusters to
-compact our diagram. As a bonus, this increases the chance of having
-similar layouts for different function calls.
+If there are disjoint clusters of ellipses, the optimizer will often spread
+these out more than is necessary, wasting space in our diagram. To tackle this,
+we use a SKYLINE-BL rectangle packing algorithm [@Jylaenki_2010] designed
+specifically for **eulerr**. In it, we surround each ellipse cluster with a
+bounding box, pack these boxes into a bin of appropriate size and aspect ratio,
+and adjust the coordinates of the ellipses in the clusters to compact our
+diagram. As a bonus, this increases the chance of having similar layouts for
+different function calls.
 
 ## References
