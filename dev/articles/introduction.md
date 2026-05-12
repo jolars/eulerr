@@ -116,22 +116,7 @@ We can also use **eulerr**’s built in
 [`error_plot()`](https://jolars.github.io/eulerr/dev/reference/error_plot.md)
 function to diagnose the fit.
 
-``` r
-
-error_plot(fit2)
-```
-
-![A plot from
-\`error_plot()\`.](introduction_files/figure-html/error-plot-1.png)
-
-A plot from
-[`error_plot()`](https://jolars.github.io/eulerr/dev/reference/error_plot.md).
-
-![A plot from
-\`error_plot()\`.](introduction_files/figure-html/error-plot-2.png)
-
-A plot from
-[`error_plot()`](https://jolars.github.io/eulerr/dev/reference/error_plot.md).
+`` {r error-plot, fig.cap = "A plot from `error_plot()`."} error_plot(fit2) ``
 
 This shows us that the intersection is somewhat overrepresented in .
 Given that these residuals are on the scale of the original values,

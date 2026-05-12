@@ -389,10 +389,10 @@ area of the involved overlap by
 2.  identifying the points that are inside the intersection via the
     inequality
     ``` math
-    \begin{aligned}
-    &\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
-    &\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} < 1,
-    \end{aligned}
+     \begin{aligned}
+     &\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
+     &\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} < 1,
+     \end{aligned}
     ```
     where $`x`$ and $`y`$ are the coordinates of the sampled points, and
     finally

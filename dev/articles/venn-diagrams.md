@@ -55,10 +55,7 @@ plot(euler(fruits[, 1:3], shape = "ellipse"), quantities = TRUE)
 
 ``` r
 
-s4 <- list(a = c(1, 2, 3),
-           b = c(1, 2),
-           c = c(1, 4),
-           e = c(5))
+s4 <- list(a = c(1, 2, 3), b = c(1, 2), c = c(1, 4), e = c(5))
 plot(venn(s4))
 plot(euler(s4, shape = "ellipse"), quantities = TRUE)
 ```

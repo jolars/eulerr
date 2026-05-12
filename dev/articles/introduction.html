@@ -187,24 +187,13 @@ Residuals for the fit diagram.
 </div>
 <p>We can also use <strong>eulerr</strong>’s built in
 <code><a href="../reference/error_plot.html">error_plot()</a></code> function to diagnose the fit.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/error_plot.html">error_plot</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="introduction_files/figure-html/error-plot-1.png" class="r-plt" alt="A plot from `error_plot()`." width="700"><p class="caption">
-A plot from <code><a href="../reference/error_plot.html">error_plot()</a></code>.
-</p>
-</div>
-<div class="figure">
-<img src="introduction_files/figure-html/error-plot-2.png" class="r-plt" alt="A plot from `error_plot()`." width="700"><p class="caption">
-A plot from <code><a href="../reference/error_plot.html">error_plot()</a></code>.
-</p>
-</div>
+<p><code>{r error-plot, fig.cap = "A plot from `error_plot()`."} error_plot(fit2)</code></p>
 <p>This shows us that the intersection is somewhat overrepresented in .
 Given that these residuals are on the scale of the original values,
 however, the residuals are arguably of little concern.</p>
 <p>As an alternative, we could plot the circles in another program by
 retrieving their coordinates and radii.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         h       k     a     b phi</span></span>
 <span><span class="co">#&gt; A -0.4587 0.00000 3.432 3.432   0</span></span>
@@ -237,7 +226,7 @@ try to use ellipses instead. <span class="citation">(Wilkinson
 2012)</span> features a difficult combination that it manages to fit
 with a reasonably small error; with <strong>eulerr</strong>, however, we
 can get rid of that error entirely.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wilkinson2012</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  A <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  B <span class="op">=</span> <span class="fl">6</span>,</span>
@@ -279,14 +268,14 @@ package.)</p>
 <p>No we get to the fun part: plotting our diagram. This is easy, as
 well as highly customizable, with <strong>eulerr</strong>. The default
 parameters can easily be adjusted to suit anybody’s needs.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="introduction_files/figure-html/eulerr-plot-1.png" class="r-plt" alt="Customizing Euler plots is a breeze in eulerr." width="700"><p class="caption">
 Customizing Euler plots is a breeze in eulerr.
 </p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Remove fills, vary borders, display quantities, and switch font.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
