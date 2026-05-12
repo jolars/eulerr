@@ -1,4 +1,4 @@
-# Run eunoia label placement, expanding limits so exterior labels are not clipped. Drives one initial pass plus one re-measure pass when the limits widened by more than `re_measure_threshold` on the short side. Updates `centers` (and the complement slot on `container_data`) in place with placed `(x, y)` plus `kind`, `tether_x`, `tether_y`.
+# Run eunoia label placement, expanding limits so exterior labels are not clipped. Drives one initial pass plus one re-measure pass when the limits widened by more than `re_measure_threshold` on the short side. Updates `centers` (and the complement slot on `container_data`) in place with placed `(x, y)` plus `kind`, `tether_x`, `tether_y`, `leader_end_x`, `leader_end_y`.
 
 When `placement_opts` is `NULL`, defaults to eunoia's raycast + POI
 tether.

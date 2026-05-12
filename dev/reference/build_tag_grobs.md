@@ -19,6 +19,8 @@ build_tag_grobs(
   kind,
   tx,
   ty,
+  lend_x,
+  lend_y,
   label_text,
   quantity_text,
   has_label,

@@ -152,9 +152,14 @@ margin between an exterior label and the diagram (default is half
 the larger of the label's width and height); <code>labels$iterations</code>
 sets the iteration cap for the force-directed solver;
 <code>labels$tether</code> (<code>"poi"</code> (default) or <code>"boundary"</code>) chooses where
-the leader line attaches on the source region; and <code>labels$leader</code>
-is a list (<code>col</code>, <code>alpha</code>, <code>lwd</code>, <code>lty</code>, <code>lex</code>) styling the leader
-line drawn from the tether to the exterior label.</p></dd>
+the leader line attaches on the source region; <code>labels$gap</code>
+controls the visible gap between the leader tip and the label box
+edge — a bare numeric is interpreted as <code>lines</code> (font-relative),
+a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code> is honoured as given, and the default <code>NULL</code>
+tracks <code>eulerr_options()$padding</code> so the gap matches the spacing
+between label and quantity; <code>labels$leader</code> is a list (<code>col</code>,
+<code>alpha</code>, <code>lwd</code>, <code>lty</code>, <code>lex</code>) styling the leader line drawn from
+the tether to the exterior label.</p></dd>
 
 
 <dt id="arg-quantities">quantities<a class="anchor" aria-label="anchor" href="#arg-quantities"></a></dt>
@@ -216,7 +221,8 @@ shorthand. A list accepts <code>fill</code>, <code>alpha</code>, <code>col</code
 <code>lex</code> (outline + label gpar), <code>fontsize</code>, <code>cex</code>, <code>font</code>, <code>fontfamily</code>,
 <code>lineheight</code> (label only), and <code>label</code> (custom text — defaults to the
 complement count). Also accepts the same placement controls as
-<code>labels</code> (<code>placement</code>, <code>margin</code>, <code>iterations</code>, <code>tether</code>, <code>leader</code>)
+<code>labels</code> (<code>placement</code>, <code>margin</code>, <code>iterations</code>, <code>tether</code>, <code>gap</code>,
+<code>leader</code>)
 for the complement count label. Has no effect if the diagram was
 fit without <code>complement =</code>. Defaults can be set via
 <code>eulerr_options(complement = ...)</code>.</p></dd>

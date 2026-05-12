@@ -106,9 +106,14 @@ plot(...)
   is half the larger of the label's width and height);
   `labels$iterations` sets the iteration cap for the force-directed
   solver; `labels$tether` (`"poi"` (default) or `"boundary"`) chooses
-  where the leader line attaches on the source region; and
-  `labels$leader` is a list (`col`, `alpha`, `lwd`, `lty`, `lex`)
-  styling the leader line drawn from the tether to the exterior label.
+  where the leader line attaches on the source region; `labels$gap`
+  controls the visible gap between the leader tip and the label box edge
+  — a bare numeric is interpreted as `lines` (font-relative), a
+  [`grid::unit()`](https://rdrr.io/r/grid/unit.html) is honoured as
+  given, and the default `NULL` tracks `eulerr_options()$padding` so the
+  gap matches the spacing between label and quantity; `labels$leader` is
+  a list (`col`, `alpha`, `lwd`, `lty`, `lex`) styling the leader line
+  drawn from the tether to the exterior label.
 
 - quantities:
 
@@ -176,9 +181,10 @@ plot(...)
   `fontsize`, `cex`, `font`, `fontfamily`, `lineheight` (label only),
   and `label` (custom text — defaults to the complement count). Also
   accepts the same placement controls as `labels` (`placement`,
-  `margin`, `iterations`, `tether`, `leader`) for the complement count
-  label. Has no effect if the diagram was fit without `complement =`.
-  Defaults can be set via `eulerr_options(complement = ...)`.
+  `margin`, `iterations`, `tether`, `gap`, `leader`) for the complement
+  count label. Has no effect if the diagram was fit without
+  `complement =`. Defaults can be set via
+  `eulerr_options(complement = ...)`.
 
 - rotate:
 
