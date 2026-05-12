@@ -87,6 +87,69 @@ palette](visualization_files/figure-html/colorexamle-2.png)
 
 The eight first colors of the default color palette
 
+## Composing diagrams
+
+Several Euler diagrams can be arranged into a single figure using
+operator syntax inspired by the **patchwork** package. The `|` and `+`
+operators place plots side by side, while `/` stacks them vertically.
+
+``` r
+
+p1 <- plot(euler(c(A = 1, B = 8, "A&B" = 1)), main = "First")
+p2 <- plot(euler(c(A = 1, C = 1, "A&C" = 1)), main = "Second")
+```
+
+![Two diagrams arranged side by
+side](visualization_files/figure-html/composition-basic-1.png)
+
+Two diagrams arranged side by side
+
+``` r
+
+
+p1 | p2
+```
+
+![Two diagrams arranged side by
+side](visualization_files/figure-html/composition-basic-2.png)
+
+Two diagrams arranged side by side
+
+Each operator returns an `eulergram`, so compositions nest freely:
+
+``` r
+
+p3 <- plot(euler(c(X = 3, Y = 2, "X&Y" = 1)), main = "Third")
+```
+
+![Nested composition: two plots on top, one
+below](visualization_files/figure-html/composition-nested-1.png)
+
+Nested composition: two plots on top, one below
+
+``` r
+
+
+(p1 | p2) / p3
+```
+
+![Nested composition: two plots on top, one
+below](visualization_files/figure-html/composition-nested-2.png)
+
+Nested composition: two plots on top, one below
+
+Individual panels can be titled with the `main` argument to
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html), as above. The
+gap between adjacent plots is controlled by the `composition$spacing`
+entry of
+[`eulerr_options()`](https://jolars.github.io/eulerr/dev/reference/eulerr_options.md):
+
+``` r
+
+eulerr_options(composition = list(spacing = grid::unit(2, "lines")))
+p1 | p2
+```
+
 ## Normalizing dispersed layouts
 
 If there are disjoint clusters of ellipses, the optimizer will often

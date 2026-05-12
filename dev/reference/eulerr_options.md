@@ -90,6 +90,13 @@ Currently, the following items will be considered:
   which you can change if you, for instance, want to increase spacing
   between labels, quantities, and percentages.
 
+- composition:
+
+  a list controlling how `eulergram` objects are arranged when composed
+  via `|`, `/`, or `+`. Contains a single `spacing` item (a
+  [`grid::unit()`](https://rdrr.io/r/grid/unit.html)) that sets the gap
+  between adjacent plots.
+
 ## See also
 
 [`plot.euler()`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md),

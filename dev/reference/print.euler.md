@@ -48,20 +48,20 @@ Summary statistics of the fitted Euler diagram are printed to screen.
 ``` r
 euler(organisms)
 #>                   original fitted residuals regionError
-#> animal                   0  0.463    -0.463       0.075
-#> mammal                   0  0.215    -0.215       0.035
-#> plant                    0  0.371    -0.371       0.060
-#> sea                      0  0.330    -0.330       0.053
-#> spiny                    0  0.175    -0.175       0.028
-#> animal&mammal            2  1.904     0.096       0.022
-#> animal&sea               1  0.570     0.430       0.051
-#> mammal&sea               1  0.000     1.000       0.143
-#> plant&sea                1  0.804     0.196       0.013
-#> plant&spiny              1  0.875     0.125       0.002
-#> animal&mammal&sea        0  0.250    -0.250       0.040
-#> animal&plant&sea         0  0.034    -0.034       0.006
+#> animal                   0  0.218    -0.218       0.035
+#> mammal                   0  0.466    -0.466       0.075
+#> plant                    0  0.370    -0.370       0.060
+#> sea                      0  0.332    -0.332       0.054
+#> spiny                    0  0.176    -0.176       0.028
+#> animal&mammal            2  1.905     0.095       0.021
+#> animal&sea               1  0.000     1.000       0.143
+#> mammal&sea               1  0.576     0.424       0.050
+#> plant&sea                1  0.805     0.195       0.013
+#> plant&spiny              1  0.869     0.131       0.003
+#> animal&mammal&sea        0  0.251    -0.251       0.041
 #> animal&sea&spiny         1  0.000     1.000       0.143
-#> plant&sea&spiny          0  0.203    -0.203       0.033
+#> mammal&plant&sea         0  0.035    -0.035       0.006
+#> plant&sea&spiny          0  0.200    -0.200       0.032
 #> 
 #> diagError: 0.143 
 #> stress:    0.321 

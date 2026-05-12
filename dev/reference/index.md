@@ -10,6 +10,11 @@
 - [`euler()`](https://jolars.github.io/eulerr/dev/reference/euler.md) :
   Area-proportional Euler diagrams
 
+- [`` `|`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/dev/reference/eulergram-compose.md)
+  [`` `/`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/dev/reference/eulergram-compose.md)
+  [`` `+`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/dev/reference/eulergram-compose.md)
+  : Compose Euler Diagrams
+
 - [`eulerr_options()`](https://jolars.github.io/eulerr/dev/reference/eulerr_options.md)
   : Get or set global graphical parameters for eulerr
 

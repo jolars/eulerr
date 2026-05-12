@@ -162,6 +162,54 @@ The eight first colors of the default color palette
 </div>
 </div>
 <div class="section level2">
+<h2 id="composing-diagrams">Composing diagrams<a class="anchor" aria-label="anchor" href="#composing-diagrams"></a>
+</h2>
+<p>Several Euler diagrams can be arranged into a single figure using
+operator syntax inspired by the <strong>patchwork</strong> package. The
+<code>|</code> and <code>+</code> operators place plots side by side,
+while <code>/</code> stacks them vertically.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">8</span>, <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"First"</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Second"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/composition-basic-1.png" class="r-plt" alt="Two diagrams arranged side by side" width="700"><p class="caption">
+Two diagrams arranged side by side
+</p>
+</div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/composition-basic-2.png" class="r-plt" alt="Two diagrams arranged side by side" width="700"><p class="caption">
+Two diagrams arranged side by side
+</p>
+</div>
+<p>Each operator returns an <code>eulergram</code>, so compositions nest
+freely:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>X <span class="op">=</span> <span class="fl">3</span>, Y <span class="op">=</span> <span class="fl">2</span>, <span class="st">"X&amp;Y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Third"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/composition-nested-1.png" class="r-plt" alt="Nested composition: two plots on top, one below" width="700"><p class="caption">
+Nested composition: two plots on top, one below
+</p>
+</div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">/</span> <span class="va">p3</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/composition-nested-2.png" class="r-plt" alt="Nested composition: two plots on top, one below" width="700"><p class="caption">
+Nested composition: two plots on top, one below
+</p>
+</div>
+<p>Individual panels can be titled with the <code>main</code> argument
+to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, as above. The gap between adjacent plots is
+controlled by the <code>composition$spacing</code> entry of
+<code><a href="../reference/eulerr_options.html">eulerr_options()</a></code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/eulerr_options.html">eulerr_options</a></span><span class="op">(</span>composition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>spacing <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">2</span>, <span class="st">"lines"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="normalizing-dispersed-layouts">Normalizing dispersed layouts<a class="anchor" aria-label="anchor" href="#normalizing-dispersed-layouts"></a>
 </h2>
 <p>If there are disjoint clusters of ellipses, the optimizer will often
