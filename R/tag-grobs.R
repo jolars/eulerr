@@ -456,11 +456,7 @@ makeContext.EulerPanel <- function(x) {
 
   container <- x$container
   has_container <- !is.null(container)
-  placement_opts <- if (is.null(x$placement_opts)) {
-    default_placement_opts()
-  } else {
-    x$placement_opts
-  }
+  placement_opts <- resolve_placement_opts(x$placement_opts)
   precision <- if (
     is.null(x$label_precision) || !is.finite(x$label_precision)
   ) {
@@ -648,10 +644,7 @@ makeContent.EulerTags <- function(x) {
 
   container <- x$container
   has_container <- !is.null(container)
-  placement_opts <- x$placement_opts
-  if (is.null(placement_opts)) {
-    placement_opts <- default_placement_opts()
-  }
+  placement_opts <- resolve_placement_opts(x$placement_opts)
 
   placements <- place_euler_labels(
     set_names = rownames(ellipses),
