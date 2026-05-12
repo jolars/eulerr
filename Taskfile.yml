@@ -64,3 +64,8 @@ tasks:
     desc: Remove build artifacts (objects, shared libs, Rust target, stale vendor state)
     cmds:
       - rm -rf src/*.o src/*.so src/rust/target src/.cargo src/vendor
+
+  readme:
+    desc: Regenerate README.md from README.Rmd
+    cmds:
+      - Rscript -e 'devtools::build_readme()'
