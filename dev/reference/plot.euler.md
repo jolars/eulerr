@@ -292,10 +292,10 @@ plot(fit, quantities = TRUE)
 # Add a custom legend and retain quantities
 plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 
-#> Error in place_euler_labels(set_names = rownames(ellipses), h = ellipses$h,     k = ellipses$k, a = ellipses$a, b = ellipses$b, phi = ellipses$phi,     container_h = if (has_container) container$h else NULL, container_k = if (has_container) container$k else NULL,     container_width = if (has_container) container$width else NULL,     container_height = if (has_container) container$height else NULL,     n_vertices = as.integer(x$n_vertices), label_combos = combos[ok],     label_widths = widths[ok], label_heights = heights[ok], placement = placement_opts$placement,     placement_margin = placement_opts$margin, placement_iterations = placement_opts$iterations,     placement_tether = placement_opts$tether, label_precision = x$label_precision): Expected non zero length
 
 # Plot without fills and distinguish sets with border types instead
 plot(fit, fills = "transparent", lty = 1:2)
+
 
 # Save plot parameters to plot using some other method
 diagram_description <- plot(fit)
