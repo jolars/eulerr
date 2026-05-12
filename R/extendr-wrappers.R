@@ -43,7 +43,7 @@ euler_plot_data <- function(set_names, h, k, a, b, phi, container_h, container_k
 #' so eunoia emits the empty `Combination` from `decompose_regions`.
 #'
 #' @keywords internal
-place_euler_labels <- function(set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_tether, label_precision) .Call(wrap__place_euler_labels, set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_tether, label_precision)
+place_euler_labels <- function(set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_tether, placement_leader_gap, label_precision) .Call(wrap__place_euler_labels, set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_tether, placement_leader_gap, label_precision)
 
 #' Clip a (possibly multi-polygon) subject path against a single clip
 #' polygon. Mirrors the slice of `polyclip::polyclip` behavior eulerr

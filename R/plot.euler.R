@@ -87,9 +87,14 @@
 #'   the larger of the label's width and height); `labels$iterations`
 #'   sets the iteration cap for the force-directed solver;
 #'   `labels$tether` (`"poi"` (default) or `"boundary"`) chooses where
-#'   the leader line attaches on the source region; and `labels$leader`
-#'   is a list (`col`, `alpha`, `lwd`, `lty`, `lex`) styling the leader
-#'   line drawn from the tether to the exterior label.
+#'   the leader line attaches on the source region; `labels$gap`
+#'   controls the visible gap between the leader tip and the label box
+#'   edge — a bare numeric is interpreted as `lines` (font-relative),
+#'   a [grid::unit()] is honoured as given, and the default `NULL`
+#'   tracks `eulerr_options()$padding` so the gap matches the spacing
+#'   between label and quantity; `labels$leader` is a list (`col`,
+#'   `alpha`, `lwd`, `lty`, `lex`) styling the leader line drawn from
+#'   the tether to the exterior label.
 #' @param quantities a logical, vector, or list. Vectors are assumed to be
 #'   text for the quantities' labels, which by
 #'   default are the original values in the input to [euler()]. In addition
@@ -130,7 +135,8 @@
 #'   `lex` (outline + label gpar), `fontsize`, `cex`, `font`, `fontfamily`,
 #'   `lineheight` (label only), and `label` (custom text — defaults to the
 #'   complement count). Also accepts the same placement controls as
-#'   `labels` (`placement`, `margin`, `iterations`, `tether`, `leader`)
+#'   `labels` (`placement`, `margin`, `iterations`, `tether`, `gap`,
+#'   `leader`)
 #'   for the complement count label. Has no effect if the diagram was
 #'   fit without `complement =`. Defaults can be set via
 #'   `eulerr_options(complement = ...)`.
@@ -906,6 +912,7 @@ plot.euler <- function(
       "margin",
       "iterations",
       "tether",
+      "gap",
       "leader"
     )
     placement_user <- labels[intersect(names(labels), placement_fields)]
@@ -932,6 +939,7 @@ plot.euler <- function(
     labels$iterations <- placement_user$iterations %||%
       opar$labels$iterations
     labels$tether <- placement_user$tether %||% opar$labels$tether
+    labels$gap <- placement_user$gap %||% opar$labels$gap
     labels$leader <- update_list(
       opar$labels$leader %||% list(),
       placement_user$leader %||% list()
@@ -1232,6 +1240,7 @@ plot.euler <- function(
       "margin",
       "iterations",
       "tether",
+      "gap",
       "leader"
     )
     cplace_user <- complement_user[intersect(
@@ -1266,6 +1275,7 @@ plot.euler <- function(
       opar$complement$iterations
     complement$tether <- cplace_user$tether %||%
       opar$complement$tether
+    complement$gap <- cplace_user$gap %||% opar$complement$gap
     complement$leader <- update_list(
       opar$complement$leader %||% list(),
       cplace_user$leader %||% list()
@@ -1301,7 +1311,8 @@ plot.euler <- function(
     placement = labels$placement,
     margin = labels$margin,
     iterations = labels$iterations,
-    tether = labels$tether
+    tether = labels$tether,
+    gap = labels$gap
   )
   if (do_groups) {
     data <- lapply(

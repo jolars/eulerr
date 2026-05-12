@@ -23,6 +23,7 @@ place_euler_labels(
   placement_margin,
   placement_iterations,
   placement_tether,
+  placement_leader_gap,
   label_precision
 )
 }

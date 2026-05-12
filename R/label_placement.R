@@ -8,7 +8,8 @@ default_placement_opts <- function() {
     placement = "raycast",
     margin = NULL,
     iterations = NULL,
-    tether = "poi"
+    tether = "poi",
+    gap = NULL
   )
 }
 
@@ -162,6 +163,22 @@ measure_tag <- function(
   )
 }
 
+#' Resolve a `gap` option to a numeric in native units inside the current
+#' measurement viewport. `NULL` → falls back to `padding_native` so the
+#' visible leader-tip gap matches the spacing between label and quantity.
+#' A `grid::unit` value converts to native; a bare numeric is interpreted
+#' as `lines` (same convention as `eulerr_options()$padding`).
+#' @keywords internal
+resolve_gap_native <- function(gap, padding_native) {
+  if (is.null(gap)) {
+    return(padding_native)
+  }
+  if (inherits(gap, "unit")) {
+    return(grid::convertHeight(gap, "native", valueOnly = TRUE))
+  }
+  grid::convertHeight(grid::unit(gap, "lines"), "native", valueOnly = TRUE)
+}
+
 #' Measure all candidate tag sizes (regions + optional complement) inside
 #' a fresh measurement viewport scaled to `xlim`/`ylim`.
 #' @keywords internal
@@ -172,6 +189,7 @@ measure_tag_sizes <- function(
   labels_gp,
   quantities_gp,
   padding,
+  gap,
   xlim,
   ylim
 ) {
@@ -179,6 +197,7 @@ measure_tag_sizes <- function(
   on.exit(close_vp(), add = TRUE)
 
   padding_native <- grid::convertHeight(padding, "native", valueOnly = TRUE)
+  gap_native <- resolve_gap_native(gap, padding_native)
 
   n_rows <- if (is.null(centers)) 0L else NROW(centers)
   widths <- numeric(0)
@@ -221,7 +240,12 @@ measure_tag_sizes <- function(
     combos <- c(combos, "")
   }
 
-  list(combos = combos, widths = widths, heights = heights)
+  list(
+    combos = combos,
+    widths = widths,
+    heights = heights,
+    gap_native = gap_native
+  )
 }
 
 #' Single placement pass: measure tags, call the Rust FFI, return the
@@ -248,6 +272,7 @@ run_placement_pass <- function(
     labels_gp = labels_gp,
     quantities_gp = quantities_gp,
     padding = padding,
+    gap = placement_opts$gap,
     xlim = xlim,
     ylim = ylim
   )
@@ -276,6 +301,7 @@ run_placement_pass <- function(
     placement_margin = placement_opts$margin,
     placement_iterations = placement_opts$iterations,
     placement_tether = placement_opts$tether,
+    placement_leader_gap = sizes$gap_native,
     label_precision = label_precision
   )
 
@@ -325,7 +351,8 @@ expand_limits_with_canvas <- function(limits, placements, slack = 1.4) {
 #' not clipped. Drives one initial pass plus one re-measure pass when
 #' the limits widened by more than `re_measure_threshold` on the short
 #' side. Updates `centers` (and the complement slot on `container_data`)
-#' in place with placed `(x, y)` plus `kind`, `tether_x`, `tether_y`.
+#' in place with placed `(x, y)` plus `kind`, `tether_x`, `tether_y`,
+#' `leader_end_x`, `leader_end_y`.
 #'
 #' When `placement_opts` is `NULL`, defaults to eunoia's raycast + POI
 #' tether.
@@ -434,6 +461,8 @@ apply_label_placement <- function(
     centers$kind <- rep("", NROW(centers))
     centers$tether_x <- rep(NA_real_, NROW(centers))
     centers$tether_y <- rep(NA_real_, NROW(centers))
+    centers$leader_end_x <- rep(NA_real_, NROW(centers))
+    centers$leader_end_y <- rep(NA_real_, NROW(centers))
     if (length(centers_combos) > 0L) {
       idx <- match(centers_combos, combos)
       ok <- !is.na(idx)
@@ -443,6 +472,8 @@ apply_label_placement <- function(
         kx <- pl$kind[idx[ok]]
         tx <- pl$tether_x[idx[ok]]
         ty <- pl$tether_y[idx[ok]]
+        lex <- pl$leader_end_x[idx[ok]]
+        ley <- pl$leader_end_y[idx[ok]]
         # Keep the POI fallback when eunoia returned NA / no placement.
         valid <- is.finite(ax) & is.finite(ay)
         rows <- which(ok)[valid]
@@ -451,6 +482,8 @@ apply_label_placement <- function(
         centers$kind[rows] <- kx[valid]
         centers$tether_x[rows] <- tx[valid]
         centers$tether_y[rows] <- ty[valid]
+        centers$leader_end_x[rows] <- lex[valid]
+        centers$leader_end_y[rows] <- ley[valid]
       }
     }
   }
@@ -466,6 +499,8 @@ apply_label_placement <- function(
         container_data$kind <- pl$kind[idx]
         container_data$tether_x <- pl$tether_x[idx]
         container_data$tether_y <- pl$tether_y[idx]
+        container_data$leader_end_x <- pl$leader_end_x[idx]
+        container_data$leader_end_y <- pl$leader_end_y[idx]
       }
     }
   }

@@ -12,6 +12,8 @@ build_tag_grobs <- function(
   kind,
   tx,
   ty,
+  lend_x,
+  lend_y,
   label_text,
   quantity_text,
   has_label,
@@ -79,6 +81,8 @@ build_tag_grobs <- function(
     kind = kind,
     tx = tx,
     ty = ty,
+    lend_x = lend_x,
+    lend_y = lend_y,
     leader_gp_list = leader_gp_list,
     fallback_gp = if (has_label) label_gp else quantity_gp,
     name = leader_name
@@ -94,8 +98,10 @@ build_tag_grobs <- function(
 #' Build the polyline leader for an exterior tag, or [grid::nullGrob()]
 #' for interior / missing-tether placements.
 #'
-#' Drawn before the text grobs so the text visually covers the leader's
-#' anchor end — a cheap substitute for proper AABB edge clipping.
+#' Terminates at `(lend_x, lend_y)` — the point on the label box AABB
+#' edge supplied by eunoia (`LabelPlacement::leader_end`). Falls back
+#' to the anchor when the leader endpoint isn't finite so older /
+#' partial placement results still draw something sensible.
 #' @keywords internal
 build_leader_grob <- function(
   ax,
@@ -103,6 +109,8 @@ build_leader_grob <- function(
   kind,
   tx,
   ty,
+  lend_x,
+  lend_y,
   leader_gp_list,
   fallback_gp,
   name
@@ -122,6 +130,9 @@ build_leader_grob <- function(
   ) {
     return(grid::nullGrob(name = name))
   }
+
+  end_x <- if (!is.null(lend_x) && is.finite(lend_x)) lend_x else ax
+  end_y <- if (!is.null(lend_y) && is.finite(lend_y)) lend_y else ay
 
   fallback_col <- if (
     !is.null(fallback_gp) &&
@@ -148,8 +159,8 @@ build_leader_grob <- function(
   )
 
   grid::polylineGrob(
-    x = c(tx, ax),
-    y = c(ty, ay),
+    x = c(tx, end_x),
+    y = c(ty, end_y),
     default.units = "native",
     gp = gp,
     name = name
@@ -187,6 +198,8 @@ setup_tag <- function(data, labels, quantities, number) {
     kind = data$kind,
     tx = data$tether_x,
     ty = data$tether_y,
+    lend_x = data$leader_end_x,
+    lend_y = data$leader_end_y,
     label_text = label_text,
     quantity_text = quantity_text,
     has_label = has_label,
@@ -262,6 +275,8 @@ setup_complement_tag <- function(container_data, complement, number) {
     kind = container_data$kind,
     tx = container_data$tether_x,
     ty = container_data$tether_y,
+    lend_x = container_data$leader_end_x,
+    lend_y = container_data$leader_end_y,
     label_text = NA,
     quantity_text = label_text,
     has_label = FALSE,
@@ -346,17 +361,24 @@ find_eulertags <- function(panel) {
 
 #' Measure every drawable tag inside `tags_grob` against the current
 #' viewport. Returns parallel vectors of combo / width / height suitable
-#' for handing to [place_euler_labels()].
+#' for handing to [place_euler_labels()], plus the resolved leader gap
+#' in native units (so the FFI sees one number per draw pass).
 #' @keywords internal
-measure_all_tags <- function(tags_grob, padding) {
+measure_all_tags <- function(tags_grob, padding, gap = NULL) {
   if (is.null(tags_grob) || length(tags_grob$children) == 0L) {
-    return(list(combos = character(), widths = numeric(), heights = numeric()))
+    return(list(
+      combos = character(),
+      widths = numeric(),
+      heights = numeric(),
+      gap_native = 0
+    ))
   }
   padding_native <- grid::convertHeight(
     padding,
     "native",
     valueOnly = TRUE
   )
+  gap_native <- resolve_gap_native(gap, padding_native)
   combos <- character()
   widths <- numeric()
   heights <- numeric()
@@ -368,7 +390,12 @@ measure_all_tags <- function(tags_grob, padding) {
       heights <- c(heights, sz$h)
     }
   }
-  list(combos = combos, widths = widths, heights = heights)
+  list(
+    combos = combos,
+    widths = widths,
+    heights = heights,
+    gap_native = gap_native
+  )
 }
 
 #' Set the panel viewport's `xscale`/`yscale` at draw time.
@@ -497,7 +524,7 @@ makeContext.EulerPanel <- function(x) {
     )
     grid::pushViewport(meas_vp)
     measurements <- tryCatch(
-      measure_all_tags(tags_grob, x$padding),
+      measure_all_tags(tags_grob, x$padding, placement_opts$gap),
       error = function(e) NULL
     )
     grid::popViewport()
@@ -525,6 +552,7 @@ makeContext.EulerPanel <- function(x) {
         placement_margin = placement_opts$margin,
         placement_iterations = placement_opts$iterations,
         placement_tether = placement_opts$tether,
+        placement_leader_gap = measurements$gap_native,
         label_precision = precision
       ),
       error = function(e) NULL
@@ -645,6 +673,7 @@ makeContent.EulerTags <- function(x) {
   container <- x$container
   has_container <- !is.null(container)
   placement_opts <- resolve_placement_opts(x$placement_opts)
+  gap_native <- resolve_gap_native(placement_opts$gap, padding_native)
 
   placements <- place_euler_labels(
     set_names = rownames(ellipses),
@@ -665,6 +694,7 @@ makeContent.EulerTags <- function(x) {
     placement_margin = placement_opts$margin,
     placement_iterations = placement_opts$iterations,
     placement_tether = placement_opts$tether,
+    placement_leader_gap = gap_native,
     label_precision = x$label_precision
   )
 
@@ -679,6 +709,8 @@ makeContent.EulerTags <- function(x) {
     kind <- placements$kind[j]
     tx <- placements$tether_x[j]
     ty <- placements$tether_y[j]
+    lend_x <- placements$leader_end_x[j]
+    lend_y <- placements$leader_end_y[j]
     child <- x$children[[i]]
     new_children <- build_tag_grobs(
       ax = ax,
@@ -686,6 +718,8 @@ makeContent.EulerTags <- function(x) {
       kind = kind,
       tx = tx,
       ty = ty,
+      lend_x = lend_x,
+      lend_y = lend_y,
       label_text = child$label_text,
       quantity_text = child$quantity_text,
       has_label = isTRUE(child$has_label),

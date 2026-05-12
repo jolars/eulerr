@@ -140,6 +140,7 @@ eulerr_default_options <- function() {
       margin = NULL,
       iterations = NULL,
       tether = "poi",
+      gap = NULL,
       leader = list(
         col = NULL,
         alpha = 0.6,
@@ -222,6 +223,7 @@ eulerr_default_options <- function() {
       margin = NULL,
       iterations = NULL,
       tether = "poi",
+      gap = NULL,
       leader = list(
         col = NULL,
         alpha = 0.6,

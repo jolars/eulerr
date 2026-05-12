@@ -6,7 +6,8 @@
 not clipped. Drives one initial pass plus one re-measure pass when
 the limits widened by more than \code{re_measure_threshold} on the short
 side. Updates \code{centers} (and the complement slot on \code{container_data})
-in place with placed \verb{(x, y)} plus \code{kind}, \code{tether_x}, \code{tether_y}.}
+in place with placed \verb{(x, y)} plus \code{kind}, \code{tether_x}, \code{tether_y},
+\code{leader_end_x}, \code{leader_end_y}.}
 \usage{
 apply_label_placement(
   centers,

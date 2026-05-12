@@ -12,6 +12,7 @@ measure_tag_sizes(
   labels_gp,
   quantities_gp,
   padding,
+  gap,
   xlim,
   ylim
 )

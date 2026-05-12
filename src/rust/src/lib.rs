@@ -880,6 +880,7 @@ fn place_euler_labels(
     placement_margin: Robj,
     placement_iterations: Robj,
     placement_tether: &str,
+    placement_leader_gap: Robj,
     label_precision: f64,
 ) -> extendr_api::Result<List> {
     let n = set_names.len();
@@ -901,7 +902,9 @@ fn place_euler_labels(
             anchor_y = nan_vec.clone(),
             kind = kind_vec,
             tether_x = nan_vec.clone(),
-            tether_y = nan_vec,
+            tether_y = nan_vec.clone(),
+            leader_end_x = nan_vec.clone(),
+            leader_end_y = nan_vec,
             canvas_bbox_h = f64::NAN,
             canvas_bbox_k = f64::NAN,
             canvas_bbox_width = f64::NAN,
@@ -998,10 +1001,15 @@ fn place_euler_labels(
 
     let exterior = parse_placement(placement, margin_opt, iterations_opt)?;
     let tether_source = parse_tether(placement_tether)?;
+    let leader_gap = read_optional_f64(&placement_leader_gap)
+        .filter(|v| v.is_finite())
+        .map(|v| v.max(0.0))
+        .unwrap_or(0.0);
     let strategy = PlacementStrategy {
         exterior,
         precision: label_precision.max(f64::EPSILON),
         tether: tether_source,
+        leader_gap,
     };
 
     let placements = place_labels(&regions, &sizes, container.as_ref(), &strategy);
@@ -1011,6 +1019,8 @@ fn place_euler_labels(
     let mut kind = Vec::with_capacity(n_labels);
     let mut tether_x = Vec::with_capacity(n_labels);
     let mut tether_y = Vec::with_capacity(n_labels);
+    let mut leader_end_x = Vec::with_capacity(n_labels);
+    let mut leader_end_y = Vec::with_capacity(n_labels);
 
     for canon in &canonical_keys {
         match canon.as_ref().and_then(|k| placements.get(k)) {
@@ -1028,6 +1038,16 @@ fn place_euler_labels(
                         tether_y.push(f64::NAN);
                     }
                 }
+                match p.leader_end {
+                    Some(le) => {
+                        leader_end_x.push(le.x());
+                        leader_end_y.push(le.y());
+                    }
+                    None => {
+                        leader_end_x.push(f64::NAN);
+                        leader_end_y.push(f64::NAN);
+                    }
+                }
             }
             None => {
                 anchor_x.push(f64::NAN);
@@ -1035,6 +1055,8 @@ fn place_euler_labels(
                 kind.push(String::new());
                 tether_x.push(f64::NAN);
                 tether_y.push(f64::NAN);
+                leader_end_x.push(f64::NAN);
+                leader_end_y.push(f64::NAN);
             }
         }
     }
@@ -1055,6 +1077,8 @@ fn place_euler_labels(
         kind = kind,
         tether_x = tether_x,
         tether_y = tether_y,
+        leader_end_x = leader_end_x,
+        leader_end_y = leader_end_y,
         canvas_bbox_h = cbb_h,
         canvas_bbox_k = cbb_k,
         canvas_bbox_width = cbb_w,

@@ -5,10 +5,23 @@
 \title{Build the polyline leader for an exterior tag, or \code{\link[grid:grid.null]{grid::nullGrob()}}
 for interior / missing-tether placements.}
 \usage{
-build_leader_grob(ax, ay, kind, tx, ty, leader_gp_list, fallback_gp, name)
+build_leader_grob(
+  ax,
+  ay,
+  kind,
+  tx,
+  ty,
+  lend_x,
+  lend_y,
+  leader_gp_list,
+  fallback_gp,
+  name
+)
 }
 \description{
-Drawn before the text grobs so the text visually covers the leader's
-anchor end — a cheap substitute for proper AABB edge clipping.
+Terminates at \verb{(lend_x, lend_y)} — the point on the label box AABB
+edge supplied by eunoia (\code{LabelPlacement::leader_end}). Falls back
+to the anchor when the leader endpoint isn't finite so older /
+partial placement results still draw something sensible.
 }
 \keyword{internal}

@@ -78,9 +78,14 @@ margin between an exterior label and the diagram (default is half
 the larger of the label's width and height); \code{labels$iterations}
 sets the iteration cap for the force-directed solver;
 \code{labels$tether} (\code{"poi"} (default) or \code{"boundary"}) chooses where
-the leader line attaches on the source region; and \code{labels$leader}
-is a list (\code{col}, \code{alpha}, \code{lwd}, \code{lty}, \code{lex}) styling the leader
-line drawn from the tether to the exterior label.}
+the leader line attaches on the source region; \code{labels$gap}
+controls the visible gap between the leader tip and the label box
+edge — a bare numeric is interpreted as \code{lines} (font-relative),
+a \code{\link[grid:unit]{grid::unit()}} is honoured as given, and the default \code{NULL}
+tracks \code{eulerr_options()$padding} so the gap matches the spacing
+between label and quantity; \code{labels$leader} is a list (\code{col},
+\code{alpha}, \code{lwd}, \code{lty}, \code{lex}) styling the leader line drawn from
+the tether to the exterior label.}
 
 \item{quantities}{a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
@@ -132,7 +137,8 @@ shorthand. A list accepts \code{fill}, \code{alpha}, \code{col}, \code{lty}, \co
 \code{lex} (outline + label gpar), \code{fontsize}, \code{cex}, \code{font}, \code{fontfamily},
 \code{lineheight} (label only), and \code{label} (custom text — defaults to the
 complement count). Also accepts the same placement controls as
-\code{labels} (\code{placement}, \code{margin}, \code{iterations}, \code{tether}, \code{leader})
+\code{labels} (\code{placement}, \code{margin}, \code{iterations}, \code{tether}, \code{gap},
+\code{leader})
 for the complement count label. Has no effect if the diagram was
 fit without \verb{complement =}. Defaults can be set via
 \code{eulerr_options(complement = ...)}.}
