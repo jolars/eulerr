@@ -2,7 +2,7 @@
 % Please edit documentation in R/tag-grobs.R
 \name{build_tag_grobs}
 \alias{build_tag_grobs}
-\title{Build the leader / label / quantity gList for one tag.}
+\title{Build the leader / label / quantity / annotation gList for one tag.}
 \usage{
 build_tag_grobs(
   ax,
@@ -14,12 +14,16 @@ build_tag_grobs(
   lend_y,
   label_text,
   quantity_text,
+  annotation_text,
   has_label,
   has_quantity,
+  has_annotation,
   label_gp,
   quantity_gp,
+  annotation_gp,
   label_rot,
   quantity_rot,
+  annotation_rot,
   number,
   leader_gp_list,
   padding,
@@ -30,6 +34,10 @@ build_tag_grobs(
 Shared between \code{\link[=setup_tag]{setup_tag()}} (initial construction in \code{\link[=setup_grobs]{setup_grobs()}})
 and \code{\link[=makeContent.EulerTags]{makeContent.EulerTags()}} (draw-time re-placement on resize).
 Pure factory — no measurement; takes anchor + tether already in
-native units, plus the stashed text / gpar bundle.
+native units, plus the stashed text / gpar bundle. The three text
+elements stack: label on top, quantity in the middle (at the anchor
+when present), annotation at the bottom. When the quantity is
+missing, the label sits at the anchor and the annotation stacks
+below it.
 }
 \keyword{internal}

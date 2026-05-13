@@ -1,9 +1,12 @@
-#' Build the leader / label / quantity gList for one tag.
+#' Build the leader / label / quantity / annotation gList for one tag.
 #'
 #' Shared between [setup_tag()] (initial construction in [setup_grobs()])
 #' and [makeContent.EulerTags()] (draw-time re-placement on resize).
 #' Pure factory — no measurement; takes anchor + tether already in
-#' native units, plus the stashed text / gpar bundle.
+#' native units, plus the stashed text / gpar bundle. The label /
+#' quantity / annotation stack is centered vertically on `(ax, ay)`
+#' so the bbox center matches the anchor eunoia placed and leader
+#' endpoints land on the actual bbox edge.
 #'
 #' @keywords internal
 build_tag_grobs <- function(
@@ -16,12 +19,16 @@ build_tag_grobs <- function(
   lend_y,
   label_text,
   quantity_text,
+  annotation_text,
   has_label,
   has_quantity,
+  has_annotation,
   label_gp,
   quantity_gp,
+  annotation_gp,
   label_rot,
   quantity_rot,
+  annotation_rot,
   number,
   leader_gp_list,
   padding,
@@ -37,17 +44,25 @@ build_tag_grobs <- function(
   } else {
     paste0(name_prefix, ".label.", number)
   }
+  aname <- if (identical(name_prefix, "complement")) {
+    "complement.annotation.grob"
+  } else {
+    paste0(name_prefix, ".annotation.", number)
+  }
   leader_name <- if (identical(name_prefix, "complement")) {
     "complement.leader.grob"
   } else {
     paste0(name_prefix, ".leader.", number)
   }
 
+  ax_unit <- grid::unit(ax, "native")
+  ay_unit <- grid::unit(ay, "native")
+
   if (has_quantity) {
     quantity_grob <- grid::textGrob(
       quantity_text,
-      x = grid::unit(ax, "native"),
-      y = grid::unit(ay, "native"),
+      x = ax_unit,
+      y = ay_unit,
       rot = quantity_rot,
       gp = quantity_gp,
       name = qname
@@ -59,22 +74,105 @@ build_tag_grobs <- function(
   if (has_label) {
     label_grob <- grid::textGrob(
       label_text,
-      x = grid::unit(ax, "native"),
-      y = grid::unit(ay, "native"),
+      x = ax_unit,
+      y = ay_unit,
       rot = label_rot,
       gp = label_gp,
       name = lname
     )
-    if (has_quantity) {
-      label_grob$y <- label_grob$y +
-        0.5 * grid::stringHeight(label_text) +
-        0.5 * grid::grobHeight(quantity_grob) +
-        padding
-    }
   } else {
     label_grob <- grid::nullGrob(name = paste0(lname, ".null"))
   }
 
+  if (has_annotation) {
+    annotation_grob <- grid::textGrob(
+      annotation_text,
+      x = ax_unit,
+      y = ay_unit,
+      rot = annotation_rot,
+      gp = annotation_gp,
+      name = aname
+    )
+  } else {
+    annotation_grob <- grid::nullGrob(name = paste0(aname, ".null"))
+  }
+
+  # Center the label/quantity/annotation stack vertically on (ax, ay).
+  # The bbox center then matches the anchor eunoia placed, so leader
+  # endpoints (computed against an anchor-centered AABB) land on the
+  # actual bbox edge instead of inside the stack.
+  #
+  # Each element's offset from `ay` is `0.5 * (below - above)`. We
+  # only emit the terms that are actually present — adding a
+  # `unit(0, "native")` to a y-position sum makes grid treat it as
+  # an absolute position offset (not a zero height), which yanks the
+  # resolution way off, so the zero-height branch must skip the term
+  # entirely.
+  build_above <- function(parts) {
+    if (length(parts) == 0L) NULL else Reduce(`+`, parts)
+  }
+  if (has_label) {
+    below_parts <- list()
+    if (has_quantity) {
+      below_parts <- c(below_parts, list(padding, grid::grobHeight(quantity_grob)))
+    }
+    if (has_annotation) {
+      below_parts <- c(
+        below_parts,
+        list(padding, grid::grobHeight(annotation_grob))
+      )
+    }
+    below <- build_above(below_parts)
+    if (!is.null(below)) {
+      label_grob$y <- ay_unit + 0.5 * below
+    }
+  }
+  if (has_quantity) {
+    above_parts <- list()
+    below_parts <- list()
+    if (has_label) {
+      above_parts <- c(above_parts, list(grid::grobHeight(label_grob), padding))
+    }
+    if (has_annotation) {
+      below_parts <- c(below_parts, list(padding, grid::grobHeight(annotation_grob)))
+    }
+    above <- build_above(above_parts)
+    below <- build_above(below_parts)
+    new_y <- ay_unit
+    if (!is.null(below)) {
+      new_y <- new_y + 0.5 * below
+    }
+    if (!is.null(above)) {
+      new_y <- new_y - 0.5 * above
+    }
+    if (!is.null(above) || !is.null(below)) {
+      quantity_grob$y <- new_y
+    }
+  }
+  if (has_annotation) {
+    above_parts <- list()
+    if (has_quantity) {
+      above_parts <- c(above_parts, list(grid::grobHeight(quantity_grob), padding))
+    }
+    if (has_label) {
+      if (!has_quantity) {
+        above_parts <- c(above_parts, list(padding))
+      }
+      above_parts <- c(above_parts, list(grid::grobHeight(label_grob)))
+    }
+    above <- build_above(above_parts)
+    if (!is.null(above)) {
+      annotation_grob$y <- ay_unit - 0.5 * above
+    }
+  }
+
+  fallback_gp <- if (has_label) {
+    label_gp
+  } else if (has_quantity) {
+    quantity_gp
+  } else {
+    annotation_gp
+  }
   leader_grob <- build_leader_grob(
     ax = ax,
     ay = ay,
@@ -84,14 +182,15 @@ build_tag_grobs <- function(
     lend_x = lend_x,
     lend_y = lend_y,
     leader_gp_list = leader_gp_list,
-    fallback_gp = if (has_label) label_gp else quantity_gp,
+    fallback_gp = fallback_gp,
     name = leader_name
   )
 
   grid::gList(
     leader = leader_grob,
     label = label_grob,
-    quantity = quantity_grob
+    quantity = quantity_grob,
+    annotation = annotation_grob
   )
 }
 
@@ -167,24 +266,38 @@ build_leader_grob <- function(
   )
 }
 
-#' Setup grobs for one tag (label + quantity + leader).
+#' Setup grobs for one tag (label + quantity + annotation + leader).
 #'
 #' Builds the gList via [build_tag_grobs()] and stashes the text / gpar
 #' bundle on the resulting `EulerTag` gTree so [makeContent.EulerTags()]
 #' can rebuild it at draw time with fresh measurements.
 #'
 #' @keywords internal
-setup_tag <- function(data, labels, quantities, number) {
+setup_tag <- function(data, labels, quantities, annotations, number) {
   has_label <- !is.null(labels) && !is.na(data$labels_par_id)
   has_quantity <- !is.null(quantities) && !is.na(data$quantities_par_id)
+  has_annotation <- !is.null(annotations) &&
+    !is.null(data$annotations_par_id) &&
+    !is.na(data$annotations_par_id)
 
   label_text <- if (has_label) data$labels else NA
   quantity_text <- if (has_quantity) data$quantities else NA
+  annotation_text <- if (has_annotation) data$annotations else NA
   label_gp <- if (has_label) labels$gp[data$labels_par_id] else NULL
   quantity_gp <- if (has_quantity) quantities$gp[data$quantities_par_id] else NULL
+  annotation_gp <- if (has_annotation) {
+    annotations$gp[data$annotations_par_id]
+  } else {
+    NULL
+  }
   label_rot <- if (has_label) labels$rot[data$labels_par_id] else 0
   quantity_rot <- if (has_quantity) {
     quantities$rot[data$quantities_par_id]
+  } else {
+    0
+  }
+  annotation_rot <- if (has_annotation) {
+    annotations$rot[data$annotations_par_id]
   } else {
     0
   }
@@ -202,12 +315,16 @@ setup_tag <- function(data, labels, quantities, number) {
     lend_y = data$leader_end_y,
     label_text = label_text,
     quantity_text = quantity_text,
+    annotation_text = annotation_text,
     has_label = has_label,
     has_quantity = has_quantity,
+    has_annotation = has_annotation,
     label_gp = label_gp,
     quantity_gp = quantity_gp,
+    annotation_gp = annotation_gp,
     label_rot = label_rot,
     quantity_rot = quantity_rot,
+    annotation_rot = annotation_rot,
     number = number,
     leader_gp_list = leader_gp_list,
     padding = padding
@@ -218,12 +335,16 @@ setup_tag <- function(data, labels, quantities, number) {
     combo_key = rownames(data),
     label_text = label_text,
     quantity_text = quantity_text,
+    annotation_text = annotation_text,
     has_label = has_label,
     has_quantity = has_quantity,
+    has_annotation = has_annotation,
     label_gp = label_gp,
     quantity_gp = quantity_gp,
+    annotation_gp = annotation_gp,
     label_rot = label_rot,
     quantity_rot = quantity_rot,
+    annotation_rot = annotation_rot,
     leader_gp_list = leader_gp_list,
     padding = padding,
     number = number,
@@ -279,12 +400,16 @@ setup_complement_tag <- function(container_data, complement, number) {
     lend_y = container_data$leader_end_y,
     label_text = NA,
     quantity_text = label_text,
+    annotation_text = NA,
     has_label = FALSE,
     has_quantity = TRUE,
+    has_annotation = FALSE,
     label_gp = NULL,
     quantity_gp = quantity_gp,
+    annotation_gp = NULL,
     label_rot = 0,
     quantity_rot = 0,
+    annotation_rot = 0,
     number = number,
     leader_gp_list = leader_gp_list,
     padding = padding,
@@ -296,12 +421,16 @@ setup_complement_tag <- function(container_data, complement, number) {
     combo_key = "",
     label_text = NA,
     quantity_text = label_text,
+    annotation_text = NA,
     has_label = FALSE,
     has_quantity = TRUE,
+    has_annotation = FALSE,
     label_gp = NULL,
     quantity_gp = quantity_gp,
+    annotation_gp = NULL,
     label_rot = 0,
     quantity_rot = 0,
+    annotation_rot = 0,
     leader_gp_list = leader_gp_list,
     padding = padding,
     number = number,
@@ -344,8 +473,28 @@ measure_tag_native <- function(tag, padding_native) {
       valueOnly = TRUE
     )
   }
-  inter_pad <- if (label_h > 0 && quant_h > 0) padding_native else 0
-  list(w = max(label_w, quant_w), h = label_h + quant_h + inter_pad)
+  annot_w <- 0
+  annot_h <- 0
+  if (isTRUE(tag$has_annotation)) {
+    g <- grid::textGrob(tag$annotation_text, gp = tag$annotation_gp)
+    annot_w <- grid::convertWidth(
+      grid::grobWidth(g),
+      "native",
+      valueOnly = TRUE
+    )
+    annot_h <- grid::convertHeight(
+      grid::grobHeight(g),
+      "native",
+      valueOnly = TRUE
+    )
+  }
+  pad_lq <- if (label_h > 0 && quant_h > 0) padding_native else 0
+  pad_qa <- if (quant_h > 0 && annot_h > 0) padding_native else 0
+  pad_la <- if (quant_h == 0 && label_h > 0 && annot_h > 0) padding_native else 0
+  list(
+    w = max(label_w, quant_w, annot_w),
+    h = label_h + quant_h + annot_h + pad_lq + pad_qa + pad_la
+  )
 }
 
 #' Find the `EulerTags` child of an `EulerPanel`, if any.
@@ -722,12 +871,16 @@ makeContent.EulerTags <- function(x) {
       lend_y = lend_y,
       label_text = child$label_text,
       quantity_text = child$quantity_text,
+      annotation_text = child$annotation_text,
       has_label = isTRUE(child$has_label),
       has_quantity = isTRUE(child$has_quantity),
+      has_annotation = isTRUE(child$has_annotation),
       label_gp = child$label_gp,
       quantity_gp = child$quantity_gp,
+      annotation_gp = child$annotation_gp,
       label_rot = child$label_rot,
       quantity_rot = child$quantity_rot,
+      annotation_rot = child$annotation_rot,
       number = child$number,
       leader_gp_list = child$leader_gp_list,
       padding = child$padding,

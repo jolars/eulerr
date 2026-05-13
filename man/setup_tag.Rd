@@ -2,9 +2,9 @@
 % Please edit documentation in R/tag-grobs.R
 \name{setup_tag}
 \alias{setup_tag}
-\title{Setup grobs for one tag (label + quantity + leader).}
+\title{Setup grobs for one tag (label + quantity + annotation + leader).}
 \usage{
-setup_tag(data, labels, quantities, number)
+setup_tag(data, labels, quantities, annotations, number)
 }
 \description{
 Builds the gList via \code{\link[=build_tag_grobs]{build_tag_grobs()}} and stashes the text / gpar

@@ -88,23 +88,26 @@ open_measurement_viewport <- function(xlim, ylim) {
 }
 
 #' Native-unit AABB of one composite tag (label stacked above quantity,
-#' separated by `padding`). The geometry matches what `setup_tag()`
-#' renders at draw time, so the size handed to eunoia agrees with the
-#' actual on-screen footprint.
+#' annotation stacked below quantity, separated by `padding`). The
+#' geometry matches what `setup_tag()` renders at draw time, so the size
+#' handed to eunoia agrees with the actual on-screen footprint.
 #' @keywords internal
 measure_tag <- function(
   label,
   quantity,
+  annotation,
   labels_par_id,
   quantities_par_id,
+  annotations_par_id,
   labels_gp,
   quantities_gp,
+  annotations_gp,
   padding_native
 ) {
-  # `labels_par_id`/`quantities_par_id` are only assigned for drawable
-  # tags, so they're the authoritative "is there something to draw"
-  # signal. Don't call `is.na(label)` on the text — `label` may be an
-  # expression (from `str2expression(...)`) and `is.na` warns there.
+  # `*_par_id` are only assigned for drawable tags, so they're the
+  # authoritative "is there something to draw" signal. Don't call
+  # `is.na(label)` on the text — `label` may be an expression (from
+  # `str2expression(...)`) and `is.na` warns there.
   do_label <- !is.null(labels_gp) &&
     !is.null(labels_par_id) &&
     !is.na(labels_par_id) &&
@@ -113,14 +116,21 @@ measure_tag <- function(
     !is.null(quantities_par_id) &&
     !is.na(quantities_par_id) &&
     !is.null(quantity)
+  do_annot <- !is.null(annotations_gp) &&
+    !is.null(annotations_par_id) &&
+    !is.na(annotations_par_id) &&
+    !is.null(annotation)
   if (do_label && !is.expression(label) && is.na(label)) {
     do_label <- FALSE
   }
   if (do_quant && !is.expression(quantity) && is.na(quantity)) {
     do_quant <- FALSE
   }
+  if (do_annot && !is.expression(annotation) && is.na(annotation)) {
+    do_annot <- FALSE
+  }
 
-  if (!do_label && !do_quant) {
+  if (!do_label && !do_quant && !do_annot) {
     return(list(w = 0, h = 0))
   }
 
@@ -144,6 +154,8 @@ measure_tag <- function(
   label_h <- 0
   quant_w <- 0
   quant_h <- 0
+  annot_w <- 0
+  annot_h <- 0
 
   if (do_label) {
     m <- measure_one(label, labels_gp[labels_par_id])
@@ -155,11 +167,18 @@ measure_tag <- function(
     quant_w <- m$w
     quant_h <- m$h
   }
+  if (do_annot) {
+    m <- measure_one(annotation, annotations_gp[annotations_par_id])
+    annot_w <- m$w
+    annot_h <- m$h
+  }
 
-  inter_pad <- if (do_label && do_quant) padding_native else 0
+  pad_lq <- if (do_label && do_quant) padding_native else 0
+  pad_qa <- if (do_quant && do_annot) padding_native else 0
+  pad_la <- if (!do_quant && do_label && do_annot) padding_native else 0
   list(
-    w = max(label_w, quant_w),
-    h = label_h + quant_h + inter_pad
+    w = max(label_w, quant_w, annot_w),
+    h = label_h + quant_h + annot_h + pad_lq + pad_qa + pad_la
   )
 }
 
@@ -188,6 +207,7 @@ measure_tag_sizes <- function(
   complement_label,
   labels_gp,
   quantities_gp,
+  annotations_gp,
   padding,
   gap,
   xlim,
@@ -204,18 +224,30 @@ measure_tag_sizes <- function(
   heights <- numeric(0)
   combos <- character(0)
 
+  has_annotations_col <- !is.null(centers) &&
+    "annotations" %in% names(centers)
+
   if (n_rows > 0L) {
     widths <- numeric(n_rows)
     heights <- numeric(n_rows)
     combos <- rownames(centers)
     for (i in seq_len(n_rows)) {
+      annotation_text <- if (has_annotations_col) centers$annotations[i] else NA
+      annotation_par_id <- if (has_annotations_col) {
+        centers$annotations_par_id[i]
+      } else {
+        NA_integer_
+      }
       m <- measure_tag(
         label = centers$labels[i],
         quantity = centers$quantities[i],
+        annotation = annotation_text,
         labels_par_id = centers$labels_par_id[i],
         quantities_par_id = centers$quantities_par_id[i],
+        annotations_par_id = annotation_par_id,
         labels_gp = labels_gp,
         quantities_gp = quantities_gp,
+        annotations_gp = annotations_gp,
         padding_native = padding_native
       )
       widths[i] <- m$w
@@ -224,15 +256,18 @@ measure_tag_sizes <- function(
   }
 
   if (do_complement_label && !is.null(complement_label) && !is.na(complement_label)) {
-    # The complement label is just text — there's no per-set label, so
-    # measure as if labels_par_id were NA and only the quantity is drawn.
+    # The complement label is just text — there's no per-set label or
+    # annotation, so measure as if only the quantity is drawn.
     m <- measure_tag(
       label = NA,
       quantity = complement_label,
+      annotation = NA,
       labels_par_id = NA_integer_,
       quantities_par_id = 1L,
+      annotations_par_id = NA_integer_,
       labels_gp = NULL,
       quantities_gp = quantities_gp,
+      annotations_gp = NULL,
       padding_native = padding_native
     )
     widths <- c(widths, m$w)
@@ -257,6 +292,7 @@ run_placement_pass <- function(
   ellipses,
   labels_gp,
   quantities_gp,
+  annotations_gp,
   padding,
   placement_opts,
   do_complement_label,
@@ -271,6 +307,7 @@ run_placement_pass <- function(
     complement_label = if (do_complement_label) container_data$quantity_label else NA,
     labels_gp = labels_gp,
     quantities_gp = quantities_gp,
+    annotations_gp = annotations_gp,
     padding = padding,
     gap = placement_opts$gap,
     xlim = xlim,
@@ -365,6 +402,7 @@ apply_label_placement <- function(
   ellipses,
   labels,
   quantities,
+  annotations = NULL,
   placement_opts = NULL,
   do_complement_label = FALSE,
   limits,
@@ -391,6 +429,7 @@ apply_label_placement <- function(
   placement_opts <- resolve_placement_opts(placement_opts)
   labels_gp <- if (!is.null(labels)) labels$gp else NULL
   quantities_gp <- if (!is.null(quantities)) quantities$gp else NULL
+  annotations_gp <- if (!is.null(annotations)) annotations$gp else NULL
   padding <- eulerr_options()$padding
 
   # First pass at the incoming limits. The aspect-preserving
@@ -406,6 +445,7 @@ apply_label_placement <- function(
     ellipses = ellipses,
     labels_gp = labels_gp,
     quantities_gp = quantities_gp,
+    annotations_gp = annotations_gp,
     padding = padding,
     placement_opts = placement_opts,
     do_complement_label = do_complement_label,
@@ -437,6 +477,7 @@ apply_label_placement <- function(
         ellipses = ellipses,
         labels_gp = labels_gp,
         quantities_gp = quantities_gp,
+        annotations_gp = annotations_gp,
         padding = padding,
         placement_opts = placement_opts,
         do_complement_label = do_complement_label,

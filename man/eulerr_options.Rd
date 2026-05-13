@@ -34,6 +34,10 @@ some margin sizes in the resulting plot}#'
 \item{quantities}{a list of items \code{type}, \code{template}, \code{format}, \code{total}, \code{rot},
 \code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
+\item{annotations}{a list of items \code{rot}, \code{col}, \code{alpha}, \code{fontsize},
+\code{cex}, \code{fontfamily}, \code{lineheight}, \code{font}, and \code{labels} (a named
+character vector keyed by subset name). Used to add a third stacked
+text element per region below the quantity.}
 \item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},

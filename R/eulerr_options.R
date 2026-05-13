@@ -18,6 +18,10 @@
 #'   \item{quantities}{a list of items `type`, `template`, `format`, `total`, `rot`,
 #'   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
+#'   \item{annotations}{a list of items `rot`, `col`, `alpha`, `fontsize`,
+#'   `cex`, `fontfamily`, `lineheight`, `font`, and `labels` (a named
+#'   character vector keyed by subset name). Used to add a third stacked
+#'   text element per region below the quantity.}
 #'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
@@ -77,6 +81,7 @@ eulerr_options <- function(...) {
       list(
         labels = list(fontsize = pointsize),
         quantities = list(fontsize = pointsize),
+        annotations = list(fontsize = pointsize),
         strips = list(fontsize = pointsize),
         legend = list(fontsize = pointsize),
         main = list(fontsize = pointsize),
@@ -162,6 +167,17 @@ eulerr_default_options <- function() {
       alpha = 1,
       fontsize = 12,
       cex = 1,
+      fontfamily = "",
+      lineheight = 1.2,
+      font = 1
+    ),
+    annotations = list(
+      labels = NULL,
+      rot = 0,
+      col = 1L,
+      alpha = 1,
+      fontsize = 12,
+      cex = 0.8,
       fontfamily = "",
       lineheight = 1.2,
       font = 1

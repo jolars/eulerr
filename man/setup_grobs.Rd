@@ -11,6 +11,7 @@ setup_grobs(
   edges,
   labels,
   quantities,
+  annotations = NULL,
   complement = NULL,
   number,
   merged_sets,

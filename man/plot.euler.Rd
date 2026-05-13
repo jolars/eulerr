@@ -14,6 +14,7 @@
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = FALSE,
+  annotations = NULL,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -111,6 +112,18 @@ separate lines or \code{"n={counts} ({percent})"} for arbitrary layout. When
 \code{template} is set it overrides \code{type}; the set of placeholders in the
 template determines which values are computed.}
 
+\item{annotations}{free-form per-region text rendered as a third
+stacked element below the quantity (or below the label when no
+quantity is drawn). Accepts a named character vector keyed by
+subset name (e.g. \code{c(A = "n = 12", "A&B" = "n = 3")}) as a
+shorthand for \verb{list(labels = <vector>)}, or a list with \code{labels}
+plus \code{\link[grid:gpar]{grid::gpar()}} fields (\code{col}, \code{alpha}, \code{fontsize}, \code{cex},
+\code{fontfamily}, \code{lineheight}, \code{font}, \code{rot}). Regions absent from
+\code{labels} are not annotated. The composite tag bbox grows to
+include the annotation, so exterior placement and leader lines
+adapt automatically. Defaults to slightly smaller text than
+\code{labels} / \code{quantities} (\code{cex = 0.8}).}
+
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}. In addition to graphical parameters, this
 argument can include \code{labels = list(top = ..., left = ...)} for custom
@@ -189,19 +202,19 @@ arguments that are specific to each argument.
 The various \code{\link[grid:gpar]{grid::gpar()}} values that are available for each argument
 are:
 
-\tabular{lccccccc}{
-\tab fills \tab edges \tab labels \tab quantities  \tab strips \tab legend \tab main \cr
-col        \tab       \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-fill       \tab x     \tab       \tab        \tab             \tab        \tab        \tab      \cr
-alpha      \tab x     \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-lty        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
-lwd        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
-lex        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
-fontsize   \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-cex        \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-fontfamily \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-lineheight \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-font       \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+\tabular{lcccccccc}{
+\tab fills \tab edges \tab labels \tab quantities  \tab annotations \tab strips \tab legend \tab main \cr
+col        \tab       \tab x     \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+fill       \tab x     \tab       \tab        \tab             \tab             \tab        \tab        \tab      \cr
+alpha      \tab x     \tab x     \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+lty        \tab       \tab x     \tab        \tab             \tab             \tab        \tab        \tab      \cr
+lwd        \tab       \tab x     \tab        \tab             \tab             \tab        \tab        \tab      \cr
+lex        \tab       \tab x     \tab        \tab             \tab             \tab        \tab        \tab      \cr
+fontsize   \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+cex        \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+fontfamily \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+lineheight \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+font       \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
 }
 
 Defaults for these values, as well as other parameters of the plots, can
@@ -210,14 +223,15 @@ be set globally using \code{\link[=eulerr_options]{eulerr_options()}}.
 If the diagram has been fit using the \code{data.frame} or \code{matrix} methods
 and using the \code{by} argument, the plot area will be split into panels for
 each combination of the one to two factors. The \code{fills}, \code{patterns}, \code{edges},
-\code{labels}, and \code{quantities} arguments each accept an optional \code{by_group}
-entry: a named list of override lists keyed by panel name (the names of the
-fitted object). For multi-\code{by} fits the panel name is the levels joined by
-\code{.}, e.g. \code{"Male.German"}. Panels not listed in \code{by_group} use the top-level
-settings unchanged. Only graphical fields (and \code{rot} for \code{labels} and
-\code{quantities}) may be overridden per panel; structural fields such as
-\code{quantities$type}, \code{quantities$format}, or named-by-subset \code{fills$fill} must
-be set at the top level.
+\code{labels}, \code{quantities}, and \code{annotations} arguments each accept an optional
+\code{by_group} entry: a named list of override lists keyed by panel name (the
+names of the fitted object). For multi-\code{by} fits the panel name is the
+levels joined by \code{.}, e.g. \code{"Male.German"}. Panels not listed in \code{by_group}
+use the top-level settings unchanged. Only graphical fields (and \code{rot} for
+\code{labels}, \code{quantities}, and \code{annotations}) may be overridden per panel;
+structural fields such as \code{quantities$type}, \code{quantities$format},
+\code{annotations$labels}, or named-by-subset \code{fills$fill} must be set at the
+top level.
 
 For users who are looking to plot their diagram using another package,
 all the necessary parameters can be collected if the result of this
@@ -233,6 +247,13 @@ plot(fit,
 
 # Add quantities to the plot
 plot(fit, quantities = TRUE)
+
+# Add free-form per-region annotations below the counts
+plot(
+  fit,
+  quantities = TRUE,
+  annotations = c(A = "mean = 35", "A&B" = "mean = 41")
+)
 
 # Add a custom legend and retain quantities
 plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))

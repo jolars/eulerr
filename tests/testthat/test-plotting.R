@@ -716,6 +716,187 @@ test_that("by_group rejects invalid input", {
   )
 })
 
+test_that("annotations render as a third stacked text element", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+  })
+
+  tag_text_grobs <- function(tag, kind) {
+    nm_prefix <- paste0("tag.", kind, ".")
+    out <- list()
+    for (child in tag$children) {
+      if (inherits(child, "text") && startsWith(child$name, nm_prefix)) {
+        out[[length(out) + 1L]] <- child
+      }
+    }
+    out
+  }
+
+  fit <- euler(c(A = 10, B = 5, "A&B" = 3))
+  p <- plot(
+    fit,
+    quantities = TRUE,
+    annotations = c(A = "mean=35", "A&B" = "n=3")
+  )
+
+  # The centers data.frame carries the per-region annotation text.
+  expect_equal(p$data$centers["A", "annotations"], "mean=35")
+  expect_equal(p$data$centers["A&B", "annotations"], "n=3")
+  expect_true(is.na(p$data$centers["B", "annotations"]))
+
+  tags <- p$children$canvas.grob$children$diagram.grob.1$children$tags$children
+  combos <- vapply(tags, function(t) t$combo_key %||% "", character(1))
+
+  # A: all three slots populated
+  a <- tags[[which(combos == "A")]]
+  expect_true(isTRUE(a$has_label))
+  expect_true(isTRUE(a$has_quantity))
+  expect_true(isTRUE(a$has_annotation))
+  expect_length(tag_text_grobs(a, "annotation"), 1L)
+  expect_equal(tag_text_grobs(a, "annotation")[[1L]]$label, "mean=35")
+
+  # B: no annotation requested -> nullGrob placeholder
+  b <- tags[[which(combos == "B")]]
+  expect_false(isTRUE(b$has_annotation))
+  expect_length(tag_text_grobs(b, "annotation"), 0L)
+
+  # A&B: quantity at anchor, annotation below (no label)
+  ab <- tags[[which(combos == "A&B")]]
+  expect_false(isTRUE(ab$has_label))
+  expect_true(isTRUE(ab$has_quantity))
+  expect_true(isTRUE(ab$has_annotation))
+})
+
+test_that("annotations accept named-vector shorthand and list with styling", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+  })
+
+  fit <- euler(c(A = 10, B = 5, "A&B" = 3))
+
+  # Shorthand named vector
+  p1 <- plot(fit, annotations = c(A = "a"))
+  # Equivalent list form
+  p2 <- plot(fit, annotations = list(labels = c(A = "a")))
+
+  expect_equal(p1$data$centers$annotations, p2$data$centers$annotations)
+
+  # List form with gpar override
+  p3 <- plot(
+    fit,
+    annotations = list(labels = c(A = "a"), col = "purple", cex = 1.5)
+  )
+  ann_tag <- p3$children$canvas.grob$children$diagram.grob.1$children$tags$children[[1L]]
+  expect_equal(ann_tag$annotation_gp$col, "purple")
+  expect_equal(ann_tag$annotation_gp$cex, 1.5)
+})
+
+test_that("annotation anchor falls back when quantity or label is absent", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+  })
+
+  fit <- euler(c(A = 10, B = 5, "A&B" = 3))
+
+  # quantity off, label on -> label is the anchor, annotation stacks below it
+  p_no_quant <- plot(
+    fit,
+    quantities = FALSE,
+    labels = TRUE,
+    annotations = c(A = "note")
+  )
+  tags <- p_no_quant$children$canvas.grob$children$diagram.grob.1$children$tags$children
+  combos <- vapply(tags, function(t) t$combo_key %||% "", character(1))
+  a <- tags[[which(combos == "A")]]
+  expect_true(isTRUE(a$has_label))
+  expect_false(isTRUE(a$has_quantity))
+  expect_true(isTRUE(a$has_annotation))
+
+  # labels off, quantities off -> annotation IS the anchor
+  p_solo <- plot(
+    fit,
+    quantities = FALSE,
+    labels = FALSE,
+    annotations = c(A = "only")
+  )
+  tags <- p_solo$children$canvas.grob$children$diagram.grob.1$children$tags$children
+  combos <- vapply(tags, function(t) t$combo_key %||% "", character(1))
+  a <- tags[[which(combos == "A")]]
+  expect_false(isTRUE(a$has_label))
+  expect_false(isTRUE(a$has_quantity))
+  expect_true(isTRUE(a$has_annotation))
+})
+
+test_that("by_group panel overrides apply to annotations", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+  })
+
+  panel_annotation_cols <- function(g, i) {
+    panel <- g$children$canvas.grob$children[[i]]
+    tags <- panel$children$tags$children
+    out <- character(0)
+    for (tag in tags) {
+      for (child in tag$children) {
+        if (
+          inherits(child, "text") &&
+            grepl("^tag\\.annotation\\.", child$name)
+        ) {
+          out <- c(out, child$gp$col)
+        }
+      }
+    }
+    unique(out)
+  }
+
+  fit <- euler(fruits[, 1:4], by = list(sex))
+  female_idx <- which(names(fit) == "female")
+  male_idx <- which(names(fit) == "male")
+
+  g <- plot(
+    fit,
+    quantities = TRUE,
+    annotations = list(
+      labels = c(banana = "tropical"),
+      by_group = list(
+        female = list(col = "purple"),
+        male = list(col = "navy")
+      )
+    )
+  )
+  expect_equal(panel_annotation_cols(g, female_idx), "purple")
+  expect_equal(panel_annotation_cols(g, male_idx), "navy")
+})
+
+test_that("annotations reject unnamed and non-character input", {
+  fit <- euler(c(A = 1, B = 1, "A&B" = 1))
+  expect_error(
+    plot(fit, annotations = c("foo", "bar")),
+    "fully named character vector"
+  )
+  expect_error(
+    plot(fit, annotations = list(labels = c(A = 1, B = 2))),
+    "must be a character vector"
+  )
+  # by_group requires `by =`
+  expect_error(
+    plot(fit, annotations = list(by_group = list(any = list(col = "red")))),
+    "requires a diagram fit with `by ="
+  )
+})
+
 test_that("eulergrams can be composed with | and /", {
   tmp <- tempfile()
   png(tmp)

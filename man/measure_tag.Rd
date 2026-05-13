@@ -3,24 +3,27 @@
 \name{measure_tag}
 \alias{measure_tag}
 \title{Native-unit AABB of one composite tag (label stacked above quantity,
-separated by \code{padding}). The geometry matches what \code{setup_tag()}
-renders at draw time, so the size handed to eunoia agrees with the
-actual on-screen footprint.}
+annotation stacked below quantity, separated by \code{padding}). The
+geometry matches what \code{setup_tag()} renders at draw time, so the size
+handed to eunoia agrees with the actual on-screen footprint.}
 \usage{
 measure_tag(
   label,
   quantity,
+  annotation,
   labels_par_id,
   quantities_par_id,
+  annotations_par_id,
   labels_gp,
   quantities_gp,
+  annotations_gp,
   padding_native
 )
 }
 \description{
 Native-unit AABB of one composite tag (label stacked above quantity,
-separated by \code{padding}). The geometry matches what \code{setup_tag()}
-renders at draw time, so the size handed to eunoia agrees with the
-actual on-screen footprint.
+annotation stacked below quantity, separated by \code{padding}). The
+geometry matches what \code{setup_tag()} renders at draw time, so the size
+handed to eunoia agrees with the actual on-screen footprint.
 }
 \keyword{internal}

@@ -16,6 +16,7 @@ setup_geometry <- function(
   edges,
   labels,
   quantities,
+  annotations,
   n,
   merged_sets,
   placement_opts = NULL,
@@ -48,6 +49,7 @@ setup_geometry <- function(
   do_edges <- !is.null(edges)
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
+  do_annotations <- !is.null(annotations)
 
   h <- dd$h
   k <- dd$k
@@ -130,7 +132,7 @@ setup_geometry <- function(
     )
   }
 
-  if (do_fills || do_labels || do_quantities) {
+  if (do_fills || do_labels || do_quantities || do_annotations) {
     fills <- vector("list", n_id)
     for (i in seq_len(n_id)) {
       if (!nonzero[i]) {
@@ -146,7 +148,7 @@ setup_geometry <- function(
     }
   }
 
-  if (do_labels || do_quantities) {
+  if (do_labels || do_quantities || do_annotations) {
     empty <- !nonzero_fit(fitted)
 
     centers_x <- region_centers_x
@@ -161,8 +163,10 @@ setup_geometry <- function(
       id = centers_id,
       labels = rep(NA_character_, n_id),
       quantities = rep(NA, n_id),
+      annotations = rep(NA_character_, n_id),
       labels_par_id = rep(NA_integer_, n_id),
       quantities_par_id = rep(NA_integer_, n_id),
+      annotations_par_id = rep(NA_integer_, n_id),
       row.names = combo_labels,
       stringsAsFactors = FALSE
     )
@@ -319,6 +323,16 @@ setup_geometry <- function(
       }
     }
 
+    if (do_annotations && !is.null(annotations$labels)) {
+      rows <- singles | others
+      annot_named <- annotations$labels[rownames(centers)[rows]]
+      centers$annotations[rows] <- ifelse(
+        is.na(annot_named),
+        NA_character_,
+        unname(annot_named)
+      )
+    }
+
     centers <- centers[has_center, , drop = FALSE]
 
     n_q <- sum(!is.na(centers$quantities))
@@ -326,7 +340,14 @@ setup_geometry <- function(
       centers$quantities_par_id[!is.na(centers$quantities)] <- seq_len(n_q)
     }
 
-    has_tag <- !is.na(centers$quantities_par_id) | !is.na(centers$labels_par_id)
+    n_a <- sum(!is.na(centers$annotations))
+    if (n_a > 0L) {
+      centers$annotations_par_id[!is.na(centers$annotations)] <- seq_len(n_a)
+    }
+
+    has_tag <- !is.na(centers$quantities_par_id) |
+      !is.na(centers$labels_par_id) |
+      !is.na(centers$annotations_par_id)
 
     centers <- centers[has_tag, , drop = FALSE]
   } else {
@@ -424,6 +445,7 @@ setup_geometry <- function(
       ellipses = dd,
       labels = labels,
       quantities = quantities,
+      annotations = annotations,
       placement_opts = placement_opts,
       do_complement_label = placement_label,
       limits = limits,
@@ -444,6 +466,7 @@ setup_geometry <- function(
     edges = edges,
     labels = labels,
     quantities = quantities,
+    annotations = annotations,
     centers = centers,
     empty_sets = empty_sets,
     empty_subsets = empty_subsets,

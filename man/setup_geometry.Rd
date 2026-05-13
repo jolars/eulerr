@@ -10,6 +10,7 @@ setup_geometry(
   edges,
   labels,
   quantities,
+  annotations,
   n,
   merged_sets,
   placement_opts = NULL,

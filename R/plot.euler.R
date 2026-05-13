@@ -24,19 +24,19 @@
 #' The various [grid::gpar()] values that are available for each argument
 #' are:
 #'
-#' \tabular{lccccccc}{
-#'              \tab fills \tab edges \tab labels \tab quantities  \tab strips \tab legend \tab main \cr
-#'   col        \tab       \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-#'   fill       \tab x     \tab       \tab        \tab             \tab        \tab        \tab      \cr
-#'   alpha      \tab x     \tab x     \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-#'   lty        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
-#'   lwd        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
-#'   lex        \tab       \tab x     \tab        \tab             \tab        \tab        \tab      \cr
-#'   fontsize   \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-#'   cex        \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-#'   fontfamily \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-#'   lineheight \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
-#'   font       \tab       \tab       \tab x      \tab x           \tab x      \tab x      \tab x    \cr
+#' \tabular{lcccccccc}{
+#'              \tab fills \tab edges \tab labels \tab quantities  \tab annotations \tab strips \tab legend \tab main \cr
+#'   col        \tab       \tab x     \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+#'   fill       \tab x     \tab       \tab        \tab             \tab             \tab        \tab        \tab      \cr
+#'   alpha      \tab x     \tab x     \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+#'   lty        \tab       \tab x     \tab        \tab             \tab             \tab        \tab        \tab      \cr
+#'   lwd        \tab       \tab x     \tab        \tab             \tab             \tab        \tab        \tab      \cr
+#'   lex        \tab       \tab x     \tab        \tab             \tab             \tab        \tab        \tab      \cr
+#'   fontsize   \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+#'   cex        \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+#'   fontfamily \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+#'   lineheight \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
+#'   font       \tab       \tab       \tab x      \tab x           \tab x           \tab x      \tab x      \tab x    \cr
 #' }
 #'
 #' Defaults for these values, as well as other parameters of the plots, can
@@ -45,14 +45,15 @@
 #' If the diagram has been fit using the `data.frame` or `matrix` methods
 #' and using the `by` argument, the plot area will be split into panels for
 #' each combination of the one to two factors. The `fills`, `patterns`, `edges`,
-#' `labels`, and `quantities` arguments each accept an optional `by_group`
-#' entry: a named list of override lists keyed by panel name (the names of the
-#' fitted object). For multi-`by` fits the panel name is the levels joined by
-#' `.`, e.g. `"Male.German"`. Panels not listed in `by_group` use the top-level
-#' settings unchanged. Only graphical fields (and `rot` for `labels` and
-#' `quantities`) may be overridden per panel; structural fields such as
-#' `quantities$type`, `quantities$format`, or named-by-subset `fills$fill` must
-#' be set at the top level.
+#' `labels`, `quantities`, and `annotations` arguments each accept an optional
+#' `by_group` entry: a named list of override lists keyed by panel name (the
+#' names of the fitted object). For multi-`by` fits the panel name is the
+#' levels joined by `.`, e.g. `"Male.German"`. Panels not listed in `by_group`
+#' use the top-level settings unchanged. Only graphical fields (and `rot` for
+#' `labels`, `quantities`, and `annotations`) may be overridden per panel;
+#' structural fields such as `quantities$type`, `quantities$format`,
+#' `annotations$labels`, or named-by-subset `fills$fill` must be set at the
+#' top level.
 #'
 #' For users who are looking to plot their diagram using another package,
 #' all the necessary parameters can be collected if the result of this
@@ -118,6 +119,17 @@
 #'   separate lines or `"n={counts} ({percent})"` for arbitrary layout. When
 #'   `template` is set it overrides `type`; the set of placeholders in the
 #'   template determines which values are computed.
+#' @param annotations free-form per-region text rendered as a third
+#'   stacked element below the quantity (or below the label when no
+#'   quantity is drawn). Accepts a named character vector keyed by
+#'   subset name (e.g. `c(A = "n = 12", "A&B" = "n = 3")`) as a
+#'   shorthand for `list(labels = <vector>)`, or a list with `labels`
+#'   plus [grid::gpar()] fields (`col`, `alpha`, `fontsize`, `cex`,
+#'   `fontfamily`, `lineheight`, `font`, `rot`). Regions absent from
+#'   `labels` are not annotated. The composite tag bbox grows to
+#'   include the annotation, so exterior placement and leader lines
+#'   adapt automatically. Defaults to slightly smaller text than
+#'   `labels` / `quantities` (`cex = 0.8`).
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]. In addition to graphical parameters, this
 #'   argument can include `labels = list(top = ..., left = ...)` for custom
@@ -176,6 +188,13 @@
 #' # Add quantities to the plot
 #' plot(fit, quantities = TRUE)
 #'
+#' # Add free-form per-region annotations below the counts
+#' plot(
+#'   fit,
+#'   quantities = TRUE,
+#'   annotations = c(A = "mean = 35", "A&B" = "mean = 41")
+#' )
+#'
 #' # Add a custom legend and retain quantities
 #' plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 #'
@@ -206,6 +225,7 @@ plot.euler <- function(
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = FALSE,
+  annotations = NULL,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -232,6 +252,7 @@ plot.euler <- function(
   do_edges <- !is_false(edges) && !is.null(edges)
   do_labels <- !is_false(labels) && !is.null(labels)
   do_quantities <- !is_false(quantities) && !is.null(quantities)
+  do_annotations <- !is_false(annotations) && !is.null(annotations)
   do_legend <- !is_false(legend) && !is.null(legend)
   do_groups <- !is.null(groups)
   do_strips <- !is_false(strips) && do_groups
@@ -265,6 +286,16 @@ plot.euler <- function(
       "rot"
     ),
     quantities = c(
+      "col",
+      "alpha",
+      "fontsize",
+      "cex",
+      "fontfamily",
+      "lineheight",
+      "font",
+      "rot"
+    ),
+    annotations = c(
       "col",
       "alpha",
       "fontsize",
@@ -357,6 +388,10 @@ plot.euler <- function(
   quantities_split <- pop_by_group(quantities, "quantities")
   quantities <- quantities_split$param
   quantities_by_group <- quantities_split$by_group
+
+  annotations_split <- pop_by_group(annotations, "annotations")
+  annotations <- annotations_split$param
+  annotations_by_group <- annotations_split$by_group
 
   fills_user <- fills
 
@@ -1067,6 +1102,50 @@ plot.euler <- function(
     quantities <- NULL
   }
 
+  # setup annotations
+  if (do_annotations) {
+    if (is.list(annotations)) {
+      annotations <- update_list(
+        list(labels = NULL, rot = opar$annotations$rot),
+        annotations
+      )
+    } else if (isTRUE(annotations)) {
+      annotations <- list(labels = NULL, rot = opar$annotations$rot)
+    } else {
+      annotations <- list(labels = annotations, rot = opar$annotations$rot)
+    }
+
+    if (!is.null(annotations$labels)) {
+      if (!is.character(annotations$labels)) {
+        stop("`annotations$labels` must be a character vector.")
+      }
+      lbl_names <- names(annotations$labels)
+      if (is.null(lbl_names) || any(!nzchar(lbl_names))) {
+        stop(
+          "`annotations$labels` must be a fully named character vector keyed by subset (e.g. `c(A = \"...\", \"A&B\" = \"...\")`)."
+        )
+      }
+    }
+
+    annotations$rot <- rep_len(annotations$rot, n_id)
+
+    annotations$gp <- setup_gpar(
+      list(
+        col = opar$annotations$col,
+        alpha = opar$annotations$alpha,
+        fontsize = opar$annotations$fontsize,
+        cex = opar$annotations$cex,
+        fontfamily = opar$annotations$fontfamily,
+        lineheight = opar$annotations$lineheight,
+        font = opar$annotations$font
+      ),
+      annotations,
+      n_id
+    )
+  } else {
+    annotations <- NULL
+  }
+
   # setup legend
   if (do_custom_legend) {
     legend <- legend
@@ -1322,6 +1401,7 @@ plot.euler <- function(
       edges = edges,
       labels = labels,
       quantities = quantities,
+      annotations = annotations,
       n = n,
       merged_sets = merged_sets,
       placement_opts = placement_opts,
@@ -1334,6 +1414,7 @@ plot.euler <- function(
       edges = edges,
       labels = labels,
       quantities = quantities,
+      annotations = annotations,
       n = n,
       merged_sets = merged_sets,
       placement_opts = placement_opts,
@@ -1375,6 +1456,10 @@ plot.euler <- function(
         quantities,
         panel_override(quantities_by_group, key_i)
       )
+      annotations_i <- apply_panel_overrides(
+        annotations,
+        panel_override(annotations_by_group, key_i)
+      )
       euler_grob_children[[i]] <- setup_grobs(
         data[[i]],
         fills = fills_i,
@@ -1382,6 +1467,7 @@ plot.euler <- function(
         edges = edges_i,
         labels = labels_i,
         quantities = quantities_i,
+        annotations = annotations_i,
         complement = complement,
         number = i,
         merged_sets = merged_sets,
@@ -1409,6 +1495,7 @@ plot.euler <- function(
       edges = edges,
       labels = labels,
       quantities = quantities,
+      annotations = annotations,
       complement = complement,
       number = 1,
       merged_sets = merged_sets,

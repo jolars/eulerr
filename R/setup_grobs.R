@@ -250,6 +250,7 @@ setup_grobs <- function(
   edges,
   labels,
   quantities,
+  annotations = NULL,
   complement = NULL,
   number,
   merged_sets,
@@ -269,6 +270,7 @@ setup_grobs <- function(
   do_patterns <- !is.null(patterns)
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
+  do_annotations <- !is.null(annotations)
 
   xlim <- x$xlim
   ylim <- x$ylim
@@ -439,12 +441,13 @@ setup_grobs <- function(
   # labels cleanly — no clipping on shrink.
   # ------------------------------------------------------------------
   tag_grobs <- gList()
-  if ((do_quantities || do_labels) && !is.null(data_tags)) {
+  if ((do_quantities || do_labels || do_annotations) && !is.null(data_tags)) {
     for (i in seq_len(NROW(data_tags))) {
       tag_grobs[[length(tag_grobs) + 1L]] <- setup_tag(
         data_tags[i, , drop = FALSE],
         labels,
         quantities,
+        annotations,
         number = i
       )
     }
