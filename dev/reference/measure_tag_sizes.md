@@ -12,6 +12,7 @@ measure_tag_sizes(
   complement_label,
   labels_gp,
   quantities_gp,
+  annotations_gp,
   padding,
   gap,
   xlim,

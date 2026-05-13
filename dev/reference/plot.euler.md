@@ -23,6 +23,7 @@ plot(
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = FALSE,
+  annotations = NULL,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -144,6 +145,20 @@ plot(...)
   `template` is set it overrides `type`; the set of placeholders in the
   template determines which values are computed.
 
+- annotations:
+
+  free-form per-region text rendered as a third stacked element below
+  the quantity (or below the label when no quantity is drawn). Accepts a
+  named character vector keyed by subset name (e.g.
+  `c(A = "n = 12", "A&B" = "n = 3")`) as a shorthand for
+  `list(labels = <vector>)`, or a list with `labels` plus
+  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) fields (`col`,
+  `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, `font`,
+  `rot`). Regions absent from `labels` are not annotated. The composite
+  tag bbox grows to include the annotation, so exterior placement and
+  leader lines adapt automatically. Defaults to slightly smaller text
+  than `labels` / `quantities` (`cex = 0.8`).
+
 - strips:
 
   a list, ignored unless the `'by'` argument was used in
@@ -235,20 +250,20 @@ vector, or a list where
 The various [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) values
 that are available for each argument are:
 
-|            |       |       |        |            |        |        |      |
-|------------|-------|-------|--------|------------|--------|--------|------|
-|            | fills | edges | labels | quantities | strips | legend | main |
-| col        |       | x     | x      | x          | x      | x      | x    |
-| fill       | x     |       |        |            |        |        |      |
-| alpha      | x     | x     | x      | x          | x      | x      | x    |
-| lty        |       | x     |        |            |        |        |      |
-| lwd        |       | x     |        |            |        |        |      |
-| lex        |       | x     |        |            |        |        |      |
-| fontsize   |       |       | x      | x          | x      | x      | x    |
-| cex        |       |       | x      | x          | x      | x      | x    |
-| fontfamily |       |       | x      | x          | x      | x      | x    |
-| lineheight |       |       | x      | x          | x      | x      | x    |
-| font       |       |       | x      | x          | x      | x      | x    |
+|            |       |       |        |            |             |        |        |      |
+|------------|-------|-------|--------|------------|-------------|--------|--------|------|
+|            | fills | edges | labels | quantities | annotations | strips | legend | main |
+| col        |       | x     | x      | x          | x           | x      | x      | x    |
+| fill       | x     |       |        |            |             |        |        |      |
+| alpha      | x     | x     | x      | x          | x           | x      | x      | x    |
+| lty        |       | x     |        |            |             |        |        |      |
+| lwd        |       | x     |        |            |             |        |        |      |
+| lex        |       | x     |        |            |             |        |        |      |
+| fontsize   |       |       | x      | x          | x           | x      | x      | x    |
+| cex        |       |       | x      | x          | x           | x      | x      | x    |
+| fontfamily |       |       | x      | x          | x           | x      | x      | x    |
+| lineheight |       |       | x      | x          | x           | x      | x      | x    |
+| font       |       |       | x      | x          | x           | x      | x      | x    |
 
 Defaults for these values, as well as other parameters of the plots, can
 be set globally using
@@ -257,13 +272,14 @@ be set globally using
 If the diagram has been fit using the `data.frame` or `matrix` methods
 and using the `by` argument, the plot area will be split into panels for
 each combination of the one to two factors. The `fills`, `patterns`,
-`edges`, `labels`, and `quantities` arguments each accept an optional
-`by_group` entry: a named list of override lists keyed by panel name
-(the names of the fitted object). For multi-`by` fits the panel name is
-the levels joined by `.`, e.g. `"Male.German"`. Panels not listed in
-`by_group` use the top-level settings unchanged. Only graphical fields
-(and `rot` for `labels` and `quantities`) may be overridden per panel;
-structural fields such as `quantities$type`, `quantities$format`, or
+`edges`, `labels`, `quantities`, and `annotations` arguments each accept
+an optional `by_group` entry: a named list of override lists keyed by
+panel name (the names of the fitted object). For multi-`by` fits the
+panel name is the levels joined by `.`, e.g. `"Male.German"`. Panels not
+listed in `by_group` use the top-level settings unchanged. Only
+graphical fields (and `rot` for `labels`, `quantities`, and
+`annotations`) may be overridden per panel; structural fields such as
+`quantities$type`, `quantities$format`, `annotations$labels`, or
 named-by-subset `fills$fill` must be set at the top level.
 
 For users who are looking to plot their diagram using another package,
@@ -293,6 +309,14 @@ plot(fit,
 
 # Add quantities to the plot
 plot(fit, quantities = TRUE)
+
+
+# Add free-form per-region annotations below the counts
+plot(
+  fit,
+  quantities = TRUE,
+  annotations = c(A = "mean = 35", "A&B" = "mean = 41")
+)
 
 
 # Add a custom legend and retain quantities

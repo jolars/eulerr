@@ -12,6 +12,7 @@ run_placement_pass(
   ellipses,
   labels_gp,
   quantities_gp,
+  annotations_gp,
   padding,
   placement_opts,
   do_complement_label,

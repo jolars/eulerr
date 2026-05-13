@@ -12,6 +12,7 @@ apply_label_placement(
   ellipses,
   labels,
   quantities,
+  annotations = NULL,
   placement_opts = NULL,
   do_complement_label = FALSE,
   limits,

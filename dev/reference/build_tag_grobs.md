@@ -1,4 +1,4 @@
-# Build the leader / label / quantity gList for one tag.
+# Build the leader / label / quantity / annotation gList for one tag.
 
 Shared between
 [`setup_tag()`](https://jolars.github.io/eulerr/dev/reference/setup_tag.md)
@@ -8,7 +8,10 @@ and
 [`makeContent.EulerTags()`](https://jolars.github.io/eulerr/dev/reference/makeContent.EulerTags.md)
 (draw-time re-placement on resize). Pure factory — no measurement; takes
 anchor + tether already in native units, plus the stashed text / gpar
-bundle.
+bundle. The three text elements stack: label on top, quantity in the
+middle (at the anchor when present), annotation at the bottom. When the
+quantity is missing, the label sits at the anchor and the annotation
+stacks below it.
 
 ## Usage
 
@@ -23,12 +26,16 @@ build_tag_grobs(
   lend_y,
   label_text,
   quantity_text,
+  annotation_text,
   has_label,
   has_quantity,
+  has_annotation,
   label_gp,
   quantity_gp,
+  annotation_gp,
   label_rot,
   quantity_rot,
+  annotation_rot,
   number,
   leader_gp_list,
   padding,

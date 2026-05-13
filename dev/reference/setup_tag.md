@@ -1,4 +1,4 @@
-# Setup grobs for one tag (label + quantity + leader).
+# Setup grobs for one tag (label + quantity + annotation + leader).
 
 Builds the gList via
 [`build_tag_grobs()`](https://jolars.github.io/eulerr/dev/reference/build_tag_grobs.md)
@@ -9,5 +9,5 @@ can rebuild it at draw time with fresh measurements.
 ## Usage
 
 ``` r
-setup_tag(data, labels, quantities, number)
+setup_tag(data, labels, quantities, annotations, number)
 ```

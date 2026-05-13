@@ -55,6 +55,13 @@ Currently, the following items will be considered:
   a list of items `type`, `template`, `format`, `total`, `rot`, `col`,
   `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`
 
+- annotations:
+
+  a list of items `rot`, `col`, `alpha`, `fontsize`, `cex`,
+  `fontfamily`, `lineheight`, `font`, and `labels` (a named character
+  vector keyed by subset name). Used to add a third stacked text element
+  per region below the quantity.
+
 - strips:
 
   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, and
