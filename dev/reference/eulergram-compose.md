@@ -12,9 +12,6 @@ e1 | e2
 
 # S3 method for class 'eulergram'
 e1/e2
-
-# S3 method for class 'eulergram'
-e1 + e2
 ```
 
 ## Arguments
@@ -30,9 +27,9 @@ An `eulergram` containing the composed layout.
 
 ## Details
 
-`|` and `+` arrange the two plots horizontally; `/` stacks them
-vertically. The result is itself an `eulergram`, so further composition
-chains naturally.
+`|` arranges the two plots horizontally; `/` stacks them vertically. The
+result is itself an `eulergram`, so further composition chains
+naturally.
 
 The gap between adjacent plots is controlled by the
 `composition$spacing` entry of

@@ -104,8 +104,8 @@ The eight first colors of the default color palette
 ## Composing diagrams
 
 Several Euler diagrams can be arranged into a single figure using
-operator syntax inspired by the **patchwork** package. The `|` and `+`
-operators place plots side by side, while `/` stacks them vertically.
+operator syntax inspired by the **patchwork** package. The `|` operator
+place plots side by side, while `/` stacks them vertically.
 
 ``` r
 

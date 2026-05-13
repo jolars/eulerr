@@ -57,10 +57,7 @@ arbitrarily, e.g. <code>(p1 | p2) / p3</code>.</p>
 <span><span class="va">e1</span> <span class="op">|</span> <span class="va">e2</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'eulergram'</span></span>
-<span><span class="va">e1</span><span class="op">/</span><span class="va">e2</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'eulergram'</span></span>
-<span><span class="va">e1</span> <span class="op">+</span> <span class="va">e2</span></span></code></pre></div>
+<span><span class="va">e1</span><span class="op">/</span><span class="va">e2</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,9 +74,9 @@ arbitrarily, e.g. <code>(p1 | p2) / p3</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code>|</code> and <code>+</code> arrange the two plots horizontally; <code>/</code> stacks them
-vertically. The result is itself an <code>eulergram</code>, so further composition
-chains naturally.</p>
+    <p><code>|</code> arranges the two plots horizontally; <code>/</code> stacks them vertically.
+The result is itself an <code>eulergram</code>, so further composition chains
+naturally.</p>
 <p>The gap between adjacent plots is controlled by the
 <code>composition$spacing</code> entry of <code><a href="eulerr_options.html">eulerr_options()</a></code>, which must be a
 <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code> and defaults to <code>grid::unit(1, "lines")</code>.</p>

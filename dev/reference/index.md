@@ -12,7 +12,6 @@
 
 - [`` `|`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/dev/reference/eulergram-compose.md)
   [`` `/`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/dev/reference/eulergram-compose.md)
-  [`` `+`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/dev/reference/eulergram-compose.md)
   : Compose Euler Diagrams
 
 - [`eulerr_options()`](https://jolars.github.io/eulerr/dev/reference/eulerr_options.md)
