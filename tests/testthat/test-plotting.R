@@ -716,7 +716,7 @@ test_that("by_group rejects invalid input", {
   )
 })
 
-test_that("eulergrams can be composed with |, /, and +", {
+test_that("eulergrams can be composed with | and /", {
   tmp <- tempfile()
   png(tmp)
   on.exit({
@@ -743,11 +743,6 @@ test_that("eulergrams can be composed with |, /, and +", {
   expect_equal(vert$vp$layout$ncol, 1L)
   expect_equal(vert$children[[1]]$vp$layout.pos.row[1], 1L)
   expect_equal(vert$children[[2]]$vp$layout.pos.row[1], 3L)
-
-  plus <- p1 + p2
-  expect_s3_class(plus, "eulergram")
-  expect_equal(plus$vp$layout$ncol, horiz$vp$layout$ncol)
-  expect_equal(plus$vp$layout$nrow, horiz$vp$layout$nrow)
 
   nested <- (p1 | p2) / p3
   expect_s3_class(nested, "eulergram")

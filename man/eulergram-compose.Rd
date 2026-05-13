@@ -4,14 +4,11 @@
 \alias{eulergram-compose}
 \alias{|.eulergram}
 \alias{/.eulergram}
-\alias{+.eulergram}
 \title{Compose Euler Diagrams}
 \usage{
 \method{|}{eulergram}(e1, e2)
 
 \method{/}{eulergram}(e1, e2)
-
-\method{+}{eulergram}(e1, e2)
 }
 \arguments{
 \item{e1, e2}{\code{eulergram} objects, typically returned by \code{\link[=plot.euler]{plot.euler()}}.}
@@ -25,9 +22,9 @@ multi-panel layouts with operator syntax. Compositions can be nested
 arbitrarily, e.g. \code{(p1 | p2) / p3}.
 }
 \details{
-\code{|} and \code{+} arrange the two plots horizontally; \code{/} stacks them
-vertically. The result is itself an \code{eulergram}, so further composition
-chains naturally.
+\code{|} arranges the two plots horizontally; \code{/} stacks them vertically.
+The result is itself an \code{eulergram}, so further composition chains
+naturally.
 
 The gap between adjacent plots is controlled by the
 \code{composition$spacing} entry of \code{\link[=eulerr_options]{eulerr_options()}}, which must be a

@@ -34,9 +34,8 @@
 #'   if you, for instance, want to increase spacing between labels,
 #'   quantities, and percentages.}
 #'   \item{composition}{a list controlling how `eulergram` objects are
-#'   arranged when composed via `|`, `/`, or `+`. Contains a single
-#'   `spacing` item (a [grid::unit()]) that sets the gap between adjacent
-#'   plots.}
+#'   arranged when composed via `|` or `/`. Contains a single `spacing`
+#'   item (a [grid::unit()]) that sets the gap between adjacent plots.}
 #' }
 #'
 #' @param ... objects to update the global graphical parameters for \pkg{eulerr}

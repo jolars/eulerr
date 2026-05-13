@@ -50,9 +50,8 @@ elements in plots from \code{\link[=plot.euler]{plot.euler()}}, which you can ch
 if you, for instance, want to increase spacing between labels,
 quantities, and percentages.}
 \item{composition}{a list controlling how \code{eulergram} objects are
-arranged when composed via \code{|}, \code{/}, or \code{+}. Contains a single
-\code{spacing} item (a \code{\link[grid:unit]{grid::unit()}}) that sets the gap between adjacent
-plots.}
+arranged when composed via \code{|} or \code{/}. Contains a single \code{spacing}
+item (a \code{\link[grid:unit]{grid::unit()}}) that sets the gap between adjacent plots.}
 }
 }
 \examples{

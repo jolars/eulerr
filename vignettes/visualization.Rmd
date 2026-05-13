@@ -113,8 +113,8 @@ plot(euler(con), labels = as.character(1:8))
 ## Composing diagrams
 
 Several Euler diagrams can be arranged into a single figure using operator
-syntax inspired by the **patchwork** package. The `|` and `+` operators place
-plots side by side, while `/` stacks them vertically.
+syntax inspired by the **patchwork** package. The `|` operator place plots side
+by side, while `/` stacks them vertically.
 
 ```{r}
 #| label: composition-basic

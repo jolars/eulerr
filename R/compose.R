@@ -7,9 +7,9 @@
 #' @param e1,e2 `eulergram` objects, typically returned by [plot.euler()].
 #'
 #' @details
-#' `|` and `+` arrange the two plots horizontally; `/` stacks them
-#' vertically. The result is itself an `eulergram`, so further composition
-#' chains naturally.
+#' `|` arranges the two plots horizontally; `/` stacks them vertically.
+#' The result is itself an `eulergram`, so further composition chains
+#' naturally.
 #'
 #' The gap between adjacent plots is controlled by the
 #' `composition$spacing` entry of [eulerr_options()], which must be a
@@ -45,12 +45,6 @@ NULL
 #' @export
 "/.eulergram" <- function(e1, e2) {
   compose_eulergrams(e1, e2, horizontal = FALSE)
-}
-
-#' @rdname eulergram-compose
-#' @export
-"+.eulergram" <- function(e1, e2) {
-  compose_eulergrams(e1, e2, horizontal = TRUE)
 }
 
 compose_eulergrams <- function(e1, e2, horizontal = TRUE) {
