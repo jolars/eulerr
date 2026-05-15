@@ -15,6 +15,7 @@
 <url><loc>https://jolars.github.io/eulerr/dev/authors.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/index.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/news/index.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/EULER_PANEL_PAD_PT.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/all_set_combinations.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/apply_label_placement.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/apply_panel_overrides.html</loc></url>
@@ -42,7 +43,6 @@
 <url><loc>https://jolars.github.io/eulerr/dev/reference/is_integer.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/is_real.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/makeContent.EulerTags.html</loc></url>
-<url><loc>https://jolars.github.io/eulerr/dev/reference/makeContext.EulerPanel.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/max_sets_default.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/max_sets_hard_cap.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/measure_all_tags.html</loc></url>
@@ -53,6 +53,7 @@
 <url><loc>https://jolars.github.io/eulerr/dev/reference/n_sets.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/open_measurement_viewport.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/organisms.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/pad_axis_native.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/pain.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/place_euler_labels.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/plants.html</loc></url>
