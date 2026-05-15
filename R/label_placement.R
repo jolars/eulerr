@@ -31,11 +31,18 @@ resolve_placement_opts <- function(opts) {
 
 #' Open a temporary grid measurement device + viewport.
 #'
-#' Returns an idempotent closer thunk that pops the viewport and (when
-#' we opened one) closes the null PDF device. Used so we can call
+#' Returns an idempotent closer thunk that pops the viewport and
+#' closes the null PDF device. Used so we can call
 #' `grid::convertWidth(grobWidth(...), "native", ...)` at setup time —
 #' i.e. before `plot.eulergram()` ever opens a real device — to size
 #' the label boxes that drive label placement.
+#'
+#' Always opens its own off-screen PDF rather than reusing the caller's
+#' active device. Pushing a viewport onto the caller's device adds an
+#' entry to its display list, which knitr/evaluate's plot capture
+#' treats as visible change and emits as an extra blank plot before
+#' the real `plot.eulergram()` draws. The off-screen PDF keeps
+#' measurement entirely out of the user's display list.
 #' @keywords internal
 open_measurement_viewport <- function(xlim, ylim) {
   # Setup-time placement just sizes the *plot region*; draw-time
@@ -52,10 +59,9 @@ open_measurement_viewport <- function(xlim, ylim) {
   # extent than at draw time — measured heights come back too small,
   # the canvas bbox isn't widened enough, and exterior labels overrun
   # `ylim` once the user resizes the device.
-  needs_dev <- grDevices::dev.cur() == 1L
-  if (needs_dev) {
-    grDevices::pdf(NULL, width = 7, height = 7)
-  }
+  prev_dev <- grDevices::dev.cur()
+  grDevices::pdf(NULL, width = 7, height = 7)
+  meas_dev <- grDevices::dev.cur()
   xrng <- diff(xlim)
   yrng <- diff(ylim)
   if (!is.finite(xrng) || !is.finite(yrng) || xrng <= 0 || yrng <= 0) {
@@ -81,8 +87,9 @@ open_measurement_viewport <- function(xlim, ylim) {
     }
     closed <<- TRUE
     grid::popViewport()
-    if (needs_dev) {
-      grDevices::dev.off()
+    grDevices::dev.off(meas_dev)
+    if (prev_dev != 1L) {
+      grDevices::dev.set(prev_dev)
     }
   }
 }
