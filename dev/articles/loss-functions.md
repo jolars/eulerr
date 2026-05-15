@@ -59,15 +59,6 @@ An Euler diagram fit to the combination given earlier on, showing that
 only 1-by-1 intersections are present. This fit uses the default loss
 function, the sum of squared errors.
 
-![An Euler diagram fit to the combination given earlier on, showing that
-only 1-by-1 intersections are present. This fit uses the default loss
-function, the sum of squared
-errors.](loss-functions_files/figure-html/unnamed-chunk-3-2.png)
-
-An Euler diagram fit to the combination given earlier on, showing that
-only 1-by-1 intersections are present. This fit uses the default loss
-function, the sum of squared errors.
-
 If we rather want a diagram that includes these intersections, despite
 leading to errors for the zero-intersections, then we need to switch the
 loss function we use. In **eulerr**, you can do so via the `loss`
@@ -127,9 +118,7 @@ functions](loss-functions_files/figure-html/unnamed-chunk-4-4.png)![Euler
 diagrams fit to the combination above, using different loss
 functions](loss-functions_files/figure-html/unnamed-chunk-4-5.png)![Euler
 diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-6.png)![Euler
-diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-7.png)
+functions](loss-functions_files/figure-html/unnamed-chunk-4-6.png)
 
 Euler diagrams fit to the combination above, using different loss
 functions

@@ -26,7 +26,7 @@ uniform_intersections <- euler(c(
 plot(uniform_intersections)
 ```
 
-![](gallery_files/figure-html/uniform_intersections-1.png)![](gallery_files/figure-html/uniform_intersections-2.png)
+![](gallery_files/figure-html/uniform_intersections-1.png)
 
 ### Disjoint sets
 
@@ -40,7 +40,7 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/disjoint-1.png)![](gallery_files/figure-html/disjoint-2.png)
+![](gallery_files/figure-html/disjoint-1.png)
 
 ### A set contained in the intersection of two sets
 
@@ -63,7 +63,7 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/completely_contained-1.png)![](gallery_files/figure-html/completely_contained-2.png)
+![](gallery_files/figure-html/completely_contained-1.png)
 
 ### Two sets intersecting inside a third
 
@@ -108,7 +108,7 @@ one_contained <- euler(
 plot(one_contained, quantities = list(type = "percent"))
 ```
 
-![](gallery_files/figure-html/one_contained-1.png)![](gallery_files/figure-html/one_contained-2.png)
+![](gallery_files/figure-html/one_contained-1.png)
 
 ### Russian doll
 
@@ -128,7 +128,7 @@ russian_doll <- euler(c(
 plot(russian_doll)
 ```
 
-![](gallery_files/figure-html/russian_doll-1.png)![](gallery_files/figure-html/russian_doll-2.png)
+![](gallery_files/figure-html/russian_doll-1.png)
 
 ### Wilkinson set relationship
 
@@ -166,7 +166,7 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/wilkinson-1.png)![](gallery_files/figure-html/wilkinson-2.png)
+![](gallery_files/figure-html/wilkinson-1.png)
 
 ### Gene set
 
@@ -185,7 +185,7 @@ genes <- euler(c(
 plot(genes, quantities = list(type = c("percent", "counts")))
 ```
 
-![](gallery_files/figure-html/gene_set-1.png)![](gallery_files/figure-html/gene_set-2.png)
+![](gallery_files/figure-html/gene_set-1.png)
 
 ### Three sets intersecting inside a fourth
 
@@ -204,7 +204,7 @@ three_inside_fourth <- euler(c(
 plot(three_inside_fourth)
 ```
 
-![](gallery_files/figure-html/three_inside_fourth-1.png)![](gallery_files/figure-html/three_inside_fourth-2.png)
+![](gallery_files/figure-html/three_inside_fourth-1.png)
 
 ### eulerAPE combination
 
@@ -228,7 +228,7 @@ eulerape <- euler(
 plot(eulerape)
 ```
 
-![](gallery_files/figure-html/eulerape-1.png)![](gallery_files/figure-html/eulerape-2.png)
+![](gallery_files/figure-html/eulerape-1.png)
 
 ### Four uniform interactions
 
@@ -262,7 +262,7 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/four_uniform-1.png)![](gallery_files/figure-html/four_uniform-2.png)
+![](gallery_files/figure-html/four_uniform-1.png)
 
 ### Two circles intersecting completely
 
@@ -272,4 +272,4 @@ two_overlapping <- euler(c("A" = 0, "B" = 0, "A&B" = 10))
 plot(two_overlapping)
 ```
 
-![](gallery_files/figure-html/two_overlapping-1.png)![](gallery_files/figure-html/two_overlapping-2.png)
+![](gallery_files/figure-html/two_overlapping-1.png)

@@ -193,11 +193,6 @@ plot(fit3)
 
 A difficult combination from Wilkinson 2012.
 
-![A difficult combination from Wilkinson
-2012.](introduction_files/figure-html/unnamed-chunk-2-2.png)
-
-A difficult combination from Wilkinson 2012.
-
 If we still lack a good fit after having tried ellipses, we would do
 best to stop here and look for another way to visualize our data. (I
 suggest the excellent
@@ -234,11 +229,6 @@ plot(
 
 ![Customizing Euler plots is a breeze in
 eulerr.](introduction_files/figure-html/eulerr-plot-2.png)
-
-Customizing Euler plots is a breeze in eulerr.
-
-![Customizing Euler plots is a breeze in
-eulerr.](introduction_files/figure-html/eulerr-plot-3.png)
 
 Customizing Euler plots is a breeze in eulerr.
 

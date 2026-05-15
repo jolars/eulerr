@@ -73,5 +73,4 @@ off.
 
 ``` r
 error_plot(euler(organisms), quantities = FALSE)
-
 ```

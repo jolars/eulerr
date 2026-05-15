@@ -294,7 +294,6 @@ fit2
 plot(fit2)
 
 
-
 # A set with no perfect solution
 euler(c(
   "a" = 3491, "b" = 3409, "c" = 3503,

@@ -330,9 +330,9 @@ plot(fit, fills = "transparent", lty = 1:2)
 # Save plot parameters to plot using some other method
 diagram_description <- plot(fit)
 
-
 # Plots using 'by' argument
 plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
+
 
 # Per-panel styling with `by_group`
 plot(
@@ -344,5 +344,4 @@ plot(
     )
   )
 )
-
 ```
