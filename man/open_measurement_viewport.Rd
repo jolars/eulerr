@@ -7,10 +7,18 @@
 open_measurement_viewport(xlim, ylim)
 }
 \description{
-Returns an idempotent closer thunk that pops the viewport and (when
-we opened one) closes the null PDF device. Used so we can call
+Returns an idempotent closer thunk that pops the viewport and
+closes the null PDF device. Used so we can call
 \code{grid::convertWidth(grobWidth(...), "native", ...)} at setup time —
 i.e. before \code{plot.eulergram()} ever opens a real device — to size
 the label boxes that drive label placement.
+}
+\details{
+Always opens its own off-screen PDF rather than reusing the caller's
+active device. Pushing a viewport onto the caller's device adds an
+entry to its display list, which knitr/evaluate's plot capture
+treats as visible change and emits as an extra blank plot before
+the real \code{plot.eulergram()} draws. The off-screen PDF keeps
+measurement entirely out of the user's display list.
 }
 \keyword{internal}

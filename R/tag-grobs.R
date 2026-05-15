@@ -563,6 +563,52 @@ measure_all_tags <- function(tags_grob, padding, gap = NULL) {
 #'
 #' @export
 #' @keywords internal
+#' Fixed padding in pt for the panel viewport scale. Geometry / labels
+#' that land flush with the bbox would otherwise be clipped at the
+#' device edge by stroke width and anti-aliasing — both of which are in
+#' device units, not native units, so the padding is in pt rather than
+#' a fraction of the coordinate range.
+#' @keywords internal
+EULER_PANEL_PAD_PT <- 2
+
+#' Pad an axis range by `pt_pad` points, converted to native units
+#' against a measurement viewport with the supplied scale. Returns the
+#' original range unchanged if the conversion isn't finite (e.g. zero
+#' range, no device).
+#' @keywords internal
+pad_axis_native <- function(
+  lim,
+  pt_pad,
+  axis = c("x", "y"),
+  layout_pos_row = NULL,
+  layout_pos_col = NULL
+) {
+  axis <- match.arg(axis)
+  if (!all(is.finite(lim)) || diff(range(lim)) <= 0) {
+    return(lim)
+  }
+  meas_vp <- grid::viewport(
+    layout.pos.row = layout_pos_row,
+    layout.pos.col = layout_pos_col,
+    xscale = lim,
+    yscale = lim
+  )
+  grid::pushViewport(meas_vp)
+  pad_native <- tryCatch(
+    if (axis == "x") {
+      grid::convertWidth(grid::unit(pt_pad, "pt"), "native", valueOnly = TRUE)
+    } else {
+      grid::convertHeight(grid::unit(pt_pad, "pt"), "native", valueOnly = TRUE)
+    },
+    error = function(e) NA_real_
+  )
+  grid::popViewport()
+  if (!is.finite(pad_native) || pad_native <= 0) {
+    return(lim)
+  }
+  c(lim[1] - pad_native, lim[2] + pad_native)
+}
+
 makeContext.EulerPanel <- function(x) {
   ellipses <- x$ellipses
   geom_xlim <- x$geom_xlim
@@ -575,18 +621,37 @@ makeContext.EulerPanel <- function(x) {
     return(x)
   }
 
+  layout_row <- if (is.null(x$vp)) NULL else x$vp$layout.pos.row
+  layout_col <- if (is.null(x$vp)) NULL else x$vp$layout.pos.col
+
   # Always emit a vp so grid has something to push. We update its
   # xscale/yscale below; the layout.pos fields come from
-  # `plot.euler.R`.
+  # `plot.euler.R`. The xscale/yscale gets a small pad in pt on each
+  # side so geometry that lands flush with the bbox isn't clipped by
+  # stroke width / anti-aliasing at the device edge.
+  padded_geom_xlim <- pad_axis_native(
+    geom_xlim,
+    EULER_PANEL_PAD_PT,
+    "x",
+    layout_row,
+    layout_col
+  )
+  padded_geom_ylim <- pad_axis_native(
+    geom_ylim,
+    EULER_PANEL_PAD_PT,
+    "y",
+    layout_row,
+    layout_col
+  )
   if (is.null(x$vp)) {
     x$vp <- grid::viewport(
-      xscale = geom_xlim,
-      yscale = geom_ylim,
+      xscale = padded_geom_xlim,
+      yscale = padded_geom_ylim,
       name = x$name %||% "panel.vp"
     )
   } else {
-    x$vp$xscale <- geom_xlim
-    x$vp$yscale <- geom_ylim
+    x$vp$xscale <- padded_geom_xlim
+    x$vp$yscale <- padded_geom_ylim
   }
 
   tags_grob <- find_eulertags(x)
@@ -766,6 +831,24 @@ makeContext.EulerPanel <- function(x) {
       break
     }
   }
+
+  # Same pt-based pad as the early-return path — applied here too
+  # because the fixed-point loop above overwrites any earlier padding
+  # with the tight canvas bbox.
+  current_xlim <- pad_axis_native(
+    current_xlim,
+    EULER_PANEL_PAD_PT,
+    "x",
+    layout_row,
+    layout_col
+  )
+  current_ylim <- pad_axis_native(
+    current_ylim,
+    EULER_PANEL_PAD_PT,
+    "y",
+    layout_row,
+    layout_col
+  )
 
   x$vp$xscale <- current_xlim
   x$vp$yscale <- current_ylim
