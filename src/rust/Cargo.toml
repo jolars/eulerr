@@ -2,8 +2,8 @@
 name = "eulerr"
 publish = false
 version = "0.1.0"
-edition = "2021"
-rust-version = "1.84.1"
+edition = "2024"
+rust-version = "1.91.1"
 
 [lib]
 crate-type = ["staticlib"]
