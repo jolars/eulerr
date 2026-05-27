@@ -16,7 +16,7 @@ the label boxes that drive label placement.
 \details{
 Always opens its own off-screen PDF rather than reusing the caller's
 active device. Pushing a viewport onto the caller's device adds an
-entry to its display list, which knitr/evaluate's plot capture
+entry to its display list, which knitr's plot capture
 treats as visible change and emits as an extra blank plot before
 the real \code{plot.eulergram()} draws. The off-screen PDF keeps
 measurement entirely out of the user's display list.

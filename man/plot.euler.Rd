@@ -82,7 +82,7 @@ sets the iteration cap for the force-directed solver;
 the leader line attaches on the source region; \code{labels$gap}
 controls the visible gap between the leader tip and the label box
 edge — a bare numeric is interpreted as \code{lines} (font-relative),
-a \code{\link[grid:unit]{grid::unit()}} is honoured as given, and the default \code{NULL}
+a \code{\link[grid:unit]{grid::unit()}} is honored as given, and the default \code{NULL}
 tracks \code{eulerr_options()$padding} so the gap matches the spacing
 between label and quantity; \code{labels$leader} is a list (\code{col},
 \code{alpha}, \code{lwd}, \code{lty}, \code{lex}) styling the leader line drawn from

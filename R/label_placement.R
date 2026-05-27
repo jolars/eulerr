@@ -39,7 +39,7 @@ resolve_placement_opts <- function(opts) {
 #'
 #' Always opens its own off-screen PDF rather than reusing the caller's
 #' active device. Pushing a viewport onto the caller's device adds an
-#' entry to its display list, which knitr/evaluate's plot capture
+#' entry to its display list, which knitr's plot capture
 #' treats as visible change and emits as an extra blank plot before
 #' the real `plot.eulergram()` draws. The off-screen PDF keeps
 #' measurement entirely out of the user's display list.
@@ -262,7 +262,11 @@ measure_tag_sizes <- function(
     }
   }
 
-  if (do_complement_label && !is.null(complement_label) && !is.na(complement_label)) {
+  if (
+    do_complement_label &&
+      !is.null(complement_label) &&
+      !is.na(complement_label)
+  ) {
     # The complement label is just text — there's no per-set label or
     # annotation, so measure as if only the quantity is drawn.
     m <- measure_tag(
@@ -311,7 +315,11 @@ run_placement_pass <- function(
   sizes <- measure_tag_sizes(
     centers = centers,
     do_complement_label = do_complement_label,
-    complement_label = if (do_complement_label) container_data$quantity_label else NA,
+    complement_label = if (do_complement_label) {
+      container_data$quantity_label
+    } else {
+      NA
+    },
     labels_gp = labels_gp,
     quantities_gp = quantities_gp,
     annotations_gp = annotations_gp,

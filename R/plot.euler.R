@@ -91,7 +91,7 @@
 #'   the leader line attaches on the source region; `labels$gap`
 #'   controls the visible gap between the leader tip and the label box
 #'   edge — a bare numeric is interpreted as `lines` (font-relative),
-#'   a [grid::unit()] is honoured as given, and the default `NULL`
+#'   a [grid::unit()] is honored as given, and the default `NULL`
 #'   tracks `eulerr_options()$padding` so the gap matches the spacing
 #'   between label and quantity; `labels$leader` is a list (`col`,
 #'   `alpha`, `lwd`, `lty`, `lex`) styling the leader line drawn from
