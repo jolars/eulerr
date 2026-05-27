@@ -3,7 +3,7 @@
 \docType{data}
 \name{EULER_PANEL_PAD_PT}
 \alias{EULER_PANEL_PAD_PT}
-\title{Set the panel viewport's \code{xscale}/\code{yscale} at draw time.}
+\title{Fixed padding in pt for the panel viewport scale.}
 \format{
 An object of class \code{numeric} of length 1.
 }
@@ -11,62 +11,9 @@ An object of class \code{numeric} of length 1.
 EULER_PANEL_PAD_PT
 }
 \description{
-Fires before grid pushes the panel viewport. We can therefore
-measure labels against the live cell, run eunoia's placement, and
-compute a viewport bbox that fits both the diagram and the labels.
-On window resize grid invalidates the gTree and \code{makeContext}
-re-runs, so the panel grows or shrinks to track the current device
-and exterior labels never extend past the viewport edge.
+Geometry / labels that land flush with the bbox would otherwise be
+clipped at the device edge by stroke width and anti-aliasing — both
+of which are in device units, not native units, so the padding is in
+pt rather than a fraction of the coordinate range.
 }
-\details{
-Aspect preservation: the new bbox keeps \code{xrng / yrng} equal to the
-geometry's natural aspect (set by \code{\link[=setup_geometry]{setup_geometry()}}) so that
-circles render as circles. The smaller dimension is padded if the
-label-driven canvas bbox is asymmetric.
-}
-\keyword{/}
-\keyword{Fixed}
-\keyword{Geometry}
-\keyword{a}
-\keyword{and}
-\keyword{anti-aliasing}
-\keyword{are}
-\keyword{at}
-\keyword{bbox}
-\keyword{be}
-\keyword{both}
-\keyword{by}
-\keyword{clipped}
-\keyword{coordinate}
-\keyword{device}
-\keyword{edge}
-\keyword{flush}
-\keyword{for}
-\keyword{fraction}
-\keyword{in}
 \keyword{internal}
-\keyword{is}
-\keyword{labels}
-\keyword{land}
-\keyword{native}
-\keyword{not}
-\keyword{of}
-\keyword{otherwise}
-\keyword{padding}
-\keyword{panel}
-\keyword{pt}
-\keyword{range.}
-\keyword{rather}
-\keyword{scale.}
-\keyword{so}
-\keyword{stroke}
-\keyword{than}
-\keyword{that}
-\keyword{the}
-\keyword{units,}
-\keyword{viewport}
-\keyword{which}
-\keyword{width}
-\keyword{with}
-\keyword{would}
-\keyword{—}

@@ -547,27 +547,12 @@ measure_all_tags <- function(tags_grob, padding, gap = NULL) {
   )
 }
 
-#' Set the panel viewport's `xscale`/`yscale` at draw time.
+#' Fixed padding in pt for the panel viewport scale.
 #'
-#' Fires before grid pushes the panel viewport. We can therefore
-#' measure labels against the live cell, run eunoia's placement, and
-#' compute a viewport bbox that fits both the diagram and the labels.
-#' On window resize grid invalidates the gTree and `makeContext`
-#' re-runs, so the panel grows or shrinks to track the current device
-#' and exterior labels never extend past the viewport edge.
-#'
-#' Aspect preservation: the new bbox keeps `xrng / yrng` equal to the
-#' geometry's natural aspect (set by [setup_geometry()]) so that
-#' circles render as circles. The smaller dimension is padded if the
-#' label-driven canvas bbox is asymmetric.
-#'
-#' @export
-#' @keywords internal
-#' Fixed padding in pt for the panel viewport scale. Geometry / labels
-#' that land flush with the bbox would otherwise be clipped at the
-#' device edge by stroke width and anti-aliasing — both of which are in
-#' device units, not native units, so the padding is in pt rather than
-#' a fraction of the coordinate range.
+#' Geometry / labels that land flush with the bbox would otherwise be
+#' clipped at the device edge by stroke width and anti-aliasing — both
+#' of which are in device units, not native units, so the padding is in
+#' pt rather than a fraction of the coordinate range.
 #' @keywords internal
 EULER_PANEL_PAD_PT <- 2
 
@@ -609,6 +594,22 @@ pad_axis_native <- function(
   c(lim[1] - pad_native, lim[2] + pad_native)
 }
 
+#' Set the panel viewport's `xscale`/`yscale` at draw time.
+#'
+#' Fires before grid pushes the panel viewport. We can therefore
+#' measure labels against the live cell, run eunoia's placement, and
+#' compute a viewport bbox that fits both the diagram and the labels.
+#' On window resize grid invalidates the gTree and `makeContext`
+#' re-runs, so the panel grows or shrinks to track the current device
+#' and exterior labels never extend past the viewport edge.
+#'
+#' Aspect preservation: the new bbox keeps `xrng / yrng` equal to the
+#' geometry's natural aspect (set by [setup_geometry()]) so that
+#' circles render as circles. The smaller dimension is padded if the
+#' label-driven canvas bbox is asymmetric.
+#'
+#' @export
+#' @keywords internal
 makeContext.EulerPanel <- function(x) {
   ellipses <- x$ellipses
   geom_xlim <- x$geom_xlim
