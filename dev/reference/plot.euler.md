@@ -110,7 +110,7 @@ plot(...)
   where the leader line attaches on the source region; `labels$gap`
   controls the visible gap between the leader tip and the label box edge
   — a bare numeric is interpreted as `lines` (font-relative), a
-  [`grid::unit()`](https://rdrr.io/r/grid/unit.html) is honoured as
+  [`grid::unit()`](https://rdrr.io/r/grid/unit.html) is honored as
   given, and the default `NULL` tracks `eulerr_options()$padding` so the
   gap matches the spacing between label and quantity; `labels$leader` is
   a list (`col`, `alpha`, `lwd`, `lty`, `lex`) styling the leader line
