@@ -40,9 +40,13 @@
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/NEXT_RELEASE.md" class="external-link"><code>NEXT_RELEASE.md</code></a></small>
     </div>
 
-<p>This is a major milestone for eulerr. The 8.0.0 release introduces a complete rewrite of the underlying C++ codebase, which now relies on the external Eunoia Rust library for fitting Euler diagrams.</p>
 
-  </main></div>
+<p>This is a major milestone for eulerr. The 8.0.0 release introduces a complete rewrite of the underlying C++ codebase, now relying instead on the Rust library <a href="https://eunoia.bz" class="external-link">Eunoia</a>, which is a library I have developed. Here are some of the highlights this brings:</p>
+<ul><li>Eunoia uses analytical gradients for all the smooth loss functions, which leads to significantly improved performance. We have also swapped the default optimization algorithm to a Levendberg–Marquardt (LM) method plus CMA-ES fallback. The LM method is invoked only when the loss is squared residuals, but is then much faster than the previous <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> method. The CMA-ES fallback replaces the previous use of the <strong>GenSA</strong> package, and is invoked whenever the LM method reaches a minimum that’s above a level of error (configurable by the user).</li>
+<li>There are now several labeling algorithms that ensure labels do not overlap each other or other parts of the diagram.</li>
+<li>As a result of the above, we have been able to drop multiple dependencies: <strong>Rcpp</strong>, <strong>RcppArmadillo</strong>, <strong>GenSA</strong>, <strong>polylabelr</strong>, and <strong>polyclip</strong> are all no longer required, since <strong>rextendr</strong> and Eunoia handle the Compiled code and algorithms natively.</li>
+<li>The calculated intersections are now <em>sparse</em>, which means that only the intersections that actually appear in either input or output (the diagram) are calculated and stored. This is a <strong>breaking change</strong> because it means that you cannot index the intersections by their position or intersection name and guarantee that you will get a value. Instead, you must check if the intersection exists first, and then implicitly it will have a value of zero. But this allows eulerr to handle much larger combinations, since we never store a <code>2^n - 1</code>-sized vector anywhere.</li>
+</ul></main></div>
 
 
     <footer><div class="pkgdown-footer-left">
