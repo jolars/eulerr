@@ -763,8 +763,27 @@ makeContext.EulerPanel <- function(x) {
   cap_factor <- 20
   cap_xrng <- geom_xrng * cap_factor
   cap_yrng <- geom_yrng * cap_factor
-  current_xlim <- geom_xlim
-  current_ylim <- geom_ylim
+  # Seed the iteration with the same pt-based pad we'd otherwise apply
+  # post-loop, so each measurement viewport matches what
+  # `makeContent.EulerTags` will measure against at draw time. Without
+  # this, post-loop padding inflates the native viewport by ~1-2% and
+  # `makeContent` can re-measure labels just large enough that some flip
+  # from interior to exterior — but the viewport is already pinned, so
+  # the exterior labels overflow the panel and get clipped.
+  current_xlim <- pad_axis_native(
+    geom_xlim,
+    EULER_PANEL_PAD_PT,
+    "x",
+    layout_row,
+    layout_col
+  )
+  current_ylim <- pad_axis_native(
+    geom_ylim,
+    EULER_PANEL_PAD_PT,
+    "y",
+    layout_row,
+    layout_col
+  )
   for (iter in seq_len(max_iters)) {
     meas_vp <- grid::viewport(
       layout.pos.row = x$vp$layout.pos.row,
@@ -868,24 +887,6 @@ makeContext.EulerPanel <- function(x) {
       break
     }
   }
-
-  # Same pt-based pad as the early-return path — applied here too
-  # because the fixed-point loop above overwrites any earlier padding
-  # with the tight canvas bbox.
-  current_xlim <- pad_axis_native(
-    current_xlim,
-    EULER_PANEL_PAD_PT,
-    "x",
-    layout_row,
-    layout_col
-  )
-  current_ylim <- pad_axis_native(
-    current_ylim,
-    EULER_PANEL_PAD_PT,
-    "y",
-    layout_row,
-    layout_col
-  )
 
   x$vp$xscale <- current_xlim
   x$vp$yscale <- current_ylim
