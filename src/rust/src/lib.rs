@@ -10,7 +10,8 @@ use eunoia::{
     loss::LossType,
     plotting::{
         decompose_regions, place_labels, placements_bbox, polygon_clip, ClipOperation,
-        ExteriorPolicy, PlacementKind, PlacementStrategy, RegionPiece, TetherSource,
+        ElbowOptions, ExteriorPolicy, LeaderStrategy, PlacementKind, PlacementStrategy,
+        RegionPiece, TetherSource,
     },
     spec::DiagramSpec,
     Combination, DiagramError, DiagramSpecBuilder, Fitter, InputType,
@@ -54,16 +55,22 @@ fn parse_loss_type(loss: &str) -> std::result::Result<LossType, Error> {
     }
 }
 
-/// Parse a placement-strategy string into the eunoia [`ExteriorPolicy`]
-/// variant, applying optional `margin` / `iterations` overrides.
+/// Parse a placement-strategy string into the eunoia [`LeaderStrategy`]
+/// variant, applying optional per-strategy overrides. `iterations` only
+/// applies to `"force_directed"`; `min_gap` only applies to `"elbow"`.
 fn parse_placement(
     placement: &str,
     margin: Option<f64>,
     iterations: Option<usize>,
-) -> std::result::Result<ExteriorPolicy, Error> {
+    min_gap: Option<f64>,
+) -> std::result::Result<LeaderStrategy, Error> {
     match placement {
-        "raycast" => Ok(ExteriorPolicy::Raycast { margin }),
-        "force_directed" => Ok(ExteriorPolicy::ForceDirected { margin, iterations }),
+        "raycast" => Ok(LeaderStrategy::Straight(ExteriorPolicy::Raycast { margin })),
+        "force_directed" => Ok(LeaderStrategy::Straight(ExteriorPolicy::ForceDirected {
+            margin,
+            iterations,
+        })),
+        "elbow" => Ok(LeaderStrategy::Elbow(ElbowOptions { margin, min_gap })),
         other => Err(format!("Unknown placement strategy: {}", other).into()),
     }
 }
@@ -835,6 +842,7 @@ fn placement_kind_str(kind: PlacementKind) -> &'static str {
         PlacementKind::Interior => "interior",
         PlacementKind::ExteriorRaycast => "exterior_raycast",
         PlacementKind::ExteriorForceDirected => "exterior_force_directed",
+        PlacementKind::ExteriorElbow => "exterior_elbow",
     }
 }
 
@@ -846,9 +854,15 @@ fn placement_kind_str(kind: PlacementKind) -> &'static str {
 ///
 /// * `anchor_x` / `anchor_y` — placed label anchor (NA on miss);
 /// * `kind` — one of `"interior"`, `"exterior_raycast"`,
-///   `"exterior_force_directed"`; `""` if no placement was produced;
+///   `"exterior_force_directed"`, `"exterior_elbow"`; `""` if no
+///   placement was produced;
 /// * `tether_x` / `tether_y` — tether point for the leader line (NA for
 ///   interior placements / misses).
+/// * `leader_end_x` / `leader_end_y` — point on the label box AABB where
+///   the leader terminates (NA for interior placements / misses).
+/// * `leader_waypoints_x` / `leader_waypoints_y` / `leader_waypoints_lengths`
+///   — concatenated waypoint coordinates and per-label counts. Empty for
+///   straight leaders; carries one knee point per elbow placement.
 ///
 /// Plus a canvas bbox (`canvas_bbox_h/k/width/height`) from eunoia's
 /// `placements_bbox` — NaN when no placements were produced — for the R
@@ -879,6 +893,7 @@ fn place_euler_labels(
     placement: &str,
     placement_margin: Robj,
     placement_iterations: Robj,
+    placement_min_gap: Robj,
     placement_tether: &str,
     placement_leader_gap: Robj,
     label_precision: f64,
@@ -897,6 +912,7 @@ fn place_euler_labels(
     if n == 0 || n_labels == 0 {
         let nan_vec = vec![f64::NAN; n_labels];
         let kind_vec = vec![String::new(); n_labels];
+        let zero_lengths = vec![0i32; n_labels];
         return Ok(list!(
             anchor_x = nan_vec.clone(),
             anchor_y = nan_vec.clone(),
@@ -905,6 +921,9 @@ fn place_euler_labels(
             tether_y = nan_vec.clone(),
             leader_end_x = nan_vec.clone(),
             leader_end_y = nan_vec,
+            leader_waypoints_x = Vec::<f64>::new(),
+            leader_waypoints_y = Vec::<f64>::new(),
+            leader_waypoints_lengths = zero_lengths,
             canvas_bbox_h = f64::NAN,
             canvas_bbox_k = f64::NAN,
             canvas_bbox_width = f64::NAN,
@@ -998,15 +1017,17 @@ fn place_euler_labels(
             .filter(|v| v.is_finite() && *v >= 1.0)
             .map(|v| v as usize)
     };
+    let min_gap_opt: Option<f64> = read_optional_f64(&placement_min_gap)
+        .filter(|v| v.is_finite() && *v >= 0.0);
 
-    let exterior = parse_placement(placement, margin_opt, iterations_opt)?;
+    let leader = parse_placement(placement, margin_opt, iterations_opt, min_gap_opt)?;
     let tether_source = parse_tether(placement_tether)?;
     let leader_gap = read_optional_f64(&placement_leader_gap)
         .filter(|v| v.is_finite())
         .map(|v| v.max(0.0))
         .unwrap_or(0.0);
     let strategy = PlacementStrategy {
-        exterior,
+        leader,
         precision: label_precision.max(f64::EPSILON),
         tether: tether_source,
         leader_gap,
@@ -1021,6 +1042,9 @@ fn place_euler_labels(
     let mut tether_y = Vec::with_capacity(n_labels);
     let mut leader_end_x = Vec::with_capacity(n_labels);
     let mut leader_end_y = Vec::with_capacity(n_labels);
+    let mut waypoints_x: Vec<f64> = Vec::new();
+    let mut waypoints_y: Vec<f64> = Vec::new();
+    let mut waypoints_lengths: Vec<i32> = Vec::with_capacity(n_labels);
 
     for canon in &canonical_keys {
         match canon.as_ref().and_then(|k| placements.get(k)) {
@@ -1048,6 +1072,11 @@ fn place_euler_labels(
                         leader_end_y.push(f64::NAN);
                     }
                 }
+                for w in &p.leader_waypoints {
+                    waypoints_x.push(w.x());
+                    waypoints_y.push(w.y());
+                }
+                waypoints_lengths.push(p.leader_waypoints.len() as i32);
             }
             None => {
                 anchor_x.push(f64::NAN);
@@ -1057,6 +1086,7 @@ fn place_euler_labels(
                 tether_y.push(f64::NAN);
                 leader_end_x.push(f64::NAN);
                 leader_end_y.push(f64::NAN);
+                waypoints_lengths.push(0);
             }
         }
     }
@@ -1079,6 +1109,9 @@ fn place_euler_labels(
         tether_y = tether_y,
         leader_end_x = leader_end_x,
         leader_end_y = leader_end_y,
+        leader_waypoints_x = waypoints_x,
+        leader_waypoints_y = waypoints_y,
+        leader_waypoints_lengths = waypoints_lengths,
         canvas_bbox_h = cbb_h,
         canvas_bbox_k = cbb_k,
         canvas_bbox_width = cbb_w,

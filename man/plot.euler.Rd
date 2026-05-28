@@ -72,12 +72,16 @@ the legend symbols independently of the text size. See
 text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}. In addition to the
 \code{grid::gpar()} fields, the following placement controls are
 supported (delegated to the \code{eunoia} Rust crate):
-\code{labels$placement} (\code{"raycast"} (default) or \code{"force_directed"})
-selects the exterior solver used when a label does not fit inside
-its region; \code{labels$margin} (numeric) overrides the per-region
-margin between an exterior label and the diagram (default is half
-the larger of the label's width and height); \code{labels$iterations}
-sets the iteration cap for the force-directed solver;
+\code{labels$placement} (\code{"raycast"} (default), \code{"force_directed"}, or
+\code{"elbow"}) selects the strategy used when a label does not fit
+inside its region. \code{"raycast"} and \code{"force_directed"} produce
+straight leader lines (the former places the label along the
+centroid→POI ray, the latter relaxes labels with a polygon-aware
+force solver). \code{"elbow"} produces d3-pie style orthogonal leaders,
+stacking exterior labels in left/right columns reached by a
+three-segment polyline. \code{labels$margin} (numeric) overrides the
+per-region margin between an exterior label and the diagram
+(default is half the larger of the label's width and height);
 \code{labels$tether} (\code{"poi"} (default) or \code{"boundary"}) chooses where
 the leader line attaches on the source region; \code{labels$gap}
 controls the visible gap between the leader tip and the label box
@@ -86,7 +90,12 @@ a \code{\link[grid:unit]{grid::unit()}} is honored as given, and the default \co
 tracks \code{eulerr_options()$padding} so the gap matches the spacing
 between label and quantity; \code{labels$leader} is a list (\code{col},
 \code{alpha}, \code{lwd}, \code{lty}, \code{lex}) styling the leader line drawn from
-the tether to the exterior label.}
+the tether to the exterior label. Strategy-specific knobs live in
+their own sublists: \code{labels$force_directed = list(iterations = ...)}
+sets the iteration cap for the force-directed solver, and
+\code{labels$elbow = list(min_gap = ...)} sets the minimum vertical
+centre-to-centre spacing between stacked label boxes in an elbow
+column.}
 
 \item{quantities}{a logical, vector, or list. Vectors are assumed to be
 text for the quantities' labels, which by
@@ -150,8 +159,8 @@ shorthand. A list accepts \code{fill}, \code{alpha}, \code{col}, \code{lty}, \co
 \code{lex} (outline + label gpar), \code{fontsize}, \code{cex}, \code{font}, \code{fontfamily},
 \code{lineheight} (label only), and \code{label} (custom text — defaults to the
 complement count). Also accepts the same placement controls as
-\code{labels} (\code{placement}, \code{margin}, \code{iterations}, \code{tether}, \code{gap},
-\code{leader})
+\code{labels} (\code{placement}, \code{margin}, \code{tether}, \code{gap}, \code{leader},
+\code{force_directed}, \code{elbow})
 for the complement count label. Has no effect if the diagram was
 fit without \verb{complement =}. Defaults can be set via
 \code{eulerr_options(complement = ...)}.}

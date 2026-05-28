@@ -27,6 +27,8 @@ build_tag_grobs(
   number,
   leader_gp_list,
   padding,
+  waypoints_x = numeric(0),
+  waypoints_y = numeric(0),
   name_prefix = "tag"
 )
 }

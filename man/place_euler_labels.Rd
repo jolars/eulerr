@@ -22,6 +22,7 @@ place_euler_labels(
   placement,
   placement_margin,
   placement_iterations,
+  placement_min_gap,
   placement_tether,
   placement_leader_gap,
   label_precision
@@ -36,9 +37,15 @@ label sizes plus placement-strategy options. Returns, parallel to
 \itemize{
 \item \code{anchor_x} / \code{anchor_y} — placed label anchor (NA on miss);
 \item \code{kind} — one of \code{"interior"}, \code{"exterior_raycast"},
-\code{"exterior_force_directed"}; \code{""} if no placement was produced;
+\code{"exterior_force_directed"}, \code{"exterior_elbow"}; \code{""} if no
+placement was produced;
 \item \code{tether_x} / \code{tether_y} — tether point for the leader line (NA for
 interior placements / misses).
+\item \code{leader_end_x} / \code{leader_end_y} — point on the label box AABB where
+the leader terminates (NA for interior placements / misses).
+\item \code{leader_waypoints_x} / \code{leader_waypoints_y} / \code{leader_waypoints_lengths}
+— concatenated waypoint coordinates and per-label counts. Empty for
+straight leaders; carries one knee point per elbow placement.
 }
 
 Plus a canvas bbox (\code{canvas_bbox_h/k/width/height}) from eunoia's

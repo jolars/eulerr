@@ -1,13 +1,18 @@
 #' Default placement options used when the caller doesn't supply any.
 #'
 #' Mirrors `eunoia::plotting::PlacementStrategy::default()`: raycast
-#' exterior solver, POI tether, proportional margin / iterations.
+#' exterior solver, POI tether, proportional margin. Per-strategy knobs
+#' `iterations` (force-directed) and `min_gap` (elbow) live alongside in
+#' the flat shape that the Rust FFI expects; the user-facing sublists in
+#' `eulerr_options(labels = list(force_directed = ..., elbow = ...))` are
+#' flattened into this shape by `plot.euler()` before placement runs.
 #' @keywords internal
 default_placement_opts <- function() {
   list(
     placement = "raycast",
     margin = NULL,
     iterations = NULL,
+    min_gap = NULL,
     tether = "poi",
     gap = NULL
   )
@@ -352,12 +357,41 @@ run_placement_pass <- function(
     placement = placement_opts$placement,
     placement_margin = placement_opts$margin,
     placement_iterations = placement_opts$iterations,
+    placement_min_gap = placement_opts$min_gap,
     placement_tether = placement_opts$tether,
     placement_leader_gap = sizes$gap_native,
     label_precision = label_precision
   )
 
   list(sizes = sizes, placements = placements)
+}
+
+#' Split a placement's flat `leader_waypoints_x` / `_y` / `_lengths`
+#' return triple into a per-label list of `list(x = ..., y = ...)`
+#' coordinate pairs. Each list element has length-`lengths[i]` `x`/`y`
+#' vectors (often `0` — straight leaders carry no waypoints).
+#' @keywords internal
+split_waypoints <- function(placements) {
+  wx <- placements$leader_waypoints_x
+  wy <- placements$leader_waypoints_y
+  lens <- placements$leader_waypoints_lengths
+  if (is.null(wx) || is.null(wy) || is.null(lens)) {
+    return(NULL)
+  }
+  n <- length(lens)
+  out <- vector("list", n)
+  cursor <- 0L
+  for (i in seq_len(n)) {
+    len <- as.integer(lens[i])
+    if (len <= 0L) {
+      out[[i]] <- list(x = numeric(0), y = numeric(0))
+    } else {
+      idx <- seq.int(cursor + 1L, cursor + len)
+      out[[i]] <- list(x = wx[idx], y = wy[idx])
+      cursor <- cursor + len
+    }
+  }
+  out
 }
 
 #' Union the current `xlim`/`ylim` with the canvas bbox reported by
@@ -511,6 +545,7 @@ apply_label_placement <- function(
   # Apply placements back to centers and container_data.
   combos <- final$sizes$combos
   pl <- final$placements
+  waypoints <- split_waypoints(pl)
 
   centers_combos <- if (!no_centers) rownames(centers) else character(0)
   if (!no_centers) {
@@ -519,6 +554,8 @@ apply_label_placement <- function(
     centers$tether_y <- rep(NA_real_, NROW(centers))
     centers$leader_end_x <- rep(NA_real_, NROW(centers))
     centers$leader_end_y <- rep(NA_real_, NROW(centers))
+    empty_wp <- list(x = numeric(0), y = numeric(0))
+    centers$leader_waypoints <- replicate(NROW(centers), empty_wp, simplify = FALSE)
     if (length(centers_combos) > 0L) {
       idx <- match(centers_combos, combos)
       ok <- !is.na(idx)
@@ -540,6 +577,12 @@ apply_label_placement <- function(
         centers$tether_y[rows] <- ty[valid]
         centers$leader_end_x[rows] <- lex[valid]
         centers$leader_end_y[rows] <- ley[valid]
+        if (!is.null(waypoints)) {
+          wp_idx <- idx[ok][valid]
+          for (j in seq_along(rows)) {
+            centers$leader_waypoints[[rows[j]]] <- waypoints[[wp_idx[j]]]
+          }
+        }
       }
     }
   }
@@ -557,6 +600,11 @@ apply_label_placement <- function(
         container_data$tether_y <- pl$tether_y[idx]
         container_data$leader_end_x <- pl$leader_end_x[idx]
         container_data$leader_end_y <- pl$leader_end_y[idx]
+        container_data$leader_waypoints <- if (!is.null(waypoints)) {
+          waypoints[[idx]]
+        } else {
+          list(x = numeric(0), y = numeric(0))
+        }
       }
     }
   }

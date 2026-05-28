@@ -32,6 +32,8 @@ build_tag_grobs <- function(
   number,
   leader_gp_list,
   padding,
+  waypoints_x = numeric(0),
+  waypoints_y = numeric(0),
   name_prefix = "tag"
 ) {
   qname <- if (identical(name_prefix, "complement")) {
@@ -181,6 +183,8 @@ build_tag_grobs <- function(
     ty = ty,
     lend_x = lend_x,
     lend_y = lend_y,
+    waypoints_x = waypoints_x,
+    waypoints_y = waypoints_y,
     leader_gp_list = leader_gp_list,
     fallback_gp = fallback_gp,
     name = leader_name
@@ -197,6 +201,12 @@ build_tag_grobs <- function(
 #' Build the polyline leader for an exterior tag, or [grid::nullGrob()]
 #' for interior / missing-tether placements.
 #'
+#' Draws the polyline `tether → waypoints[1..] → leader_end`. For
+#' straight leaders (raycast / force-directed) `waypoints_*` are empty,
+#' so the polyline collapses to the single `tether → leader_end`
+#' segment. For elbow leaders eunoia emits one knee waypoint, producing
+#' the orthogonal `tether → knee → leader_end` bend.
+#'
 #' Terminates at `(lend_x, lend_y)` — the point on the label box AABB
 #' edge supplied by eunoia (`LabelPlacement::leader_end`). Falls back
 #' to the anchor when the leader endpoint isn't finite so older /
@@ -210,6 +220,8 @@ build_leader_grob <- function(
   ty,
   lend_x,
   lend_y,
+  waypoints_x = numeric(0),
+  waypoints_y = numeric(0),
   leader_gp_list,
   fallback_gp,
   name
@@ -232,6 +244,14 @@ build_leader_grob <- function(
 
   end_x <- if (!is.null(lend_x) && is.finite(lend_x)) lend_x else ax
   end_y <- if (!is.null(lend_y) && is.finite(lend_y)) lend_y else ay
+
+  if (is.null(waypoints_x) || is.null(waypoints_y)) {
+    waypoints_x <- numeric(0)
+    waypoints_y <- numeric(0)
+  }
+  wp_ok <- is.finite(waypoints_x) & is.finite(waypoints_y)
+  waypoints_x <- waypoints_x[wp_ok]
+  waypoints_y <- waypoints_y[wp_ok]
 
   fallback_col <- if (
     !is.null(fallback_gp) &&
@@ -258,8 +278,8 @@ build_leader_grob <- function(
   )
 
   grid::polylineGrob(
-    x = c(tx, end_x),
-    y = c(ty, end_y),
+    x = c(tx, waypoints_x, end_x),
+    y = c(ty, waypoints_y, end_y),
     default.units = "native",
     gp = gp,
     name = name
@@ -305,6 +325,13 @@ setup_tag <- function(data, labels, quantities, annotations, number) {
   padding <- eulerr_options()$padding
   leader_gp_list <- if (!is.null(labels)) labels$leader else NULL
 
+  wp <- data$leader_waypoints
+  if (is.list(wp) && length(wp) >= 1L) {
+    wp <- wp[[1L]]
+  }
+  wp_x <- if (!is.null(wp) && !is.null(wp$x)) wp$x else numeric(0)
+  wp_y <- if (!is.null(wp) && !is.null(wp$y)) wp$y else numeric(0)
+
   grobs <- build_tag_grobs(
     ax = data$x,
     ay = data$y,
@@ -327,7 +354,9 @@ setup_tag <- function(data, labels, quantities, annotations, number) {
     annotation_rot = annotation_rot,
     number = number,
     leader_gp_list = leader_gp_list,
-    padding = padding
+    padding = padding,
+    waypoints_x = wp_x,
+    waypoints_y = wp_y
   )
 
   grid::gTree(
@@ -390,6 +419,10 @@ setup_complement_tag <- function(container_data, complement, number) {
   leader_gp_list <- complement$leader
   padding <- eulerr_options()$padding
 
+  wp <- container_data$leader_waypoints
+  wp_x <- if (!is.null(wp) && !is.null(wp$x)) wp$x else numeric(0)
+  wp_y <- if (!is.null(wp) && !is.null(wp$y)) wp$y else numeric(0)
+
   grobs <- build_tag_grobs(
     ax = container_data$label_x,
     ay = container_data$label_y,
@@ -413,6 +446,8 @@ setup_complement_tag <- function(container_data, complement, number) {
     number = number,
     leader_gp_list = leader_gp_list,
     padding = padding,
+    waypoints_x = wp_x,
+    waypoints_y = wp_y,
     name_prefix = "complement"
   )
 
@@ -766,6 +801,7 @@ makeContext.EulerPanel <- function(x) {
         placement = placement_opts$placement,
         placement_margin = placement_opts$margin,
         placement_iterations = placement_opts$iterations,
+        placement_min_gap = placement_opts$min_gap,
         placement_tether = placement_opts$tether,
         placement_leader_gap = measurements$gap_native,
         label_precision = precision
@@ -926,10 +962,13 @@ makeContent.EulerTags <- function(x) {
     placement = placement_opts$placement,
     placement_margin = placement_opts$margin,
     placement_iterations = placement_opts$iterations,
+    placement_min_gap = placement_opts$min_gap,
     placement_tether = placement_opts$tether,
     placement_leader_gap = gap_native,
     label_precision = x$label_precision
   )
+
+  waypoints <- split_waypoints(placements)
 
   ok_idx <- which(ok)
   for (j in seq_along(ok_idx)) {
@@ -944,6 +983,11 @@ makeContent.EulerTags <- function(x) {
     ty <- placements$tether_y[j]
     lend_x <- placements$leader_end_x[j]
     lend_y <- placements$leader_end_y[j]
+    wp <- if (!is.null(waypoints)) {
+      waypoints[[j]]
+    } else {
+      list(x = numeric(0), y = numeric(0))
+    }
     child <- x$children[[i]]
     new_children <- build_tag_grobs(
       ax = ax,
@@ -968,6 +1012,8 @@ makeContent.EulerTags <- function(x) {
       number = child$number,
       leader_gp_list = child$leader_gp_list,
       padding = child$padding,
+      waypoints_x = wp$x,
+      waypoints_y = wp$y,
       name_prefix = if (is.null(child$name_prefix)) "tag" else child$name_prefix
     )
     # `grid::setChildren()` updates the internal `childrenOrder` index

@@ -81,12 +81,16 @@
 #'   text for the labels. See [grid::grid.text()]. In addition to the
 #'   `grid::gpar()` fields, the following placement controls are
 #'   supported (delegated to the `eunoia` Rust crate):
-#'   `labels$placement` (`"raycast"` (default) or `"force_directed"`)
-#'   selects the exterior solver used when a label does not fit inside
-#'   its region; `labels$margin` (numeric) overrides the per-region
-#'   margin between an exterior label and the diagram (default is half
-#'   the larger of the label's width and height); `labels$iterations`
-#'   sets the iteration cap for the force-directed solver;
+#'   `labels$placement` (`"raycast"` (default), `"force_directed"`, or
+#'   `"elbow"`) selects the strategy used when a label does not fit
+#'   inside its region. `"raycast"` and `"force_directed"` produce
+#'   straight leader lines (the former places the label along the
+#'   centroid→POI ray, the latter relaxes labels with a polygon-aware
+#'   force solver). `"elbow"` produces d3-pie style orthogonal leaders,
+#'   stacking exterior labels in left/right columns reached by a
+#'   three-segment polyline. `labels$margin` (numeric) overrides the
+#'   per-region margin between an exterior label and the diagram
+#'   (default is half the larger of the label's width and height);
 #'   `labels$tether` (`"poi"` (default) or `"boundary"`) chooses where
 #'   the leader line attaches on the source region; `labels$gap`
 #'   controls the visible gap between the leader tip and the label box
@@ -95,7 +99,12 @@
 #'   tracks `eulerr_options()$padding` so the gap matches the spacing
 #'   between label and quantity; `labels$leader` is a list (`col`,
 #'   `alpha`, `lwd`, `lty`, `lex`) styling the leader line drawn from
-#'   the tether to the exterior label.
+#'   the tether to the exterior label. Strategy-specific knobs live in
+#'   their own sublists: `labels$force_directed = list(iterations = ...)`
+#'   sets the iteration cap for the force-directed solver, and
+#'   `labels$elbow = list(min_gap = ...)` sets the minimum vertical
+#'   centre-to-centre spacing between stacked label boxes in an elbow
+#'   column.
 #' @param quantities a logical, vector, or list. Vectors are assumed to be
 #'   text for the quantities' labels, which by
 #'   default are the original values in the input to [euler()]. In addition
@@ -147,8 +156,8 @@
 #'   `lex` (outline + label gpar), `fontsize`, `cex`, `font`, `fontfamily`,
 #'   `lineheight` (label only), and `label` (custom text — defaults to the
 #'   complement count). Also accepts the same placement controls as
-#'   `labels` (`placement`, `margin`, `iterations`, `tether`, `gap`,
-#'   `leader`)
+#'   `labels` (`placement`, `margin`, `tether`, `gap`, `leader`,
+#'   `force_directed`, `elbow`)
 #'   for the complement count label. Has no effect if the diagram was
 #'   fit without `complement =`. Defaults can be set via
 #'   `eulerr_options(complement = ...)`.
@@ -945,10 +954,11 @@ plot.euler <- function(
     placement_fields <- c(
       "placement",
       "margin",
-      "iterations",
       "tether",
       "gap",
-      "leader"
+      "leader",
+      "force_directed",
+      "elbow"
     )
     placement_user <- labels[intersect(names(labels), placement_fields)]
     labels[placement_fields] <- NULL
@@ -971,10 +981,16 @@ plot.euler <- function(
     labels$placement <- placement_user$placement %||%
       opar$labels$placement
     labels$margin <- placement_user$margin %||% opar$labels$margin
-    labels$iterations <- placement_user$iterations %||%
-      opar$labels$iterations
     labels$tether <- placement_user$tether %||% opar$labels$tether
     labels$gap <- placement_user$gap %||% opar$labels$gap
+    labels$force_directed <- update_list(
+      opar$labels$force_directed %||% list(),
+      placement_user$force_directed %||% list()
+    )
+    labels$elbow <- update_list(
+      opar$labels$elbow %||% list(),
+      placement_user$elbow %||% list()
+    )
     labels$leader <- update_list(
       opar$labels$leader %||% list(),
       placement_user$leader %||% list()
@@ -1317,10 +1333,11 @@ plot.euler <- function(
     cplace_fields <- c(
       "placement",
       "margin",
-      "iterations",
       "tether",
       "gap",
-      "leader"
+      "leader",
+      "force_directed",
+      "elbow"
     )
     cplace_user <- complement_user[intersect(
       names(complement_user),
@@ -1350,11 +1367,17 @@ plot.euler <- function(
       opar$complement$placement
     complement$margin <- cplace_user$margin %||%
       opar$complement$margin
-    complement$iterations <- cplace_user$iterations %||%
-      opar$complement$iterations
     complement$tether <- cplace_user$tether %||%
       opar$complement$tether
     complement$gap <- cplace_user$gap %||% opar$complement$gap
+    complement$force_directed <- update_list(
+      opar$complement$force_directed %||% list(),
+      cplace_user$force_directed %||% list()
+    )
+    complement$elbow <- update_list(
+      opar$complement$elbow %||% list(),
+      cplace_user$elbow %||% list()
+    )
     complement$leader <- update_list(
       opar$complement$leader %||% list(),
       cplace_user$leader %||% list()
@@ -1385,11 +1408,23 @@ plot.euler <- function(
     }
   }
 
-  # set up geometry for diagrams
+  # set up geometry for diagrams. Per-strategy sublists collapse to the
+  # flat shape that `place_euler_labels` (and `apply_label_placement`'s
+  # `placement_opts`) expect: `iterations` is only forwarded when
+  # `force_directed` is the active strategy, `min_gap` only when `elbow`
+  # is.
+  strat <- labels$placement
+  fd_opts <- labels$force_directed %||% list()
+  el_opts <- labels$elbow %||% list()
   placement_opts <- list(
-    placement = labels$placement,
+    placement = strat,
     margin = labels$margin,
-    iterations = labels$iterations,
+    iterations = if (identical(strat, "force_directed")) {
+      fd_opts$iterations
+    } else {
+      NULL
+    },
+    min_gap = if (identical(strat, "elbow")) el_opts$min_gap else NULL,
     tether = labels$tether,
     gap = labels$gap
   )

@@ -146,9 +146,10 @@ eulerr_default_options <- function() {
       font = 2,
       placement = "raycast",
       margin = NULL,
-      iterations = NULL,
       tether = "poi",
       gap = NULL,
+      force_directed = list(iterations = NULL),
+      elbow = list(min_gap = NULL),
       leader = list(
         col = NULL,
         alpha = 0.6,
@@ -240,9 +241,10 @@ eulerr_default_options <- function() {
       lineheight = 1.2,
       placement = "raycast",
       margin = NULL,
-      iterations = NULL,
       tether = "poi",
       gap = NULL,
+      force_directed = list(iterations = NULL),
+      elbow = list(min_gap = NULL),
       leader = list(
         col = NULL,
         alpha = 0.6,

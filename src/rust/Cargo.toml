@@ -10,8 +10,8 @@ crate-type = ["staticlib"]
 name = "eulerr"
 
 [dependencies]
-extendr-api = "0.9.0"
-eunoia = { version = "0.15.0", features = ["plotting"] }
+extendr-api = "0.9"
+eunoia = "0.16"
 
 [profile.release]
 lto = true
