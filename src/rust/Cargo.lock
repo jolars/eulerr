@@ -97,9 +97,9 @@ dependencies = [
 
 [[package]]
 name = "eunoia"
-version = "0.16.0"
+version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "329cb1a9481b9f7261bef04c4be13373081ad1a632848540a50ea525e848621f"
+checksum = "111f9a11d6b8a6b99adab0a564c0194315b6aabc2f24251ef08dd657c5af616b"
 dependencies = [
  "basin",
  "finitediff",
@@ -108,7 +108,6 @@ dependencies = [
  "log",
  "nalgebra",
  "num-complex",
- "polylabel-mini",
  "rand",
 ]
 
@@ -598,12 +597,6 @@ name = "pin-project-lite"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a89322df9ebe1c1578d689c92318e070967d1042b512afbe49518723f4e6d5cd"
-
-[[package]]
-name = "polylabel-mini"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "faee212fadf37bc93666b566a657c78c7947f65bfe6bf9d81ce8f2a28ec1e4d1"
 
 [[package]]
 name = "ppv-lite86"
