@@ -71,6 +71,7 @@ label sizes plus placement-strategy options. Returns, parallel to
 <span>  <span class="va">placement</span>,</span>
 <span>  <span class="va">placement_margin</span>,</span>
 <span>  <span class="va">placement_iterations</span>,</span>
+<span>  <span class="va">placement_min_gap</span>,</span>
 <span>  <span class="va">placement_tether</span>,</span>
 <span>  <span class="va">placement_leader_gap</span>,</span>
 <span>  <span class="va">label_precision</span></span>
@@ -82,9 +83,15 @@ label sizes plus placement-strategy options. Returns, parallel to
 
 <ul><li><p><code>anchor_x</code> / <code>anchor_y</code> — placed label anchor (NA on miss);</p></li>
 <li><p><code>kind</code> — one of <code>"interior"</code>, <code>"exterior_raycast"</code>,
-<code>"exterior_force_directed"</code>; <code>""</code> if no placement was produced;</p></li>
+<code>"exterior_force_directed"</code>, <code>"exterior_elbow"</code>; <code>""</code> if no
+placement was produced;</p></li>
 <li><p><code>tether_x</code> / <code>tether_y</code> — tether point for the leader line (NA for
 interior placements / misses).</p></li>
+<li><p><code>leader_end_x</code> / <code>leader_end_y</code> — point on the label box AABB where
+the leader terminates (NA for interior placements / misses).</p></li>
+<li><p><code>leader_waypoints_x</code> / <code>leader_waypoints_y</code> / <code>leader_waypoints_lengths</code>
+— concatenated waypoint coordinates and per-label counts. Empty for
+straight leaders; carries one knee point per elbow placement.</p></li>
 </ul><p>Plus a canvas bbox (<code>canvas_bbox_h/k/width/height</code>) from eunoia's
 <code>placements_bbox</code> — NaN when no placements were produced — for the R
 side to grow <code>xlim/ylim</code> so exterior labels are never clipped.</p>

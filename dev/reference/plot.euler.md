@@ -100,21 +100,31 @@ plot(...)
   [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html). In
   addition to the [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html)
   fields, the following placement controls are supported (delegated to
-  the `eunoia` Rust crate): `labels$placement` (`"raycast"` (default) or
-  `"force_directed"`) selects the exterior solver used when a label does
-  not fit inside its region; `labels$margin` (numeric) overrides the
-  per-region margin between an exterior label and the diagram (default
-  is half the larger of the label's width and height);
-  `labels$iterations` sets the iteration cap for the force-directed
-  solver; `labels$tether` (`"poi"` (default) or `"boundary"`) chooses
-  where the leader line attaches on the source region; `labels$gap`
-  controls the visible gap between the leader tip and the label box edge
-  — a bare numeric is interpreted as `lines` (font-relative), a
+  the `eunoia` Rust crate): `labels$placement` (`"raycast"` (default),
+  `"force_directed"`, or `"elbow"`) selects the strategy used when a
+  label does not fit inside its region. `"raycast"` and
+  `"force_directed"` produce straight leader lines (the former places
+  the label along the centroid→POI ray, the latter relaxes labels with a
+  polygon-aware force solver). `"elbow"` produces d3-pie style
+  orthogonal leaders, stacking exterior labels in left/right columns
+  reached by a three-segment polyline. `labels$margin` (numeric)
+  overrides the per-region margin between an exterior label and the
+  diagram (default is half the larger of the label's width and height);
+  `labels$tether` (`"poi"` (default) or `"boundary"`) chooses where the
+  leader line attaches on the source region; `labels$gap` controls the
+  visible gap between the leader tip and the label box edge — a bare
+  numeric is interpreted as `lines` (font-relative), a
   [`grid::unit()`](https://rdrr.io/r/grid/unit.html) is honored as
   given, and the default `NULL` tracks `eulerr_options()$padding` so the
   gap matches the spacing between label and quantity; `labels$leader` is
   a list (`col`, `alpha`, `lwd`, `lty`, `lex`) styling the leader line
-  drawn from the tether to the exterior label.
+  drawn from the tether to the exterior label. Strategy-specific knobs
+  live in their own sublists:
+  `labels$force_directed = list(iterations = ...)` sets the iteration
+  cap for the force-directed solver, and
+  `labels$elbow = list(min_gap = ...)` sets the minimum vertical
+  centre-to-centre spacing between stacked label boxes in an elbow
+  column.
 
 - quantities:
 
@@ -196,9 +206,9 @@ plot(...)
   `fontsize`, `cex`, `font`, `fontfamily`, `lineheight` (label only),
   and `label` (custom text — defaults to the complement count). Also
   accepts the same placement controls as `labels` (`placement`,
-  `margin`, `iterations`, `tether`, `gap`, `leader`) for the complement
-  count label. Has no effect if the diagram was fit without
-  `complement =`. Defaults can be set via
+  `margin`, `tether`, `gap`, `leader`, `force_directed`, `elbow`) for
+  the complement count label. Has no effect if the diagram was fit
+  without `complement =`. Defaults can be set via
   `eulerr_options(complement = ...)`.
 
 - rotate:

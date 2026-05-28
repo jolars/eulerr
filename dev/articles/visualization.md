@@ -33,6 +33,81 @@ of no analytical solution to this problem. Instead, **eulerr** uses the
 *Mapbox*’s **polylabel** C++ library), implemented in the **eunoia**
 Rust crate that powers eulerr’s geometry layer.
 
+When a label is too large to fit inside its region’s polygon, **eulerr**
+falls back to one of three exterior-placement strategies, all delegated
+to **eunoia**. The strategy is selected via `labels$placement`:
+
+- `"raycast"` (the default) — labels are placed along the ray from the
+  diagram centroid through the region’s pole of inaccessibility, padded
+  away from the diagram by a per-region margin. Closed-form, fast,
+  deterministic.
+- `"force_directed"` — initial positions come from the raycast geometry,
+  then a damped spring-and-repulsion solver relaxes the labels against
+  each other *and* against foreign region polygons. Useful when several
+  labels would otherwise collide or drift across unrelated regions.
+- `"elbow"` — labels are assigned to a left or right column outside the
+  diagram, stacked vertically without overlap and reached by an
+  orthogonal three-segment (“elbow”) leader. Reminiscent of d3-pie style
+  callouts.
+
+In every case, a leader line is drawn from the source region to the
+exterior label; tether and leader styling are controlled via
+`labels$tether`, `labels$gap`, and `labels$leader`.
+
+``` r
+
+set.seed(1)
+fit <- euler(c(
+  A = 1, B = 1, C = 1, D = 1,
+  "A&B" = 0.15, "B&C" = 0.15, "C&D" = 0.15, "A&D" = 0.15
+))
+
+# Force exterior placement by making the labels large relative to the shapes.
+big <- list(fontsize = 16)
+
+p1 <- plot(fit, quantities = TRUE,
+           labels = c(big, list(placement = "raycast")),
+           main = "raycast")
+p2 <- plot(fit, quantities = TRUE,
+           labels = c(big, list(placement = "force_directed")),
+           main = "force_directed")
+p3 <- plot(fit, quantities = TRUE,
+           labels = c(big, list(placement = "elbow")),
+           main = "elbow")
+
+p1 | p2 | p3
+```
+
+![Three exterior-label placement strategies on the same
+fit](visualization_files/figure-html/placement-comparison-1.png)
+
+Three exterior-label placement strategies on the same fit
+
+Strategy-specific knobs live in their own sublists. The force-directed
+solver takes `labels$force_directed = list(iterations = ...)` and the
+elbow placement takes
+`labels$elbow = list(margin = ..., min_gap = ...)`, where `min_gap` sets
+the minimum vertical centre-to-centre spacing between stacked label
+boxes in a column:
+
+``` r
+
+plot(
+  fit,
+  quantities = TRUE,
+  labels = list(
+    placement = "elbow",
+    fontsize = 14,
+    elbow = list(min_gap = 0.6)
+  )
+)
+```
+
+![Elbow leaders with extra vertical breathing room between
+labels](visualization_files/figure-html/elbow-min-gap-1.png)
+
+Elbow leaders with extra vertical breathing room between labels
+
 ### Aesthetics
 
 Euler diagrams display both quantitative and qualitative data. The
@@ -70,7 +145,6 @@ color using a manually tuned color palette.
 ``` r
 
 set.seed(2)
-library(eulerr)
 con <- c(
   A = 1,
   B = 1,
