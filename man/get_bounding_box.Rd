@@ -2,25 +2,25 @@
 % Please edit documentation in R/geometry.R
 \name{get_bounding_box}
 \alias{get_bounding_box}
-\title{Get the bounding box of an ellipse}
+\title{Get the bounding box for a row-wise collection of fitted shapes.}
 \usage{
-get_bounding_box(h, k, a, b = NULL, phi = NULL)
+get_bounding_box(shapes, k = NULL, a = NULL, b = NULL, phi = NULL)
 }
 \arguments{
-\item{h}{x-coordinate for the center}
+\item{shapes}{the \verb{$shapes} data frame of a fitted euler object (after
+dropping NA rows for empty sets), or — for legacy callers — the
+numeric \code{h} vector. When \code{h} is numeric the function falls back to
+the legacy ellipse signature for back-compat with external code.}
 
-\item{k}{y-coordinate for the center}
-
-\item{a}{radius or semi-major axis}
-
-\item{b}{semi-minor axis}
-
-\item{phi}{rotation}
+\item{k, a, b, phi}{legacy ellipse parameters; only used when \code{shapes} is
+numeric (the legacy signature).}
 }
 \value{
-The bounding box as a list with xlim and ylim
+The bounding box as a list with \code{xlim} and \code{ylim}.
 }
 \description{
-Get the bounding box of an ellipse
+Dispatches on the shape kind. Ellipse/circle use the rotated-ellipse
+bounding-box formula; rectangle/square use width/height (or side)
+directly since both are axis-aligned in eunoia.
 }
 \keyword{internal}

@@ -60,8 +60,12 @@ constructing dummy codes}
 }
 \value{
 Returns an object of class \verb{'eulerr_venn', 'venn', 'euler'} with items
-\item{ellipses}{a matrix of \code{h} and \code{k} (x and y-coordinates for the
-centers of the shapes), semiaxes \code{a} and \code{b}, and rotation angle \code{phi}}
+\item{shapes}{a data frame of the precomputed ellipse parameters (one
+row per set, columns \verb{type, h, k, a, b, phi}). \code{venn()} always uses
+ellipses.}
+\item{ellipses}{the legacy 5-column data frame
+(\verb{h, k, a, b, phi}) — kept for back-compat alongside the canonical
+\code{shapes} slot.}
 \item{original.values}{set relationships in the input}
 \item{fitted.values}{set relationships in the solution}
 }

@@ -2,7 +2,8 @@
 #'
 #' Fit Euler diagrams (a generalization of Venn diagrams) using numerical
 #' optimization to find exact or approximate solutions to a specification of set
-#' relationships. The shape of the diagram may be a circle or an ellipse.
+#' relationships. The shape of the diagram may be a circle, an ellipse, an
+#' axis-aligned rectangle, or an axis-aligned square.
 #'
 #' If the input is a matrix or data frame and argument `by` is specified,
 #' the function returns a list of euler diagrams.
@@ -96,8 +97,16 @@
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.
-#'   \item{ellipses}{a matrix of `h` and `k` (x and y-coordinates for the
-#'     centers of the shapes), semiaxes `a` and `b`, and rotation angle `phi`}
+#'   \item{shapes}{a data frame of fitted shape parameters. One row per set
+#'     with a `type` column (one of `"circle"`, `"ellipse"`, `"rectangle"`,
+#'     `"square"`), the center coordinates `h` and `k`, and the
+#'     shape-specific columns: `a`, `b`, `phi` for ellipses/circles; `width`
+#'     and `height` for rectangles; `side` (plus mirrored `width`/`height`)
+#'     for squares. Columns that don't apply to the chosen shape are `NA`.}
+#'   \item{ellipses}{for `shape = "circle"` and `shape = "ellipse"` fits,
+#'     the legacy 5-column data frame of `h`, `k`, `a`, `b`, `phi`. This
+#'     slot is deprecated in favour of `shapes` and is not populated for
+#'     rectangle/square fits.}
 #'   \item{original.values}{set relationships in the input}
 #'   \item{fitted.values}{set relationships in the solution}
 #'   \item{residuals}{residuals}
@@ -153,7 +162,7 @@ euler <- function(combinations, ...) UseMethod("euler")
 euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
+  shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c(
     "sum_squared",
     "sum_absolute",

@@ -14,7 +14,7 @@ euler(combinations, ...)
 \method{euler}{default}(
   combinations,
   input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
+  shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c("sum_squared", "sum_absolute", "sum_absolute_region_error",
     "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
     "stress", "diag_error"),
@@ -113,8 +113,16 @@ constructing dummy codes}
 }
 \value{
 A list object of class \code{'euler'} with the following parameters.
-\item{ellipses}{a matrix of \code{h} and \code{k} (x and y-coordinates for the
-centers of the shapes), semiaxes \code{a} and \code{b}, and rotation angle \code{phi}}
+\item{shapes}{a data frame of fitted shape parameters. One row per set
+with a \code{type} column (one of \code{"circle"}, \code{"ellipse"}, \code{"rectangle"},
+\code{"square"}), the center coordinates \code{h} and \code{k}, and the
+shape-specific columns: \code{a}, \code{b}, \code{phi} for ellipses/circles; \code{width}
+and \code{height} for rectangles; \code{side} (plus mirrored \code{width}/\code{height})
+for squares. Columns that don't apply to the chosen shape are \code{NA}.}
+\item{ellipses}{for \code{shape = "circle"} and \code{shape = "ellipse"} fits,
+the legacy 5-column data frame of \code{h}, \code{k}, \code{a}, \code{b}, \code{phi}. This
+slot is deprecated in favour of \code{shapes} and is not populated for
+rectangle/square fits.}
 \item{original.values}{set relationships in the input}
 \item{fitted.values}{set relationships in the solution}
 \item{residuals}{residuals}
@@ -126,7 +134,8 @@ disjoint subset in the input and the respective area in the output}
 \description{
 Fit Euler diagrams (a generalization of Venn diagrams) using numerical
 optimization to find exact or approximate solutions to a specification of set
-relationships. The shape of the diagram may be a circle or an ellipse.
+relationships. The shape of the diagram may be a circle, an ellipse, an
+axis-aligned rectangle, or an axis-aligned square.
 }
 \details{
 If the input is a matrix or data frame and argument \code{by} is specified,

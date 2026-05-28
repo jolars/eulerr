@@ -10,17 +10,20 @@ fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, ext
 #' container.
 #'
 #' Inputs are the fitted shape parameters for the **non-empty** sets only,
-#' in the order eulerr stores them (`x$ellipses` rows after dropping rows
-#' with NA). When `container_*` are non-NULL they describe the fitted
-#' universe-box rectangle; in that case the result also carries the
-#' complement region geometry (the area inside the rectangle outside every
-#' shape) and a label anchor for it. Eunoia's `decompose_regions` emits this
-#' region under the empty `Combination` whenever the spec carries a
-#' complement and a container is supplied — so eulerr no longer needs a
-#' hand-rolled rectangle-minus-shapes pass.
+#' in the order eulerr stores them (`x$shapes` rows after dropping rows
+#' with NA). The leading `shape` argument selects which per-set columns are
+#' active: `"circle"`/`"ellipse"` consume `(h, k, a, b, phi)`,
+#' `"rectangle"` consumes `(h, k, width, height)`, `"square"` consumes
+#' `(h, k, side)`. The remaining vectors must still be provided (NaN
+#' padding is acceptable). When `container_*` are non-NULL they describe
+#' the fitted universe-box rectangle; in that case the result also carries
+#' the complement region geometry (the area inside the rectangle outside
+#' every shape) and a label anchor for it. Eunoia's `decompose_regions`
+#' emits this region under the empty `Combination` whenever the spec
+#' carries a complement and a container is supplied.
 #'
 #' @keywords internal
-euler_plot_data <- function(set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_precision) .Call(wrap__euler_plot_data, set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_precision)
+euler_plot_data <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_precision) .Call(wrap__euler_plot_data, set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_precision)
 
 #' Place per-region labels using eunoia's `place_labels` API.
 #'
@@ -49,7 +52,7 @@ euler_plot_data <- function(set_names, h, k, a, b, phi, container_h, container_k
 #' so eunoia emits the empty `Combination` from `decompose_regions`.
 #'
 #' @keywords internal
-place_euler_labels <- function(set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision) .Call(wrap__place_euler_labels, set_names, h, k, a, b, phi, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision)
+place_euler_labels <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision) .Call(wrap__place_euler_labels, set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision)
 
 #' Clip a (possibly multi-polygon) subject path against a single clip
 #' polygon. Mirrors the slice of `polyclip::polyclip` behavior eulerr

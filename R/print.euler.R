@@ -91,9 +91,12 @@ print.eulerr_venn <- function(
       print(x[[i]], round = round, ...)
     }
   } else {
-    n <- nrow(x$ellipses)
+    table <- x$shapes %||% x$ellipses
+    n <- nrow(table)
     cat(n, "set Venn diagram", "\n\n")
-    print(round(x$ellipses, digits = round), ...)
+    numeric_cols <- vapply(table, is.numeric, logical(1))
+    table[numeric_cols] <- lapply(table[numeric_cols], round, digits = round)
+    print(table, ...)
   }
   invisible(x)
 }

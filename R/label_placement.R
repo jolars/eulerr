@@ -305,7 +305,7 @@ measure_tag_sizes <- function(
 run_placement_pass <- function(
   centers,
   container_data,
-  ellipses,
+  shapes,
   labels_gp,
   quantities_gp,
   annotations_gp,
@@ -339,13 +339,18 @@ run_placement_pass <- function(
   }
 
   do_container <- !is.null(container_data)
+  shape_type <- if (NROW(shapes) > 0L) shapes$type[1L] else "ellipse"
   placements <- place_euler_labels(
-    set_names = rownames(ellipses),
-    h = ellipses$h,
-    k = ellipses$k,
-    a = ellipses$a,
-    b = ellipses$b,
-    phi = ellipses$phi,
+    set_names = rownames(shapes),
+    shape = shape_type,
+    h = shapes$h,
+    k = shapes$k,
+    a = shapes$a,
+    b = shapes$b,
+    phi = shapes$phi,
+    width = shapes$width,
+    height = shapes$height,
+    side = shapes$side,
     container_h = if (do_container) container_data$h else NULL,
     container_k = if (do_container) container_data$k else NULL,
     container_width = if (do_container) container_data$width else NULL,
@@ -448,7 +453,7 @@ expand_limits_with_canvas <- function(limits, placements, slack = 1.4) {
 apply_label_placement <- function(
   centers,
   container_data,
-  ellipses,
+  shapes,
   labels,
   quantities,
   annotations = NULL,
@@ -467,7 +472,7 @@ apply_label_placement <- function(
       limits = limits
     ))
   }
-  if (NROW(ellipses) == 0L) {
+  if (NROW(shapes) == 0L) {
     return(list(
       centers = centers,
       container_data = container_data,
@@ -491,7 +496,7 @@ apply_label_placement <- function(
   pass1 <- run_placement_pass(
     centers = centers,
     container_data = container_data,
-    ellipses = ellipses,
+    shapes = shapes,
     labels_gp = labels_gp,
     quantities_gp = quantities_gp,
     annotations_gp = annotations_gp,
@@ -523,7 +528,7 @@ apply_label_placement <- function(
       pass2 <- run_placement_pass(
         centers = centers,
         container_data = container_data,
-        ellipses = ellipses,
+        shapes = shapes,
         labels_gp = labels_gp,
         quantities_gp = quantities_gp,
         annotations_gp = annotations_gp,

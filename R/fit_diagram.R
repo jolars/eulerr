@@ -2,7 +2,7 @@ fit_diagram <- function(
   combinations,
   type = c("euler", "venn"),
   input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
+  shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c(
     "sum_squared",
     "sum_absolute",
@@ -98,9 +98,11 @@ fit_diagram <- function(
 
     fpar <- venn_spec[[n]]
     rownames(fpar) <- setnames
+    shapes <- ellipse_frame_to_shapes(fpar, "ellipse")
 
     return(structure(
       list(
+        shapes = shapes,
         ellipses = fpar,
         original.values = orig,
         fitted.values = fit
@@ -121,6 +123,9 @@ fit_diagram <- function(
     control
   )
 
+  # Keep the global-search fallback gated on ellipse fits for now — eunoia's
+  # rectangle/square fitters haven't been tuned to benefit from CMA-ES the
+  # way the ellipse path has.
   extraopt_threshold <- if (isTRUE(control$extraopt) && shape == "ellipse") {
     as.numeric(control$extraopt_threshold)
   } else {
@@ -182,27 +187,32 @@ fit_diagram <- function(
   )
 
   # Empty sets stay NA so downstream code (setup_geometry, plotting) detects
-  # them via `is.na(ellipses$h)` and skips polygonization — eunoia rejects
-  # zero-radius ellipses, so we must not feed those through.
+  # them via `is.na(shapes$h)` and skips polygonization — eunoia rejects
+  # zero-area shapes, so we must not feed those through.
   n_all <- length(result$all_set_names)
 
-  fpar <- data.frame(
-    h = rep(NA_real_, n_all),
-    k = rep(NA_real_, n_all),
-    a = rep(NA_real_, n_all),
-    b = rep(NA_real_, n_all),
-    phi = rep(NA_real_, n_all),
-    row.names = result$all_set_names,
-    stringsAsFactors = TRUE
-  )
+  shapes <- new_shape_frame(shape, n_all, result$all_set_names)
 
   if (length(result$fitted_set_names) > 0L) {
     fidx <- match(result$fitted_set_names, result$all_set_names)
-    fpar$h[fidx] <- result$h
-    fpar$k[fidx] <- result$k
-    fpar$a[fidx] <- result$a
-    fpar$b[fidx] <- result$b
-    fpar$phi[fidx] <- result$phi
+    shapes$h[fidx] <- result$h
+    shapes$k[fidx] <- result$k
+    shapes$a[fidx] <- result$a
+    shapes$b[fidx] <- result$b
+    shapes$phi[fidx] <- result$phi
+    shapes$width[fidx] <- result$width
+    shapes$height[fidx] <- result$height
+    shapes$side[fidx] <- result$side
+  }
+
+  # The legacy `$ellipses` column is still populated for circle/ellipse fits
+  # so consumers reading `fit$ellipses$h` etc. keep working without change.
+  # For rectangle/square fits there is no equivalent ellipse representation,
+  # so `$ellipses` is omitted — callers must read `$shapes` (see ?euler).
+  fpar <- if (shape %in% c("circle", "ellipse")) {
+    shapes_to_ellipse_frame(shapes)
+  } else {
+    NULL
   }
 
   labs <- result$combo_labels
@@ -243,18 +253,75 @@ fit_diagram <- function(
     NULL
   }
 
-  structure(
-    list(
-      ellipses = fpar,
-      original.values = orig,
-      fitted.values = fit,
-      residuals = stats::setNames(result$residuals, labs),
-      regionError = stats::setNames(result$region_error, labs),
-      diagError = result$diag_error,
-      stress = result$stress,
-      container = container
-    ),
-    class = c("euler", "list")
+  out <- list(
+    shapes = shapes,
+    ellipses = fpar,
+    original.values = orig,
+    fitted.values = fit,
+    residuals = stats::setNames(result$residuals, labs),
+    regionError = stats::setNames(result$region_error, labs),
+    diagError = result$diag_error,
+    stress = result$stress,
+    container = container
+  )
+  # Drop `$ellipses` rather than carry an explicit NULL slot — `coef()` and
+  # any other consumer that checks `is.null(fit$ellipses)` then sees a
+  # missing field, which is the deprecation contract.
+  if (is.null(fpar)) {
+    out$ellipses <- NULL
+  }
+
+  structure(out, class = c("euler", "list"))
+}
+
+#' Allocate a fresh `$shapes` data frame for `n_all` sets. Rows for empty
+#' sets keep NA in every column so downstream plotting can detect them via
+#' `is.na(shapes$h)` regardless of shape kind.
+#' @keywords internal
+new_shape_frame <- function(shape, n_all, row_names) {
+  data.frame(
+    type = rep(shape, n_all),
+    h = rep(NA_real_, n_all),
+    k = rep(NA_real_, n_all),
+    a = rep(NA_real_, n_all),
+    b = rep(NA_real_, n_all),
+    phi = rep(NA_real_, n_all),
+    width = rep(NA_real_, n_all),
+    height = rep(NA_real_, n_all),
+    side = rep(NA_real_, n_all),
+    row.names = row_names,
+    stringsAsFactors = FALSE
+  )
+}
+
+#' Promote a legacy 5-column ellipse data frame (h, k, a, b, phi) into the
+#' wide `$shapes` schema. Used by the `venn()` path, where the precomputed
+#' venn-shape lookup is still expressed as ellipses.
+#' @keywords internal
+ellipse_frame_to_shapes <- function(fpar, shape) {
+  shapes <- new_shape_frame(shape, NROW(fpar), rownames(fpar))
+  shapes$h <- fpar$h
+  shapes$k <- fpar$k
+  shapes$a <- fpar$a
+  shapes$b <- fpar$b
+  shapes$phi <- fpar$phi
+  shapes
+}
+
+#' Project the wide `$shapes` schema back into the legacy 5-column
+#' (h, k, a, b, phi) ellipse data frame for circle/ellipse fits. Preserves
+#' the row order and row names so back-compat consumers see exactly the
+#' shape they used to.
+#' @keywords internal
+shapes_to_ellipse_frame <- function(shapes) {
+  data.frame(
+    h = shapes$h,
+    k = shapes$k,
+    a = shapes$a,
+    b = shapes$b,
+    phi = shapes$phi,
+    row.names = rownames(shapes),
+    stringsAsFactors = TRUE
   )
 }
 

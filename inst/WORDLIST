@@ -49,6 +49,9 @@ arccos
 arctan
 bbox
 benchmarking
+callouts
+centre
+compat
 bigcap
 bigcup
 bitset
@@ -62,6 +65,7 @@ colour
 ddots
 deuteranopia
 diagError
+drawable
 displaystyle
 eVenn
 emptyset
@@ -71,6 +75,7 @@ eulerAPE
 eulerr's
 eunoia
 eunoia's
+favour
 fontfamily
 fontsize
 fontsizes
@@ -78,6 +83,8 @@ frac
 ggrepel
 gpar
 gpars
+gList
+gTree
 hardcoded
 ij
 interpretability
@@ -85,6 +92,7 @@ ith
 javascript
 js
 knitr
+knitr's
 leq
 lex
 lineheight
@@ -97,18 +105,22 @@ memcheck
 nabla
 optimises
 optimizer's
+overrepresented
 param
 params
 performant
 polyclip
 polylabel
 polylabelr
+polyline
 pre
 projective
 pts
 quadric
 raycast
 regErrors
+waypoint
+waypoints
 regionError
 semiaxes
 semimajor

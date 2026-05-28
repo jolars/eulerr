@@ -12,7 +12,7 @@ in place with placed \verb{(x, y)} plus \code{kind}, \code{tether_x}, \code{teth
 apply_label_placement(
   centers,
   container_data,
-  ellipses,
+  shapes,
   labels,
   quantities,
   annotations = NULL,

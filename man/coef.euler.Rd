@@ -2,7 +2,7 @@
 % Please edit documentation in R/euler-methods.R
 \name{coef.euler}
 \alias{coef.euler}
-\title{Return ellipses from the euler object}
+\title{Return the fitted shape parameters from the euler object}
 \usage{
 \method{coef}{euler}(object, ...)
 }
@@ -12,9 +12,14 @@
 \item{...}{ignored}
 }
 \value{
-a data frame of the ellipses in the fit
+a data frame of the fitted shape parameters
 }
 \description{
-Return ellipses from the euler object
+Returns the \verb{$shapes} data frame — a tagged uniform schema with one row
+per set, a \code{type} column, and shape-specific columns
+(\verb{h, k, a, b, phi, width, height, side}) populated according to the
+chosen shape (other columns are \code{NA}). For circle/ellipse fits the
+legacy \verb{$ellipses} slot is still populated for back-compat; consumers
+that need the new shapes (rectangle, square) must read \verb{$shapes}.
 }
 \keyword{internal}

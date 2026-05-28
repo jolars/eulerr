@@ -25,7 +25,8 @@ options(digits = 4)
 ## Motivation
 
 **eulerr** generates area-proportional euler diagrams that display set
-relationships (intersections, unions, and disjoints) with circles or ellipses.
+relationships (intersections, unions, and disjoints) with circles, ellipses,
+or axis-aligned rectangles and squares.
 [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams
 without the requirement that all set interactions be present (whether they are
 empty or not). That is, depending on input, eulerr will sometimes produce Venn
@@ -159,10 +160,12 @@ In our example, the diagError is `r fit2$diag_error` and our stress is
 `r fit2$stress`, suggesting that the fit is accurate.
 
 We can now be confident that eulerr provides a reasonable representation of our
-input using circles. Were it otherwise, we might try to use ellipses instead.
-[@wilkinson_exact_2012] features a difficult combination that it manages to fit
-with a reasonably small error; with **eulerr**, however, we can get rid of that
-error entirely.
+input using circles. Were it otherwise, we might try a different shape via the
+`shape` argument — `"ellipse"` is the most expressive choice, but axis-aligned
+`"rectangle"` and `"square"` fits are also available.
+[@wilkinson_exact_2012] features a difficult combination that ellipses manage
+to fit with a reasonably small error; with **eulerr**, however, we can get rid
+of that error entirely.
 
 ```{r}
 #| fig-cap: "A difficult combination from Wilkinson 2012."
@@ -205,9 +208,11 @@ suit anybody's needs.
 
 plot(fit2)
 
-# Remove fills, vary borders, display quantities, and switch font.
+# Switch to squares for the same set combination, customizing borders,
+# labels, and quantities. The `shape` argument also accepts `"ellipse"`
+# and `"rectangle"`.
 plot(
-  fit2,
+  euler(mat, shape = "square"),
   quantities = TRUE,
   fill = "transparent",
   lty = 1:3,

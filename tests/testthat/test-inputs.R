@@ -146,6 +146,7 @@ test_that("legacy loss / loss_aggregator arguments warn and still work", {
   legacy_fit <- suppressWarnings(
     euler(s, loss = "region", loss_aggregator = "max")
   )
+  expect_equal(new_fit$shapes, legacy_fit$shapes)
   expect_equal(new_fit$ellipses, legacy_fit$ellipses)
 })
 

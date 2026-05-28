@@ -10,8 +10,12 @@
 #' @inheritParams euler
 #'
 #' @return Returns an object of class `'eulerr_venn', 'venn', 'euler'` with items
-#'   \item{ellipses}{a matrix of `h` and `k` (x and y-coordinates for the
-#'     centers of the shapes), semiaxes `a` and `b`, and rotation angle `phi`}
+#'   \item{shapes}{a data frame of the precomputed ellipse parameters (one
+#'     row per set, columns `type, h, k, a, b, phi`). `venn()` always uses
+#'     ellipses.}
+#'   \item{ellipses}{the legacy 5-column data frame
+#'     (`h, k, a, b, phi`) — kept for back-compat alongside the canonical
+#'     `shapes` slot.}
 #'   \item{original.values}{set relationships in the input}
 #'   \item{fitted.values}{set relationships in the solution}
 #'

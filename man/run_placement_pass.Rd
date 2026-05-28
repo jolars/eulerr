@@ -8,7 +8,7 @@ placement records and the canvas bbox returned by eunoia.}
 run_placement_pass(
   centers,
   container_data,
-  ellipses,
+  shapes,
   labels_gp,
   quantities_gp,
   annotations_gp,

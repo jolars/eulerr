@@ -22,8 +22,8 @@ setup_geometry <- function(
   placement_opts = NULL,
   do_complement_label = FALSE
 ) {
-  dd <- x$ellipses
-  empty_sets <- is.na(dd[, 1L]) & !merged_sets
+  dd <- x$shapes
+  empty_sets <- is.na(dd$h) & !merged_sets
   setnames_full <- rownames(dd)
   empty_set_names <- setnames_full[empty_sets]
 
@@ -51,11 +51,7 @@ setup_geometry <- function(
   do_quantities <- !is.null(quantities)
   do_annotations <- !is.null(annotations)
 
-  h <- dd$h
-  k <- dd$k
-  a <- dd$a
-  b <- dd$b
-  phi <- dd$phi
+  shape_type <- if (NROW(dd) > 0L) dd$type[1L] else "ellipse"
 
   n_e <- NROW(dd)
   n_id <- length(combo_labels)
@@ -64,7 +60,7 @@ setup_geometry <- function(
   do_container <- !is.null(container)
 
   if (n_e > 0L) {
-    limits <- get_bounding_box(h, k, a, b, phi)
+    limits <- get_bounding_box(dd)
   } else {
     limits <- list(xlim = c(-1, 1), ylim = c(-1, 1))
   }
@@ -84,11 +80,15 @@ setup_geometry <- function(
   if (n_e > 0L) {
     plot_data <- euler_plot_data(
       set_names = rownames(dd),
-      h = h,
-      k = k,
-      a = a,
-      b = b,
-      phi = phi,
+      shape = shape_type,
+      h = dd$h,
+      k = dd$k,
+      a = dd$a,
+      b = dd$b,
+      phi = dd$phi,
+      width = dd$width,
+      height = dd$height,
+      side = dd$side,
       container_h = if (do_container) container$h else NULL,
       container_k = if (do_container) container$k else NULL,
       container_width = if (do_container) container$width else NULL,
@@ -442,7 +442,7 @@ setup_geometry <- function(
     placed <- apply_label_placement(
       centers = centers,
       container_data = container_data,
-      ellipses = dd,
+      shapes = dd,
       labels = labels,
       quantities = quantities,
       annotations = annotations,
@@ -458,7 +458,7 @@ setup_geometry <- function(
   }
 
   list(
-    ellipses = dd,
+    shapes = dd,
     set_polygons = set_polygons,
     fitted.values = fitted,
     original.values = orig,

@@ -8,11 +8,15 @@ container.}
 \usage{
 euler_plot_data(
   set_names,
+  shape,
   h,
   k,
   a,
   b,
   phi,
+  width,
+  height,
+  side,
   container_h,
   container_k,
   container_width,
@@ -23,13 +27,16 @@ euler_plot_data(
 }
 \description{
 Inputs are the fitted shape parameters for the \strong{non-empty} sets only,
-in the order eulerr stores them (\code{x$ellipses} rows after dropping rows
-with NA). When \verb{container_*} are non-NULL they describe the fitted
-universe-box rectangle; in that case the result also carries the
-complement region geometry (the area inside the rectangle outside every
-shape) and a label anchor for it. Eunoia's \code{decompose_regions} emits this
-region under the empty \code{Combination} whenever the spec carries a
-complement and a container is supplied — so eulerr no longer needs a
-hand-rolled rectangle-minus-shapes pass.
+in the order eulerr stores them (\code{x$shapes} rows after dropping rows
+with NA). The leading \code{shape} argument selects which per-set columns are
+active: \code{"circle"}/\code{"ellipse"} consume \verb{(h, k, a, b, phi)},
+\code{"rectangle"} consumes \verb{(h, k, width, height)}, \code{"square"} consumes
+\verb{(h, k, side)}. The remaining vectors must still be provided (NaN
+padding is acceptable). When \verb{container_*} are non-NULL they describe
+the fitted universe-box rectangle; in that case the result also carries
+the complement region geometry (the area inside the rectangle outside
+every shape) and a label anchor for it. Eunoia's \code{decompose_regions}
+emits this region under the empty \code{Combination} whenever the spec
+carries a complement and a container is supplied.
 }
 \keyword{internal}

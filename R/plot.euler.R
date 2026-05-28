@@ -404,11 +404,11 @@ plot.euler <- function(
 
   fills_user <- fills
 
-  ellipses <- if (do_groups) x[[1L]]$ellipses else x$ellipses
+  shapes <- if (do_groups) x[[1L]]$shapes else x$shapes
 
-  n_e <- NROW(ellipses)
+  n_e <- NROW(shapes)
 
-  setnames <- rownames(ellipses)
+  setnames <- rownames(shapes)
   setnames_orig <- setnames
 
   # Build a sparse combo_labels that places singletons (in input order) first,
@@ -459,7 +459,7 @@ plot.euler <- function(
   }
 
   if (do_groups) {
-    res <- lapply(x, function(xi) is.na(xi$ellipses)[, 1L])
+    res <- lapply(x, function(xi) is.na(xi$shapes$h))
     empty_sets <- apply(do.call(rbind, res), 2, all)
 
     empty_subsets <- if (any(empty_sets)) {
@@ -476,7 +476,7 @@ plot.euler <- function(
 
     nonzero <- apply(do.call(rbind, res), 2, any)
   } else {
-    empty_sets <- is.na(x$ellipses[, 1L])
+    empty_sets <- is.na(x$shapes$h)
     empty_subsets <- if (any(empty_sets)) {
       rowSums(id[, empty_sets, drop = FALSE]) > 0
     } else {
@@ -1391,7 +1391,27 @@ plot.euler <- function(
     theta <- rotate * pi / 180
     ct <- cos(theta)
     st <- sin(theta)
-    rotate_ellipses <- function(dd) {
+    # Rotation only updates `phi` for ellipse-like shapes — rectangles and
+    # squares are axis-aligned in eunoia, so there's no in-plane rotation
+    # angle to advance. The geometry itself is still rotated via the (h, k)
+    # update, but the result rotates the centers without re-orienting the
+    # boxes; this matches eunoia's axis-aligned model.
+    rotate_shapes <- function(dd) {
+      h_new <- dd$h * ct - dd$k * st
+      dd$k <- dd$h * st + dd$k * ct
+      dd$h <- h_new
+      if (NROW(dd) > 0L) {
+        type <- dd$type[1L]
+        if (type %in% c("circle", "ellipse")) {
+          dd$phi <- dd$phi + theta
+        }
+      }
+      dd
+    }
+    rotate_ellipse_frame <- function(dd) {
+      if (is.null(dd) || NROW(dd) == 0L) {
+        return(dd)
+      }
       h_new <- dd$h * ct - dd$k * st
       dd$k <- dd$h * st + dd$k * ct
       dd$h <- h_new
@@ -1400,11 +1420,17 @@ plot.euler <- function(
     }
     if (do_groups) {
       x <- lapply(x, function(xi) {
-        xi$ellipses <- rotate_ellipses(xi$ellipses)
+        xi$shapes <- rotate_shapes(xi$shapes)
+        if (!is.null(xi$ellipses)) {
+          xi$ellipses <- rotate_ellipse_frame(xi$ellipses)
+        }
         xi
       })
     } else {
-      x$ellipses <- rotate_ellipses(x$ellipses)
+      x$shapes <- rotate_shapes(x$shapes)
+      if (!is.null(x$ellipses)) {
+        x$ellipses <- rotate_ellipse_frame(x$ellipses)
+      }
     }
   }
 

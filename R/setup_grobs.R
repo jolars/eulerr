@@ -275,7 +275,7 @@ setup_grobs <- function(
   xlim <- x$xlim
   ylim <- x$ylim
 
-  n_e <- NROW(x$ellipses)
+  n_e <- NROW(x$shapes)
   n_id <- length(x$fitted.values)
 
   #edges
@@ -470,7 +470,7 @@ setup_grobs <- function(
     tags_gtree <- gTree(
       xlim = xlim,
       ylim = ylim,
-      ellipses = x$ellipses,
+      shapes = x$shapes,
       container = container_data,
       n_vertices = as.integer(n_vertices),
       placement_opts = placement_opts,
@@ -503,14 +503,8 @@ setup_grobs <- function(
   # smallest label native size and the most conservative placement.
   # The (label-aware) `x$xlim`/`x$ylim` from setup_geometry are used as
   # the fallback when measurement isn't possible.
-  if (NROW(x$ellipses) > 0L) {
-    geom_box <- get_bounding_box(
-      x$ellipses$h,
-      x$ellipses$k,
-      x$ellipses$a,
-      x$ellipses$b,
-      x$ellipses$phi
-    )
+  if (NROW(x$shapes) > 0L) {
+    geom_box <- get_bounding_box(x$shapes)
     geom_xlim <- geom_box$xlim
     geom_ylim <- geom_box$ylim
     if (!is.null(x$container)) {
@@ -528,7 +522,7 @@ setup_grobs <- function(
   label_precision_base <- max(diff(geom_xlim), diff(geom_ylim)) / 100
   grid::gTree(
     children = panel_children,
-    ellipses = x$ellipses,
+    shapes = x$shapes,
     container = if (do_container) x$container else NULL,
     n_vertices = as.integer(n_vertices),
     placement_opts = placement_opts,

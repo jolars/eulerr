@@ -6,11 +6,15 @@
 \usage{
 place_euler_labels(
   set_names,
+  shape,
   h,
   k,
   a,
   b,
   phi,
+  width,
+  height,
+  side,
   container_h,
   container_k,
   container_width,

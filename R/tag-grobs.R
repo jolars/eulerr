@@ -646,7 +646,7 @@ pad_axis_native <- function(
 #' @export
 #' @keywords internal
 makeContext.EulerPanel <- function(x) {
-  ellipses <- x$ellipses
+  shapes <- x$shapes
   geom_xlim <- x$geom_xlim
   geom_ylim <- x$geom_ylim
   if (
@@ -694,11 +694,12 @@ makeContext.EulerPanel <- function(x) {
   if (
     is.null(tags_grob) ||
       length(tags_grob$children) == 0L ||
-      is.null(ellipses) ||
-      NROW(ellipses) == 0L
+      is.null(shapes) ||
+      NROW(shapes) == 0L
   ) {
     return(x)
   }
+  shape_type <- shapes$type[1L]
 
   geom_xrng <- diff(geom_xlim)
   geom_yrng <- diff(geom_ylim)
@@ -803,12 +804,16 @@ makeContext.EulerPanel <- function(x) {
 
     placements <- tryCatch(
       place_euler_labels(
-        set_names = rownames(ellipses),
-        h = ellipses$h,
-        k = ellipses$k,
-        a = ellipses$a,
-        b = ellipses$b,
-        phi = ellipses$phi,
+        set_names = rownames(shapes),
+        shape = shape_type,
+        h = shapes$h,
+        k = shapes$k,
+        a = shapes$a,
+        b = shapes$b,
+        phi = shapes$phi,
+        width = shapes$width,
+        height = shapes$height,
+        side = shapes$side,
         container_h = if (has_container) container$h else NULL,
         container_k = if (has_container) container$k else NULL,
         container_width = if (has_container) container$width else NULL,
@@ -913,10 +918,11 @@ makeContent.EulerTags <- function(x) {
   if (n == 0L) {
     return(x)
   }
-  ellipses <- x$ellipses
-  if (is.null(ellipses) || NROW(ellipses) == 0L) {
+  shapes <- x$shapes
+  if (is.null(shapes) || NROW(shapes) == 0L) {
     return(x)
   }
+  shape_type <- shapes$type[1L]
 
   padding_native <- grid::convertHeight(
     x$padding,
@@ -946,12 +952,16 @@ makeContent.EulerTags <- function(x) {
   gap_native <- resolve_gap_native(placement_opts$gap, padding_native)
 
   placements <- place_euler_labels(
-    set_names = rownames(ellipses),
-    h = ellipses$h,
-    k = ellipses$k,
-    a = ellipses$a,
-    b = ellipses$b,
-    phi = ellipses$phi,
+    set_names = rownames(shapes),
+    shape = shape_type,
+    h = shapes$h,
+    k = shapes$k,
+    a = shapes$a,
+    b = shapes$b,
+    phi = shapes$phi,
+    width = shapes$width,
+    height = shapes$height,
+    side = shapes$side,
     container_h = if (has_container) container$h else NULL,
     container_k = if (has_container) container$k else NULL,
     container_width = if (has_container) container$width else NULL,

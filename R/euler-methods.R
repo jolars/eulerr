@@ -15,7 +15,7 @@ fitted.euler <- function(object, dense = FALSE, ...) {
   if (!isTRUE(dense)) {
     return(object$fitted.values)
   }
-  expand_dense(object$fitted.values, object$ellipses)
+  expand_dense(object$fitted.values, object$shapes)
 }
 
 #' Residuals of euler object
@@ -33,16 +33,18 @@ residuals.euler <- function(object, dense = FALSE, ...) {
   if (!isTRUE(dense)) {
     return(object$residuals)
   }
-  expand_dense(object$residuals, object$ellipses)
+  expand_dense(object$residuals, object$shapes)
 }
 
 #' Pad a sparse combination-keyed vector to cover every combination of the
-#' non-empty sets in `ellipses`, filling absent entries with 0.
+#' non-empty sets in `shapes`, filling absent entries with 0. The lookup is
+#' the wide `$shapes` table keyed by row names; empty sets carry NA in `h`
+#' so they're filtered out.
 #' @keywords internal
 #' @noRd
-expand_dense <- function(sparse_values, ellipses) {
-  setnames <- rownames(ellipses)
-  non_empty <- !is.na(ellipses[, 1L])
+expand_dense <- function(sparse_values, shapes) {
+  setnames <- rownames(shapes)
+  non_empty <- !is.na(shapes$h)
   all_combos <- all_set_combinations(setnames[non_empty])
   out <- stats::setNames(numeric(length(all_combos)), all_combos)
   present <- intersect(all_combos, names(sparse_values))
@@ -50,13 +52,24 @@ expand_dense <- function(sparse_values, ellipses) {
   out
 }
 
-#' Return ellipses from the euler object
+#' Return the fitted shape parameters from the euler object
+#'
+#' Returns the `$shapes` data frame — a tagged uniform schema with one row
+#' per set, a `type` column, and shape-specific columns
+#' (`h, k, a, b, phi, width, height, side`) populated according to the
+#' chosen shape (other columns are `NA`). For circle/ellipse fits the
+#' legacy `$ellipses` slot is still populated for back-compat; consumers
+#' that need the new shapes (rectangle, square) must read `$shapes`.
 #'
 #' @param object object of class `'euler'`
 #' @param ... ignored
 #' @export
 #' @keywords internal
-#' @return a data frame of the ellipses in the fit
+#' @return a data frame of the fitted shape parameters
 coef.euler <- function(object, ...) {
-  object$ellipses
+  if (!is.null(object$shapes)) {
+    object$shapes
+  } else {
+    object$ellipses
+  }
 }

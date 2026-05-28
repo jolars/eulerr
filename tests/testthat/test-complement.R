@@ -171,13 +171,18 @@ test_that("default complement uses dashed outline (lty = 2)", {
 test_that("euler_plot_data returns a complement polygon and label", {
   set.seed(1)
   fit <- euler(c(A = 25, B = 25, "A&B" = 5), complement = 145)
+  shapes <- fit$shapes
   cd <- euler_plot_data(
-    set_names = rownames(fit$ellipses),
-    h = fit$ellipses$h,
-    k = fit$ellipses$k,
-    a = fit$ellipses$a,
-    b = fit$ellipses$b,
-    phi = fit$ellipses$phi,
+    set_names = rownames(shapes),
+    shape = shapes$type[1L],
+    h = shapes$h,
+    k = shapes$k,
+    a = shapes$a,
+    b = shapes$b,
+    phi = shapes$phi,
+    width = shapes$width,
+    height = shapes$height,
+    side = shapes$side,
     container_h = fit$container$h,
     container_k = fit$container$k,
     container_width = fit$container$width,
@@ -191,13 +196,13 @@ test_that("euler_plot_data returns a complement polygon and label", {
   expect_gt(length(cd$complement_polygon$x), 0L)
   # Label anchor must lie outside both fitted disks.
   d_to_A <- sqrt(
-    (cd$complement_label_x - fit$ellipses$h[1])^2 +
-      (cd$complement_label_y - fit$ellipses$k[1])^2
+    (cd$complement_label_x - shapes$h[1])^2 +
+      (cd$complement_label_y - shapes$k[1])^2
   )
   d_to_B <- sqrt(
-    (cd$complement_label_x - fit$ellipses$h[2])^2 +
-      (cd$complement_label_y - fit$ellipses$k[2])^2
+    (cd$complement_label_x - shapes$h[2])^2 +
+      (cd$complement_label_y - shapes$k[2])^2
   )
-  expect_gt(d_to_A, fit$ellipses$a[1])
-  expect_gt(d_to_B, fit$ellipses$a[2])
+  expect_gt(d_to_A, shapes$a[1])
+  expect_gt(d_to_B, shapes$a[2])
 })

@@ -4,14 +4,14 @@ use eunoia::{
     constants::{MAX_SETS, MAX_SETS_HARD_CAP},
     geometry::{
         primitives::Point,
-        shapes::{Circle, Ellipse, Polygon, Rectangle},
+        shapes::{Circle, Ellipse, Polygon, Rectangle, Square},
         traits::{DiagramShape, Polygonize},
     },
     loss::LossType,
     plotting::{
         decompose_regions, place_labels, placements_bbox, polygon_clip, ClipOperation,
         ElbowOptions, ExteriorPolicy, LeaderStrategy, PlacementKind, PlacementStrategy,
-        RegionPiece, TetherSource,
+        RegionPiece, RegionPolygons, TetherSource,
     },
     spec::DiagramSpec,
     Combination, DiagramError, DiagramSpecBuilder, Fitter, InputType,
@@ -153,16 +153,120 @@ fn ordered_combo_keys<'a>(
     keys
 }
 
-/// Build the R list result from fitted shape params + metric HashMaps.
-#[allow(clippy::too_many_arguments)]
-fn build_result_list(
-    all_set_names: &[String],
-    fitted_set_names: Vec<String>,
+/// Per-set fitted shape parameters in the wide eulerr schema. NaN means the
+/// field doesn't apply to the chosen shape (e.g. `width`/`height` are NaN
+/// for ellipse fits, `phi` is NaN for axis-aligned rectangle/square fits).
+struct ShapeParams {
     h: Vec<f64>,
     k: Vec<f64>,
     a: Vec<f64>,
     b: Vec<f64>,
     phi: Vec<f64>,
+    width: Vec<f64>,
+    height: Vec<f64>,
+    side: Vec<f64>,
+}
+
+impl ShapeParams {
+    fn with_capacity(n: usize) -> Self {
+        Self {
+            h: Vec::with_capacity(n),
+            k: Vec::with_capacity(n),
+            a: vec![f64::NAN; n],
+            b: vec![f64::NAN; n],
+            phi: vec![f64::NAN; n],
+            width: vec![f64::NAN; n],
+            height: vec![f64::NAN; n],
+            side: vec![f64::NAN; n],
+        }
+    }
+
+    /// Empty parallel vectors for the 0-set edge case.
+    fn empty() -> Self {
+        Self {
+            h: Vec::new(),
+            k: Vec::new(),
+            a: Vec::new(),
+            b: Vec::new(),
+            phi: Vec::new(),
+            width: Vec::new(),
+            height: Vec::new(),
+            side: Vec::new(),
+        }
+    }
+}
+
+/// Pull fitted parameters out of a generic `Layout<S>` into the wide eulerr
+/// schema. The mapping from `DiagramShape::to_params()` to the schema is
+/// shape-specific: ellipse uses (a, b, phi); circle collapses to (a=b=r,
+/// phi=0); rectangle uses (width, height); square uses (side, with
+/// width=height=side mirrored in for convenience). All unused columns stay
+/// NaN.
+fn unpack_layout_params<S: DiagramShape + Copy + 'static>(
+    layout: &eunoia::Layout<S>,
+    non_empty: &[String],
+    shape: ShapeKind,
+) -> extendr_api::Result<ShapeParams> {
+    let n = non_empty.len();
+    let mut out = ShapeParams::with_capacity(n);
+    for (i, name) in non_empty.iter().enumerate() {
+        let shape_ref = layout
+            .shape_for_set(name)
+            .ok_or_else(|| Error::from(format!("missing shape for set {}", name)))?;
+        let p = shape_ref.to_params();
+        out.h.push(p[0]);
+        out.k.push(p[1]);
+        match shape {
+            ShapeKind::Circle => {
+                out.a[i] = p[2];
+                out.b[i] = p[2];
+                out.phi[i] = 0.0;
+            }
+            ShapeKind::Ellipse => {
+                out.a[i] = p[2];
+                out.b[i] = p[3];
+                out.phi[i] = p[4];
+            }
+            ShapeKind::Rectangle => {
+                out.width[i] = p[2];
+                out.height[i] = p[3];
+            }
+            ShapeKind::Square => {
+                out.side[i] = p[2];
+                out.width[i] = p[2];
+                out.height[i] = p[2];
+            }
+        }
+    }
+    Ok(out)
+}
+
+#[derive(Clone, Copy)]
+enum ShapeKind {
+    Circle,
+    Ellipse,
+    Rectangle,
+    Square,
+}
+
+impl ShapeKind {
+    fn parse(s: &str) -> std::result::Result<Self, Error> {
+        match s {
+            "circle" => Ok(ShapeKind::Circle),
+            "ellipse" => Ok(ShapeKind::Ellipse),
+            "rectangle" => Ok(ShapeKind::Rectangle),
+            "square" => Ok(ShapeKind::Square),
+            other => Err(format!("Unknown shape: {}", other).into()),
+        }
+    }
+}
+
+/// Build the R list result from fitted shape params + metric HashMaps.
+#[allow(clippy::too_many_arguments)]
+fn build_result_list(
+    all_set_names: &[String],
+    fitted_set_names: Vec<String>,
+    params: ShapeParams,
     requested: &HashMap<Combination, f64>,
     fitted: &HashMap<Combination, f64>,
     residuals: &HashMap<Combination, f64>,
@@ -204,11 +308,14 @@ fn build_result_list(
     list!(
         all_set_names = all_set_names.to_vec(),
         fitted_set_names = fitted_set_names,
-        h = h,
-        k = k,
-        a = a,
-        b = b,
-        phi = phi,
+        h = params.h,
+        k = params.k,
+        a = params.a,
+        b = params.b,
+        phi = params.phi,
+        width = params.width,
+        height = params.height,
+        side = params.side,
         combo_labels = combo_labels,
         original_values = orig_vec,
         fitted_values = fit_vec,
@@ -225,18 +332,22 @@ fn build_result_list(
 }
 
 /// Build result for edge cases (0 or 1 non-empty sets). Sparse: only the
-/// combinations present in the spec's exclusive areas are returned.
+/// combinations present in the spec's exclusive areas are returned. The
+/// single-set closed-form fit always emits a circle (a = b = radius,
+/// phi = 0); for rectangle/square shapes the R wrapper substitutes the
+/// equivalent square representation when reading the result.
 fn build_edge_case_list(
     all_set_names: &[String],
     spec: &DiagramSpec,
     non_empty: &[String],
+    shape: ShapeKind,
 ) -> List {
     // Treat the spec's exclusive areas as the "requested" map and produce an
     // empty fitted map for the 0-set case (or fitted == requested for the
     // single-set case below).
     let requested: HashMap<Combination, f64> = spec.exclusive_areas().clone();
 
-    let (h, k, a, b, phi, fitted_set_names, fitted_map) = if non_empty.len() == 1 {
+    let (params, fitted_set_names, fitted_map) = if non_empty.len() == 1 {
         let name = &non_empty[0];
         let combo = Combination::new(&[name.as_str()]);
         let area = spec
@@ -244,38 +355,42 @@ fn build_edge_case_list(
             .get(&combo)
             .copied()
             .unwrap_or(0.0);
-        let r = (area / std::f64::consts::PI).sqrt();
+        let mut p = ShapeParams::with_capacity(1);
+        p.h.push(0.0);
+        p.k.push(0.0);
+        match shape {
+            ShapeKind::Circle | ShapeKind::Ellipse => {
+                let r = (area / std::f64::consts::PI).sqrt();
+                p.a[0] = r;
+                p.b[0] = r;
+                p.phi[0] = 0.0;
+            }
+            ShapeKind::Rectangle => {
+                // Single-set rectangle has infinite valid (width, height)
+                // pairs for a fixed area; pick the square that matches
+                // the per-set area so the geometry is well-defined.
+                let side = area.sqrt();
+                p.width[0] = side;
+                p.height[0] = side;
+            }
+            ShapeKind::Square => {
+                let side = area.sqrt();
+                p.width[0] = side;
+                p.height[0] = side;
+                p.side[0] = side;
+            }
+        }
         // Fitted equals requested for the single-set perfect-fit case.
-        (
-            vec![0.0],
-            vec![0.0],
-            vec![r],
-            vec![r],
-            vec![0.0],
-            vec![name.clone()],
-            requested.clone(),
-        )
+        (p, vec![name.clone()], requested.clone())
     } else {
-        (
-            vec![],
-            vec![],
-            vec![],
-            vec![],
-            vec![],
-            vec![],
-            HashMap::new(),
-        )
+        (ShapeParams::empty(), Vec::new(), HashMap::new())
     };
 
     let zero_map: HashMap<Combination, f64> = HashMap::new();
     build_result_list(
         all_set_names,
         fitted_set_names,
-        h,
-        k,
-        a,
-        b,
-        phi,
+        params,
         &requested,
         &fitted_map,
         &zero_map,
@@ -286,14 +401,51 @@ fn build_edge_case_list(
     )
 }
 
-/// Convert a shape's params into [h, k, a, b, phi].
-fn shape_to_euler_params<S: DiagramShape>(shape: &S, is_circle: bool) -> [f64; 5] {
-    let p = shape.to_params();
-    if is_circle {
-        [p[0], p[1], p[2], p[2], 0.0]
-    } else {
-        [p[0], p[1], p[2], p[3], p[4]]
+/// Run a shape-typed Fitter and project its layout back into the wide eulerr
+/// result list. Factored out so the four shape arms in `fit_euler_diagram`
+/// can share configuration and result-assembly code.
+fn fit_and_collect<S: DiagramShape + Copy + 'static>(
+    spec: &DiagramSpec,
+    non_empty: &[String],
+    all_set_names: &[String],
+    shape: ShapeKind,
+    loss_type: LossType,
+    seed: u64,
+    cmaes_threshold: Option<f64>,
+    tolerance_opt: Option<f64>,
+) -> extendr_api::Result<List> {
+    let mut fitter = Fitter::<S>::new(spec).loss_type(loss_type).seed(seed);
+    if let Some(t) = cmaes_threshold {
+        fitter = fitter.cmaes_fallback_threshold(t);
     }
+    if let Some(tol) = tolerance_opt {
+        fitter = fitter.tolerance(tol);
+    }
+    let layout = fitter
+        .fit()
+        .unwrap_or_else(|e| throw_r_error(&format!("eunoia fit error: {}", e)));
+
+    let params = unpack_layout_params(&layout, non_empty, shape)?;
+    let requested = layout.requested().clone();
+    let fitted = layout.fitted().clone();
+    let residuals = layout.residuals();
+    let region_error = layout.region_error();
+    let diag_error = layout.diag_error();
+    let stress = layout.stress();
+    let container = layout.container().copied();
+
+    Ok(build_result_list(
+        all_set_names,
+        non_empty.to_vec(),
+        params,
+        &requested,
+        &fitted,
+        &residuals,
+        &region_error,
+        diag_error,
+        stress,
+        container.as_ref(),
+    ))
 }
 
 /// Fit an Euler diagram using the eunoia Rust library.
@@ -316,6 +468,7 @@ fn fit_euler_diagram(
         return Err("combo_names and combo_values must be the same length".into());
     }
 
+    let shape_kind = ShapeKind::parse(shape)?;
     let all_set_names = extract_set_names(&combo_names);
     let n = all_set_names.len();
 
@@ -331,6 +484,9 @@ fn fit_euler_diagram(
             a = empty_vec.clone(),
             b = empty_vec.clone(),
             phi = empty_vec.clone(),
+            width = empty_vec.clone(),
+            height = empty_vec.clone(),
+            side = empty_vec.clone(),
             combo_labels = combo_labels,
             original_values = empty_vec.clone(),
             fitted_values = empty_vec.clone(),
@@ -409,125 +565,55 @@ fn fit_euler_diagram(
     // the R wrapper synthesises a container around the lone disk for the
     // n_e == 1 path.
     if non_empty.len() <= 1 {
-        return Ok(build_edge_case_list(&all_set_names, &spec, &non_empty));
+        return Ok(build_edge_case_list(
+            &all_set_names,
+            &spec,
+            &non_empty,
+            shape_kind,
+        ));
     }
 
-    match shape {
-        "circle" => {
-            let mut fitter = Fitter::<Circle>::new(&spec)
-                .loss_type(loss_type)
-                .seed(seed_u64);
-            if let Some(t) = cmaes_threshold {
-                fitter = fitter.cmaes_fallback_threshold(t);
-            }
-            if let Some(tol) = tolerance_opt {
-                fitter = fitter.tolerance(tol);
-            }
-            let layout = fitter
-                .fit()
-                .unwrap_or_else(|e| throw_r_error(&format!("eunoia fit error: {}", e)));
-
-            let mut h_vec = Vec::with_capacity(non_empty.len());
-            let mut k_vec = Vec::with_capacity(non_empty.len());
-            let mut a_vec = Vec::with_capacity(non_empty.len());
-            let mut b_vec = Vec::with_capacity(non_empty.len());
-            let mut phi_vec = Vec::with_capacity(non_empty.len());
-
-            for name in &non_empty {
-                let shape_ref = layout
-                    .shape_for_set(name)
-                    .ok_or_else(|| Error::from(format!("missing shape for set {}", name)))?;
-                let p = shape_to_euler_params(shape_ref, true);
-                h_vec.push(p[0]);
-                k_vec.push(p[1]);
-                a_vec.push(p[2]);
-                b_vec.push(p[3]);
-                phi_vec.push(p[4]);
-            }
-
-            let requested = layout.requested().clone();
-            let fitted = layout.fitted().clone();
-            let residuals = layout.residuals();
-            let region_error = layout.region_error();
-            let diag_error = layout.diag_error();
-            let stress = layout.stress();
-            let container = layout.container().copied();
-
-            Ok(build_result_list(
-                &all_set_names,
-                non_empty,
-                h_vec,
-                k_vec,
-                a_vec,
-                b_vec,
-                phi_vec,
-                &requested,
-                &fitted,
-                &residuals,
-                &region_error,
-                diag_error,
-                stress,
-                container.as_ref(),
-            ))
-        }
-        "ellipse" => {
-            let mut fitter = Fitter::<Ellipse>::new(&spec)
-                .loss_type(loss_type)
-                .seed(seed_u64);
-            if let Some(t) = cmaes_threshold {
-                fitter = fitter.cmaes_fallback_threshold(t);
-            }
-            if let Some(tol) = tolerance_opt {
-                fitter = fitter.tolerance(tol);
-            }
-            let layout = fitter
-                .fit()
-                .unwrap_or_else(|e| throw_r_error(&format!("eunoia fit error: {}", e)));
-
-            let mut h_vec = Vec::with_capacity(non_empty.len());
-            let mut k_vec = Vec::with_capacity(non_empty.len());
-            let mut a_vec = Vec::with_capacity(non_empty.len());
-            let mut b_vec = Vec::with_capacity(non_empty.len());
-            let mut phi_vec = Vec::with_capacity(non_empty.len());
-
-            for name in &non_empty {
-                let shape_ref = layout
-                    .shape_for_set(name)
-                    .ok_or_else(|| Error::from(format!("missing shape for set {}", name)))?;
-                let p = shape_to_euler_params(shape_ref, false);
-                h_vec.push(p[0]);
-                k_vec.push(p[1]);
-                a_vec.push(p[2]);
-                b_vec.push(p[3]);
-                phi_vec.push(p[4]);
-            }
-
-            let requested = layout.requested().clone();
-            let fitted = layout.fitted().clone();
-            let residuals = layout.residuals();
-            let region_error = layout.region_error();
-            let diag_error = layout.diag_error();
-            let stress = layout.stress();
-            let container = layout.container().copied();
-
-            Ok(build_result_list(
-                &all_set_names,
-                non_empty,
-                h_vec,
-                k_vec,
-                a_vec,
-                b_vec,
-                phi_vec,
-                &requested,
-                &fitted,
-                &residuals,
-                &region_error,
-                diag_error,
-                stress,
-                container.as_ref(),
-            ))
-        }
-        other => Err(format!("Unknown shape: {}", other).into()),
+    match shape_kind {
+        ShapeKind::Circle => fit_and_collect::<Circle>(
+            &spec,
+            &non_empty,
+            &all_set_names,
+            shape_kind,
+            loss_type,
+            seed_u64,
+            cmaes_threshold,
+            tolerance_opt,
+        ),
+        ShapeKind::Ellipse => fit_and_collect::<Ellipse>(
+            &spec,
+            &non_empty,
+            &all_set_names,
+            shape_kind,
+            loss_type,
+            seed_u64,
+            cmaes_threshold,
+            tolerance_opt,
+        ),
+        ShapeKind::Rectangle => fit_and_collect::<Rectangle>(
+            &spec,
+            &non_empty,
+            &all_set_names,
+            shape_kind,
+            loss_type,
+            seed_u64,
+            cmaes_threshold,
+            tolerance_opt,
+        ),
+        ShapeKind::Square => fit_and_collect::<Square>(
+            &spec,
+            &non_empty,
+            &all_set_names,
+            shape_kind,
+            loss_type,
+            seed_u64,
+            cmaes_threshold,
+            tolerance_opt,
+        ),
     }
 }
 
@@ -617,30 +703,182 @@ fn build_container(
     Some(Rectangle::new(Point::new(ch, ck), cw, chh))
 }
 
+/// Map the wide eulerr per-set parameter schema (NaN-padded) into the
+/// shape-specific eunoia objects needed by the plotting pipeline. Surfaces
+/// `InvalidShapeParameter` errors as readable R-level messages rather than
+/// panicking at the FFI boundary.
+fn build_shapes(
+    shape: ShapeKind,
+    set_names: &[String],
+    h: &[f64],
+    k: &[f64],
+    a: &[f64],
+    b: &[f64],
+    phi: &[f64],
+    width: &[f64],
+    height: &[f64],
+    side: &[f64],
+) -> extendr_api::Result<DiagramShapes> {
+    let n = set_names.len();
+    let invalid_param = |i: usize, e: DiagramError| -> Error {
+        match e {
+            DiagramError::InvalidShapeParameter {
+                shape,
+                param,
+                value,
+            } => Error::from(format!(
+                "invalid {} parameter `{}` for set `{}`: {}",
+                shape, param, set_names[i], value
+            )),
+            other => Error::from(format!("eunoia shape error: {}", other)),
+        }
+    };
+    match shape {
+        ShapeKind::Circle | ShapeKind::Ellipse => {
+            if h.len() != n || k.len() != n || a.len() != n || b.len() != n || phi.len() != n {
+                return Err(
+                    "set_names and ellipse parameter vectors must all have the same length".into(),
+                );
+            }
+            let ellipses: Vec<Ellipse> = (0..n)
+                .map(|i| {
+                    Ellipse::try_new(Point::new(h[i], k[i]), a[i], b[i], phi[i])
+                        .map_err(|e| invalid_param(i, e))
+                })
+                .collect::<extendr_api::Result<Vec<_>>>()?;
+            Ok(DiagramShapes::Ellipses(ellipses))
+        }
+        ShapeKind::Rectangle => {
+            if h.len() != n || k.len() != n || width.len() != n || height.len() != n {
+                return Err(
+                    "set_names and rectangle parameter vectors must all have the same length"
+                        .into(),
+                );
+            }
+            let rects: Vec<Rectangle> = (0..n)
+                .map(|i| {
+                    Rectangle::try_new(Point::new(h[i], k[i]), width[i], height[i])
+                        .map_err(|e| invalid_param(i, e))
+                })
+                .collect::<extendr_api::Result<Vec<_>>>()?;
+            Ok(DiagramShapes::Rectangles(rects))
+        }
+        ShapeKind::Square => {
+            if h.len() != n || k.len() != n || side.len() != n {
+                return Err(
+                    "set_names and square parameter vectors must all have the same length".into(),
+                );
+            }
+            let squares: Vec<Square> = (0..n)
+                .map(|i| {
+                    Square::try_new(Point::new(h[i], k[i]), side[i])
+                        .map_err(|e| invalid_param(i, e))
+                })
+                .collect::<extendr_api::Result<Vec<_>>>()?;
+            Ok(DiagramShapes::Squares(squares))
+        }
+    }
+}
+
+/// Per-shape collection of fitted shapes feeding the plotting pipeline.
+/// eunoia's `decompose_regions` / `place_labels` are generic over a single
+/// shape type, so we dispatch on this enum once and reuse the same downstream
+/// region/label code for all shape kinds.
+enum DiagramShapes {
+    Ellipses(Vec<Ellipse>),
+    Rectangles(Vec<Rectangle>),
+    Squares(Vec<Square>),
+}
+
+impl DiagramShapes {
+    /// Per-set polygon outlines (input order). eunoia doesn't repeat the
+    /// first vertex; close the ring here so polylineGrob (used for edges)
+    /// draws the closing segment instead of leaving a visible gap.
+    fn set_polygon_outlines(&self, n_vertices: usize) -> Vec<Robj> {
+        match self {
+            DiagramShapes::Ellipses(v) => v
+                .iter()
+                .map(|s| polygonize_outline(s, n_vertices))
+                .collect(),
+            DiagramShapes::Rectangles(v) => v
+                .iter()
+                .map(|s| polygonize_outline(s, n_vertices))
+                .collect(),
+            DiagramShapes::Squares(v) => v
+                .iter()
+                .map(|s| polygonize_outline(s, n_vertices))
+                .collect(),
+        }
+    }
+
+    fn decompose(
+        &self,
+        set_names: &[String],
+        spec: &DiagramSpec,
+        container: Option<&Rectangle>,
+        n_vertices: usize,
+    ) -> RegionPolygons {
+        match self {
+            DiagramShapes::Ellipses(v) => {
+                decompose_regions(v, set_names, spec, container, n_vertices)
+            }
+            DiagramShapes::Rectangles(v) => {
+                decompose_regions(v, set_names, spec, container, n_vertices)
+            }
+            DiagramShapes::Squares(v) => {
+                decompose_regions(v, set_names, spec, container, n_vertices)
+            }
+        }
+    }
+}
+
+fn polygonize_outline<S: Polygonize>(shape: &S, n_vertices: usize) -> Robj {
+    let p = shape.polygonize(n_vertices);
+    let verts = p.vertices();
+    let mut x: Vec<f64> = Vec::with_capacity(verts.len() + 1);
+    let mut y: Vec<f64> = Vec::with_capacity(verts.len() + 1);
+    for v in verts {
+        x.push(v.x());
+        y.push(v.y());
+    }
+    if let Some(first) = verts.first() {
+        x.push(first.x());
+        y.push(first.y());
+    }
+    list!(x = x, y = y).into()
+}
+
 /// Compute polygon geometry and label anchors for plotting a fitted Euler
 /// diagram, including the optional complement region inside a fitted
 /// container.
 ///
 /// Inputs are the fitted shape parameters for the **non-empty** sets only,
-/// in the order eulerr stores them (`x$ellipses` rows after dropping rows
-/// with NA). When `container_*` are non-NULL they describe the fitted
-/// universe-box rectangle; in that case the result also carries the
-/// complement region geometry (the area inside the rectangle outside every
-/// shape) and a label anchor for it. Eunoia's `decompose_regions` emits this
-/// region under the empty `Combination` whenever the spec carries a
-/// complement and a container is supplied — so eulerr no longer needs a
-/// hand-rolled rectangle-minus-shapes pass.
+/// in the order eulerr stores them (`x$shapes` rows after dropping rows
+/// with NA). The leading `shape` argument selects which per-set columns are
+/// active: `"circle"`/`"ellipse"` consume `(h, k, a, b, phi)`,
+/// `"rectangle"` consumes `(h, k, width, height)`, `"square"` consumes
+/// `(h, k, side)`. The remaining vectors must still be provided (NaN
+/// padding is acceptable). When `container_*` are non-NULL they describe
+/// the fitted universe-box rectangle; in that case the result also carries
+/// the complement region geometry (the area inside the rectangle outside
+/// every shape) and a label anchor for it. Eunoia's `decompose_regions`
+/// emits this region under the empty `Combination` whenever the spec
+/// carries a complement and a container is supplied.
 ///
 /// @keywords internal
 #[extendr]
 #[allow(clippy::too_many_arguments)]
 fn euler_plot_data(
     set_names: Vec<String>,
+    shape: &str,
     h: Vec<f64>,
     k: Vec<f64>,
     a: Vec<f64>,
     b: Vec<f64>,
     phi: Vec<f64>,
+    width: Vec<f64>,
+    height: Vec<f64>,
+    side: Vec<f64>,
     container_h: Robj,
     container_k: Robj,
     container_width: Robj,
@@ -664,32 +902,13 @@ fn euler_plot_data(
             container_outline_y = Vec::<f64>::new(),
         ));
     }
-    if h.len() != n || k.len() != n || a.len() != n || b.len() != n || phi.len() != n {
-        return Err(
-            "set_names and shape parameter vectors must all have the same length".into(),
-        );
-    }
 
+    let shape_kind = ShapeKind::parse(shape)?;
     let n_vertices = n_vertices.max(3) as usize;
 
-    // Validate at the FFI boundary: shape params come from R, so use
-    // `try_new` and surface eunoia's `InvalidShapeParameter` as a readable R
-    // error rather than panicking inside `new`.
-    let ellipses: Vec<Ellipse> = (0..n)
-        .map(|i| {
-            Ellipse::try_new(Point::new(h[i], k[i]), a[i], b[i], phi[i]).map_err(|e| match e {
-                DiagramError::InvalidShapeParameter {
-                    shape,
-                    param,
-                    value,
-                } => Error::from(format!(
-                    "invalid {} parameter `{}` for set `{}`: {}",
-                    shape, param, set_names[i], value
-                )),
-                other => Error::from(format!("eunoia ellipse error: {}", other)),
-            })
-        })
-        .collect::<extendr_api::Result<Vec<_>>>()?;
+    let shapes = build_shapes(
+        shape_kind, &set_names, &h, &k, &a, &b, &phi, &width, &height, &side,
+    )?;
 
     let container = build_container(
         &container_h,
@@ -699,27 +918,7 @@ fn euler_plot_data(
     );
     let has_complement = container.is_some();
 
-    // Per-set polygon outlines (input order). eunoia doesn't repeat the first
-    // vertex; close the ring here so polylineGrob (used for edges) draws the
-    // closing segment instead of leaving a visible gap.
-    let set_polygons: Vec<Robj> = ellipses
-        .iter()
-        .map(|e| {
-            let p = e.polygonize(n_vertices);
-            let verts = p.vertices();
-            let mut x: Vec<f64> = Vec::with_capacity(verts.len() + 1);
-            let mut y: Vec<f64> = Vec::with_capacity(verts.len() + 1);
-            for v in verts {
-                x.push(v.x());
-                y.push(v.y());
-            }
-            if let Some(first) = verts.first() {
-                x.push(first.x());
-                y.push(first.y());
-            }
-            list!(x = x, y = y).into()
-        })
-        .collect();
+    let set_polygons: Vec<Robj> = shapes.set_polygon_outlines(n_vertices);
 
     // Build a spec just for region decomposition. The areas are dummies —
     // `decompose_regions` reads only set names and `spec.complement()`. When a
@@ -737,13 +936,7 @@ fn euler_plot_data(
         .build()
         .map_err(|e| Error::from(format!("eunoia spec build error: {}", e)))?;
 
-    let regions = decompose_regions(
-        &ellipses,
-        &set_names,
-        &spec,
-        container.as_ref(),
-        n_vertices,
-    );
+    let regions = shapes.decompose(&set_names, &spec, container.as_ref(), n_vertices);
     let region_anchors = regions.label_points(label_precision);
 
     // Walk regions in canonical input order (singletons → pairs → triples,
@@ -877,11 +1070,15 @@ fn placement_kind_str(kind: PlacementKind) -> &'static str {
 #[allow(clippy::too_many_arguments)]
 fn place_euler_labels(
     set_names: Vec<String>,
+    shape: &str,
     h: Vec<f64>,
     k: Vec<f64>,
     a: Vec<f64>,
     b: Vec<f64>,
     phi: Vec<f64>,
+    width: Vec<f64>,
+    height: Vec<f64>,
+    side: Vec<f64>,
     container_h: Robj,
     container_k: Robj,
     container_width: Robj,
@@ -931,29 +1128,12 @@ fn place_euler_labels(
         ));
     }
 
-    if h.len() != n || k.len() != n || a.len() != n || b.len() != n || phi.len() != n {
-        return Err(
-            "set_names and shape parameter vectors must all have the same length".into(),
-        );
-    }
-
+    let shape_kind = ShapeKind::parse(shape)?;
     let n_vertices = n_vertices.max(3) as usize;
 
-    let ellipses: Vec<Ellipse> = (0..n)
-        .map(|i| {
-            Ellipse::try_new(Point::new(h[i], k[i]), a[i], b[i], phi[i]).map_err(|e| match e {
-                DiagramError::InvalidShapeParameter {
-                    shape,
-                    param,
-                    value,
-                } => Error::from(format!(
-                    "invalid {} parameter `{}` for set `{}`: {}",
-                    shape, param, set_names[i], value
-                )),
-                other => Error::from(format!("eunoia ellipse error: {}", other)),
-            })
-        })
-        .collect::<extendr_api::Result<Vec<_>>>()?;
+    let shapes = build_shapes(
+        shape_kind, &set_names, &h, &k, &a, &b, &phi, &width, &height, &side,
+    )?;
 
     let container = build_container(
         &container_h,
@@ -979,13 +1159,7 @@ fn place_euler_labels(
         .build()
         .map_err(|e| Error::from(format!("eunoia spec build error: {}", e)))?;
 
-    let regions = decompose_regions(
-        &ellipses,
-        &set_names,
-        &spec,
-        container.as_ref(),
-        n_vertices,
-    );
+    let regions = shapes.decompose(&set_names, &spec, container.as_ref(), n_vertices);
 
     // Build the size HashMap keyed by canonical Combination string form so
     // place_labels' internal `key.parse::<Combination>()` finds each
