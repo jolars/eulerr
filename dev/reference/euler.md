@@ -369,25 +369,25 @@ euler(fruits, by = list(sex, age))
 # Using the matrix method
 euler(organisms)
 #>                         original fitted residuals regionError
-#> animal                         0  0.578    -0.578       0.087
-#> mammal                         0  0.300    -0.300       0.045
-#> plant                          0  0.207    -0.207       0.031
-#> sea                            0  0.424    -0.424       0.063
-#> spiny                          0  0.161    -0.161       0.024
-#> animal&mammal                  2  1.813     0.187       0.014
-#> animal&sea                     1  0.599     0.401       0.053
-#> animal&spiny                   0  0.209    -0.209       0.031
+#> animal                         0  0.582    -0.582       0.086
+#> mammal                         0  0.302    -0.302       0.044
+#> plant                          0  0.210    -0.210       0.031
+#> sea                            0  0.430    -0.430       0.063
+#> spiny                          0  0.166    -0.166       0.025
+#> animal&mammal                  2  1.817     0.183       0.018
+#> animal&sea                     1  0.612     0.388       0.053
+#> animal&spiny                   0  0.215    -0.215       0.032
 #> mammal&sea                     1  0.000     1.000       0.143
-#> plant&sea                      1  0.862     0.138       0.014
+#> plant&sea                      1  0.868     0.132       0.015
 #> plant&spiny                    1  0.000     1.000       0.143
-#> sea&spiny                      0  0.174    -0.174       0.026
-#> animal&mammal&sea              0  0.260    -0.260       0.039
-#> animal&mammal&spiny            0  0.060    -0.060       0.009
-#> animal&plant&sea               0  0.115    -0.115       0.017
-#> animal&sea&spiny               1  0.689     0.311       0.040
-#> plant&sea&spiny                0  0.015    -0.015       0.002
-#> animal&mammal&sea&spiny        0  0.167    -0.167       0.025
-#> animal&plant&sea&spiny         0  0.039    -0.039       0.006
+#> sea&spiny                      0  0.176    -0.176       0.026
+#> animal&mammal&sea              0  0.268    -0.268       0.040
+#> animal&mammal&spiny            0  0.061    -0.061       0.009
+#> animal&plant&sea               0  0.119    -0.119       0.018
+#> animal&sea&spiny               1  0.715     0.285       0.037
+#> plant&sea&spiny                0  0.016    -0.016       0.002
+#> animal&mammal&sea&spiny        0  0.177    -0.177       0.026
+#> animal&plant&sea&spiny         0  0.043    -0.043       0.006
 #> 
 #> diagError: 0.143 
 #> stress:    0.352 

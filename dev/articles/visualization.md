@@ -37,15 +37,19 @@ When a label is too large to fit inside its region’s polygon, **eulerr**
 falls back to one of three exterior-placement strategies, all delegated
 to **eunoia**. The strategy is selected via `labels$placement`:
 
-- `"raycast"` (the default) — labels are placed along the ray from the
+- `"raycast"` (the default): labels are placed along the ray from the
   diagram centroid through the region’s pole of inaccessibility, padded
   away from the diagram by a per-region margin. Closed-form, fast,
   deterministic.
-- `"force_directed"` — initial positions come from the raycast geometry,
-  then a damped spring-and-repulsion solver relaxes the labels against
-  each other *and* against foreign region polygons. Useful when several
-  labels would otherwise collide or drift across unrelated regions.
-- `"elbow"` — labels are assigned to a left or right column outside the
+
+- `"force_directed"`:
+
+  initial positions come from the raycast geometry, then a damped
+  spring-and-repulsion solver relaxes the labels against each other
+  *and* against foreign region polygons. Useful when several labels
+  would otherwise collide or drift across unrelated regions.
+
+- `"elbow"`: labels are assigned to a left or right column outside the
   diagram, stacked vertically without overlap and reached by an
   orthogonal three-segment (“elbow”) leader. Reminiscent of d3-pie style
   callouts.
@@ -57,31 +61,73 @@ exterior label; tether and leader styling are controlled via
 ``` r
 
 set.seed(1)
+# A chain of four sets with long names and very small overlaps — the
+# overlap regions are too narrow to fit their quantity labels inside,
+# so all three strategies push the overlap labels to the exterior.
 fit <- euler(c(
-  A = 1, B = 1, C = 1, D = 1,
-  "A&B" = 0.15, "B&C" = 0.15, "C&D" = 0.15, "A&D" = 0.15
+  Animalia = 8,
+  Plantae = 7,
+  Fungi = 6,
+  Bacteria = 5,
+  "Animalia&Plantae" = 0.05,
+  "Plantae&Fungi" = 0.05,
+  "Fungi&Bacteria" = 0.05,
+  "Animalia&Bacteria" = 0.05
 ))
-
-# Force exterior placement by making the labels large relative to the shapes.
-big <- list(fontsize = 16)
-
-p1 <- plot(fit, quantities = TRUE,
-           labels = c(big, list(placement = "raycast")),
-           main = "raycast")
-p2 <- plot(fit, quantities = TRUE,
-           labels = c(big, list(placement = "force_directed")),
-           main = "force_directed")
-p3 <- plot(fit, quantities = TRUE,
-           labels = c(big, list(placement = "elbow")),
-           main = "elbow")
-
-p1 | p2 | p3
 ```
 
-![Three exterior-label placement strategies on the same
-fit](visualization_files/figure-html/placement-comparison-1.png)
+``` r
 
-Three exterior-label placement strategies on the same fit
+plot(
+  fit,
+  quantities = TRUE,
+  labels = list(placement = "raycast"),
+  main = "raycast"
+)
+```
+
+![The raycast strategy places labels along rays from the diagram
+centroid, padded away from the diagram by a per-region
+margin.](visualization_files/figure-html/placement-raycast-1.png)
+
+The raycast strategy places labels along rays from the diagram centroid,
+padded away from the diagram by a per-region margin.
+
+``` r
+
+plot(
+  fit,
+  quantities = TRUE,
+  labels = list(placement = "force_directed"),
+  main = "force-directed"
+)
+```
+
+![The force-directed strategy relaxes labels against each other and
+against foreign region polygons, which is useful when several labels
+would otherwise collide or drift across unrelated
+regions.](visualization_files/figure-html/placement-force-directed-1.png)
+
+The force-directed strategy relaxes labels against each other and
+against foreign region polygons, which is useful when several labels
+would otherwise collide or drift across unrelated regions.
+
+``` r
+
+plot(
+  fit,
+  quantities = TRUE,
+  labels = list(placement = "elbow"),
+  main = "elbow"
+)
+```
+
+![The elbow strategy stacks exterior labels in left/right columns
+reached by an orthogonal three-segment leader, in the style of d3-pie
+callouts.](visualization_files/figure-html/placement-elbow-1.png)
+
+The elbow strategy stacks exterior labels in left/right columns reached
+by an orthogonal three-segment leader, in the style of d3-pie callouts.
 
 Strategy-specific knobs live in their own sublists. The force-directed
 solver takes `labels$force_directed = list(iterations = ...)` and the
@@ -97,8 +143,7 @@ plot(
   quantities = TRUE,
   labels = list(
     placement = "elbow",
-    fontsize = 14,
-    elbow = list(min_gap = 0.6)
+    elbow = list(min_gap = 1)
   )
 )
 ```
