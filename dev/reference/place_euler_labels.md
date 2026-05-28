@@ -9,11 +9,15 @@ label sizes plus placement-strategy options. Returns, parallel to
 ``` r
 place_euler_labels(
   set_names,
+  shape,
   h,
   k,
   a,
   b,
   phi,
+  width,
+  height,
+  side,
   container_h,
   container_k,
   container_width,

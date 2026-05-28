@@ -9,7 +9,7 @@ tether.
 apply_label_placement(
   centers,
   container_data,
-  ellipses,
+  shapes,
   labels,
   quantities,
   annotations = NULL,

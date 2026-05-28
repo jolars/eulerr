@@ -1,6 +1,11 @@
-# Return ellipses from the euler object
+# Return the fitted shape parameters from the euler object
 
-Return ellipses from the euler object
+Returns the `$shapes` data frame — a tagged uniform schema with one row
+per set, a `type` column, and shape-specific columns
+(`h, k, a, b, phi, width, height, side`) populated according to the
+chosen shape (other columns are `NA`). For circle/ellipse fits the
+legacy `$ellipses` slot is still populated for back-compat; consumers
+that need the new shapes (rectangle, square) must read `$shapes`.
 
 ## Usage
 
@@ -21,4 +26,4 @@ coef(object, ...)
 
 ## Value
 
-a data frame of the ellipses in the fit
+a data frame of the fitted shape parameters

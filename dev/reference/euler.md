@@ -2,8 +2,8 @@
 
 Fit Euler diagrams (a generalization of Venn diagrams) using numerical
 optimization to find exact or approximate solutions to a specification
-of set relationships. The shape of the diagram may be a circle or an
-ellipse.
+of set relationships. The shape of the diagram may be a circle, an
+ellipse, an axis-aligned rectangle, or an axis-aligned square.
 
 ## Usage
 
@@ -14,7 +14,7 @@ euler(combinations, ...)
 euler(
   combinations,
   input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
+  shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c("sum_squared", "sum_absolute", "sum_absolute_region_error",
     "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
     "stress", "diag_error"),
@@ -159,10 +159,21 @@ euler(combinations, ...)
 
 A list object of class `'euler'` with the following parameters.
 
+- shapes:
+
+  a data frame of fitted shape parameters. One row per set with a `type`
+  column (one of `"circle"`, `"ellipse"`, `"rectangle"`, `"square"`),
+  the center coordinates `h` and `k`, and the shape-specific columns:
+  `a`, `b`, `phi` for ellipses/circles; `width` and `height` for
+  rectangles; `side` (plus mirrored `width`/`height`) for squares.
+  Columns that don't apply to the chosen shape are `NA`.
+
 - ellipses:
 
-  a matrix of `h` and `k` (x and y-coordinates for the centers of the
-  shapes), semiaxes `a` and `b`, and rotation angle `phi`
+  for `shape = "circle"` and `shape = "ellipse"` fits, the legacy
+  5-column data frame of `h`, `k`, `a`, `b`, `phi`. This slot is
+  deprecated in favour of `shapes` and is not populated for
+  rectangle/square fits.
 
 - original.values:
 

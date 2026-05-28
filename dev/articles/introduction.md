@@ -3,11 +3,12 @@
 ## Motivation
 
 **eulerr** generates area-proportional euler diagrams that display set
-relationships (intersections, unions, and disjoints) with circles or
-ellipses. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram)
-are Venn diagrams without the requirement that all set interactions be
-present (whether they are empty or not). That is, depending on input,
-eulerr will sometimes produce Venn diagrams but sometimes not.
+relationships (intersections, unions, and disjoints) with circles,
+ellipses, or axis-aligned rectangles and squares. [Euler
+diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams
+without the requirement that all set interactions be present (whether
+they are empty or not). That is, depending on input, eulerr will
+sometimes produce Venn diagrams but sometimes not.
 
 R features several packages that produce Euler diagrams; some of the
 more prominent ones (on CRAN) are
@@ -128,10 +129,10 @@ retrieving their coordinates and radii.
 ``` r
 
 coef(fit2)
-#>         h         k     a     b phi
-#> A -0.4587 2.220e-16 3.432 3.432   0
-#> B  1.1847 1.110e-16 2.706 2.706   0
-#> C -1.4189 1.685e+00 1.493 1.493   0
+#>     type       h         k     a     b phi width height side
+#> A circle -0.4587 2.220e-16 3.432 3.432   0   NaN    NaN  NaN
+#> B circle  1.1847 1.110e-16 2.706 2.706   0   NaN    NaN  NaN
+#> C circle -1.4189 1.685e+00 1.493 1.493   0   NaN    NaN  NaN
 ```
 
 ### Goodness-of-fit
@@ -159,9 +160,11 @@ In our example, the diagError is and our stress is 0.002, suggesting
 that the fit is accurate.
 
 We can now be confident that eulerr provides a reasonable representation
-of our input using circles. Were it otherwise, we might try to use
-ellipses instead. (Wilkinson 2012) features a difficult combination that
-it manages to fit with a reasonably small error; with **eulerr**,
+of our input using circles. Were it otherwise, we might try a different
+shape via the `shape` argument — `"ellipse"` is the most expressive
+choice, but axis-aligned `"rectangle"` and `"square"` fits are also
+available. (Wilkinson 2012) features a difficult combination that
+ellipses manage to fit with a reasonably small error; with **eulerr**,
 however, we can get rid of that error entirely.
 
 ``` r
@@ -217,9 +220,11 @@ Customizing Euler plots is a breeze in eulerr.
 ``` r
 
 
-# Remove fills, vary borders, display quantities, and switch font.
+# Switch to squares for the same set combination, customizing borders,
+# labels, and quantities. The `shape` argument also accepts `"ellipse"`
+# and `"rectangle"`.
 plot(
-  fit2,
+  euler(mat, shape = "square"),
   quantities = TRUE,
   fill = "transparent",
   lty = 1:3,

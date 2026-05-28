@@ -88,10 +88,15 @@ venn(combinations, ...)
 
 Returns an object of class `'eulerr_venn', 'venn', 'euler'` with items
 
+- shapes:
+
+  a data frame of the precomputed ellipse parameters (one row per set,
+  columns `type, h, k, a, b, phi`). `venn()` always uses ellipses.
+
 - ellipses:
 
-  a matrix of `h` and `k` (x and y-coordinates for the centers of the
-  shapes), semiaxes `a` and `b`, and rotation angle `phi`
+  the legacy 5-column data frame (`h, k, a, b, phi`) — kept for
+  back-compat alongside the canonical `shapes` slot.
 
 - original.values:
 
@@ -141,74 +146,74 @@ f2 <- venn(c(A = 1, "B&C" = 3, "A&D" = 0.3))
 venn(pain, factor_names = FALSE)
 #> 3 set Venn diagram 
 #> 
-#>                h     k    a    b  phi
-#> widespread -0.42 -0.36 1.05 1.05 3.76
-#> regional    0.42 -0.36 1.05 1.05 3.76
-#> male        0.00  0.36 1.05 1.05 3.76
+#>               type     h     k    a    b  phi width height side
+#> widespread ellipse -0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> regional   ellipse  0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> male       ellipse  0.00  0.36 1.05 1.05 3.76    NA     NA   NA
 
 # Using grouping via the 'by' argument through the data.frame method
 venn(fruits, by = list(sex, age))
 #> female.adult 
 #> 3 set Venn diagram 
 #> 
-#>            h     k    a    b  phi
-#> banana -0.42 -0.36 1.05 1.05 3.76
-#> apple   0.42 -0.36 1.05 1.05 3.76
-#> orange  0.00  0.36 1.05 1.05 3.76
+#>           type     h     k    a    b  phi width height side
+#> banana ellipse -0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> apple  ellipse  0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> orange ellipse  0.00  0.36 1.05 1.05 3.76    NA     NA   NA
 #> ------------------------------------------------------------ 
 #> male.child 
 #> 3 set Venn diagram 
 #> 
-#>            h     k    a    b  phi
-#> banana -0.42 -0.36 1.05 1.05 3.76
-#> apple   0.42 -0.36 1.05 1.05 3.76
-#> orange  0.00  0.36 1.05 1.05 3.76
+#>           type     h     k    a    b  phi width height side
+#> banana ellipse -0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> apple  ellipse  0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> orange ellipse  0.00  0.36 1.05 1.05 3.76    NA     NA   NA
 #> ------------------------------------------------------------ 
 #> male.adult 
 #> 3 set Venn diagram 
 #> 
-#>            h     k    a    b  phi
-#> banana -0.42 -0.36 1.05 1.05 3.76
-#> apple   0.42 -0.36 1.05 1.05 3.76
-#> orange  0.00  0.36 1.05 1.05 3.76
+#>           type     h     k    a    b  phi width height side
+#> banana ellipse -0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> apple  ellipse  0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> orange ellipse  0.00  0.36 1.05 1.05 3.76    NA     NA   NA
 #> ------------------------------------------------------------ 
 #> female.child 
 #> 3 set Venn diagram 
 #> 
-#>            h     k    a    b  phi
-#> banana -0.42 -0.36 1.05 1.05 3.76
-#> apple   0.42 -0.36 1.05 1.05 3.76
-#> orange  0.00  0.36 1.05 1.05 3.76
+#>           type     h     k    a    b  phi width height side
+#> banana ellipse -0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> apple  ellipse  0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> orange ellipse  0.00  0.36 1.05 1.05 3.76    NA     NA   NA
 
 
 # Using the matrix method
 venn(organisms)
 #> 5 set Venn diagram 
 #> 
-#>             h      k a   b   phi
-#> animal  0.176  0.096 1 0.6 0.000
-#> mammal -0.037  0.197 1 0.6 1.257
-#> plant  -0.198  0.026 1 0.6 2.513
-#> sea    -0.086 -0.181 1 0.6 3.770
-#> spiny   0.145 -0.137 1 0.6 5.027
+#>           type      h      k a   b   phi width height side
+#> animal ellipse  0.176  0.096 1 0.6 0.000    NA     NA   NA
+#> mammal ellipse -0.037  0.197 1 0.6 1.257    NA     NA   NA
+#> plant  ellipse -0.198  0.026 1 0.6 2.513    NA     NA   NA
+#> sea    ellipse -0.086 -0.181 1 0.6 3.770    NA     NA   NA
+#> spiny  ellipse  0.145 -0.137 1 0.6 5.027    NA     NA   NA
 
 # Using weights
 venn(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 #> 5 set Venn diagram 
 #> 
-#>             h      k a   b   phi
-#> animal  0.176  0.096 1 0.6 0.000
-#> mammal -0.037  0.197 1 0.6 1.257
-#> plant  -0.198  0.026 1 0.6 2.513
-#> sea    -0.086 -0.181 1 0.6 3.770
-#> spiny   0.145 -0.137 1 0.6 5.027
+#>           type      h      k a   b   phi width height side
+#> animal ellipse  0.176  0.096 1 0.6 0.000    NA     NA   NA
+#> mammal ellipse -0.037  0.197 1 0.6 1.257    NA     NA   NA
+#> plant  ellipse -0.198  0.026 1 0.6 2.513    NA     NA   NA
+#> sea    ellipse -0.086 -0.181 1 0.6 3.770    NA     NA   NA
+#> spiny  ellipse  0.145 -0.137 1 0.6 5.027    NA     NA   NA
 
 # A venn diagram from a list of sample spaces (the list method)
 venn(plants[c("erigenia", "solanum", "cynodon")])
 #> 3 set Venn diagram 
 #> 
-#>              h     k    a    b  phi
-#> erigenia -0.42 -0.36 1.05 1.05 3.76
-#> solanum   0.42 -0.36 1.05 1.05 3.76
-#> cynodon   0.00  0.36 1.05 1.05 3.76
+#>             type     h     k    a    b  phi width height side
+#> erigenia ellipse -0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> solanum  ellipse  0.42 -0.36 1.05 1.05 3.76    NA     NA   NA
+#> cynodon  ellipse  0.00  0.36 1.05 1.05 3.76    NA     NA   NA
 ```

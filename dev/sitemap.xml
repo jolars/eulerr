@@ -24,6 +24,8 @@
 <url><loc>https://jolars.github.io/eulerr/dev/reference/coef.euler.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/default_placement_opts.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/dummy_code.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/ellipse_bounding_box.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/ellipse_frame_to_shapes.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/error_plot.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/euler.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/euler_plot_data.html</loc></url>
@@ -52,6 +54,7 @@
 <url><loc>https://jolars.github.io/eulerr/dev/reference/measure_tag_sizes.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/mix_colors.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/n_sets.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/new_shape_frame.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/open_measurement_viewport.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/organisms.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/pad_axis_native.html</loc></url>
@@ -74,6 +77,8 @@
 <url><loc>https://jolars.github.io/eulerr/dev/reference/setup_gpar.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/setup_grobs.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/setup_tag.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/shape_bounding_box.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/dev/reference/shapes_to_ellipse_frame.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/split_waypoints.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/tally_combinations.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/dev/reference/update_list.html</loc></url>
