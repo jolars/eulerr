@@ -5,6 +5,7 @@ complete rewrite of the underlying C++ codebase, now relying instead on
 the Rust library [Eunoia](https://eunoia.bz), which is a library I have
 developed. Here are some of the highlights this brings:
 
+- We have added support for squares and rectangles too!
 - Eunoia uses analytical gradients for all the smooth loss functions,
   which leads to significantly improved performance. We have also
   swapped the default optimization algorithm to a Levendberg–Marquardt
