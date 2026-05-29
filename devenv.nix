@@ -56,4 +56,12 @@
       lsp.enable = true;
     };
   };
+
+  git-hooks = {
+    hooks = {
+      panache-format = {
+        enable = true;
+      };
+    };
+  };
 }
