@@ -1,4 +1,67 @@
-# eulerr (development version)
+# eulerr 8.0
+
+This is a major milestone for eulerr. The 8.0.0 release introduces a complete
+rewrite of the underlying C++ codebase, now relying instead on the Rust library
+[Eunoia](https://eunoia.bz), which is a library I have developed. Here are some
+of the highlights this brings:
+
+- We have added support for squares and rectangles too!
+- Eunoia uses analytical gradients for all the smooth loss functions, which
+  leads to significantly improved performance. We have also swapped the default
+  optimization algorithm to a Levendberg--Marquardt (LM) method plus CMA-ES
+  fallback. The LM method is invoked only when the loss is squared residuals,
+  but is then much faster than the previous `nlm()` method. The CMA-ES fallback
+  replaces the previous use of the **GenSA** package, and is invoked whenever
+  the LM method reaches a minimum that's above a level of error (configurable by
+  the user).
+- There are now several labeling algorithms that ensure labels do not overlap
+  each other or other parts of the diagram.
+- As a result of the above, we have been able to drop multiple dependencies:
+  **Rcpp**, **RcppArmadillo**, **GenSA**, **polylabelr**, and **polyclip** are
+  all no longer required, since **rextendr** and Eunoia handle the Compiled code
+  and algorithms natively.
+- The calculated intersections are now *sparse*, which means that only the
+  intersections that actually appear in either input or output (the diagram) are
+  calculated and stored. This is a **breaking change** because it means that you
+  cannot index the intersections by their position or intersection name and
+  guarantee that you will get a value. Instead, you must check if the
+  intersection exists first, and then implicitly it will have a value of zero.
+  But this allows eulerr to handle much larger combinations, since we never
+  store a `2^n - 1`-sized vector anywhere.
+
+## Breaking changes
+
+- return sparse residuals ([`decc985`](https://github.com/jolars/eulerr/commit/decc9856f7894296024af3b032f1f056800690ae))
+
+## Features
+
+- add square and rectangle shapes ([`44c9a1a`](https://github.com/jolars/eulerr/commit/44c9a1afb622bf279279a6369c142e4b753b96c3))
+- **plotting:** add placement strategies for labels ([`308167a`](https://github.com/jolars/eulerr/commit/308167a599aa0f9a9ac9e7ee6aa780ecbcb6642f))
+- add `annotations` argument for annotating intersections ([`19d2d87`](https://github.com/jolars/eulerr/commit/19d2d877cf8b41a5521944531e211e65f82a31b0)), closes [#70](https://github.com/jolars/eulerr/issues/70)
+- add plot composing via `+`, `/` and `|` ([`d974c08`](https://github.com/jolars/eulerr/commit/d974c0826d455111dcc7b267477a347898549753)), closes [#46](https://github.com/jolars/eulerr/issues/46)
+- expose `gap` and separate labels by gap and tether ([`17802a2`](https://github.com/jolars/eulerr/commit/17802a2459d6ff7bc779205325a47fa2f197a62a))
+- add `template` to `quantities` in `plot()` ([`59ddd71`](https://github.com/jolars/eulerr/commit/59ddd71e464978dda91786ca74b3b589a63deb34)), closes [#99](https://github.com/jolars/eulerr/issues/99)
+- employ Eunoia's label-placement framework ([`4ed75b4`](https://github.com/jolars/eulerr/commit/4ed75b483c4bf88df50d23451ed2c142c2d24af3)), closes [#69](https://github.com/jolars/eulerr/issues/69) and [#4](https://github.com/jolars/eulerr/issues/4)
+- add complement ([`b6ce232`](https://github.com/jolars/eulerr/commit/b6ce23280d4b54b932659f2ce9c73c5df59f5be7)), closes [#13](https://github.com/jolars/eulerr/issues/13)
+- add new loss functions, deprectate old and `loss_aggregator` ([`03e7dea`](https://github.com/jolars/eulerr/commit/03e7dea3c813676ee87418a1ef52667f498df4e6))
+- add `max_sets` in `control` for capping max sets ([`621a898`](https://github.com/jolars/eulerr/commit/621a898f1e523df8f5d904a3543bb35dd1355ff8)), closes [#85](https://github.com/jolars/eulerr/issues/85)
+- add `by_groups` to `plot()` for panel-specifics ([`f2d5533`](https://github.com/jolars/eulerr/commit/f2d5533d594e0b920042a8b0906a39c0994661b0)), closes [#125](https://github.com/jolars/eulerr/issues/125)
+- return sparse residuals ([`decc985`](https://github.com/jolars/eulerr/commit/decc9856f7894296024af3b032f1f056800690ae))
+- update euonoia to 0.8.0 ([`ceb3138`](https://github.com/jolars/eulerr/commit/ceb313841164760db83a2ac61796fbe9d15125c9))
+- update eunoia ([`530fb11`](https://github.com/jolars/eulerr/commit/530fb11ad92b52d8a33d8ed6127bf111df95ffeb))
+- lower default tolerance ([`6400fae`](https://github.com/jolars/eulerr/commit/6400fae1f2575542ece0871acf9198a34d00b4ff))
+- **plotting:** add `symbol_size` to configure legend symbol ([`1491a49`](https://github.com/jolars/eulerr/commit/1491a494d6fb4d722279fe5d1478dfcb8a792c53)), closes [#60](https://github.com/jolars/eulerr/issues/60)
+- **plotting:** add `rotate` parameter ([`706735c`](https://github.com/jolars/eulerr/commit/706735cce7bbfbdf41165f0623a1f5221aaa471e)), closes [#12](https://github.com/jolars/eulerr/issues/12)
+- **plots:** support `top` and `left` for labeling strips ([`c1a87fb`](https://github.com/jolars/eulerr/commit/c1a87fb68f41dabda740095bd56adef7b2ec937b)), closes [#123](https://github.com/jolars/eulerr/issues/123)
+
+## Bug fixes
+
+- add padding to avoid clipping plots ([`5129054`](https://github.com/jolars/eulerr/commit/51290543279b843eb03a1b0e8581c43a795fde03))
+- use `stats` namespace ([`72df9c8`](https://github.com/jolars/eulerr/commit/72df9c81b03cf13672e46d48cb3406ae0e866e14))
+
+## Performance improvements
+
+- upgrade to eunoia 0.11.0 ([`021ceb4`](https://github.com/jolars/eulerr/commit/021ceb43bd4435b3c108995cc787b69cd9cb8cc5))
 
 # eulerr 7.1
 
