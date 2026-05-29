@@ -1571,8 +1571,6 @@ plot.euler <- function(
     layout <- c(1L, 1L)
   }
 
-  xlim <- grDevices::extendrange(xlim, f = 0.01)
-  ylim <- grDevices::extendrange(ylim, f = 0.01)
   xrng <- abs(xlim[1L] - xlim[2L])
   yrng <- abs(ylim[1L] - ylim[2L])
 
@@ -1582,6 +1580,21 @@ plot.euler <- function(
   }
 
   ar <- xrng / yrng
+
+  # Reserve a fixed physical margin inside the canvas so shape outlines
+  # (which straddle the geometric boundary by half a stroke width) aren't
+  # clipped by the canvas edge. The narrower data axis gets the minimum
+  # `panel_pad`; the wider axis is scaled up so the resulting inset
+  # preserves the data aspect ratio (otherwise circles would render
+  # slightly elliptical).
+  panel_pad <- grid::unit(2, "pt")
+  if (ar >= 1) {
+    pad_x <- panel_pad * ar
+    pad_y <- panel_pad
+  } else {
+    pad_x <- panel_pad
+    pad_y <- panel_pad / ar
+  }
   # adjust <- layout[1L]/layout[2]
 
   do_strip_left <- layout[1L] > 1L && do_strips
@@ -1794,6 +1807,8 @@ plot.euler <- function(
   canvas_vp <- grid::viewport(
     layout.pos.row = diagram_row,
     layout.pos.col = diagram_col,
+    width = grid::unit(1, "npc") - pad_x - pad_x,
+    height = grid::unit(1, "npc") - pad_y - pad_y,
     name = "canvas.vp",
     layout = grid::grid.layout(
       nrow = layout[1L],
