@@ -86,16 +86,20 @@ available.</p>
 <div class="section level3">
 <h3 id="uniform-intersections">Uniform intersections<a class="anchor" aria-label="anchor" href="#uniform-intersections"></a>
 </h3>
+<p>Here we use squares instead of the default circles.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">uniform_intersections</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">uniform_intersections</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>    <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>    <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>    <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">2</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="st">"square"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">uniform_intersections</span><span class="op">)</span></span></code></pre></div>
 <p><img src="gallery_files/figure-html/uniform_intersections-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -283,24 +287,28 @@ with ellipses.</p>
 <div class="section level3">
 <h3 id="four-uniform-interactions">Four uniform interactions<a class="anchor" aria-label="anchor" href="#four-uniform-interactions"></a>
 </h3>
+<p>This time we fit the diagram using rectangles.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">uniform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="st">"D"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  <span class="st">"A&amp;D"</span> <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"A&amp;B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"A&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"A&amp;B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">uniform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"A"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    <span class="st">"B"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    <span class="st">"C"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    <span class="st">"D"</span> <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    <span class="st">"A&amp;D"</span> <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    <span class="st">"B&amp;D"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    <span class="st">"A&amp;B&amp;C"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    <span class="st">"A&amp;B&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    <span class="st">"A&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    <span class="st">"B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    <span class="st">"A&amp;B&amp;C&amp;D"</span> <span class="op">=</span> <span class="fl">1</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="st">"rectangle"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">uniform</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
