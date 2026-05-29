@@ -1,3 +1,5 @@
+# eulerr (development version)
+
 # eulerr 8.0
 
 This is a major milestone for eulerr. The 8.0.0 release introduces a complete
