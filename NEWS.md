@@ -322,9 +322,8 @@
 
 ## Bug fixes
 
-- Added the missing %\\VignetteEngine{[knitr::knitr](knitr::knitr)} to both
-  vignettes. It had mistakenly been left out, which had mangled the resulting
-  vignettes.
+- Added the missing `%\VignetteEngine{knitr::knitr}` to both vignettes. It had
+  mistakenly been left out, which had mangled the resulting vignettes.
 
 # eulerr 3.0.0
 
