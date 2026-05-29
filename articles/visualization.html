@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Visualizing Euler diagrams with eulerr">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">7.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,9 +69,9 @@
                         <h4 data-toc-skip class="author">Johan
 Larsson</h4>
             
-            <h4 data-toc-skip class="date">2026-04-20</h4>
+            <h4 data-toc-skip class="date">2026-05-29</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/v7.1.0/vignettes/visualization.Rmd" class="external-link"><code>vignettes/visualization.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/visualization.Rmd" class="external-link"><code>vignettes/visualization.Rmd</code></a></small>
       <div class="d-none name"><code>visualization.Rmd</code></div>
     </div>
 
@@ -84,7 +84,7 @@ system <span class="citation">(R Core Team 2017)</span> and offers
 intuitive and granular control over the output.</p>
 <p>Plotting the ellipses is straightforward using the parametrization of
 a rotated ellipse,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>x</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>y</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>h</mi><mo>+</mo><mi>a</mi><mo>cos</mo><mi>θ</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>k</mi><mo>+</mo><mi>b</mi><mo>sin</mo><mi>θ</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>x</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>y</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>h</mi><mo>+</mo><mi>a</mi><mrow><mi mathvariant="normal">cos</mi><mo>⁡</mo></mrow><mi>θ</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>k</mi><mo>+</mo><mi>b</mi><mrow><mi mathvariant="normal">sin</mi><mo>⁡</mo></mrow><mi>θ</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \begin{bmatrix}
 x \\ y
 \end{bmatrix} =
@@ -94,7 +94,7 @@ k + b \sin{\theta}
 \end{bmatrix},
 </annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>∈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mi>π</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mi>a</mi><mo>,</mo><mi>b</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta \in [0, 2\pi],\quad a,b&gt;0</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>∈</mo><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>2</mn><mi>π</mi><mo stretchy="false" form="postfix">]</mo><mo>,</mo><mspace width="1.0em"></mspace><mi>a</mi><mo>,</mo><mi>b</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta \in [0, 2\pi],\quad a,b&gt;0</annotation></semantics></math>.</p>
 <p>Most users will also prefer to label the ellipses and their
 intersections with text and this, however, is considerably more
 involved.</p>
@@ -104,11 +104,117 @@ involved.</p>
 <p>Labeling the ellipses is complicated since the shapes of the
 intersections often are irregular, lacking well-defined centers; we know
 of no analytical solution to this problem. Instead,
-<strong>eulerr</strong> relies on the <strong>polylabelr</strong>
-package <span class="citation">(Larsson 2018)</span>, which was created
-by the author. It provides a simple wrapper for the
-<strong>polylabel</strong> <span class="citation">(Mapbox 2018)</span>
-C++ library from <em>Mapbox</em>.</p>
+<strong>eulerr</strong> uses the <em>pole of inaccessibility</em>
+algorithm <span class="citation">(Mapbox 2018)</span> (originally from
+<em>Mapbox</em>’s <strong>polylabel</strong> C++ library), implemented
+in the <strong>eunoia</strong> Rust crate that powers eulerr’s geometry
+layer.</p>
+<p>When a label is too large to fit inside its region’s polygon,
+<strong>eulerr</strong> falls back to one of three exterior-placement
+strategies, all delegated to <strong>eunoia</strong>. The strategy is
+selected via <code>labels$placement</code>:</p>
+<dl>
+<dt>
+<code>"raycast"</code> (the default)</dt>
+<dd>
+labels are placed along the ray from the diagram centroid through the
+region’s pole of inaccessibility, padded away from the diagram by a
+per-region margin. Closed-form, fast, deterministic.
+</dd>
+<dt><code>"force_directed"</code></dt>
+<dd>
+initial positions come from the raycast geometry, then a damped
+spring-and-repulsion solver relaxes the labels against each other
+<em>and</em> against foreign region polygons. Useful when several labels
+would otherwise collide or drift across unrelated regions.
+</dd>
+<dt><code>"elbow"</code></dt>
+<dd>
+labels are assigned to a left or right column outside the diagram,
+stacked vertically without overlap and reached by an orthogonal
+three-segment (“elbow”) leader. Reminiscent of d3-pie style callouts.
+</dd>
+</dl>
+<p>In every case, a leader line is drawn from the source region to the
+exterior label; tether and leader styling are controlled via
+<code>labels$tether</code>, <code>labels$gap</code>, and
+<code>labels$leader</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co"># A chain of four sets with long names and very small overlaps — the</span></span>
+<span><span class="co"># overlap regions are too narrow to fit their quantity labels inside,</span></span>
+<span><span class="co"># so all three strategies push the overlap labels to the exterior.</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  Animalia <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  Plantae <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  Fungi <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  Bacteria <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  <span class="st">"Animalia&amp;Plantae"</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  <span class="st">"Plantae&amp;Fungi"</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  <span class="st">"Fungi&amp;Bacteria"</span> <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  <span class="st">"Animalia&amp;Bacteria"</span> <span class="op">=</span> <span class="fl">0.05</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">fit</span>,</span>
+<span>  quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>placement <span class="op">=</span> <span class="st">"raycast"</span><span class="op">)</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"raycast"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/placement-raycast-1.png" class="r-plt" alt="The raycast strategy places labels along rays from the diagram centroid, padded away from the diagram by a per-region margin." width="288"><p class="caption">
+The raycast strategy places labels along rays from the diagram centroid,
+padded away from the diagram by a per-region margin.
+</p>
+</div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">fit</span>,</span>
+<span>  quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>placement <span class="op">=</span> <span class="st">"force_directed"</span><span class="op">)</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"force-directed"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/placement-force-directed-1.png" class="r-plt" alt="The force-directed strategy relaxes labels against each other and against foreign region polygons, which is useful when several labels would otherwise collide or drift across unrelated regions." width="288"><p class="caption">
+The force-directed strategy relaxes labels against each other and
+against foreign region polygons, which is useful when several labels
+would otherwise collide or drift across unrelated regions.
+</p>
+</div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">fit</span>,</span>
+<span>  quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>placement <span class="op">=</span> <span class="st">"elbow"</span><span class="op">)</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"elbow"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/placement-elbow-1.png" class="r-plt" alt="The elbow strategy stacks exterior labels in left/right columns reached by an orthogonal three-segment leader, in the style of d3-pie callouts." width="288"><p class="caption">
+The elbow strategy stacks exterior labels in left/right columns reached
+by an orthogonal three-segment leader, in the style of d3-pie callouts.
+</p>
+</div>
+<p>Strategy-specific knobs live in their own sublists. The
+force-directed solver takes
+<code>labels$force_directed = list(iterations = ...)</code> and the
+elbow placement takes
+<code>labels$elbow = list(margin = ..., min_gap = ...)</code>, where
+<code>min_gap</code> sets the minimum vertical centre-to-centre spacing
+between stacked label boxes in a column:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">fit</span>,</span>
+<span>  quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    placement <span class="op">=</span> <span class="st">"elbow"</span>,</span>
+<span>    elbow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min_gap <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/elbow-min-gap-1.png" class="r-plt" alt="Elbow leaders with extra vertical breathing room between labels" width="288"><p class="caption">
+Elbow leaders with extra vertical breathing room between labels
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="aesthetics">Aesthetics<a class="anchor" aria-label="anchor" href="#aesthetics"></a>
@@ -142,18 +248,67 @@ premium in scientific publications and adds no utility to a diagram of
 two shapes.</p>
 <p>For these reasons, <strong>eulerr</strong> defaults to distinguishing
 ellipses with color using a manually tuned color palette.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
-<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span>, D <span class="op">=</span> <span class="fl">1</span>, E <span class="op">=</span> <span class="fl">1</span>, F <span class="op">=</span> <span class="fl">1</span>, G <span class="op">=</span> <span class="fl">1</span>, H <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>         <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>         <span class="st">"F&amp;G"</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="st">"G&amp;H"</span> <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  A <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  B <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  C <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  D <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  E <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  F <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  G <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  H <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  <span class="st">"B&amp;C"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  <span class="st">"C&amp;D"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  <span class="st">"D&amp;E"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  <span class="st">"E&amp;F"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  <span class="st">"F&amp;G"</span> <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  <span class="st">"G&amp;H"</span> <span class="op">=</span> <span class="fl">0.2</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="visualization_files/figure-html/colorexamle-1.png" class="r-plt" alt="The eight first colors of the default color palette" width="700"><p class="caption">
 The eight first colors of the default color palette
 </p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="composing-diagrams">Composing diagrams<a class="anchor" aria-label="anchor" href="#composing-diagrams"></a>
+</h2>
+<p>Several Euler diagrams can be arranged into a single figure using
+operator syntax inspired by the <strong>patchwork</strong> package. The
+<code>|</code> operator place plots side by side, while <code>/</code>
+stacks them vertically.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, B <span class="op">=</span> <span class="fl">8</span>, <span class="st">"A&amp;B"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"First"</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span>, C <span class="op">=</span> <span class="fl">1</span>, <span class="st">"A&amp;C"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Second"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/composition-basic-1.png" class="r-plt" alt="Two diagrams arranged side by side" width="700"><p class="caption">
+Two diagrams arranged side by side
+</p>
+</div>
+<p>Each operator returns an <code>eulergram</code>, so compositions nest
+freely:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>X <span class="op">=</span> <span class="fl">3</span>, Y <span class="op">=</span> <span class="fl">2</span>, <span class="st">"X&amp;Y"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Third"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">/</span> <span class="va">p3</span></span></code></pre></div>
+<div class="figure">
+<img src="visualization_files/figure-html/composition-nested-1.png" class="r-plt" alt="Nested composition: two plots on top, one below" width="700"><p class="caption">
+Nested composition: two plots on top, one below
+</p>
+</div>
+<p>Individual panels can be titled with the <code>main</code> argument
+to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, as above. The gap between adjacent plots is
+controlled by the <code>composition$spacing</code> entry of
+<code><a href="../reference/eulerr_options.html">eulerr_options()</a></code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/eulerr_options.html">eulerr_options</a></span><span class="op">(</span>composition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>spacing <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">2</span>, <span class="st">"lines"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="normalizing-dispersed-layouts">Normalizing dispersed layouts<a class="anchor" aria-label="anchor" href="#normalizing-dispersed-layouts"></a>
@@ -170,29 +325,24 @@ similar layouts for different function calls.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Blake_2016" class="csl-entry">
 Blake, Andrew. 2016. <span>“The Impact of Graphical Choices on the
 Perception of <span>Euler</span> Diagrams.”</span> {Ph.D.} dissertation,
-Brighton, UK: Brighton University.
+Brighton University.
 </div>
 <div id="ref-Jylaenki_2010" class="csl-entry">
-Jylänki, Jukka. 2010. <span>“A Thousand Ways to Pack the Bin – a
-Practical Approach to Two-Dimensional Rectangle Bin Packing.”</span>
-</div>
-<div id="ref-larsson2018d" class="csl-entry">
-Larsson, Johan. 2018. <span>“<span class="nocase">polylabelr</span>:
-Find the Pole of Inaccessibility (Visual Center) of a Polygon.”</span>
+Jylänki, Jukka. 2010. <em>A Thousand Ways to Pack the Bin – a Practical
+Approach to Two-Dimensional Rectangle Bin Packing</em>.
 </div>
 <div id="ref-mapbox2018" class="csl-entry">
-Mapbox. 2018. <span>“<span class="nocase">polylabel</span>: A Fast
+Mapbox. 2018. <em><span class="nocase">polylabel</span>: A Fast
 Algorithm for Finding the Pole of Inaccessibility of a Polygon (in
-<span>JavaScript</span> and <span>C</span>++).”</span> Mapbox.
+<span>JavaScript</span> and <span>C</span>++)</em>. Mapbox.
 </div>
 <div id="ref-RCT_2017" class="csl-entry">
 R Core Team. 2017. <em><span>R</span>: A Language and Environment for
-Statistical Computing</em>. Vienna, Austria: R Foundation for
-Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
+Statistical Computing</em>. R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
 </div>
 </div>
 </div>

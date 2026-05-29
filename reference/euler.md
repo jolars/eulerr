@@ -2,8 +2,8 @@
 
 Fit Euler diagrams (a generalization of Venn diagrams) using numerical
 optimization to find exact or approximate solutions to a specification
-of set relationships. The shape of the diagram may be a circle or an
-ellipse.
+of set relationships. The shape of the diagram may be a circle, an
+ellipse, an axis-aligned rectangle, or an axis-aligned square.
 
 ## Usage
 
@@ -14,9 +14,12 @@ euler(combinations, ...)
 euler(
   combinations,
   input = c("disjoint", "union"),
-  shape = c("circle", "ellipse"),
-  loss = c("square", "abs", "region"),
-  loss_aggregator = c("sum", "max"),
+  shape = c("circle", "ellipse", "rectangle", "square"),
+  loss = c("sum_squared", "sum_absolute", "sum_absolute_region_error",
+    "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
+    "stress", "diag_error"),
+  loss_aggregator = NULL,
+  complement = NULL,
   control = list(),
   ...
 )
@@ -63,33 +66,74 @@ euler(combinations, ...)
 
 - loss:
 
-  type of loss to minimize over. If `"square"` is used together with the
-  value `"sum"` for `loss_aggregator`, then the resulting loss function
-  is the sum of squared errors, which is the default.
+  type of loss to minimize over. The default, `"sum_squared"`, minimizes
+  the sum of squared errors. The available options mirror the loss
+  functions exposed by the `eunoia` Rust crate that powers the
+  optimizer:
+
+  - `"sum_squared"` — normalized sum of squared errors (default).
+
+  - `"sum_absolute"` — normalized sum of absolute errors.
+
+  - `"sum_absolute_region_error"` — normalized sum of absolute region
+    errors.
+
+  - `"sum_squared_region_error"` — normalized sum of squared region
+    errors.
+
+  - `"max_absolute"` — normalized maximum absolute error.
+
+  - `"max_squared"` — normalized maximum squared error.
+
+  - `"root_mean_squared"` — normalized root-mean-squared error.
+
+  - `"stress"` — venneuler-style stress.
+
+  - `"diag_error"` — eulerAPE-style `diagError`.
 
 - loss_aggregator:
 
-  how the final loss is computed. `"sum"` indicates that the sum of the
-  losses computed by `loss` are summed up. `"max"` indicates
+  deprecated; use `loss` directly instead. Pre-1.0 code that combined
+  `loss` (`"square"`/`"abs"`/`"region"`) with `loss_aggregator`
+  (`"sum"`/`"max"`) still works but emits a warning; the combination is
+  mapped to the equivalent new `loss` value.
+
+- complement:
+
+  an optional single non-negative number giving the area of the
+  *complement* — that is, the universe outside every named set. When
+  supplied, the fitter jointly optimizes a containing rectangle together
+  with the diagram shapes so that the area of the rectangle minus the
+  union of (clipped) shapes matches `complement`. This is the classical
+  "everything not in any set" region; see
+  [`plot.euler()`](https://jolars.github.io/eulerr/reference/plot.euler.md)
+  for how it is rendered. Defaults to `NULL` (no container; classical
+  shape-only fit). Not supported for
+  [`venn()`](https://jolars.github.io/eulerr/reference/venn.md).
 
 - control:
 
   a list of control parameters.
 
-  - `extraopt`: should the more thorough optimizer (currently
-    [`GenSA::GenSA()`](https://rdrr.io/pkg/GenSA/man/GenSA.html)) kick
-    in (provided `extraopt_threshold` is exceeded)? The default is
-    `TRUE` for ellipses and three sets and `FALSE` otherwise.
+  - `extraopt`: should the global-search fallback optimizer (CMA-ES)
+    kick in when the primary optimizer's `diagError` exceeds
+    `extraopt_threshold`? The default is `TRUE` for three-set ellipse
+    fits and `FALSE` otherwise.
 
   - `extraopt_threshold`: threshold, in terms of `diagError`, for when
-    the extra optimizer kicks in. This will almost always slow down the
-    process considerably. A value of 0 means that the extra optimizer
-    will kick in if there is *any* error. A value of 1 means that it
-    will never kick in. The default is `0.001`.
+    the CMA-ES fallback kicks in. A value of 0 means it will kick in for
+    *any* error; a value of 1 means it will never kick in. Default
+    `0.001`.
 
-  - `extraopt_control`: a list of control parameters to pass to the
-    extra optimizer, such as `max.call`. See
-    [`GenSA::GenSA()`](https://rdrr.io/pkg/GenSA/man/GenSA.html).
+  - `tolerance`: convergence tolerance passed to the underlying solver.
+    Tighter values give more accurate fits at higher cost. Default
+    `1e-8`.
+
+  - `max_sets`: maximum number of sets the underlying engine will
+    accept. Defaults to `NULL`, which uses the engine's built-in default
+    of 32. Region masks are stored in a bitset, so values may be raised
+    up to 63 (the absolute hard cap). Going higher is rarely useful in
+    practice since fully-overlapping diagrams have `2^n - 1` regions.
 
 - weights:
 
@@ -115,10 +159,21 @@ euler(combinations, ...)
 
 A list object of class `'euler'` with the following parameters.
 
+- shapes:
+
+  a data frame of fitted shape parameters. One row per set with a `type`
+  column (one of `"circle"`, `"ellipse"`, `"rectangle"`, `"square"`),
+  the center coordinates `h` and `k`, and the shape-specific columns:
+  `a`, `b`, `phi` for ellipses/circles; `width` and `height` for
+  rectangles; `side` (plus mirrored `width`/`height`) for squares.
+  Columns that don't apply to the chosen shape are `NA`.
+
 - ellipses:
 
-  a matrix of `h` and `k` (x and y-coordinates for the centers of the
-  shapes), semiaxes `a` and `b`, and rotation angle `phi`
+  for `shape = "circle"` and `shape = "ellipse"` fits, the legacy
+  5-column data frame of `h`, `k`, `a`, `b`, `phi`. This slot is
+  deprecated in favour of `shapes` and is not populated for
+  rectangle/square fits.
 
 - original.values:
 
@@ -235,14 +290,13 @@ fit2 <- euler(combo, shape = "ellipse")
 
 # Investigate the fit again (which is now exact)
 fit2
-#>       original fitted residuals regionError
-#> A            2      2         0           0
-#> B            2      2         0           0
-#> C            2      2         0           0
-#> A&B          1      1         0           0
-#> A&C          1      1         0           0
-#> B&C          1      1         0           0
-#> A&B&C        0      0         0           0
+#>     original fitted residuals regionError
+#> A          2      2         0           0
+#> B          2      2         0           0
+#> C          2      2         0           0
+#> A&B        1      1         0           0
+#> A&C        1      1         0           0
+#> B&C        1      1         0           0
 #> 
 #> diagError: 0 
 #> stress:    0 
@@ -304,7 +358,6 @@ euler(fruits, by = list(sex, age))
 #> apple                      2  2.003    -0.003       0.000
 #> orange                     0  0.016    -0.016       0.001
 #> banana&apple              10 10.000     0.000       0.001
-#> banana&orange              0  0.000     0.000       0.000
 #> apple&orange               1  0.996     0.004       0.000
 #> banana&apple&orange        1  1.002    -0.002       0.000
 #> 
@@ -313,93 +366,65 @@ euler(fruits, by = list(sex, age))
 #> ------------------------------------------------------------ 
 #> female.child 
 #>                     original fitted residuals regionError
-#> banana                     4      4         0           0
-#> apple                      0      0         0           0
-#> orange                     1      1         0           0
-#> banana&apple               4      4         0           0
-#> banana&orange              1      1         0           0
-#> apple&orange               0      0         0           0
-#> banana&apple&orange        2      2         0           0
+#> banana                     4      0         4       0.333
+#> apple                      0      0         0       0.000
+#> orange                     1      1         0       0.031
+#> banana&apple               4     15       -11       0.456
+#> banana&orange              1      1         0       0.031
+#> banana&apple&orange        2      2         0       0.061
 #> 
-#> diagError: 0 
-#> stress:    0 
+#> diagError: 0.456 
+#> stress:    0.504 
 
 
 # Using the matrix method
 euler(organisms)
-#>                               original fitted residuals regionError
-#> animal                               0  0.582    -0.582       0.086
-#> mammal                               0  0.302    -0.302       0.044
-#> plant                                0  0.210    -0.210       0.031
-#> sea                                  0  0.430    -0.430       0.063
-#> spiny                                0  0.166    -0.166       0.025
-#> animal&mammal                        2  1.817     0.183       0.018
-#> animal&plant                         0  0.000     0.000       0.000
-#> animal&sea                           1  0.612     0.388       0.053
-#> animal&spiny                         0  0.215    -0.215       0.032
-#> mammal&plant                         0  0.000     0.000       0.000
-#> mammal&sea                           1  0.000     1.000       0.143
-#> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&sea                            1  0.868     0.132       0.015
-#> plant&spiny                          1  0.000     1.000       0.143
-#> sea&spiny                            0  0.176    -0.176       0.026
-#> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  0.268    -0.268       0.040
-#> animal&mammal&spiny                  0  0.061    -0.061       0.009
-#> animal&plant&sea                     0  0.119    -0.119       0.018
-#> animal&plant&spiny                   0  0.000     0.000       0.000
-#> animal&sea&spiny                     1  0.715     0.285       0.037
-#> mammal&plant&sea                     0  0.000     0.000       0.000
-#> mammal&plant&spiny                   0  0.000     0.000       0.000
-#> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.016    -0.016       0.002
-#> animal&mammal&plant&sea              0  0.000     0.000       0.000
-#> animal&mammal&plant&spiny            0  0.000     0.000       0.000
-#> animal&mammal&sea&spiny              0  0.177    -0.177       0.026
-#> animal&plant&sea&spiny               0  0.043    -0.043       0.006
-#> mammal&plant&sea&spiny               0  0.000     0.000       0.000
-#> animal&mammal&plant&sea&spiny        0  0.000     0.000       0.000
+#>                         original fitted residuals regionError
+#> animal                         0  0.582    -0.582       0.086
+#> mammal                         0  0.302    -0.302       0.044
+#> plant                          0  0.210    -0.210       0.031
+#> sea                            0  0.430    -0.430       0.063
+#> spiny                          0  0.166    -0.166       0.025
+#> animal&mammal                  2  1.817     0.183       0.018
+#> animal&sea                     1  0.612     0.388       0.053
+#> animal&spiny                   0  0.215    -0.215       0.032
+#> mammal&sea                     1  0.000     1.000       0.143
+#> plant&sea                      1  0.868     0.132       0.015
+#> plant&spiny                    1  0.000     1.000       0.143
+#> sea&spiny                      0  0.176    -0.176       0.026
+#> animal&mammal&sea              0  0.268    -0.268       0.040
+#> animal&mammal&spiny            0  0.061    -0.061       0.009
+#> animal&plant&sea               0  0.119    -0.119       0.018
+#> animal&sea&spiny               1  0.715     0.285       0.037
+#> plant&sea&spiny                0  0.016    -0.016       0.002
+#> animal&mammal&sea&spiny        0  0.177    -0.177       0.026
+#> animal&plant&sea&spiny         0  0.043    -0.043       0.006
 #> 
 #> diagError: 0.143 
 #> stress:    0.352 
 
 # Using weights
 euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
-#>                               original fitted residuals regionError
-#> animal                               0  0.789    -0.789       0.019
-#> mammal                               0  0.360    -0.360       0.009
-#> plant                                0  0.099    -0.099       0.002
-#> sea                                  0  0.409    -0.409       0.010
-#> spiny                                0  0.200    -0.200       0.005
-#> animal&mammal                       30 29.984     0.016       0.197
-#> animal&plant                         0  0.000     0.000       0.000
-#> animal&sea                           4  0.169     3.831       0.065
-#> animal&spiny                         0  0.027    -0.027       0.001
-#> mammal&plant                         0  0.000     0.000       0.000
-#> mammal&sea                           8  0.000     8.000       0.138
-#> mammal&spiny                         0  0.000     0.000       0.000
-#> plant&sea                            2  0.000     2.000       0.034
-#> plant&spiny                          9  9.000     0.000       0.059
-#> sea&spiny                            0  0.062    -0.062       0.001
-#> animal&mammal&plant                  0  0.000     0.000       0.000
-#> animal&mammal&sea                    0  0.431    -0.431       0.010
-#> animal&mammal&spiny                  0  0.100    -0.100       0.002
-#> animal&plant&sea                     0  0.000     0.000       0.000
-#> animal&plant&spiny                   0  0.176    -0.176       0.004
-#> animal&sea&spiny                     5  0.018     4.982       0.086
-#> mammal&plant&sea                     0  0.000     0.000       0.000
-#> mammal&plant&spiny                   0  0.000     0.000       0.000
-#> mammal&sea&spiny                     0  0.000     0.000       0.000
-#> plant&sea&spiny                      0  0.098    -0.098       0.002
-#> animal&mammal&plant&sea              0  0.000     0.000       0.000
-#> animal&mammal&plant&spiny            0  0.054    -0.054       0.001
-#> animal&mammal&sea&spiny              0  0.000     0.000       0.000
-#> animal&plant&sea&spiny               0  0.002    -0.002       0.000
-#> mammal&plant&sea&spiny               0  0.000     0.000       0.000
-#> animal&mammal&plant&sea&spiny        0  0.000     0.000       0.000
+#>                     original fitted residuals regionError
+#> animal                     0  1.828    -1.828       0.033
+#> mammal                     0  3.611    -3.611       0.065
+#> plant                      0  0.768    -0.768       0.014
+#> sea                        0  1.899    -1.899       0.034
+#> spiny                      0  0.374    -0.374       0.007
+#> animal&mammal             30 29.533     0.467       0.018
+#> animal&sea                 4  0.000     4.000       0.069
+#> mammal&plant               0  0.857    -0.857       0.016
+#> mammal&sea                 8  3.069     4.931       0.082
+#> plant&sea                  2  0.000     2.000       0.034
+#> plant&spiny                9  9.003    -0.003       0.008
+#> animal&mammal&plant        0  0.486    -0.486       0.009
+#> animal&mammal&sea          0  2.215    -2.215       0.040
+#> animal&sea&spiny           5  0.000     5.000       0.086
+#> mammal&plant&sea           0  0.000     0.000       0.000
+#> mammal&plant&spiny         0  1.512    -1.512       0.027
 #> 
-#> diagError: 0.197 
-#> stress:    0.1 
+#> diagError: 0.086 
+#> stress:    0.09 
 
 # The table method
 euler(pain, factor_names = FALSE)
@@ -407,7 +432,6 @@ euler(pain, factor_names = FALSE)
 #> widespread                    204 204.002    -0.002           0
 #> regional                      229 229.002    -0.002           0
 #> male                           48  48.032    -0.032           0
-#> widespread&regional             0   0.000     0.000           0
 #> widespread&male                78  77.984     0.016           0
 #> regional&male                 143 142.992     0.008           0
 #> widespread&regional&male        0   0.247    -0.247           0
@@ -422,7 +446,6 @@ euler(plants[c("erigenia", "solanum", "cynodon")])
 #> solanum                        16     16         0           0
 #> cynodon                         1      1         0           0
 #> erigenia&solanum                2      2         0           0
-#> erigenia&cynodon                0      0         0           0
 #> solanum&cynodon                25     25         0           0
 #> erigenia&solanum&cynodon       20     20         0           0
 #> 

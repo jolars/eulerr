@@ -50,10 +50,10 @@ Summary statistics of the fitted Venn diagram are printed to screen.
 venn(organisms)
 #> 5 set Venn diagram 
 #> 
-#>             h      k a   b   phi
-#> animal  0.176  0.096 1 0.6 0.000
-#> mammal -0.037  0.197 1 0.6 1.257
-#> plant  -0.198  0.026 1 0.6 2.513
-#> sea    -0.086 -0.181 1 0.6 3.770
-#> spiny   0.145 -0.137 1 0.6 5.027
+#>           type      h      k a   b   phi width height side
+#> animal ellipse  0.176  0.096 1 0.6 0.000    NA     NA   NA
+#> mammal ellipse -0.037  0.197 1 0.6 1.257    NA     NA   NA
+#> plant  ellipse -0.198  0.026 1 0.6 2.513    NA     NA   NA
+#> sea    ellipse -0.086 -0.181 1 0.6 3.770    NA     NA   NA
+#> spiny  ellipse  0.145 -0.137 1 0.6 5.027    NA     NA   NA
 ```

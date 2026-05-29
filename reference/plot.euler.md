@@ -23,9 +23,12 @@ plot(
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = FALSE,
+  annotations = NULL,
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
+  rotate = 0,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -43,6 +46,7 @@ plot(
   strips = NULL,
   bg = FALSE,
   main = NULL,
+  complement = TRUE,
   n = 200L,
   adjust_labels = TRUE,
   ...
@@ -85,14 +89,42 @@ plot(...)
 - legend:
 
   a logical scalar or list. If a list, the item `side` can be used to
-  set the location of the legend. See
+  set the location of the legend and `symbol_size` can be used to scale
+  the legend symbols independently of the text size. See
   [`grid::grid.legend()`](https://rdrr.io/r/grid/legendGrob.html).
 
 - labels:
 
   a logical, vector, or list. Vectors are assumed to be text for the
   labels. See
-  [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html).
+  [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html). In
+  addition to the [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html)
+  fields, the following placement controls are supported (delegated to
+  the `eunoia` Rust crate): `labels$placement` (`"raycast"` (default),
+  `"force_directed"`, or `"elbow"`) selects the strategy used when a
+  label does not fit inside its region. `"raycast"` and
+  `"force_directed"` produce straight leader lines (the former places
+  the label along the centroid→POI ray, the latter relaxes labels with a
+  polygon-aware force solver). `"elbow"` produces d3-pie style
+  orthogonal leaders, stacking exterior labels in left/right columns
+  reached by a three-segment polyline. `labels$margin` (numeric)
+  overrides the per-region margin between an exterior label and the
+  diagram (default is half the larger of the label's width and height);
+  `labels$tether` (`"poi"` (default) or `"boundary"`) chooses where the
+  leader line attaches on the source region; `labels$gap` controls the
+  visible gap between the leader tip and the label box edge — a bare
+  numeric is interpreted as `lines` (font-relative), a
+  [`grid::unit()`](https://rdrr.io/r/grid/unit.html) is honored as
+  given, and the default `NULL` tracks `eulerr_options()$padding` so the
+  gap matches the spacing between label and quantity; `labels$leader` is
+  a list (`col`, `alpha`, `lwd`, `lty`, `lex`) styling the leader line
+  drawn from the tether to the exterior label. Strategy-specific knobs
+  live in their own sublists:
+  `labels$force_directed = list(iterations = ...)` sets the iteration
+  cap for the force-directed solver, and
+  `labels$elbow = list(min_gap = ...)` sets the minimum vertical
+  centre-to-centre spacing between stacked label boxes in an elbow
+  column.
 
 - quantities:
 
@@ -115,12 +147,36 @@ plot(...)
   argument `type` may also be used which should be a combination of
   `"counts"`, `"percent"`, and `"fraction"`. The first item will be
   printed first and the second will be printed thereafter inside
-  brackets. The default is `type = "counts"`.
+  brackets. The default is `type = "counts"`. For finer control over the
+  rendered text, set `quantities$template` to a string with `{counts}`,
+  `{percent}`, and/or `{fraction}` placeholders, for example
+  `"{counts}\n{percent}"` to put the count and percentage on separate
+  lines or `"n={counts} ({percent})"` for arbitrary layout. When
+  `template` is set it overrides `type`; the set of placeholders in the
+  template determines which values are computed.
+
+- annotations:
+
+  free-form per-region text rendered as a third stacked element below
+  the quantity (or below the label when no quantity is drawn). Accepts a
+  named character vector keyed by subset name (e.g.
+  `c(A = "n = 12", "A&B" = "n = 3")`) as a shorthand for
+  `list(labels = <vector>)`, or a list with `labels` plus
+  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) fields (`col`,
+  `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, `font`,
+  `rot`). Regions absent from `labels` are not annotated. The composite
+  tag bbox grows to include the annotation, so exterior placement and
+  leader lines adapt automatically. Defaults to slightly smaller text
+  than `labels` / `quantities` (`cex = 0.8`).
 
 - strips:
 
   a list, ignored unless the `'by'` argument was used in
-  [`euler()`](https://jolars.github.io/eulerr/reference/euler.md)
+  [`euler()`](https://jolars.github.io/eulerr/reference/euler.md). In
+  addition to graphical parameters, this argument can include
+  `labels = list(top = ..., left = ...)` for custom strip labels.
+  Unnamed labels are interpreted in display order. Named labels are
+  matched by factor levels and then reordered to display order.
 
 - bg:
 
@@ -136,6 +192,30 @@ plot(...)
   is used as the label. If a list of longer length is provided, an item
   named `'label'` must be provided (and will be used for the actual
   text).
+
+- complement:
+
+  a logical, character, or list controlling the container box and
+  complement region for diagrams fit with `complement =` in
+  [`euler()`](https://jolars.github.io/eulerr/reference/euler.md).
+  `TRUE` (default) draws the container with a dashed outline
+  (`lty = 2`), no fill, and the complement count inside the complement
+  region. `FALSE` suppresses the container and its label entirely. A
+  character value is treated as a fill color shorthand. A list accepts
+  `fill`, `alpha`, `col`, `lty`, `lwd`, `lex` (outline + label gpar),
+  `fontsize`, `cex`, `font`, `fontfamily`, `lineheight` (label only),
+  and `label` (custom text — defaults to the complement count). Also
+  accepts the same placement controls as `labels` (`placement`,
+  `margin`, `tether`, `gap`, `leader`, `force_directed`, `elbow`) for
+  the complement count label. Has no effect if the diagram was fit
+  without `complement =`. Defaults can be set via
+  `eulerr_options(complement = ...)`.
+
+- rotate:
+
+  a numeric value giving the angle in degrees by which to rotate the
+  entire diagram layout. Positive values rotate counter-clockwise.
+  Defaults to `0` (no rotation).
 
 - n:
 
@@ -180,20 +260,20 @@ vector, or a list where
 The various [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) values
 that are available for each argument are:
 
-|            |       |       |        |            |        |        |      |
-|------------|-------|-------|--------|------------|--------|--------|------|
-|            | fills | edges | labels | quantities | strips | legend | main |
-| col        |       | x     | x      | x          | x      | x      | x    |
-| fill       | x     |       |        |            |        |        |      |
-| alpha      | x     | x     | x      | x          | x      | x      | x    |
-| lty        |       | x     |        |            |        |        |      |
-| lwd        |       | x     |        |            |        |        |      |
-| lex        |       | x     |        |            |        |        |      |
-| fontsize   |       |       | x      | x          | x      | x      | x    |
-| cex        |       |       | x      | x          | x      | x      | x    |
-| fontfamily |       |       | x      | x          | x      | x      | x    |
-| lineheight |       |       | x      | x          | x      | x      | x    |
-| font       |       |       | x      | x          | x      | x      | x    |
+|            |       |       |        |            |             |        |        |      |
+|------------|-------|-------|--------|------------|-------------|--------|--------|------|
+|            | fills | edges | labels | quantities | annotations | strips | legend | main |
+| col        |       | x     | x      | x          | x           | x      | x      | x    |
+| fill       | x     |       |        |            |             |        |        |      |
+| alpha      | x     | x     | x      | x          | x           | x      | x      | x    |
+| lty        |       | x     |        |            |             |        |        |      |
+| lwd        |       | x     |        |            |             |        |        |      |
+| lex        |       | x     |        |            |             |        |        |      |
+| fontsize   |       |       | x      | x          | x           | x      | x      | x    |
+| cex        |       |       | x      | x          | x           | x      | x      | x    |
+| fontfamily |       |       | x      | x          | x           | x      | x      | x    |
+| lineheight |       |       | x      | x          | x           | x      | x      | x    |
+| font       |       |       | x      | x          | x           | x      | x      | x    |
 
 Defaults for these values, as well as other parameters of the plots, can
 be set globally using
@@ -201,7 +281,16 @@ be set globally using
 
 If the diagram has been fit using the `data.frame` or `matrix` methods
 and using the `by` argument, the plot area will be split into panels for
-each combination of the one to two factors.
+each combination of the one to two factors. The `fills`, `patterns`,
+`edges`, `labels`, `quantities`, and `annotations` arguments each accept
+an optional `by_group` entry: a named list of override lists keyed by
+panel name (the names of the fitted object). For multi-`by` fits the
+panel name is the levels joined by `.`, e.g. `"Male.German"`. Panels not
+listed in `by_group` use the top-level settings unchanged. Only
+graphical fields (and `rot` for `labels`, `quantities`, and
+`annotations`) may be overridden per panel; structural fields such as
+`quantities$type`, `quantities$format`, `annotations$labels`, or
+named-by-subset `fills$fill` must be set at the top level.
 
 For users who are looking to plot their diagram using another package,
 all the necessary parameters can be collected if the result of this
@@ -232,6 +321,14 @@ plot(fit,
 plot(fit, quantities = TRUE)
 
 
+# Add free-form per-region annotations below the counts
+plot(
+  fit,
+  quantities = TRUE,
+  annotations = c(A = "mean = 35", "A&B" = "mean = 41")
+)
+
+
 # Add a custom legend and retain quantities
 plot(fit, quantities = TRUE, legend = list(labels = c("foo", "bar")))
 
@@ -245,4 +342,16 @@ diagram_description <- plot(fit)
 
 # Plots using 'by' argument
 plot(euler(fruits[, 1:4], by = list(sex)), legend = TRUE)
+
+
+# Per-panel styling with `by_group`
+plot(
+  venn(fruits[, 1:4], by = list(sex)),
+  quantities = list(
+    by_group = list(
+      male = list(col = "steelblue"),
+      female = list(col = "tomato")
+    )
+  )
+)
 ```

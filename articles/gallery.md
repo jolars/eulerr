@@ -1,6 +1,7 @@
 # A Gallery of Euler and Venn Diagrams
 
 ``` r
+
 library(eulerr)
 ```
 
@@ -11,24 +12,31 @@ of the various options for customization that are available.
 
 ### Uniform intersections
 
+Here we use squares instead of the default circles.
+
 ``` r
-uniform_intersections <- euler(c(
-  "A" = 10,
-  "B" = 10,
-  "C" = 10,
-  "A&B" = 4,
-  "A&C" = 4,
-  "B&C" = 4,
-  "A&B&C" = 2
-))
+
+uniform_intersections <- euler(
+  c(
+    "A" = 10,
+    "B" = 10,
+    "C" = 10,
+    "A&B" = 4,
+    "A&C" = 4,
+    "B&C" = 4,
+    "A&B&C" = 2
+  ),
+  shape = "square"
+)
 plot(uniform_intersections)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-2-1.png)
+![](gallery_files/figure-html/uniform_intersections-1.png)
 
 ### Disjoint sets
 
 ``` r
+
 disjoint_sets <- euler(c(A = 1, B = 1, C = 1))
 plot(
   disjoint_sets,
@@ -37,11 +45,12 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-3-1.png)
+![](gallery_files/figure-html/disjoint-1.png)
 
 ### A set contained in the intersection of two sets
 
 ``` r
+
 completely_contained <- euler(c(
   "A" = 15,
   "B" = 15,
@@ -59,11 +68,12 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-4-1.png)
+![](gallery_files/figure-html/completely_contained-1.png)
 
 ### Two sets intersecting inside a third
 
 ``` r
+
 intersecting_inside <- euler(c(
   "A" = 15,
   "B" = 0,
@@ -95,6 +105,7 @@ plot(
 ### Difficult set (for circles!)
 
 ``` r
+
 one_contained <- euler(
   c("A" = 7, B = 6, C = 0, "A&B" = 0, "A&C" = 1, "B&C" = 1, "A&B&C" = 2),
   shape = "ellipse"
@@ -102,13 +113,14 @@ one_contained <- euler(
 plot(one_contained, quantities = list(type = "percent"))
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-5-1.png)
+![](gallery_files/figure-html/one_contained-1.png)
 
 ### Russian doll
 
 Sets intersecting inside other sets.
 
 ``` r
+
 russian_doll <- euler(c(
   "A" = 15,
   "B" = 0,
@@ -121,7 +133,7 @@ russian_doll <- euler(c(
 plot(russian_doll)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-6-1.png)
+![](gallery_files/figure-html/russian_doll-1.png)
 
 ### Wilkinson set relationship
 
@@ -129,6 +141,7 @@ This set relationship is taken from Wilkinson et al. It works best with
 ellipses.
 
 ``` r
+
 wilkinson <- euler(
   c(
     A = 4,
@@ -158,11 +171,12 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-7-1.png)
+![](gallery_files/figure-html/wilkinson-1.png)
 
 ### Gene set
 
 ``` r
+
 genes <- euler(c(
   "SE" = 13,
   "Treat" = 28,
@@ -176,31 +190,33 @@ genes <- euler(c(
 plot(genes, quantities = list(type = c("percent", "counts")))
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-8-1.png)
+![](gallery_files/figure-html/gene_set-1.png)
 
 ### Three sets intersecting inside a fourth
 
 ``` r
+
 three_inside_fourth <- euler(c(
   "A" = 30,
   "A&B" = 3,
   "A&C" = 3,
   "A&D" = 3,
-  "A&B&C" = 2,
-  "A&B&D" = 2,
-  "A&C&D" = 2,
+  "A&B&C" = 0.4,
+  "A&B&D" = 0.4,
+  "A&C&D" = 0.4,
   "A&B&C&D" = 1
 ))
 plot(three_inside_fourth)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-9-1.png)
+![](gallery_files/figure-html/three_inside_fourth-1.png)
 
 ### eulerAPE combination
 
 A combination taken from the eulerAPE article.
 
 ``` r
+
 eulerape <- euler(
   c(
     "a" = 3491,
@@ -217,28 +233,34 @@ eulerape <- euler(
 plot(eulerape)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-10-1.png)
+![](gallery_files/figure-html/eulerape-1.png)
 
 ### Four uniform interactions
 
+This time we fit the diagram using rectangles.
+
 ``` r
-uniform <- euler(c(
-  "A" = 10,
-  "B" = 10,
-  "C" = 10,
-  "D" = 10,
-  "A&B" = 3,
-  "A&C" = 3,
-  "A&D" = 0,
-  "B&C" = 0,
-  "B&D" = 3,
-  "C&D" = 3,
-  "A&B&C" = 1,
-  "A&B&D" = 1,
-  "A&C&D" = 1,
-  "B&C&D" = 1,
-  "A&B&C&D" = 1
-))
+
+uniform <- euler(
+  c(
+    "A" = 10,
+    "B" = 10,
+    "C" = 10,
+    "D" = 10,
+    "A&B" = 3,
+    "A&C" = 3,
+    "A&D" = 0,
+    "B&C" = 0,
+    "B&D" = 3,
+    "C&D" = 3,
+    "A&B&C" = 1,
+    "A&B&D" = 1,
+    "A&C&D" = 1,
+    "B&C&D" = 1,
+    "A&B&C&D" = 1
+  ),
+  shape = "rectangle"
+)
 plot(
   uniform,
   labels = list(
@@ -250,13 +272,14 @@ plot(
 )
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-11-1.png)
+![](gallery_files/figure-html/four_uniform-1.png)
 
 ### Two circles intersecting completely
 
 ``` r
+
 two_overlapping <- euler(c("A" = 0, "B" = 0, "A&B" = 10))
 plot(two_overlapping)
 ```
 
-![](gallery_files/figure-html/unnamed-chunk-12-1.png)
+![](gallery_files/figure-html/two_overlapping-1.png)

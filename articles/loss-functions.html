@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Loss Functions">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">7.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@
       <img src="../logo.svg" class="logo" alt=""><h1>Loss Functions</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/v7.1.0/vignettes/loss-functions.Rmd" class="external-link"><code>vignettes/loss-functions.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/loss-functions.Rmd" class="external-link"><code>vignettes/loss-functions.Rmd</code></a></small>
       <div class="d-none name"><code>loss-functions.Rmd</code></div>
     </div>
 
@@ -82,18 +82,18 @@ repository for eulerr</a>.</p>
 <em>agc</em>, <em>camk</em>, <em>cmgc</em>, and <em>tk</em>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"agc"</span>                  <span class="op">=</span> <span class="fl">9</span>,</span>
-<span>  <span class="st">"camk"</span>                 <span class="op">=</span> <span class="fl">17</span>,</span>
-<span>  <span class="st">"cmgc"</span>                 <span class="op">=</span> <span class="fl">16</span>,</span>
-<span>  <span class="st">"tk"</span>                   <span class="op">=</span> <span class="fl">16</span>,</span>
-<span>  <span class="st">"tkl"</span>                  <span class="op">=</span> <span class="fl">23</span>,</span>
-<span>  <span class="st">"agc&amp;camk"</span>             <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;tk"</span>              <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"tk&amp;tkl"</span>               <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;cmgc&amp;tkl"</span>        <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;tk&amp;tkl"</span>          <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  <span class="st">"agc&amp;camk&amp;tk&amp;tkl"</span>      <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="st">"camk&amp;cmgc&amp;tk&amp;tkl"</span>     <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  <span class="st">"agc"</span> <span class="op">=</span> <span class="fl">9</span>,</span>
+<span>  <span class="st">"camk"</span> <span class="op">=</span> <span class="fl">17</span>,</span>
+<span>  <span class="st">"cmgc"</span> <span class="op">=</span> <span class="fl">16</span>,</span>
+<span>  <span class="st">"tk"</span> <span class="op">=</span> <span class="fl">16</span>,</span>
+<span>  <span class="st">"tkl"</span> <span class="op">=</span> <span class="fl">23</span>,</span>
+<span>  <span class="st">"agc&amp;camk"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;tk"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;cmgc&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="st">"agc&amp;camk&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="st">"camk&amp;cmgc&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  <span class="st">"agc&amp;camk&amp;cmgc&amp;tk&amp;tkl"</span> <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Notice that the sizes of most of the intersections are small compared
@@ -123,9 +123,9 @@ function, the sum of squared errors.
 <p>If we rather want a diagram that includes these intersections,
 despite leading to errors for the zero-intersections, then we need to
 switch the loss function we use. In <strong>eulerr</strong>, you can do
-so via the two arguments <code>loss</code> and
-<code>loss_aggregator</code> in <code><a href="../reference/euler.html">euler()</a></code>. We start by
-listing the alternatives for the <code>loss</code> argument.</p>
+so via the <code>loss</code> argument in <code><a href="../reference/euler.html">euler()</a></code>, which
+mirrors the loss functions provided by the underlying
+<code>eunoia</code> Rust crate.</p>
 <table class="table">
 <caption>Loss functions in <strong>eulerr</strong>
 </caption>
@@ -136,50 +136,81 @@ listing the alternatives for the <code>loss</code> argument.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Squared errors</td>
-<td align="left"><code>square</code></td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><annotation encoding="application/x-tex">(y_i - \hat y_i)^2</annotation></semantics></math></td>
+<td align="left">Sum of squared errors</td>
+<td align="left">
+<code>sum_squared</code> (default)</td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum_i (y_i - \hat y_i)^2</annotation></semantics></math></td>
 </tr>
 <tr class="even">
-<td align="left">Absolute errors</td>
-<td align="left"><code>abs</code></td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo stretchy="true" form="postfix">|</mo></mrow><annotation encoding="application/x-tex">|y_i - \hat y_i|</annotation></semantics></math></td>
+<td align="left">Sum of absolute errors</td>
+<td align="left"><code>sum_absolute</code></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">\sum_i |y_i - \hat y_i|</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
-<td align="left">RegionErrors</td>
-<td align="left"><code>region</code></td>
-<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">\big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \big|</annotation></semantics></math></td>
+<td align="left">Sum of squared regErrors</td>
+<td align="left"><code>sum_squared_region_error</code></td>
+<td align="left">$_i (y_i/_k y_k - y_i / <em>k y</em>
+</td>
+</tr>
+<tr class="even">
+<td align="left">Sum of absolute regErrors</td>
+<td align="left"><code>sum_absolute_region_error</code></td>
+<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
+</tr>
+<tr class="odd">
+<td align="left">Max squared error</td>
+<td align="left"><code>max_squared</code></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\max_i (y_i - \hat y_i)^2</annotation></semantics></math></td>
+</tr>
+<tr class="even">
+<td align="left">Max absolute error</td>
+<td align="left"><code>max_absolute</code></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">\max_i |y_i - \hat y_i|</annotation></semantics></math></td>
+</tr>
+<tr class="odd">
+<td align="left">Root-mean-squared error</td>
+<td align="left"><code>root_mean_squared</code></td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi>/</mi><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>y</mi><mi>i</mi><mn>2</mn></msubsup></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{\sum_i (y_i - \hat y_i)^2 / \sum_i y_i^2}</annotation></semantics></math></td>
+</tr>
+<tr class="even">
+<td align="left">Stress</td>
+<td align="left"><code>stress</code></td>
+<td align="left">venneuler-style stress</td>
+</tr>
+<tr class="odd">
+<td align="left">diagError</td>
+<td align="left"><code>diag_error</code></td>
+<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
 </tr>
 </tbody>
 </table>
-<p>How the final loss is computed depends on the value of
-<code>loss_aggregator</code>, which is the function used to aggregate
-the values computed for each set intersection via the function used in
-<code>loss</code>. The two available settings are <code>"sum"</code> and
-<code>"max"</code>, which should be self-explanatory.</p>
-<p>That means that <code>loss = "square"</code> and
-<code>loss_aggregator = "sum"</code> leads to the sum of squared errors.
-<code>loss = "region"</code> uses <em>regionError</em>, which is a loss
-metric introduced by <span class="citation">(Micallef and Rodgers
-2014)</span>. Together with <code>loss_aggregator = "max"</code>,
-<code><a href="../reference/euler.html">euler()</a></code> will use <em>diagError</em> (introduced in the same
-paper).</p>
+<p>The pre-1.0 <code>loss_aggregator</code> argument is deprecated;
+combine the behavior you want into a single <code>loss</code> value
+instead. For example <code>loss = "square"</code> together with
+<code>loss_aggregator = "sum"</code> is now simply
+<code>loss = "sum_squared"</code>, and <code>loss = "region"</code> with
+<code>loss_aggregator = "max"</code> is
+<code>loss = "diag_error"</code>.</p>
 <p>To see what these different choices mean for the combination that we
-have looked at, we now refit the diagram for each combination.</p>
+have looked at, we now refit the diagram for each loss.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">losses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"square"</span>, <span class="st">"abs"</span>, <span class="st">"region"</span><span class="op">)</span></span>
-<span><span class="va">aggregators</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sum"</span>, <span class="st">"max"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">losses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"sum_squared"</span>,</span>
+<span>  <span class="st">"sum_absolute"</span>,</span>
+<span>  <span class="st">"sum_absolute_region_error"</span>,</span>
+<span>  <span class="st">"max_squared"</span>,</span>
+<span>  <span class="st">"max_absolute"</span>,</span>
+<span>  <span class="st">"diag_error"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">loss</span> <span class="kw">in</span> <span class="va">losses</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">aggregator</span> <span class="kw">in</span> <span class="va">aggregators</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">combos</span>, loss <span class="op">=</span> <span class="va">loss</span>, loss_aggregator <span class="op">=</span> <span class="va">aggregator</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">aggregator</span>, <span class="va">loss</span>, sep <span class="op">=</span> <span class="st">", "</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
+<span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">combos</span>, loss <span class="op">=</span> <span class="va">loss</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, main <span class="op">=</span> <span class="va">loss</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="figure">
-<img src="loss-functions_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-3.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-4.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-5.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-6.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss function" width="288"><p class="caption">
+<img src="loss-functions_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss functions" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss functions" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-3.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss functions" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-4.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss functions" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-5.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss functions" width="288"><img src="loss-functions_files/figure-html/unnamed-chunk-4-6.png" class="r-plt" alt="Euler diagrams fit to the combination above, using different loss functions" width="288"><p class="caption">
 Euler diagrams fit to the combination above, using different loss
-function
+functions
 </p>
 </div>
 <p>As you can see, the errors that sum either the absolute or squared
@@ -193,13 +224,6 @@ reducing the goodness-of-fit of the larger intersections.</p>
 <p>Feel free to raise a request (or better yet, a pull request) at <a href="https://github.com/jolars/eulerr/issues" class="external-link uri">https://github.com/jolars/eulerr/issues</a> if you know of
 any other loss function that you think should be included in the
 package.</p>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div id="ref-Micallef_2014a" class="csl-entry">
-Micallef, Luana, and Peter Rodgers. 2014. <span>“<span class="nocase">eulerAPE</span>: Drawing Area-Proportional
-3-<span>Venn</span> Diagrams Using Ellipses.”</span> <em>PLOS ONE</em> 9
-(7): e101717. <a href="https://doi.org/10.1371/journal.pone.0101717" class="external-link">https://doi.org/10.1371/journal.pone.0101717</a>.
-</div>
-</div>
   </main>
 </div>
 

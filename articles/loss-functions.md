@@ -10,19 +10,20 @@ We list the combinations below, which consists of 5 different sets,
 *agc*, *camk*, *cmgc*, and *tk*.
 
 ``` r
+
 combos <- c(
-  "agc"                  = 9,
-  "camk"                 = 17,
-  "cmgc"                 = 16,
-  "tk"                   = 16,
-  "tkl"                  = 23,
-  "agc&camk"             = 1,
-  "camk&tk"              = 1,
-  "tk&tkl"               = 1,
-  "camk&cmgc&tkl"        = 1,
-  "camk&tk&tkl"          = 2,
-  "agc&camk&tk&tkl"      = 1,
-  "camk&cmgc&tk&tkl"     = 3,
+  "agc" = 9,
+  "camk" = 17,
+  "cmgc" = 16,
+  "tk" = 16,
+  "tkl" = 23,
+  "agc&camk" = 1,
+  "camk&tk" = 1,
+  "tk&tkl" = 1,
+  "camk&cmgc&tkl" = 1,
+  "camk&tk&tkl" = 2,
+  "agc&camk&tk&tkl" = 1,
+  "camk&cmgc&tk&tkl" = 3,
   "agc&camk&cmgc&tk&tkl" = 1
 )
 ```
@@ -42,6 +43,7 @@ larger errors from having to include other intersections that are not
 present.
 
 ``` r
+
 library(eulerr)
 
 fit <- euler(combos)
@@ -59,62 +61,67 @@ function, the sum of squared errors.
 
 If we rather want a diagram that includes these intersections, despite
 leading to errors for the zero-intersections, then we need to switch the
-loss function we use. In **eulerr**, you can do so via the two arguments
-`loss` and `loss_aggregator` in
-[`euler()`](https://jolars.github.io/eulerr/reference/euler.md). We
-start by listing the alternatives for the `loss` argument.
+loss function we use. In **eulerr**, you can do so via the `loss`
+argument in
+[`euler()`](https://jolars.github.io/eulerr/reference/euler.md), which
+mirrors the loss functions provided by the underlying `eunoia` Rust
+crate.
 
-| Loss            | Input    | Definition                                                            |
-|:----------------|:---------|:----------------------------------------------------------------------|
-| Squared errors  | `square` | $\left( y_{i} - {\widehat{y}}_{i} \right)^{2}$                        |
-| Absolute errors | `abs`    | $\left| y_{i} - {\widehat{y}}_{i} \right|$                            |
-| RegionErrors    | `region` | $|y_{i}/\sum_{k}y_{k} - {\widehat{y}}_{i}/\sum_{k}{\widehat{y}}_{k}|$ |
+| Loss | Input | Definition |
+|:---|:---|:---|
+| Sum of squared errors | `sum_squared` (default) | $`\sum_i (y_i - \hat y_i)^2`$ |
+| Sum of absolute errors | `sum_absolute` | $`\sum_i |y_i - \hat y_i|`$ |
+| Sum of squared regErrors | `sum_squared_region_error` | \$\_i (y_i/\_k y_k - y_i / *k y* |
+| Sum of absolute regErrors | `sum_absolute_region_error` | \$\_i \|y_i/\_k y_k - y_i / \_k y_k |
+| Max squared error | `max_squared` | $`\max_i (y_i - \hat y_i)^2`$ |
+| Max absolute error | `max_absolute` | $`\max_i |y_i - \hat y_i|`$ |
+| Root-mean-squared error | `root_mean_squared` | $`\sqrt{\sum_i (y_i - \hat y_i)^2 / \sum_i y_i^2}`$ |
+| Stress | `stress` | venneuler-style stress |
+| diagError | `diag_error` | \$\_i \|y_i/\_k y_k - y_i / \_k y_k |
 
-Loss functions in **eulerr**
+Loss functions in **eulerr** {.table}
 
-How the final loss is computed depends on the value of
-`loss_aggregator`, which is the function used to aggregate the values
-computed for each set intersection via the function used in `loss`. The
-two available settings are `"sum"` and `"max"`, which should be
-self-explanatory.
-
-That means that `loss = "square"` and `loss_aggregator = "sum"` leads to
-the sum of squared errors. `loss = "region"` uses *regionError*, which
-is a loss metric introduced by (Micallef and Rodgers 2014). Together
-with `loss_aggregator = "max"`,
-[`euler()`](https://jolars.github.io/eulerr/reference/euler.md) will use
-*diagError* (introduced in the same paper).
+The pre-1.0 `loss_aggregator` argument is deprecated; combine the
+behavior you want into a single `loss` value instead. For example
+`loss = "square"` together with `loss_aggregator = "sum"` is now simply
+`loss = "sum_squared"`, and `loss = "region"` with
+`loss_aggregator = "max"` is `loss = "diag_error"`.
 
 To see what these different choices mean for the combination that we
-have looked at, we now refit the diagram for each combination.
+have looked at, we now refit the diagram for each loss.
 
 ``` r
-losses <- c("square", "abs", "region")
-aggregators <- c("sum", "max")
+
+losses <- c(
+  "sum_squared",
+  "sum_absolute",
+  "sum_absolute_region_error",
+  "max_squared",
+  "max_absolute",
+  "diag_error"
+)
 
 for (loss in losses) {
-  for (aggregator in aggregators) {
-    fit <- euler(combos, loss = loss, loss_aggregator = aggregator)
-    print(plot(fit, main = paste(aggregator, loss, sep = ", ")))
-  }
+  fit <- euler(combos, loss = loss)
+  print(plot(fit, main = loss))
 }
 ```
 
 ![Euler diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-1.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-1.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-2.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-2.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-3.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-3.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-4.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-4.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-5.png)![Euler
+functions](loss-functions_files/figure-html/unnamed-chunk-4-5.png)![Euler
 diagrams fit to the combination above, using different loss
-function](loss-functions_files/figure-html/unnamed-chunk-4-6.png)
+functions](loss-functions_files/figure-html/unnamed-chunk-4-6.png)
 
 Euler diagrams fit to the combination above, using different loss
-function
+functions
 
 As you can see, the errors that sum either the absolute or squared
 errors result in very similar fits and keep the existing two-set
@@ -128,7 +135,3 @@ intersections.
 Feel free to raise a request (or better yet, a pull request) at
 <https://github.com/jolars/eulerr/issues> if you know of any other loss
 function that you think should be included in the package.
-
-Micallef, Luana, and Peter Rodgers. 2014. “eulerAPE: Drawing
-Area-Proportional 3-Venn Diagrams Using Ellipses.” *PLOS ONE* 9 (7):
-e101717. <https://doi.org/10.1371/journal.pone.0101717>.

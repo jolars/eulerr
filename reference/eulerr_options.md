@@ -52,8 +52,15 @@ Currently, the following items will be considered:
 
 - quantities:
 
-  a list of items `type`, `format`, `total`, `rot`, `col`, `alpha`,
-  `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`
+  a list of items `type`, `template`, `format`, `total`, `rot`, `col`,
+  `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, and `font`
+
+- annotations:
+
+  a list of items `rot`, `col`, `alpha`, `fontsize`, `cex`,
+  `fontfamily`, `lineheight`, `font`, and `labels` (a named character
+  vector keyed by subset name). Used to add a third stacked text element
+  per region below the quantity.
 
 - strips:
 
@@ -64,13 +71,23 @@ Currently, the following items will be considered:
 
   arguments to
   [`grid::legendGrob()`](https://rdrr.io/r/grid/legendGrob.html) as well
-  as `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, and
-  `font`
+  as `col`, `alpha`, `fontsize`, `cex`, `symbol_size` (symbol size
+  multiplier, independent of text size; defaults to `cex` if `NULL`),
+  `fontfamily`, `lineheight`, and `font`
 
 - main:
 
   arguments to
   [`grid::textGrob()`](https://rdrr.io/r/grid/grid.text.html)
+
+- complement:
+
+  a list of styling defaults for the container box and its complement
+  label drawn when
+  [`euler()`](https://jolars.github.io/eulerr/reference/euler.md) is
+  called with `complement =`. Items: `fill`, `alpha`, `col`, `lty`,
+  `lwd`, `lex`, `fontsize`, `cex`, `font`, `fontfamily`, `lineheight`.
+  The default `lty = 2` draws the container with a dashed outline.
 
 - padding:
 
@@ -79,6 +96,13 @@ Currently, the following items will be considered:
   [`plot.euler()`](https://jolars.github.io/eulerr/reference/plot.euler.md),
   which you can change if you, for instance, want to increase spacing
   between labels, quantities, and percentages.
+
+- composition:
+
+  a list controlling how `eulergram` objects are arranged when composed
+  via `|` or `/`. Contains a single `spacing` item (a
+  [`grid::unit()`](https://rdrr.io/r/grid/unit.html)) that sets the gap
+  between adjacent plots.
 
 ## See also
 

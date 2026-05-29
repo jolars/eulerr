@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="eulerr under the hood">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">7.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,9 +69,9 @@
                         <h4 data-toc-skip class="author">Johan
 Larsson</h4>
             
-            <h4 data-toc-skip class="date">2026-04-20</h4>
+            <h4 data-toc-skip class="date">2026-05-29</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/v7.1.0/vignettes/under-the-hood.Rmd" class="external-link"><code>vignettes/under-the-hood.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/under-the-hood.Rmd" class="external-link"><code>vignettes/under-the-hood.Rmd</code></a></small>
       <div class="d-none name"><code>under-the-hood.Rmd</code></div>
     </div>
 
@@ -181,7 +181,7 @@ circles in our initial layout, for which we can use the circle–circle
 overlap formula to numerically find the required distance,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>,
 for each pairwise relationship.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo></mtd><mtd columnalign="left" style="text-align: left"><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup><mo>arccos</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup></mrow><mrow><mn>2</mn><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>r</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup><mo>arccos</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup></mrow><mrow><mn>2</mn><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>r</mi><mi>j</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mfrac><mn>1</mn><mn>2</mn></mfrac><msqrt><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup><mrow><mi mathvariant="normal">arccos</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup></mrow><mrow><mn>2</mn><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>r</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup><mrow><mi mathvariant="normal">arccos</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup></mrow><mrow><mn>2</mn><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>r</mi><mi>j</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mspace width="1.0em"></mspace><mfrac><mn>1</mn><mn>2</mn></mfrac><msqrt><mrow><mo stretchy="false" form="prefix">(</mo><mi>−</mi><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></msqrt><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 O_{ij} = &amp; r_i^2\arccos\left(\frac{d_{ij}^2 + r_i^2 - r_j^2}{2d_{ij}r_i}\right) +
 r_j^2\arccos\left(\frac{d_{ij}^2 + r_j^2 - r_i^2}{2d_{ij}r_j}\right) -\\
@@ -223,7 +223,7 @@ set, we are able to obtain
 numerically using the squared difference between
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>O</mi><annotation encoding="application/x-tex">O</annotation></semantics></math>
 and the desired overlap as loss function,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>,</mo><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">for </mtext><mspace width="0.333em"></mspace></mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi><mo>≤</mo><mi>n</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>,</mo><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">for </mtext><mspace width="0.333em"></mspace></mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi><mo>≤</mo><mi>n</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i &lt;
 j \leq n,
 </annotation></semantics></math></p>
@@ -256,7 +256,7 @@ of circles,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>,
 that we found in the overlap equation, and the actual distance in the
 layout we are currently exploring.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>h</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>ℓ</mo><munder><mo>∑</mo><mrow><mn>1</mn><mo>≤</mo><mi>i</mi><mo>&lt;</mo><mi>j</mi><mo>≤</mo><mi>N</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mi>∅</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>⊆</mo><msub><mi>F</mi><mi>j</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>F</mi><mi>i</mi></msub><mo>⊇</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo>−</mo><msub><mi>k</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"></mtd></mtr></mtable></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>h</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>ℓ</mi><munder><mo>∑</mo><mrow><mn>1</mn><mo>≤</mo><mi>i</mi><mo>&lt;</mo><mi>j</mi><mo>≤</mo><mi>N</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mi>∅</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>⊆</mo><msub><mi>F</mi><mi>j</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>F</mi><mi>i</mi></msub><mo>⊇</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo>−</mo><msub><mi>k</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"></mtd></mtr></mtable></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i&lt;j\leq N}}
 \begin{cases}
 0 &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
@@ -266,7 +266,7 @@ layout we are currently exploring.</p>
 </annotation></semantics></math></p>
 <p>The analytical gradient is retrieved as usual by taking the
 derivative of the loss function,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>∇</mi><mo accent="true">→</mo></mover><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mover><mn>0</mn><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mi>∅</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mover><mn>0</mn><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>⊆</mo><msub><mi>F</mi><mi>j</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>F</mi><mi>i</mi></msub><mo>⊇</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>4</mn><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo>−</mo><msub><mi>k</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext><mo>,</mo></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>∇</mi><mo accent="true">→</mo></mover><mi>f</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mover><mn>0</mn><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mi>∅</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mover><mn>0</mn><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>⊆</mo><msub><mi>F</mi><mi>j</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>F</mi><mi>i</mi></msub><mo>⊇</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>4</mn><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo>−</mo><msub><mi>k</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext><mo>,</mo></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
 \vec{\nabla} f(h_i) = \sum_{j=1}^N
 \begin{cases}
 \vec{0} &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
@@ -275,7 +275,7 @@ derivative of the loss function,</p>
 \end{cases}
 </annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>∇</mi><mo accent="true">→</mo></mover><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\vec{\nabla} f(k_i)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>∇</mi><mo accent="true">→</mo></mover><mi>f</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\vec{\nabla} f(k_i)</annotation></semantics></math>
 is found as in the gradient with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi>i</mi></msub><annotation encoding="application/x-tex">h_i</annotation></semantics></math>
 swapped for
@@ -307,10 +307,12 @@ each element of the Hessian and have been omitted for convenience
 only.</p>
 <p>We optimize the loss function using the nonlinear optimizer
 <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> from the R core package <strong>stats</strong>. The
-underlying code for <code>nlm</code> was written by <span class="citation">Schnabel, Koonatz, and Weiss (1985)</span>. It was
-ported to R by Saikat DebRoy and the R Core team <span class="citation">(R Core Team 2017)</span> from a previous FORTRAN to C
-translation by Richard H. Jones. <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> consists of a system
-of Newton-type algorithms and performs well for difficult problems <span class="citation">(Nash 2014)</span>.</p>
+underlying code for <code>nlm</code> was written by <span class="citation">Schnabel et al. (1985)</span>. It was ported to R by
+Saikat DebRoy and the R Core team <span class="citation">(R Core Team
+2017)</span> from a previous FORTRAN to C translation by Richard H.
+Jones. <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> consists of a system of Newton-type algorithms
+and performs well for difficult problems <span class="citation">(Nash
+2014)</span>.</p>
 <p>The initial layout outlined above will sometimes turn up perfect
 diagrams, but only reliably so when the diagram is completely determined
 by its pairwise intersections. More pertinently, we have not yet
@@ -337,7 +339,7 @@ intersections, we define
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math>
 as the intersections of these sets and their relative complements, such
 that</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>ω</mi><mn>1</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>F</mi><mn>1</mn></msub><mo>\</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>2</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>ω</mi><mn>2</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>2</mn></munderover><msub><mi>F</mi><mi>i</mi></msub><mo>\</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>3</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>⋮</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>⋮</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>ω</mi><mi>n</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>ω</mi><mn>1</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>F</mi><mn>1</mn></msub><mo>\</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>2</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>ω</mi><mn>2</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>2</mn></munderover><msub><mi>F</mi><mi>i</mi></msub><mo>\</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>3</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>⋮</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>⋮</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>ω</mi><mi>n</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 \omega_{1} &amp; = F_1 \setminus \bigcap_{i=2}^N F_i  \\
 \omega_{2} &amp; = \bigcap_{i=1}^2 F_i \setminus \bigcap_{i=3}^{N} F_i\\
@@ -354,7 +356,7 @@ that</p>
 we also introduce the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>&amp;</mi><annotation encoding="application/x-tex">\&amp;</annotation></semantics></math>-operator,
 such that</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub><mi>&amp;</mi><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>\</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mtext mathvariant="sans-serif">𝖼</mtext></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub><mi>&amp;</mi><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>\</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mtext mathvariant="sans-serif">𝖼</mtext></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
 F_i \&amp; F_j = (F_i \cap F_j)\setminus (F_i \cap F_j)^\textsf{c}.
 </annotation></semantics></math></p>
 <p>The fitted diagram’s area-equivalents for
@@ -382,7 +384,7 @@ equally for a circle.</p>
 <p>To collect all the intersection points, we naturally need only to
 consider two ellipses at a time. The canonical form of an ellipse is
 given by</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>cos</mo><mi>ϕ</mi><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>sin</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>a</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>sin</mo><mi>ϕ</mi><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>cos</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>b</mi><mn>2</mn></msup></mfrac><mo>=</mo><mn>1</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">cos</mi><mi>ϕ</mi><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">sin</mi><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>a</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">sin</mi><mi>ϕ</mi><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">cos</mi><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>b</mi><mn>2</mn></msup></mfrac><mo>=</mo><mn>1</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \frac{\left[ (x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2}+
 \frac{\left[(x-h) \sin{\phi}-(y-k) \cos{\phi}\right]^2}{b^2} = 1,
 </annotation></semantics></math></p>
@@ -461,7 +463,7 @@ and
 from the semimajor axis), we proceed to find its area by</p>
 <ol style="list-style-type: decimal">
 <li>centering the ellipse at
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0, 0)</annotation></semantics></math>,</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0, 0)</annotation></semantics></math>,</li>
 <li>normalizing its rotation, which is not needed to compute the
 area,</li>
 <li>integrating the ellipse over
@@ -469,19 +471,19 @@ area,</li>
 and
 [<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>,</mo><msub><mi>θ</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">0,\theta_1</annotation></semantics></math>],
 producing elliptical sectors
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">F(\theta_0)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(\theta_0)</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">F(\theta_1)</annotation></semantics></math>,</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(\theta_1)</annotation></semantics></math>,</li>
 <li>subtracting the smaller
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">F(\theta_0</annotation></semantics></math>))
 of these sectors from the larger
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">F(\theta_0</annotation></semantics></math>),
 and</li>
 <li>subtracting the triangle section to finally find the segment area,
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>x</mi><mn>1</mn></msub><msub><mi>y</mi><mn>0</mn></msub><mo>−</mo><msub><mi>x</mi><mn>0</mn></msub><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>F</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>x</mi><mn>1</mn></msub><msub><mi>y</mi><mn>0</mn></msub><mo>−</mo><msub><mi>x</mi><mn>0</mn></msub><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 F(\theta_1) - F(\theta_0) - \frac{1}{2}\left|x_1y_0 - x_0y_1\right|,
 </annotation></semantics></math> where
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mi>a</mi><mi>b</mi></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mi>θ</mi><mo>−</mo><mo>arctan</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo>−</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>sin</mo><mrow><mn>2</mn><mi>θ</mi></mrow></mrow><mrow><mi>b</mi><mo>+</mo><mi>a</mi><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo>−</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>cos</mo><mrow><mn>2</mn><mi>θ</mi></mrow></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mi>a</mi><mi>b</mi></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mi>θ</mi><mo>−</mo><mi mathvariant="normal">arctan</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo>−</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">sin</mi><mo>⁡</mo></mrow><mrow><mn>2</mn><mi>θ</mi></mrow></mrow><mrow><mi>b</mi><mo>+</mo><mi>a</mi><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo>−</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">cos</mi><mo>⁡</mo></mrow><mrow><mn>2</mn><mi>θ</mi></mrow></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 F(\theta) = \frac{a}{b}\left[ \theta - \arctan{\left(\frac{(b - a)\sin{2\theta}}{b + a +(b - a )\cos{2\theta}} \right)}\right].
 </annotation></semantics></math>
 </li>
@@ -496,11 +498,11 @@ refer the interested reader to <span class="citation">Eberly
 <img src="under-the-hood_files/figure-html/ellipsesegment-1.png" class="r-plt" alt="The elliptical segment in blue is found by first subtracting the elliptical sector from $(a, 0)$ to $\theta_0$ from the one from $(a, 0)$ to $\theta_1$ and then subtracting the triangle part (in grey)." width="288"><p class="caption">
 The elliptical segment in blue is found by first subtracting the
 elliptical sector from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a, 0)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a, 0)</annotation></semantics></math>
 to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_0</annotation></semantics></math>
 from the one from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a, 0)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a, 0)</annotation></semantics></math>
 to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\theta_1</annotation></semantics></math>
 and then subtracting the triangle part (in grey).
@@ -525,7 +527,7 @@ for instance, this means subtracting the
 overlap from the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A \cap B</annotation></semantics></math>
 one to retrieve the equivalent of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>\</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">(A \cap B) \setminus C</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>\</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">(A \cap B) \setminus C</annotation></semantics></math>.</p>
 <p>The exact algorithm may in rare instances<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;1 out of approximately 7000 in our simulations.&lt;/p&gt;"><sup>4</sup></a>, break down, the
 culprit being numerical precision issues that occur when ellipses are
 tangent or completely overlap. In these cases, the algorithm will
@@ -534,11 +536,11 @@ approximate the area of the involved overlap by</p>
 <li>spreading points across the ellipses using Vogel’s method.</li>
 <li>identifying the points that are inside the intersection via the
 inequality
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>cos</mo><mi>ϕ</mi><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>sin</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>a</mi><mn>2</mn></msup></mfrac><mo>+</mo></mtd><mtd columnalign="right" style="text-align: right"><mspace width="1.0em"></mspace><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>sin</mo><mi>ϕ</mi><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>cos</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>b</mi><mn>2</mn></msup></mfrac><mo>&lt;</mo><mn>1</mn><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{aligned}
-&amp;\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
-&amp;\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} &lt; 1,
-\end{aligned}
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">cos</mi><mi>ϕ</mi><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">sin</mi><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>a</mi><mn>2</mn></msup></mfrac><mo>+</mo></mtd><mtd columnalign="right" style="text-align: right"><mspace width="1.0em"></mspace><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">sin</mi><mi>ϕ</mi><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">cos</mi><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>b</mi><mn>2</mn></msup></mfrac><mo>&lt;</mo><mn>1</mn><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
+ \begin{aligned}
+ &amp;\frac{\left[(x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2} + 
+ &amp;\quad \frac{\left[(x-h) \sin{\phi}-(y-k)\cos{\phi}\right]^2}{b^2} &lt; 1,
+ \end{aligned}
 </annotation></semantics></math> where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
 and
@@ -576,7 +578,7 @@ we use in our final optimization step and is used in
 rough analogue of the correlation coefficient via
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mtext mathvariant="normal">stress</mtext><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">r = \sqrt{1-\text{stress}^2}</annotation></semantics></math>.</p>
 <p>diagError, meanwhile, is given by</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mo>max</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">|</mo><mfrac><msub><mi>ω</mi><mi>i</mi></msub><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>ω</mi><mi>i</mi></msub></mrow></mfrac><mo>−</mo><mfrac><msub><mi>A</mi><mi>i</mi></msub><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>A</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">|</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mi mathvariant="normal">max</mi><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">|</mo><mfrac><msub><mi>ω</mi><mi>i</mi></msub><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>ω</mi><mi>i</mi></msub></mrow></mfrac><mo>−</mo><mfrac><msub><mi>A</mi><mi>i</mi></msub><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>A</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">|</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 {\max_{i = 1, 2, \dots, n}}\left|
 \frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i} \right|,
 </annotation></semantics></math></p>
@@ -589,20 +591,20 @@ to the respective unique area of the diagram.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Eberly_2016" class="csl-entry">
 Eberly, David. 2016. <span>“The Area of Intersecting Ellipses.”</span>
-<em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf" class="external-link">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.
+In <em>Geometric Tools</em>. <a href="https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf" class="external-link">https://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf</a>.
 </div>
 <div id="ref-Frederickson_2015" class="csl-entry">
-Frederickson, Ben. 2015. <span>“Venn <span>Diagrams</span> with
-<span>D3</span>.js.”</span>
-http://www.benfrederickson.com/venn-diagrams-with-d3.js/.
+Frederickson, Ben. 2015. <em>Venn <span>Diagrams</span> with
+<span>D3</span>.js</em>.
+Http://www.benfrederickson.com/venn-diagrams-with-d3.js/.
 </div>
 <div id="ref-Frederickson_2016" class="csl-entry">
-———. 2016. <span>“Venn.js <span>Area</span> Proportional
+Frederickson, Ben. 2016. <em>Venn.js <span>Area</span> Proportional
 <span>Venn</span> and <span>Euler</span> Diagrams in
-<span>JavaScript</span>.”</span>
+<span>JavaScript</span></em>.
 </div>
 <div id="ref-Micallef_2014a" class="csl-entry">
 Micallef, Luana, and Peter Rodgers. 2014. <span>“<span class="nocase">eulerAPE</span>: Drawing Area-Proportional
@@ -611,17 +613,15 @@ Micallef, Luana, and Peter Rodgers. 2014. <span>“<span class="nocase">eulerAPE
 </div>
 <div id="ref-Nash_2014" class="csl-entry">
 Nash, John C. 2014. <em>Nonlinear Parameter Optimization Using
-<span>R</span> Tools</em>. 1st ed. Chichester, West Sussex: Wiley.
+<span>R</span> Tools</em>. 1st ed. Wiley.
 </div>
 <div id="ref-RCT_2017" class="csl-entry">
 R Core Team. 2017. <em><span>R</span>: A Language and Environment for
-Statistical Computing</em>. Vienna, Austria: R Foundation for
-Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
+Statistical Computing</em>. R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
 </div>
 <div id="ref-Richter-Gebert_2011" class="csl-entry">
 Richter-Gebert, Jurgen. 2011. <em>Perspectives on Projective Geometry: A
-Guided Tour Through Real and Complex Geometry</em>. 1st ed. Berlin,
-Germany: Springer.
+Guided Tour Through Real and Complex Geometry</em>. 1st ed. Springer.
 </div>
 <div id="ref-Schnabel_1985" class="csl-entry">
 Schnabel, Robert B., John E. Koonatz, and Barry E. Weiss. 1985. <span>“A

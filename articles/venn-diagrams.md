@@ -33,6 +33,7 @@ We will now look at some Venn diagrams and their respective Euler
 diagrams.
 
 ``` r
+
 library(eulerr)
 set.seed(1)
 
@@ -45,6 +46,7 @@ plot(euler(s2), quantities = TRUE)
 ![](venn-diagrams_files/figure-html/two-1.png)![](venn-diagrams_files/figure-html/two-2.png)
 
 ``` r
+
 plot(venn(fruits[, 1:3]))
 plot(euler(fruits[, 1:3], shape = "ellipse"), quantities = TRUE)
 ```
@@ -52,10 +54,8 @@ plot(euler(fruits[, 1:3], shape = "ellipse"), quantities = TRUE)
 ![](venn-diagrams_files/figure-html/three-1.png)![](venn-diagrams_files/figure-html/three-2.png)
 
 ``` r
-s4 <- list(a = c(1, 2, 3),
-           b = c(1, 2),
-           c = c(1, 4),
-           e = c(5))
+
+s4 <- list(a = c(1, 2, 3), b = c(1, 2), c = c(1, 4), e = c(5))
 plot(venn(s4))
 plot(euler(s4, shape = "ellipse"), quantities = TRUE)
 ```
@@ -63,6 +63,7 @@ plot(euler(s4, shape = "ellipse"), quantities = TRUE)
 ![](venn-diagrams_files/figure-html/four-1.png)![](venn-diagrams_files/figure-html/four-2.png)
 
 ``` r
+
 plot(venn(organisms))
 plot(euler(organisms, shape = "ellipse"), quantities = TRUE)
 ```

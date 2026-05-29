@@ -10,8 +10,15 @@
 - [`euler()`](https://jolars.github.io/eulerr/reference/euler.md) :
   Area-proportional Euler diagrams
 
+- [`` `|`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/reference/eulergram-compose.md)
+  [`` `/`( ``*`<eulergram>`*`)`](https://jolars.github.io/eulerr/reference/eulergram-compose.md)
+  : Compose Euler Diagrams
+
 - [`eulerr_options()`](https://jolars.github.io/eulerr/reference/eulerr_options.md)
   : Get or set global graphical parameters for eulerr
+
+- [`fitted(`*`<euler>`*`)`](https://jolars.github.io/eulerr/reference/fitted.euler.md)
+  : Fitted values of euler object
 
 - [`fruits`](https://jolars.github.io/eulerr/reference/fruits.md) :
   Fruits
@@ -40,6 +47,9 @@
 - [`print(`*`<eulerr_venn>`*`)`](https://jolars.github.io/eulerr/reference/print.eulerr_venn.md)
   [`print(`*`<venn>`*`)`](https://jolars.github.io/eulerr/reference/print.eulerr_venn.md)
   : Print a summary of a Venn diagram
+
+- [`residuals(`*`<euler>`*`)`](https://jolars.github.io/eulerr/reference/residuals.euler.md)
+  : Residuals of euler object
 
 - [`venn()`](https://jolars.github.io/eulerr/reference/venn.md) : Venn
   diagrams

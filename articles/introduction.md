@@ -3,11 +3,12 @@
 ## Motivation
 
 **eulerr** generates area-proportional euler diagrams that display set
-relationships (intersections, unions, and disjoints) with circles or
-ellipses. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram)
-are Venn diagrams without the requirement that all set interactions be
-present (whether they are empty or not). That is, depending on input,
-eulerr will sometimes produce Venn diagrams but sometimes not.
+relationships (intersections, unions, and disjoints) with circles,
+ellipses, or axis-aligned rectangles and squares. [Euler
+diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams
+without the requirement that all set interactions be present (whether
+they are empty or not). That is, depending on input, eulerr will
+sometimes produce Venn diagrams but sometimes not.
 
 R features several packages that produce Euler diagrams; some of the
 more prominent ones (on CRAN) are
@@ -57,6 +58,7 @@ either
 - a table.
 
 ``` r
+
 library(eulerr)
 
 # Input in the form of a named numeric vector
@@ -83,6 +85,7 @@ fit2 <- euler(mat)
 We inspect our results by printing the eulerr object
 
 ``` r
+
 fit2
 #>       original fitted residuals regionError
 #> A           13     13         0       0.008
@@ -100,6 +103,7 @@ fit2
 or directly access and plot the residuals.
 
 ``` r
+
 # Cleveland dot plot of the residuals
 dotchart(resid(fit2))
 ```
@@ -113,15 +117,7 @@ We can also use **eulerr**’s built in
 [`error_plot()`](https://jolars.github.io/eulerr/reference/error_plot.md)
 function to diagnose the fit.
 
-``` r
-error_plot(fit2)
-```
-
-![A plot from
-\`error_plot()\`.](introduction_files/figure-html/error-plot-1.png)
-
-A plot from
-[`error_plot()`](https://jolars.github.io/eulerr/reference/error_plot.md).
+`` {r error-plot, fig.cap = "A plot from `error_plot()`."} error_plot(fit2) ``
 
 This shows us that the intersection is somewhat overrepresented in .
 Given that these residuals are on the scale of the original values,
@@ -131,11 +127,12 @@ As an alternative, we could plot the circles in another program by
 retrieving their coordinates and radii.
 
 ``` r
+
 coef(fit2)
-#>         h       k     a     b phi
-#> A -0.5309 -0.2494 3.432 3.432 2.5
-#> B  1.1125 -0.2494 2.706 2.706 2.5
-#> C -1.5072  1.4101 1.493 1.493 2.5
+#>     type       h         k     a     b phi width height side
+#> A circle -0.4587 2.220e-16 3.432 3.432   0   NaN    NaN  NaN
+#> B circle  1.1847 1.110e-16 2.706 2.706   0   NaN    NaN  NaN
+#> C circle -1.4189 1.685e+00 1.493 1.493   0   NaN    NaN  NaN
 ```
 
 ### Goodness-of-fit
@@ -143,27 +140,35 @@ coef(fit2)
 To tell if we can trust our solution, we use two goodness-of-fit
 measures: the stress statistic from **venneuler** (Wilkinson 2012),
 
-$$\frac{\sum\limits_{i = 1}^{n}\left( y_{i} - {\widehat{y}}_{i} \right)^{2}}{\sum\limits_{i = 1}^{n}y_{i}^{2}}$$
+``` math
+\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
+```
 
-where ${\widehat{y}}_{i}$ is an ordinary least squares estimate from the
+where $`\hat{y}_i`$ is an ordinary least squares estimate from the
 regression of the fitted areas on the original areas that is being
 explored during optimization,
 
 and the *diagError* statistic from **eulerAPE** (Micallef and Rodgers
 2014):
 
-$$\max\limits_{i = 1,2,\ldots,n}\left| \frac{y_{i}}{\sum y_{i}} - \frac{{\widehat{y}}_{i}}{\sum{\widehat{y}}_{i}} \right|$$
+``` math
+\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
+\frac{\hat{y}_i}{\sum \hat{y}_i} \right|
+```
 
 In our example, the diagError is and our stress is 0.002, suggesting
 that the fit is accurate.
 
 We can now be confident that eulerr provides a reasonable representation
-of our input using circles. Were it otherwise, we might try to use
-ellipses instead. (Wilkinson 2012) features a difficult combination that
-it manages to fit with a reasonably small error; with **eulerr**,
+of our input using circles. Were it otherwise, we might try a different
+shape via the `shape` argument — `"ellipse"` is the most expressive
+choice, but axis-aligned `"rectangle"` and `"square"` fits are also
+available. (Wilkinson 2012) features a difficult combination that
+ellipses manage to fit with a reasonably small error; with **eulerr**,
 however, we can get rid of that error entirely.
 
 ``` r
+
 wilkinson2012 <- c(
   A = 4,
   B = 6,
@@ -203,6 +208,7 @@ as highly customizable, with **eulerr**. The default parameters can
 easily be adjusted to suit anybody’s needs.
 
 ``` r
+
 plot(fit2)
 ```
 
@@ -213,9 +219,12 @@ Customizing Euler plots is a breeze in eulerr.
 
 ``` r
 
-# Remove fills, vary borders, display quantities, and switch font.
+
+# Switch to squares for the same set combination, customizing borders,
+# labels, and quantities. The `shape` argument also accepts `"ellipse"`
+# and `"rectangle"`.
 plot(
-  fit2,
+  euler(mat, shape = "square"),
   quantities = TRUE,
   fill = "transparent",
   lty = 1:3,
