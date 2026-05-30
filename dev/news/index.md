@@ -148,8 +148,6 @@ developed. Here are some of the highlights this brings:
 
 ## eulerr 7.0.4
 
-CRAN release: 2025-09-24
-
 ### Bug Fixes
 
 - Ignore `air.toml` in `Rbuildignore` to fix R CMD check warning.
@@ -164,8 +162,6 @@ CRAN release: 2025-09-24
 
 ## eulerr 7.0.2
 
-CRAN release: 2024-03-28
-
 ### Bug Fixes
 
 - Fix order and layout of strips when grouping
@@ -174,16 +170,12 @@ CRAN release: 2024-03-28
 
 ## eulerr 7.0.1
 
-CRAN release: 2024-02-16
-
 ### Minor Changes
 
 - Fixed some incorrect documentation of internal functions.
 - Corrected an url for eulerAPE.
 
 ## eulerr 7.0.0
-
-CRAN release: 2022-12-09
 
 ### New Features
 
@@ -203,8 +195,6 @@ CRAN release: 2022-12-09
 
 ## eulerr 6.1.1
 
-CRAN release: 2021-09-06
-
 ### Minor changes
 
 - citation to conference paper added to `inst/CITATION`
@@ -221,8 +211,6 @@ CRAN release: 2021-09-06
 
 ## eulerr 6.1.0
 
-CRAN release: 2020-03-09
-
 ### Minor changes
 
 - Label repelling (activated by calling
@@ -235,8 +223,6 @@ CRAN release: 2020-03-09
 - Rectify sanitizer error from clang-ASAN test environment.
 
 ## eulerr 6.0.2
-
-CRAN release: 2020-03-04
 
 ### Bug fixes
 
@@ -264,8 +250,6 @@ CRAN release: 2020-03-04
   when categorical variables are character vectors and not factors.
 
 ## eulerr 6.0.0
-
-CRAN release: 2019-09-27
 
 ### New features
 
@@ -340,8 +324,6 @@ CRAN release: 2019-09-27
 
 ## eulerr 5.0.0
 
-CRAN release: 2018-11-05
-
 ### New features
 
 - [`error_plot()`](https://jolars.github.io/eulerr/dev/reference/error_plot.md)
@@ -409,8 +391,6 @@ CRAN release: 2018-11-05
 
 ## eulerr 4.1.0
 
-CRAN release: 2018-04-20
-
 ### Minor changes
 
 - [`plot.euler()`](https://jolars.github.io/eulerr/dev/reference/plot.euler.md)
@@ -442,8 +422,6 @@ CRAN release: 2018-04-20
   argument `by` is used.
 
 ## eulerr 4.0.0
-
-CRAN release: 2018-02-05
 
 ### Major changes
 
@@ -489,8 +467,6 @@ CRAN release: 2018-02-05
 
 ## eulerr 3.1.0
 
-CRAN release: 2018-01-02
-
 ### Major changes
 
 - The last-ditch optimizer switched from `GenSA::GenSA()` to
@@ -518,8 +494,6 @@ CRAN release: 2018-01-02
 
 ## eulerr 3.0.1
 
-CRAN release: 2017-11-15
-
 ### Bug fixes
 
 - Added the missing `%\VignetteEngine{knitr::knitr}` to both vignettes.
@@ -527,8 +501,6 @@ CRAN release: 2017-11-15
   vignettes.
 
 ## eulerr 3.0.0
-
-CRAN release: 2017-11-15
 
 ### Major changes
 
@@ -578,8 +550,6 @@ CRAN release: 2017-11-15
   been made defunct.
 
 ## eulerr 2.0.0
-
-CRAN release: 2017-06-20
 
 ### Major changes
 
@@ -632,8 +602,6 @@ CRAN release: 2017-06-20
 
 ## eulerr 1.1.0
 
-CRAN release: 2017-02-05
-
 ### Major changes
 
 - [`eulerr()`](https://jolars.github.io/eulerr/dev/reference/eulerr-package.md)
@@ -679,8 +647,6 @@ CRAN release: 2017-02-05
 
 ## eulerr 1.0.0
 
-CRAN release: 2016-12-10
-
 ### New features
 
 - Final optimization routines have been completely rewritten in C++
@@ -708,7 +674,5 @@ CRAN release: 2016-12-10
 - Updated vignette to cover new features and changes.
 
 ## eulerr 0.1.0
-
-CRAN release: 2016-10-16
 
 - The first release.
