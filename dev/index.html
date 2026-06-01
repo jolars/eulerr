@@ -71,12 +71,13 @@
 </h1>
 </div>
 <!-- badges: start -->
-
+<p>[<img src="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check">](<a href="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml" class="external-link">https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml</a>) [<img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status">](<a href="https://app.codecov.io/gh/jolars/eulerr" class="external-link">https://app.codecov.io/gh/jolars/eulerr</a>) [<img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge">](<a href="https://cran.r-project.org/package=eulerr" class="external-link">https://cran.r-project.org/package=eulerr</a>) <!-- badges: end --></p>
 <p><strong>eulerr</strong> generates area-proportional Euler diagrams that display set relationships (intersections, unions, and disjoints) with circles or ellipses. <a href="https://en.wikipedia.org/wiki/Euler_diagram" class="external-link">Euler diagrams</a> are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, <strong>eulerr</strong> sometimes produces Venn diagrams and sometimes not.</p>
 <p>With three or more sets intersecting, exact Euler diagrams are often impossible. For such cases <strong>eulerr</strong> attempts to provide a good approximation by numerically tuning the parameters of the ellipses or circles to minimize the error in the resulting diagram. Residuals and goodness of fit statistics are provided to assess whether the resulting diagram can be trusted.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<p>Building <strong>eulerr</strong> from source requires a Rust toolchain. The minimum supported <code>rustc</code> version is listed in the <code>SystemRequirements</code> field of <code>DESCRIPTION</code> (currently <code>rustc &gt;= 1.88.0</code>). If your system Rust is older than that, install or update via <a href="https://rustup.rs" class="external-link">rustup</a> before installing the package from source. CRAN binary builds do not need a local Rust toolchain.</p>
 <div class="section level3">
 <h3 id="cran-version">CRAN version<a class="anchor" aria-label="anchor" href="#cran-version"></a>
 </h3>
@@ -193,14 +194,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/jolars/eulerr" class="external-link"><img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
-<li><a href="https://cran.r-project.org/package=eulerr" class="external-link"><img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>

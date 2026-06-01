@@ -1,5 +1,11 @@
 # eulerr
 
+\[![R-CMD-check](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg)\](<https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml>)
+\[![Coverage
+Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)\](<https://app.codecov.io/gh/jolars/eulerr>)
+\[![CRAN
+Badge](http://www.r-pkg.org/badges/version/eulerr)\](<https://cran.r-project.org/package=eulerr>)
+
 **eulerr** generates area-proportional Euler diagrams that display set
 relationships (intersections, unions, and disjoints) with circles or
 ellipses. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram)
@@ -15,6 +21,13 @@ goodness of fit statistics are provided to assess whether the resulting
 diagram can be trusted.
 
 ## Installation
+
+Building **eulerr** from source requires a Rust toolchain. The minimum
+supported `rustc` version is listed in the `SystemRequirements` field of
+`DESCRIPTION` (currently `rustc >= 1.88.0`). If your system Rust is
+older than that, install or update via [rustup](https://rustup.rs)
+before installing the package from source. CRAN binary builds do not
+need a local Rust toolchain.
 
 ### CRAN version
 
