@@ -150,13 +150,12 @@ mirrors the loss functions provided by the underlying
 <tr class="odd">
 <td align="left">Sum of squared regErrors</td>
 <td align="left"><code>sum_squared_region_error</code></td>
-<td align="left">$_i (y_i/_k y_k - y_i / <em>k y</em>
-</td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow></mrow><annotation encoding="application/x-tex">\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left">Sum of absolute regErrors</td>
 <td align="left"><code>sum_absolute_region_error</code></td>
-<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left">Max squared error</td>
@@ -181,7 +180,7 @@ mirrors the loss functions provided by the underlying
 <tr class="odd">
 <td align="left">diagError</td>
 <td align="left"><code>diag_error</code></td>
-<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mi>i</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k</annotation></semantics></math></td>
 </tr>
 </tbody>
 </table>
