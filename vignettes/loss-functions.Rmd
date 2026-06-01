@@ -73,13 +73,13 @@ mirrors the loss functions provided by the underlying `eunoia` Rust crate.
   -------------------------  -----------------------------    --------------------------------------------------------
   Sum of squared errors      `sum_squared` (default)          $\sum_i (y_i - \hat y_i)^2$
   Sum of absolute errors     `sum_absolute`                   $\sum_i |y_i - \hat y_i|$
-  Sum of squared regErrors   `sum_squared_region_error`       $\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_
-  Sum of absolute regErrors  `sum_absolute_region_error`      $\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k
+  Sum of squared regErrors   `sum_squared_region_error`       $\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
+  Sum of absolute regErrors  `sum_absolute_region_error`      $\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
   Max squared error          `max_squared`                    $\max_i (y_i - \hat y_i)^2$
   Max absolute error         `max_absolute`                   $\max_i |y_i - \hat y_i|$
   Root-mean-squared error    `root_mean_squared`              $\sqrt{\sum_i (y_i - \hat y_i)^2 / \sum_i y_i^2}$
   Stress                     `stress`                         venneuler-style stress
-  diagError                  `diag_error`                     $\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k
+  diagError                  `diag_error`                     $\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
 
   : Loss functions in **eulerr**
 
