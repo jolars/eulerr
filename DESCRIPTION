@@ -43,4 +43,4 @@ RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Language: en-US
 Config/rextendr/version: 0.4.2
-SystemRequirements: Cargo (Rust's package manager), rustc >= 1.91.1
+SystemRequirements: Cargo (Rust's package manager), rustc >= 1.88.0

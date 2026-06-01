@@ -11,7 +11,7 @@ name = "eulerr"
 
 [dependencies]
 extendr-api = "0.9"
-eunoia = "0.16.1"
+eunoia = "0.17.0"
 
 [profile.release]
 lto = true
