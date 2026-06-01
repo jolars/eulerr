@@ -40,6 +40,12 @@ provided to assess whether the resulting diagram can be trusted.
 
 ## Installation
 
+Building **eulerr** from source requires a Rust toolchain. The minimum supported
+`rustc` version is listed in the `SystemRequirements` field of `DESCRIPTION`
+(currently `rustc >= 1.88.0`). If your system Rust is older than that, install
+or update via [rustup](https://rustup.rs) before installing the package from
+source. CRAN binary builds do not need a local Rust toolchain.
+
 ### CRAN version
 
 ```{r}
