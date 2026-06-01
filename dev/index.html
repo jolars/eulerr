@@ -71,7 +71,7 @@
 </h1>
 </div>
 <!-- badges: start -->
-<p>[<img src="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check">](<a href="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml" class="external-link">https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml</a>) [<img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status">](<a href="https://app.codecov.io/gh/jolars/eulerr" class="external-link">https://app.codecov.io/gh/jolars/eulerr</a>) [<img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge">](<a href="https://cran.r-project.org/package=eulerr" class="external-link">https://cran.r-project.org/package=eulerr</a>) <!-- badges: end --></p>
+
 <p><strong>eulerr</strong> generates area-proportional Euler diagrams that display set relationships (intersections, unions, and disjoints) with circles or ellipses. <a href="https://en.wikipedia.org/wiki/Euler_diagram" class="external-link">Euler diagrams</a> are Venn diagrams without the requirement that all set interactions be present (whether they are empty or not), which means that, depending on input, <strong>eulerr</strong> sometimes produces Venn diagrams and sometimes not.</p>
 <p>With three or more sets intersecting, exact Euler diagrams are often impossible. For such cases <strong>eulerr</strong> attempts to provide a good approximation by numerically tuning the parameters of the ellipses or circles to minimize the error in the resulting diagram. Residuals and goodness of fit statistics are provided to assess whether the resulting diagram can be trusted.</p>
 <div class="section level2">
@@ -93,7 +93,7 @@
 <div class="section level3">
 <h3 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
 </h3>
-<p>eulerr is also available as a shiny app hosted at eulerr.co</p>
+<p>eulerr is also available as a shiny app hosted at <a href="https://eunoia.bz/app" class="external-link uri">https://eunoia.bz/app</a>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -126,14 +126,19 @@
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">stress</span></span>
-<span><span class="co">#&gt; [1] 9.629033e-30</span></span>
+<span><span class="co">#&gt; [1] 2.558211e-19</span></span>
 <span><span class="va">fit</span><span class="op">$</span><span class="va">diagError</span></span>
-<span><span class="co">#&gt; [1] 6.245005e-16</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 9.466256e-11</span></span></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot_method-1.png"><!-- --></p>
 <p>Please see <a href="https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html" class="external-link">the introductory vignette</a> for a brief introduction or <a href="https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html" class="external-link"><em>eulerr under the hood</em></a> for details.</p>
+</div>
+<div class="section level2">
+<h2 id="eunoia">Eunoia<a class="anchor" aria-label="anchor" href="#eunoia"></a>
+</h2>
+<p>eulerr is based on <a href="https://eunoia.bz" class="external-link">Eunoia</a>, which is a Rust library for fitting and visualizing Euler and Venn diagrams. It is also available as a <a href="https://www.npmjs.com/package/@jolars/eunoia" class="external-link">npm package</a> and a <a href="https://pypi.org/project/eunoia/" class="external-link">Python package</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
@@ -194,7 +199,14 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/jolars/eulerr" class="external-link"><img src="https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg" alt="Coverage Status"></a></li>
+<li><a href="https://cran.r-project.org/package=eulerr" class="external-link"><img src="http://www.r-pkg.org/badges/version/eulerr" alt="CRAN Badge"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

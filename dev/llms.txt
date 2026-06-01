@@ -1,11 +1,5 @@
 # eulerr
 
-\[![R-CMD-check](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg)\](<https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml>)
-\[![Coverage
-Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)\](<https://app.codecov.io/gh/jolars/eulerr>)
-\[![CRAN
-Badge](http://www.r-pkg.org/badges/version/eulerr)\](<https://cran.r-project.org/package=eulerr>)
-
 **eulerr** generates area-proportional Euler diagrams that display set
 relationships (intersections, unions, and disjoints) with circles or
 ellipses. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram)
@@ -45,7 +39,8 @@ devtools::install_github("jolars/eulerr")
 
 ### Shiny app
 
-eulerr is also available as a shiny app hosted at eulerr.co
+eulerr is also available as a shiny app hosted at
+<https://eunoia.bz/app>.
 
 ## Usage
 
@@ -82,9 +77,9 @@ the solution,
 ``` r
 
 fit$stress
-#> [1] 9.629033e-30
+#> [1] 2.558211e-19
 fit$diagError
-#> [1] 6.245005e-16
+#> [1] 9.466256e-11
 ```
 
 and plot it
@@ -101,6 +96,14 @@ vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
 for a brief introduction or [*eulerr under the
 hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
+
+## Eunoia
+
+eulerr is based on [Eunoia](https://eunoia.bz), which is a Rust library
+for fitting and visualizing Euler and Venn diagrams. It is also
+available as a [npm
+package](https://www.npmjs.com/package/@jolars/eunoia) and a [Python
+package](https://pypi.org/project/eunoia/).
 
 ## License
 
