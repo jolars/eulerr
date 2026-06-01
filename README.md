@@ -1,56 +1,60 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # eulerr <a href="https://jolars.github.io/eulerr/"><img src='man/figures/logo.svg' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
-\[![R-CMD-check](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg)\]([https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml))
-\[![Coverage
-Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)\]([https://app.codecov.io/gh/jolars/eulerr](https://app.codecov.io/gh/jolars/eulerr))
-\[![CRAN
-Badge](http://www.r-pkg.org/badges/version/eulerr)\]([https://cran.r-project.org/package=eulerr](https://cran.r-project.org/package=eulerr))
+[![R-CMD-check](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jolars/eulerr/actions/workflows/R-CMD-check.yaml)
+[![Coverage
+Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jolars/eulerr)
+[![CRAN
+Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
 <!-- badges: end -->
 
 **eulerr** generates area-proportional Euler diagrams that display set
-relationships (intersections, unions, and disjoints) with circles or ellipses.
-[Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams
-without the requirement that all set interactions be present (whether they are
-empty or not), which means that, depending on input, **eulerr** sometimes
-produces Venn diagrams and sometimes not.
+relationships (intersections, unions, and disjoints) with circles or
+ellipses. [Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram)
+are Venn diagrams without the requirement that all set interactions be
+present (whether they are empty or not), which means that, depending on
+input, **eulerr** sometimes produces Venn diagrams and sometimes not.
 
-With three or more sets intersecting, exact Euler diagrams are often impossible.
-For such cases **eulerr** attempts to provide a good approximation by
-numerically tuning the parameters of the ellipses or circles to minimize the
-error in the resulting diagram. Residuals and goodness of fit statistics are
-provided to assess whether the resulting diagram can be trusted.
+With three or more sets intersecting, exact Euler diagrams are often
+impossible. For such cases **eulerr** attempts to provide a good
+approximation by numerically tuning the parameters of the ellipses or
+circles to minimize the error in the resulting diagram. Residuals and
+goodness of fit statistics are provided to assess whether the resulting
+diagram can be trusted.
 
 ## Installation
 
-Building **eulerr** from source requires a Rust toolchain. The minimum supported
-`rustc` version is listed in the `SystemRequirements` field of `DESCRIPTION`
-(currently `rustc >= 1.88.0`). If your system Rust is older than that, install
-or update via [rustup](https://rustup.rs) before installing the package from
-source. CRAN binary builds do not need a local Rust toolchain.
+Building **eulerr** from source requires a Rust toolchain. The minimum
+supported `rustc` version is listed in the `SystemRequirements` field of
+`DESCRIPTION` (currently `rustc >= 1.88.0`). If your system Rust is
+older than that, install or update via [rustup](https://rustup.rs)
+before installing the package from source. CRAN binary builds do not
+need a local Rust toolchain.
 
 ### CRAN version
 
-```r
+``` r
 install.packages("eulerr")
 ```
 
 ### Development version
 
-```r
+``` r
 devtools::install_github("jolars/eulerr")
 ```
 
 ### Shiny app
 
-eulerr is also available as a shiny app hosted at eulerr.co
+eulerr is also available as a shiny app hosted at
+<https://eunoia.bz/app>.
 
 ## Usage
 
-```r
+``` r
 library(eulerr)
 # From Wilkinson 2012
 fit <- euler(
@@ -76,19 +80,19 @@ fit <- euler(
 )
 ```
 
-We can inspect the goodness-of-fit metrics *diagError* and *stress* for the
-solution,
+We can inspect the goodness-of-fit metrics *diagError* and *stress* for
+the solution,
 
-```r
+``` r
 fit$stress
-#> [1] 9.629033e-30
+#> [1] 2.558211e-19
 fit$diagError
-#> [1] 6.245005e-16
+#> [1] 9.466256e-11
 ```
 
 and plot it
 
-```r
+``` r
 plot(fit)
 ```
 
@@ -99,6 +103,14 @@ vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
 for a brief introduction or [*eulerr under the
 hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
+
+## Eunoia
+
+eulerr is based on [Eunoia](https://eunoia.bz), which is a Rust library
+for fitting and visualizing Euler and Venn diagrams. It is also
+available as a [npm
+package](https://www.npmjs.com/package/@jolars/eunoia) and a [Python
+package](https://pypi.org/project/eunoia/).
 
 ## License
 

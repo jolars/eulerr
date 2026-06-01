@@ -66,7 +66,7 @@ devtools::install_github("jolars/eulerr")
 
 ### Shiny app
 
-eulerr is also available as a shiny app hosted at eulerr.co
+eulerr is also available as a shiny app hosted at <https://eunoia.bz/app>.
 
 ## Usage
 
@@ -119,6 +119,13 @@ vignette](https://CRAN.R-project.org/package=eulerr/vignettes/introduction.html)
 for a brief introduction or [*eulerr under the
 hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
+
+## Eunoia
+
+eulerr is based on [Eunoia](https://eunoia.bz), which is a Rust library for
+fitting and visualizing Euler and Venn diagrams. It is also available as a [npm
+package](https://www.npmjs.com/package/@jolars/eunoia) and a [Python
+package](https://pypi.org/project/eunoia/).
 
 ## License
 
