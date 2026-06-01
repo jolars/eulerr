@@ -55,3 +55,4 @@
 ^Taskfile\.yml$
 ^NEXT_RELEASE\.md$
 ^\.pre-commit-config\.yaml$
+^CONTRIBUTING\.md$
