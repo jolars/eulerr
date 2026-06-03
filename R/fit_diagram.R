@@ -1,7 +1,32 @@
+# Convert a named vector of *union* (inclusive) combination areas into the
+# areas of the disjoint (exclusive) regions they imply. Mirrors the
+# decomposition used in the venn branch, but over whatever combinations are
+# named (unnamed combinations are treated as 0 elsewhere).
+union_to_disjoint <- function(combinations) {
+  labels <- names(combinations)
+  set_lists <- strsplit(labels, "&", fixed = TRUE)
+  cards <- lengths(set_lists)
+  disjoint <- numeric(length(labels))
+
+  for (i in order(cards, decreasing = TRUE)) {
+    this_sets <- set_lists[[i]]
+    is_strict_super <- cards > cards[i] &
+      vapply(set_lists, function(s) all(this_sets %in% s), logical(1))
+    disjoint[i] <- combinations[i] - sum(disjoint[is_strict_super])
+  }
+
+  if (any(disjoint < 0)) {
+    stop("Check your set configuration. Some disjoint areas are negative.")
+  }
+
+  stats::setNames(disjoint, labels)
+}
+
 fit_diagram <- function(
   combinations,
   type = c("euler", "venn"),
   input = c("disjoint", "union"),
+  transform = identity,
   shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c(
     "sum_squared",
@@ -23,6 +48,10 @@ fit_diagram <- function(
   shape <- match.arg(shape)
   type <- match.arg(type)
   loss <- resolve_loss(loss, loss_aggregator)
+
+  if (!is.function(transform)) {
+    stop("`transform` must be a function")
+  }
 
   if (!is.numeric(combinations)) {
     stop("`combinations` must be numeric")
@@ -173,10 +202,50 @@ fit_diagram <- function(
   # Derive integer seed from R's RNG so set.seed() works
   seed <- sample.int(.Machine$integer.max, 1L)
 
+  # A `transform` applies to the *disjoint* (exclusive) regions, since those are
+  # the additive atoms the fitter targets. When the input is given as unions we
+  # must decompose to disjoint areas first so the transform lands on the right
+  # quantities, then hand the result to Rust as disjoint input.
+  combo_names <- names(combinations)
+  combo_values <- as.double(combinations)
+  input_used <- input
+
+  if (!identical(transform, identity)) {
+    if (input == "union") {
+      disjoint <- union_to_disjoint(combinations)
+      combo_names <- names(disjoint)
+      combo_values <- as.double(disjoint)
+      input_used <- "disjoint"
+    }
+
+    combo_values <- as.double(transform(combo_values))
+
+    if (
+      length(combo_values) != length(combo_names) ||
+        any(!is.finite(combo_values)) ||
+        any(combo_values < 0)
+    ) {
+      stop(
+        "`transform` must return a non-negative, finite value for every region"
+      )
+    }
+
+    if (!is.null(complement)) {
+      complement <- as.double(transform(complement))
+      if (
+        length(complement) != 1L || !is.finite(complement) || complement < 0
+      ) {
+        stop(
+          "`transform` must return a single non-negative value for `complement`"
+        )
+      }
+    }
+  }
+
   result <- fit_euler_diagram(
-    combo_names = names(combinations),
-    combo_values = as.double(combinations),
-    input = input,
+    combo_names = combo_names,
+    combo_values = combo_values,
+    input = input_used,
     shape = shape,
     loss = loss,
     extraopt_threshold = extraopt_threshold,

@@ -52,6 +52,16 @@
 #'   split the data.frame or matrix of set combinations
 #' @param input type of input: disjoint identities
 #'   (`'disjoint'`) or unions (`'union'`).
+#' @param transform a function applied to the areas of the *disjoint*
+#'   (exclusive) regions before fitting. The default, [base::identity()], leaves
+#'   the areas untouched. A monotone transform such as [base::log1p()] can keep
+#'   small regions legible when set sizes span several orders of magnitude. The
+#'   transform is applied to the exclusive regions because those are the
+#'   additive atoms the diagram fits to; as a consequence the area of a whole
+#'   set or union no longer equals `transform()` of its size, only the
+#'   individual visible regions carry the transformed scale. The function must
+#'   return a non-negative, finite value for each region (and for `complement`,
+#'   when given). Has no effect on [venn()] diagrams, whose geometry is fixed.
 #' @param shape geometric shape used in the diagram
 #' @param loss type of loss to minimize over. The default,
 #'   `"sum_squared"`, minimizes the sum of squared errors. The available
@@ -162,6 +172,7 @@ euler <- function(combinations, ...) UseMethod("euler")
 euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
+  transform = identity,
   shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c(
     "sum_squared",
@@ -183,9 +194,10 @@ euler.default <- function(
     combinations,
     "euler",
     input,
-    shape,
-    loss,
-    loss_aggregator,
+    transform = transform,
+    shape = shape,
+    loss = loss,
+    loss_aggregator = loss_aggregator,
     complement = complement,
     control = control,
     ...

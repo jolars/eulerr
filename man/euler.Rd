@@ -14,6 +14,7 @@ euler(combinations, ...)
 \method{euler}{default}(
   combinations,
   input = c("disjoint", "union"),
+  transform = identity,
   shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c("sum_squared", "sum_absolute", "sum_absolute_region_error",
     "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
@@ -47,6 +48,17 @@ data.frame (see \strong{methods (by class)})}
 
 \item{input}{type of input: disjoint identities
 (\code{'disjoint'}) or unions (\code{'union'}).}
+
+\item{transform}{a function applied to the areas of the \emph{disjoint}
+(exclusive) regions before fitting. The default, \code{\link[base:identity]{base::identity()}}, leaves
+the areas untouched. A monotone transform such as \code{\link[base:Log]{base::log1p()}} can keep
+small regions legible when set sizes span several orders of magnitude. The
+transform is applied to the exclusive regions because those are the
+additive atoms the diagram fits to; as a consequence the area of a whole
+set or union no longer equals \code{transform()} of its size, only the
+individual visible regions carry the transformed scale. The function must
+return a non-negative, finite value for each region (and for \code{complement},
+when given). Has no effect on \code{\link[=venn]{venn()}} diagrams, whose geometry is fixed.}
 
 \item{shape}{geometric shape used in the diagram}
 
