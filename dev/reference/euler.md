@@ -14,6 +14,7 @@ euler(combinations, ...)
 euler(
   combinations,
   input = c("disjoint", "union"),
+  transform = identity,
   shape = c("circle", "ellipse", "rectangle", "square"),
   loss = c("sum_squared", "sum_absolute", "sum_absolute_region_error",
     "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
@@ -59,6 +60,24 @@ euler(combinations, ...)
 
   type of input: disjoint identities (`'disjoint'`) or unions
   (`'union'`).
+
+- transform:
+
+  a function applied to the areas of the *disjoint* (exclusive) regions
+  before fitting. The default,
+  [`base::identity()`](https://rdrr.io/r/base/identity.html), leaves the
+  areas untouched. A monotone transform such as
+  [`base::log1p()`](https://rdrr.io/r/base/Log.html) can keep small
+  regions legible when set sizes span several orders of magnitude. The
+  transform is applied to the exclusive regions because those are the
+  additive atoms the diagram fits to; as a consequence the area of a
+  whole set or union no longer equals
+  [`transform()`](https://rdrr.io/r/base/transform.html) of its size,
+  only the individual visible regions carry the transformed scale. The
+  function must return a non-negative, finite value for each region (and
+  for `complement`, when given). Has no effect on
+  [`venn()`](https://jolars.github.io/eulerr/dev/reference/venn.md)
+  diagrams, whose geometry is fixed.
 
 - shape:
 
