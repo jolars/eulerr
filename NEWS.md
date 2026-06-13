@@ -1,4 +1,4 @@
-# eulerr (development version)
+# eulerr 8.1
 
 # eulerr 8.0
 
@@ -102,6 +102,14 @@ of the highlights this brings:
 - use correct number of columns in tabular
   ([`4880f5e`](https://github.com/jolars/eulerr/commit/4880f5ebeeebd381665df3affad6841e3dbdd401)),
   closes [#116](https://github.com/jolars/eulerr/issues/116)
+
+## Features
+
+- add `transform` option to fitter ([`f4b99c1`](https://github.com/jolars/eulerr/commit/f4b99c16d10baf5e23263aa81f6ae6efff06dab0)), closes [#96](https://github.com/jolars/eulerr/issues/96)
+
+## Bug fixes
+
+- note correct rustc requirement in DESCRIPTION ([`9b05074`](https://github.com/jolars/eulerr/commit/9b0507423c6088c1432390b9b44f448d52351a88))
 
 # eulerr 7.0.4
 
