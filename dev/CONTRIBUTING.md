@@ -133,5 +133,5 @@ Before opening a pull request, please make sure:
 ## License
 
 By contributing, you agree that your contributions will be licensed
-under the [GPL-3](https://jolars.github.io/eulerr/dev/LICENSE) license
+under the [MIT](https://jolars.github.io/eulerr/dev/LICENSE.md) license
 that covers the project.

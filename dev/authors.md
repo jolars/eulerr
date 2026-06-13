@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **Johan Larsson**. Author, maintainer.
+- **Johan Larsson**. Author, maintainer, copyright holder.
   [](https://orcid.org/0000-0002-4029-5945)
 
 - **A. Jonathan R. Godfrey**. Contributor.

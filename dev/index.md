@@ -77,9 +77,9 @@ the solution,
 ``` r
 
 fit$stress
-#> [1] 2.558211e-19
+#> [1] 8.615404e-20
 fit$diagError
-#> [1] 9.466256e-11
+#> [1] 5.5167e-11
 ```
 
 and plot it
@@ -107,8 +107,8 @@ package](https://pypi.org/project/eunoia/).
 
 ## License
 
-eulerr is open source software, licensed under
-[GPL-3](https://github.com/jolars/eulerr/blob/master/LICENSE).
+eulerr is open source software, licensed under the
+[MIT](https://github.com/jolars/eulerr/blob/master/LICENSE.md) license.
 
 ## Versioning
 
