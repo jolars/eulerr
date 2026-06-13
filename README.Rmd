@@ -129,8 +129,8 @@ package](https://pypi.org/project/eunoia/).
 
 ## License
 
-eulerr is open source software, licensed under
-[GPL-3](https://github.com/jolars/eulerr/blob/master/LICENSE).
+eulerr is open source software, licensed under the
+[MIT](https://github.com/jolars/eulerr/blob/master/LICENSE.md) license.
 
 ## Versioning
 

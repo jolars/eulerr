@@ -1,7 +1,8 @@
 flavor = "rmarkdown"
 
+extend-exclude = ["README.md"]
+
 [flavor-overrides]
-"README.md" = "gfm"
 "NEWS.md" = "gfm"
 "AGENTS.md" = "gfm"
 "CONDUCT.md" = "gfm"

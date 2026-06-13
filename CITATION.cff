@@ -20,7 +20,7 @@ keywords:
   - set visualization
   - R
   - ellipses
-license: GPL-3.0
+license: MIT
 preferred-citation:
   type: conference-paper
   title: >-

@@ -119,4 +119,4 @@ Before opening a pull request, please make sure:
 ## License
 
 By contributing, you agree that your contributions will be licensed under the
-[GPL-3](LICENSE) license that covers the project.
+[MIT](LICENSE.md) license that covers the project.

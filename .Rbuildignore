@@ -12,7 +12,7 @@
 ^cran-comments\.md$
 ^revdep$
 ^CONDUCT\.md$
-^LICENSE$
+^LICENSE\.md$
 ^data-raw$
 ^vignettes/cache$
 ^vignettes/figure$
