@@ -2,6 +2,8 @@
 
 ### All vignettes
 
+- [Comparison with other
+  packages](https://jolars.github.io/eulerr/dev/articles/comparison.md):
 - [A Gallery of Euler and Venn
   Diagrams](https://jolars.github.io/eulerr/dev/articles/gallery.md):
 - [Introducing

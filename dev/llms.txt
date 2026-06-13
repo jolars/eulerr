@@ -186,6 +186,8 @@ eulerr would not be possible without Ben Frederickson’s work on
 
 ### All vignettes
 
+- [Comparison with other
+  packages](https://jolars.github.io/eulerr/dev/articles/comparison.md):
 - [A Gallery of Euler and Venn
   Diagrams](https://jolars.github.io/eulerr/dev/articles/gallery.md):
 - [Introducing
