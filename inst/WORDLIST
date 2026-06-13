@@ -1,6 +1,7 @@
 AABB
 ASAN
 Acknowledgements
+BioVenn
 Bxy
 CIELab
 CMA
@@ -20,6 +21,7 @@ Frederickson’s
 Fredrickson
 Fredrickson's
 Grobify
+JVM
 Jöud
 Karra
 MDS
@@ -102,6 +104,8 @@ mathbf
 mathcal
 mathsf
 memcheck
+nVenn
+nVennR
 nabla
 optimises
 optimizer's
@@ -117,6 +121,7 @@ pre
 projective
 pts
 quadric
+rJava
 raycast
 regErrors
 waypoint
@@ -133,11 +138,13 @@ th
 tibble
 tibbles
 tk
+toolchain
 transversing
 validator
 vdots
 vec
 venn
 venneuler
+vennplot
 xlim
 ylim
