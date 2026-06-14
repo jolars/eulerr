@@ -102,6 +102,9 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr" class="external-link">eulerr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">26</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># From Wilkinson 2012</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/euler.html">euler</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -127,9 +130,9 @@
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">stress</span></span>
-<span><span class="co">#&gt; [1] 6.100811e-20</span></span>
+<span><span class="co">#&gt; [1] 1.280328e-19</span></span>
 <span><span class="va">fit</span><span class="op">$</span><span class="va">diagError</span></span>
-<span><span class="co">#&gt; [1] 4.595797e-11</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 6.773921e-11</span></span></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
@@ -160,8 +163,7 @@
 <tr>
 <td><strong>Rust</strong></td>
 <td>
-<a href="https://crates.io/crates/eunoia" class="external-link"><code>eunoia</code></a> (<a href="https://github.com/jolars/eunoia" class="external-link">repo</a>
-</td>
+<a href="https://crates.io/crates/eunoia" class="external-link"><code>eunoia</code></a> (<a href="https://github.com/jolars/eunoia" class="external-link">repo</a>)</td>
 <td><code>cargo add eunoia</code></td>
 </tr>
 <tr>
@@ -173,8 +175,7 @@
 <tr>
 <td><strong>JavaScript</strong></td>
 <td>
-<a href="https://www.npmjs.com/package/@jolars/eunoia" class="external-link"><code>@jolars/eunoia</code></a> (<a href="https://github.com/jolars/eunoia" class="external-link">repo</a>
-</td>
+<a href="https://www.npmjs.com/package/@jolars/eunoia" class="external-link"><code>@jolars/eunoia</code></a> (<a href="https://github.com/jolars/eunoia" class="external-link">repo</a>)</td>
 <td><code>npm install @jolars/eunoia</code></td>
 </tr>
 </tbody>

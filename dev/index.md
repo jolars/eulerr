@@ -46,6 +46,9 @@ eulerr is also available as a web app at <https://eunoia.bz/app>.
 ``` r
 
 library(eulerr)
+
+set.seed(26)
+
 # From Wilkinson 2012
 fit <- euler(
   c(
@@ -76,9 +79,9 @@ the solution,
 ``` r
 
 fit$stress
-#> [1] 6.100811e-20
+#> [1] 1.280328e-19
 fit$diagError
-#> [1] 4.595797e-11
+#> [1] 6.773921e-11
 ```
 
 and plot it
@@ -106,9 +109,9 @@ engine:
 | Language | Package | Install |
 |----|----|----|
 | **R** | [`eulerr`](https://CRAN.R-project.org/package=eulerr) | `install.packages("eulerr")` |
-| **Rust** | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia) | `cargo add eunoia` |
+| **Rust** | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia)) | `cargo add eunoia` |
 | **Python** | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py)) | `pip install eunoia` |
-| **JavaScript** | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia) | `npm install @jolars/eunoia` |
+| **JavaScript** | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia)) | `npm install @jolars/eunoia` |
 
 ## License
 
