@@ -74,6 +74,9 @@ eulerr is also available as a web app at <https://eunoia.bz/app>.
 #| label: specification
 
 library(eulerr)
+
+set.seed(26)
+
 # From Wilkinson 2012
 fit <- euler(
   c(
@@ -126,12 +129,12 @@ eulerr is based on [Eunoia](https://eunoia.bz), which is a Rust library for
 fitting and visualizing Euler and Venn diagrams. The pure-Rust core powers
 bindings in several languages, all backed by the same fitting engine:
 
-  | Language       | Package                                                                                                    | Install                      |
-  | -------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------- |
-  | **R**          | [`eulerr`](https://CRAN.R-project.org/package=eulerr)                                                      | `install.packages("eulerr")` |
-  | **Rust**       | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia)                      | `cargo add eunoia`           |
-  | **Python**     | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py))                 | `pip install eunoia`         |
-  | **JavaScript** | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia) | `npm install @jolars/eunoia` |
+  | Language       | Package                                                                                                     | Install                      |
+  | -------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------- |
+  | **R**          | [`eulerr`](https://CRAN.R-project.org/package=eulerr)                                                       | `install.packages("eulerr")` |
+  | **Rust**       | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia))                      | `cargo add eunoia`           |
+  | **Python**     | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py))                  | `pip install eunoia`         |
+  | **JavaScript** | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia)) | `npm install @jolars/eunoia` |
 
 ## License
 
