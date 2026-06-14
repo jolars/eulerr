@@ -86,15 +86,15 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"eulerr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
+<h3 id="development-version">Development Version<a class="anchor" aria-label="anchor" href="#development-version"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jolars/eulerr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
+<h3 id="web-app">Web App<a class="anchor" aria-label="anchor" href="#web-app"></a>
 </h3>
-<p>eulerr is also available as a shiny app hosted at <a href="https://eunoia.bz/app" class="external-link uri">https://eunoia.bz/app</a>.</p>
+<p>eulerr is also available as a web app at <a href="https://eunoia.bz/app" class="external-link uri">https://eunoia.bz/app</a>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -127,9 +127,9 @@
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">stress</span></span>
-<span><span class="co">#&gt; [1] 8.615404e-20</span></span>
+<span><span class="co">#&gt; [1] 6.100811e-20</span></span>
 <span><span class="va">fit</span><span class="op">$</span><span class="va">diagError</span></span>
-<span><span class="co">#&gt; [1] 5.5167e-11</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 4.595797e-11</span></span></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
@@ -139,7 +139,46 @@
 <div class="section level2">
 <h2 id="eunoia">Eunoia<a class="anchor" aria-label="anchor" href="#eunoia"></a>
 </h2>
-<p>eulerr is based on <a href="https://eunoia.bz" class="external-link">Eunoia</a>, which is a Rust library for fitting and visualizing Euler and Venn diagrams. It is also available as a <a href="https://www.npmjs.com/package/@jolars/eunoia" class="external-link">npm package</a> and a <a href="https://pypi.org/project/eunoia/" class="external-link">Python package</a>.</p>
+<p>eulerr is based on <a href="https://eunoia.bz" class="external-link">Eunoia</a>, which is a Rust library for fitting and visualizing Euler and Venn diagrams. The pure-Rust core powers bindings in several languages, all backed by the same fitting engine:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th>Language</th>
+<th>Package</th>
+<th>Install</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>R</strong></td>
+<td><a href="https://CRAN.R-project.org/package=eulerr" class="external-link"><code>eulerr</code></a></td>
+<td><code>install.packages("eulerr")</code></td>
+</tr>
+<tr>
+<td><strong>Rust</strong></td>
+<td>
+<a href="https://crates.io/crates/eunoia" class="external-link"><code>eunoia</code></a> (<a href="https://github.com/jolars/eunoia" class="external-link">repo</a>
+</td>
+<td><code>cargo add eunoia</code></td>
+</tr>
+<tr>
+<td><strong>Python</strong></td>
+<td>
+<a href="https://pypi.org/project/eunoia/" class="external-link"><code>eunoia</code></a> (<a href="https://github.com/jolars/eunoia-py" class="external-link">repo</a>)</td>
+<td><code>pip install eunoia</code></td>
+</tr>
+<tr>
+<td><strong>JavaScript</strong></td>
+<td>
+<a href="https://www.npmjs.com/package/@jolars/eunoia" class="external-link"><code>@jolars/eunoia</code></a> (<a href="https://github.com/jolars/eunoia" class="external-link">repo</a>
+</td>
+<td><code>npm install @jolars/eunoia</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
@@ -152,7 +191,7 @@
 <p>eulerr uses <a href="https://semver.org" class="external-link">semantic versioning</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="code-of-conduct">Code of conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
+<h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
 </h2>
 <p>Please note that this project is released with a <a href="https://github.com/jolars/eulerr/blob/master/CONDUCT.md" class="external-link">Contributor Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
 </div>

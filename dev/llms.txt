@@ -30,17 +30,16 @@ need a local Rust toolchain.
 install.packages("eulerr")
 ```
 
-### Development version
+### Development Version
 
 ``` r
 
 devtools::install_github("jolars/eulerr")
 ```
 
-### Shiny app
+### Web App
 
-eulerr is also available as a shiny app hosted at
-<https://eunoia.bz/app>.
+eulerr is also available as a web app at <https://eunoia.bz/app>.
 
 ## Usage
 
@@ -77,9 +76,9 @@ the solution,
 ``` r
 
 fit$stress
-#> [1] 8.615404e-20
+#> [1] 6.100811e-20
 fit$diagError
-#> [1] 5.5167e-11
+#> [1] 4.595797e-11
 ```
 
 and plot it
@@ -100,10 +99,16 @@ for details.
 ## Eunoia
 
 eulerr is based on [Eunoia](https://eunoia.bz), which is a Rust library
-for fitting and visualizing Euler and Venn diagrams. It is also
-available as a [npm
-package](https://www.npmjs.com/package/@jolars/eunoia) and a [Python
-package](https://pypi.org/project/eunoia/).
+for fitting and visualizing Euler and Venn diagrams. The pure-Rust core
+powers bindings in several languages, all backed by the same fitting
+engine:
+
+| Language | Package | Install |
+|----|----|----|
+| **R** | [`eulerr`](https://CRAN.R-project.org/package=eulerr) | `install.packages("eulerr")` |
+| **Rust** | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia) | `cargo add eunoia` |
+| **Python** | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py)) | `pip install eunoia` |
+| **JavaScript** | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia) | `npm install @jolars/eunoia` |
 
 ## License
 
@@ -114,7 +119,7 @@ eulerr is open source software, licensed under the
 
 eulerr uses [semantic versioning](https://semver.org).
 
-## Code of conduct
+## Code of Conduct
 
 Please note that this project is released with a [Contributor Code of
 Conduct](https://github.com/jolars/eulerr/blob/master/CONDUCT.md). By
