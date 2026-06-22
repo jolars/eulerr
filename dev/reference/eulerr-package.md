@@ -19,7 +19,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Johan Larsson <johanlarsson@outlook.com>
-([ORCID](https://orcid.org/0000-0002-4029-5945))
+([ORCID](https://orcid.org/0000-0002-4029-5945)) \[copyright holder\]
 
 Other contributors:
 
