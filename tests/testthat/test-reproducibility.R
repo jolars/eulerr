@@ -204,3 +204,25 @@ test_that("a variety of sets can be reproduced", {
     }
   }
 })
+
+test_that("the fit is invariant to the number of threads", {
+  # Parallelism only fans out the restart loop; the chosen layout is reduced
+  # by lowest loss and is identical regardless of thread count. Use a harder
+  # three-set ellipse fit so multiple restarts actually run.
+  combo <- c(
+    "a" = 3491, "b" = 3409, "c" = 3503,
+    "a&b" = 120, "a&c" = 114, "b&c" = 132,
+    "a&b&c" = 50
+  )
+
+  set.seed(42)
+  serial <- euler(combo, shape = "ellipse", control = list(n_threads = 1))
+  set.seed(42)
+  parallel <- euler(combo, shape = "ellipse", control = list(n_threads = 4))
+  set.seed(42)
+  auto <- euler(combo, shape = "ellipse", control = list(n_threads = NULL))
+
+  expect_equal(serial$shapes, parallel$shapes)
+  expect_equal(serial$shapes, auto$shapes)
+  expect_equal(serial$fitted.values, parallel$fitted.values)
+})

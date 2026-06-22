@@ -109,6 +109,15 @@ Defaults to \code{NULL}, which uses the engine's built-in default of 32.
 Region masks are stored in a bitset, so values may be raised up to 63
 (the absolute hard cap). Going higher is rarely useful in practice
 since fully-overlapping diagrams have \code{2^n - 1} regions.
+\item \code{n_threads}: number of threads used to fan out the optimizer's restart
+loop. A positive integer pins a private thread pool of that size, while
+\code{NULL} uses all available cores. This is purely a wall-time knob: the
+fitted diagram is identical regardless of the thread count. The default
+uses half of the available logical cores (but a single thread under
+\verb{R CMD check}, to respect CRAN's two-core policy). It can be overridden
+globally with the \code{eulerr.n_threads} option or the \code{EULERR_NUM_THREADS}
+environment variable, and otherwise honors R's conventional \code{mc.cores}
+option (or \code{MC_CORES} environment variable).
 }}
 
 \item{weights}{a numeric vector of weights of the same length as

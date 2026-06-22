@@ -14,7 +14,8 @@ fit_euler_diagram(
   tolerance,
   max_sets,
   complement,
-  seed
+  seed,
+  n_threads
 )
 }
 \description{

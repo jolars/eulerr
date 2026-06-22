@@ -3,7 +3,7 @@
 # nolint start
 
 #' @keywords internal
-fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, extraopt_threshold, tolerance, max_sets, complement, seed) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, extraopt_threshold, tolerance, max_sets, complement, seed)
+fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads)
 
 #' Compute polygon geometry and label anchors for plotting a fitted Euler
 #' diagram, including the optional complement region inside a fitted

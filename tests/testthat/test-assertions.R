@@ -94,3 +94,22 @@ test_that("euler() guards against too many sets", {
   expect_error(euler(small, control = list(max_sets = c(10, 20))))
   expect_error(euler(small, control = list(max_sets = "32")))
 })
+
+test_that("euler() validates control$n_threads", {
+  small <- c(A = 1, B = 1, C = 1, "A&B" = 0.5)
+
+  # A positive integer and the NULL ("automatic") sentinel are both accepted
+  expect_s3_class(euler(small, control = list(n_threads = 1)), "euler")
+  expect_s3_class(euler(small, control = list(n_threads = 2L)), "euler")
+  expect_s3_class(euler(small, control = list(n_threads = NULL)), "euler")
+
+  # Bad n_threads values are rejected
+  expect_error(
+    euler(small, control = list(n_threads = 0)),
+    "positive integer scalar"
+  )
+  expect_error(euler(small, control = list(n_threads = -1)))
+  expect_error(euler(small, control = list(n_threads = 1.5)))
+  expect_error(euler(small, control = list(n_threads = c(1, 2))))
+  expect_error(euler(small, control = list(n_threads = "2")))
+})

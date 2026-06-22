@@ -413,8 +413,12 @@ fn fit_and_collect<S: DiagramShape + Copy + 'static>(
     seed: u64,
     cmaes_threshold: Option<f64>,
     tolerance_opt: Option<f64>,
+    jobs: usize,
 ) -> extendr_api::Result<List> {
-    let mut fitter = Fitter::<S>::new(spec).loss_type(loss_type).seed(seed);
+    let mut fitter = Fitter::<S>::new(spec)
+        .loss_type(loss_type)
+        .seed(seed)
+        .jobs(jobs);
     if let Some(t) = cmaes_threshold {
         fitter = fitter.cmaes_fallback_threshold(t);
     }
@@ -463,6 +467,7 @@ fn fit_euler_diagram(
     max_sets: Robj,
     complement: Robj,
     seed: i32,
+    n_threads: Robj,
 ) -> extendr_api::Result<List> {
     if combo_names.len() != combo_values.len() {
         return Err("combo_names and combo_values must be the same length".into());
@@ -534,6 +539,22 @@ fn fit_euler_diagram(
 
     let seed_u64 = seed as u32 as u64;
 
+    // Thread count for the restart loop. NULL means "automatic" (eunoia's
+    // `jobs(0)` defers to the global rayon pool = all logical cores); an
+    // explicit positive integer pins a private, scoped pool of that size.
+    // Results are identical regardless of thread count, so this is purely a
+    // wall-time knob and only has an effect when eunoia is built with the
+    // `parallel` feature.
+    let jobs: usize = if n_threads.is_null() {
+        0
+    } else {
+        n_threads
+            .as_real()
+            .filter(|v| v.is_finite() && *v >= 1.0)
+            .map(|v| v as usize)
+            .unwrap_or(1)
+    };
+
     let mut builder = DiagramSpecBuilder::new();
     for (name, &value) in combo_names.iter().zip(combo_values.iter()) {
         let sets: Vec<&str> = name.split('&').filter(|s| !s.is_empty()).collect();
@@ -583,6 +604,7 @@ fn fit_euler_diagram(
             seed_u64,
             cmaes_threshold,
             tolerance_opt,
+            jobs,
         ),
         ShapeKind::Ellipse => fit_and_collect::<Ellipse>(
             &spec,
@@ -593,6 +615,7 @@ fn fit_euler_diagram(
             seed_u64,
             cmaes_threshold,
             tolerance_opt,
+            jobs,
         ),
         ShapeKind::Rectangle => fit_and_collect::<Rectangle>(
             &spec,
@@ -603,6 +626,7 @@ fn fit_euler_diagram(
             seed_u64,
             cmaes_threshold,
             tolerance_opt,
+            jobs,
         ),
         ShapeKind::Square => fit_and_collect::<Square>(
             &spec,
@@ -613,6 +637,7 @@ fn fit_euler_diagram(
             seed_u64,
             cmaes_threshold,
             tolerance_opt,
+            jobs,
         ),
     }
 }

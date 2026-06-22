@@ -126,6 +126,76 @@ is_real <- function(x, tol = .Machine$double.eps^0.5) {
   is.numeric(x) && !is_integer(x, tol = )
 }
 
+#' Number of CPU cores eulerr may use
+#'
+#' Collects the core-count limits we trust and returns the smallest, never
+#' less than one. This mirrors the (much more elaborate) min-of-signals design
+#' of `parallelly::availableCores()`, but only the durable, non-platform-specific
+#' signals: the detected core count, `R CMD check`'s `_R_CHECK_LIMIT_CORES_`
+#' (capped at two), and `OMP_THREAD_LIMIT`. We deliberately do not parse cgroup
+#' quotas or HPC scheduler variables.
+#'
+#' @return A positive integer scalar.
+#' @keywords internal
+detect_available_cores <- function() {
+  n_cores <- parallel::detectCores(logical = TRUE)
+  caps <- if (is.na(n_cores)) 1L else as.integer(n_cores)
+
+  # `R CMD check --as-cran` sets `_R_CHECK_LIMIT_CORES_`; the CRAN check farm
+  # sets `OMP_THREAD_LIMIT`. Both cap how many cores we may use.
+  if (nzchar(Sys.getenv("_R_CHECK_LIMIT_CORES_"))) {
+    caps <- c(caps, 2L)
+  }
+  omp <- suppressWarnings(as.integer(Sys.getenv("OMP_THREAD_LIMIT", "")))
+  if (!is.na(omp)) {
+    caps <- c(caps, omp)
+  }
+
+  max(1L, min(caps))
+}
+
+#' Default number of threads for the fitter's restart loop
+#'
+#' Mirrors the approach taken by **data.table**: use half the available cores
+#' at runtime, but stay single-threaded under `R CMD check` to honor CRAN's
+#' two-core policy. eunoia parallelizes through `rayon`, which ignores the
+#' `OMP_THREAD_LIMIT` signal that CRAN's check farm sets, so we throttle here
+#' instead. Overrides are honored in order: the `eulerr.n_threads` option, the
+#' `EULERR_NUM_THREADS` environment variable, and then R's conventional
+#' `mc.cores` option (or `MC_CORES` environment variable), the last of which is
+#' treated as an exact request bounded by the available cores.
+#'
+#' @return A positive integer scalar (or whatever the `eulerr.n_threads` option
+#'   is set to, validated downstream).
+#' @keywords internal
+default_n_threads <- function() {
+  # Explicit, eulerr-specific overrides win outright.
+  opt <- getOption("eulerr.n_threads", NULL)
+  if (!is.null(opt)) {
+    return(opt)
+  }
+
+  env <- suppressWarnings(as.integer(Sys.getenv("EULERR_NUM_THREADS", "")))
+  if (!is.na(env) && env >= 1L) {
+    return(env)
+  }
+
+  available <- detect_available_cores()
+
+  # Respect R's conventional `mc.cores` knob as an exact request, bounded by
+  # what's actually available.
+  mc <- getOption("mc.cores", NULL)
+  if (is.null(mc)) {
+    mc <- suppressWarnings(as.integer(Sys.getenv("MC_CORES", "")))
+  }
+  if (!is.null(mc) && !is.na(mc) && mc >= 1L) {
+    return(max(1L, min(as.integer(mc), available)))
+  }
+
+  # Otherwise default to half of the available cores.
+  max(1L, available %/% 2L)
+}
+
 #' Enumerate all 2^n - 1 combination labels for a set of names
 #'
 #' Generates labels in cardinality-first order: singletons first, then pairs,

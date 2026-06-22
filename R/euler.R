@@ -104,6 +104,15 @@
 #'   Region masks are stored in a bitset, so values may be raised up to 63
 #'   (the absolute hard cap). Going higher is rarely useful in practice
 #'   since fully-overlapping diagrams have `2^n - 1` regions.
+#'   * `n_threads`: number of threads used to fan out the optimizer's restart
+#'   loop. A positive integer pins a private thread pool of that size, while
+#'   `NULL` uses all available cores. This is purely a wall-time knob: the
+#'   fitted diagram is identical regardless of the thread count. The default
+#'   uses half of the available logical cores (but a single thread under
+#'   `R CMD check`, to respect CRAN's two-core policy). It can be overridden
+#'   globally with the `eulerr.n_threads` option or the `EULERR_NUM_THREADS`
+#'   environment variable, and otherwise honors R's conventional `mc.cores`
+#'   option (or `MC_CORES` environment variable).
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.

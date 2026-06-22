@@ -141,13 +141,20 @@ fit_diagram <- function(
   }
 
   # Euler fit: delegate to Rust
+
+  # `modifyList()` drops NULL entries, so an explicit `n_threads = NULL` (the
+  # "use all cores" sentinel) would otherwise silently revert to the default.
+  # Detect it before merging.
+  n_threads_auto <- "n_threads" %in% names(control) && is.null(control$n_threads)
+
   control <- utils::modifyList(
     list(
       extraopt = (n == 3) && (shape == "ellipse"),
       extraopt_threshold = 0.001,
       extraopt_control = list(),
       tolerance = 1e-3,
-      max_sets = NULL
+      max_sets = NULL,
+      n_threads = default_n_threads()
     ),
     control
   )
@@ -187,6 +194,28 @@ fit_diagram <- function(
         hard_cap
       ))
     }
+  }
+
+  # `n_threads` controls how many threads the restart loop is fanned across.
+  # NULL (signalled by `n_threads_auto`) means "use all available cores"; the
+  # default of 1 keeps the fit single-threaded. Results are identical
+  # regardless of the thread count.
+  if (n_threads_auto) {
+    n_threads <- NULL
+  } else {
+    n_threads <- control$n_threads
+    if (
+      !is.numeric(n_threads) ||
+        length(n_threads) != 1L ||
+        !is.finite(n_threads) ||
+        n_threads < 1 ||
+        n_threads != as.integer(n_threads)
+    ) {
+      stop(
+        "`control$n_threads` must be a positive integer scalar, or NULL for automatic"
+      )
+    }
+    n_threads <- as.integer(n_threads)
   }
 
   effective_cap <- if (is.null(max_sets)) max_sets_default() else max_sets
@@ -252,7 +281,8 @@ fit_diagram <- function(
     tolerance = tolerance,
     max_sets = if (is.null(max_sets)) NULL else as.numeric(max_sets),
     complement = complement,
-    seed = seed
+    seed = seed,
+    n_threads = if (is.null(n_threads)) NULL else as.numeric(n_threads)
   )
 
   # Empty sets stay NA so downstream code (setup_geometry, plotting) detects
