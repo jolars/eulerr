@@ -99,7 +99,7 @@ for a brief introduction or [*eulerr under the
 hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
 
-## Eunoia
+## Eunoia and Its Ecosystem
 
 eulerr is based on [Eunoia](https://eunoia.bz), which is a Rust library
 for fitting and visualizing Euler and Venn diagrams. The pure-Rust core
@@ -108,10 +108,10 @@ engine:
 
 | Language | Package | Install |
 |----|----|----|
-| **R** | [`eulerr`](https://CRAN.R-project.org/package=eulerr) | `install.packages("eulerr")` |
-| **Rust** | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia)) | `cargo add eunoia` |
-| **Python** | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py)) | `pip install eunoia` |
-| **JavaScript** | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia)) | `npm install @jolars/eunoia` |
+| Python | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py)) | `pip install eunoia` |
+| Julia | [`Eunoia.jl`](https://platform.juliahub.com/ui/Packages/General/Eunoia) ([repo](https://github.com/jolars/Eunoia.jl)) | `] add Eunoia` |
+| JavaScript | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia)) | `npm install @jolars/eunoia` |
+| Rust | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia)) | `cargo add eunoia` |
 
 ## License
 
