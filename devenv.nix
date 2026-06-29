@@ -47,6 +47,7 @@
             testthat
             urlchecker
             profvis
+            V8
           ];
         }
       );
