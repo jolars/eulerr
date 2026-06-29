@@ -1581,18 +1581,18 @@ plot.euler <- function(
 
   ar <- xrng / yrng
 
-  # Reserve a fixed physical margin inside the canvas so the diagram has
+  # Reserve a physical margin inside the canvas so the diagram has
   # visible breathing room and shape outlines (which straddle the
   # geometric boundary by half a stroke width) aren't clipped by the
-  # canvas edge. The margin is fixed in points rather than relative to
-  # the canvas because the things it guards against -- stroke width,
-  # anti-aliasing, and label text -- are themselves physical sizes that
-  # don't shrink with the plot; a relative margin would under-pad small
-  # plots, which are the most at risk of clipping. The narrower data axis
-  # gets the minimum `panel_pad`; the wider axis is scaled up so the
-  # resulting inset preserves the data aspect ratio (otherwise circles
-  # would render slightly elliptical).
-  panel_pad <- grid::unit(6, "pt")
+  # canvas edge. The default margin (`eulerr_options()$margin`) is fixed
+  # in points rather than relative to the canvas because the things it
+  # guards against -- stroke width, anti-aliasing, and label text -- are
+  # themselves physical sizes that don't shrink with the plot; a relative
+  # margin would under-pad small plots, which are the most at risk of
+  # clipping. The narrower data axis gets the minimum `panel_pad`; the
+  # wider axis is scaled up so the resulting inset preserves the data
+  # aspect ratio (otherwise circles would render slightly elliptical).
+  panel_pad <- opar$margin %||% grid::unit(6, "pt")
   if (ar >= 1) {
     pad_x <- panel_pad * ar
     pad_y <- panel_pad

@@ -792,7 +792,9 @@ test_that("annotations accept named-vector shorthand and list with styling", {
     fit,
     annotations = list(labels = c(A = "a"), col = "purple", cex = 1.5)
   )
-  ann_tag <- p3$children$canvas.grob$children$diagram.grob.1$children$tags$children[[1L]]
+  ann_tag <- p3$children$canvas.grob$children$diagram.grob.1$children$tags$children[[
+    1L
+  ]]
   expect_equal(ann_tag$annotation_gp$col, "purple")
   expect_equal(ann_tag$annotation_gp$cex, 1.5)
 })
@@ -955,6 +957,33 @@ test_that("composition spacing follows eulerr_options()", {
   widths <- composed$vp$layout$widths
   expect_match(as.character(widths[2]), "2")
   expect_equal(grid::unitType(widths)[2], "cm")
+})
+
+test_that("canvas margin follows eulerr_options()", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+    eulerr_options(margin = grid::unit(6, "pt"))
+  })
+
+  fit <- euler(c(A = 1, B = 1, "A&B" = 1))
+
+  canvas_width_pt <- function() {
+    p <- plot(fit)
+    w <- p$children$canvas.grob$vp$width
+    grid::convertWidth(w, "pt", valueOnly = TRUE)
+  }
+
+  eulerr_options(margin = grid::unit(2, "pt"))
+  narrow <- canvas_width_pt()
+
+  eulerr_options(margin = grid::unit(20, "pt"))
+  wide_margin <- canvas_width_pt()
+
+  # A larger margin reserves more space, leaving a narrower canvas.
+  expect_lt(wide_margin, narrow)
 })
 
 test_that("composing non-eulergram operands fails", {

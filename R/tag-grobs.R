@@ -116,7 +116,10 @@ build_tag_grobs <- function(
   if (has_label) {
     below_parts <- list()
     if (has_quantity) {
-      below_parts <- c(below_parts, list(padding, grid::grobHeight(quantity_grob)))
+      below_parts <- c(
+        below_parts,
+        list(padding, grid::grobHeight(quantity_grob))
+      )
     }
     if (has_annotation) {
       below_parts <- c(
@@ -136,7 +139,10 @@ build_tag_grobs <- function(
       above_parts <- c(above_parts, list(grid::grobHeight(label_grob), padding))
     }
     if (has_annotation) {
-      below_parts <- c(below_parts, list(padding, grid::grobHeight(annotation_grob)))
+      below_parts <- c(
+        below_parts,
+        list(padding, grid::grobHeight(annotation_grob))
+      )
     }
     above <- build_above(above_parts)
     below <- build_above(below_parts)
@@ -154,7 +160,10 @@ build_tag_grobs <- function(
   if (has_annotation) {
     above_parts <- list()
     if (has_quantity) {
-      above_parts <- c(above_parts, list(grid::grobHeight(quantity_grob), padding))
+      above_parts <- c(
+        above_parts,
+        list(grid::grobHeight(quantity_grob), padding)
+      )
     }
     if (has_label) {
       if (!has_quantity) {
@@ -304,7 +313,11 @@ setup_tag <- function(data, labels, quantities, annotations, number) {
   quantity_text <- if (has_quantity) data$quantities else NA
   annotation_text <- if (has_annotation) data$annotations else NA
   label_gp <- if (has_label) labels$gp[data$labels_par_id] else NULL
-  quantity_gp <- if (has_quantity) quantities$gp[data$quantities_par_id] else NULL
+  quantity_gp <- if (has_quantity) {
+    quantities$gp[data$quantities_par_id]
+  } else {
+    NULL
+  }
   annotation_gp <- if (has_annotation) {
     annotations$gp[data$annotations_par_id]
   } else {
@@ -525,7 +538,11 @@ measure_tag_native <- function(tag, padding_native) {
   }
   pad_lq <- if (label_h > 0 && quant_h > 0) padding_native else 0
   pad_qa <- if (quant_h > 0 && annot_h > 0) padding_native else 0
-  pad_la <- if (quant_h == 0 && label_h > 0 && annot_h > 0) padding_native else 0
+  pad_la <- if (quant_h == 0 && label_h > 0 && annot_h > 0) {
+    padding_native
+  } else {
+    0
+  }
   list(
     w = max(label_w, quant_w, annot_w),
     h = label_h + quant_h + annot_h + pad_lq + pad_qa + pad_la
