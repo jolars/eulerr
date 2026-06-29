@@ -39,7 +39,7 @@ devtools::install_github("jolars/eulerr")
 
 ### Web App
 
-eulerr is also available as a web app at <https://eunoia.bz/app>.
+eulerr is also available as a web app at <https://eunoia.bz/app/>.
 
 ## Usage
 
@@ -79,9 +79,9 @@ the solution,
 ``` r
 
 fit$stress
-#> [1] 1.280328e-19
+#> [1] 1.280319e-19
 fit$diagError
-#> [1] 6.773921e-11
+#> [1] 6.774157e-11
 ```
 
 and plot it
