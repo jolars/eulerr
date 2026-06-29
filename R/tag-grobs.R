@@ -589,7 +589,7 @@ measure_all_tags <- function(tags_grob, padding, gap = NULL) {
 #' of which are in device units, not native units, so the padding is in
 #' pt rather than a fraction of the coordinate range.
 #' @keywords internal
-EULER_PANEL_PAD_PT <- 2
+EULER_PANEL_PAD_PT <- 3
 
 #' Pad an axis range by `pt_pad` points, converted to native units
 #' against a measurement viewport with the supplied scale. Returns the
