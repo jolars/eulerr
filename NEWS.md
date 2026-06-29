@@ -1,5 +1,7 @@
 # eulerr (development version)
 
+## Highlights
+
 This version brings rotated rectangles as a new shape to eulerr, as well as the
 ability to customize the optimizer used to fit the diagram. eulerr is also
 parallelized now, and because the fitting pipeline now runs the full fit in
