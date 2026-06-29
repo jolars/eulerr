@@ -21,9 +21,7 @@
   languages = {
     rust = {
       enable = true;
-      channel = "stable";
-      version = "1.94.1";
-      targets = [ "wasm32-unknown-unknown" ];
+      toolchainFile = ./src/rust/rust-toolchain.toml;
     };
 
     r = {
