@@ -68,7 +68,7 @@ of the highlights this brings:
 - add complement
   ([`b6ce232`](https://github.com/jolars/eulerr/commit/b6ce23280d4b54b932659f2ce9c73c5df59f5be7)),
   closes [#13](https://github.com/jolars/eulerr/issues/13)
-- add new loss functions, deprectate old and `loss_aggregator`
+- add new loss functions, deprecate old and `loss_aggregator`
   ([`03e7dea`](https://github.com/jolars/eulerr/commit/03e7dea3c813676ee87418a1ef52667f498df4e6))
 - add `max_sets` in `control` for capping max sets
   ([`621a898`](https://github.com/jolars/eulerr/commit/621a898f1e523df8f5d904a3543bb35dd1355ff8)),
