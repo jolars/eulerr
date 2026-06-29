@@ -1,5 +1,13 @@
 test_that("rectangle fit populates width/height and leaves a/b/phi as NaN", {
-  combo <- c(A = 5, B = 4, C = 6, "A&B" = 2, "A&C" = 1, "B&C" = 1, "A&B&C" = 0.5)
+  combo <- c(
+    A = 5,
+    B = 4,
+    C = 6,
+    "A&B" = 2,
+    "A&C" = 1,
+    "B&C" = 1,
+    "A&B&C" = 0.5
+  )
   fit <- euler(combo, shape = "rectangle")
   expect_is(fit, "euler")
   s <- fit$shapes
@@ -38,8 +46,42 @@ test_that("rectangle/square diagrams plot without error", {
   }
 })
 
+test_that("rotated rectangle fit populates width/height/phi, NaN a/b/side", {
+  combo <- c(A = 5, B = 4, "A&B" = 2)
+  fit <- euler(combo, shape = "rotated_rectangle")
+  expect_is(fit, "euler")
+  s <- fit$shapes
+  expect_identical(unique(s$type), "rotated_rectangle")
+  expect_true(all(is.finite(s$h)))
+  expect_true(all(is.finite(s$k)))
+  expect_true(all(is.finite(s$width)))
+  expect_true(all(is.finite(s$height)))
+  expect_true(all(is.finite(s$phi)))
+  expect_true(all(is.nan(s$a)))
+  expect_true(all(is.nan(s$b)))
+  expect_true(all(is.nan(s$side)))
+  expect_true(is.finite(fit$diagError))
+  expect_null(fit$ellipses)
+})
+
+test_that("rotated rectangle diagrams plot without error", {
+  fit <- euler(c(A = 5, B = 4, "A&B" = 2), shape = "rotated_rectangle")
+  g <- plot(fit)
+  expect_s3_class(g, "eulergram")
+  # exercise the full grob/render pipeline
+  pdf(tempfile())
+  on.exit(dev.off(), add = TRUE)
+  expect_silent(print(g))
+})
+
 test_that("single-set edge cases return well-defined geometry per shape", {
-  for (shape in c("circle", "ellipse", "rectangle", "square")) {
+  for (shape in c(
+    "circle",
+    "ellipse",
+    "rectangle",
+    "square",
+    "rotated_rectangle"
+  )) {
     fit <- euler(c(A = 5), shape = shape)
     s <- fit$shapes
     expect_equal(NROW(s), 1L)

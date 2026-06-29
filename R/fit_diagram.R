@@ -27,7 +27,7 @@ fit_diagram <- function(
   type = c("euler", "venn"),
   input = c("disjoint", "union"),
   transform = identity,
-  shape = c("circle", "ellipse", "rectangle", "square"),
+  shape = c("circle", "ellipse", "rectangle", "square", "rotated_rectangle"),
   loss = c(
     "sum_squared",
     "sum_absolute",
@@ -37,7 +37,14 @@ fit_diagram <- function(
     "max_squared",
     "root_mean_squared",
     "stress",
-    "diag_error"
+    "diag_error",
+    "log_sum_absolute",
+    "smooth_sum_absolute",
+    "smooth_sum_absolute_region_error",
+    "smooth_max_absolute",
+    "smooth_max_squared",
+    "smooth_diag_error",
+    "smooth_log_sum_absolute"
   ),
   loss_aggregator = NULL,
   complement = NULL,
@@ -125,6 +132,34 @@ fit_diagram <- function(
     orig <- stats::setNames(areas_disjoint, combo_labels)
     fit <- stats::setNames(rep.int(1, N), combo_labels)
 
+    if (shape == "rotated_rectangle") {
+      # Rotated-rectangle Venn geometry comes from eunoia's canonical layout
+      # (rotation is what lets four rectangles open all 15 regions). It only
+      # supports up to four sets, unlike the ellipse lookup.
+      if (n > 4) {
+        stop(
+          "rotated-rectangle Venn diagrams support at most four sets; ",
+          "use the default ellipse shape for five sets"
+        )
+      }
+      layout <- venn_layout(setnames, "rotated_rectangle")
+      shapes <- new_shape_frame("rotated_rectangle", n, setnames)
+      shapes$h <- layout$h
+      shapes$k <- layout$k
+      shapes$width <- layout$width
+      shapes$height <- layout$height
+      shapes$phi <- layout$phi
+
+      return(structure(
+        list(
+          shapes = shapes,
+          original.values = orig,
+          fitted.values = fit
+        ),
+        class = c("eulerr_venn", "venn", "euler", "list")
+      ))
+    }
+
     fpar <- venn_spec[[n]]
     rownames(fpar) <- setnames
     shapes <- ellipse_frame_to_shapes(fpar, "ellipse")
@@ -145,7 +180,9 @@ fit_diagram <- function(
   # `modifyList()` drops NULL entries, so an explicit `n_threads = NULL` (the
   # "use all cores" sentinel) would otherwise silently revert to the default.
   # Detect it before merging.
-  n_threads_auto <- "n_threads" %in% names(control) && is.null(control$n_threads)
+  n_threads_auto <- "n_threads" %in%
+    names(control) &&
+    is.null(control$n_threads)
 
   control <- utils::modifyList(
     list(
@@ -154,7 +191,10 @@ fit_diagram <- function(
       extraopt_control = list(),
       tolerance = 1e-3,
       max_sets = NULL,
-      n_threads = default_n_threads()
+      n_threads = default_n_threads(),
+      optimizer = "auto",
+      n_restarts = NULL,
+      loss_eps = 0.01
     ),
     control
   )
@@ -218,6 +258,38 @@ fit_diagram <- function(
     n_threads <- as.integer(n_threads)
   }
 
+  optimizer_choices <- c(
+    "auto",
+    "levenberg_marquardt",
+    "lbfgs",
+    "nelder_mead",
+    "mads",
+    "cma_es",
+    "cma_es_lm",
+    "trf",
+    "cma_es_trf"
+  )
+  optimizer <- match.arg(control$optimizer, optimizer_choices)
+
+  loss_eps <- as.numeric(control$loss_eps)
+  if (length(loss_eps) != 1L || !is.finite(loss_eps) || loss_eps <= 0) {
+    stop("`control$loss_eps` must be a single positive number")
+  }
+
+  n_restarts <- control$n_restarts
+  if (!is.null(n_restarts)) {
+    if (
+      !is.numeric(n_restarts) ||
+        length(n_restarts) != 1L ||
+        !is.finite(n_restarts) ||
+        n_restarts < 1 ||
+        n_restarts != as.integer(n_restarts)
+    ) {
+      stop("`control$n_restarts` must be a positive integer scalar, or NULL")
+    }
+    n_restarts <- as.integer(n_restarts)
+  }
+
   effective_cap <- if (is.null(max_sets)) max_sets_default() else max_sets
   if (n > effective_cap) {
     stop(sprintf(
@@ -277,6 +349,9 @@ fit_diagram <- function(
     input = input_used,
     shape = shape,
     loss = loss,
+    loss_eps = loss_eps,
+    optimizer = optimizer,
+    n_restarts = if (is.null(n_restarts)) NULL else as.numeric(n_restarts),
     extraopt_threshold = extraopt_threshold,
     tolerance = tolerance,
     max_sets = if (is.null(max_sets)) NULL else as.numeric(max_sets),
@@ -436,7 +511,14 @@ resolve_loss <- function(loss, loss_aggregator) {
     "max_squared",
     "root_mean_squared",
     "stress",
-    "diag_error"
+    "diag_error",
+    "log_sum_absolute",
+    "smooth_sum_absolute",
+    "smooth_sum_absolute_region_error",
+    "smooth_max_absolute",
+    "smooth_max_squared",
+    "smooth_diag_error",
+    "smooth_log_sum_absolute"
   )
   legacy_loss <- c("square", "abs", "region")
 

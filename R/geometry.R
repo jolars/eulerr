@@ -70,6 +70,19 @@ shape_bounding_box <- function(shapes) {
         ylim = range(c(k - half, k + half))
       )
     },
+    rotated_rectangle = {
+      # Axis-aligned extent of a rectangle rotated by `phi` about its center.
+      half_w <- shapes$width / 2
+      half_h <- shapes$height / 2
+      c_phi <- abs(cos(shapes$phi))
+      s_phi <- abs(sin(shapes$phi))
+      ext_x <- half_w * c_phi + half_h * s_phi
+      ext_y <- half_w * s_phi + half_h * c_phi
+      list(
+        xlim = range(c(h - ext_x, h + ext_x)),
+        ylim = range(c(k - ext_y, k + ext_y))
+      )
+    },
     ellipse_bounding_box(h, k, shapes$a, shapes$b, shapes$phi)
   )
 }

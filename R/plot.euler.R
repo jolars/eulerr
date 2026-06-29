@@ -1391,18 +1391,18 @@ plot.euler <- function(
     theta <- rotate * pi / 180
     ct <- cos(theta)
     st <- sin(theta)
-    # Rotation only updates `phi` for ellipse-like shapes — rectangles and
+    # Rotation updates `phi` for shapes that carry an orientation angle
+    # (ellipse-like shapes and rotated rectangles). Plain rectangles and
     # squares are axis-aligned in eunoia, so there's no in-plane rotation
-    # angle to advance. The geometry itself is still rotated via the (h, k)
-    # update, but the result rotates the centers without re-orienting the
-    # boxes; this matches eunoia's axis-aligned model.
+    # angle to advance — their geometry is still rotated via the (h, k)
+    # update, which rotates the centers without re-orienting the boxes.
     rotate_shapes <- function(dd) {
       h_new <- dd$h * ct - dd$k * st
       dd$k <- dd$h * st + dd$k * ct
       dd$h <- h_new
       if (NROW(dd) > 0L) {
         type <- dd$type[1L]
-        if (type %in% c("circle", "ellipse")) {
+        if (type %in% c("circle", "ellipse", "rotated_rectangle")) {
           dd$phi <- dd$phi + theta
         }
       }

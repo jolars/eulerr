@@ -3,7 +3,7 @@ name = "eulerr"
 publish = false
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.91.1"
+rust-version = "1.88.0"
 
 [lib]
 crate-type = ["staticlib"]
@@ -11,7 +11,7 @@ name = "eulerr"
 
 [dependencies]
 extendr-api = "0.9"
-eunoia = { version = "0.17.0", features = ["parallel"] }
+eunoia = { version = "1.6.0", features = ["parallel"] }
 
 [profile.release]
 lto = true

@@ -14,6 +14,7 @@ venn(combinations, ...)
 \method{venn}{default}(
   combinations,
   input = c("disjoint", "union"),
+  shape = c("ellipse", "rotated_rectangle"),
   names = letters[length(combinations)],
   ...
 )
@@ -42,6 +43,11 @@ data.frame (see \strong{methods (by class)})}
 \item{input}{type of input: disjoint identities
 (\code{'disjoint'}) or unions (\code{'union'}).}
 
+\item{shape}{geometric shape used in the diagram, either \code{"ellipse"} (the
+default, supporting up to five sets) or \code{"rotated_rectangle"} (supporting
+up to four sets). Rotated rectangles draw a true four-set Venn diagram in
+which all 15 regions are visible.}
+
 \item{names}{a character vector for the names of each set of the same
 length as 'combinations'. Must not be \code{NULL} if \code{combinations} is a
 one-length numeric.}
@@ -60,12 +66,11 @@ constructing dummy codes}
 }
 \value{
 Returns an object of class \verb{'eulerr_venn', 'venn', 'euler'} with items
-\item{shapes}{a data frame of the precomputed ellipse parameters (one
-row per set, columns \verb{type, h, k, a, b, phi}). \code{venn()} always uses
-ellipses.}
+\item{shapes}{a data frame of the precomputed shape parameters (one row
+per set). For \code{shape = "ellipse"} the columns are \verb{type, h, k, a, b, phi}; for \code{shape = "rotated_rectangle"} they are \verb{type, h, k, width, height, phi}.}
 \item{ellipses}{the legacy 5-column data frame
 (\verb{h, k, a, b, phi}) — kept for back-compat alongside the canonical
-\code{shapes} slot.}
+\code{shapes} slot. Only present for \code{shape = "ellipse"}.}
 \item{original.values}{set relationships in the input}
 \item{fitted.values}{set relationships in the solution}
 }

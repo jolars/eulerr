@@ -8,14 +8,19 @@
 #' *non-proportional* to the input; this is also the case here.
 #'
 #' @inheritParams euler
+#' @param shape geometric shape used in the diagram, either `"ellipse"` (the
+#'   default, supporting up to five sets) or `"rotated_rectangle"` (supporting
+#'   up to four sets). Rotated rectangles draw a true four-set Venn diagram in
+#'   which all 15 regions are visible.
 #'
 #' @return Returns an object of class `'eulerr_venn', 'venn', 'euler'` with items
-#'   \item{shapes}{a data frame of the precomputed ellipse parameters (one
-#'     row per set, columns `type, h, k, a, b, phi`). `venn()` always uses
-#'     ellipses.}
+#'   \item{shapes}{a data frame of the precomputed shape parameters (one row
+#'     per set). For `shape = "ellipse"` the columns are `type, h, k, a, b,
+#'     phi`; for `shape = "rotated_rectangle"` they are `type, h, k, width,
+#'     height, phi`.}
 #'   \item{ellipses}{the legacy 5-column data frame
 #'     (`h, k, a, b, phi`) — kept for back-compat alongside the canonical
-#'     `shapes` slot.}
+#'     `shapes` slot. Only present for `shape = "ellipse"`.}
 #'   \item{original.values}{set relationships in the input}
 #'   \item{fitted.values}{set relationships in the solution}
 #'
@@ -44,9 +49,11 @@ venn <- function(combinations, ...) {
 venn.default <- function(
   combinations,
   input = c("disjoint", "union"),
+  shape = c("ellipse", "rotated_rectangle"),
   names = letters[length(combinations)],
   ...
 ) {
+  shape <- match.arg(shape)
   if (is.numeric(combinations) && length(combinations) == 1) {
     if (is.null(names)) {
       stop(
@@ -87,7 +94,7 @@ venn.default <- function(
     combinations,
     type = "venn",
     input = input,
-    shape = "ellipse",
+    shape = shape,
     control = list(),
     ...
   )

@@ -62,7 +62,10 @@
 #'   individual visible regions carry the transformed scale. The function must
 #'   return a non-negative, finite value for each region (and for `complement`,
 #'   when given). Has no effect on [venn()] diagrams, whose geometry is fixed.
-#' @param shape geometric shape used in the diagram
+#' @param shape geometric shape used in the diagram: one of `"circle"`,
+#'   `"ellipse"`, `"rectangle"`, `"square"`, or `"rotated_rectangle"`. The
+#'   rotated rectangle is fit with a derivative-free optimizer and is also the
+#'   only shape able to draw a true four-set Venn diagram (see [venn()]).
 #' @param loss type of loss to minimize over. The default,
 #'   `"sum_squared"`, minimizes the sum of squared errors. The available
 #'   options mirror the loss functions exposed by the `eunoia` Rust crate
@@ -78,6 +81,12 @@
 #'   * `"root_mean_squared"` --- normalized root-mean-squared error.
 #'   * `"stress"` --- venneuler-style stress.
 #'   * `"diag_error"` --- eulerAPE-style `diagError`.
+#'   * `"log_sum_absolute"` --- sum of absolute errors on `log1p`-transformed
+#'     areas, which stops large regions from dominating the fit.
+#'   * `"smooth_sum_absolute"`, `"smooth_sum_absolute_region_error"`,
+#'     `"smooth_max_absolute"`, `"smooth_max_squared"`, `"smooth_diag_error"`,
+#'     `"smooth_log_sum_absolute"` --- gradient-friendly (Huber) surrogates of
+#'     the corresponding non-smooth losses, controlled by `control$loss_eps`.
 #' @param loss_aggregator deprecated; use `loss` directly instead. Pre-1.0
 #'   code that combined `loss` (`"square"`/`"abs"`/`"region"`) with
 #'   `loss_aggregator` (`"sum"`/`"max"`) still works but emits a warning;
@@ -113,15 +122,30 @@
 #'   globally with the `eulerr.n_threads` option or the `EULERR_NUM_THREADS`
 #'   environment variable, and otherwise honors R's conventional `mc.cores`
 #'   option (or `MC_CORES` environment variable).
+#'   * `optimizer`: the final-layout optimizer. The default, `"auto"`, lets the
+#'   engine pick a sensible optimizer for the chosen shape and loss. To force a
+#'   particular one, use any of `"levenberg_marquardt"`, `"lbfgs"`,
+#'   `"nelder_mead"`, `"mads"` (mesh-adaptive direct search, derivative-free
+#'   and well suited to non-smooth losses), `"cma_es"`, `"cma_es_lm"`, `"trf"`,
+#'   or `"cma_es_trf"`.
+#'   * `n_restarts`: number of full-pipeline restarts; the lowest-loss result
+#'   is kept. Higher values improve the chance of finding the global optimum at
+#'   proportionally higher cost. `NULL` (the default) lets the engine choose
+#'   (10, automatically reduced for small smooth-loss fits).
+#'   * `loss_eps`: smoothing parameter for the `"smooth_*"` losses; pick roughly
+#'   1% of the typical residual magnitude. Smaller values track the non-smooth
+#'   loss more closely but give noisier gradients. Default `0.01`.
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.
 #'   \item{shapes}{a data frame of fitted shape parameters. One row per set
 #'     with a `type` column (one of `"circle"`, `"ellipse"`, `"rectangle"`,
-#'     `"square"`), the center coordinates `h` and `k`, and the
-#'     shape-specific columns: `a`, `b`, `phi` for ellipses/circles; `width`
-#'     and `height` for rectangles; `side` (plus mirrored `width`/`height`)
-#'     for squares. Columns that don't apply to the chosen shape are `NA`.}
+#'     `"square"`, `"rotated_rectangle"`), the center coordinates `h` and `k`,
+#'     and the shape-specific columns: `a`, `b`, `phi` for ellipses/circles;
+#'     `width` and `height` for rectangles; `side` (plus mirrored
+#'     `width`/`height`) for squares; `width`, `height`, and `phi` (rotation,
+#'     in radians) for rotated rectangles. Columns that don't apply to the
+#'     chosen shape are `NA`.}
 #'   \item{ellipses}{for `shape = "circle"` and `shape = "ellipse"` fits,
 #'     the legacy 5-column data frame of `h`, `k`, `a`, `b`, `phi`. This
 #'     slot is deprecated in favour of `shapes` and is not populated for
@@ -182,7 +206,7 @@ euler.default <- function(
   combinations,
   input = c("disjoint", "union"),
   transform = identity,
-  shape = c("circle", "ellipse", "rectangle", "square"),
+  shape = c("circle", "ellipse", "rectangle", "square", "rotated_rectangle"),
   loss = c(
     "sum_squared",
     "sum_absolute",
@@ -192,7 +216,14 @@ euler.default <- function(
     "max_squared",
     "root_mean_squared",
     "stress",
-    "diag_error"
+    "diag_error",
+    "log_sum_absolute",
+    "smooth_sum_absolute",
+    "smooth_sum_absolute_region_error",
+    "smooth_max_absolute",
+    "smooth_max_squared",
+    "smooth_diag_error",
+    "smooth_log_sum_absolute"
   ),
   loss_aggregator = NULL,
   complement = NULL,

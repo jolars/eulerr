@@ -1,21 +1,21 @@
-use extendr_api::prelude::*;
-use extendr_api::throw_r_error;
 use eunoia::{
+    Combination, DiagramError, DiagramSpecBuilder, Fitter, InputType, Optimizer,
     constants::{MAX_SETS, MAX_SETS_HARD_CAP},
     geometry::{
         primitives::Point,
-        shapes::{Circle, Ellipse, Polygon, Rectangle, Square},
+        shapes::{Circle, Ellipse, Polygon, Rectangle, RotatedRectangle, Square},
         traits::{DiagramShape, Polygonize},
     },
     loss::LossType,
     plotting::{
-        decompose_regions, place_labels, placements_bbox, polygon_clip, ClipOperation,
-        ElbowOptions, ExteriorPolicy, LeaderStrategy, PlacementKind, PlacementStrategy,
-        RegionPiece, RegionPolygons, TetherSource,
+        ClipOperation, ElbowOptions, ExteriorPolicy, LeaderStrategy, PlacementKind,
+        PlacementStrategy, RegionPiece, RegionPolygons, TetherSource, decompose_regions,
+        place_labels, placements_bbox, polygon_clip,
     },
     spec::DiagramSpec,
-    Combination, DiagramError, DiagramSpecBuilder, Fitter, InputType,
 };
+use extendr_api::prelude::*;
+use extendr_api::throw_r_error;
 use std::collections::{HashMap, HashSet};
 
 /// Extract unique set names from combination labels in order of first appearance.
@@ -40,10 +40,10 @@ fn parse_input_type(input: &str) -> std::result::Result<InputType, Error> {
     }
 }
 
-fn parse_loss_type(loss: &str) -> std::result::Result<LossType, Error> {
+fn parse_loss_type(loss: &str, eps: f64) -> std::result::Result<LossType, Error> {
     match loss {
         "sum_squared" => Ok(LossType::SumSquared),
-        "sum_absolute" => Ok(LossType::SumAbsoute),
+        "sum_absolute" => Ok(LossType::SumAbsolute),
         "sum_absolute_region_error" => Ok(LossType::SumAbsoluteRegionError),
         "sum_squared_region_error" => Ok(LossType::SumSquaredRegionError),
         "max_absolute" => Ok(LossType::MaxAbsolute),
@@ -51,8 +51,37 @@ fn parse_loss_type(loss: &str) -> std::result::Result<LossType, Error> {
         "root_mean_squared" => Ok(LossType::RootMeanSquared),
         "stress" => Ok(LossType::Stress),
         "diag_error" => Ok(LossType::DiagError),
+        "log_sum_absolute" => Ok(LossType::LogSumAbsolute),
+        // Smooth (Huber) surrogates: each replaces |x| / max(x) with a
+        // gradient-friendly approximation controlled by `eps`. eunoia
+        // expresses `eps` as a struct-variant payload.
+        "smooth_sum_absolute" => Ok(LossType::SmoothSumAbsolute { eps }),
+        "smooth_sum_absolute_region_error" => Ok(LossType::SmoothSumAbsoluteRegionError { eps }),
+        "smooth_max_absolute" => Ok(LossType::SmoothMaxAbsolute { eps }),
+        "smooth_max_squared" => Ok(LossType::SmoothMaxSquared { eps }),
+        "smooth_diag_error" => Ok(LossType::SmoothDiagError { eps }),
+        "smooth_log_sum_absolute" => Ok(LossType::SmoothLogSumAbsolute { eps }),
         other => Err(format!("Unknown loss type: {}", other).into()),
     }
+}
+
+/// Parse an optimizer name into the eunoia [`Optimizer`] variant. Returns
+/// `Ok(None)` for `"auto"` (or an empty string), which leaves the Fitter on
+/// its automatic, capability-driven default pool.
+fn parse_optimizer(opt: &str) -> std::result::Result<Option<Optimizer>, Error> {
+    let chosen = match opt {
+        "auto" | "" => return Ok(None),
+        "levenberg_marquardt" => Optimizer::LevenbergMarquardt,
+        "lbfgs" => Optimizer::Lbfgs,
+        "nelder_mead" => Optimizer::NelderMead,
+        "mads" => Optimizer::Mads,
+        "cma_es" => Optimizer::CmaEs,
+        "cma_es_lm" => Optimizer::CmaEsLm,
+        "trf" => Optimizer::Trf,
+        "cma_es_trf" => Optimizer::CmaEsTrf,
+        other => return Err(format!("Unknown optimizer: {}", other).into()),
+    };
+    Ok(Some(chosen))
 }
 
 /// Parse a placement-strategy string into the eunoia [`LeaderStrategy`]
@@ -70,7 +99,9 @@ fn parse_placement(
             margin,
             iterations,
         })),
-        "elbow" => Ok(LeaderStrategy::Elbow(ElbowOptions { margin, min_gap })),
+        "elbow" => Ok(LeaderStrategy::Elbow(
+            ElbowOptions::default().margin(margin).min_gap(min_gap),
+        )),
         other => Err(format!("Unknown placement strategy: {}", other).into()),
     }
 }
@@ -91,11 +122,7 @@ fn non_empty_set_names(spec: &DiagramSpec) -> Vec<String> {
         .iter()
         .filter(|name| {
             let combo = Combination::new(&[name.as_str()]);
-            spec.inclusive_areas()
-                .get(&combo)
-                .copied()
-                .unwrap_or(0.0)
-                >= EPS
+            spec.inclusive_areas().get(&combo).copied().unwrap_or(0.0) >= EPS
         })
         .cloned()
         .collect()
@@ -145,7 +172,12 @@ fn ordered_combo_keys<'a>(
         let mut indices: Vec<usize> = c
             .sets()
             .iter()
-            .map(|s| input_order.iter().position(|n| n == s).unwrap_or(usize::MAX))
+            .map(|s| {
+                input_order
+                    .iter()
+                    .position(|n| n == s)
+                    .unwrap_or(usize::MAX)
+            })
             .collect();
         indices.sort_unstable();
         (indices.len(), indices)
@@ -236,6 +268,12 @@ fn unpack_layout_params<S: DiagramShape + Copy + 'static>(
                 out.width[i] = p[2];
                 out.height[i] = p[2];
             }
+            ShapeKind::RotatedRectangle => {
+                // RotatedRectangle::to_params() -> [x, y, width, height, phi]
+                out.width[i] = p[2];
+                out.height[i] = p[3];
+                out.phi[i] = p[4];
+            }
         }
     }
     Ok(out)
@@ -247,6 +285,7 @@ enum ShapeKind {
     Ellipse,
     Rectangle,
     Square,
+    RotatedRectangle,
 }
 
 impl ShapeKind {
@@ -256,6 +295,7 @@ impl ShapeKind {
             "ellipse" => Ok(ShapeKind::Ellipse),
             "rectangle" => Ok(ShapeKind::Rectangle),
             "square" => Ok(ShapeKind::Square),
+            "rotated_rectangle" => Ok(ShapeKind::RotatedRectangle),
             other => Err(format!("Unknown shape: {}", other).into()),
         }
     }
@@ -285,8 +325,7 @@ fn build_result_list(
     let mut region_err_vec = Vec::with_capacity(n_combos);
 
     for combo in &combo_keys {
-        let label = combo_label(combo, all_set_names)
-            .unwrap_or_else(|| combo.sets().join("&"));
+        let label = combo_label(combo, all_set_names).unwrap_or_else(|| combo.sets().join("&"));
         combo_labels.push(label);
         orig_vec.push(requested.get(combo).copied().unwrap_or(0.0));
         fit_vec.push(fitted.get(combo).copied().unwrap_or(0.0));
@@ -350,11 +389,7 @@ fn build_edge_case_list(
     let (params, fitted_set_names, fitted_map) = if non_empty.len() == 1 {
         let name = &non_empty[0];
         let combo = Combination::new(&[name.as_str()]);
-        let area = spec
-            .inclusive_areas()
-            .get(&combo)
-            .copied()
-            .unwrap_or(0.0);
+        let area = spec.inclusive_areas().get(&combo).copied().unwrap_or(0.0);
         let mut p = ShapeParams::with_capacity(1);
         p.h.push(0.0);
         p.k.push(0.0);
@@ -378,6 +413,15 @@ fn build_edge_case_list(
                 p.width[0] = side;
                 p.height[0] = side;
                 p.side[0] = side;
+            }
+            ShapeKind::RotatedRectangle => {
+                // A single-set rotated rectangle is unconstrained in aspect
+                // and angle; emit the axis-aligned square (phi = 0) matching
+                // the area, mirroring the rectangle/square closed forms.
+                let side = area.sqrt();
+                p.width[0] = side;
+                p.height[0] = side;
+                p.phi[0] = 0.0;
             }
         }
         // Fitted equals requested for the single-set perfect-fit case.
@@ -414,6 +458,8 @@ fn fit_and_collect<S: DiagramShape + Copy + 'static>(
     cmaes_threshold: Option<f64>,
     tolerance_opt: Option<f64>,
     jobs: usize,
+    optimizer: Option<Optimizer>,
+    n_restarts: Option<usize>,
 ) -> extendr_api::Result<List> {
     let mut fitter = Fitter::<S>::new(spec)
         .loss_type(loss_type)
@@ -424,6 +470,12 @@ fn fit_and_collect<S: DiagramShape + Copy + 'static>(
     }
     if let Some(tol) = tolerance_opt {
         fitter = fitter.tolerance(tol);
+    }
+    if let Some(opt) = optimizer {
+        fitter = fitter.optimizer(opt);
+    }
+    if let Some(n) = n_restarts {
+        fitter = fitter.n_restarts(n);
     }
     let layout = fitter
         .fit()
@@ -462,6 +514,9 @@ fn fit_euler_diagram(
     input: &str,
     shape: &str,
     loss: &str,
+    loss_eps: f64,
+    optimizer: &str,
+    n_restarts: Robj,
     extraopt_threshold: Robj,
     tolerance: Robj,
     max_sets: Robj,
@@ -508,7 +563,17 @@ fn fit_euler_diagram(
     }
 
     let input_type = parse_input_type(input)?;
-    let loss_type = parse_loss_type(loss)?;
+    let loss_type = parse_loss_type(loss, loss_eps)?;
+    let optimizer_opt = parse_optimizer(optimizer)?;
+
+    let n_restarts_opt: Option<usize> = if n_restarts.is_null() {
+        None
+    } else {
+        n_restarts
+            .as_real()
+            .filter(|v| v.is_finite() && *v >= 1.0)
+            .map(|v| v as usize)
+    };
 
     let cmaes_threshold: Option<f64> = if extraopt_threshold.is_null() {
         None
@@ -594,51 +659,30 @@ fn fit_euler_diagram(
         ));
     }
 
+    macro_rules! fit {
+        ($shape:ty) => {
+            fit_and_collect::<$shape>(
+                &spec,
+                &non_empty,
+                &all_set_names,
+                shape_kind,
+                loss_type,
+                seed_u64,
+                cmaes_threshold,
+                tolerance_opt,
+                jobs,
+                optimizer_opt,
+                n_restarts_opt,
+            )
+        };
+    }
+
     match shape_kind {
-        ShapeKind::Circle => fit_and_collect::<Circle>(
-            &spec,
-            &non_empty,
-            &all_set_names,
-            shape_kind,
-            loss_type,
-            seed_u64,
-            cmaes_threshold,
-            tolerance_opt,
-            jobs,
-        ),
-        ShapeKind::Ellipse => fit_and_collect::<Ellipse>(
-            &spec,
-            &non_empty,
-            &all_set_names,
-            shape_kind,
-            loss_type,
-            seed_u64,
-            cmaes_threshold,
-            tolerance_opt,
-            jobs,
-        ),
-        ShapeKind::Rectangle => fit_and_collect::<Rectangle>(
-            &spec,
-            &non_empty,
-            &all_set_names,
-            shape_kind,
-            loss_type,
-            seed_u64,
-            cmaes_threshold,
-            tolerance_opt,
-            jobs,
-        ),
-        ShapeKind::Square => fit_and_collect::<Square>(
-            &spec,
-            &non_empty,
-            &all_set_names,
-            shape_kind,
-            loss_type,
-            seed_u64,
-            cmaes_threshold,
-            tolerance_opt,
-            jobs,
-        ),
+        ShapeKind::Circle => fit!(Circle),
+        ShapeKind::Ellipse => fit!(Ellipse),
+        ShapeKind::Rectangle => fit!(Rectangle),
+        ShapeKind::Square => fit!(Square),
+        ShapeKind::RotatedRectangle => fit!(RotatedRectangle),
     }
 }
 
@@ -670,16 +714,17 @@ fn region_pieces_to_xy_list(pieces: &[RegionPiece]) -> List {
     let mut x: Vec<f64> = Vec::new();
     let mut y: Vec<f64> = Vec::new();
     let mut id_lengths: Vec<i32> = Vec::new();
-    let push_ring = |verts: &[Point], x: &mut Vec<f64>, y: &mut Vec<f64>, id_lengths: &mut Vec<i32>| {
-        if verts.is_empty() {
-            return;
-        }
-        for v in verts {
-            x.push(v.x());
-            y.push(v.y());
-        }
-        id_lengths.push(verts.len() as i32);
-    };
+    let push_ring =
+        |verts: &[Point], x: &mut Vec<f64>, y: &mut Vec<f64>, id_lengths: &mut Vec<i32>| {
+            if verts.is_empty() {
+                return;
+            }
+            for v in verts {
+                x.push(v.x());
+                y.push(v.y());
+            }
+            id_lengths.push(verts.len() as i32);
+        };
     for piece in pieces {
         push_ring(piece.outer.vertices(), &mut x, &mut y, &mut id_lengths);
         for hole in &piece.holes {
@@ -699,11 +744,7 @@ fn empty_region_xy_list() -> List {
 
 /// Read an `Option<f64>` from a possibly-NULL R scalar.
 fn read_optional_f64(obj: &Robj) -> Option<f64> {
-    if obj.is_null() {
-        None
-    } else {
-        obj.as_real()
-    }
+    if obj.is_null() { None } else { obj.as_real() }
 }
 
 /// Build the optional fitted container rectangle from raw R scalars. Returns
@@ -802,6 +843,26 @@ fn build_shapes(
                 .collect::<extendr_api::Result<Vec<_>>>()?;
             Ok(DiagramShapes::Squares(squares))
         }
+        ShapeKind::RotatedRectangle => {
+            if h.len() != n
+                || k.len() != n
+                || width.len() != n
+                || height.len() != n
+                || phi.len() != n
+            {
+                return Err(
+                    "set_names and rotated rectangle parameter vectors must all have the same length"
+                        .into(),
+                );
+            }
+            let rects: Vec<RotatedRectangle> = (0..n)
+                .map(|i| {
+                    RotatedRectangle::try_new(Point::new(h[i], k[i]), width[i], height[i], phi[i])
+                        .map_err(|e| invalid_param(i, e))
+                })
+                .collect::<extendr_api::Result<Vec<_>>>()?;
+            Ok(DiagramShapes::RotatedRectangles(rects))
+        }
     }
 }
 
@@ -813,6 +874,7 @@ enum DiagramShapes {
     Ellipses(Vec<Ellipse>),
     Rectangles(Vec<Rectangle>),
     Squares(Vec<Square>),
+    RotatedRectangles(Vec<RotatedRectangle>),
 }
 
 impl DiagramShapes {
@@ -830,6 +892,10 @@ impl DiagramShapes {
                 .map(|s| polygonize_outline(s, n_vertices))
                 .collect(),
             DiagramShapes::Squares(v) => v
+                .iter()
+                .map(|s| polygonize_outline(s, n_vertices))
+                .collect(),
+            DiagramShapes::RotatedRectangles(v) => v
                 .iter()
                 .map(|s| polygonize_outline(s, n_vertices))
                 .collect(),
@@ -851,6 +917,9 @@ impl DiagramShapes {
                 decompose_regions(v, set_names, spec, container, n_vertices)
             }
             DiagramShapes::Squares(v) => {
+                decompose_regions(v, set_names, spec, container, n_vertices)
+            }
+            DiagramShapes::RotatedRectangles(v) => {
                 decompose_regions(v, set_names, spec, container, n_vertices)
             }
         }
@@ -1061,6 +1130,9 @@ fn placement_kind_str(kind: PlacementKind) -> &'static str {
         PlacementKind::ExteriorRaycast => "exterior_raycast",
         PlacementKind::ExteriorForceDirected => "exterior_force_directed",
         PlacementKind::ExteriorElbow => "exterior_elbow",
+        // `PlacementKind` is #[non_exhaustive]; treat any future variant as
+        // an interior placement (the no-leader default).
+        _ => "interior",
     }
 }
 
@@ -1216,8 +1288,8 @@ fn place_euler_labels(
             .filter(|v| v.is_finite() && *v >= 1.0)
             .map(|v| v as usize)
     };
-    let min_gap_opt: Option<f64> = read_optional_f64(&placement_min_gap)
-        .filter(|v| v.is_finite() && *v >= 0.0);
+    let min_gap_opt: Option<f64> =
+        read_optional_f64(&placement_min_gap).filter(|v| v.is_finite() && *v >= 0.0);
 
     let leader = parse_placement(placement, margin_opt, iterations_opt, min_gap_opt)?;
     let tether_source = parse_tether(placement_tether)?;
@@ -1225,12 +1297,13 @@ fn place_euler_labels(
         .filter(|v| v.is_finite())
         .map(|v| v.max(0.0))
         .unwrap_or(0.0);
-    let strategy = PlacementStrategy {
-        leader,
-        precision: label_precision.max(f64::EPSILON),
-        tether: tether_source,
-        leader_gap,
-    };
+    // `PlacementStrategy` is #[non_exhaustive]; build it via its fluent setters
+    // rather than a struct literal.
+    let strategy = PlacementStrategy::default()
+        .leader(leader)
+        .precision(label_precision.max(f64::EPSILON))
+        .tether(tether_source)
+        .leader_gap(leader_gap);
 
     let placements = place_labels(&regions, &sizes, container.as_ref(), &strategy);
 
@@ -1340,9 +1413,7 @@ fn polygon_clip_rust(
     }
     let total_subject: usize = subject_id_lengths.iter().map(|&n| n as usize).sum();
     if total_subject != subject_x.len() {
-        return Err(
-            "sum(subject_id_lengths) must equal length(subject_x)".into(),
-        );
+        return Err("sum(subject_id_lengths) must equal length(subject_x)".into());
     }
 
     let operation = match op {
@@ -1381,6 +1452,56 @@ fn polygon_clip_rust(
     Ok(polygons_to_xy_list(&result_polys))
 }
 
+/// Canonical (non-proportional) Venn layout for a given shape.
+///
+/// Returns per-set geometry for a true Venn diagram of `set_names.len()` sets,
+/// where every one of the `2^n - 1` regions is present. Used by the R `venn()`
+/// path for shapes whose layout is supplied by eunoia rather than by eulerr's
+/// precomputed ellipse table. Currently only `"rotated_rectangle"` is wired
+/// here (it supports `n` in 1..=4); the rotation is what lets four rectangles
+/// open all 15 regions, which axis-aligned rectangles cannot.
+///
+/// @keywords internal
+#[extendr]
+fn venn_layout(set_names: Vec<String>, shape: &str) -> extendr_api::Result<List> {
+    let n = set_names.len();
+    let shapes = match shape {
+        "rotated_rectangle" => RotatedRectangle::canonical_venn_layout(n).ok_or_else(|| {
+            Error::from(format!(
+                "rotated-rectangle Venn diagrams support 1 to 4 sets, but {} were given",
+                n
+            ))
+        })?,
+        other => {
+            return Err(format!("venn_layout: unsupported shape `{}`", other).into());
+        }
+    };
+
+    let mut h = Vec::with_capacity(n);
+    let mut k = Vec::with_capacity(n);
+    let mut width = Vec::with_capacity(n);
+    let mut height = Vec::with_capacity(n);
+    let mut phi = Vec::with_capacity(n);
+    for s in &shapes {
+        // RotatedRectangle::to_params() -> [x, y, width, height, phi]
+        let p = s.to_params();
+        h.push(p[0]);
+        k.push(p[1]);
+        width.push(p[2]);
+        height.push(p[3]);
+        phi.push(p[4]);
+    }
+
+    Ok(list!(
+        set_names = set_names,
+        h = h,
+        k = k,
+        width = width,
+        height = height,
+        phi = phi,
+    ))
+}
+
 /// Default number of sets that `eunoia` accepts before rejecting a spec.
 /// Used by the R-side input validator so the cap is not hardcoded.
 /// @keywords internal
@@ -1405,6 +1526,7 @@ extendr_module! {
     fn euler_plot_data;
     fn place_euler_labels;
     fn polygon_clip_rust;
+    fn venn_layout;
     fn max_sets_default;
     fn max_sets_hard_cap;
 }

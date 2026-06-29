@@ -3,7 +3,7 @@
 # nolint start
 
 #' @keywords internal
-fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads)
+fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, loss_eps, optimizer, n_restarts, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, loss_eps, optimizer, n_restarts, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads)
 
 #' Compute polygon geometry and label anchors for plotting a fitted Euler
 #' diagram, including the optional complement region inside a fitted
@@ -60,6 +60,18 @@ place_euler_labels <- function(set_names, shape, h, k, a, b, phi, width, height,
 #'
 #' @keywords internal
 polygon_clip_rust <- function(subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op) .Call(wrap__polygon_clip_rust, subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op)
+
+#' Canonical (non-proportional) Venn layout for a given shape.
+#'
+#' Returns per-set geometry for a true Venn diagram of `set_names.len()` sets,
+#' where every one of the `2^n - 1` regions is present. Used by the R `venn()`
+#' path for shapes whose layout is supplied by eunoia rather than by eulerr's
+#' precomputed ellipse table. Currently only `"rotated_rectangle"` is wired
+#' here (it supports `n` in 1..=4); the rotation is what lets four rectangles
+#' open all 15 regions, which axis-aligned rectangles cannot.
+#'
+#' @keywords internal
+venn_layout <- function(set_names, shape) .Call(wrap__venn_layout, set_names, shape)
 
 #' Default number of sets that `eunoia` accepts before rejecting a spec.
 #' Used by the R-side input validator so the cap is not hardcoded.

@@ -51,6 +51,30 @@ test_that("all venn diagram sizes work", {
   }
 })
 
+test_that("rotated-rectangle venn works for up to four sets", {
+  for (n in 1:4) {
+    v <- venn(n, names = letters[1:n], shape = "rotated_rectangle")
+    expect_is(v, "eulerr_venn")
+    s <- v$shapes
+    expect_identical(unique(s$type), "rotated_rectangle")
+    expect_equal(NROW(s), n)
+    expect_true(all(is.finite(s$h)))
+    expect_true(all(is.finite(s$width)))
+    expect_true(all(is.finite(s$phi)))
+    expect_null(v$ellipses)
+    # a true Venn diagram has all 2^n - 1 regions
+    expect_equal(length(v$original.values), 2^n - 1)
+    expect_silent(plot(v))
+  }
+})
+
+test_that("rotated-rectangle venn rejects five sets", {
+  expect_error(
+    venn(5, names = letters[1:5], shape = "rotated_rectangle"),
+    "four sets"
+  )
+})
+
 test_that("normal use of venn() returns no errors", {
   expect_silent(venn(organisms))
   expect_silent(venn(c(A = 1, B = 2)))
