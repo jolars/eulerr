@@ -111,7 +111,7 @@ engine:
 | Python | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py)) | `pip install eunoia` |
 | Julia | [`Eunoia.jl`](https://platform.juliahub.com/ui/Packages/General/Eunoia) ([repo](https://github.com/jolars/Eunoia.jl)) | `] add Eunoia` |
 | JavaScript | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia)) | `npm install @jolars/eunoia` |
-| Rust | [`eunoia`](https://crates.io/crates/eunoia) ([repo](https://github.com/jolars/eunoia)) | `cargo add eunoia` |
+| Rust | `eunoia` on crates.io ([repo](https://github.com/jolars/eunoia)) | `cargo add eunoia` |
 
 ## License
 
