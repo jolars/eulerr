@@ -18,6 +18,7 @@ venn(combinations, ...)
 venn(
   combinations,
   input = c("disjoint", "union"),
+  shape = c("ellipse", "rotated_rectangle"),
   names = letters[length(combinations)],
   ...
 )
@@ -58,6 +59,13 @@ venn(combinations, ...)
   type of input: disjoint identities (`'disjoint'`) or unions
   (`'union'`).
 
+- shape:
+
+  geometric shape used in the diagram, either `"ellipse"` (the default,
+  supporting up to five sets) or `"rotated_rectangle"` (supporting up to
+  four sets). Rotated rectangles draw a true four-set Venn diagram in
+  which all 15 regions are visible.
+
 - names:
 
   a character vector for the names of each set of the same length as
@@ -90,13 +98,16 @@ Returns an object of class `'eulerr_venn', 'venn', 'euler'` with items
 
 - shapes:
 
-  a data frame of the precomputed ellipse parameters (one row per set,
-  columns `type, h, k, a, b, phi`). `venn()` always uses ellipses.
+  a data frame of the precomputed shape parameters (one row per set).
+  For `shape = "ellipse"` the columns are `type, h, k, a, b, phi`; for
+  `shape = "rotated_rectangle"` they are
+  `type, h, k, width, height, phi`.
 
 - ellipses:
 
   the legacy 5-column data frame (`h, k, a, b, phi`) — kept for
-  back-compat alongside the canonical `shapes` slot.
+  back-compat alongside the canonical `shapes` slot. Only present for
+  `shape = "ellipse"`.
 
 - original.values:
 

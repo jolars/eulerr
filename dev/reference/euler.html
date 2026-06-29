@@ -64,10 +64,12 @@ axis-aligned rectangle, or an axis-aligned square.</p>
 <span>  <span class="va">combinations</span>,</span>
 <span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disjoint"</span>, <span class="st">"union"</span><span class="op">)</span>,</span>
 <span>  transform <span class="op">=</span> <span class="va">identity</span>,</span>
-<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"circle"</span>, <span class="st">"ellipse"</span>, <span class="st">"rectangle"</span>, <span class="st">"square"</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"circle"</span>, <span class="st">"ellipse"</span>, <span class="st">"rectangle"</span>, <span class="st">"square"</span>, <span class="st">"rotated_rectangle"</span><span class="op">)</span>,</span>
 <span>  loss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sum_squared"</span>, <span class="st">"sum_absolute"</span>, <span class="st">"sum_absolute_region_error"</span>,</span>
 <span>    <span class="st">"sum_squared_region_error"</span>, <span class="st">"max_absolute"</span>, <span class="st">"max_squared"</span>, <span class="st">"root_mean_squared"</span>,</span>
-<span>    <span class="st">"stress"</span>, <span class="st">"diag_error"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"stress"</span>, <span class="st">"diag_error"</span>, <span class="st">"log_sum_absolute"</span>, <span class="st">"smooth_sum_absolute"</span>,</span>
+<span>    <span class="st">"smooth_sum_absolute_region_error"</span>, <span class="st">"smooth_max_absolute"</span>, <span class="st">"smooth_max_squared"</span>,</span>
+<span>    <span class="st">"smooth_diag_error"</span>, <span class="st">"smooth_log_sum_absolute"</span><span class="op">)</span>,</span>
 <span>  loss_aggregator <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  complement <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -126,7 +128,10 @@ when given). Has no effect on <code><a href="venn.html">venn()</a></code> diagra
 
 
 <dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
-<dd><p>geometric shape used in the diagram</p></dd>
+<dd><p>geometric shape used in the diagram: one of <code>"circle"</code>,
+<code>"ellipse"</code>, <code>"rectangle"</code>, <code>"square"</code>, or <code>"rotated_rectangle"</code>. The
+rotated rectangle is fit with a derivative-free optimizer and is also the
+only shape able to draw a true four-set Venn diagram (see <code><a href="venn.html">venn()</a></code>).</p></dd>
 
 
 <dt id="arg-loss">loss<a class="anchor" aria-label="anchor" href="#arg-loss"></a></dt>
@@ -144,6 +149,12 @@ errors.</p></li>
 <li><p><code>"root_mean_squared"</code> — normalized root-mean-squared error.</p></li>
 <li><p><code>"stress"</code> — venneuler-style stress.</p></li>
 <li><p><code>"diag_error"</code> — eulerAPE-style <code>diagError</code>.</p></li>
+<li><p><code>"log_sum_absolute"</code> — sum of absolute errors on <code>log1p</code>-transformed
+areas, which stops large regions from dominating the fit.</p></li>
+<li><p><code>"smooth_sum_absolute"</code>, <code>"smooth_sum_absolute_region_error"</code>,
+<code>"smooth_max_absolute"</code>, <code>"smooth_max_squared"</code>, <code>"smooth_diag_error"</code>,
+<code>"smooth_log_sum_absolute"</code> — gradient-friendly (Huber) surrogates of
+the corresponding non-smooth losses, controlled by <code>control$loss_eps</code>.</p></li>
 </ul></dd>
 
 
@@ -188,6 +199,19 @@ uses half of the available logical cores (but a single thread under
 globally with the <code>eulerr.n_threads</code> option or the <code>EULERR_NUM_THREADS</code>
 environment variable, and otherwise honors R's conventional <code>mc.cores</code>
 option (or <code>MC_CORES</code> environment variable).</p></li>
+<li><p><code>optimizer</code>: the final-layout optimizer. The default, <code>"auto"</code>, lets the
+engine pick a sensible optimizer for the chosen shape and loss. To force a
+particular one, use any of <code>"levenberg_marquardt"</code>, <code>"lbfgs"</code>,
+<code>"nelder_mead"</code>, <code>"mads"</code> (mesh-adaptive direct search, derivative-free
+and well suited to non-smooth losses), <code>"cma_es"</code>, <code>"cma_es_lm"</code>, <code>"trf"</code>,
+or <code>"cma_es_trf"</code>.</p></li>
+<li><p><code>n_restarts</code>: number of full-pipeline restarts; the lowest-loss result
+is kept. Higher values improve the chance of finding the global optimum at
+proportionally higher cost. <code>NULL</code> (the default) lets the engine choose
+(10, automatically reduced for small smooth-loss fits).</p></li>
+<li><p><code>loss_eps</code>: smoothing parameter for the <code>"smooth_*"</code> losses; pick roughly
+1% of the typical residual magnitude. Smaller values track the non-smooth
+loss more closely but give noisier gradients. Default <code>0.01</code>.</p></li>
 </ul></dd>
 
 
@@ -217,10 +241,12 @@ constructing dummy codes</p></dd>
 <dl><dt>shapes</dt>
 <dd><p>a data frame of fitted shape parameters. One row per set
 with a <code>type</code> column (one of <code>"circle"</code>, <code>"ellipse"</code>, <code>"rectangle"</code>,
-<code>"square"</code>), the center coordinates <code>h</code> and <code>k</code>, and the
-shape-specific columns: <code>a</code>, <code>b</code>, <code>phi</code> for ellipses/circles; <code>width</code>
-and <code>height</code> for rectangles; <code>side</code> (plus mirrored <code>width</code>/<code>height</code>)
-for squares. Columns that don't apply to the chosen shape are <code>NA</code>.</p></dd>
+<code>"square"</code>, <code>"rotated_rectangle"</code>), the center coordinates <code>h</code> and <code>k</code>,
+and the shape-specific columns: <code>a</code>, <code>b</code>, <code>phi</code> for ellipses/circles;
+<code>width</code> and <code>height</code> for rectangles; <code>side</code> (plus mirrored
+<code>width</code>/<code>height</code>) for squares; <code>width</code>, <code>height</code>, and <code>phi</code> (rotation,
+in radians) for rotated rectangles. Columns that don't apply to the
+chosen shape are <code>NA</code>.</p></dd>
 
 <dt>ellipses</dt>
 <dd><p>for <code>shape = "circle"</code> and <code>shape = "ellipse"</code> fits,
@@ -331,13 +357,14 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Investigate the fit again (which is now exact)</span></span></span>
 <span class="r-in"><span><span class="va">fit2</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     original fitted residuals regionError</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A          2      2         0           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> B          2      2         0           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> C          2      2         0           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A&amp;B        1      1         0           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A&amp;C        1      1         0           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> B&amp;C        1      1         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       original fitted residuals regionError</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A            2      2         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> B            2      2         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> C            2      2         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A&amp;B          1      1         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A&amp;C          1      1         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> B&amp;C          1      1         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A&amp;B&amp;C        0      0         0           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0 </span>
@@ -407,15 +434,15 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 <span class="r-out co"><span class="r-pr">#&gt;</span> ------------------------------------------------------------ </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> female.child </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     original fitted residuals regionError</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> banana                     4      0         4       0.333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> apple                      0      0         0       0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> orange                     1      1         0       0.031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> banana&amp;apple               4     15       -11       0.456</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> banana&amp;orange              1      1         0       0.031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> banana&amp;apple&amp;orange        2      2         0       0.061</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> banana                     4      4         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> apple                      0      0         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> orange                     1      1         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> banana&amp;apple               4      4         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> banana&amp;orange              1      1         0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> banana&amp;apple&amp;orange        2      2         0           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0.456 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0.504 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Using the matrix method</span></span></span>
@@ -447,22 +474,22 @@ Using Ellipses. PLOS ONE (Internet). 2014 Jul (cited 2016 Dec
 <span class="r-in"><span><span class="co"># Using weights</span></span></span>
 <span class="r-in"><span><span class="fu">euler</span><span class="op">(</span><span class="va">organisms</span>, weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">9</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     original fitted residuals regionError</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> animal                     0  1.828    -1.828       0.033</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mammal                     0  3.611    -3.611       0.065</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> plant                      0  0.768    -0.768       0.014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sea                        0  1.899    -1.899       0.034</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> animal                     0  1.829    -1.829       0.033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mammal                     0  3.612    -3.612       0.065</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> plant                      0  0.769    -0.769       0.014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sea                        0  1.900    -1.900       0.034</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> spiny                      0  0.374    -0.374       0.007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal             30 29.533     0.467       0.018</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal             30 29.532     0.468       0.018</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;sea                 4  0.000     4.000       0.069</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;plant               0  0.857    -0.857       0.016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;sea                 8  3.069     4.931       0.082</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;plant               0  0.859    -0.859       0.016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;sea                 8  3.072     4.928       0.082</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> plant&amp;sea                  2  0.000     2.000       0.034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> plant&amp;spiny                9  9.003    -0.003       0.008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;plant        0  0.486    -0.486       0.009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;sea          0  2.215    -2.215       0.040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> plant&amp;spiny                9  9.004    -0.004       0.008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;plant        0  0.487    -0.487       0.009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;mammal&amp;sea          0  2.216    -2.216       0.040</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> animal&amp;sea&amp;spiny           5  0.000     5.000       0.086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;plant&amp;sea           0  0.000     0.000       0.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;plant&amp;spiny         0  1.512    -1.512       0.027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mammal&amp;plant&amp;spiny         0  1.513    -1.513       0.027</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> diagError: 0.086 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stress:    0.09 </span>

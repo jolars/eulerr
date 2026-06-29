@@ -69,6 +69,7 @@ Venn diagrams, however, the areas in the diagram are also
 <span><span class="fu">venn</span><span class="op">(</span></span>
 <span>  <span class="va">combinations</span>,</span>
 <span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disjoint"</span>, <span class="st">"union"</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ellipse"</span>, <span class="st">"rotated_rectangle"</span><span class="op">)</span>,</span>
 <span>  names <span class="op">=</span> <span class="va">letters</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">combinations</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -111,6 +112,13 @@ data.frame (see <strong>methods (by class)</strong>)</p></dd>
 (<code>'disjoint'</code>) or unions (<code>'union'</code>).</p></dd>
 
 
+<dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
+<dd><p>geometric shape used in the diagram, either <code>"ellipse"</code> (the
+default, supporting up to five sets) or <code>"rotated_rectangle"</code> (supporting
+up to four sets). Rotated rectangles draw a true four-set Venn diagram in
+which all 15 regions are visible.</p></dd>
+
+
 <dt id="arg-names">names<a class="anchor" aria-label="anchor" href="#arg-names"></a></dt>
 <dd><p>a character vector for the names of each set of the same
 length as 'combinations'. Must not be <code>NULL</code> if <code>combinations</code> is a
@@ -141,14 +149,13 @@ constructing dummy codes</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Returns an object of class <code>'eulerr_venn', 'venn', 'euler'</code> with items</p>
 <dl><dt>shapes</dt>
-<dd><p>a data frame of the precomputed ellipse parameters (one
-row per set, columns <code>type, h, k, a, b, phi</code>). <code>venn()</code> always uses
-ellipses.</p></dd>
+<dd><p>a data frame of the precomputed shape parameters (one row
+per set). For <code>shape = "ellipse"</code> the columns are <code>type, h, k, a, b, phi</code>; for <code>shape = "rotated_rectangle"</code> they are <code>type, h, k, width, height, phi</code>.</p></dd>
 
 <dt>ellipses</dt>
 <dd><p>the legacy 5-column data frame
 (<code>h, k, a, b, phi</code>) — kept for back-compat alongside the canonical
-<code>shapes</code> slot.</p></dd>
+<code>shapes</code> slot. Only present for <code>shape = "ellipse"</code>.</p></dd>
 
 <dt>original.values</dt>
 <dd><p>set relationships in the input</p></dd>
