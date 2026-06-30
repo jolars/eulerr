@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **Johan Larsson**. Author, maintainer.
+- **Johan Larsson**. Author, maintainer, copyright holder.
   [](https://orcid.org/0000-0002-4029-5945)
 
 - **A. Jonathan R. Godfrey**. Contributor.
@@ -20,7 +20,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/jolars/eulerr/blob/v8.0.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/jolars/eulerr/blob/main/inst/CITATION)
 
 Larsson J, Gustafsson P (2018). “A Case Study in Fitting
 Area-Proportional Euler Diagrams with Ellipses Using eulerr.” In

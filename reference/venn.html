@@ -17,7 +17,7 @@ non-proportional to the input; this is also the case here."><meta property="og:i
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +28,8 @@ non-proportional to the input; this is also the case here."><meta property="og:i
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/comparison.html">Comparison with other packages</a></li>
+    <li><a class="dropdown-item" href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/introduction.html">Introducing eulerr</a></li>
     <li><a class="dropdown-item" href="../articles/loss-functions.html">Loss Functions</a></li>
     <li><a class="dropdown-item" href="../articles/under-the-hood.html">eulerr under the hood</a></li>
@@ -47,7 +48,7 @@ non-proportional to the input; this is also the case here."><meta property="og:i
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Venn diagrams</h1>
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/v8.0.0/R/venn.R" class="external-link"><code>R/venn.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/R/venn.R" class="external-link"><code>R/venn.R</code></a></small>
       <div class="d-none name"><code>venn.Rd</code></div>
     </div>
 
@@ -68,6 +69,7 @@ Venn diagrams, however, the areas in the diagram are also
 <span><span class="fu">venn</span><span class="op">(</span></span>
 <span>  <span class="va">combinations</span>,</span>
 <span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"disjoint"</span>, <span class="st">"union"</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ellipse"</span>, <span class="st">"rotated_rectangle"</span><span class="op">)</span>,</span>
 <span>  names <span class="op">=</span> <span class="va">letters</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">combinations</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -110,6 +112,13 @@ data.frame (see <strong>methods (by class)</strong>)</p></dd>
 (<code>'disjoint'</code>) or unions (<code>'union'</code>).</p></dd>
 
 
+<dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
+<dd><p>geometric shape used in the diagram, either <code>"ellipse"</code> (the
+default, supporting up to five sets) or <code>"rotated_rectangle"</code> (supporting
+up to four sets). Rotated rectangles draw a true four-set Venn diagram in
+which all 15 regions are visible.</p></dd>
+
+
 <dt id="arg-names">names<a class="anchor" aria-label="anchor" href="#arg-names"></a></dt>
 <dd><p>a character vector for the names of each set of the same
 length as 'combinations'. Must not be <code>NULL</code> if <code>combinations</code> is a
@@ -140,14 +149,13 @@ constructing dummy codes</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Returns an object of class <code>'eulerr_venn', 'venn', 'euler'</code> with items</p>
 <dl><dt>shapes</dt>
-<dd><p>a data frame of the precomputed ellipse parameters (one
-row per set, columns <code>type, h, k, a, b, phi</code>). <code>venn()</code> always uses
-ellipses.</p></dd>
+<dd><p>a data frame of the precomputed shape parameters (one row
+per set). For <code>shape = "ellipse"</code> the columns are <code>type, h, k, a, b, phi</code>; for <code>shape = "rotated_rectangle"</code> they are <code>type, h, k, width, height, phi</code>.</p></dd>
 
 <dt>ellipses</dt>
 <dd><p>the legacy 5-column data frame
 (<code>h, k, a, b, phi</code>) — kept for back-compat alongside the canonical
-<code>shapes</code> slot.</p></dd>
+<code>shapes</code> slot. Only present for <code>shape = "ellipse"</code>.</p></dd>
 
 <dt>original.values</dt>
 <dd><p>set relationships in the input</p></dd>

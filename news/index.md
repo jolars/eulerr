@@ -1,5 +1,34 @@
 # Changelog
 
+## eulerr 8.1
+
+### Highlights
+
+This version brings rotated rectangles as a new shape to eulerr, as well
+as the ability to customize the optimizer used to fit the diagram.
+eulerr is also parallelized now, and because the fitting pipeline now
+runs the full fit in several branches (in parallel), this should bring
+significant speedups for larger diagrams.
+
+### Features
+
+- **plotting:** add configurable canvas margin
+  ([`eea3542`](https://github.com/jolars/eulerr/commit/eea354295936f8409debb4914c1d33f9878b94aa))
+- support rotated rectangles and configurable optimizers
+  ([`330e42b`](https://github.com/jolars/eulerr/commit/330e42b6c87226cbc3833c3e99869fe1a7a971c3))
+- add `n_threads` option for parallelizing fits
+  ([`845a54f`](https://github.com/jolars/eulerr/commit/845a54fb53034be8aecde65ee5a0cedbe31d8c29))
+- add `transform` option to fitter
+  ([`f4b99c1`](https://github.com/jolars/eulerr/commit/f4b99c16d10baf5e23263aa81f6ae6efff06dab0)),
+  closes [\#96](https://github.com/jolars/eulerr/issues/96)
+
+### Bug fixes
+
+- **plotting:** increase margin around plot to 2 pt
+  ([`3ff50c6`](https://github.com/jolars/eulerr/commit/3ff50c68c204470e5ba2fa6ea0ff486047928a6b))
+- note correct rustc requirement in DESCRIPTION
+  ([`9b05074`](https://github.com/jolars/eulerr/commit/9b0507423c6088c1432390b9b44f448d52351a88))
+
 ## eulerr 8.0
 
 This is a major milestone for eulerr. The 8.0.0 release introduces a
@@ -63,7 +92,7 @@ developed. Here are some of the highlights this brings:
 - add complement
   ([`b6ce232`](https://github.com/jolars/eulerr/commit/b6ce23280d4b54b932659f2ce9c73c5df59f5be7)),
   closes [\#13](https://github.com/jolars/eulerr/issues/13)
-- add new loss functions, deprectate old and `loss_aggregator`
+- add new loss functions, deprecate old and `loss_aggregator`
   ([`03e7dea`](https://github.com/jolars/eulerr/commit/03e7dea3c813676ee87418a1ef52667f498df4e6))
 - add `max_sets` in `control` for capping max sets
   ([`621a898`](https://github.com/jolars/eulerr/commit/621a898f1e523df8f5d904a3543bb35dd1355ff8)),

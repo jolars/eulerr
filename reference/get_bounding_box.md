@@ -15,9 +15,9 @@ get_bounding_box(shapes, k = NULL, a = NULL, b = NULL, phi = NULL)
 - shapes:
 
   the `$shapes` data frame of a fitted euler object (after dropping NA
-  rows for empty sets), or — for legacy callers — the numeric `h`
-  vector. When `h` is numeric the function falls back to the legacy
-  ellipse signature for back-compat with external code.
+  rows for empty sets), or (for legacy callers) the numeric `h` vector.
+  When `h` is numeric the function falls back to the legacy ellipse
+  signature for back-compat with external code.
 
 - k, a, b, phi:
 

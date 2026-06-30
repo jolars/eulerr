@@ -12,6 +12,8 @@ is_real(x, tol = .Machine$double.eps^0.5)
 
 - x:
 
+  a vector
+
 ## Value
 
 A logical.

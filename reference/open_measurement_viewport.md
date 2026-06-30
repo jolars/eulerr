@@ -2,10 +2,10 @@
 
 Returns an idempotent closer thunk that pops the viewport and closes the
 null PDF device. Used so we can call
-`grid::convertWidth(grobWidth(...), "native", ...)` at setup time — i.e.
+`grid::convertWidth(grobWidth(...), "native", ...)` at setup time, i.e.
 before
 [`plot.eulergram()`](https://jolars.github.io/eulerr/reference/plot.eulergram.md)
-ever opens a real device — to size the label boxes that drive label
+ever opens a real device, to size the label boxes that drive label
 placement.
 
 ## Usage

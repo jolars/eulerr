@@ -14,10 +14,13 @@ euler(combinations, ...)
 euler(
   combinations,
   input = c("disjoint", "union"),
-  shape = c("circle", "ellipse", "rectangle", "square"),
+  transform = identity,
+  shape = c("circle", "ellipse", "rectangle", "square", "rotated_rectangle"),
   loss = c("sum_squared", "sum_absolute", "sum_absolute_region_error",
     "sum_squared_region_error", "max_absolute", "max_squared", "root_mean_squared",
-    "stress", "diag_error"),
+    "stress", "diag_error", "log_sum_absolute", "smooth_sum_absolute",
+    "smooth_sum_absolute_region_error", "smooth_max_absolute", "smooth_max_squared",
+    "smooth_diag_error", "smooth_log_sum_absolute"),
   loss_aggregator = NULL,
   complement = NULL,
   control = list(),
@@ -60,9 +63,31 @@ euler(combinations, ...)
   type of input: disjoint identities (`'disjoint'`) or unions
   (`'union'`).
 
+- transform:
+
+  a function applied to the areas of the *disjoint* (exclusive) regions
+  before fitting. The default,
+  [`base::identity()`](https://rdrr.io/r/base/identity.html), leaves the
+  areas untouched. A monotone transform such as
+  [`base::log1p()`](https://rdrr.io/r/base/Log.html) can keep small
+  regions legible when set sizes span several orders of magnitude. The
+  transform is applied to the exclusive regions because those are the
+  additive atoms the diagram fits to; as a consequence the area of a
+  whole set or union no longer equals
+  [`transform()`](https://rdrr.io/r/base/transform.html) of its size,
+  only the individual visible regions carry the transformed scale. The
+  function must return a non-negative, finite value for each region (and
+  for `complement`, when given). Has no effect on
+  [`venn()`](https://jolars.github.io/eulerr/reference/venn.md)
+  diagrams, whose geometry is fixed.
+
 - shape:
 
-  geometric shape used in the diagram
+  geometric shape used in the diagram: one of `"circle"`, `"ellipse"`,
+  `"rectangle"`, `"square"`, or `"rotated_rectangle"`. The rotated
+  rectangle is fit with a derivative-free optimizer and is also the only
+  shape able to draw a true four-set Venn diagram (see
+  [`venn()`](https://jolars.github.io/eulerr/reference/venn.md)).
 
 - loss:
 
@@ -71,25 +96,34 @@ euler(combinations, ...)
   functions exposed by the `eunoia` Rust crate that powers the
   optimizer:
 
-  - `"sum_squared"` — normalized sum of squared errors (default).
+  - `"sum_squared"`: normalized sum of squared errors (default).
 
-  - `"sum_absolute"` — normalized sum of absolute errors.
+  - `"sum_absolute"`: normalized sum of absolute errors.
 
-  - `"sum_absolute_region_error"` — normalized sum of absolute region
+  - `"sum_absolute_region_error"`: normalized sum of absolute region
     errors.
 
-  - `"sum_squared_region_error"` — normalized sum of squared region
+  - `"sum_squared_region_error"`: normalized sum of squared region
     errors.
 
-  - `"max_absolute"` — normalized maximum absolute error.
+  - `"max_absolute"`: normalized maximum absolute error.
 
-  - `"max_squared"` — normalized maximum squared error.
+  - `"max_squared"`: normalized maximum squared error.
 
-  - `"root_mean_squared"` — normalized root-mean-squared error.
+  - `"root_mean_squared"`: normalized root-mean-squared error.
 
-  - `"stress"` — venneuler-style stress.
+  - `"stress"`: venneuler-style stress.
 
-  - `"diag_error"` — eulerAPE-style `diagError`.
+  - `"diag_error"`: eulerAPE-style `diagError`.
+
+  - `"log_sum_absolute"`: sum of absolute errors on `log1p`-transformed
+    areas, which stops large regions from dominating the fit.
+
+  - `"smooth_sum_absolute"`, `"smooth_sum_absolute_region_error"`,
+    `"smooth_max_absolute"`, `"smooth_max_squared"`,
+    `"smooth_diag_error"`, `"smooth_log_sum_absolute"` —
+    gradient-friendly (Huber) surrogates of the corresponding non-smooth
+    losses, controlled by `control$loss_eps`.
 
 - loss_aggregator:
 
@@ -101,7 +135,7 @@ euler(combinations, ...)
 - complement:
 
   an optional single non-negative number giving the area of the
-  *complement* — that is, the universe outside every named set. When
+  *complement*, that is, the universe outside every named set. When
   supplied, the fitter jointly optimizes a containing rectangle together
   with the diagram shapes so that the area of the rectangle minus the
   union of (clipped) shapes matches `complement`. This is the classical
@@ -122,7 +156,7 @@ euler(combinations, ...)
 
   - `extraopt_threshold`: threshold, in terms of `diagError`, for when
     the CMA-ES fallback kicks in. A value of 0 means it will kick in for
-    *any* error; a value of 1 means it will never kick in. Default
+    an\* error; a value of 1 means it will never kick in. Default
     `0.001`.
 
   - `tolerance`: convergence tolerance passed to the underlying solver.
@@ -134,6 +168,35 @@ euler(combinations, ...)
     of 32. Region masks are stored in a bitset, so values may be raised
     up to 63 (the absolute hard cap). Going higher is rarely useful in
     practice since fully-overlapping diagrams have `2^n - 1` regions.
+
+  - `n_threads`: number of threads used to fan out the optimizer's
+    restart loop. A positive integer pins a private thread pool of that
+    size, while `NULL` uses all available cores. This is purely a
+    wall-time knob: the fitted diagram is identical regardless of the
+    thread count. The default uses half of the available logical cores
+    (but a single thread under `R CMD check`, to respect CRAN's two-core
+    policy). It can be overridden globally with the `eulerr.n_threads`
+    option or the `EULERR_NUM_THREADS` environment variable, and
+    otherwise honors R's conventional `mc.cores` option (or `MC_CORES`
+    environment variable).
+
+  - `optimizer`: the final-layout optimizer. The default, `"auto"`, lets
+    the engine pick a sensible optimizer for the chosen shape and loss.
+    To force a particular one, use any of `"levenberg_marquardt"`,
+    `"lbfgs"`, `"nelder_mead"`, `"mads"` (mesh-adaptive direct search,
+    derivative-free and well suited to non-smooth losses), `"cma_es"`,
+    `"cma_es_lm"`, `"trf"`, or `"cma_es_trf"`.
+
+  - `n_restarts`: number of full-pipeline restarts; the lowest-loss
+    result is kept. Higher values improve the chance of finding the
+    global optimum at proportionally higher cost. `NULL` (the default)
+    lets the engine choose (10, automatically reduced for small
+    smooth-loss fits).
+
+  - `loss_eps`: smoothing parameter for the `"smooth_*"` losses; pick
+    roughly 1% of the typical residual magnitude. Smaller values track
+    the non-smooth loss more closely but give noisier gradients. Default
+    `0.01`.
 
 - weights:
 
@@ -162,11 +225,13 @@ A list object of class `'euler'` with the following parameters.
 - shapes:
 
   a data frame of fitted shape parameters. One row per set with a `type`
-  column (one of `"circle"`, `"ellipse"`, `"rectangle"`, `"square"`),
-  the center coordinates `h` and `k`, and the shape-specific columns:
-  `a`, `b`, `phi` for ellipses/circles; `width` and `height` for
-  rectangles; `side` (plus mirrored `width`/`height`) for squares.
-  Columns that don't apply to the chosen shape are `NA`.
+  column (one of `"circle"`, `"ellipse"`, `"rectangle"`, `"square"`,
+  `"rotated_rectangle"`), the center coordinates `h` and `k`, and the
+  shape-specific columns: `a`, `b`, `phi` for ellipses/circles; `width`
+  and `height` for rectangles; `side` (plus mirrored `width`/`height`)
+  for squares; `width`, `height`, and `phi` (rotation, in radians) for
+  rotated rectangles. Columns that don't apply to the chosen shape are
+  `NA`.
 
 - ellipses:
 
@@ -290,13 +355,14 @@ fit2 <- euler(combo, shape = "ellipse")
 
 # Investigate the fit again (which is now exact)
 fit2
-#>     original fitted residuals regionError
-#> A          2      2         0           0
-#> B          2      2         0           0
-#> C          2      2         0           0
-#> A&B        1      1         0           0
-#> A&C        1      1         0           0
-#> B&C        1      1         0           0
+#>       original fitted residuals regionError
+#> A            2      2         0           0
+#> B            2      2         0           0
+#> C            2      2         0           0
+#> A&B          1      1         0           0
+#> A&C          1      1         0           0
+#> B&C          1      1         0           0
+#> A&B&C        0      0         0           0
 #> 
 #> diagError: 0 
 #> stress:    0 
@@ -366,15 +432,15 @@ euler(fruits, by = list(sex, age))
 #> ------------------------------------------------------------ 
 #> female.child 
 #>                     original fitted residuals regionError
-#> banana                     4      0         4       0.333
-#> apple                      0      0         0       0.000
-#> orange                     1      1         0       0.031
-#> banana&apple               4     15       -11       0.456
-#> banana&orange              1      1         0       0.031
-#> banana&apple&orange        2      2         0       0.061
+#> banana                     4      4         0           0
+#> apple                      0      0         0           0
+#> orange                     1      1         0           0
+#> banana&apple               4      4         0           0
+#> banana&orange              1      1         0           0
+#> banana&apple&orange        2      2         0           0
 #> 
-#> diagError: 0.456 
-#> stress:    0.504 
+#> diagError: 0 
+#> stress:    0 
 
 
 # Using the matrix method
@@ -406,22 +472,22 @@ euler(organisms)
 # Using weights
 euler(organisms, weights = c(10, 20, 5, 4, 8, 9, 2))
 #>                     original fitted residuals regionError
-#> animal                     0  1.828    -1.828       0.033
-#> mammal                     0  3.611    -3.611       0.065
-#> plant                      0  0.768    -0.768       0.014
-#> sea                        0  1.899    -1.899       0.034
+#> animal                     0  1.829    -1.829       0.033
+#> mammal                     0  3.612    -3.612       0.065
+#> plant                      0  0.769    -0.769       0.014
+#> sea                        0  1.900    -1.900       0.034
 #> spiny                      0  0.374    -0.374       0.007
-#> animal&mammal             30 29.533     0.467       0.018
+#> animal&mammal             30 29.532     0.468       0.018
 #> animal&sea                 4  0.000     4.000       0.069
-#> mammal&plant               0  0.857    -0.857       0.016
-#> mammal&sea                 8  3.069     4.931       0.082
+#> mammal&plant               0  0.859    -0.859       0.016
+#> mammal&sea                 8  3.072     4.928       0.082
 #> plant&sea                  2  0.000     2.000       0.034
-#> plant&spiny                9  9.003    -0.003       0.008
-#> animal&mammal&plant        0  0.486    -0.486       0.009
-#> animal&mammal&sea          0  2.215    -2.215       0.040
+#> plant&spiny                9  9.004    -0.004       0.008
+#> animal&mammal&plant        0  0.487    -0.487       0.009
+#> animal&mammal&sea          0  2.216    -2.216       0.040
 #> animal&sea&spiny           5  0.000     5.000       0.086
 #> mammal&plant&sea           0  0.000     0.000       0.000
-#> mammal&plant&spiny         0  1.512    -1.512       0.027
+#> mammal&plant&spiny         0  1.513    -1.513       0.027
 #> 
 #> diagError: 0.086 
 #> stress:    0.09 

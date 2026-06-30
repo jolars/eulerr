@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/comparison.html">Comparison with other packages</a></li>
+    <li><a class="dropdown-item" href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/introduction.html">Introducing eulerr</a></li>
     <li><a class="dropdown-item" href="../articles/loss-functions.html">Loss Functions</a></li>
     <li><a class="dropdown-item" href="../articles/under-the-hood.html">eulerr under the hood</a></li>
@@ -37,9 +38,31 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/jolars/eulerr/blob/v8.0.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/jolars/eulerr/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="8.1" id="eulerr-81">eulerr 8.1<a class="anchor" aria-label="anchor" href="#eulerr-81"></a></h2>
+<div class="section level3">
+<h3 id="highlights-8-1">Highlights<a class="anchor" aria-label="anchor" href="#highlights-8-1"></a></h3>
+<p>This version brings rotated rectangles as a new shape to eulerr, as well as the ability to customize the optimizer used to fit the diagram. eulerr is also parallelized now, and because the fitting pipeline now runs the full fit in several branches (in parallel), this should bring significant speedups for larger diagrams.</p>
+</div>
+<div class="section level3">
+<h3 id="features-8-1">Features<a class="anchor" aria-label="anchor" href="#features-8-1"></a></h3>
+<ul><li>
+<strong>plotting:</strong> add configurable canvas margin (<a href="https://github.com/jolars/eulerr/commit/eea354295936f8409debb4914c1d33f9878b94aa" class="external-link"><code>eea3542</code></a>)</li>
+<li>support rotated rectangles and configurable optimizers (<a href="https://github.com/jolars/eulerr/commit/330e42b6c87226cbc3833c3e99869fe1a7a971c3" class="external-link"><code>330e42b</code></a>)</li>
+<li>add <code>n_threads</code> option for parallelizing fits (<a href="https://github.com/jolars/eulerr/commit/845a54fb53034be8aecde65ee5a0cedbe31d8c29" class="external-link"><code>845a54f</code></a>)</li>
+<li>add <code>transform</code> option to fitter (<a href="https://github.com/jolars/eulerr/commit/f4b99c16d10baf5e23263aa81f6ae6efff06dab0" class="external-link"><code>f4b99c1</code></a>), closes <a href="https://github.com/jolars/eulerr/issues/96" class="external-link">#96</a>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-8-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-8-1"></a></h3>
+<ul><li>
+<strong>plotting:</strong> increase margin around plot to 2 pt (<a href="https://github.com/jolars/eulerr/commit/3ff50c68c204470e5ba2fa6ea0ff486047928a6b" class="external-link"><code>3ff50c6</code></a>)</li>
+<li>note correct rustc requirement in DESCRIPTION (<a href="https://github.com/jolars/eulerr/commit/9b0507423c6088c1432390b9b44f448d52351a88" class="external-link"><code>9b05074</code></a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="8.0" id="eulerr-80">eulerr 8.0<a class="anchor" aria-label="anchor" href="#eulerr-80"></a></h2>
 <p>This is a major milestone for eulerr. The 8.0.0 release introduces a complete rewrite of the underlying C++ codebase, now relying instead on the Rust library <a href="https://eunoia.bz" class="external-link">Eunoia</a>, which is a library I have developed. Here are some of the highlights this brings:</p>
@@ -68,7 +91,7 @@
 </li>
 <li>add complement (<a href="https://github.com/jolars/eulerr/commit/b6ce23280d4b54b932659f2ce9c73c5df59f5be7" class="external-link"><code>b6ce232</code></a>), closes <a href="https://github.com/jolars/eulerr/issues/13" class="external-link">#13</a>
 </li>
-<li>add new loss functions, deprectate old and <code>loss_aggregator</code> (<a href="https://github.com/jolars/eulerr/commit/03e7dea3c813676ee87418a1ef52667f498df4e6" class="external-link"><code>03e7dea</code></a>)</li>
+<li>add new loss functions, deprecate old and <code>loss_aggregator</code> (<a href="https://github.com/jolars/eulerr/commit/03e7dea3c813676ee87418a1ef52667f498df4e6" class="external-link"><code>03e7dea</code></a>)</li>
 <li>add <code>max_sets</code> in <code>control</code> for capping max sets (<a href="https://github.com/jolars/eulerr/commit/621a898f1e523df8f5d904a3543bb35dd1355ff8" class="external-link"><code>621a898</code></a>), closes <a href="https://github.com/jolars/eulerr/issues/85" class="external-link">#85</a>
 </li>
 <li>add <code>by_groups</code> to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for panel-specifics (<a href="https://github.com/jolars/eulerr/commit/f2d5533d594e0b920042a8b0906a39c0994661b0" class="external-link"><code>f2d5533</code></a>), closes <a href="https://github.com/jolars/eulerr/issues/125" class="external-link">#125</a>

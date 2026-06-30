@@ -97,6 +97,15 @@ Currently, the following items will be considered:
   which you can change if you, for instance, want to increase spacing
   between labels, quantities, and percentages.
 
+- margin:
+
+  a [`grid::unit()`](https://rdrr.io/r/grid/unit.html) giving the fixed
+  margin reserved around the diagram inside the plot canvas. Increase it
+  if shape outlines or exterior labels are clipped at the plot edge, or
+  decrease it to give the diagram more room. A fixed (rather than
+  relative) unit is recommended so that the margin keeps pace with
+  stroke width and label text, which are themselves fixed sizes.
+
 - composition:
 
   a list controlling how `eulergram` objects are arranged when composed

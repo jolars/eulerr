@@ -3,8 +3,11 @@
 <url><loc>https://jolars.github.io/eulerr/AGENTS.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/CLAUDE.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/CONDUCT.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/CONTRIBUTING.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/LICENSE-text.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/LICENSE.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/TODO.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/articles/comparison.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/articles/gallery.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/articles/index.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/articles/introduction.html</loc></url>
@@ -22,7 +25,9 @@
 <url><loc>https://jolars.github.io/eulerr/reference/build_leader_grob.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/build_tag_grobs.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/coef.euler.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/reference/default_n_threads.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/default_placement_opts.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/reference/detect_available_cores.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/dummy_code.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/ellipse_bounding_box.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/ellipse_frame_to_shapes.html</loc></url>
@@ -83,5 +88,6 @@
 <url><loc>https://jolars.github.io/eulerr/reference/tally_combinations.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/update_list.html</loc></url>
 <url><loc>https://jolars.github.io/eulerr/reference/venn.html</loc></url>
+<url><loc>https://jolars.github.io/eulerr/reference/venn_layout.html</loc></url>
 </urlset>
 

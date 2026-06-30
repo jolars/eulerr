@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a></li>
+<li><a class="dropdown-item" href="../articles/comparison.html">Comparison with other packages</a></li>
+    <li><a class="dropdown-item" href="../articles/gallery.html">A Gallery of Euler and Venn Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/introduction.html">Introducing eulerr</a></li>
     <li><a class="dropdown-item" href="../articles/loss-functions.html">Loss Functions</a></li>
     <li><a class="dropdown-item" href="../articles/under-the-hood.html">eulerr under the hood</a></li>
@@ -68,7 +69,7 @@
       <img src="../logo.svg" class="logo" alt=""><h1>Loss Functions</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/v8.0.0/vignettes/loss-functions.Rmd" class="external-link"><code>vignettes/loss-functions.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/loss-functions.Rmd" class="external-link"><code>vignettes/loss-functions.Rmd</code></a></small>
       <div class="d-none name"><code>loss-functions.Rmd</code></div>
     </div>
 
@@ -149,13 +150,12 @@ mirrors the loss functions provided by the underlying
 <tr class="odd">
 <td align="left">Sum of squared regErrors</td>
 <td align="left"><code>sum_squared_region_error</code></td>
-<td align="left">$_i (y_i/_k y_k - y_i / <em>k y</em>
-</td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow></mrow><annotation encoding="application/x-tex">\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td align="left">Sum of absolute regErrors</td>
 <td align="left"><code>sum_absolute_region_error</code></td>
-<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k</annotation></semantics></math></td>
 </tr>
 <tr class="odd">
 <td align="left">Max squared error</td>
@@ -180,7 +180,7 @@ mirrors the loss functions provided by the underlying
 <tr class="odd">
 <td align="left">diagError</td>
 <td align="left"><code>diag_error</code></td>
-<td align="left">$_i |y_i/_k y_k - y_i / _k y_k</td>
+<td align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mi>i</mi></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">|</mo><msub><mi>y</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k</annotation></semantics></math></td>
 </tr>
 </tbody>
 </table>

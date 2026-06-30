@@ -16,6 +16,13 @@ diagram can be trusted.
 
 ## Installation
 
+Building **eulerr** from source requires a Rust toolchain. The minimum
+supported `rustc` version is listed in the `SystemRequirements` field of
+`DESCRIPTION` (currently `rustc >= 1.88.0`). If your system Rust is
+older than that, install or update via [rustup](https://rustup.rs)
+before installing the package from source. CRAN binary builds do not
+need a local Rust toolchain.
+
 ### CRAN version
 
 ``` r
@@ -23,22 +30,25 @@ diagram can be trusted.
 install.packages("eulerr")
 ```
 
-### Development version
+### Development Version
 
 ``` r
 
 devtools::install_github("jolars/eulerr")
 ```
 
-### Shiny app
+### Web App
 
-eulerr is also available as a shiny app hosted at eulerr.co
+eulerr is also available as a web app at <https://eunoia.bz/app/>.
 
 ## Usage
 
 ``` r
 
 library(eulerr)
+
+set.seed(26)
+
 # From Wilkinson 2012
 fit <- euler(
   c(
@@ -69,9 +79,9 @@ the solution,
 ``` r
 
 fit$stress
-#> [1] 9.629033e-30
+#> [1] 1.280319e-19
 fit$diagError
-#> [1] 6.245005e-16
+#> [1] 6.774157e-11
 ```
 
 and plot it
@@ -89,16 +99,30 @@ for a brief introduction or [*eulerr under the
 hood*](https://CRAN.R-project.org/package=eulerr/vignettes/under-the-hood.html)
 for details.
 
+## Eunoia and Its Ecosystem
+
+eulerr is based on [Eunoia](https://eunoia.bz), which is a Rust library
+for fitting and visualizing Euler and Venn diagrams. The pure-Rust core
+powers bindings in several languages, all backed by the same fitting
+engine:
+
+| Language | Package | Install |
+|----|----|----|
+| Python | [`eunoia`](https://pypi.org/project/eunoia/) ([repo](https://github.com/jolars/eunoia-py)) | `pip install eunoia` |
+| Julia | [`Eunoia.jl`](https://platform.juliahub.com/ui/Packages/General/Eunoia) ([repo](https://github.com/jolars/Eunoia.jl)) | `] add Eunoia` |
+| JavaScript | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia)) | `npm install @jolars/eunoia` |
+| Rust | `eunoia` on crates.io ([repo](https://github.com/jolars/eunoia)) | `cargo add eunoia` |
+
 ## License
 
-eulerr is open source software, licensed under
-[GPL-3](https://github.com/jolars/eulerr/blob/master/LICENSE).
+eulerr is open source software, licensed under the
+[MIT](https://github.com/jolars/eulerr/blob/master/LICENSE.md) license.
 
 ## Versioning
 
 eulerr uses [semantic versioning](https://semver.org).
 
-## Code of conduct
+## Code of Conduct
 
 Please note that this project is released with a [Contributor Code of
 Conduct](https://github.com/jolars/eulerr/blob/master/CONDUCT.md). By
