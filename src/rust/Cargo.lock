@@ -25,9 +25,9 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
 name = "basin"
-version = "1.3.0"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3af565654f4ed1371593752a2b900b8d279c9fbd326bedaf7db27d8e2ebcd051"
+checksum = "a0dbb8f846441e3d0ef60f7c59034447f94702f3386d76c2ecf6cbdaea7a1b2f"
 dependencies = [
  "nalgebra",
  "nalgebra-sparse",
@@ -109,7 +109,7 @@ checksum = "91622ff5e7162018101f2fea40d6ebf4a78bbe5a49736a2020649edf9693679e"
 
 [[package]]
 name = "eulerr"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "eunoia",
  "extendr-api",
