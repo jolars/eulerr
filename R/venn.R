@@ -19,7 +19,7 @@
 #'     phi`; for `shape = "rotated_rectangle"` they are `type, h, k, width,
 #'     height, phi`.}
 #'   \item{ellipses}{the legacy 5-column data frame
-#'     (`h, k, a, b, phi`) — kept for back-compat alongside the canonical
+#'     (`h, k, a, b, phi`), kept for back-compat alongside the canonical
 #'     `shapes` slot. Only present for `shape = "ellipse"`.}
 #'   \item{original.values}{set relationships in the input}
 #'   \item{fitted.values}{set relationships in the solution}

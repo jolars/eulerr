@@ -1,9 +1,4 @@
-stripe_segments <- function(
-  xlim,
-  ylim,
-  angle = 45,
-  spacing = NULL
-) {
+stripe_segments <- function(xlim, ylim, angle = 45, spacing = NULL) {
   xrng <- diff(xlim)
   yrng <- diff(ylim)
   if (is.null(spacing)) {
@@ -82,12 +77,7 @@ split_fill_paths <- function(fill_data) {
   idx <- cumsum(fill_data$id.lengths)
   starts <- c(1L, utils::head(idx + 1L, -1L))
   mapply(
-    function(s, e) {
-      list(
-        x = fill_data$x[s:e],
-        y = fill_data$y[s:e]
-      )
-    },
+    function(s, e) list(x = fill_data$x[s:e], y = fill_data$y[s:e]),
     starts,
     idx,
     SIMPLIFY = FALSE
@@ -134,22 +124,25 @@ stripe_polygons <- function(
   ny <- dx / len
   h <- stripe_width / 2
 
-  lapply(seq_along(x0), function(i) {
-    list(
-      x = c(
-        x0[i] + h * nx[i],
-        x1[i] + h * nx[i],
-        x1[i] - h * nx[i],
-        x0[i] - h * nx[i]
-      ),
-      y = c(
-        y0[i] + h * ny[i],
-        y1[i] + h * ny[i],
-        y1[i] - h * ny[i],
-        y0[i] - h * ny[i]
+  lapply(
+    seq_along(x0),
+    function(i) {
+      list(
+        x = c(
+          x0[i] + h * nx[i],
+          x1[i] + h * nx[i],
+          x1[i] - h * nx[i],
+          x0[i] - h * nx[i]
+        ),
+        y = c(
+          y0[i] + h * ny[i],
+          y1[i] + h * ny[i],
+          y1[i] - h * ny[i],
+          y0[i] - h * ny[i]
+        )
       )
-    )
-  })
+    }
+  )
 }
 
 apply_stripe_pattern <- function(fill_data, pattern_gp, spacing_scale = 25) {

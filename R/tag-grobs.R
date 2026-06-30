@@ -207,19 +207,19 @@ build_tag_grobs <- function(
   )
 }
 
-#' Build the polyline leader for an exterior tag, or [grid::nullGrob()]
-#' for interior / missing-tether placements.
+#' Build the polyline leader for an exterior tag, or [grid::nullGrob()] for
+#' interior / missing-tether placements.
 #'
-#' Draws the polyline `tether → waypoints[1..] → leader_end`. For
-#' straight leaders (raycast / force-directed) `waypoints_*` are empty,
-#' so the polyline collapses to the single `tether → leader_end`
-#' segment. For elbow leaders eunoia emits one knee waypoint, producing
-#' the orthogonal `tether → knee → leader_end` bend.
+#' Draws the polyline `tether → waypoints[1..] → leader_end`. For straight
+#' leaders (raycast / force-directed) `waypoints_*` are empty, so the polyline
+#' collapses to the single `tether → leader_end` segment. For elbow leaders
+#' eunoia emits one knee waypoint, producing the orthogonal
+#' `tether → knee → leader_end` bend.
 #'
-#' Terminates at `(lend_x, lend_y)` — the point on the label box AABB
-#' edge supplied by eunoia (`LabelPlacement::leader_end`). Falls back
-#' to the anchor when the leader endpoint isn't finite so older /
-#' partial placement results still draw something sensible.
+#' Terminates at `(lend_x, lend_y)` — the point on the label box AABB edge
+#' supplied by eunoia (`LabelPlacement::leader_end`). Falls back to the anchor
+#' when the leader endpoint isn't finite so older / partial placement results
+#' still draw something sensible.
 #' @keywords internal
 build_leader_grob <- function(
   ax,
@@ -235,19 +235,12 @@ build_leader_grob <- function(
   fallback_gp,
   name
 ) {
-  is_exterior <- !is.null(kind) &&
-    !is.na(kind) &&
-    nzchar(kind) &&
+  is_exterior <- !is.null(kind) && !is.na(kind) && nzchar(kind) &&
     !identical(kind, "interior")
   if (!is_exterior) {
     return(grid::nullGrob(name = name))
   }
-  if (
-    is.null(tx) ||
-      is.null(ty) ||
-      !is.finite(tx) ||
-      !is.finite(ty)
-  ) {
+  if (is.null(tx) || is.null(ty) || !is.finite(tx) || !is.finite(ty)) {
     return(grid::nullGrob(name = name))
   }
 
@@ -263,8 +256,7 @@ build_leader_grob <- function(
   waypoints_y <- waypoints_y[wp_ok]
 
   fallback_col <- if (
-    !is.null(fallback_gp) &&
-      !is.null(fallback_gp$col) &&
+    !is.null(fallback_gp) && !is.null(fallback_gp$col) &&
       length(fallback_gp$col) >= 1L
   ) {
     fallback_gp$col[1L]
@@ -297,9 +289,9 @@ build_leader_grob <- function(
 
 #' Setup grobs for one tag (label + quantity + annotation + leader).
 #'
-#' Builds the gList via [build_tag_grobs()] and stashes the text / gpar
-#' bundle on the resulting `EulerTag` gTree so [makeContent.EulerTags()]
-#' can rebuild it at draw time with fresh measurements.
+#' Builds the gList via [build_tag_grobs()] and stashes the text / gpar bundle
+#' on the resulting `EulerTag` gTree so [makeContent.EulerTags()] can rebuild it
+#' at draw time with fresh measurements.
 #'
 #' @keywords internal
 setup_tag <- function(data, labels, quantities, annotations, number) {
@@ -395,12 +387,12 @@ setup_tag <- function(data, labels, quantities, annotations, number) {
   )
 }
 
-#' Setup the complement-count tag, in the same shape as a region tag so
-#' it shares one [makeContent.EulerTags()] pass.
+#' Setup the complement-count tag, in the same shape as a region tag so it
+#' shares one [makeContent.EulerTags()] pass.
 #'
-#' Acts as a quantity-only tag with `combo_key = ""`. The complement
-#' label text comes either from `complement$label` (user override) or
-#' from `container_data$quantity_label` (the fitted complement count).
+#' Acts as a quantity-only tag with `combo_key = ""`. The complement label text
+#' comes either from `complement$label` (user override) or from
+#' `container_data$quantity_label` (the fitted complement count).
 #'
 #' @keywords internal
 setup_complement_tag <- function(container_data, complement, number) {
@@ -412,8 +404,7 @@ setup_complement_tag <- function(container_data, complement, number) {
     label_text <- container_data$quantity_label
   }
   if (
-    is.null(label_text) ||
-      is.na(label_text) ||
+    is.null(label_text) || is.na(label_text) ||
       !is.finite(container_data$label_x) ||
       !is.finite(container_data$label_y)
   ) {
@@ -560,10 +551,10 @@ find_eulertags <- function(panel) {
   NULL
 }
 
-#' Measure every drawable tag inside `tags_grob` against the current
-#' viewport. Returns parallel vectors of combo / width / height suitable
-#' for handing to [place_euler_labels()], plus the resolved leader gap
-#' in native units (so the FFI sees one number per draw pass).
+#' Measure every drawable tag inside `tags_grob` against the current viewport.
+#' Returns parallel vectors of combo / width / height suitable for handing to
+#' [place_euler_labels()], plus the resolved leader gap in native units (so the
+#' FFI sees one number per draw pass).
 #' @keywords internal
 measure_all_tags <- function(tags_grob, padding, gap = NULL) {
   if (is.null(tags_grob) || length(tags_grob$children) == 0L) {
@@ -574,11 +565,7 @@ measure_all_tags <- function(tags_grob, padding, gap = NULL) {
       gap_native = 0
     ))
   }
-  padding_native <- grid::convertHeight(
-    padding,
-    "native",
-    valueOnly = TRUE
-  )
+  padding_native <- grid::convertHeight(padding, "native", valueOnly = TRUE)
   gap_native <- resolve_gap_native(gap, padding_native)
   combos <- character()
   widths <- numeric()
@@ -601,17 +588,16 @@ measure_all_tags <- function(tags_grob, padding, gap = NULL) {
 
 #' Fixed padding in pt for the panel viewport scale.
 #'
-#' Geometry / labels that land flush with the bbox would otherwise be
-#' clipped at the device edge by stroke width and anti-aliasing — both
-#' of which are in device units, not native units, so the padding is in
-#' pt rather than a fraction of the coordinate range.
+#' Geometry / labels that land flush with the bbox would otherwise be clipped at
+#' the device edge by stroke width and anti-aliasing — both of which are in
+#' device units, not native units, so the padding is in pt rather than a
+#' fraction of the coordinate range.
 #' @keywords internal
 EULER_PANEL_PAD_PT <- 3
 
-#' Pad an axis range by `pt_pad` points, converted to native units
-#' against a measurement viewport with the supplied scale. Returns the
-#' original range unchanged if the conversion isn't finite (e.g. zero
-#' range, no device).
+#' Pad an axis range by `pt_pad` points, converted to native units against a
+#' measurement viewport with the supplied scale. Returns the original range
+#' unchanged if the conversion isn't finite (e.g. zero range, no device).
 #' @keywords internal
 pad_axis_native <- function(
   lim,
@@ -648,17 +634,16 @@ pad_axis_native <- function(
 
 #' Set the panel viewport's `xscale`/`yscale` at draw time.
 #'
-#' Fires before grid pushes the panel viewport. We can therefore
-#' measure labels against the live cell, run eunoia's placement, and
-#' compute a viewport bbox that fits both the diagram and the labels.
-#' On window resize grid invalidates the gTree and `makeContext`
-#' re-runs, so the panel grows or shrinks to track the current device
-#' and exterior labels never extend past the viewport edge.
+#' Fires before grid pushes the panel viewport. We can therefore measure labels
+#' against the live cell, run eunoia's placement, and compute a viewport bbox
+#' that fits both the diagram and the labels. On window resize grid invalidates
+#' the gTree and `makeContext` re-runs, so the panel grows or shrinks to track
+#' the current device and exterior labels never extend past the viewport edge.
 #'
-#' Aspect preservation: the new bbox keeps `xrng / yrng` equal to the
-#' geometry's natural aspect (set by [setup_geometry()]) so that
-#' circles render as circles. The smaller dimension is padded if the
-#' label-driven canvas bbox is asymmetric.
+#' Aspect preservation: the new bbox keeps `xrng / yrng` equal to the geometry's
+#' natural aspect (set by [setup_geometry()]) so that circles render as circles.
+#' The smaller dimension is padded if the label-driven canvas bbox is
+#' asymmetric.
 #'
 #' @export
 #' @keywords internal
@@ -667,8 +652,7 @@ makeContext.EulerPanel <- function(x) {
   geom_xlim <- x$geom_xlim
   geom_ylim <- x$geom_ylim
   if (
-    is.null(geom_xlim) ||
-      is.null(geom_ylim) ||
+    is.null(geom_xlim) || is.null(geom_ylim) ||
       !all(is.finite(c(geom_xlim, geom_ylim)))
   ) {
     return(x)
@@ -709,9 +693,7 @@ makeContext.EulerPanel <- function(x) {
 
   tags_grob <- find_eulertags(x)
   if (
-    is.null(tags_grob) ||
-      length(tags_grob$children) == 0L ||
-      is.null(shapes) ||
+    is.null(tags_grob) || length(tags_grob$children) == 0L || is.null(shapes) ||
       NROW(shapes) == 0L
   ) {
     return(x)
@@ -739,9 +721,7 @@ makeContext.EulerPanel <- function(x) {
   cell_h_pt <- grid::convertHeight(grid::unit(1, "npc"), "pt", valueOnly = TRUE)
   grid::popViewport()
   if (
-    !is.finite(cell_w_pt) ||
-      !is.finite(cell_h_pt) ||
-      cell_w_pt <= 0 ||
+    !is.finite(cell_w_pt) || !is.finite(cell_h_pt) || cell_w_pt <= 0 ||
       cell_h_pt <= 0
   ) {
     cell_ar <- geom_ar
@@ -850,8 +830,7 @@ makeContext.EulerPanel <- function(x) {
       error = function(e) NULL
     )
     if (
-      is.null(placements) ||
-        !is.finite(placements$canvas_bbox_h) ||
+      is.null(placements) || !is.finite(placements$canvas_bbox_h) ||
         !is.finite(placements$canvas_bbox_width) ||
         placements$canvas_bbox_width <= 0 ||
         placements$canvas_bbox_height <= 0
@@ -859,14 +838,10 @@ makeContext.EulerPanel <- function(x) {
       break
     }
 
-    cb_xmin <- placements$canvas_bbox_h -
-      placements$canvas_bbox_width / 2
-    cb_xmax <- placements$canvas_bbox_h +
-      placements$canvas_bbox_width / 2
-    cb_ymin <- placements$canvas_bbox_k -
-      placements$canvas_bbox_height / 2
-    cb_ymax <- placements$canvas_bbox_k +
-      placements$canvas_bbox_height / 2
+    cb_xmin <- placements$canvas_bbox_h - placements$canvas_bbox_width / 2
+    cb_xmax <- placements$canvas_bbox_h + placements$canvas_bbox_width / 2
+    cb_ymin <- placements$canvas_bbox_k - placements$canvas_bbox_height / 2
+    cb_ymax <- placements$canvas_bbox_k + placements$canvas_bbox_height / 2
 
     xmin <- min(geom_xlim[1], cb_xmin)
     xmax <- max(geom_xlim[2], cb_xmax)
@@ -917,16 +892,16 @@ makeContext.EulerPanel <- function(x) {
 
 #' Re-place tags at draw time so resizing the device doesn't clip labels.
 #'
-#' The panel viewport is active when `makeContent` fires, so we can
-#' measure each tag's footprint in current native units via
+#' The panel viewport is active when `makeContent` fires, so we can measure each
+#' tag's footprint in current native units via
 #' `grid::convertWidth(grobWidth(...), "native")` and call eunoia's
-#' [place_euler_labels()] again. On resize, grid invalidates the tree
-#' and `makeContent` re-runs, so the placement tracks the current
-#' device automatically.
+#' [place_euler_labels()] again. On resize, grid invalidates the tree and
+#' `makeContent` re-runs, so the placement tracks the current device
+#' automatically.
 #'
-#' Tags whose measured size is zero (or whose anchor / kind eunoia
-#' can't compute) keep the positions they were built with — typically
-#' the setup-time placement stored on `centers$x` / `centers$y`.
+#' Tags whose measured size is zero (or whose anchor / kind eunoia can't
+#' compute) keep the positions they were built with — typically the setup-time
+#' placement stored on `centers$x` / `centers$y`.
 #'
 #' @export
 #' @keywords internal
@@ -941,11 +916,7 @@ makeContent.EulerTags <- function(x) {
   }
   shape_type <- shapes$type[1L]
 
-  padding_native <- grid::convertHeight(
-    x$padding,
-    "native",
-    valueOnly = TRUE
-  )
+  padding_native <- grid::convertHeight(x$padding, "native", valueOnly = TRUE)
 
   combos <- character(n)
   widths <- numeric(n)
