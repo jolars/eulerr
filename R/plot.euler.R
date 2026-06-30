@@ -1533,7 +1533,8 @@ plot.euler <- function(
         number = i,
         merged_sets = merged_sets,
         n_vertices = as.integer(n),
-        placement_opts = placement_opts
+        placement_opts = placement_opts,
+        combo_labels = combo_labels
       )
     }
     euler_grob <- grid::gTree(
@@ -1561,7 +1562,8 @@ plot.euler <- function(
       number = 1,
       merged_sets = merged_sets,
       n_vertices = as.integer(n),
-      placement_opts = placement_opts
+      placement_opts = placement_opts,
+      combo_labels = combo_labels
     )
     euler_grob <- grid::grobTree(euler_grob, name = "canvas.grob")
 

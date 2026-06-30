@@ -233,6 +233,9 @@ add_fill_pattern <- function(fill_grob, fill_data, pattern_gp) {
 #' @param quantities quantities params
 #' @param number current diagram number
 #' @param merged_sets sets that are the same and have been merged
+#' @param combo_labels region labels in the order of the per-region graphical
+#'   parameters (`fills$gp`, `patterns$gp`), used to associate each region's
+#'   geometry with its parameters by name rather than position
 #'
 #' @return A [grid::gList()] is returned.
 #' @keywords internal
@@ -248,7 +251,8 @@ setup_grobs <- function(
   number,
   merged_sets,
   n_vertices = 200L,
-  placement_opts = NULL
+  placement_opts = NULL,
+  combo_labels = NULL
 ) {
   data_edges <- x$edges
   data_fills <- x$fills
@@ -256,6 +260,17 @@ setup_grobs <- function(
   fitted <- x$fitted.values
   empty_sets <- x$empty_sets
   empty_subsets <- x$empty_subsets
+
+  # Per-region graphical parameters (`fills$gp`, `patterns$gp`) are ordered by
+  # `combo_labels`, while the geometry (`data_fills`) is ordered by the fit's
+  # regions. Match region i's geometry to its parameters by label so the two
+  # orderings can never desync (e.g. when one set name is a prefix of another).
+  region_labels <- names(fitted)
+  par_idx <- if (is.null(combo_labels)) {
+    which(!empty_subsets)
+  } else {
+    match(region_labels, combo_labels)
+  }
 
   do_tags <- !is.null(data_tags)
   do_edges <- !is.null(data_edges)
@@ -332,7 +347,7 @@ setup_grobs <- function(
     if (n_e == 0) {
       fills_grob <- grid::nullGrob()
     } else if (n_e == 1) {
-      fill_idx <- which(!empty_subsets)[1L]
+      fill_idx <- par_idx[1L]
       fill_grob <- grid::polygonGrob(
         data_fills[[1]]$x,
         data_fills[[1]]$y,
@@ -359,7 +374,7 @@ setup_grobs <- function(
         if (is.null(data_fills[[i]])) {
           fills_grob[[i]] <- grid::nullGrob(name = paste0("fills.grob.", i))
         } else {
-          fill_idx <- which(!empty_subsets)[i]
+          fill_idx <- par_idx[i]
           fill_grob <- grid::pathGrob(
             data_fills[[i]]$x,
             data_fills[[i]]$y,
