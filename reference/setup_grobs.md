@@ -17,7 +17,8 @@ setup_grobs(
   number,
   merged_sets,
   n_vertices = 200L,
-  placement_opts = NULL
+  placement_opts = NULL,
+  combo_labels = NULL
 )
 ```
 
@@ -54,6 +55,12 @@ setup_grobs(
 - merged_sets:
 
   sets that are the same and have been merged
+
+- combo_labels:
+
+  region labels in the order of the per-region graphical parameters
+  (`fills$gp`, `patterns$gp`), used to associate each region's geometry
+  with its parameters by name rather than position
 
 ## Value
 
