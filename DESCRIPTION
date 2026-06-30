@@ -1,7 +1,7 @@
 Package: eulerr
-Title: Area-Proportional Euler and Venn Diagrams with Ellipses
+Title: Area-Proportional Euler and Venn Diagrams
 Version: 8.0.0.9000
-Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
+Authors@R: c(person("Johan", "Larsson", email = "johan@jolars.co",
                     role = c("aut", "cre", "cph"),
                     comment = c(ORCID = "0000-0002-4029-5945")),
              person("A. Jonathan R.", "Godfrey", role = "ctb"),
@@ -12,10 +12,10 @@ Authors@R: c(person("Johan", "Larsson", email = "johanlarsson@outlook.com",
                     comment = "root solver code"),
              person("Florian", "Privé", role = "ctb"))
 Description: Generate area-proportional Euler diagrams
-    using numerical optimization. An Euler diagram is a generalization of a Venn
+    using numerical optimization. A Euler diagram is a generalization of a Venn
     diagram, relaxing the criterion that all interactions need to be
-    represented. Diagrams may be fit with ellipses and circles via
-    a wide range of inputs and can be visualized in numerous ways.
+    represented. Diagrams may be fit with circles, ellipses, squares, and
+    rectangles via a wide range of inputs and can be visualized in numerous ways.
 Depends:
     R (>= 4.2)
 Imports:
@@ -38,7 +38,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/
+URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/, https://eunoia.bz
 BugReports: https://github.com/jolars/eulerr/issues
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
