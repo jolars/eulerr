@@ -7,8 +7,8 @@
 setup_tag(data, labels, quantities, annotations, number)
 }
 \description{
-Builds the gList via \code{\link[=build_tag_grobs]{build_tag_grobs()}} and stashes the text / gpar
-bundle on the resulting \code{EulerTag} gTree so \code{\link[=makeContent.EulerTags]{makeContent.EulerTags()}}
-can rebuild it at draw time with fresh measurements.
+Builds the gList via \code{\link[=build_tag_grobs]{build_tag_grobs()}} and stashes the text / gpar bundle
+on the resulting \code{EulerTag} gTree so \code{\link[=makeContent.EulerTags]{makeContent.EulerTags()}} can rebuild it
+at draw time with fresh measurements.
 }
 \keyword{internal}

@@ -69,7 +69,7 @@ Returns an object of class \verb{'eulerr_venn', 'venn', 'euler'} with items
 \item{shapes}{a data frame of the precomputed shape parameters (one row
 per set). For \code{shape = "ellipse"} the columns are \verb{type, h, k, a, b, phi}; for \code{shape = "rotated_rectangle"} they are \verb{type, h, k, width, height, phi}.}
 \item{ellipses}{the legacy 5-column data frame
-(\verb{h, k, a, b, phi}) — kept for back-compat alongside the canonical
+(\verb{h, k, a, b, phi}), kept for back-compat alongside the canonical
 \code{shapes} slot. Only present for \code{shape = "ellipse"}.}
 \item{original.values}{set relationships in the input}
 \item{fitted.values}{set relationships in the solution}

@@ -2,17 +2,17 @@
 % Please edit documentation in R/tag-grobs.R
 \name{measure_all_tags}
 \alias{measure_all_tags}
-\title{Measure every drawable tag inside \code{tags_grob} against the current
-viewport. Returns parallel vectors of combo / width / height suitable
-for handing to \code{\link[=place_euler_labels]{place_euler_labels()}}, plus the resolved leader gap
-in native units (so the FFI sees one number per draw pass).}
+\title{Measure every drawable tag inside \code{tags_grob} against the current viewport.
+Returns parallel vectors of combo / width / height suitable for handing to
+\code{\link[=place_euler_labels]{place_euler_labels()}}, plus the resolved leader gap in native units (so the
+FFI sees one number per draw pass).}
 \usage{
 measure_all_tags(tags_grob, padding, gap = NULL)
 }
 \description{
-Measure every drawable tag inside \code{tags_grob} against the current
-viewport. Returns parallel vectors of combo / width / height suitable
-for handing to \code{\link[=place_euler_labels]{place_euler_labels()}}, plus the resolved leader gap
-in native units (so the FFI sees one number per draw pass).
+Measure every drawable tag inside \code{tags_grob} against the current viewport.
+Returns parallel vectors of combo / width / height suitable for handing to
+\code{\link[=place_euler_labels]{place_euler_labels()}}, plus the resolved leader gap in native units (so the
+FFI sees one number per draw pass).
 }
 \keyword{internal}

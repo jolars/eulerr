@@ -7,17 +7,16 @@
 \method{makeContext}{EulerPanel}(x)
 }
 \description{
-Fires before grid pushes the panel viewport. We can therefore
-measure labels against the live cell, run eunoia's placement, and
-compute a viewport bbox that fits both the diagram and the labels.
-On window resize grid invalidates the gTree and \code{makeContext}
-re-runs, so the panel grows or shrinks to track the current device
-and exterior labels never extend past the viewport edge.
+Fires before grid pushes the panel viewport. We can therefore measure labels
+against the live cell, run eunoia's placement, and compute a viewport bbox
+that fits both the diagram and the labels. On window resize grid invalidates
+the gTree and \code{makeContext} re-runs, so the panel grows or shrinks to track
+the current device and exterior labels never extend past the viewport edge.
 }
 \details{
-Aspect preservation: the new bbox keeps \code{xrng / yrng} equal to the
-geometry's natural aspect (set by \code{\link[=setup_geometry]{setup_geometry()}}) so that
-circles render as circles. The smaller dimension is padded if the
-label-driven canvas bbox is asymmetric.
+Aspect preservation: the new bbox keeps \code{xrng / yrng} equal to the geometry's
+natural aspect (set by \code{\link[=setup_geometry]{setup_geometry()}}) so that circles render as circles.
+The smaller dimension is padded if the label-driven canvas bbox is
+asymmetric.
 }
 \keyword{internal}

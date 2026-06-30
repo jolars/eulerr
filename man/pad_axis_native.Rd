@@ -2,10 +2,9 @@
 % Please edit documentation in R/tag-grobs.R
 \name{pad_axis_native}
 \alias{pad_axis_native}
-\title{Pad an axis range by \code{pt_pad} points, converted to native units
-against a measurement viewport with the supplied scale. Returns the
-original range unchanged if the conversion isn't finite (e.g. zero
-range, no device).}
+\title{Pad an axis range by \code{pt_pad} points, converted to native units against a
+measurement viewport with the supplied scale. Returns the original range
+unchanged if the conversion isn't finite (e.g. zero range, no device).}
 \usage{
 pad_axis_native(
   lim,
@@ -16,9 +15,8 @@ pad_axis_native(
 )
 }
 \description{
-Pad an axis range by \code{pt_pad} points, converted to native units
-against a measurement viewport with the supplied scale. Returns the
-original range unchanged if the conversion isn't finite (e.g. zero
-range, no device).
+Pad an axis range by \code{pt_pad} points, converted to native units against a
+measurement viewport with the supplied scale. Returns the original range
+unchanged if the conversion isn't finite (e.g. zero range, no device).
 }
 \keyword{internal}
