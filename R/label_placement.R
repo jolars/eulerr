@@ -38,8 +38,8 @@ resolve_placement_opts <- function(opts) {
 #'
 #' Returns an idempotent closer thunk that pops the viewport and
 #' closes the null PDF device. Used so we can call
-#' `grid::convertWidth(grobWidth(...), "native", ...)` at setup time —
-#' i.e. before `plot.eulergram()` ever opens a real device — to size
+#' `grid::convertWidth(grobWidth(...), "native", ...)` at setup time,
+#' i.e. before `plot.eulergram()` ever opens a real device, to size
 #' the label boxes that drive label placement.
 #'
 #' Always opens its own off-screen PDF rather than reusing the caller's

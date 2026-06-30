@@ -9,8 +9,8 @@ open_measurement_viewport(xlim, ylim)
 \description{
 Returns an idempotent closer thunk that pops the viewport and
 closes the null PDF device. Used so we can call
-\code{grid::convertWidth(grobWidth(...), "native", ...)} at setup time —
-i.e. before \code{plot.eulergram()} ever opens a real device — to size
+\code{grid::convertWidth(grobWidth(...), "native", ...)} at setup time,
+i.e. before \code{plot.eulergram()} ever opens a real device, to size
 the label boxes that drive label placement.
 }
 \details{

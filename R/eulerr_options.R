@@ -73,7 +73,7 @@ eulerr_options <- function(...) {
     return(old[unlist(new)])
   }
   is_named <- nm != ""
-  if (any(!is_named)) {
+  if (!all(is_named)) {
     nm[!is_named] <- unlist(new[!is_named])
   }
   out <- old[nm]

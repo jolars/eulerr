@@ -118,7 +118,7 @@ is_integer <- function(x, tol = .Machine$double.eps^0.5) {
 
 #' Check if vector is a real (numeric non-integer)
 #'
-#' @param x
+#' @param x a vector
 #'
 #' @return A logical.
 #' @keywords internal
@@ -353,7 +353,7 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
 
   dummy_names <- unlist(dummy_names)
 
-  if (any(duplicated(dummy_names))) {
+  if (anyDuplicated(dummy_names) > 0) {
     stop(paste(
       "duplicated names for dummy coded factors were generated;",
       "please consider specifying 'factor_names = TRUE'."

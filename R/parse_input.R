@@ -13,7 +13,7 @@ parse_list <- function(combinations) {
     stop("vectors in `combinations` cannot contain duplicates")
   }
 
-  if (any(duplicated(names(combinations)))) {
+  if (anyDuplicated(names(combinations)) > 0) {
     stop("names of elements in `combinations` must be unique")
   }
 

@@ -40,8 +40,8 @@ LazyData: true
 VignetteBuilder: knitr
 URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/, https://eunoia.bz
 BugReports: https://github.com/jolars/eulerr/issues
-RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Language: en-US
 Config/rextendr/version: 0.4.2
 SystemRequirements: Cargo (Rust's package manager), rustc >= 1.88.0
+Config/roxygen2/version: 8.0.0

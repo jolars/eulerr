@@ -8,7 +8,7 @@ get_bounding_box(shapes, k = NULL, a = NULL, b = NULL, phi = NULL)
 }
 \arguments{
 \item{shapes}{the \verb{$shapes} data frame of a fitted euler object (after
-dropping NA rows for empty sets), or — for legacy callers — the
+dropping NA rows for empty sets), or (for legacy callers) the
 numeric \code{h} vector. When \code{h} is numeric the function falls back to
 the legacy ellipse signature for back-compat with external code.}
 

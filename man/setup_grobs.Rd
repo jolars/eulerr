@@ -37,7 +37,7 @@ setup_grobs(
 \item{merged_sets}{sets that are the same and have been merged}
 }
 \value{
-A \code{\link[grid:grid.grob]{grid::gList()}} is returned.
+A \code{\link[grid:gList]{grid::gList()}} is returned.
 }
 \description{
 Grobify Euler objects

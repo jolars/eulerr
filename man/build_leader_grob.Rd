@@ -2,7 +2,7 @@
 % Please edit documentation in R/tag-grobs.R
 \name{build_leader_grob}
 \alias{build_leader_grob}
-\title{Build the polyline leader for an exterior tag, or \code{\link[grid:grid.null]{grid::nullGrob()}}
+\title{Build the polyline leader for an exterior tag, or \code{\link[grid:nullGrob]{grid::nullGrob()}}
 for interior / missing-tether placements.}
 \usage{
 build_leader_grob(

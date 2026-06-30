@@ -5,8 +5,8 @@
 #'   non-empty sets (`2^n - 1` entries), filling absent combinations with 0.
 #'   The default (`FALSE`) returns the sparse vector stored on the object,
 #'   which only contains entries that were either requested as input or fit
-#'   to a non-zero area. Use `dense = TRUE` only for diagrams with few sets
-#'   --- the full enumeration is exponential in the number of non-empty sets.
+#'   to a non-zero area. Use `dense = TRUE` only for diagrams with few sets. 
+#'   The full enumeration is exponential in the number of non-empty sets.
 #' @param ... ignored
 #' @export
 #' @return A named numeric vector of fitted areas keyed by combination label
@@ -54,7 +54,7 @@ expand_dense <- function(sparse_values, shapes) {
 
 #' Return the fitted shape parameters from the euler object
 #'
-#' Returns the `$shapes` data frame — a tagged uniform schema with one row
+#' Returns the `$shapes` data frame: a tagged uniform schema with one row
 #' per set, a `type` column, and shape-specific columns
 #' (`h, k, a, b, phi, width, height, side`) populated according to the
 #' chosen shape (other columns are `NA`). For circle/ellipse fits the

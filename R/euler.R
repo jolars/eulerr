@@ -70,18 +70,19 @@
 #'   `"sum_squared"`, minimizes the sum of squared errors. The available
 #'   options mirror the loss functions exposed by the `eunoia` Rust crate
 #'   that powers the optimizer:
-#'   * `"sum_squared"` --- normalized sum of squared errors (default).
-#'   * `"sum_absolute"` --- normalized sum of absolute errors.
-#'   * `"sum_absolute_region_error"` --- normalized sum of absolute
+#'
+#'   * `"sum_squared"`: normalized sum of squared errors (default).
+#'   * `"sum_absolute"`: normalized sum of absolute errors.
+#'   * `"sum_absolute_region_error"`: normalized sum of absolute
 #'     region errors.
-#'   * `"sum_squared_region_error"` --- normalized sum of squared region
+#'   * `"sum_squared_region_error"`: normalized sum of squared region
 #'     errors.
-#'   * `"max_absolute"` --- normalized maximum absolute error.
-#'   * `"max_squared"` --- normalized maximum squared error.
-#'   * `"root_mean_squared"` --- normalized root-mean-squared error.
-#'   * `"stress"` --- venneuler-style stress.
-#'   * `"diag_error"` --- eulerAPE-style `diagError`.
-#'   * `"log_sum_absolute"` --- sum of absolute errors on `log1p`-transformed
+#'   * `"max_absolute"`: normalized maximum absolute error.
+#'   * `"max_squared"`: normalized maximum squared error.
+#'   * `"root_mean_squared"`: normalized root-mean-squared error.
+#'   * `"stress"`: venneuler-style stress.
+#'   * `"diag_error"`: eulerAPE-style `diagError`.
+#'   * `"log_sum_absolute"`: sum of absolute errors on `log1p`-transformed
 #'     areas, which stops large regions from dominating the fit.
 #'   * `"smooth_sum_absolute"`, `"smooth_sum_absolute_region_error"`,
 #'     `"smooth_max_absolute"`, `"smooth_max_squared"`, `"smooth_diag_error"`,
@@ -91,50 +92,52 @@
 #'   code that combined `loss` (`"square"`/`"abs"`/`"region"`) with
 #'   `loss_aggregator` (`"sum"`/`"max"`) still works but emits a warning;
 #'   the combination is mapped to the equivalent new `loss` value.
+#'
 #' @param complement an optional single non-negative number giving the area
-#'   of the *complement* — that is, the universe outside every named set.
+#'   of the *complement*, that is, the universe outside every named set.
 #'   When supplied, the fitter jointly optimizes a containing rectangle
 #'   together with the diagram shapes so that the area of the rectangle
 #'   minus the union of (clipped) shapes matches `complement`. This is the
 #'   classical "everything not in any set" region; see [plot.euler()] for
 #'   how it is rendered. Defaults to `NULL` (no container; classical
 #'   shape-only fit). Not supported for [venn()].
+#'
 #' @param control a list of control parameters.
 #'   * `extraopt`: should the global-search fallback optimizer (CMA-ES) kick
-#'   in when the primary optimizer's `diagError` exceeds `extraopt_threshold`?
-#'   The default is `TRUE` for three-set ellipse fits and `FALSE` otherwise.
+#'     in when the primary optimizer's `diagError` exceeds `extraopt_threshold`?
+#'     The default is `TRUE` for three-set ellipse fits and `FALSE` otherwise.
 #'   * `extraopt_threshold`: threshold, in terms of `diagError`, for when
-#'   the CMA-ES fallback kicks in. A value of 0 means it will kick in for
-#'   *any* error; a value of 1 means it will never kick in. Default `0.001`.
+#'     the CMA-ES fallback kicks in. A value of 0 means it will kick in for
+#'     an* error; a value of 1 means it will never kick in. Default `0.001`.
 #'   * `tolerance`: convergence tolerance passed to the underlying solver.
-#'   Tighter values give more accurate fits at higher cost. Default `1e-8`.
+#'     Tighter values give more accurate fits at higher cost. Default `1e-8`.
 #'   * `max_sets`: maximum number of sets the underlying engine will accept.
-#'   Defaults to `NULL`, which uses the engine's built-in default of 32.
-#'   Region masks are stored in a bitset, so values may be raised up to 63
-#'   (the absolute hard cap). Going higher is rarely useful in practice
-#'   since fully-overlapping diagrams have `2^n - 1` regions.
+#'     Defaults to `NULL`, which uses the engine's built-in default of 32.
+#'     Region masks are stored in a bitset, so values may be raised up to 63
+#'     (the absolute hard cap). Going higher is rarely useful in practice
+#'     since fully-overlapping diagrams have `2^n - 1` regions.
 #'   * `n_threads`: number of threads used to fan out the optimizer's restart
-#'   loop. A positive integer pins a private thread pool of that size, while
-#'   `NULL` uses all available cores. This is purely a wall-time knob: the
-#'   fitted diagram is identical regardless of the thread count. The default
-#'   uses half of the available logical cores (but a single thread under
-#'   `R CMD check`, to respect CRAN's two-core policy). It can be overridden
-#'   globally with the `eulerr.n_threads` option or the `EULERR_NUM_THREADS`
-#'   environment variable, and otherwise honors R's conventional `mc.cores`
-#'   option (or `MC_CORES` environment variable).
+#'     loop. A positive integer pins a private thread pool of that size, while
+#'     `NULL` uses all available cores. This is purely a wall-time knob: the
+#'     fitted diagram is identical regardless of the thread count. The default
+#'     uses half of the available logical cores (but a single thread under
+#'     `R CMD check`, to respect CRAN's two-core policy). It can be overridden
+#'     globally with the `eulerr.n_threads` option or the `EULERR_NUM_THREADS`
+#'     environment variable, and otherwise honors R's conventional `mc.cores`
+#'     option (or `MC_CORES` environment variable).
 #'   * `optimizer`: the final-layout optimizer. The default, `"auto"`, lets the
-#'   engine pick a sensible optimizer for the chosen shape and loss. To force a
-#'   particular one, use any of `"levenberg_marquardt"`, `"lbfgs"`,
-#'   `"nelder_mead"`, `"mads"` (mesh-adaptive direct search, derivative-free
-#'   and well suited to non-smooth losses), `"cma_es"`, `"cma_es_lm"`, `"trf"`,
-#'   or `"cma_es_trf"`.
+#'     engine pick a sensible optimizer for the chosen shape and loss. To force a
+#'     particular one, use any of `"levenberg_marquardt"`, `"lbfgs"`,
+#'     `"nelder_mead"`, `"mads"` (mesh-adaptive direct search, derivative-free
+#'     and well suited to non-smooth losses), `"cma_es"`, `"cma_es_lm"`, `"trf"`,
+#'     or `"cma_es_trf"`.
 #'   * `n_restarts`: number of full-pipeline restarts; the lowest-loss result
-#'   is kept. Higher values improve the chance of finding the global optimum at
-#'   proportionally higher cost. `NULL` (the default) lets the engine choose
-#'   (10, automatically reduced for small smooth-loss fits).
+#'     is kept. Higher values improve the chance of finding the global optimum at
+#'     proportionally higher cost. `NULL` (the default) lets the engine choose
+#'     (10, automatically reduced for small smooth-loss fits).
 #'   * `loss_eps`: smoothing parameter for the `"smooth_*"` losses; pick roughly
-#'   1% of the typical residual magnitude. Smaller values track the non-smooth
-#'   loss more closely but give noisier gradients. Default `0.01`.
+#'     1% of the typical residual magnitude. Smaller values track the non-smooth
+#'     loss more closely but give noisier gradients. Default `0.01`.
 #' @param ... arguments passed down to other methods
 #'
 #' @return A list object of class `'euler'` with the following parameters.

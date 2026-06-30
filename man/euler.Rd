@@ -53,7 +53,7 @@ data.frame (see \strong{methods (by class)})}
 
 \item{transform}{a function applied to the areas of the \emph{disjoint}
 (exclusive) regions before fitting. The default, \code{\link[base:identity]{base::identity()}}, leaves
-the areas untouched. A monotone transform such as \code{\link[base:Log]{base::log1p()}} can keep
+the areas untouched. A monotone transform such as \code{\link[base:log1p]{base::log1p()}} can keep
 small regions legible when set sizes span several orders of magnitude. The
 transform is applied to the exclusive regions because those are the
 additive atoms the diagram fits to; as a consequence the area of a whole
@@ -72,18 +72,18 @@ only shape able to draw a true four-set Venn diagram (see \code{\link[=venn]{ven
 options mirror the loss functions exposed by the \code{eunoia} Rust crate
 that powers the optimizer:
 \itemize{
-\item \code{"sum_squared"} --- normalized sum of squared errors (default).
-\item \code{"sum_absolute"} --- normalized sum of absolute errors.
-\item \code{"sum_absolute_region_error"} --- normalized sum of absolute
+\item \code{"sum_squared"}: normalized sum of squared errors (default).
+\item \code{"sum_absolute"}: normalized sum of absolute errors.
+\item \code{"sum_absolute_region_error"}: normalized sum of absolute
 region errors.
-\item \code{"sum_squared_region_error"} --- normalized sum of squared region
+\item \code{"sum_squared_region_error"}: normalized sum of squared region
 errors.
-\item \code{"max_absolute"} --- normalized maximum absolute error.
-\item \code{"max_squared"} --- normalized maximum squared error.
-\item \code{"root_mean_squared"} --- normalized root-mean-squared error.
-\item \code{"stress"} --- venneuler-style stress.
-\item \code{"diag_error"} --- eulerAPE-style \code{diagError}.
-\item \code{"log_sum_absolute"} --- sum of absolute errors on \code{log1p}-transformed
+\item \code{"max_absolute"}: normalized maximum absolute error.
+\item \code{"max_squared"}: normalized maximum squared error.
+\item \code{"root_mean_squared"}: normalized root-mean-squared error.
+\item \code{"stress"}: venneuler-style stress.
+\item \code{"diag_error"}: eulerAPE-style \code{diagError}.
+\item \code{"log_sum_absolute"}: sum of absolute errors on \code{log1p}-transformed
 areas, which stops large regions from dominating the fit.
 \item \code{"smooth_sum_absolute"}, \code{"smooth_sum_absolute_region_error"},
 \code{"smooth_max_absolute"}, \code{"smooth_max_squared"}, \code{"smooth_diag_error"},
@@ -97,7 +97,7 @@ code that combined \code{loss} (\code{"square"}/\code{"abs"}/\code{"region"}) wi
 the combination is mapped to the equivalent new \code{loss} value.}
 
 \item{complement}{an optional single non-negative number giving the area
-of the \emph{complement} — that is, the universe outside every named set.
+of the \emph{complement}, that is, the universe outside every named set.
 When supplied, the fitter jointly optimizes a containing rectangle
 together with the diagram shapes so that the area of the rectangle
 minus the union of (clipped) shapes matches \code{complement}. This is the
@@ -112,7 +112,7 @@ in when the primary optimizer's \code{diagError} exceeds \code{extraopt_threshol
 The default is \code{TRUE} for three-set ellipse fits and \code{FALSE} otherwise.
 \item \code{extraopt_threshold}: threshold, in terms of \code{diagError}, for when
 the CMA-ES fallback kicks in. A value of 0 means it will kick in for
-\emph{any} error; a value of 1 means it will never kick in. Default \code{0.001}.
+an* error; a value of 1 means it will never kick in. Default \code{0.001}.
 \item \code{tolerance}: convergence tolerance passed to the underlying solver.
 Tighter values give more accurate fits at higher cost. Default \code{1e-8}.
 \item \code{max_sets}: maximum number of sets the underlying engine will accept.
@@ -236,7 +236,7 @@ Missing combinations are treated as being 0.
 factors.
 
 \item \code{euler(matrix)}: a matrix that can be converted to a data.frame of logicals
-(as in the description above) via \code{\link[base:as.data.frame]{base::as.data.frame.matrix()}}.
+(as in the description above) via \code{\link[base:as.data.frame.matrix]{base::as.data.frame.matrix()}}.
 
 \item \code{euler(table)}: A table with \code{max(dim(x)) < 3}.
 

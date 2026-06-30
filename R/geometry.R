@@ -5,7 +5,7 @@
 #' directly since both are axis-aligned in eunoia.
 #'
 #' @param shapes the `$shapes` data frame of a fitted euler object (after
-#'   dropping NA rows for empty sets), or — for legacy callers — the
+#'   dropping NA rows for empty sets), or (for legacy callers) the
 #'   numeric `h` vector. When `h` is numeric the function falls back to
 #'   the legacy ellipse signature for back-compat with external code.
 #' @param k,a,b,phi legacy ellipse parameters; only used when `shapes` is

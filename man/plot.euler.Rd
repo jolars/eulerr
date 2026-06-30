@@ -61,12 +61,12 @@ Named pattern vectors can be matched in
 
 \item{edges}{a logical, vector, or list of graphical parameters for the edges
 in the diagram. Vectors are assumed to be colors for the edges.
-See \code{\link[grid:grid.lines]{grid::grid.polyline()}}.}
+See \code{\link[grid:grid.polyline]{grid::grid.polyline()}}.}
 
 \item{legend}{a logical scalar or list. If a list, the item \code{side} can be
 used to set the location of the legend and \code{symbol_size} can be used to scale
 the legend symbols independently of the text size. See
-\code{\link[grid:legendGrob]{grid::grid.legend()}}.}
+\code{\link[grid:grid.legend]{grid::grid.legend()}}.}
 
 \item{labels}{a logical, vector, or list. Vectors are assumed to be
 text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}. In addition to the
@@ -131,7 +131,7 @@ plus \code{\link[grid:gpar]{grid::gpar()}} fields (\code{col}, \code{alpha}, \co
 \code{labels} are not annotated. The composite tag bbox grows to
 include the annotation, so exterior placement and leader lines
 adapt automatically. Defaults to slightly smaller text than
-\code{labels} / \code{quantities} (\code{cex = 0.8}).}
+\code{labels}/\code{quantities} (\code{cex = 0.8}).}
 
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}. In addition to graphical parameters, this
@@ -289,6 +289,6 @@ plot(
 }
 \seealso{
 \code{\link[=euler]{euler()}}, \code{\link[=plot.eulergram]{plot.eulergram()}}, \code{\link[grid:gpar]{grid::gpar()}},
-\code{\link[grid:grid.lines]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
-\code{\link[grid:legendGrob]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
+\code{\link[grid:grid.polyline]{grid::grid.polyline()}}, \code{\link[grid:grid.path]{grid::grid.path()}},
+\code{\link[grid:grid.legend]{grid::grid.legend()}}, \code{\link[grid:grid.text]{grid::grid.text()}}
 }

@@ -1,5 +1,5 @@
 # eulerr: Area-Proportional Euler and Venn Diagrams with Circles or Ellipses
-# Copyright (C) 2018 Johan Larsson <johanlarsson@outlook.com>
+# Copyright (C) 2026 Johan Larsson <johanlarsson@outlook.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

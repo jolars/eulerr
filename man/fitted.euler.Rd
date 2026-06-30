@@ -13,8 +13,8 @@
 non-empty sets (\code{2^n - 1} entries), filling absent combinations with 0.
 The default (\code{FALSE}) returns the sparse vector stored on the object,
 which only contains entries that were either requested as input or fit
-to a non-zero area. Use \code{dense = TRUE} only for diagrams with few sets
---- the full enumeration is exponential in the number of non-empty sets.}
+to a non-zero area. Use \code{dense = TRUE} only for diagrams with few sets.
+The full enumeration is exponential in the number of non-empty sets.}
 
 \item{...}{ignored}
 }

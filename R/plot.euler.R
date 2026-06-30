@@ -138,7 +138,7 @@
 #'   `labels` are not annotated. The composite tag bbox grows to
 #'   include the annotation, so exterior placement and leader lines
 #'   adapt automatically. Defaults to slightly smaller text than
-#'   `labels` / `quantities` (`cex = 0.8`).
+#'   `labels`/`quantities` (`cex = 0.8`).
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]. In addition to graphical parameters, this
 #'   argument can include `labels = list(top = ..., left = ...)` for custom
@@ -332,7 +332,7 @@ plot.euler <- function(
       stop("`", name, "$by_group` must be a non-empty named list.")
     }
     keys <- names(by_group)
-    if (is.null(keys) || any(!nzchar(keys))) {
+    if (is.null(keys) || !all(nzchar(keys))) {
       stop("`", name, "$by_group` must be a fully named list.")
     }
     valid_keys <- names(x)
@@ -647,7 +647,7 @@ plot.euler <- function(
       NULL
     }
   )
-  do_legacy_patterns <- any(!vapply(legacy_patterns, is.null, logical(1)))
+  do_legacy_patterns <- !all(vapply(legacy_patterns, is.null, logical(1)))
   do_patterns <- do_patterns || do_legacy_patterns
 
   # setup patterns
@@ -916,7 +916,7 @@ plot.euler <- function(
           )
         }
         strip_label_names <- names(strip_labels)
-        if (is.null(strip_label_names) || any(!nzchar(strip_label_names))) {
+        if (is.null(strip_label_names) || !all(nzchar(strip_label_names))) {
           stop(
             "`strips$labels` must be a named list with optional `top` and `left` entries."
           )
@@ -1136,7 +1136,7 @@ plot.euler <- function(
         stop("`annotations$labels` must be a character vector.")
       }
       lbl_names <- names(annotations$labels)
-      if (is.null(lbl_names) || any(!nzchar(lbl_names))) {
+      if (is.null(lbl_names) || !all(nzchar(lbl_names))) {
         stop(
           "`annotations$labels` must be a fully named character vector keyed by subset (e.g. `c(A = \"...\", \"A&B\" = \"...\")`)."
         )
@@ -1879,7 +1879,7 @@ resolve_strip_labels <- function(labels, levels, display_levels, axis) {
   has_names <- !is.null(label_names) && any(nzchar(label_names))
 
   if (has_names) {
-    if (any(!nzchar(label_names))) {
+    if (!all(nzchar(label_names))) {
       stop(sprintf(
         "`strips$labels$%s` must be fully named when names are used.",
         axis

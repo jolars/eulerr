@@ -15,7 +15,7 @@
 a data frame of the fitted shape parameters
 }
 \description{
-Returns the \verb{$shapes} data frame — a tagged uniform schema with one row
+Returns the \verb{$shapes} data frame: a tagged uniform schema with one row
 per set, a \code{type} column, and shape-specific columns
 (\verb{h, k, a, b, phi, width, height, side}) populated according to the
 chosen shape (other columns are \code{NA}). For circle/ellipse fits the

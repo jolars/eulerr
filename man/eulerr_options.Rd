@@ -43,7 +43,7 @@ text element per region below the quantity.}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},
 \code{fontsize}, \code{cex}, \code{symbol_size} (symbol size multiplier, independent of text
 size; defaults to \code{cex} if \code{NULL}), \code{fontfamily}, \code{lineheight}, and \code{font}}
-\item{main}{arguments to \code{\link[grid:grid.text]{grid::textGrob()}}}
+\item{main}{arguments to \code{\link[grid:textGrob]{grid::textGrob()}}}
 \item{complement}{a list of styling defaults for the container box
 and its complement label drawn when \code{\link[=euler]{euler()}} is called with
 \verb{complement =}. Items: \code{fill}, \code{alpha}, \code{col}, \code{lty}, \code{lwd}, \code{lex},

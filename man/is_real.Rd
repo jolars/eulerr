@@ -7,7 +7,7 @@
 is_real(x, tol = .Machine$double.eps^0.5)
 }
 \arguments{
-\item{x}{}
+\item{x}{a vector}
 }
 \value{
 A logical.

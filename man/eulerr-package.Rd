@@ -4,21 +4,29 @@
 \name{eulerr-package}
 \alias{eulerr}
 \alias{eulerr-package}
-\title{eulerr: Area-Proportional Euler and Venn Diagrams with Ellipses}
+\title{eulerr: Area-Proportional Euler and Venn Diagrams}
 \description{
-Generate area-proportional Euler diagrams using numerical optimization. An Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with ellipses and circles via a wide range of inputs and can be visualized in numerous ways.
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
+Generate area-proportional Euler diagrams using numerical optimization. A Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with circles, ellipses, squares, and rectangles via a wide range of inputs and can be visualized in numerous ways.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/jolars/eulerr}
   \item \url{https://jolars.github.io/eulerr/}
+  \item \url{https://eunoia.bz}
   \item Report bugs at \url{https://github.com/jolars/eulerr/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Johan Larsson \email{johanlarsson@outlook.com} (\href{https://orcid.org/0000-0002-4029-5945}{ORCID}) [copyright holder]
+\strong{Maintainer}: Johan Larsson \email{johan@jolars.co} (\href{https://orcid.org/0000-0002-4029-5945}{ORCID}) [copyright holder]
+
+Authors:
+\itemize{
+  \item Johan Larsson \email{johan@jolars.co} (\href{https://orcid.org/0000-0002-4029-5945}{ORCID}) [copyright holder]
+}
 
 Other contributors:
 \itemize{
