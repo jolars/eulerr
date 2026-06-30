@@ -1,6 +1,6 @@
 # Return the fitted shape parameters from the euler object
 
-Returns the `$shapes` data frame — a tagged uniform schema with one row
+Returns the `$shapes` data frame: a tagged uniform schema with one row
 per set, a `type` column, and shape-specific columns
 (`h, k, a, b, phi, width, height, side`) populated according to the
 chosen shape (other columns are `NA`). For circle/ellipse fits the

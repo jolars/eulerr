@@ -138,18 +138,18 @@ only shape able to draw a true four-set Venn diagram (see <code><a href="venn.ht
 <dd><p>type of loss to minimize over. The default,
 <code>"sum_squared"</code>, minimizes the sum of squared errors. The available
 options mirror the loss functions exposed by the <code>eunoia</code> Rust crate
-that powers the optimizer:</p><ul><li><p><code>"sum_squared"</code> — normalized sum of squared errors (default).</p></li>
-<li><p><code>"sum_absolute"</code> — normalized sum of absolute errors.</p></li>
-<li><p><code>"sum_absolute_region_error"</code> — normalized sum of absolute
+that powers the optimizer:</p><ul><li><p><code>"sum_squared"</code>: normalized sum of squared errors (default).</p></li>
+<li><p><code>"sum_absolute"</code>: normalized sum of absolute errors.</p></li>
+<li><p><code>"sum_absolute_region_error"</code>: normalized sum of absolute
 region errors.</p></li>
-<li><p><code>"sum_squared_region_error"</code> — normalized sum of squared region
+<li><p><code>"sum_squared_region_error"</code>: normalized sum of squared region
 errors.</p></li>
-<li><p><code>"max_absolute"</code> — normalized maximum absolute error.</p></li>
-<li><p><code>"max_squared"</code> — normalized maximum squared error.</p></li>
-<li><p><code>"root_mean_squared"</code> — normalized root-mean-squared error.</p></li>
-<li><p><code>"stress"</code> — venneuler-style stress.</p></li>
-<li><p><code>"diag_error"</code> — eulerAPE-style <code>diagError</code>.</p></li>
-<li><p><code>"log_sum_absolute"</code> — sum of absolute errors on <code>log1p</code>-transformed
+<li><p><code>"max_absolute"</code>: normalized maximum absolute error.</p></li>
+<li><p><code>"max_squared"</code>: normalized maximum squared error.</p></li>
+<li><p><code>"root_mean_squared"</code>: normalized root-mean-squared error.</p></li>
+<li><p><code>"stress"</code>: venneuler-style stress.</p></li>
+<li><p><code>"diag_error"</code>: eulerAPE-style <code>diagError</code>.</p></li>
+<li><p><code>"log_sum_absolute"</code>: sum of absolute errors on <code>log1p</code>-transformed
 areas, which stops large regions from dominating the fit.</p></li>
 <li><p><code>"smooth_sum_absolute"</code>, <code>"smooth_sum_absolute_region_error"</code>,
 <code>"smooth_max_absolute"</code>, <code>"smooth_max_squared"</code>, <code>"smooth_diag_error"</code>,
@@ -167,7 +167,7 @@ the combination is mapped to the equivalent new <code>loss</code> value.</p></dd
 
 <dt id="arg-complement">complement<a class="anchor" aria-label="anchor" href="#arg-complement"></a></dt>
 <dd><p>an optional single non-negative number giving the area
-of the <em>complement</em> — that is, the universe outside every named set.
+of the <em>complement</em>, that is, the universe outside every named set.
 When supplied, the fitter jointly optimizes a containing rectangle
 together with the diagram shapes so that the area of the rectangle
 minus the union of (clipped) shapes matches <code>complement</code>. This is the
@@ -182,7 +182,7 @@ in when the primary optimizer's <code>diagError</code> exceeds <code>extraopt_th
 The default is <code>TRUE</code> for three-set ellipse fits and <code>FALSE</code> otherwise.</p></li>
 <li><p><code>extraopt_threshold</code>: threshold, in terms of <code>diagError</code>, for when
 the CMA-ES fallback kicks in. A value of 0 means it will kick in for
-<em>any</em> error; a value of 1 means it will never kick in. Default <code>0.001</code>.</p></li>
+an* error; a value of 1 means it will never kick in. Default <code>0.001</code>.</p></li>
 <li><p><code>tolerance</code>: convergence tolerance passed to the underlying solver.
 Tighter values give more accurate fits at higher cost. Default <code>1e-8</code>.</p></li>
 <li><p><code>max_sets</code>: maximum number of sets the underlying engine will accept.

@@ -57,5 +57,4 @@ setup_grobs(
 
 ## Value
 
-A [`grid::gList()`](https://rdrr.io/r/grid/grid-defunct.html) is
-returned.
+A [`grid::gList()`](https://rdrr.io/r/grid/grid.grob.html) is returned.

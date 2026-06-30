@@ -10,7 +10,3 @@ rather than a fraction of the coordinate range.
 ``` r
 EULER_PANEL_PAD_PT
 ```
-
-## Format
-
-An object of class `numeric` of length 1.

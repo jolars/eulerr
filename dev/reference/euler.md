@@ -96,27 +96,27 @@ euler(combinations, ...)
   functions exposed by the `eunoia` Rust crate that powers the
   optimizer:
 
-  - `"sum_squared"` — normalized sum of squared errors (default).
+  - `"sum_squared"`: normalized sum of squared errors (default).
 
-  - `"sum_absolute"` — normalized sum of absolute errors.
+  - `"sum_absolute"`: normalized sum of absolute errors.
 
-  - `"sum_absolute_region_error"` — normalized sum of absolute region
+  - `"sum_absolute_region_error"`: normalized sum of absolute region
     errors.
 
-  - `"sum_squared_region_error"` — normalized sum of squared region
+  - `"sum_squared_region_error"`: normalized sum of squared region
     errors.
 
-  - `"max_absolute"` — normalized maximum absolute error.
+  - `"max_absolute"`: normalized maximum absolute error.
 
-  - `"max_squared"` — normalized maximum squared error.
+  - `"max_squared"`: normalized maximum squared error.
 
-  - `"root_mean_squared"` — normalized root-mean-squared error.
+  - `"root_mean_squared"`: normalized root-mean-squared error.
 
-  - `"stress"` — venneuler-style stress.
+  - `"stress"`: venneuler-style stress.
 
-  - `"diag_error"` — eulerAPE-style `diagError`.
+  - `"diag_error"`: eulerAPE-style `diagError`.
 
-  - `"log_sum_absolute"` — sum of absolute errors on `log1p`-transformed
+  - `"log_sum_absolute"`: sum of absolute errors on `log1p`-transformed
     areas, which stops large regions from dominating the fit.
 
   - `"smooth_sum_absolute"`, `"smooth_sum_absolute_region_error"`,
@@ -135,7 +135,7 @@ euler(combinations, ...)
 - complement:
 
   an optional single non-negative number giving the area of the
-  *complement* — that is, the universe outside every named set. When
+  *complement*, that is, the universe outside every named set. When
   supplied, the fitter jointly optimizes a containing rectangle together
   with the diagram shapes so that the area of the rectangle minus the
   union of (clipped) shapes matches `complement`. This is the classical
@@ -156,7 +156,7 @@ euler(combinations, ...)
 
   - `extraopt_threshold`: threshold, in terms of `diagError`, for when
     the CMA-ES fallback kicks in. A value of 0 means it will kick in for
-    *any* error; a value of 1 means it will never kick in. Default
+    an\* error; a value of 1 means it will never kick in. Default
     `0.001`.
 
   - `tolerance`: convergence tolerance passed to the underlying solver.

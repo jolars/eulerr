@@ -167,7 +167,7 @@ plot(...)
   `rot`). Regions absent from `labels` are not annotated. The composite
   tag bbox grows to include the annotation, so exterior placement and
   leader lines adapt automatically. Defaults to slightly smaller text
-  than `labels` / `quantities` (`cex = 0.8`).
+  than `labels`/`quantities` (`cex = 0.8`).
 
 - strips:
 
