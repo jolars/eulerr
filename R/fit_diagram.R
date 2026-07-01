@@ -72,7 +72,7 @@ fit_diagram <- function(
     stop("every element in `combinations` needs to be named")
   }
 
-  if (any(duplicated(names(combinations)))) {
+  if (anyDuplicated(names(combinations)) > 0) {
     stop("names of elements in `combinations` cannot be duplicated")
   }
 
@@ -323,7 +323,7 @@ fit_diagram <- function(
 
     if (
       length(combo_values) != length(combo_names) ||
-        any(!is.finite(combo_values)) ||
+        !all(is.finite(combo_values)) ||
         any(combo_values < 0)
     ) {
       stop(

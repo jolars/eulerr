@@ -837,7 +837,7 @@ plot.euler <- function(
       patterns_out$type[is.na(patterns_out$type)] <- "none"
       patterns_out$type <- tolower(patterns_out$type)
 
-      if (any(!patterns_out$type %in% c("none", "stripes"))) {
+      if (!all(patterns_out$type %in% c("none", "stripes"))) {
         stop("`patterns$type` must be one of: 'stripes', NA.")
       }
 
@@ -853,7 +853,7 @@ plot.euler <- function(
       patterns$gp <- setup_gpar(patterns_gp, list(), n_id)
     } else {
       patterns_out$type[is.na(patterns_out$type)] <- "none"
-      if (any(!patterns_out$type %in% c("none", "stripes"))) {
+      if (!all(patterns_out$type %in% c("none", "stripes"))) {
         stop("`patterns$type` must be one of: 'stripes', NA.")
       }
       if (all(is.na(patterns_out$col))) {

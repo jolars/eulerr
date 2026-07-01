@@ -109,7 +109,7 @@ venn.default <- function(
 #' venn(pain, factor_names = FALSE)
 venn.table <- function(combinations, ...) {
   x <- as.data.frame(combinations)
-  venn(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
+  venn(x[, names(x) != "Freq"], weights = x$Freq, ...)
 }
 
 #' @describeIn venn a `data.frame` of logicals, binary integers, or

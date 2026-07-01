@@ -316,7 +316,7 @@ euler.matrix <- function(combinations, ...) {
 #' euler(pain, factor_names = FALSE)
 euler.table <- function(combinations, ...) {
   x <- as.data.frame(combinations)
-  euler(x[, !(names(x) == "Freq")], weights = x$Freq, ...)
+  euler(x[, names(x) != "Freq"], weights = x$Freq, ...)
 }
 
 #' @describeIn euler a list of vectors, each vector giving the contents of
