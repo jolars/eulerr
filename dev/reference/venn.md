@@ -105,7 +105,7 @@ Returns an object of class `'eulerr_venn', 'venn', 'euler'` with items
 
 - ellipses:
 
-  the legacy 5-column data frame (`h, k, a, b, phi`) — kept for
+  the legacy 5-column data frame (`h, k, a, b, phi`), kept for
   back-compat alongside the canonical `shapes` slot. Only present for
   `shape = "ellipse"`.
 

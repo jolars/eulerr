@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">8.0.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">8.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,10 +43,28 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="eulerr-development-version">eulerr (development version)<a class="anchor" aria-label="anchor" href="#eulerr-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="8.1" id="eulerr-81">eulerr 8.1<a class="anchor" aria-label="anchor" href="#eulerr-81"></a></h2>
 <div class="section level3">
-<h3 id="highlights-development-version">Highlights<a class="anchor" aria-label="anchor" href="#highlights-development-version"></a></h3>
+<h3 id="highlights-8-1">Highlights<a class="anchor" aria-label="anchor" href="#highlights-8-1"></a></h3>
 <p>This version brings rotated rectangles as a new shape to eulerr, as well as the ability to customize the optimizer used to fit the diagram. eulerr is also parallelized now, and because the fitting pipeline now runs the full fit in several branches (in parallel), this should bring significant speedups for larger diagrams.</p>
 </div>
+<div class="section level3">
+<h3 id="features-8-1">Features<a class="anchor" aria-label="anchor" href="#features-8-1"></a></h3>
+<ul><li>
+<strong>plotting:</strong> add configurable canvas margin (<a href="https://github.com/jolars/eulerr/commit/eea354295936f8409debb4914c1d33f9878b94aa" class="external-link"><code>eea3542</code></a>)</li>
+<li>support rotated rectangles and configurable optimizers (<a href="https://github.com/jolars/eulerr/commit/330e42b6c87226cbc3833c3e99869fe1a7a971c3" class="external-link"><code>330e42b</code></a>)</li>
+<li>add <code>n_threads</code> option for parallelizing fits (<a href="https://github.com/jolars/eulerr/commit/845a54fb53034be8aecde65ee5a0cedbe31d8c29" class="external-link"><code>845a54f</code></a>)</li>
+<li>add <code>transform</code> option to fitter (<a href="https://github.com/jolars/eulerr/commit/f4b99c16d10baf5e23263aa81f6ae6efff06dab0" class="external-link"><code>f4b99c1</code></a>), closes <a href="https://github.com/jolars/eulerr/issues/96" class="external-link">#96</a>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-8-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-8-1"></a></h3>
+<ul><li>
+<strong>plotting:</strong> increase margin around plot to 2 pt (<a href="https://github.com/jolars/eulerr/commit/3ff50c68c204470e5ba2fa6ea0ff486047928a6b" class="external-link"><code>3ff50c6</code></a>)</li>
+<li>note correct rustc requirement in DESCRIPTION (<a href="https://github.com/jolars/eulerr/commit/9b0507423c6088c1432390b9b44f448d52351a88" class="external-link"><code>9b05074</code></a>)</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="8.0" id="eulerr-80">eulerr 8.0<a class="anchor" aria-label="anchor" href="#eulerr-80"></a></h2>
