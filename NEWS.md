@@ -1,4 +1,8 @@
-# eulerr (development version)
+# eulerr 8.1
+
+## Bug fixes
+
+- **plot:** associate region fills by label not position ([`c74896a`](https://github.com/jolars/eulerr/commit/c74896af20c4d1a382743b8ef32f5da48ebc6ec1)), fixes [#134](https://github.com/jolars/eulerr/issues/134)
 
 # eulerr 8.1
 
