@@ -12,8 +12,8 @@ tally_combinations(sets, weights)
 \item{weights}{a numeric vector}
 }
 \value{
-Calls \code{\link[=euler]{euler()}} after the set relationships have been coerced to a
-named numeric vector.
+Calls \code{\link[=euler]{euler()}} after the set relationships have been coerced to a named
+numeric vector.
 }
 \description{
 Tally set relationships

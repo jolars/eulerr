@@ -7,12 +7,12 @@
 default_n_threads()
 }
 \value{
-A positive integer scalar (or whatever the \code{eulerr.n_threads} option
-is set to, validated downstream).
+A positive integer scalar (or whatever the \code{eulerr.n_threads} option is set
+to, validated downstream).
 }
 \description{
-Mirrors the approach taken by \strong{data.table}: use half the available cores
-at runtime, but stay single-threaded under \verb{R CMD check} to honor CRAN's
+Mirrors the approach taken by \strong{data.table}: use half the available cores at
+runtime, but stay single-threaded under \verb{R CMD check} to honor CRAN's
 two-core policy. eunoia parallelizes through \code{rayon}, which ignores the
 \code{OMP_THREAD_LIMIT} signal that CRAN's check farm sets, so we throttle here
 instead. Overrides are honored in order: the \code{eulerr.n_threads} option, the

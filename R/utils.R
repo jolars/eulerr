@@ -3,8 +3,9 @@
 #' @param sets a data.frame with set relationships and weights
 #' @param weights a numeric vector
 #'
-#' @return Calls [euler()] after the set relationships have been coerced to a
-#'   named numeric vector.
+#' @return
+#' Calls [euler()] after the set relationships have been coerced to a named
+#' numeric vector.
 #' @keywords internal
 tally_combinations <- function(sets, weights) {
   if (!is.matrix(sets)) {
@@ -76,8 +77,8 @@ update_list <- function(old, new) {
 
 #' Replace (refresh) a list
 #'
-#' Unlike `update_list`, this function only modifies, and does not add,
-#' items in the list.
+#' Unlike `update_list`, this function only modifies, and does not add, items in
+#' the list.
 #'
 #' @param old the original list
 #' @param new the things to update `old` with
@@ -94,17 +95,13 @@ replace_list <- function(old, new) {
 #'
 #' @return A logical.
 #' @keywords internal
-is_false <- function(x) {
-  identical(x, FALSE)
-}
+is_false <- function(x) identical(x, FALSE)
 
 #' Null-coalesce: returns `y` when `x` is `NULL`, else `x`. Local
 #' polyfill so we keep the R >= 4.2 floor (base `%||%` is 4.4+).
 #' @keywords internal
 #' @noRd
-`%||%` <- function(x, y) {
-  if (is.null(x)) y else x
-}
+`%||%` <- function(x, y) if (is.null(x)) y else x
 
 #' Check if a vector is an integer
 #'
@@ -128,9 +125,9 @@ is_real <- function(x, tol = .Machine$double.eps^0.5) {
 
 #' Number of CPU cores eulerr may use
 #'
-#' Collects the core-count limits we trust and returns the smallest, never
-#' less than one. This mirrors the (much more elaborate) min-of-signals design
-#' of `parallelly::availableCores()`, but only the durable, non-platform-specific
+#' Collects the core-count limits we trust and returns the smallest, never less
+#' than one. This mirrors the (much more elaborate) min-of-signals design of
+#' `parallelly::availableCores()`, but only the durable, non-platform-specific
 #' signals: the detected core count, `R CMD check`'s `_R_CHECK_LIMIT_CORES_`
 #' (capped at two), and `OMP_THREAD_LIMIT`. We deliberately do not parse cgroup
 #' quotas or HPC scheduler variables.
@@ -156,8 +153,8 @@ detect_available_cores <- function() {
 
 #' Default number of threads for the fitter's restart loop
 #'
-#' Mirrors the approach taken by **data.table**: use half the available cores
-#' at runtime, but stay single-threaded under `R CMD check` to honor CRAN's
+#' Mirrors the approach taken by **data.table**: use half the available cores at
+#' runtime, but stay single-threaded under `R CMD check` to honor CRAN's
 #' two-core policy. eunoia parallelizes through `rayon`, which ignores the
 #' `OMP_THREAD_LIMIT` signal that CRAN's check farm sets, so we throttle here
 #' instead. Overrides are honored in order: the `eulerr.n_threads` option, the
@@ -165,8 +162,9 @@ detect_available_cores <- function() {
 #' `mc.cores` option (or `MC_CORES` environment variable), the last of which is
 #' treated as an exact request bounded by the available cores.
 #'
-#' @return A positive integer scalar (or whatever the `eulerr.n_threads` option
-#'   is set to, validated downstream).
+#' @return
+#' A positive integer scalar (or whatever the `eulerr.n_threads` option is set
+#' to, validated downstream).
 #' @keywords internal
 default_n_threads <- function() {
   # Explicit, eulerr-specific overrides win outright.
@@ -222,17 +220,6 @@ all_set_combinations <- function(setnames) {
     out <- c(out, labs)
   }
   out
-}
-
-#' Get the number of sets in he input
-#'
-#' @param combinations a vector of combinations (see [euler()])
-#'
-#' @return The number of sets in the input
-#' @keywords internal
-n_sets <- function(combinations) {
-  combo_names <- strsplit(names(combinations), split = "&", fixed = TRUE)
-  length(unique(unlist(combo_names, use.names = FALSE)))
 }
 
 #' Blend (average) colors
@@ -315,10 +302,10 @@ apply_panel_overrides <- function(param, override) {
 #' Dummy code a data.frame
 #'
 #' @param x a data.frame
-#' @param sep character for separating dummy code factors and their levels
-#'   when constructing names
-#' @param factor_names whether to include factor names when creating new
-#'   names for dummy codes
+#' @param sep character for separating dummy code factors and their levels when
+#'   constructing names
+#' @param factor_names whether to include factor names when creating new names
+#'   for dummy codes
 #'
 #' @return A dummy-coded version of x.
 #'
@@ -380,6 +367,4 @@ dummy_code <- function(x, sep = "_", factor_names = TRUE) {
   cbind(x[, !fac_chr, drop = FALSE], out)
 }
 
-nonzero_fit <- function(x) {
-  abs(x) / sum(abs(x) + .Machine$double.eps) > 1e-4
-}
+nonzero_fit <- function(x) abs(x) / sum(abs(x) + .Machine$double.eps) > 1e-4

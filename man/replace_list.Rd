@@ -15,7 +15,7 @@ replace_list(old, new)
 A refreshed list.
 }
 \description{
-Unlike \code{update_list}, this function only modifies, and does not add,
-items in the list.
+Unlike \code{update_list}, this function only modifies, and does not add, items in
+the list.
 }
 \keyword{internal}
