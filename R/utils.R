@@ -39,18 +39,6 @@ tally_combinations <- function(sets, weights) {
   c(singletons, multi)
 }
 
-#' Rescale values to new range
-#'
-#' @param x numeric vector
-#' @param new_min new min
-#' @param new_max new max
-#'
-#' @return Rescaled vector
-#' @keywords internal
-rescale <- function(x, new_min, new_max) {
-  (new_max - new_min) / (max(x) - min(x)) * (x - max(x)) + new_max
-}
-
 #' Update list with input
 #'
 #' A wrapper for [utils::modifyList()] that attempts to coerce non-lists to
