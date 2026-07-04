@@ -78,12 +78,15 @@ arbitrarily, e.g. <code>(p1 | p2) / p3</code>.</p>
     <p><code>|</code> arranges the two plots horizontally; <code>/</code> stacks them vertically.
 The result is itself an <code>eulergram</code>, so further composition chains
 naturally.</p>
+<p>Consecutive operators of the same direction are flattened into a
+single row or column of equally sized panels. Thus
+<code>p1 | p2 | p3 | p4</code> produces one row of four equal-width panels rather
+than a lopsided nest of binary splits. Use parentheses (or mix <code>|</code> and
+<code>/</code>) to force sub-groups: in <code>(p1 | p2) / p3</code>, <code>p3</code> spans the full
+bottom row while <code>p1</code> and <code>p2</code> split the top row equally.</p>
 <p>The gap between adjacent plots is controlled by the
 <code>composition$spacing</code> entry of <code><a href="eulerr_options.html">eulerr_options()</a></code>, which must be a
 <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code> and defaults to <code>grid::unit(1, "lines")</code>.</p>
-<p>Because composition is binary and recursive, panels at different
-nesting levels are not size-aligned. In <code>(p1 | p2) / p3</code>, <code>p3</code> spans
-the full bottom row while <code>p1</code> and <code>p2</code> split the top row equally.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
