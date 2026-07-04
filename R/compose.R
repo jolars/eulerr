@@ -11,13 +11,16 @@
 #' The result is itself an `eulergram`, so further composition chains
 #' naturally.
 #'
+#' Consecutive operators of the same direction are flattened into a
+#' single row or column of equally sized panels. Thus
+#' `p1 | p2 | p3 | p4` produces one row of four equal-width panels rather
+#' than a lopsided nest of binary splits. Use parentheses (or mix `|` and
+#' `/`) to force sub-groups: in `(p1 | p2) / p3`, `p3` spans the full
+#' bottom row while `p1` and `p2` split the top row equally.
+#'
 #' The gap between adjacent plots is controlled by the
 #' `composition$spacing` entry of [eulerr_options()], which must be a
 #' [grid::unit()] and defaults to `grid::unit(1, "lines")`.
-#'
-#' Because composition is binary and recursive, panels at different
-#' nesting levels are not size-aligned. In `(p1 | p2) / p3`, `p3` spans
-#' the full bottom row while `p1` and `p2` split the top row equally.
 #'
 #' @return An `eulergram` containing the composed layout.
 #'
@@ -63,62 +66,79 @@ compose_eulergrams <- function(e1, e2, horizontal = TRUE) {
     )
   }
 
+  # Flatten runs of same-direction operators into a single row/column so
+  # that, e.g., `p1 | p2 | p3` yields three equal-width panels instead of
+  # a lopsided binary nest. Operands composed in the other direction stay
+  # as single panels, preserving intended sub-groups.
+  panels <- c(
+    composition_panels(e1, horizontal),
+    composition_panels(e2, horizontal)
+  )
+
+  build_composition(panels, spacing, horizontal)
+}
+
+# Return the list of flat panels for an operand: the panels of a same-
+# direction composition, otherwise the operand itself as a single panel.
+composition_panels <- function(e, horizontal) {
+  dir <- attr(e, "euler_dir", exact = TRUE)
+  panels <- attr(e, "euler_panels", exact = TRUE)
+  if (!is.null(dir) && identical(dir, horizontal) && !is.null(panels)) {
+    panels
+  } else {
+    list(e)
+  }
+}
+
+# Lay out `panels` in a single row (horizontal) or column, separated by
+# `spacing`, with each panel getting an equal `1null` share.
+build_composition <- function(panels, spacing, horizontal) {
+  n <- length(panels)
+
+  # Interleave panel slots with spacing: panel, gap, panel, ..., panel.
+  panel_size <- grid::unit(1, "null")
+  sizes <- panel_size
+  for (i in seq_len(n - 1)) {
+    sizes <- grid::unit.c(sizes, spacing, panel_size)
+  }
+  n_slots <- 2L * n - 1L
+
   if (horizontal) {
     layout_vp <- grid::viewport(
-      layout = grid::grid.layout(
-        nrow = 1,
-        ncol = 3,
-        widths = grid::unit.c(
-          grid::unit(1, "null"),
-          spacing,
-          grid::unit(1, "null")
-        )
-      ),
+      layout = grid::grid.layout(nrow = 1, ncol = n_slots, widths = sizes),
       name = "euler.composed.vp"
-    )
-
-    first <- grid::gTree(
-      children = grid::gList(e1),
-      vp = grid::viewport(layout.pos.col = 1),
-      name = "euler.composed.left"
-    )
-
-    second <- grid::gTree(
-      children = grid::gList(e2),
-      vp = grid::viewport(layout.pos.col = 3),
-      name = "euler.composed.right"
     )
   } else {
     layout_vp <- grid::viewport(
-      layout = grid::grid.layout(
-        nrow = 3,
-        ncol = 1,
-        heights = grid::unit.c(
-          grid::unit(1, "null"),
-          spacing,
-          grid::unit(1, "null")
-        )
-      ),
+      layout = grid::grid.layout(nrow = n_slots, ncol = 1, heights = sizes),
       name = "euler.composed.vp"
-    )
-
-    first <- grid::gTree(
-      children = grid::gList(e1),
-      vp = grid::viewport(layout.pos.row = 1),
-      name = "euler.composed.top"
-    )
-
-    second <- grid::gTree(
-      children = grid::gList(e2),
-      vp = grid::viewport(layout.pos.row = 3),
-      name = "euler.composed.bottom"
     )
   }
 
-  grid::gTree(
-    children = grid::gList(first, second),
+  children <- lapply(seq_len(n), function(i) {
+    slot <- 2L * i - 1L
+    vp <- if (horizontal) {
+      grid::viewport(layout.pos.col = slot)
+    } else {
+      grid::viewport(layout.pos.row = slot)
+    }
+    grid::gTree(
+      children = grid::gList(panels[[i]]),
+      vp = vp,
+      name = paste0("euler.composed.panel", i)
+    )
+  })
+
+  grob <- grid::gTree(
+    children = do.call(grid::gList, children),
     vp = layout_vp,
     cl = "eulergram",
     name = "euler.composed"
   )
+
+  # Record the flat panel list and direction so a subsequent same-
+  # direction operator can extend this composition instead of nesting it.
+  attr(grob, "euler_panels") <- panels
+  attr(grob, "euler_dir") <- horizontal
+  grob
 }

@@ -940,6 +940,48 @@ test_that("eulergrams can be composed with | and /", {
   })
 })
 
+test_that("same-direction compositions flatten into equal panels", {
+  tmp <- tempfile()
+  png(tmp)
+  on.exit({
+    dev.off()
+    unlink(tmp)
+  })
+
+  p1 <- plot(euler(c(A = 1, B = 8, "A&B" = 1)))
+  p2 <- plot(euler(c(A = 1, C = 1, "A&C" = 1)))
+  p3 <- plot(euler(c(X = 3, Y = 2, "X&Y" = 1)))
+  p4 <- plot(euler(c(M = 2, N = 2, "M&N" = 1)))
+
+  # A chain of `|` collapses into one row of four equal-width panels
+  # (slots: panel, gap, panel, gap, panel, gap, panel).
+  chain <- p1 | p2 | p3 | p4
+  expect_length(chain$children, 4L)
+  expect_equal(chain$vp$layout$ncol, 7L)
+  expect_equal(chain$vp$layout$nrow, 1L)
+  cols <- vapply(chain$children, function(x) x$vp$layout.pos.col[1], integer(1))
+  expect_equal(unname(cols), c(1L, 3L, 5L, 7L))
+  widths <- chain$vp$layout$widths
+  expect_equal(grid::unitType(widths)[c(1, 3, 5, 7)], rep("null", 4))
+
+  # Parenthesized same-direction groups flatten equivalently.
+  nested_same <- (p1 | p2) | (p3 | p4)
+  expect_length(nested_same$children, 4L)
+  expect_equal(nested_same$vp$layout$ncol, 7L)
+
+  # Mixing directions preserves sub-groups: `(p1 | p2) / p3` stays binary.
+  mixed <- (p1 | p2) / p3
+  expect_equal(mixed$vp$layout$nrow, 3L)
+  expect_length(mixed$children, 2L)
+  inner <- mixed$children[[1]]$children[[1]]
+  expect_equal(inner$vp$layout$ncol, 3L)
+
+  expect_silent({
+    grid::grid.newpage()
+    grid::grid.draw(chain)
+  })
+})
+
 test_that("composition spacing follows eulerr_options()", {
   tmp <- tempfile()
   png(tmp)

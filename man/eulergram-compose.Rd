@@ -26,13 +26,16 @@ arbitrarily, e.g. \code{(p1 | p2) / p3}.
 The result is itself an \code{eulergram}, so further composition chains
 naturally.
 
+Consecutive operators of the same direction are flattened into a
+single row or column of equally sized panels. Thus
+\code{p1 | p2 | p3 | p4} produces one row of four equal-width panels rather
+than a lopsided nest of binary splits. Use parentheses (or mix \code{|} and
+\code{/}) to force sub-groups: in \code{(p1 | p2) / p3}, \code{p3} spans the full
+bottom row while \code{p1} and \code{p2} split the top row equally.
+
 The gap between adjacent plots is controlled by the
 \code{composition$spacing} entry of \code{\link[=eulerr_options]{eulerr_options()}}, which must be a
 \code{\link[grid:unit]{grid::unit()}} and defaults to \code{grid::unit(1, "lines")}.
-
-Because composition is binary and recursive, panels at different
-nesting levels are not size-aligned. In \code{(p1 | p2) / p3}, \code{p3} spans
-the full bottom row while \code{p1} and \code{p2} split the top row equally.
 }
 \examples{
 p1 <- plot(euler(c(A = 1, B = 8, "A&B" = 1)))
