@@ -117,9 +117,9 @@ dependencies = [
 
 [[package]]
 name = "eunoia"
-version = "1.6.0"
+version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dbe7a7703c3733ec4a75b38838ef8c17177fd6a6d954759aa94d1c513955ec0d"
+checksum = "3d32354354487f6295ad4af7b56440aa4e074d1b0289d164d98d9d18ba8245f6"
 dependencies = [
  "basin",
  "finitediff",
