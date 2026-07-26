@@ -41,8 +41,8 @@ place_euler_labels(
 - `anchor_x` / `anchor_y` — placed label anchor (NA on miss);
 
 - `kind` — one of `"interior"`, `"exterior_raycast"`,
-  `"exterior_force_directed"`, `"exterior_elbow"`; `""` if no placement
-  was produced;
+  `"exterior_force_directed"`, `"exterior_elbow"`, `"exterior_matched"`;
+  `""` if no placement was produced;
 
 - `tether_x` / `tether_y` — tether point for the leader line (NA for
   interior placements / misses).
