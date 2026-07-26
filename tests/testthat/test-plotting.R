@@ -190,6 +190,30 @@ test_that("plotting zero-fits works", {
   unlink(tmp)
 })
 
+test_that("exterior label placement strategies work", {
+  tmp <- tempfile()
+  png(tmp)
+
+  # The tiny intersection forces its quantity label outside the region.
+  f <- euler(c(A = 50, B = 40, "A&B" = 0.1))
+
+  for (placement in c("raycast", "force_directed", "matched", "elbow")) {
+    expect_silent(plot(
+      f,
+      quantities = TRUE,
+      labels = list(placement = !!placement)
+    ))
+  }
+
+  expect_error(
+    plot(f, quantities = TRUE, labels = list(placement = "asdf")),
+    "Unknown placement strategy"
+  )
+
+  dev.off()
+  unlink(tmp)
+})
+
 test_that("stripe fill patterns can be added", {
   tmp <- tempfile()
   png(tmp)

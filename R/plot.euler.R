@@ -81,14 +81,17 @@
 #'   text for the labels. See [grid::grid.text()]. In addition to the
 #'   `grid::gpar()` fields, the following placement controls are
 #'   supported (delegated to the `eunoia` Rust crate):
-#'   `labels$placement` (`"raycast"` (default), `"force_directed"`, or
-#'   `"elbow"`) selects the strategy used when a label does not fit
-#'   inside its region. `"raycast"` and `"force_directed"` produce
-#'   straight leader lines (the former places the label along the
-#'   centroid→POI ray, the latter relaxes labels with a polygon-aware
-#'   force solver). `"elbow"` produces d3-pie style orthogonal leaders,
-#'   stacking exterior labels in left/right columns reached by a
-#'   three-segment polyline. `labels$margin` (numeric) overrides the
+#'   `labels$placement` (`"raycast"` (default), `"force_directed"`,
+#'   `"matched"`, or `"elbow"`) selects the strategy used when a label
+#'   does not fit inside its region. `"raycast"`, `"force_directed"`,
+#'   and `"matched"` produce straight leader lines: `"raycast"` places
+#'   the label along the centroid→POI ray, `"force_directed"` relaxes
+#'   labels with a polygon-aware force solver, and `"matched"` places
+#'   labels on a ring hugging the diagram silhouette, spreading them in
+#'   proportion to their widths so that neither the label boxes nor the
+#'   leaders can cross. `"elbow"` produces d3-pie style orthogonal
+#'   leaders, stacking exterior labels in left/right columns reached by
+#'   a three-segment polyline. `labels$margin` (numeric) overrides the
 #'   per-region margin between an exterior label and the diagram
 #'   (default is half the larger of the label's width and height);
 #'   `labels$tether` (`"poi"` (default) or `"boundary"`) chooses where

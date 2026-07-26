@@ -41,8 +41,8 @@ label sizes plus placement-strategy options. Returns, parallel to
 \itemize{
 \item \code{anchor_x} / \code{anchor_y} — placed label anchor (NA on miss);
 \item \code{kind} — one of \code{"interior"}, \code{"exterior_raycast"},
-\code{"exterior_force_directed"}, \code{"exterior_elbow"}; \code{""} if no
-placement was produced;
+\code{"exterior_force_directed"}, \code{"exterior_elbow"},
+\code{"exterior_matched"}; \code{""} if no placement was produced;
 \item \code{tether_x} / \code{tether_y} — tether point for the leader line (NA for
 interior placements / misses).
 \item \code{leader_end_x} / \code{leader_end_y} — point on the label box AABB where

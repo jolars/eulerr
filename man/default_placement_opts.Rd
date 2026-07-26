@@ -10,7 +10,8 @@ default_placement_opts()
 Mirrors \verb{eunoia::plotting::PlacementStrategy::default()}: raycast
 exterior solver, POI tether, proportional margin. Per-strategy knobs
 \code{iterations} (force-directed) and \code{min_gap} (elbow) live alongside in
-the flat shape that the Rust FFI expects; the user-facing sublists in
+the flat shape that the Rust FFI expects (the matched strategy uses
+only \code{margin}); the user-facing sublists in
 \code{eulerr_options(labels = list(force_directed = ..., elbow = ...))} are
 flattened into this shape by \code{plot.euler()} before placement runs.
 }

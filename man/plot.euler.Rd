@@ -72,14 +72,17 @@ the legend symbols independently of the text size. See
 text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}. In addition to the
 \code{grid::gpar()} fields, the following placement controls are
 supported (delegated to the \code{eunoia} Rust crate):
-\code{labels$placement} (\code{"raycast"} (default), \code{"force_directed"}, or
-\code{"elbow"}) selects the strategy used when a label does not fit
-inside its region. \code{"raycast"} and \code{"force_directed"} produce
-straight leader lines (the former places the label along the
-centroid→POI ray, the latter relaxes labels with a polygon-aware
-force solver). \code{"elbow"} produces d3-pie style orthogonal leaders,
-stacking exterior labels in left/right columns reached by a
-three-segment polyline. \code{labels$margin} (numeric) overrides the
+\code{labels$placement} (\code{"raycast"} (default), \code{"force_directed"},
+\code{"matched"}, or \code{"elbow"}) selects the strategy used when a label
+does not fit inside its region. \code{"raycast"}, \code{"force_directed"},
+and \code{"matched"} produce straight leader lines: \code{"raycast"} places
+the label along the centroid→POI ray, \code{"force_directed"} relaxes
+labels with a polygon-aware force solver, and \code{"matched"} places
+labels on a ring hugging the diagram silhouette, spreading them in
+proportion to their widths so that neither the label boxes nor the
+leaders can cross. \code{"elbow"} produces d3-pie style orthogonal
+leaders, stacking exterior labels in left/right columns reached by
+a three-segment polyline. \code{labels$margin} (numeric) overrides the
 per-region margin between an exterior label and the diagram
 (default is half the larger of the label's width and height);
 \code{labels$tether} (\code{"poi"} (default) or \code{"boundary"}) chooses where

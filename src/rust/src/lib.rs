@@ -86,7 +86,8 @@ fn parse_optimizer(opt: &str) -> std::result::Result<Option<Optimizer>, Error> {
 
 /// Parse a placement-strategy string into the eunoia [`LeaderStrategy`]
 /// variant, applying optional per-strategy overrides. `iterations` only
-/// applies to `"force_directed"`; `min_gap` only applies to `"elbow"`.
+/// applies to `"force_directed"`; `min_gap` only applies to `"elbow"`;
+/// `"matched"` consumes only `margin`.
 fn parse_placement(
     placement: &str,
     margin: Option<f64>,
@@ -99,6 +100,7 @@ fn parse_placement(
             margin,
             iterations,
         })),
+        "matched" => Ok(LeaderStrategy::Straight(ExteriorPolicy::Matched { margin })),
         "elbow" => Ok(LeaderStrategy::Elbow(
             ElbowOptions::default().margin(margin).min_gap(min_gap),
         )),
@@ -1130,6 +1132,7 @@ fn placement_kind_str(kind: PlacementKind) -> &'static str {
         PlacementKind::ExteriorRaycast => "exterior_raycast",
         PlacementKind::ExteriorForceDirected => "exterior_force_directed",
         PlacementKind::ExteriorElbow => "exterior_elbow",
+        PlacementKind::ExteriorMatched => "exterior_matched",
         // `PlacementKind` is #[non_exhaustive]; treat any future variant as
         // an interior placement (the no-leader default).
         _ => "interior",
@@ -1144,8 +1147,8 @@ fn placement_kind_str(kind: PlacementKind) -> &'static str {
 ///
 /// * `anchor_x` / `anchor_y` — placed label anchor (NA on miss);
 /// * `kind` — one of `"interior"`, `"exterior_raycast"`,
-///   `"exterior_force_directed"`, `"exterior_elbow"`; `""` if no
-///   placement was produced;
+///   `"exterior_force_directed"`, `"exterior_elbow"`,
+///   `"exterior_matched"`; `""` if no placement was produced;
 /// * `tether_x` / `tether_y` — tether point for the leader line (NA for
 ///   interior placements / misses).
 /// * `leader_end_x` / `leader_end_y` — point on the label box AABB where
