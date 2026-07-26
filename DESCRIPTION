@@ -42,6 +42,6 @@ URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/, https:/
 BugReports: https://github.com/jolars/eulerr/issues
 Roxygen: list(markdown = TRUE)
 Language: en-US
-Config/rextendr/version: 0.4.2
+Config/rextendr/version: 0.5.0
 SystemRequirements: Cargo (Rust's package manager), rustc >= 1.88.0
 Config/roxygen2/version: 8.0.0
