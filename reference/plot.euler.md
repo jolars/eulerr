@@ -101,25 +101,28 @@ plot(...)
   addition to the [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html)
   fields, the following placement controls are supported (delegated to
   the `eunoia` Rust crate): `labels$placement` (`"raycast"` (default),
-  `"force_directed"`, or `"elbow"`) selects the strategy used when a
-  label does not fit inside its region. `"raycast"` and
-  `"force_directed"` produce straight leader lines (the former places
-  the label along the centroid→POI ray, the latter relaxes labels with a
-  polygon-aware force solver). `"elbow"` produces d3-pie style
-  orthogonal leaders, stacking exterior labels in left/right columns
-  reached by a three-segment polyline. `labels$margin` (numeric)
-  overrides the per-region margin between an exterior label and the
-  diagram (default is half the larger of the label's width and height);
-  `labels$tether` (`"poi"` (default) or `"boundary"`) chooses where the
-  leader line attaches on the source region; `labels$gap` controls the
-  visible gap between the leader tip and the label box edge — a bare
-  numeric is interpreted as `lines` (font-relative), a
-  [`grid::unit()`](https://rdrr.io/r/grid/unit.html) is honored as
-  given, and the default `NULL` tracks `eulerr_options()$padding` so the
-  gap matches the spacing between label and quantity; `labels$leader` is
-  a list (`col`, `alpha`, `lwd`, `lty`, `lex`) styling the leader line
-  drawn from the tether to the exterior label. Strategy-specific knobs
-  live in their own sublists:
+  `"force_directed"`, `"matched"`, or `"elbow"`) selects the strategy
+  used when a label does not fit inside its region. `"raycast"`,
+  `"force_directed"`, and `"matched"` produce straight leader lines:
+  `"raycast"` places the label along the centroid→POI ray,
+  `"force_directed"` relaxes labels with a polygon-aware force solver,
+  and `"matched"` places labels on a ring hugging the diagram
+  silhouette, spreading them in proportion to their widths so that
+  neither the label boxes nor the leaders can cross. `"elbow"` produces
+  d3-pie style orthogonal leaders, stacking exterior labels in
+  left/right columns reached by a three-segment polyline.
+  `labels$margin` (numeric) overrides the per-region margin between an
+  exterior label and the diagram (default is half the larger of the
+  label's width and height); `labels$tether` (`"poi"` (default) or
+  `"boundary"`) chooses where the leader line attaches on the source
+  region; `labels$gap` controls the visible gap between the leader tip
+  and the label box edge — a bare numeric is interpreted as `lines`
+  (font-relative), a [`grid::unit()`](https://rdrr.io/r/grid/unit.html)
+  is honored as given, and the default `NULL` tracks
+  `eulerr_options()$padding` so the gap matches the spacing between
+  label and quantity; `labels$leader` is a list (`col`, `alpha`, `lwd`,
+  `lty`, `lex`) styling the leader line drawn from the tether to the
+  exterior label. Strategy-specific knobs live in their own sublists:
   `labels$force_directed = list(iterations = ...)` sets the iteration
   cap for the force-directed solver, and
   `labels$elbow = list(min_gap = ...)` sets the minimum vertical

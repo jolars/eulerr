@@ -31,15 +31,18 @@ An `eulergram` containing the composed layout.
 result is itself an `eulergram`, so further composition chains
 naturally.
 
+Consecutive operators of the same direction are flattened into a single
+row or column of equally sized panels. Thus `p1 | p2 | p3 | p4` produces
+one row of four equal-width panels rather than a lopsided nest of binary
+splits. Use parentheses (or mix `|` and `/`) to force sub-groups: in
+`(p1 | p2) / p3`, `p3` spans the full bottom row while `p1` and `p2`
+split the top row equally.
+
 The gap between adjacent plots is controlled by the
 `composition$spacing` entry of
 [`eulerr_options()`](https://jolars.github.io/eulerr/reference/eulerr_options.md),
 which must be a [`grid::unit()`](https://rdrr.io/r/grid/unit.html) and
 defaults to `grid::unit(1, "lines")`.
-
-Because composition is binary and recursive, panels at different nesting
-levels are not size-aligned. In `(p1 | p2) / p3`, `p3` spans the full
-bottom row while `p1` and `p2` split the top row equally.
 
 ## See also
 

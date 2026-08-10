@@ -17,7 +17,7 @@ to learn about the individual settings for each argument."><meta property="og:im
 
     <a class="navbar-brand me-2" href="../index.html">eulerr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">8.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -147,14 +147,17 @@ the legend symbols independently of the text size. See
 text for the labels. See <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::grid.text()</a></code>. In addition to the
 <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> fields, the following placement controls are
 supported (delegated to the <code>eunoia</code> Rust crate):
-<code>labels$placement</code> (<code>"raycast"</code> (default), <code>"force_directed"</code>, or
-<code>"elbow"</code>) selects the strategy used when a label does not fit
-inside its region. <code>"raycast"</code> and <code>"force_directed"</code> produce
-straight leader lines (the former places the label along the
-centroid→POI ray, the latter relaxes labels with a polygon-aware
-force solver). <code>"elbow"</code> produces d3-pie style orthogonal leaders,
-stacking exterior labels in left/right columns reached by a
-three-segment polyline. <code>labels$margin</code> (numeric) overrides the
+<code>labels$placement</code> (<code>"raycast"</code> (default), <code>"force_directed"</code>,
+<code>"matched"</code>, or <code>"elbow"</code>) selects the strategy used when a label
+does not fit inside its region. <code>"raycast"</code>, <code>"force_directed"</code>,
+and <code>"matched"</code> produce straight leader lines: <code>"raycast"</code> places
+the label along the centroid→POI ray, <code>"force_directed"</code> relaxes
+labels with a polygon-aware force solver, and <code>"matched"</code> places
+labels on a ring hugging the diagram silhouette, spreading them in
+proportion to their widths so that neither the label boxes nor the
+leaders can cross. <code>"elbow"</code> produces d3-pie style orthogonal
+leaders, stacking exterior labels in left/right columns reached by
+a three-segment polyline. <code>labels$margin</code> (numeric) overrides the
 per-region margin between an exterior label and the diagram
 (default is half the larger of the label's width and height);
 <code>labels$tether</code> (<code>"poi"</code> (default) or <code>"boundary"</code>) chooses where
@@ -379,7 +382,7 @@ function is assigned to a variable (rather than printed to screen).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
