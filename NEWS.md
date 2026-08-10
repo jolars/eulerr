@@ -1,5 +1,12 @@
 # eulerr (development version)
 
+## Features
+
+- Add `euler_widget()`, an interactive HTML widget backend for Euler and Venn
+  diagrams. Hovering a region highlights it and shows a tooltip with its set
+  combination and quantity. The backend uses vanilla SVG and depends only on
+  the (Suggested) `htmlwidgets` and `jsonlite` packages.
+
 # eulerr 8.1
 
 ## Highlights

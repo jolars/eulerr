@@ -38,6 +38,7 @@ NRCS
 ORCID
 PLOS
 Pre
+RStudio
 Rcpp
 RcppArmadillo
 Saikat
@@ -117,6 +118,7 @@ nabla
 natively
 optimizer's
 overrepresented
+parallelizing
 param
 params
 performant
@@ -132,7 +134,9 @@ rJava
 raycast
 regErrors
 regionError
+renderers
 rextendr
+rustc
 rustup
 semiaxes
 semimajor

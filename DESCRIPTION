@@ -27,6 +27,9 @@ Imports:
     utils
 Suggests:
     covr,
+    htmltools,
+    htmlwidgets,
+    jsonlite,
     knitr,
     lattice,
     pBrackets,

@@ -1,0 +1,2 @@
+# htmlwidgets binding for eulerr's interactive backend.
+# v1 uses vanilla SVG with no external JS dependencies.
