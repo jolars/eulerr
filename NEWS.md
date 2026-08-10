@@ -1,4 +1,13 @@
-# eulerr (development version)
+# eulerr 8.2
+
+## Features
+
+- **plotting:** add matched exterior label placement ([`f00e121`](https://github.com/jolars/eulerr/commit/f00e12179e423bedf0787b4b5a3de012d75b9731))
+
+## Bug fixes
+
+- flatten same-direction eulergram compositions ([`2a10b4b`](https://github.com/jolars/eulerr/commit/2a10b4b3f174c022a68c8e024f6037cfbf653630))
+- **plot:** associate region fills by label not position ([`c74896a`](https://github.com/jolars/eulerr/commit/c74896af20c4d1a382743b8ef32f5da48ebc6ec1)), fixes [#134](https://github.com/jolars/eulerr/issues/134)
 
 # eulerr 8.1
 
