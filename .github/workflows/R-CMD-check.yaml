@@ -62,6 +62,6 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
 
       - id: versionary
-        uses: jolars/versionary@v0
+        uses: jolars/versionary@v1
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
