@@ -68,6 +68,52 @@ tether.</p>
     </div>
 
     <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
+<dl><dt id="arg-centers">centers<a class="anchor" aria-label="anchor" href="#arg-centers"></a></dt>
+<dd><p>the per-region tag data frame from <code><a href="setup_geometry.html">setup_geometry()</a></code></p></dd>
+
+
+<dt id="arg-container-data">container_data<a class="anchor" aria-label="anchor" href="#arg-container-data"></a></dt>
+<dd><p>the complement (container) region's data</p></dd>
+
+
+<dt id="arg-shapes">shapes<a class="anchor" aria-label="anchor" href="#arg-shapes"></a></dt>
+<dd><p>the diagram's <code>$shapes</code> data frame</p></dd>
+
+
+<dt id="arg-labels-quantities-annotations">labels, quantities, annotations<a class="anchor" aria-label="anchor" href="#arg-labels-quantities-annotations"></a></dt>
+<dd><p>the three tag component parameter
+lists, each with a <code>$gp</code></p></dd>
+
+
+<dt id="arg-placement-opts">placement_opts<a class="anchor" aria-label="anchor" href="#arg-placement-opts"></a></dt>
+<dd><p>placement options, or <code>NULL</code> for eunoia's defaults</p></dd>
+
+
+<dt id="arg-do-complement-label">do_complement_label<a class="anchor" aria-label="anchor" href="#arg-do-complement-label"></a></dt>
+<dd><p>whether the complement gets a tag too</p></dd>
+
+
+<dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
+<dd><p>a list of <code>xlim</code>/<code>ylim</code> to place against and widen</p></dd>
+
+
+<dt id="arg-n-vertices">n_vertices<a class="anchor" aria-label="anchor" href="#arg-n-vertices"></a></dt>
+<dd><p>number of vertices used to discretize each shape</p></dd>
+
+
+<dt id="arg-label-precision">label_precision<a class="anchor" aria-label="anchor" href="#arg-label-precision"></a></dt>
+<dd><p>number of decimals used when rendering quantities</p></dd>
+
+
+<dt id="arg-re-measure-threshold">re_measure_threshold<a class="anchor" aria-label="anchor" href="#arg-re-measure-threshold"></a></dt>
+<dd><p>relative widening of the short side that
+triggers a second placement pass</p></dd>
+
+</dl></div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Returns a list with <code>centers</code>, <code>container_data</code>, and <code>limits</code>.</p>
     </div>

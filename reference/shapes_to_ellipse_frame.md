@@ -10,3 +10,9 @@ used to.
 ``` r
 shapes_to_ellipse_frame(shapes)
 ```
+
+## Arguments
+
+- shapes:
+
+  a `$shapes` data frame

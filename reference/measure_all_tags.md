@@ -12,3 +12,19 @@ per draw pass).
 ``` r
 measure_all_tags(tags_grob, padding, gap = NULL)
 ```
+
+## Arguments
+
+- tags_grob:
+
+  an `EulerTags` gTree
+
+- padding:
+
+  vertical separation between tag components, as a
+  [`grid::unit()`](https://rdrr.io/r/grid/unit.html)
+
+- gap:
+
+  leader-tip gap; see
+  [`resolve_gap_native()`](https://jolars.github.io/eulerr/reference/resolve_gap_native.md)

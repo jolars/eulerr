@@ -10,3 +10,13 @@ where the precomputed venn-shape lookup is still expressed as ellipses.
 ``` r
 ellipse_frame_to_shapes(fpar, shape)
 ```
+
+## Arguments
+
+- fpar:
+
+  a 5-column (h, k, a, b, phi) ellipse data frame
+
+- shape:
+
+  the shape kind to tag every row with

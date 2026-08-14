@@ -7,3 +7,9 @@ Find the `EulerTags` child of an `EulerPanel`, if any.
 ``` r
 find_eulertags(panel)
 ```
+
+## Arguments
+
+- panel:
+
+  an `EulerPanel` gTree

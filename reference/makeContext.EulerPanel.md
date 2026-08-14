@@ -14,6 +14,17 @@ never extend past the viewport edge.
 makeContext(x)
 ```
 
+## Arguments
+
+- x:
+
+  an `EulerPanel` gTree.
+
+## Value
+
+`x`, with its viewport's `xscale`/`yscale` set to the label-aware
+bounding box.
+
 ## Details
 
 Aspect preservation: the new bbox keeps `xrng / yrng` equal to the

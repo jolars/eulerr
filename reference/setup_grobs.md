@@ -48,6 +48,14 @@ setup_grobs(
 
   quantities params
 
+- annotations:
+
+  annotations params
+
+- complement:
+
+  complement label params
+
 - number:
 
   current diagram number
@@ -55,6 +63,14 @@ setup_grobs(
 - merged_sets:
 
   sets that are the same and have been merged
+
+- n_vertices:
+
+  number of vertices used to render each shape
+
+- placement_opts:
+
+  label placement options, or `NULL` for the defaults
 
 - combo_labels:
 

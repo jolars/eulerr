@@ -77,6 +77,44 @@ eunoia emits one knee waypoint, producing the orthogonal
     </div>
 
     <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
+<dl><dt id="arg-ax-ay">ax, ay<a class="anchor" aria-label="anchor" href="#arg-ax-ay"></a></dt>
+<dd><p>the tag anchor, in native units</p></dd>
+
+
+<dt id="arg-kind">kind<a class="anchor" aria-label="anchor" href="#arg-kind"></a></dt>
+<dd><p>the placement kind eunoia returned; anything other than
+<code>"interior"</code> gets a leader</p></dd>
+
+
+<dt id="arg-tx-ty">tx, ty<a class="anchor" aria-label="anchor" href="#arg-tx-ty"></a></dt>
+<dd><p>the tether point on the shape, in native units</p></dd>
+
+
+<dt id="arg-lend-x-lend-y">lend_x, lend_y<a class="anchor" aria-label="anchor" href="#arg-lend-x-lend-y"></a></dt>
+<dd><p>the leader endpoint on the tag bbox, in native units</p></dd>
+
+
+<dt id="arg-waypoints-x-waypoints-y">waypoints_x, waypoints_y<a class="anchor" aria-label="anchor" href="#arg-waypoints-x-waypoints-y"></a></dt>
+<dd><p>intermediate leader vertices, in native
+units</p></dd>
+
+
+<dt id="arg-leader-gp-list">leader_gp_list<a class="anchor" aria-label="anchor" href="#arg-leader-gp-list"></a></dt>
+<dd><p><code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> for the leader line, or <code>NULL</code></p></dd>
+
+
+<dt id="arg-fallback-gp">fallback_gp<a class="anchor" aria-label="anchor" href="#arg-fallback-gp"></a></dt>
+<dd><p><code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> used when <code>leader_gp_list</code> is <code>NULL</code></p></dd>
+
+
+<dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
+<dd><p>name to give the returned grob</p></dd>
+
+</dl></div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Terminates at <code>(lend_x, lend_y)</code> — the point on the label box AABB edge
 supplied by eunoia (<code>LabelPlacement::leader_end</code>). Falls back to the anchor

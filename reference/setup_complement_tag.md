@@ -9,3 +9,18 @@ text comes either from `complement$label` (user override) or from
 ``` r
 setup_complement_tag(container_data, complement, number)
 ```
+
+## Arguments
+
+- container_data:
+
+  the complement (container) region's data
+
+- complement:
+
+  the complement parameter list, with a `$gp` and an optional `$label`
+  override
+
+- number:
+
+  the diagram's region index, used to name the grobs

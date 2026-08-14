@@ -22,6 +22,50 @@ apply_label_placement(
 )
 ```
 
+## Arguments
+
+- centers:
+
+  the per-region tag data frame from
+  [`setup_geometry()`](https://jolars.github.io/eulerr/reference/setup_geometry.md)
+
+- container_data:
+
+  the complement (container) region's data
+
+- shapes:
+
+  the diagram's `$shapes` data frame
+
+- labels, quantities, annotations:
+
+  the three tag component parameter lists, each with a `$gp`
+
+- placement_opts:
+
+  placement options, or `NULL` for eunoia's defaults
+
+- do_complement_label:
+
+  whether the complement gets a tag too
+
+- limits:
+
+  a list of `xlim`/`ylim` to place against and widen
+
+- n_vertices:
+
+  number of vertices used to discretize each shape
+
+- label_precision:
+
+  number of decimals used when rendering quantities
+
+- re_measure_threshold:
+
+  relative widening of the short side that triggers a second placement
+  pass
+
 ## Details
 
 Returns a list with `centers`, `container_data`, and `limits`.

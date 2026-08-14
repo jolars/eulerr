@@ -95,8 +95,70 @@ endpoints land on the actual bbox edge.</p>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
-  </main></div>
+
+<dl><dt id="arg-ax-ay">ax, ay<a class="anchor" aria-label="anchor" href="#arg-ax-ay"></a></dt>
+<dd><p>the tag anchor, in native units</p></dd>
+
+
+<dt id="arg-kind">kind<a class="anchor" aria-label="anchor" href="#arg-kind"></a></dt>
+<dd><p>the placement kind eunoia returned (interior, exterior, ...)</p></dd>
+
+
+<dt id="arg-tx-ty">tx, ty<a class="anchor" aria-label="anchor" href="#arg-tx-ty"></a></dt>
+<dd><p>the tether point on the shape, in native units</p></dd>
+
+
+<dt id="arg-lend-x-lend-y">lend_x, lend_y<a class="anchor" aria-label="anchor" href="#arg-lend-x-lend-y"></a></dt>
+<dd><p>the leader endpoint on the tag bbox, in native units</p></dd>
+
+
+<dt id="arg-label-text-quantity-text-annotation-text">label_text, quantity_text, annotation_text<a class="anchor" aria-label="anchor" href="#arg-label-text-quantity-text-annotation-text"></a></dt>
+<dd><p>the three text components</p></dd>
+
+
+<dt id="arg-has-label-has-quantity-has-annotation">has_label, has_quantity, has_annotation<a class="anchor" aria-label="anchor" href="#arg-has-label-has-quantity-has-annotation"></a></dt>
+<dd><p>whether each component is
+drawn</p></dd>
+
+
+<dt id="arg-label-gp-quantity-gp-annotation-gp">label_gp, quantity_gp, annotation_gp<a class="anchor" aria-label="anchor" href="#arg-label-gp-quantity-gp-annotation-gp"></a></dt>
+<dd><p>per-component <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code></p></dd>
+
+
+<dt id="arg-label-rot-quantity-rot-annotation-rot">label_rot, quantity_rot, annotation_rot<a class="anchor" aria-label="anchor" href="#arg-label-rot-quantity-rot-annotation-rot"></a></dt>
+<dd><p>per-component rotation, in
+degrees</p></dd>
+
+
+<dt id="arg-number">number<a class="anchor" aria-label="anchor" href="#arg-number"></a></dt>
+<dd><p>the diagram's region index, used to name the grobs</p></dd>
+
+
+<dt id="arg-leader-gp-list">leader_gp_list<a class="anchor" aria-label="anchor" href="#arg-leader-gp-list"></a></dt>
+<dd><p><code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> for the leader line, or <code>NULL</code> for
+no leader</p></dd>
+
+
+<dt id="arg-padding">padding<a class="anchor" aria-label="anchor" href="#arg-padding"></a></dt>
+<dd><p>vertical separation between components, as a
+<code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code></p></dd>
+
+
+<dt id="arg-waypoints-x-waypoints-y">waypoints_x, waypoints_y<a class="anchor" aria-label="anchor" href="#arg-waypoints-x-waypoints-y"></a></dt>
+<dd><p>intermediate leader vertices, in native
+units</p></dd>
+
+
+<dt id="arg-name-prefix">name_prefix<a class="anchor" aria-label="anchor" href="#arg-name-prefix"></a></dt>
+<dd><p>prefix for the generated grob names</p></dd>
+
+</dl></div>
+
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

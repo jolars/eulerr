@@ -12,3 +12,17 @@ before exterior labels start to fall outside the panel viewport.
 ``` r
 expand_limits_with_canvas(limits, placements, slack = 1.4)
 ```
+
+## Arguments
+
+- limits:
+
+  a list of `xlim`/`ylim` to widen
+
+- placements:
+
+  the placement record list returned by the Rust FFI
+
+- slack:
+
+  multiplicative padding applied to the canvas bbox before the union

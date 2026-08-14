@@ -14,6 +14,16 @@ so the placement tracks the current device automatically.
 makeContent(x)
 ```
 
+## Arguments
+
+- x:
+
+  an `EulerTags` gTree.
+
+## Value
+
+`x`, with its children repositioned for the current device size.
+
 ## Details
 
 Tags whose measured size is zero (or whose anchor / kind eunoia can't

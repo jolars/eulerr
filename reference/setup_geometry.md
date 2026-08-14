@@ -41,6 +41,10 @@ setup_geometry(
 
   quantities
 
+- annotations:
+
+  annotations
+
 - n:
 
   number of vertices to use to render each ellipse
@@ -48,6 +52,14 @@ setup_geometry(
 - merged_sets:
 
   which sets have been merged?
+
+- placement_opts:
+
+  label placement options, or `NULL` for the defaults
+
+- do_complement_label:
+
+  whether to place a label for the complement region
 
 ## Value
 
