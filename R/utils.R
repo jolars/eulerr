@@ -94,6 +94,7 @@ is_false <- function(x) identical(x, FALSE)
 #' Check if a vector is an integer
 #'
 #' @param x a vector
+#' @param tol tolerance within which a value counts as a whole number
 #'
 #' @return TRUE of FALSE.
 #' @keywords internal
@@ -104,6 +105,7 @@ is_integer <- function(x, tol = .Machine$double.eps^0.5) {
 #' Check if vector is a real (numeric non-integer)
 #'
 #' @param x a vector
+#' @param tol tolerance within which a value counts as a whole number
 #'
 #' @return A logical.
 #' @keywords internal

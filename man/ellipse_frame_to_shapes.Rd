@@ -8,6 +8,11 @@ venn-shape lookup is still expressed as ellipses.}
 \usage{
 ellipse_frame_to_shapes(fpar, shape)
 }
+\arguments{
+\item{fpar}{a 5-column (h, k, a, b, phi) ellipse data frame}
+
+\item{shape}{the shape kind to tag every row with}
+}
 \description{
 Promote a legacy 5-column ellipse data frame (h, k, a, b, phi) into the
 wide \verb{$shapes} schema. Used by the \code{venn()} path, where the precomputed

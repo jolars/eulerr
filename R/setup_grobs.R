@@ -231,8 +231,12 @@ add_fill_pattern <- function(fill_grob, fill_data, pattern_gp) {
 #' @param edges edges params
 #' @param labels labels params
 #' @param quantities quantities params
+#' @param annotations annotations params
+#' @param complement complement label params
 #' @param number current diagram number
 #' @param merged_sets sets that are the same and have been merged
+#' @param n_vertices number of vertices used to render each shape
+#' @param placement_opts label placement options, or `NULL` for the defaults
 #' @param combo_labels region labels in the order of the per-region graphical
 #'   parameters (`fills$gp`, `patterns$gp`), used to associate each region's
 #'   geometry with its parameters by name rather than position

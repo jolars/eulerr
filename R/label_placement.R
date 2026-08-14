@@ -20,6 +20,7 @@ default_placement_opts <- function() {
 }
 
 #' Merge user-supplied placement options onto the defaults.
+#' @param opts a partial placement-options list, or `NULL`
 #' @keywords internal
 resolve_placement_opts <- function(opts) {
   if (is.null(opts)) {
@@ -49,6 +50,7 @@ resolve_placement_opts <- function(opts) {
 #' treats as visible change and emits as an extra blank plot before
 #' the real `plot.eulergram()` draws. The off-screen PDF keeps
 #' measurement entirely out of the user's display list.
+#' @param xlim,ylim native scales to give the measurement viewport
 #' @keywords internal
 open_measurement_viewport <- function(xlim, ylim) {
   # Setup-time placement just sizes the *plot region*; draw-time
@@ -104,6 +106,15 @@ open_measurement_viewport <- function(xlim, ylim) {
 #' annotation stacked below quantity, separated by `padding`). The
 #' geometry matches what `setup_tag()` renders at draw time, so the size
 #' handed to eunoia agrees with the actual on-screen footprint.
+#' @param label,quantity,annotation the three text components of the tag; any
+#'   of them may be `NULL`
+#' @param labels_par_id,quantities_par_id,annotations_par_id per-component
+#'   graphical parameter indices; `NA` or `NULL` means the component isn't
+#'   drawn
+#' @param labels_gp,quantities_gp,annotations_gp per-component
+#'   [grid::gpar()] lists
+#' @param padding_native vertical separation between components, in native
+#'   units
 #' @keywords internal
 measure_tag <- function(
   label,
@@ -200,6 +211,10 @@ measure_tag <- function(
 #' visible leader-tip gap matches the spacing between label and quantity.
 #' A `grid::unit` value converts to native; a bare numeric is interpreted
 #' as `lines` (same convention as `eulerr_options()$padding`).
+#' @param gap the user-supplied gap: `NULL`, a [grid::unit()], or a bare
+#'   numeric in lines
+#' @param padding_native the fallback used when `gap` is `NULL`, in native
+#'   units
 #' @keywords internal
 resolve_gap_native <- function(gap, padding_native) {
   if (is.null(gap)) {
@@ -213,6 +228,15 @@ resolve_gap_native <- function(gap, padding_native) {
 
 #' Measure all candidate tag sizes (regions + optional complement) inside
 #' a fresh measurement viewport scaled to `xlim`/`ylim`.
+#' @param centers the per-region tag data frame from [setup_geometry()]
+#' @param do_complement_label whether to measure a complement tag as well
+#' @param complement_label the complement tag's parameters
+#' @param labels_gp,quantities_gp,annotations_gp per-component
+#'   [grid::gpar()] lists
+#' @param padding vertical separation between tag components, as a
+#'   [grid::unit()]
+#' @param gap leader-tip gap; see [resolve_gap_native()]
+#' @param xlim,ylim native scales of the measurement viewport
 #' @keywords internal
 measure_tag_sizes <- function(
   centers,
@@ -302,6 +326,19 @@ measure_tag_sizes <- function(
 
 #' Single placement pass: measure tags, call the Rust FFI, return the
 #' placement records and the canvas bbox returned by eunoia.
+#' @param centers the per-region tag data frame from [setup_geometry()]
+#' @param container_data the complement (container) region's data
+#' @param shapes the diagram's `$shapes` data frame
+#' @param labels_gp,quantities_gp,annotations_gp per-component
+#'   [grid::gpar()] lists
+#' @param padding vertical separation between tag components, as a
+#'   [grid::unit()]
+#' @param placement_opts resolved placement options; see
+#'   [resolve_placement_opts()]
+#' @param do_complement_label whether the complement gets a tag too
+#' @param xlim,ylim native scales of the measurement viewport
+#' @param n_vertices number of vertices used to discretize each shape
+#' @param label_precision number of decimals used when rendering quantities
 #' @keywords internal
 run_placement_pass <- function(
   centers,
@@ -376,6 +413,7 @@ run_placement_pass <- function(
 #' return triple into a per-label list of `list(x = ..., y = ...)`
 #' coordinate pairs. Each list element has length-`lengths[i]` `x`/`y`
 #' vectors (often `0` — straight leaders carry no waypoints).
+#' @param placements the placement record list returned by the Rust FFI
 #' @keywords internal
 split_waypoints <- function(placements) {
   wx <- placements$leader_waypoints_x
@@ -410,6 +448,10 @@ split_waypoints <- function(placements) {
 #' labels grow in native units accordingly. A `slack` of 1.4 absorbs
 #' roughly a 30 % linear resize before exterior labels start to fall
 #' outside the panel viewport.
+#' @param limits a list of `xlim`/`ylim` to widen
+#' @param placements the placement record list returned by the Rust FFI
+#' @param slack multiplicative padding applied to the canvas bbox before
+#'   the union
 #' @keywords internal
 expand_limits_with_canvas <- function(limits, placements, slack = 1.4) {
   if (
@@ -450,6 +492,19 @@ expand_limits_with_canvas <- function(limits, placements, slack = 1.4) {
 #' tether.
 #'
 #' Returns a list with `centers`, `container_data`, and `limits`.
+#'
+#' @param centers the per-region tag data frame from [setup_geometry()]
+#' @param container_data the complement (container) region's data
+#' @param shapes the diagram's `$shapes` data frame
+#' @param labels,quantities,annotations the three tag component parameter
+#'   lists, each with a `$gp`
+#' @param placement_opts placement options, or `NULL` for eunoia's defaults
+#' @param do_complement_label whether the complement gets a tag too
+#' @param limits a list of `xlim`/`ylim` to place against and widen
+#' @param n_vertices number of vertices used to discretize each shape
+#' @param label_precision number of decimals used when rendering quantities
+#' @param re_measure_threshold relative widening of the short side that
+#'   triggers a second placement pass
 #' @keywords internal
 apply_label_placement <- function(
   centers,
@@ -561,7 +616,11 @@ apply_label_placement <- function(
     centers$leader_end_x <- rep(NA_real_, NROW(centers))
     centers$leader_end_y <- rep(NA_real_, NROW(centers))
     empty_wp <- list(x = numeric(0), y = numeric(0))
-    centers$leader_waypoints <- replicate(NROW(centers), empty_wp, simplify = FALSE)
+    centers$leader_waypoints <- replicate(
+      NROW(centers),
+      empty_wp,
+      simplify = FALSE
+    )
     if (length(centers_combos) > 0L) {
       idx <- match(centers_combos, combos)
       ok <- !is.na(idx)

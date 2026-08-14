@@ -20,6 +20,20 @@ measure_tag(
   padding_native
 )
 }
+\arguments{
+\item{label, quantity, annotation}{the three text components of the tag; any
+of them may be \code{NULL}}
+
+\item{labels_par_id, quantities_par_id, annotations_par_id}{per-component
+graphical parameter indices; \code{NA} or \code{NULL} means the component isn't
+drawn}
+
+\item{labels_gp, quantities_gp, annotations_gp}{per-component
+\code{\link[grid:gpar]{grid::gpar()}} lists}
+
+\item{padding_native}{vertical separation between components, in native
+units}
+}
 \description{
 Native-unit AABB of one composite tag (label stacked above quantity,
 annotation stacked below quantity, separated by \code{padding}). The

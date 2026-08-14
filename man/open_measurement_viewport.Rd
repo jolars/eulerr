@@ -6,6 +6,9 @@
 \usage{
 open_measurement_viewport(xlim, ylim)
 }
+\arguments{
+\item{xlim, ylim}{native scales to give the measurement viewport}
+}
 \description{
 Returns an idempotent closer thunk that pops the viewport and
 closes the null PDF device. Used so we can call

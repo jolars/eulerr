@@ -18,6 +18,23 @@ measure_tag_sizes(
   ylim
 )
 }
+\arguments{
+\item{centers}{the per-region tag data frame from \code{\link[=setup_geometry]{setup_geometry()}}}
+
+\item{do_complement_label}{whether to measure a complement tag as well}
+
+\item{complement_label}{the complement tag's parameters}
+
+\item{labels_gp, quantities_gp, annotations_gp}{per-component
+\code{\link[grid:gpar]{grid::gpar()}} lists}
+
+\item{padding}{vertical separation between tag components, as a
+\code{\link[grid:unit]{grid::unit()}}}
+
+\item{gap}{leader-tip gap; see \code{\link[=resolve_gap_native]{resolve_gap_native()}}}
+
+\item{xlim, ylim}{native scales of the measurement viewport}
+}
 \description{
 Measure all candidate tag sizes (regions + optional complement) inside
 a fresh measurement viewport scaled to \code{xlim}/\code{ylim}.

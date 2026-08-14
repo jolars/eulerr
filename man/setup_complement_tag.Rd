@@ -7,6 +7,14 @@ shares one \code{\link[=makeContent.EulerTags]{makeContent.EulerTags()}} pass.}
 \usage{
 setup_complement_tag(container_data, complement, number)
 }
+\arguments{
+\item{container_data}{the complement (container) region's data}
+
+\item{complement}{the complement parameter list, with a \verb{$gp} and an
+optional \verb{$label} override}
+
+\item{number}{the diagram's region index, used to name the grobs}
+}
 \description{
 Acts as a quantity-only tag with \code{combo_key = ""}. The complement label text
 comes either from \code{complement$label} (user override) or from

@@ -8,6 +8,8 @@ is_real(x, tol = .Machine$double.eps^0.5)
 }
 \arguments{
 \item{x}{a vector}
+
+\item{tol}{tolerance within which a value counts as a whole number}
 }
 \value{
 A logical.

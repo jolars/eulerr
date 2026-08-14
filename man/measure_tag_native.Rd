@@ -6,6 +6,12 @@
 \usage{
 measure_tag_native(tag, padding_native)
 }
+\arguments{
+\item{tag}{an \code{EulerTag} gTree}
+
+\item{padding_native}{vertical separation between components, in native
+units}
+}
 \description{
 Measure one tag's combined AABB in the current viewport's native units.
 }

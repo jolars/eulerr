@@ -21,6 +21,30 @@ run_placement_pass(
   label_precision
 )
 }
+\arguments{
+\item{centers}{the per-region tag data frame from \code{\link[=setup_geometry]{setup_geometry()}}}
+
+\item{container_data}{the complement (container) region's data}
+
+\item{shapes}{the diagram's \verb{$shapes} data frame}
+
+\item{labels_gp, quantities_gp, annotations_gp}{per-component
+\code{\link[grid:gpar]{grid::gpar()}} lists}
+
+\item{padding}{vertical separation between tag components, as a
+\code{\link[grid:unit]{grid::unit()}}}
+
+\item{placement_opts}{resolved placement options; see
+\code{\link[=resolve_placement_opts]{resolve_placement_opts()}}}
+
+\item{do_complement_label}{whether the complement gets a tag too}
+
+\item{xlim, ylim}{native scales of the measurement viewport}
+
+\item{n_vertices}{number of vertices used to discretize each shape}
+
+\item{label_precision}{number of decimals used when rendering quantities}
+}
 \description{
 Single placement pass: measure tags, call the Rust FFI, return the
 placement records and the canvas bbox returned by eunoia.

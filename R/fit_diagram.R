@@ -290,7 +290,7 @@ fit_diagram <- function(
     n_restarts <- as.integer(n_restarts)
   }
 
-  effective_cap <- if (is.null(max_sets)) max_sets_default() else max_sets
+  effective_cap <- max_sets %||% max_sets_default()
   if (n > effective_cap) {
     stop(sprintf(
       "too many sets: %d requested, but maximum supported is %d (raise `control$max_sets` up to %d to override)",
@@ -451,6 +451,9 @@ fit_diagram <- function(
 #' Allocate a fresh `$shapes` data frame for `n_all` sets. Rows for empty
 #' sets keep NA in every column so downstream plotting can detect them via
 #' `is.na(shapes$h)` regardless of shape kind.
+#' @param shape the shape kind to tag every row with
+#' @param n_all number of rows (sets) to allocate
+#' @param row_names row names to give the frame
 #' @keywords internal
 new_shape_frame <- function(shape, n_all, row_names) {
   data.frame(
@@ -471,6 +474,8 @@ new_shape_frame <- function(shape, n_all, row_names) {
 #' Promote a legacy 5-column ellipse data frame (h, k, a, b, phi) into the
 #' wide `$shapes` schema. Used by the `venn()` path, where the precomputed
 #' venn-shape lookup is still expressed as ellipses.
+#' @param fpar a 5-column (h, k, a, b, phi) ellipse data frame
+#' @param shape the shape kind to tag every row with
 #' @keywords internal
 ellipse_frame_to_shapes <- function(fpar, shape) {
   shapes <- new_shape_frame(shape, NROW(fpar), rownames(fpar))
@@ -486,6 +491,7 @@ ellipse_frame_to_shapes <- function(fpar, shape) {
 #' (h, k, a, b, phi) ellipse data frame for circle/ellipse fits. Preserves
 #' the row order and row names so back-compat consumers see exactly the
 #' shape they used to.
+#' @param shapes a `$shapes` data frame
 #' @keywords internal
 shapes_to_ellipse_frame <- function(shapes) {
   data.frame(
@@ -546,7 +552,7 @@ resolve_loss <- function(loss, loss_aggregator) {
   }
 
   if (loss %in% legacy_loss) {
-    agg <- if (is.null(loss_aggregator)) "sum" else loss_aggregator
+    agg <- loss_aggregator %||% "sum"
     new_loss <- switch(
       paste(loss, agg, sep = "_"),
       square_sum = "sum_squared",

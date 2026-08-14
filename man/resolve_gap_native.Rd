@@ -10,6 +10,13 @@ as \code{lines} (same convention as \code{eulerr_options()$padding}).}
 \usage{
 resolve_gap_native(gap, padding_native)
 }
+\arguments{
+\item{gap}{the user-supplied gap: \code{NULL}, a \code{\link[grid:unit]{grid::unit()}}, or a bare
+numeric in lines}
+
+\item{padding_native}{the fallback used when \code{gap} is \code{NULL}, in native
+units}
+}
 \description{
 Resolve a \code{gap} option to a numeric in native units inside the current
 measurement viewport. \code{NULL} → falls back to \code{padding_native} so the

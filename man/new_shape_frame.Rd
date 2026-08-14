@@ -8,6 +8,13 @@ sets keep NA in every column so downstream plotting can detect them via
 \usage{
 new_shape_frame(shape, n_all, row_names)
 }
+\arguments{
+\item{shape}{the shape kind to tag every row with}
+
+\item{n_all}{number of rows (sets) to allocate}
+
+\item{row_names}{row names to give the frame}
+}
 \description{
 Allocate a fresh \verb{$shapes} data frame for \code{n_all} sets. Rows for empty
 sets keep NA in every column so downstream plotting can detect them via

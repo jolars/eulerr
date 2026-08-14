@@ -6,6 +6,9 @@
 \usage{
 resolve_placement_opts(opts)
 }
+\arguments{
+\item{opts}{a partial placement-options list, or \code{NULL}}
+}
 \description{
 Merge user-supplied placement options onto the defaults.
 }

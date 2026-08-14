@@ -9,6 +9,9 @@ vectors (often \code{0} — straight leaders carry no waypoints).}
 \usage{
 split_waypoints(placements)
 }
+\arguments{
+\item{placements}{the placement record list returned by the Rust FFI}
+}
 \description{
 Split a placement's flat \code{leader_waypoints_x} / \verb{_y} / \verb{_lengths}
 return triple into a per-label list of \code{list(x = ..., y = ...)}

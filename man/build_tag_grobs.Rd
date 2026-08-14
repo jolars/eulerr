@@ -32,6 +32,38 @@ build_tag_grobs(
   name_prefix = "tag"
 )
 }
+\arguments{
+\item{ax, ay}{the tag anchor, in native units}
+
+\item{kind}{the placement kind eunoia returned (interior, exterior, ...)}
+
+\item{tx, ty}{the tether point on the shape, in native units}
+
+\item{lend_x, lend_y}{the leader endpoint on the tag bbox, in native units}
+
+\item{label_text, quantity_text, annotation_text}{the three text components}
+
+\item{has_label, has_quantity, has_annotation}{whether each component is
+drawn}
+
+\item{label_gp, quantity_gp, annotation_gp}{per-component \code{\link[grid:gpar]{grid::gpar()}}}
+
+\item{label_rot, quantity_rot, annotation_rot}{per-component rotation, in
+degrees}
+
+\item{number}{the diagram's region index, used to name the grobs}
+
+\item{leader_gp_list}{\code{\link[grid:gpar]{grid::gpar()}} for the leader line, or \code{NULL} for
+no leader}
+
+\item{padding}{vertical separation between components, as a
+\code{\link[grid:unit]{grid::unit()}}}
+
+\item{waypoints_x, waypoints_y}{intermediate leader vertices, in native
+units}
+
+\item{name_prefix}{prefix for the generated grob names}
+}
 \description{
 Shared between \code{\link[=setup_tag]{setup_tag()}} (initial construction in \code{\link[=setup_grobs]{setup_grobs()}})
 and \code{\link[=makeContent.EulerTags]{makeContent.EulerTags()}} (draw-time re-placement on resize).

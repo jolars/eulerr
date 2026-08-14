@@ -6,6 +6,14 @@
 \usage{
 setup_tag(data, labels, quantities, annotations, number)
 }
+\arguments{
+\item{data}{one row of the placed \code{centers} data frame}
+
+\item{labels, quantities, annotations}{the three tag component parameter
+lists, each with a \verb{$gp}}
+
+\item{number}{the diagram's region index, used to name the grobs}
+}
 \description{
 Builds the gList via \code{\link[=build_tag_grobs]{build_tag_grobs()}} and stashes the text / gpar bundle
 on the resulting \code{EulerTag} gTree so \code{\link[=makeContent.EulerTags]{makeContent.EulerTags()}} can rebuild it

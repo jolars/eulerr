@@ -6,6 +6,12 @@
 \usage{
 \method{makeContent}{EulerTags}(x)
 }
+\arguments{
+\item{x}{an \code{EulerTags} gTree.}
+}
+\value{
+\code{x}, with its children repositioned for the current device size.
+}
 \description{
 The panel viewport is active when \code{makeContent} fires, so we can measure each
 tag's footprint in current native units via

@@ -24,6 +24,29 @@ apply_label_placement(
   re_measure_threshold = 0.01
 )
 }
+\arguments{
+\item{centers}{the per-region tag data frame from \code{\link[=setup_geometry]{setup_geometry()}}}
+
+\item{container_data}{the complement (container) region's data}
+
+\item{shapes}{the diagram's \verb{$shapes} data frame}
+
+\item{labels, quantities, annotations}{the three tag component parameter
+lists, each with a \verb{$gp}}
+
+\item{placement_opts}{placement options, or \code{NULL} for eunoia's defaults}
+
+\item{do_complement_label}{whether the complement gets a tag too}
+
+\item{limits}{a list of \code{xlim}/\code{ylim} to place against and widen}
+
+\item{n_vertices}{number of vertices used to discretize each shape}
+
+\item{label_precision}{number of decimals used when rendering quantities}
+
+\item{re_measure_threshold}{relative widening of the short side that
+triggers a second placement pass}
+}
 \description{
 When \code{placement_opts} is \code{NULL}, defaults to eunoia's raycast + POI
 tether.

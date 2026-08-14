@@ -5,8 +5,12 @@
 #' @param edges edges
 #' @param labels labels
 #' @param quantities quantities
+#' @param annotations annotations
 #' @param n number of vertices to use to render each ellipse
 #' @param merged_sets which sets have been merged?
+#' @param placement_opts label placement options, or `NULL` for the defaults
+#' @param do_complement_label whether to place a label for the complement
+#'   region
 #'
 #' @return a list object with slots for the various objects
 #' @keywords internal

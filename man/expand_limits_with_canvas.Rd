@@ -7,6 +7,14 @@ eunoia. Returns the (possibly widened) limits.}
 \usage{
 expand_limits_with_canvas(limits, placements, slack = 1.4)
 }
+\arguments{
+\item{limits}{a list of \code{xlim}/\code{ylim} to widen}
+
+\item{placements}{the placement record list returned by the Rust FFI}
+
+\item{slack}{multiplicative padding applied to the canvas bbox before
+the union}
+}
 \description{
 \code{slack} pads the canvas bbox before the union (multiplicative,
 centered on the bbox center). The setup-time bbox is sized for one

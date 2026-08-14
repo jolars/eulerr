@@ -6,6 +6,13 @@
 \usage{
 \method{makeContext}{EulerPanel}(x)
 }
+\arguments{
+\item{x}{an \code{EulerPanel} gTree.}
+}
+\value{
+\code{x}, with its viewport's \code{xscale}/\code{yscale} set to the label-aware
+bounding box.
+}
 \description{
 Fires before grid pushes the panel viewport. We can therefore measure labels
 against the live cell, run eunoia's placement, and compute a viewport bbox

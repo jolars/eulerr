@@ -14,6 +14,16 @@ pad_axis_native(
   layout_pos_col = NULL
 )
 }
+\arguments{
+\item{lim}{the axis range to pad}
+
+\item{pt_pad}{padding in points}
+
+\item{axis}{which axis \code{lim} belongs to}
+
+\item{layout_pos_row, layout_pos_col}{layout cell of the measurement
+viewport, so the conversion sees the panel's real size}
+}
 \description{
 Pad an axis range by \code{pt_pad} points, converted to native units against a
 measurement viewport with the supplied scale. Returns the original range

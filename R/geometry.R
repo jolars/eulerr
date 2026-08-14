@@ -29,6 +29,9 @@ get_bounding_box <- function(shapes, k = NULL, a = NULL, b = NULL, phi = NULL) {
 }
 
 #' Bounding box of a vector of rotated ellipses.
+#' @param h,k ellipse center coordinates
+#' @param a,b semi-major and semi-minor axes
+#' @param phi rotation of the semi-major axis, in radians
 #' @keywords internal
 ellipse_bounding_box <- function(h, k, a, b, phi) {
   xlim <- sqrt(a^2 * cos(phi)^2 + b^2 * sin(phi)^2)
@@ -45,6 +48,7 @@ ellipse_bounding_box <- function(h, k, a, b, phi) {
 #' picks the appropriate width/height calculation. Falls back to the
 #' rotated-ellipse formula when the type is unknown so external callers
 #' constructing ad-hoc `$shapes` frames still get a sensible box.
+#' @param shapes a `$shapes` data frame
 #' @keywords internal
 shape_bounding_box <- function(shapes) {
   if (NROW(shapes) == 0L) {

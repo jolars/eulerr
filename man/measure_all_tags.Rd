@@ -9,6 +9,14 @@ FFI sees one number per draw pass).}
 \usage{
 measure_all_tags(tags_grob, padding, gap = NULL)
 }
+\arguments{
+\item{tags_grob}{an \code{EulerTags} gTree}
+
+\item{padding}{vertical separation between tag components, as a
+\code{\link[grid:unit]{grid::unit()}}}
+
+\item{gap}{leader-tip gap; see \code{\link[=resolve_gap_native]{resolve_gap_native()}}}
+}
 \description{
 Measure every drawable tag inside \code{tags_grob} against the current viewport.
 Returns parallel vectors of combo / width / height suitable for handing to

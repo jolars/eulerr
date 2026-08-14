@@ -9,6 +9,9 @@ shape they used to.}
 \usage{
 shapes_to_ellipse_frame(shapes)
 }
+\arguments{
+\item{shapes}{a \verb{$shapes} data frame}
+}
 \description{
 Project the wide \verb{$shapes} schema back into the legacy 5-column
 (h, k, a, b, phi) ellipse data frame for circle/ellipse fits. Preserves

@@ -20,6 +20,25 @@ build_leader_grob(
   name
 )
 }
+\arguments{
+\item{ax, ay}{the tag anchor, in native units}
+
+\item{kind}{the placement kind eunoia returned; anything other than
+\code{"interior"} gets a leader}
+
+\item{tx, ty}{the tether point on the shape, in native units}
+
+\item{lend_x, lend_y}{the leader endpoint on the tag bbox, in native units}
+
+\item{waypoints_x, waypoints_y}{intermediate leader vertices, in native
+units}
+
+\item{leader_gp_list}{\code{\link[grid:gpar]{grid::gpar()}} for the leader line, or \code{NULL}}
+
+\item{fallback_gp}{\code{\link[grid:gpar]{grid::gpar()}} used when \code{leader_gp_list} is \code{NULL}}
+
+\item{name}{name to give the returned grob}
+}
 \description{
 Draws the polyline \verb{tether → waypoints[1..] → leader_end}. For straight
 leaders (raycast / force-directed) \verb{waypoints_*} are empty, so the polyline

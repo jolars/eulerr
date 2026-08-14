@@ -6,6 +6,9 @@
 \usage{
 find_eulertags(panel)
 }
+\arguments{
+\item{panel}{an \code{EulerPanel} gTree}
+}
 \description{
 Find the \code{EulerTags} child of an \code{EulerPanel}, if any.
 }

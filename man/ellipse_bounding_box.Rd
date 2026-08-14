@@ -6,6 +6,13 @@
 \usage{
 ellipse_bounding_box(h, k, a, b, phi)
 }
+\arguments{
+\item{h, k}{ellipse center coordinates}
+
+\item{a, b}{semi-major and semi-minor axes}
+
+\item{phi}{rotation of the semi-major axis, in radians}
+}
 \description{
 Bounding box of a vector of rotated ellipses.
 }

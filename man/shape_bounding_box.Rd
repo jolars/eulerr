@@ -10,6 +10,9 @@ constructing ad-hoc \verb{$shapes} frames still get a sensible box.}
 \usage{
 shape_bounding_box(shapes)
 }
+\arguments{
+\item{shapes}{a \verb{$shapes} data frame}
+}
 \description{
 Per-shape bounding box dispatch. Reads the \code{type} tag on \code{shapes} (rows
 are assumed to share a tag since a diagram fixes one shape kind), then

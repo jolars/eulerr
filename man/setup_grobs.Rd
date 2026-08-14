@@ -33,9 +33,17 @@ setup_grobs(
 
 \item{quantities}{quantities params}
 
+\item{annotations}{annotations params}
+
+\item{complement}{complement label params}
+
 \item{number}{current diagram number}
 
 \item{merged_sets}{sets that are the same and have been merged}
+
+\item{n_vertices}{number of vertices used to render each shape}
+
+\item{placement_opts}{label placement options, or \code{NULL} for the defaults}
 
 \item{combo_labels}{region labels in the order of the per-region graphical
 parameters (\code{fills$gp}, \code{patterns$gp}), used to associate each region's

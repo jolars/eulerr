@@ -28,9 +28,16 @@ setup_geometry(
 
 \item{quantities}{quantities}
 
+\item{annotations}{annotations}
+
 \item{n}{number of vertices to use to render each ellipse}
 
 \item{merged_sets}{which sets have been merged?}
+
+\item{placement_opts}{label placement options, or \code{NULL} for the defaults}
+
+\item{do_complement_label}{whether to place a label for the complement
+region}
 }
 \value{
 a list object with slots for the various objects
