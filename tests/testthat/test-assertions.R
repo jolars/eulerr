@@ -35,7 +35,7 @@ test_that("erroneous input to venn() throws errors", {
   expect_error(venn(2))
   expect_error(venn(0))
   expect_error(venn(2, names = "a"))
-  expect_error(venn(6, names = letters[1:n]))
+  expect_error(venn(6, names = letters[1:6]))
 })
 
 test_that("erroneous input to print.euler() throw errors", {
@@ -46,7 +46,7 @@ test_that("erroneous input to print.euler() throw errors", {
 
 test_that("erroneous input to plot.euler() return errors", {
   f <- euler(c(A = 5, B = 2))
-  expect_error(dont_plot(f, n = -1))
+  expect_error(plot(f, n = -1))
 })
 
 test_that("erroneous input to error_plot() throws", {

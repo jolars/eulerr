@@ -110,7 +110,7 @@ is_integer <- function(x, tol = .Machine$double.eps^0.5) {
 #' @return A logical.
 #' @keywords internal
 is_real <- function(x, tol = .Machine$double.eps^0.5) {
-  is.numeric(x) && !is_integer(x, tol = )
+  is.numeric(x) && !is_integer(x, tol = tol)
 }
 
 #' Number of CPU cores eulerr may use
