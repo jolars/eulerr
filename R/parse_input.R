@@ -80,7 +80,7 @@ parse_dataframe <- function(
     groups <- unique(dd)
     rownames(groups) <- NULL
 
-    out <- g <- vector("list", NROW(groups))
+    out <- vector("list", NROW(groups))
 
     by_ind <- match(nms, colnames(combinations))
 

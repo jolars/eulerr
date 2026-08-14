@@ -472,7 +472,6 @@ pick <- function(metrics, metric) {
 for (cmp in comparisons) {
   for (ds in cmp$datasets) {
     combos <- datasets[[ds]]
-    n_sets <- length(set_names_of(combos))
 
     # eulerr, configured to optimize the competitor's objective.
     er <- tryCatch(

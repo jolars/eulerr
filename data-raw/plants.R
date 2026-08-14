@@ -2,7 +2,8 @@ tmp <- tempfile()
 
 download.file(
   "https://archive.ics.uci.edu/ml/machine-learning-databases/plants/plants.data",
-  tmp
+  tmp,
+  mode = "wb"
 )
 
 d1 <- readLines(tmp)

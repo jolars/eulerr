@@ -29,7 +29,7 @@ if (!grepl("rustc", sysreqs, ignore.case = TRUE)) {
 parts <- strsplit(sysreqs, ", ")[[1]]
 
 # identify which is the rustc
-rustc_ver <- parts[grepl("rustc", parts)]
+rustc_ver <- parts[grepl("rustc", parts, fixed = TRUE)]
 
 # perform checks for the presence of rustc and cargo on the OS
 no_cargo_msg <- c(

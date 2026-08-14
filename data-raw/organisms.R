@@ -1,7 +1,8 @@
 tmp <- tempfile()
 download.file(
   "https://raw.githubusercontent.com/sysbio-bioinf/VennMaster/master/data_examples/deploy/example1.list",
-  tmp
+  tmp,
+  mode = "wb"
 )
 
 d1 <- read.delim(tmp, header = FALSE)
