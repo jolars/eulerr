@@ -130,18 +130,18 @@ A=4 \quad B=3 \quad A \cap B=1,
 <table class="table">
 <thead><tr class="header">
 <th></th>
-<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></th>
+<th align="left"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></th>
 <th align="center"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>A</mi><mi>𝖼</mi></msup><annotation encoding="application/x-tex">A^\mathsf{c}</annotation></semantics></math></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math></td>
-<td>1</td>
+<td align="left">1</td>
 <td align="center">2</td>
 </tr>
 <tr class="even">
 <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>A</mi><mi>𝖼</mi></msup><annotation encoding="application/x-tex">A^\mathsf{c}</annotation></semantics></math></td>
-<td>3</td>
+<td align="left">3</td>
 <td align="center">0</td>
 </tr>
 </tbody>
@@ -167,9 +167,9 @@ intersections into consideration.</p>
 </h2>
 <p>For our initial layout, we adopt a constrained version of
 multi-dimensional scaling (MDS) that has been adapted from
-<strong>venn.js</strong> <span class="citation">(Frederickson
+<strong>venn.js</strong> <span class="citation">(Frederickson
 2016)</span>, which in turn is a modification of an algorithm used in
-<strong>venneuler</strong> <span class="citation">(Wilkinson
+<strong>venneuler</strong> <span class="citation">(Wilkinson
 2012)</span>. In it, we consider only the pairwise intersections between
 sets, attempting to position their respective shapes so as to minimize
 the difference between the separation between their centers required to
@@ -183,11 +183,11 @@ overlap formula to numerically find the required distance,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>,
 for each pairwise relationship.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup><mrow><mi mathvariant="normal">arccos</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup></mrow><mrow><mn>2</mn><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>r</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup><mrow><mi mathvariant="normal">arccos</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>r</mi><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>r</mi><mi>i</mi><mn>2</mn></msubsup></mrow><mrow><mn>2</mn><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>r</mi><mi>j</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mspace width="1.0em"></mspace><mfrac><mn>1</mn><mn>2</mn></mfrac><msqrt><mrow><mo stretchy="false" form="prefix">(</mo><mi>−</mi><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></msqrt><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{aligned}
-O_{ij} = &amp; r_i^2\arccos\left(\frac{d_{ij}^2 + r_i^2 - r_j^2}{2d_{ij}r_i}\right) +
-r_j^2\arccos\left(\frac{d_{ij}^2 + r_j^2 - r_i^2}{2d_{ij}r_j}\right) -\\
-&amp;\quad \frac{1}{2}\sqrt{(-d_{ij} + r_i + r_j)(d_{ij} + r_i - r_j)(d_{ij} - r_i + r_j)(d_{ij} + r_i + r_j)},
-\end{aligned}
+  \begin{aligned}
+  O_{ij} = &amp; r_i^2\arccos\left(\frac{d_{ij}^2 + r_i^2 - r_j^2}{2d_{ij}r_i}\right) +
+  r_j^2\arccos\left(\frac{d_{ij}^2 + r_j^2 - r_i^2}{2d_{ij}r_j}\right) -\\
+  &amp;\quad \frac{1}{2}\sqrt{(-d_{ij} + r_i + r_j)(d_{ij} + r_i - r_j)(d_{ij} - r_i + r_j)(d_{ij} + r_i + r_j)},
+  \end{aligned}
 </annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math>
@@ -203,7 +203,7 @@ their overlap, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">d_{ij}</annotation></semantics></math>
 their separation.</p>
 <div class="figure">
-<img src="under-the-hood_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" alt="The circle--circle overlap is computed as a function of the discs' separation ($d_{ij}$), radii ($r_i,r_j$), and area of overlap ($O_{ij}$)." width="288"><p class="caption">
+<img src="under-the-hood_files/figure-html/overlap-1.png" class="r-plt" alt="The circle--circle overlap is computed as a function of the discs' separation ($d_{ij}$), radii ($r_i,r_j$), and area of overlap ($O_{ij}$)." width="288"><p class="caption">
 The circle–circle overlap is computed as a function of the discs’
 separation
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">d_{ij}</annotation></semantics></math>),
@@ -225,8 +225,8 @@ numerically using the squared difference between
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>O</mi><annotation encoding="application/x-tex">O</annotation></semantics></math>
 and the desired overlap as loss function,</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>,</mo><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">for </mtext><mspace width="0.333em"></mspace></mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi><mo>≤</mo><mi>n</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
-\mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i &lt;
-j \leq n,
+  \mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i &lt;
+  j \leq n,
 </annotation></semantics></math></p>
 <p>which we optimize using <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;According to the documentation, &lt;code&gt;&lt;a href="https://rdrr.io/r/stats/optimize.html" class="external-link"&gt;optimize()&lt;/a&gt;&lt;/code&gt;
 consists of a “combination of golden section search and successive
@@ -258,22 +258,22 @@ of circles,
 that we found in the overlap equation, and the actual distance in the
 layout we are currently exploring.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>h</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>ℓ</mi><munder><mo>∑</mo><mrow><mn>1</mn><mo>≤</mo><mi>i</mi><mo>&lt;</mo><mi>j</mi><mo>≤</mo><mi>N</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mi>∅</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>⊆</mo><msub><mi>F</mi><mi>j</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>F</mi><mi>i</mi></msub><mo>⊇</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo>−</mo><msub><mi>k</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"></mtd></mtr></mtable></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i&lt;j\leq N}}
-\begin{cases}
-0 &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
-0 &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
-\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)^2  &amp; \text{otherwise} \\
-\end{cases}.
+  \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i&lt;j\leq N}}
+  \begin{cases}
+  0 &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
+  0 &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
+  \left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)^2  &amp; \text{otherwise} \\
+  \end{cases}.
 </annotation></semantics></math></p>
 <p>The analytical gradient is retrieved as usual by taking the
 derivative of the loss function,</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>∇</mi><mo accent="true">→</mo></mover><mi>f</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mover><mn>0</mn><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mi>∅</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mover><mn>0</mn><mo accent="true">→</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>⊆</mo><msub><mi>F</mi><mi>j</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>F</mi><mi>i</mi></msub><mo>⊇</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>O</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>4</mn><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>h</mi><mi>i</mi></msub><mo>−</mo><msub><mi>h</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo>−</mo><msub><mi>k</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msubsup><mi>d</mi><mrow><mi>i</mi><mi>j</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext><mo>,</mo></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
-\vec{\nabla} f(h_i) = \sum_{j=1}^N
-\begin{cases}
-\vec{0} &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
-\vec{0} &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
-4\left(h_i-h_j\right)\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right) &amp; \text{otherwise}, \\
-\end{cases}
+  \vec{\nabla} f(h_i) = \sum_{j=1}^N
+  \begin{cases}
+  \vec{0} &amp; F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
+  \vec{0} &amp; (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
+  4\left(h_i-h_j\right)\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right) &amp; \text{otherwise}, \\
+  \end{cases}
 </annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>∇</mi><mo accent="true">→</mo></mover><mi>f</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>k</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\vec{\nabla} f(k_i)</annotation></semantics></math>
@@ -290,18 +290,18 @@ Hessian to be updated improperly, the current release of
 <strong>eulerr</strong> instead relies on the numerical approximation of
 the Hessian offered by the optimizer.</p>
 <p><span class="math display">$$
-\small
-\mathbf{H}(h,k) = \ell{\sum_{1\leq i&lt;j\leq N}}
-\begin{bmatrix}
-4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(h_i-h_j\right)^2
+  \small
+  \mathbf{H}(h,k) = \ell{\sum_{1\leq i&lt;j\leq N}}
+  \begin{bmatrix}
+  4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(h_i-h_j\right)^2
 &amp;
-\cdots &amp;
-8\left(h_i-h_j\right)\left(k_i-k_j\right)\\
-\vdots &amp; \ddots &amp; \vdots \\
-8\left(k_i-k_j\right)\left(h_i-h_j\right) &amp;
-\cdots &amp;
-4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(k_i-k_j\right)^2
-\end{bmatrix}.
+  \cdots &amp;
+  8\left(h_i-h_j\right)\left(k_i-k_j\right)\\
+  \vdots &amp; \ddots &amp; \vdots \\
+  8\left(k_i-k_j\right)\left(h_i-h_j\right) &amp;
+  \cdots &amp;
+  4\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)+8\left(k_i-k_j\right)^2
+  \end{bmatrix}.
 $$</span></p>
 <p>Note that the constraints given in loss and gradients still apply to
 each element of the Hessian and have been omitted for convenience
@@ -309,10 +309,10 @@ only.</p>
 <p>We optimize the loss function using the nonlinear optimizer
 <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> from the R core package <strong>stats</strong>. The
 underlying code for <code>nlm</code> was written by <span class="citation">Schnabel et al. (1985)</span>. It was ported to R by
-Saikat DebRoy and the R Core team <span class="citation">(R Core Team
+Saikat DebRoy and the R Core team <span class="citation">(R Core Team
 2017)</span> from a previous FORTRAN to C translation by Richard H.
 Jones. <code><a href="https://rdrr.io/r/stats/nlm.html" class="external-link">nlm()</a></code> consists of a system of Newton-type algorithms
-and performs well for difficult problems <span class="citation">(Nash
+and performs well for difficult problems <span class="citation">(Nash
 2014)</span>.</p>
 <p>The initial layout outlined above will sometimes turn up perfect
 diagrams, but only reliably so when the diagram is completely determined
@@ -341,16 +341,16 @@ intersections, we define
 as the intersections of these sets and their relative complements, such
 that</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>ω</mi><mn>1</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>F</mi><mn>1</mn></msub><mo>\</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>2</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>ω</mi><mn>2</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>2</mn></munderover><msub><mi>F</mi><mi>i</mi></msub><mo>\</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>3</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>⋮</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>⋮</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>ω</mi><mi>n</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><munderover><mo>⋂</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{aligned}
-\omega_{1} &amp; = F_1 \setminus \bigcap_{i=2}^N F_i  \\
-\omega_{2} &amp; = \bigcap_{i=1}^2 F_i \setminus \bigcap_{i=3}^{N} F_i\\
-\vdots    &amp; = \vdots \\
-\omega_n &amp; = \bigcap_{i=1}^{N}F_i
-\end{aligned}
+  \begin{aligned}
+  \omega_{1} &amp; = F_1 \setminus \bigcap_{i=2}^N F_i  \\
+  \omega_{2} &amp; = \bigcap_{i=1}^2 F_i \setminus \bigcap_{i=3}^{N} F_i\\
+  \vdots    &amp; = \vdots \\
+  \omega_n &amp; = \bigcap_{i=1}^{N}F_i
+  \end{aligned}
 </annotation></semantics></math></p>
 <p>with</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>ω</mi><mi>i</mi></msub><mo>=</mo><munderover><mo>⋃</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>F</mi><mi>i</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\sum_{i = 1}^n \omega_i =  \bigcup_{j=1}^N F_i.
+  \sum_{i = 1}^n \omega_i =  \bigcup_{j=1}^N F_i.
 </annotation></semantics></math></p>
 <p>Analogously to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math>,
@@ -358,7 +358,7 @@ we also introduce the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>&amp;</mi><annotation encoding="application/x-tex">\&amp;</annotation></semantics></math>-operator,
 such that</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub><mi>&amp;</mi><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>\</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>F</mi><mi>i</mi></msub><mo>∩</mo><msub><mi>F</mi><mi>j</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mtext mathvariant="sans-serif">𝖼</mtext></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
-F_i \&amp; F_j = (F_i \cap F_j)\setminus (F_i \cap F_j)^\textsf{c}.
+  F_i \&amp; F_j = (F_i \cap F_j)\setminus (F_i \cap F_j)^\textsf{c}.
 </annotation></semantics></math></p>
 <p>The fitted diagram’s area-equivalents for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math>
@@ -380,14 +380,14 @@ equally for a circle.</p>
 <h3 id="intersecting-ellipses">Intersecting ellipses<a class="anchor" aria-label="anchor" href="#intersecting-ellipses"></a>
 </h3>
 <p>We now need the ellipses’ points of intersections.
-<strong>eulerr</strong>’s approach to this is outlined in <span class="citation">(Richter-Gebert 2011)</span> and based in
+<strong>eulerr</strong>’s approach to this is outlined in <span class="citation">(Richter-Gebert 2011)</span> and based in
 <em>projective</em>, as opposed to <em>Euclidean</em>, geometry.</p>
 <p>To collect all the intersection points, we naturally need only to
 consider two ellipses at a time. The canonical form of an ellipse is
 given by</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">cos</mi><mi>ϕ</mi><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">sin</mi><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>a</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><msup><mrow><mo stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>−</mo><mi>h</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">sin</mi><mi>ϕ</mi><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>−</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">cos</mi><mi>ϕ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mn>2</mn></msup><msup><mi>b</mi><mn>2</mn></msup></mfrac><mo>=</mo><mn>1</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">
-\frac{\left[ (x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2}+
-\frac{\left[(x-h) \sin{\phi}-(y-k) \cos{\phi}\right]^2}{b^2} = 1,
+  \frac{\left[ (x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2}+
+  \frac{\left[(x-h) \sin{\phi}-(y-k) \cos{\phi}\right]^2}{b^2} = 1,
 </annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϕ</mi><annotation encoding="application/x-tex">\phi</annotation></semantics></math>
@@ -399,7 +399,7 @@ is the semi-minor axis, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>,</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">h, k</annotation></semantics></math>
 are the x- and y-coordinates, respectively, of ellipse’s center.</p>
 <div class="figure">
-<img src="under-the-hood_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="A rotated ellipse with semimajor axis $a$, semiminor axis $b$, rotation $\phi$, and center $h,k$." width="288"><p class="caption">
+<img src="under-the-hood_files/figure-html/rotated-ellipse-1.png" class="r-plt" alt="A rotated ellipse with semimajor axis $a$, semiminor axis $b$, rotation $\phi$, and center $h,k$." width="288"><p class="caption">
 A rotated ellipse with semimajor axis
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,
 semiminor axis
@@ -414,15 +414,15 @@ and center
 of conics.&lt;/p&gt;"><sup>3</sup></a> it can be represented
 in quadric form,</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>B</mi><mi>x</mi><mi>y</mi><mo>+</mo><mi>C</mi><msup><mi>y</mi><mn>2</mn></msup><mo>+</mo><mi>D</mi><mi>x</mi><mo>+</mo><mi>E</mi><mi>y</mi><mo>+</mo><mi>F</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">
-Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
+  Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
 </annotation></semantics></math></p>
 <p>that in turn can be represented as a matrix,</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>A</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>B</mi><mi>/</mi><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>D</mi><mi>/</mi><mn>2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>B</mi><mi>/</mi><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>C</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>E</mi><mi>/</mi><mn>2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>D</mi><mi>/</mi><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>E</mi><mi>/</mi><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>F</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-\begin{bmatrix}
-A   &amp; B/2 &amp; D/2 \\
-B/2 &amp; C   &amp; E/2 \\
-D/2 &amp; E/2 &amp; F
-\end{bmatrix},
+  \begin{bmatrix}
+  A   &amp; B/2 &amp; D/2 \\
+  B/2 &amp; C   &amp; E/2 \\
+  D/2 &amp; E/2 &amp; F
+  \end{bmatrix},
 </annotation></semantics></math></p>
 <p>which is the form we need to intersect our ellipses. We now proceed
 to form three degenerate conics from a linear combination of the two
@@ -456,7 +456,7 @@ The overlap area between three ellipses is the sum of a convex polygon
 trivial to find the area of the polygon section since it is always
 convex. Now, because each elliptical segment is formed from the arcs
 that connect successive points, we can establish the segments’ areas
-algorithmically <span class="citation">(Eberly 2016)</span>. For each
+algorithmically <span class="citation">(Eberly 2016)</span>. For each
 ellipse and its related pair of points (located at angles
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_0</annotation></semantics></math>
 and
@@ -565,23 +565,23 @@ rotate and the relation between the semiaxes to vary, altogether
 rendering five parameters to optimize per set and ellipse (or three if
 we restrict ourselves to circles). For each iteration of the optimizer,
 the areas of all intersections are analyzed and a measure of loss
-returned. The loss we use is the same as in <strong>venneuler</strong>
-<span class="citation">(Frederickson 2016)</span>, namely the residual
-sums of squares.</p>
+returned. The loss we use is the same as in
+<strong>venneuler</strong> <span class="citation">(Frederickson
+2016)</span>, namely the residual sums of squares.</p>
 <p>If the fitted diagram is still inexact after the procedure, we offer
 a final step in which we pass the parameters on to a last-ditch
 optimizer. The weapon of choice<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;We conducted thorough benchmarking, that we opt not to
-report here, to decide upon an algorithm for this step.&lt;/p&gt;"><sup>5</sup></a> is <em>stress</em> <span class="citation">(Wilkinson 2012)</span>, which is also the loss metric
+report here, to decide upon an algorithm for this step.&lt;/p&gt;"><sup>5</sup></a> is <em>stress</em> <span class="citation">(Wilkinson 2012)</span>, which is also the loss metric
 we use in our final optimization step and is used in
-<strong>venneuler</strong>, as well as <em>diagError</em> <span class="citation">(Micallef and Rodgers 2014)</span>, which is used by
+<strong>venneuler</strong>, as well as <em>diagError</em> <span class="citation">(Micallef and Rodgers 2014)</span>, which is used by
 <strong>eulerAPE</strong>.</p>
 <p>The stress metric is not easily grasped but can be transformed into a
 rough analogue of the correlation coefficient via
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mtext mathvariant="normal">stress</mtext><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">r = \sqrt{1-\text{stress}^2}</annotation></semantics></math>.</p>
 <p>diagError, meanwhile, is given by</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mi mathvariant="normal">max</mi><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">|</mo><mfrac><msub><mi>ω</mi><mi>i</mi></msub><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>ω</mi><mi>i</mi></msub></mrow></mfrac><mo>−</mo><mfrac><msub><mi>A</mi><mi>i</mi></msub><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>A</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">|</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-{\max_{i = 1, 2, \dots, n}}\left|
-\frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i} \right|,
+  {\max_{i = 1, 2, \dots, n}}\left|
+  \frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i} \right|,
 </annotation></semantics></math></p>
 <p>which is the maximum <em>absolute</em> difference of the proportion
 of any

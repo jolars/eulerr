@@ -73,6 +73,7 @@ to learn about the individual settings for each argument.</p>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">legend</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>  quantities <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  annotations <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  glyphs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strips <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -92,6 +93,7 @@ to learn about the individual settings for each argument.</p>
 <span>  legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">legend</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>  quantities <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  glyphs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strips <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -147,6 +149,10 @@ the legend symbols independently of the text size. See
 text for the labels. See <code><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">grid::grid.text()</a></code>. In addition to the
 <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> fields, the following placement controls are
 supported (delegated to the <code>eunoia</code> Rust crate):
+<code>labels$position = "inside"</code> (default) uses region anchors;
+<code>labels$position = "outside"</code> places each set name just outside its own
+outline, without a leader. <code>labels$angular_steps</code> controls the outside
+placement search resolution (default <code>180</code>).
 <code>labels$placement</code> (<code>"raycast"</code> (default), <code>"force_directed"</code>,
 <code>"matched"</code>, or <code>"elbow"</code>) selects the strategy used when a label
 does not fit inside its region. <code>"raycast"</code>, <code>"force_directed"</code>,
@@ -214,6 +220,21 @@ plus <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid
 include the annotation, so exterior placement and leader lines
 adapt automatically. Defaults to slightly smaller text than
 <code>labels</code>/<code>quantities</code> (<code>cex = 0.8</code>).</p></dd>
+
+
+<dt id="arg-glyphs">glyphs<a class="anchor" aria-label="anchor" href="#arg-glyphs"></a></dt>
+<dd><p>a logical or list controlling glyphs packed inside exclusive
+regions. <code>TRUE</code> draws one equal-sized dot per unit of the original
+exclusive values; these values must be nonnegative integers. A list may
+set <code>mode</code> to <code>"dots"</code> (default) or <code>"members"</code>, <code>arrangement</code> to
+<code>"uniform"</code> or <code>"random"</code>, and supply <code>gap</code>, <code>seed</code>, <code>max_attempts</code>,
+and <code>max_items</code>. Dot mode also supports a named integer <code>counts</code> vector,
+<code>radius</code>, and <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> fields. Member mode requires a named list such
+as <code>labels = list(A = c("Ada", "Grace"), "A&amp;B" = "Katherine")</code> and
+supports <code>scale</code>, <code>min_scale</code>, and text graphical parameters. Automatic
+safety limits are 2,000 dots and 500 member labels unless <code>max_items</code> is
+supplied. Glyphs avoid measured labels and are drawn above region fills
+and edges but below labels.</p></dd>
 
 
 <dt id="arg-strips">strips<a class="anchor" aria-label="anchor" href="#arg-strips"></a></dt>

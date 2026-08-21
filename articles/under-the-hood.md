@@ -52,7 +52,7 @@ must describe these relationships, either directly or indirectly.
 - or a two- or three-way table
 
   |                  | $`A`$ | $`A^\mathsf{c}`$ |
-  |------------------|-------|:----------------:|
+  |------------------|:------|:----------------:|
   | $`B`$            | 1     |        2         |
   | $`A^\mathsf{c}`$ | 3     |        0         |
 
@@ -73,11 +73,11 @@ consideration.
 ## Initial layout
 
 For our initial layout, we adopt a constrained version of
-multi-dimensional scaling (MDS) that has been adapted from **venn.js**
-(Frederickson 2016), which in turn is a modification of an algorithm
-used in **venneuler** (Wilkinson 2012). In it, we consider only the
-pairwise intersections between sets, attempting to position their
-respective shapes so as to minimize the difference between the
+multi-dimensional scaling (MDS) that has been adapted from
+**venn.js** (Frederickson 2016), which in turn is a modification of an
+algorithm used in **venneuler** (Wilkinson 2012). In it, we consider
+only the pairwise intersections between sets, attempting to position
+their respective shapes so as to minimize the difference between the
 separation between their centers required to obtain an optimal overlap
 and the actual overlap of the shapes in the diagram.
 
@@ -89,11 +89,11 @@ to numerically find the required distance, $`d`$, for each pairwise
 relationship.
 
 ``` math
-\begin{aligned}
-O_{ij} = & r_i^2\arccos\left(\frac{d_{ij}^2 + r_i^2 - r_j^2}{2d_{ij}r_i}\right) +
-r_j^2\arccos\left(\frac{d_{ij}^2 + r_j^2 - r_i^2}{2d_{ij}r_j}\right) -\\
-&\quad \frac{1}{2}\sqrt{(-d_{ij} + r_i + r_j)(d_{ij} + r_i - r_j)(d_{ij} - r_i + r_j)(d_{ij} + r_i + r_j)},
-\end{aligned}
+  \begin{aligned}
+  O_{ij} = & r_i^2\arccos\left(\frac{d_{ij}^2 + r_i^2 - r_j^2}{2d_{ij}r_i}\right) +
+  r_j^2\arccos\left(\frac{d_{ij}^2 + r_j^2 - r_i^2}{2d_{ij}r_j}\right) -\\
+  &\quad \frac{1}{2}\sqrt{(-d_{ij} + r_i + r_j)(d_{ij} + r_i - r_j)(d_{ij} - r_i + r_j)(d_{ij} + r_i + r_j)},
+  \end{aligned}
 ```
 
 where $`r_i`$ and $`r_j`$ are the radii of the circles representing the
@@ -102,7 +102,7 @@ and $`d_{ij}`$ their separation.
 
 ![The circle--circle overlap is computed as a function of the discs'
 separation (\$d\_{ij}\$), radii (\$r_i,r_j\$), and area of overlap
-(\$O\_{ij}\$).](under-the-hood_files/figure-html/unnamed-chunk-1-1.png)
+(\$O\_{ij}\$).](under-the-hood_files/figure-html/overlap-1.png)
 
 The circle–circle overlap is computed as a function of the discs’
 separation ($`d_{ij}`$), radii ($`r_i,r_j`$), and area of overlap
@@ -114,8 +114,8 @@ squared difference between $`O`$ and the desired overlap as loss
 function,
 
 ``` math
-\mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i <
-j \leq n,
+  \mathcal{L}(d_{ij}) = \left(O_{ij} - (F_i \cap F_j)  \right)^2, \quad \text{for } i <
+  j \leq n,
 ```
 
 which we optimize using
@@ -148,24 +148,24 @@ of circles, $`d`$, that we found in the overlap equation, and the actual
 distance in the layout we are currently exploring.
 
 ``` math
-\mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i<j\leq N}}
-\begin{cases}
-0 & F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
-0 & (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
-\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)^2  & \text{otherwise} \\
-\end{cases}.
+  \mathcal{L}(h,k) = \displaystyle \ell{\sum_{1\leq i<j\leq N}}
+  \begin{cases}
+  0 & F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
+  0 & (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
+  \left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right)^2  & \text{otherwise} \\
+  \end{cases}.
 ```
 
 The analytical gradient is retrieved as usual by taking the derivative
 of the loss function,
 
 ``` math
-\vec{\nabla} f(h_i) = \sum_{j=1}^N
-\begin{cases}
-\vec{0} & F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
-\vec{0} & (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
-4\left(h_i-h_j\right)\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right) & \text{otherwise}, \\
-\end{cases}
+  \vec{\nabla} f(h_i) = \sum_{j=1}^N
+  \begin{cases}
+  \vec{0} & F_i \cap F_j = \emptyset \text{ and } O_{ij} = 0\\
+  \vec{0} & (F_i \subseteq F_j \text{ or } F_i \supseteq F_j) \text{ and } O_{ij}=0\\
+  4\left(h_i-h_j\right)\left(\left(h_i-h_j\right)^2+\left(k_i-k_j\right)^2-d_{ij}^2\right) & \text{otherwise}, \\
+  \end{cases}
 ```
 
 where $`\vec{\nabla} f(k_i)`$ is found as in the gradient with $`h_i`$
@@ -191,10 +191,10 @@ each element of the Hessian and have been omitted for convenience only.
 We optimize the loss function using the nonlinear optimizer
 [`nlm()`](https://rdrr.io/r/stats/nlm.html) from the R core package
 **stats**. The underlying code for `nlm` was written by Schnabel et al.
-(1985). It was ported to R by Saikat DebRoy and the R Core team (R Core
+(1985). It was ported to R by Saikat DebRoy and the R Core team (R Core
 Team 2017) from a previous FORTRAN to C translation by Richard H. Jones.
 [`nlm()`](https://rdrr.io/r/stats/nlm.html) consists of a system of
-Newton-type algorithms and performs well for difficult problems (Nash
+Newton-type algorithms and performs well for difficult problems (Nash
 2014).
 
 The initial layout outlined above will sometimes turn up perfect
@@ -218,25 +218,25 @@ $`n=2^N-1`$ intersections, we define $`\omega`$ as the intersections of
 these sets and their relative complements, such that
 
 ``` math
-\begin{aligned}
-\omega_{1} & = F_1 \setminus \bigcap_{i=2}^N F_i  \\
-\omega_{2} & = \bigcap_{i=1}^2 F_i \setminus \bigcap_{i=3}^{N} F_i\\
-\vdots    & = \vdots \\
-\omega_n & = \bigcap_{i=1}^{N}F_i
-\end{aligned}
+  \begin{aligned}
+  \omega_{1} & = F_1 \setminus \bigcap_{i=2}^N F_i  \\
+  \omega_{2} & = \bigcap_{i=1}^2 F_i \setminus \bigcap_{i=3}^{N} F_i\\
+  \vdots    & = \vdots \\
+  \omega_n & = \bigcap_{i=1}^{N}F_i
+  \end{aligned}
 ```
 
 with
 
 ``` math
-\sum_{i = 1}^n \omega_i =  \bigcup_{j=1}^N F_i.
+  \sum_{i = 1}^n \omega_i =  \bigcup_{j=1}^N F_i.
 ```
 
 Analogously to $`\omega`$, we also introduce the $`\&`$-operator, such
 that
 
 ``` math
-F_i \& F_j = (F_i \cap F_j)\setminus (F_i \cap F_j)^\textsf{c}.
+  F_i \& F_j = (F_i \cap F_j)\setminus (F_i \cap F_j)^\textsf{c}.
 ```
 
 The fitted diagram’s area-equivalents for $`\omega`$ will be defined as
@@ -252,7 +252,7 @@ circle.
 ### Intersecting ellipses
 
 We now need the ellipses’ points of intersections. **eulerr**’s approach
-to this is outlined in (Richter-Gebert 2011) and based in *projective*,
+to this is outlined in (Richter-Gebert 2011) and based in *projective*,
 as opposed to *Euclidean*, geometry.
 
 To collect all the intersection points, we naturally need only to
@@ -260,8 +260,8 @@ consider two ellipses at a time. The canonical form of an ellipse is
 given by
 
 ``` math
-\frac{\left[ (x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2}+
-\frac{\left[(x-h) \sin{\phi}-(y-k) \cos{\phi}\right]^2}{b^2} = 1,
+  \frac{\left[ (x-h)\cos{\phi}+(y-k)\sin{\phi} \right]^2}{a^2}+
+  \frac{\left[(x-h) \sin{\phi}-(y-k) \cos{\phi}\right]^2}{b^2} = 1,
 ```
 
 where $`\phi`$ is the counter-clockwise angle from the positive x-axis
@@ -270,7 +270,7 @@ are the x- and y-coordinates, respectively, of ellipse’s center.
 
 ![A rotated ellipse with semimajor axis \$a\$, semiminor axis \$b\$,
 rotation \$\phi\$, and center
-\$h,k\$.](under-the-hood_files/figure-html/unnamed-chunk-2-1.png)
+\$h,k\$.](under-the-hood_files/figure-html/rotated-ellipse-1.png)
 
 A rotated ellipse with semimajor axis $`a`$, semiminor axis $`b`$,
 rotation $`\phi`$, and center $`h,k`$.
@@ -279,17 +279,17 @@ However, because an ellipse is a conic[^3] it can be represented in
 quadric form,
 
 ``` math
-Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
+  Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
 ```
 
 that in turn can be represented as a matrix,
 
 ``` math
-\begin{bmatrix}
-A   & B/2 & D/2 \\
-B/2 & C   & E/2 \\
-D/2 & E/2 & F
-\end{bmatrix},
+  \begin{bmatrix}
+  A   & B/2 & D/2 \\
+  B/2 & C   & E/2 \\
+  D/2 & E/2 & F
+  \end{bmatrix},
 ```
 
 which is the form we need to intersect our ellipses. We now proceed to
@@ -331,7 +331,7 @@ We continue by ordering the points around their centroid. It is then
 trivial to find the area of the polygon section since it is always
 convex. Now, because each elliptical segment is formed from the arcs
 that connect successive points, we can establish the segments’ areas
-algorithmically (Eberly 2016). For each ellipse and its related pair of
+algorithmically (Eberly 2016). For each ellipse and its related pair of
 points (located at angles $`\theta_0`$ and $`\theta_1`$ from the
 semimajor axis), we proceed to find its area by
 
@@ -412,14 +412,14 @@ provide the option to use ellipses rather than circles, allowing the
 altogether rendering five parameters to optimize per set and ellipse (or
 three if we restrict ourselves to circles). For each iteration of the
 optimizer, the areas of all intersections are analyzed and a measure of
-loss returned. The loss we use is the same as in **venneuler**
-(Frederickson 2016), namely the residual sums of squares.
+loss returned. The loss we use is the same as in
+**venneuler** (Frederickson 2016), namely the residual sums of squares.
 
 If the fitted diagram is still inexact after the procedure, we offer a
 final step in which we pass the parameters on to a last-ditch optimizer.
-The weapon of choice[^5] is *stress* (Wilkinson 2012), which is also the
+The weapon of choice[^5] is *stress* (Wilkinson 2012), which is also the
 loss metric we use in our final optimization step and is used in
-**venneuler**, as well as *diagError* (Micallef and Rodgers 2014), which
+**venneuler**, as well as *diagError* (Micallef and Rodgers 2014), which
 is used by **eulerAPE**.
 
 The stress metric is not easily grasped but can be transformed into a
@@ -429,8 +429,8 @@ $`r = \sqrt{1-\text{stress}^2}`$.
 diagError, meanwhile, is given by
 
 ``` math
-{\max_{i = 1, 2, \dots, n}}\left|
-\frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i} \right|,
+  {\max_{i = 1, 2, \dots, n}}\left|
+  \frac{\omega_i}{\sum_{i=1}^n \omega_i} - \frac{A_i}{\sum_{i=1}^n A_i} \right|,
 ```
 
 which is the maximum *absolute* difference of the proportion of any

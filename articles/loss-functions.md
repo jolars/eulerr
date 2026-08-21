@@ -53,7 +53,7 @@ plot(fit)
 ![An Euler diagram fit to the combination given earlier on, showing that
 only 1-by-1 intersections are present. This fit uses the default loss
 function, the sum of squared
-errors.](loss-functions_files/figure-html/unnamed-chunk-3-1.png)
+errors.](loss-functions_files/figure-html/default-loss-1.png)
 
 An Euler diagram fit to the combination given earlier on, showing that
 only 1-by-1 intersections are present. This fit uses the default loss
@@ -71,7 +71,7 @@ crate.
 |:---|:---|:---|
 | Sum of squared errors | `sum_squared` (default) | $`\sum_i (y_i - \hat y_i)^2`$ |
 | Sum of absolute errors | `sum_absolute` | $`\sum_i |y_i - \hat y_i|`$ |
-| Sum of squared regErrors | `sum_squared_region_error` | $`\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k`$ |
+| Sum of squared regErrors | `sum_squared_region_error` | $`\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \right)`$ |
 | Sum of absolute regErrors | `sum_absolute_region_error` | $`\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k`$ |
 | Max squared error | `max_squared` | $`\max_i (y_i - \hat y_i)^2`$ |
 | Max absolute error | `max_absolute` | $`\max_i |y_i - \hat y_i|`$ |
@@ -108,17 +108,17 @@ for (loss in losses) {
 ```
 
 ![Euler diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-1.png)![Euler
+functions](loss-functions_files/figure-html/loss-functions-1.png)![Euler
 diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-2.png)![Euler
+functions](loss-functions_files/figure-html/loss-functions-2.png)![Euler
 diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-3.png)![Euler
+functions](loss-functions_files/figure-html/loss-functions-3.png)![Euler
 diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-4.png)![Euler
+functions](loss-functions_files/figure-html/loss-functions-4.png)![Euler
 diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-5.png)![Euler
+functions](loss-functions_files/figure-html/loss-functions-5.png)![Euler
 diagrams fit to the combination above, using different loss
-functions](loss-functions_files/figure-html/unnamed-chunk-4-6.png)
+functions](loss-functions_files/figure-html/loss-functions-6.png)
 
 Euler diagrams fit to the combination above, using different loss
 functions

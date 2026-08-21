@@ -62,6 +62,12 @@ Currently, the following items will be considered:
   vector keyed by subset name). Used to add a third stacked text element
   per region below the quantity.
 
+- glyphs:
+
+  defaults for dot and member-label glyph placement and styling,
+  including `mode`, `arrangement`, `gap`, `seed`, `radius`, `scale`,
+  `min_scale`, `max_attempts`, `max_items`, and graphical parameters.
+
 - strips:
 
   `col`, `alpha`, `fontsize`, `cex`, `fontfamily`, `lineheight`, and

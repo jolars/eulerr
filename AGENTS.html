@@ -104,6 +104,8 @@
 <li>Combination naming uses <code>&amp;</code> delimiters across <code><a href="reference/euler.html">euler()</a></code>, <code>fit_diagram()</code>, <code>parse_input()</code>, and the Rust side (which splits on <code>&amp;</code> to recover set names).</li>
 <li>R style follows <code>air.toml</code>: <code>line-width = 80</code>, <code>indent-width = 2</code>, spaces. Format with <code>air format</code> (or via the air LSP).</li>
 <li>Rust MSRV is declared in <code>DESCRIPTION</code> <code>SystemRequirements</code> (currently <code>rustc &gt;= 1.88.0</code>); <code>tools/msrv.R</code> enforces it at configure time.</li>
+<li>
+<code>NEWS.md</code> is managed by versionary and based on conventional commits. DO NOT edit it manually.</li>
 </ul></div>
 </div>
 

@@ -115,3 +115,5 @@ crate.
   spaces. Format with `air format` (or via the air LSP).
 - Rust MSRV is declared in `DESCRIPTION` `SystemRequirements` (currently
   `rustc >= 1.88.0`); `tools/msrv.R` enforces it at configure time.
+- `NEWS.md` is managed by versionary and based on conventional commits.
+  DO NOT edit it manually.

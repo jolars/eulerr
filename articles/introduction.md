@@ -138,22 +138,22 @@ coef(fit2)
 ### Goodness-of-fit
 
 To tell if we can trust our solution, we use two goodness-of-fit
-measures: the stress statistic from **venneuler** (Wilkinson 2012),
+measures: the stress statistic from **venneuler** (Wilkinson 2012),
 
 ``` math
-\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
+  \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
 ```
 
 where $`\hat{y}_i`$ is an ordinary least squares estimate from the
 regression of the fitted areas on the original areas that is being
 explored during optimization,
 
-and the *diagError* statistic from **eulerAPE** (Micallef and Rodgers
+and the *diagError* statistic from **eulerAPE** (Micallef and Rodgers
 2014):
 
 ``` math
-\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
-\frac{\hat{y}_i}{\sum \hat{y}_i} \right|
+  \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
+  \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
 ```
 
 In our example, the diagError is and our stress is 0.002, suggesting
@@ -163,7 +163,7 @@ We can now be confident that eulerr provides a reasonable representation
 of our input using circles. Were it otherwise, we might try a different
 shape via the `shape` argument — `"ellipse"` is the most expressive
 choice, but axis-aligned `"rectangle"` and `"square"` fits are also
-available. (Wilkinson 2012) features a difficult combination that
+available. (Wilkinson 2012) features a difficult combination that
 ellipses manage to fit with a reasonably small error; with **eulerr**,
 however, we can get rid of that error entirely.
 
@@ -192,7 +192,7 @@ plot(fit3)
 ```
 
 ![A difficult combination from Wilkinson
-2012.](introduction_files/figure-html/unnamed-chunk-2-1.png)
+2012.](introduction_files/figure-html/wilkinson2012-1.png)
 
 A difficult combination from Wilkinson 2012.
 

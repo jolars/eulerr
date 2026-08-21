@@ -94,28 +94,28 @@ encode quantities through labels or color instead of area.</p>
 area-proportional diagrams are:</p>
 <ul>
 <li>
-<strong>eulerr</strong> — circles, ellipses, or axis-aligned
+<strong>eulerr</strong>: circles, ellipses, or axis-aligned
 rectangles/squares via numerical optimization; reports
 <code>stress</code> and <code>diagError</code> goodness-of-fit
 statistics.</li>
 <li>
-<strong>venneuler</strong> — Wilkinson’s circle algorithm <span class="citation">(Wilkinson 2012)</span>; circles only; Java-based
+<strong>venneuler</strong>: Wilkinson’s circle algorithm <span class="citation">(Wilkinson 2012)</span>; circles only; Java-based
 (depends on rJava).</li>
 <li>
-<strong>nVennR</strong> — the nVenn algorithm <span class="citation">(Pérez-Silva et al. 2018)</span>; quasi-proportional,
+<strong>nVennR</strong>: the nVenn algorithm <span class="citation">(Pérez-Silva et al. 2018)</span>; quasi-proportional,
 n-dimensional diagrams built from irregular polygons. Distributed via
 GitHub.</li>
 <li>
-<strong>BioVenn</strong> — accurate 2–3 circle diagrams from
+<strong>BioVenn</strong>: accurate 2–3 circle diagrams from
 identifier lists <span class="citation">(Hulsen 2021)</span>.</li>
 <li>
-<strong>vennplot</strong> — 2D circles and 3D spheres for 2–3 sets
-<span class="citation">(Xu et al. 2017)</span>; currently dormant on
-CRAN.</li>
+<strong>vennplot</strong>: 2D circles and 3D spheres for 2–3
+sets <span class="citation">(Xu et al. 2017)</span>; currently dormant
+on CRAN.</li>
 <li>
-<strong>VennDiagram</strong> — a drawing package whose
-<em>scaled</em> mode is genuinely area-proportional for two circles only
-<span class="citation">(Chen and Boutros 2011)</span>.</li>
+<strong>VennDiagram</strong>: a drawing package whose
+<em>scaled</em> mode is genuinely area-proportional for two circles
+only <span class="citation">(Chen and Boutros 2011)</span>.</li>
 </ul>
 <p>The <a href="#excluded-packages">last section</a> lists the many
 packages that are <em>not</em> area-proportional fitters and explains
@@ -137,16 +137,16 @@ compute the area of every disjoint region with <code>polyclip</code>,
 and evaluate eulerr’s own statistics on those areas:</p>
 <ul>
 <li>
-<strong>stress</strong> — the normalized residual sum of squares
-from venneuler,
+<strong>stress</strong>: the normalized residual sum of squares from
+venneuler,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>A</mi><mi>i</mi></msub><mo>−</mo><mi>β</mi><msub><mi>ω</mi><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi minsize="120%" maxsize="120%" stretchy="true">/</mi><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>A</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\sum_i (A_i - \beta\omega_i)^2 \big/ \sum_i A_i^2</annotation></semantics></math>,
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>A</mi><mi>i</mi></msub><msub><mi>ω</mi><mi>i</mi></msub><mi minsize="120%" maxsize="120%" stretchy="true">/</mi><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>ω</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\beta = \sum_i A_i\omega_i \big/ \sum_i \omega_i^2</annotation></semantics></math>.</li>
 <li>
-<strong>diagError</strong> — the largest absolute difference between
+<strong>diagError</strong>: the largest absolute difference between
 a region’s realized and target <em>proportion</em>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>A</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>A</mi><mi>k</mi></msub><mo>−</mo><msub><mi>ω</mi><mi>i</mi></msub><mi>/</mi><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>ω</mi><mi>k</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">\max_i |A_i/\sum_k A_k - \omega_i/\sum_k \omega_k|</annotation></semantics></math>
-(from eulerAPE, <span class="citation">(Micallef and Rodgers
+(from eulerAPE, <span class="citation">(Micallef and Rodgers
 2014)</span>).</li>
 </ul>
 <p>Here
