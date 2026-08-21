@@ -81,6 +81,10 @@
 #'   text for the labels. See [grid::grid.text()]. In addition to the
 #'   `grid::gpar()` fields, the following placement controls are
 #'   supported (delegated to the `eunoia` Rust crate):
+#'   `labels$position = "inside"` (default) uses region anchors;
+#'   `labels$position = "outside"` places each set name just outside its own
+#'   outline, without a leader. `labels$angular_steps` controls the outside
+#'   placement search resolution (default `180`).
 #'   `labels$placement` (`"raycast"` (default), `"force_directed"`,
 #'   `"matched"`, or `"elbow"`) selects the strategy used when a label
 #'   does not fit inside its region. `"raycast"`, `"force_directed"`,
@@ -142,6 +146,18 @@
 #'   include the annotation, so exterior placement and leader lines
 #'   adapt automatically. Defaults to slightly smaller text than
 #'   `labels`/`quantities` (`cex = 0.8`).
+#' @param glyphs a logical or list controlling glyphs packed inside exclusive
+#'   regions. `TRUE` draws one equal-sized dot per unit of the original
+#'   exclusive values; these values must be nonnegative integers. A list may
+#'   set `mode` to `"dots"` (default) or `"members"`, `arrangement` to
+#'   `"uniform"` or `"random"`, and supply `gap`, `seed`, `max_attempts`,
+#'   and `max_items`. Dot mode also supports a named integer `counts` vector,
+#'   `radius`, and [grid::gpar()] fields. Member mode requires a named list such
+#'   as `labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")` and
+#'   supports `scale`, `min_scale`, and text graphical parameters. Automatic
+#'   safety limits are 2,000 dots and 500 member labels unless `max_items` is
+#'   supplied. Glyphs avoid measured labels and are drawn above region fills
+#'   and edges but below labels.
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]. In addition to graphical parameters, this
 #'   argument can include `labels = list(top = ..., left = ...)` for custom
@@ -238,6 +254,7 @@ plot.euler <- function(
   labels = identical(legend, FALSE),
   quantities = FALSE,
   annotations = NULL,
+  glyphs = FALSE,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -265,6 +282,7 @@ plot.euler <- function(
   do_labels <- !is_false(labels) && !is.null(labels)
   do_quantities <- !is_false(quantities) && !is.null(quantities)
   do_annotations <- !is_false(annotations) && !is.null(annotations)
+  do_glyphs <- !is_false(glyphs) && !is.null(glyphs)
   do_legend <- !is_false(legend) && !is.null(legend)
   do_groups <- !is.null(groups)
   do_strips <- !is_false(strips) && do_groups
@@ -316,6 +334,19 @@ plot.euler <- function(
       "lineheight",
       "font",
       "rot"
+    ),
+    glyphs = c(
+      "fill",
+      "col",
+      "alpha",
+      "lex",
+      "lwd",
+      "lty",
+      "fontsize",
+      "cex",
+      "fontfamily",
+      "lineheight",
+      "font"
     )
   )
   pop_by_group <- function(param, name) {
@@ -404,6 +435,10 @@ plot.euler <- function(
   annotations_split <- pop_by_group(annotations, "annotations")
   annotations <- annotations_split$param
   annotations_by_group <- annotations_split$by_group
+
+  glyphs_split <- pop_by_group(glyphs, "glyphs")
+  glyphs <- glyphs_split$param
+  glyphs_by_group <- glyphs_split$by_group
 
   fills_user <- fills
 
@@ -961,7 +996,9 @@ plot.euler <- function(
       "gap",
       "leader",
       "force_directed",
-      "elbow"
+      "elbow",
+      "position",
+      "angular_steps"
     )
     placement_user <- labels[intersect(names(labels), placement_fields)]
     labels[placement_fields] <- NULL
@@ -998,8 +1035,73 @@ plot.euler <- function(
       opar$labels$leader %||% list(),
       placement_user$leader %||% list()
     )
+    labels$position <- match.arg(
+      placement_user$position %||% opar$labels$position,
+      c("inside", "outside")
+    )
+    labels$angular_steps <- placement_user$angular_steps %||%
+      opar$labels$angular_steps
+    if (
+      length(labels$angular_steps) != 1L ||
+        !is.numeric(labels$angular_steps) ||
+        !is.finite(labels$angular_steps) ||
+        labels$angular_steps < 8 ||
+        labels$angular_steps != as.integer(labels$angular_steps)
+    ) {
+      stop("`labels$angular_steps` must be a single integer of at least 8.")
+    }
   } else {
     labels <- NULL
+  }
+
+  if (do_glyphs) {
+    if (isTRUE(glyphs)) {
+      glyphs <- list()
+    }
+    if (!is.list(glyphs)) {
+      stop("`glyphs` must be `TRUE`, `FALSE`, or a list.")
+    }
+    glyph_fields <- c(
+      "mode",
+      "counts",
+      "labels",
+      "arrangement",
+      "gap",
+      "seed",
+      "radius",
+      "scale",
+      "min_scale",
+      "max_attempts",
+      "max_items"
+    )
+    glyph_user <- glyphs[intersect(names(glyphs), glyph_fields)]
+    glyph_style <- glyphs[setdiff(names(glyphs), glyph_fields)]
+    glyphs <- update_list(opar$glyphs, glyph_user)
+    glyphs$mode <- match.arg(glyphs$mode, c("dots", "members"))
+    glyphs$arrangement <- match.arg(
+      glyphs$arrangement,
+      c("uniform", "random")
+    )
+    validate_glyph_options(glyphs)
+    glyphs$gp <- setup_gpar(
+      opar$glyphs[c(
+        "fill",
+        "col",
+        "alpha",
+        "lex",
+        "lwd",
+        "lty",
+        "fontsize",
+        "cex",
+        "fontfamily",
+        "lineheight",
+        "font"
+      )],
+      glyph_style,
+      n_id
+    )
+  } else {
+    glyphs <- NULL
   }
 
   # setup quantities
@@ -1457,13 +1559,16 @@ plot.euler <- function(
     tether = labels$tether,
     gap = labels$gap
   )
+  outside_set_labels <- !is.null(labels) &&
+    identical(labels$position, "outside")
+  region_labels <- if (outside_set_labels) NULL else labels
   if (do_groups) {
     data <- lapply(
       x,
       setup_geometry,
       fills = fills,
       edges = edges,
-      labels = labels,
+      labels = region_labels,
       quantities = quantities,
       annotations = annotations,
       n = n,
@@ -1476,7 +1581,7 @@ plot.euler <- function(
       x,
       fills = fills,
       edges = edges,
-      labels = labels,
+      labels = region_labels,
       quantities = quantities,
       annotations = annotations,
       n = n,
@@ -1524,14 +1629,20 @@ plot.euler <- function(
         annotations,
         panel_override(annotations_by_group, key_i)
       )
+      glyphs_i <- apply_panel_overrides(
+        glyphs,
+        panel_override(glyphs_by_group, key_i)
+      )
       euler_grob_children[[i]] <- setup_grobs(
         data[[i]],
         fills = fills_i,
         patterns = patterns_i,
         edges = edges_i,
-        labels = labels_i,
+        labels = if (outside_set_labels) NULL else labels_i,
+        set_labels = if (outside_set_labels) labels_i else NULL,
         quantities = quantities_i,
         annotations = annotations_i,
+        glyphs = glyphs_i,
         complement = complement,
         number = i,
         merged_sets = merged_sets,
@@ -1558,9 +1669,11 @@ plot.euler <- function(
       fills = fills,
       patterns = patterns,
       edges = edges,
-      labels = labels,
+      labels = region_labels,
+      set_labels = if (outside_set_labels) labels else NULL,
       quantities = quantities,
       annotations = annotations,
+      glyphs = glyphs,
       complement = complement,
       number = 1,
       merged_sets = merged_sets,
@@ -1849,11 +1962,11 @@ plot.euler <- function(
 
   # return a gTree object
   children <- gList(
-    if (do_bg) bg_grob = bg_grob,
-    if (do_main) main_grob = main_grob,
-    if (do_strip_top) strip_top_grob = strip_top_grob,
-    if (do_strip_left) strip_left_grob = strip_left_grob,
-    if (do_legend) legend_grob = legend_grob,
+    if (do_bg) bg_grob <- bg_grob,
+    if (do_main) main_grob <- main_grob,
+    if (do_strip_top) strip_top_grob <- strip_top_grob,
+    if (do_strip_left) strip_left_grob <- strip_left_grob,
+    if (do_legend) legend_grob <- legend_grob,
     euler_grob = euler_grob
   )
 
@@ -1935,6 +2048,7 @@ plot.eulerr_venn <- function(
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = TRUE,
+  glyphs = FALSE,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -1955,6 +2069,7 @@ plot.eulerr_venn <- function(
     legend = legend,
     labels = labels,
     quantities = quantities,
+    glyphs = glyphs,
     strips = strips,
     bg = bg,
     main = main,

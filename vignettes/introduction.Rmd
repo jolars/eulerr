@@ -25,12 +25,12 @@ options(digits = 4)
 ## Motivation
 
 **eulerr** generates area-proportional euler diagrams that display set
-relationships (intersections, unions, and disjoints) with circles, ellipses,
-or axis-aligned rectangles and squares.
-[Euler diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams
-without the requirement that all set interactions be present (whether they are
-empty or not). That is, depending on input, eulerr will sometimes produce Venn
-diagrams but sometimes not.
+relationships (intersections, unions, and disjoints) with circles, ellipses, or
+axis-aligned rectangles and squares. [Euler
+diagrams](https://en.wikipedia.org/wiki/Euler_diagram) are Venn diagrams without
+the requirement that all set interactions be present (whether they are empty or
+not). That is, depending on input, eulerr will sometimes produce Venn diagrams
+but sometimes not.
 
 R features several packages that produce Euler diagrams; some of the more
 prominent ones (on CRAN) are
@@ -105,6 +105,8 @@ fit2 <- euler(mat)
 We inspect our results by printing the eulerr object
 
 ```{r}
+#| label: print
+
 fit2
 ```
 
@@ -139,21 +141,21 @@ coef(fit2)
 ### Goodness-of-fit
 
 To tell if we can trust our solution, we use two goodness-of-fit measures: the
-stress statistic from **venneuler** [@wilkinson_exact_2012],
+stress statistic from **venneuler**\ [@wilkinson_exact_2012],
 
 $$
-\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
+  \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} y_i ^ 2}
 $$
 
 where $\hat{y}_i$ is an ordinary least squares estimate from the regression of
 the fitted areas on the original areas that is being explored during
 optimization,
 
-and the *diagError* statistic from **eulerAPE** [@Micallef_2014a]:
+and the *diagError* statistic from **eulerAPE**\ [@Micallef_2014a]:
 
 $$
-\max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
-\frac{\hat{y}_i}{\sum \hat{y}_i} \right|
+  \max_{i = 1, 2, \dots, n} \left| \frac{y_i}{\sum y_i} -
+  \frac{\hat{y}_i}{\sum \hat{y}_i} \right|
 $$
 
 In our example, the diagError is `r fit2$diag_error` and our stress is
@@ -161,13 +163,13 @@ In our example, the diagError is `r fit2$diag_error` and our stress is
 
 We can now be confident that eulerr provides a reasonable representation of our
 input using circles. Were it otherwise, we might try a different shape via the
-`shape` argument — `"ellipse"` is the most expressive choice, but axis-aligned
-`"rectangle"` and `"square"` fits are also available.
-[@wilkinson_exact_2012] features a difficult combination that ellipses manage
-to fit with a reasonably small error; with **eulerr**, however, we can get rid
-of that error entirely.
+`shape` argument --- `"ellipse"` is the most expressive choice, but axis-aligned
+`"rectangle"` and `"square"` fits are also available.\ [@wilkinson_exact_2012]
+features a difficult combination that ellipses manage to fit with a reasonably
+small error; with **eulerr**, however, we can get rid of that error entirely.
 
 ```{r}
+#| label: wilkinson2012
 #| fig-cap: "A difficult combination from Wilkinson 2012."
 
 wilkinson2012 <- c(

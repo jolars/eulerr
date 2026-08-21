@@ -38,6 +38,10 @@ some margin sizes in the resulting plot}#'
 \code{cex}, \code{fontfamily}, \code{lineheight}, \code{font}, and \code{labels} (a named
 character vector keyed by subset name). Used to add a third stacked
 text element per region below the quantity.}
+\item{glyphs}{defaults for dot and member-label glyph placement and
+styling, including \code{mode}, \code{arrangement}, \code{gap}, \code{seed}, \code{radius},
+\code{scale}, \code{min_scale}, \code{max_attempts}, \code{max_items}, and graphical
+parameters.}
 \item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},

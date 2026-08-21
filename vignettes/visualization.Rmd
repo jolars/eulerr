@@ -31,13 +31,13 @@ Plotting the ellipses is straightforward using the parametrization of a rotated
 ellipse,
 
 $$
-\begin{bmatrix}
-x \\ y
-\end{bmatrix} =
-\begin{bmatrix}
-h + a \cos{\theta} \\
-k + b \sin{\theta}
-\end{bmatrix},
+  \begin{bmatrix}
+  x \\ y
+  \end{bmatrix} =
+  \begin{bmatrix}
+  h + a \cos{\theta} \\
+  k + b \sin{\theta}
+  \end{bmatrix},
 $$
 
 where $\theta \in [0, 2\pi],\quad a,b>0$.
@@ -221,6 +221,41 @@ con <- c(
   "G&H" = 0.2
 )
 plot(euler(con), labels = as.character(1:8))
+```
+
+## Glyphs and exterior set labels
+
+For integer-valued data, `glyphs = TRUE` adds one equal-sized dot per unit to
+each exclusive region. The shared radius is chosen automatically, so dots are
+comparable across the diagram.
+
+```{r}
+#| label: glyph-dots
+#| fig-cap: "Counts represented by packed unit glyphs"
+
+fit <- euler(c(A = 8, B = 6, "A&B" = 3))
+plot(fit, glyphs = TRUE, labels = list(position = "outside"))
+```
+
+Named members can be packed instead by using `mode = "members"`. The names are
+keyed by exclusive region and shrink together only when needed to fit.
+
+```{r}
+#| label: glyph-members
+#| fig-cap: "Member names packed inside their exclusive regions"
+
+plot(
+  fit,
+  glyphs = list(
+    mode = "members",
+    labels = list(
+      A = c("Ada", "Grace", "Barbara"),
+      B = c("Alan", "Edsger"),
+      "A&B" = c("Katherine", "Hedy")
+    )
+  ),
+  labels = list(position = "outside")
+)
 ```
 
 ## Composing diagrams

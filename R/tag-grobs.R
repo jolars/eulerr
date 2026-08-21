@@ -600,6 +600,15 @@ find_eulertags <- function(panel) {
   NULL
 }
 
+find_euler_child <- function(panel, class) {
+  for (child in panel$children) {
+    if (inherits(child, class)) {
+      return(child)
+    }
+  }
+  NULL
+}
+
 #' Measure every drawable tag inside `tags_grob` against the current viewport.
 #' Returns parallel vectors of combo / width / height suitable for handing to
 #' [place_euler_labels()], plus the resolved leader gap in native units (so the
@@ -756,9 +765,10 @@ makeContext.EulerPanel <- function(x) {
   }
 
   tags_grob <- find_eulertags(x)
+  set_labels_grob <- find_euler_child(x, "EulerSetLabels")
   if (
-    is.null(tags_grob) ||
-      length(tags_grob$children) == 0L ||
+    ((is.null(tags_grob) || length(tags_grob$children) == 0L) &&
+      (is.null(set_labels_grob) || length(set_labels_grob$children) == 0L)) ||
       is.null(shapes) ||
       NROW(shapes) == 0L
   ) {
@@ -862,41 +872,59 @@ makeContext.EulerPanel <- function(x) {
       measure_all_tags(tags_grob, x$padding, placement_opts$gap),
       error = function(e) NULL
     )
+    set_placements <- tryCatch(
+      if (!is.null(set_labels_grob)) place_set_label_tree(set_labels_grob),
+      error = function(e) NULL
+    )
     grid::popViewport()
-    if (is.null(measurements) || length(measurements$combos) == 0L) {
+    if (
+      (is.null(measurements) || length(measurements$combos) == 0L) &&
+        is.null(set_placements)
+    ) {
       break
     }
 
-    placements <- tryCatch(
-      place_euler_labels(
-        set_names = rownames(shapes),
-        shape = shape_type,
-        h = shapes$h,
-        k = shapes$k,
-        a = shapes$a,
-        b = shapes$b,
-        phi = shapes$phi,
-        width = shapes$width,
-        height = shapes$height,
-        side = shapes$side,
-        container_h = if (has_container) container$h else NULL,
-        container_k = if (has_container) container$k else NULL,
-        container_width = if (has_container) container$width else NULL,
-        container_height = if (has_container) container$height else NULL,
-        n_vertices = as.integer(x$n_vertices),
-        label_combos = measurements$combos,
-        label_widths = measurements$widths,
-        label_heights = measurements$heights,
-        placement = placement_opts$placement,
-        placement_margin = placement_opts$margin,
-        placement_iterations = placement_opts$iterations,
-        placement_min_gap = placement_opts$min_gap,
-        placement_tether = placement_opts$tether,
-        placement_leader_gap = measurements$gap_native,
-        label_precision = precision
-      ),
-      error = function(e) NULL
-    )
+    placements <- if (
+      !is.null(measurements) && length(measurements$combos) > 0L
+    ) {
+      tryCatch(
+        place_euler_labels(
+          set_names = rownames(shapes),
+          shape = shape_type,
+          h = shapes$h,
+          k = shapes$k,
+          a = shapes$a,
+          b = shapes$b,
+          phi = shapes$phi,
+          width = shapes$width,
+          height = shapes$height,
+          side = shapes$side,
+          container_h = if (has_container) container$h else NULL,
+          container_k = if (has_container) container$k else NULL,
+          container_width = if (has_container) container$width else NULL,
+          container_height = if (has_container) container$height else NULL,
+          n_vertices = as.integer(x$n_vertices),
+          label_combos = measurements$combos,
+          label_widths = measurements$widths,
+          label_heights = measurements$heights,
+          placement = placement_opts$placement,
+          placement_margin = placement_opts$margin,
+          placement_iterations = placement_opts$iterations,
+          placement_min_gap = placement_opts$min_gap,
+          placement_tether = placement_opts$tether,
+          placement_leader_gap = measurements$gap_native,
+          label_precision = precision
+        ),
+        error = function(e) NULL
+      )
+    } else {
+      list(
+        canvas_bbox_h = mean(geom_xlim),
+        canvas_bbox_k = mean(geom_ylim),
+        canvas_bbox_width = diff(geom_xlim),
+        canvas_bbox_height = diff(geom_ylim)
+      )
+    }
     if (
       is.null(placements) ||
         !is.finite(placements$canvas_bbox_h) ||
@@ -911,6 +939,32 @@ makeContext.EulerPanel <- function(x) {
     cb_xmax <- placements$canvas_bbox_h + placements$canvas_bbox_width / 2
     cb_ymin <- placements$canvas_bbox_k - placements$canvas_bbox_height / 2
     cb_ymax <- placements$canvas_bbox_k + placements$canvas_bbox_height / 2
+    if (
+      !is.null(set_placements) &&
+        is.finite(set_placements$canvas_bbox_width) &&
+        set_placements$canvas_bbox_width > 0
+    ) {
+      cb_xmin <- min(
+        cb_xmin,
+        set_placements$canvas_bbox_h -
+          set_placements$canvas_bbox_width / 2
+      )
+      cb_xmax <- max(
+        cb_xmax,
+        set_placements$canvas_bbox_h +
+          set_placements$canvas_bbox_width / 2
+      )
+      cb_ymin <- min(
+        cb_ymin,
+        set_placements$canvas_bbox_k -
+          set_placements$canvas_bbox_height / 2
+      )
+      cb_ymax <- max(
+        cb_ymax,
+        set_placements$canvas_bbox_k +
+          set_placements$canvas_bbox_height / 2
+      )
+    }
 
     xmin <- min(geom_xlim[1], cb_xmin)
     xmax <- max(geom_xlim[2], cb_xmax)

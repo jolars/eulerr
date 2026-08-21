@@ -76,3 +76,5 @@ devenv.local.yaml
 src/rust/vendor
 src/Makevars
 src/Makevars.win
+/doc/
+/Meta/

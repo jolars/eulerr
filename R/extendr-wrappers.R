@@ -3,7 +3,7 @@
 # nolint start
 
 #' @keywords internal
-fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, loss_eps, optimizer, n_restarts, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads) .Call(wrap__fit_euler_diagram, combo_names, combo_values, input, shape, loss, loss_eps, optimizer, n_restarts, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads)
+fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, loss_eps, optimizer, n_restarts, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads) .Call("wrap__fit_euler_diagram", combo_names, combo_values, input, shape, loss, loss_eps, optimizer, n_restarts, extraopt_threshold, tolerance, max_sets, complement, seed, n_threads, PACKAGE = "eulerr")
 
 #' Compute polygon geometry and label anchors for plotting a fitted Euler
 #' diagram, including the optional complement region inside a fitted
@@ -23,7 +23,7 @@ fit_euler_diagram <- function(combo_names, combo_values, input, shape, loss, los
 #' carries a complement and a container is supplied.
 #'
 #' @keywords internal
-euler_plot_data <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_precision) .Call(wrap__euler_plot_data, set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_precision)
+euler_plot_data <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_precision) .Call("wrap__euler_plot_data", set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_precision, PACKAGE = "eulerr")
 
 #' Place per-region labels using eunoia's `place_labels` API.
 #'
@@ -52,14 +52,26 @@ euler_plot_data <- function(set_names, shape, h, k, a, b, phi, width, height, si
 #' so eunoia emits the empty `Combination` from `decompose_regions`.
 #'
 #' @keywords internal
-place_euler_labels <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision) .Call(wrap__place_euler_labels, set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision)
+place_euler_labels <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision) .Call("wrap__place_euler_labels", set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_combos, label_widths, label_heights, placement, placement_margin, placement_iterations, placement_min_gap, placement_tether, placement_leader_gap, label_precision, PACKAGE = "eulerr")
+
+#' Place one measured label outside each set outline.
+#' @keywords internal
+place_euler_set_labels <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_widths, label_heights, obstacle_h, obstacle_k, obstacle_width, obstacle_height, margin, angular_steps, precision) .Call("wrap__place_euler_set_labels", set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, label_widths, label_heights, obstacle_h, obstacle_k, obstacle_width, obstacle_height, margin, angular_steps, precision, PACKAGE = "eulerr")
+
+#' Pack equal circular glyphs inside exclusive regions.
+#' @keywords internal
+place_euler_glyphs <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, region_names, counts, arrangement, radius, gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision) .Call("wrap__place_euler_glyphs", set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, region_names, counts, arrangement, radius, gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision, PACKAGE = "eulerr")
+
+#' Pack measured member-label boxes inside exclusive regions.
+#' @keywords internal
+place_euler_glyph_boxes <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, item_regions, item_widths, item_heights, arrangement, scale, min_scale, gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision) .Call("wrap__place_euler_glyph_boxes", set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, item_regions, item_widths, item_heights, arrangement, scale, min_scale, gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision, PACKAGE = "eulerr")
 
 #' Clip a (possibly multi-polygon) subject path against a single clip
 #' polygon. Mirrors the slice of `polyclip::polyclip` behavior eulerr
 #' actually uses at the stripe-pattern site.
 #'
 #' @keywords internal
-polygon_clip_rust <- function(subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op) .Call(wrap__polygon_clip_rust, subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op)
+polygon_clip_rust <- function(subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op) .Call("wrap__polygon_clip_rust", subject_x, subject_y, subject_id_lengths, clip_x, clip_y, op, PACKAGE = "eulerr")
 
 #' Canonical (non-proportional) Venn layout for a given shape.
 #'
@@ -71,18 +83,18 @@ polygon_clip_rust <- function(subject_x, subject_y, subject_id_lengths, clip_x, 
 #' open all 15 regions, which axis-aligned rectangles cannot.
 #'
 #' @keywords internal
-venn_layout <- function(set_names, shape) .Call(wrap__venn_layout, set_names, shape)
+venn_layout <- function(set_names, shape) .Call("wrap__venn_layout", set_names, shape, PACKAGE = "eulerr")
 
 #' Default number of sets that `eunoia` accepts before rejecting a spec.
 #' Used by the R-side input validator so the cap is not hardcoded.
 #' @keywords internal
-max_sets_default <- function() .Call(wrap__max_sets_default)
+max_sets_default <- function() .Call("wrap__max_sets_default", PACKAGE = "eulerr")
 
 #' Absolute upper bound on the number of sets that `eunoia` can represent
 #' in a single diagram. Used by the R-side input validator so the cap is
 #' not hardcoded.
 #' @keywords internal
-max_sets_hard_cap <- function() .Call(wrap__max_sets_hard_cap)
+max_sets_hard_cap <- function() .Call("wrap__max_sets_hard_cap", PACKAGE = "eulerr")
 
 
 # nolint end

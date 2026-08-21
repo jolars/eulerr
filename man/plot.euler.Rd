@@ -15,6 +15,7 @@
   labels = identical(legend, FALSE),
   quantities = FALSE,
   annotations = NULL,
+  glyphs = FALSE,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -33,6 +34,7 @@
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = TRUE,
+  glyphs = FALSE,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -72,6 +74,10 @@ the legend symbols independently of the text size. See
 text for the labels. See \code{\link[grid:grid.text]{grid::grid.text()}}. In addition to the
 \code{grid::gpar()} fields, the following placement controls are
 supported (delegated to the \code{eunoia} Rust crate):
+\code{labels$position = "inside"} (default) uses region anchors;
+\code{labels$position = "outside"} places each set name just outside its own
+outline, without a leader. \code{labels$angular_steps} controls the outside
+placement search resolution (default \code{180}).
 \code{labels$placement} (\code{"raycast"} (default), \code{"force_directed"},
 \code{"matched"}, or \code{"elbow"}) selects the strategy used when a label
 does not fit inside its region. \code{"raycast"}, \code{"force_directed"},
@@ -135,6 +141,19 @@ plus \code{\link[grid:gpar]{grid::gpar()}} fields (\code{col}, \code{alpha}, \co
 include the annotation, so exterior placement and leader lines
 adapt automatically. Defaults to slightly smaller text than
 \code{labels}/\code{quantities} (\code{cex = 0.8}).}
+
+\item{glyphs}{a logical or list controlling glyphs packed inside exclusive
+regions. \code{TRUE} draws one equal-sized dot per unit of the original
+exclusive values; these values must be nonnegative integers. A list may
+set \code{mode} to \code{"dots"} (default) or \code{"members"}, \code{arrangement} to
+\code{"uniform"} or \code{"random"}, and supply \code{gap}, \code{seed}, \code{max_attempts},
+and \code{max_items}. Dot mode also supports a named integer \code{counts} vector,
+\code{radius}, and \code{\link[grid:gpar]{grid::gpar()}} fields. Member mode requires a named list such
+as \code{labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")} and
+supports \code{scale}, \code{min_scale}, and text graphical parameters. Automatic
+safety limits are 2,000 dots and 500 member labels unless \code{max_items} is
+supplied. Glyphs avoid measured labels and are drawn above region fills
+and edges but below labels.}
 
 \item{strips}{a list, ignored unless the \code{'by'} argument
 was used in \code{\link[=euler]{euler()}}. In addition to graphical parameters, this

@@ -48,6 +48,7 @@
             urlchecker
             profvis
             V8
+            remotes
           ];
         }
       );

@@ -22,6 +22,10 @@
 #'   `cex`, `fontfamily`, `lineheight`, `font`, and `labels` (a named
 #'   character vector keyed by subset name). Used to add a third stacked
 #'   text element per region below the quantity.}
+#'   \item{glyphs}{defaults for dot and member-label glyph placement and
+#'   styling, including `mode`, `arrangement`, `gap`, `seed`, `radius`,
+#'   `scale`, `min_scale`, `max_attempts`, `max_items`, and graphical
+#'   parameters.}
 #'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
@@ -88,6 +92,7 @@ eulerr_options <- function(...) {
         labels = list(fontsize = pointsize),
         quantities = list(fontsize = pointsize),
         annotations = list(fontsize = pointsize),
+        glyphs = list(fontsize = pointsize),
         strips = list(fontsize = pointsize),
         legend = list(fontsize = pointsize),
         main = list(fontsize = pointsize),
@@ -150,6 +155,8 @@ eulerr_default_options <- function() {
       fontfamily = "",
       lineheight = 1.2,
       font = 2,
+      position = "inside",
+      angular_steps = 180L,
       placement = "raycast",
       margin = NULL,
       tether = "poi",
@@ -183,6 +190,28 @@ eulerr_default_options <- function() {
       rot = 0,
       col = 1L,
       alpha = 1,
+      fontsize = 12,
+      cex = 0.8,
+      fontfamily = "",
+      lineheight = 1.2,
+      font = 1
+    ),
+    glyphs = list(
+      mode = "dots",
+      arrangement = "uniform",
+      gap = 0.25,
+      seed = 0,
+      radius = NULL,
+      scale = NULL,
+      min_scale = 0.35,
+      max_attempts = 300L,
+      max_items = NULL,
+      fill = "white",
+      col = 1L,
+      alpha = 1,
+      lwd = 0.5,
+      lty = 1L,
+      lex = 1,
       fontsize = 12,
       cex = 0.8,
       fontfamily = "",

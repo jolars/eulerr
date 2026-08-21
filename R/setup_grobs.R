@@ -230,8 +230,10 @@ add_fill_pattern <- function(fill_grob, fill_data, pattern_gp) {
 #' @param patterns pattern params
 #' @param edges edges params
 #' @param labels labels params
+#' @param set_labels exterior set-label params
 #' @param quantities quantities params
 #' @param annotations annotations params
+#' @param glyphs glyph params
 #' @param complement complement label params
 #' @param number current diagram number
 #' @param merged_sets sets that are the same and have been merged
@@ -249,8 +251,10 @@ setup_grobs <- function(
   patterns,
   edges,
   labels,
+  set_labels = NULL,
   quantities,
   annotations = NULL,
+  glyphs = NULL,
   complement = NULL,
   number,
   merged_sets,
@@ -283,6 +287,8 @@ setup_grobs <- function(
   do_labels <- !is.null(labels)
   do_quantities <- !is.null(quantities)
   do_annotations <- !is.null(annotations)
+  do_glyphs <- !is.null(glyphs)
+  do_set_labels <- !is.null(set_labels)
 
   xlim <- x$xlim
   ylim <- x$ylim
@@ -494,13 +500,37 @@ setup_grobs <- function(
     )
   }
 
+  set_labels_gtree <- if (do_set_labels) {
+    setup_euler_set_labels(
+      x,
+      set_labels,
+      n_vertices = n_vertices,
+      tags = tags_gtree,
+      number = number
+    )
+  }
+
+  glyphs_gtree <- if (do_glyphs) {
+    setup_euler_glyphs(
+      x,
+      glyphs,
+      n_vertices = n_vertices,
+      combo_labels = combo_labels,
+      tags = tags_gtree,
+      set_labels = set_labels_gtree,
+      number = number
+    )
+  }
+
   panel_children <- grid::gList(
     if (do_container && !is.null(container_fill_grob)) container_fill_grob,
     if (do_fills) fills_grob,
     if (do_patterns && identical(patterns$mode, "shape")) patterns_grob,
     if (do_edges) edges_grob,
     if (do_container && !is.null(container_edge_grob)) container_edge_grob,
-    if (do_tags) tags_gtree
+    if (do_glyphs && !is.null(glyphs_gtree)) glyphs_gtree,
+    if (do_tags) tags_gtree,
+    if (do_set_labels && !is.null(set_labels_gtree)) set_labels_gtree
   )
 
   # Wrap each panel in a custom `EulerPanel` gTree so its viewport can

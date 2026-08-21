@@ -9,6 +9,7 @@ bibliography: eulerr.bib
 ---
 
 ```{r}
+#| label: setup
 #| include: false
 
 knitr::opts_chunk$set(
@@ -26,6 +27,8 @@ We list the combinations below, which consists of 5 different sets, *agc*,
 *camk*, *cmgc*, and *tk*.
 
 ```{r}
+#| label: combos
+
 combos <- c(
   "agc" = 9,
   "camk" = 17,
@@ -56,7 +59,11 @@ missing since including them inevitably leads to larger errors from having to
 include other intersections that are not present.
 
 ```{r}
-#| fig-cap: "An Euler diagram fit to the combination given earlier on, showing that only 1-by-1 intersections are present. This fit uses the default loss function, the sum of squared errors."
+#| label: default-loss
+#| fig-cap: >-
+#|   An Euler diagram fit to the combination given earlier on, showing that only
+#|   1-by-1 intersections are present. This fit uses the default loss function,
+#|   the sum of squared errors.
 
 library(eulerr)
 
@@ -69,17 +76,17 @@ to errors for the zero-intersections, then we need to switch the loss function
 we use. In **eulerr**, you can do so via the `loss` argument in `euler()`, which
 mirrors the loss functions provided by the underlying `eunoia` Rust crate.
 
-  Loss                       Input                            Definition
-  -------------------------  -----------------------------    --------------------------------------------------------
-  Sum of squared errors      `sum_squared` (default)          $\sum_i (y_i - \hat y_i)^2$
-  Sum of absolute errors     `sum_absolute`                   $\sum_i |y_i - \hat y_i|$
-  Sum of squared regErrors   `sum_squared_region_error`       $\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
-  Sum of absolute regErrors  `sum_absolute_region_error`      $\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
-  Max squared error          `max_squared`                    $\max_i (y_i - \hat y_i)^2$
-  Max absolute error         `max_absolute`                   $\max_i |y_i - \hat y_i|$
-  Root-mean-squared error    `root_mean_squared`              $\sqrt{\sum_i (y_i - \hat y_i)^2 / \sum_i y_i^2}$
-  Stress                     `stress`                         venneuler-style stress
-  diagError                  `diag_error`                     $\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
+  Loss                        Input                         Definition
+  --------------------------- ----------------------------- --------------------------------------------------------------------
+  Sum of squared errors       `sum_squared` (default)       $\sum_i (y_i - \hat y_i)^2$
+  Sum of absolute errors      `sum_absolute`                $\sum_i |y_i - \hat y_i|$
+  Sum of squared regErrors    `sum_squared_region_error`    $\sum_i \left(y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k \right)$
+  Sum of absolute regErrors   `sum_absolute_region_error`   $\sum_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
+  Max squared error           `max_squared`                 $\max_i (y_i - \hat y_i)^2$
+  Max absolute error          `max_absolute`                $\max_i |y_i - \hat y_i|$
+  Root-mean-squared error     `root_mean_squared`           $\sqrt{\sum_i (y_i - \hat y_i)^2 / \sum_i y_i^2}$
+  Stress                      `stress`                      venneuler-style stress
+  diagError                   `diag_error`                  $\max_i \big|y_i/\sum_k y_k - \hat y_i / \sum_k \hat y_k$
 
   : Loss functions in **eulerr**
 
@@ -92,6 +99,7 @@ To see what these different choices mean for the combination that we have looked
 at, we now refit the diagram for each loss.
 
 ```{r}
+#| label: loss-functions
 #| fig-cap: "Euler diagrams fit to the combination above, using different loss functions"
 #| fig-show: "hold"
 #| fig-width: 3

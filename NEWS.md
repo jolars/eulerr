@@ -1,3 +1,7 @@
+# Unreleased
+
+This releases adds exterior set labels and region glyphs as well as upgrades Eunoia to 1.9.0 for rectangle fitting and normalization fixes
+
 # eulerr 8.2
 
 ## Features

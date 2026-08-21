@@ -8,9 +8,10 @@ use eunoia::{
     },
     loss::LossType,
     plotting::{
-        ClipOperation, ElbowOptions, ExteriorPolicy, LeaderStrategy, PlacementKind,
-        PlacementStrategy, RegionPiece, RegionPolygons, TetherSource, decompose_regions,
-        place_labels, placements_bbox, polygon_clip,
+        ClipOperation, ElbowOptions, ExteriorPolicy, GlyphArrangement, GlyphBoxOptions,
+        GlyphOptions, LeaderStrategy, PlacementKind, PlacementStrategy, RegionPiece,
+        RegionPolygons, SetLabelStrategy, TetherSource, decompose_regions, place_glyph_boxes,
+        place_glyphs, place_labels, place_set_labels, placements_bbox, polygon_clip,
     },
     spec::DiagramSpec,
 };
@@ -114,6 +115,14 @@ fn parse_tether(tether: &str) -> std::result::Result<TetherSource, Error> {
         "poi" => Ok(TetherSource::Poi),
         "boundary" => Ok(TetherSource::Boundary),
         other => Err(format!("Unknown tether source: {}", other).into()),
+    }
+}
+
+fn parse_glyph_arrangement(arrangement: &str) -> std::result::Result<GlyphArrangement, Error> {
+    match arrangement {
+        "uniform" => Ok(GlyphArrangement::Uniform),
+        "random" => Ok(GlyphArrangement::Random),
+        other => Err(format!("Unknown glyph arrangement: {other}").into()),
     }
 }
 
@@ -771,6 +780,36 @@ fn build_container(
     Some(Rectangle::new(Point::new(ch, ck), cw, chh))
 }
 
+fn build_obstacles(h: &[f64], k: &[f64], width: &[f64], height: &[f64]) -> Vec<Rectangle> {
+    let n = h.len().min(k.len()).min(width.len()).min(height.len());
+    (0..n)
+        .filter_map(|i| {
+            let (x, y, w, hh) = (h[i], k[i], width[i], height[i]);
+            (x.is_finite()
+                && y.is_finite()
+                && w.is_finite()
+                && hh.is_finite()
+                && w > 0.0
+                && hh > 0.0)
+                .then(|| Rectangle::new(Point::new(x, y), w, hh))
+        })
+        .collect()
+}
+
+fn plotting_spec(set_names: &[String], has_container: bool) -> extendr_api::Result<DiagramSpec> {
+    let mut builder = DiagramSpecBuilder::new();
+    for name in set_names {
+        builder = builder.set(name.as_str(), 1.0);
+    }
+    if has_container {
+        builder = builder.complement(1.0);
+    }
+    builder
+        .input_type(InputType::Exclusive)
+        .build()
+        .map_err(|e| Error::from(format!("eunoia spec build error: {}", e)))
+}
+
 /// Map the wide eulerr per-set parameter schema (NaN-padded) into the
 /// shape-specific eunoia objects needed by the plotting pipeline. Surfaces
 /// `InvalidShapeParameter` errors as readable R-level messages rather than
@@ -902,6 +941,18 @@ impl DiagramShapes {
                 .map(|s| polygonize_outline(s, n_vertices))
                 .collect(),
         }
+    }
+
+    fn set_polygon_map(&self, set_names: &[String], n_vertices: usize) -> HashMap<String, Polygon> {
+        let polygons: Vec<Polygon> = match self {
+            DiagramShapes::Ellipses(v) => v.iter().map(|s| s.polygonize(n_vertices)).collect(),
+            DiagramShapes::Rectangles(v) => v.iter().map(|s| s.polygonize(n_vertices)).collect(),
+            DiagramShapes::Squares(v) => v.iter().map(|s| s.polygonize(n_vertices)).collect(),
+            DiagramShapes::RotatedRectangles(v) => {
+                v.iter().map(|s| s.polygonize(n_vertices)).collect()
+            }
+        };
+        set_names.iter().cloned().zip(polygons).collect()
     }
 
     fn decompose(
@@ -1133,6 +1184,7 @@ fn placement_kind_str(kind: PlacementKind) -> &'static str {
         PlacementKind::ExteriorForceDirected => "exterior_force_directed",
         PlacementKind::ExteriorElbow => "exterior_elbow",
         PlacementKind::ExteriorMatched => "exterior_matched",
+        PlacementKind::ExteriorSet => "exterior_set",
         // `PlacementKind` is #[non_exhaustive]; treat any future variant as
         // an interior placement (the no-leader default).
         _ => "interior",
@@ -1394,6 +1446,343 @@ fn place_euler_labels(
     ))
 }
 
+/// Place one measured label outside each set outline.
+/// @keywords internal
+#[extendr]
+#[allow(clippy::too_many_arguments)]
+fn place_euler_set_labels(
+    set_names: Vec<String>,
+    shape: &str,
+    h: Vec<f64>,
+    k: Vec<f64>,
+    a: Vec<f64>,
+    b: Vec<f64>,
+    phi: Vec<f64>,
+    width: Vec<f64>,
+    height: Vec<f64>,
+    side: Vec<f64>,
+    container_h: Robj,
+    container_k: Robj,
+    container_width: Robj,
+    container_height: Robj,
+    n_vertices: i32,
+    label_widths: Vec<f64>,
+    label_heights: Vec<f64>,
+    obstacle_h: Vec<f64>,
+    obstacle_k: Vec<f64>,
+    obstacle_width: Vec<f64>,
+    obstacle_height: Vec<f64>,
+    margin: Robj,
+    angular_steps: i32,
+    precision: f64,
+) -> extendr_api::Result<List> {
+    let n = set_names.len();
+    if label_widths.len() != n || label_heights.len() != n {
+        return Err("set_names, label_widths and label_heights must have the same length".into());
+    }
+    if n == 0 {
+        return Ok(list!(
+            anchor_x = Vec::<f64>::new(),
+            anchor_y = Vec::<f64>::new(),
+            kind = Vec::<String>::new(),
+            canvas_bbox_h = f64::NAN,
+            canvas_bbox_k = f64::NAN,
+            canvas_bbox_width = f64::NAN,
+            canvas_bbox_height = f64::NAN,
+        ));
+    }
+    let shapes = build_shapes(
+        ShapeKind::parse(shape)?,
+        &set_names,
+        &h,
+        &k,
+        &a,
+        &b,
+        &phi,
+        &width,
+        &height,
+        &side,
+    )?;
+    let container = build_container(
+        &container_h,
+        &container_k,
+        &container_width,
+        &container_height,
+    );
+    let outlines = shapes.set_polygon_map(&set_names, n_vertices.max(3) as usize);
+    let sizes: HashMap<String, (f64, f64)> = set_names
+        .iter()
+        .cloned()
+        .zip(
+            label_widths
+                .iter()
+                .copied()
+                .zip(label_heights.iter().copied()),
+        )
+        .collect();
+    let obstacles = build_obstacles(&obstacle_h, &obstacle_k, &obstacle_width, &obstacle_height);
+    let strategy = SetLabelStrategy::default()
+        .margin(read_optional_f64(&margin))
+        .angular_steps(angular_steps.max(8) as usize)
+        .precision(precision.max(f64::EPSILON))
+        .obstacles(obstacles);
+    let placements = place_set_labels(&outlines, &sizes, container.as_ref(), &strategy);
+    let mut anchor_x = Vec::with_capacity(n);
+    let mut anchor_y = Vec::with_capacity(n);
+    let mut kind = Vec::with_capacity(n);
+    for name in &set_names {
+        if let Some(p) = placements.get(name) {
+            anchor_x.push(p.anchor.x());
+            anchor_y.push(p.anchor.y());
+            kind.push(placement_kind_str(p.kind).to_string());
+        } else {
+            anchor_x.push(f64::NAN);
+            anchor_y.push(f64::NAN);
+            kind.push(String::new());
+        }
+    }
+    let (bb_h, bb_k, bb_w, bb_height) = placements_bbox(&placements, &sizes)
+        .map(|rect| {
+            (
+                rect.center().x(),
+                rect.center().y(),
+                rect.width(),
+                rect.height(),
+            )
+        })
+        .unwrap_or((f64::NAN, f64::NAN, f64::NAN, f64::NAN));
+    Ok(list!(
+        anchor_x = anchor_x,
+        anchor_y = anchor_y,
+        kind = kind,
+        canvas_bbox_h = bb_h,
+        canvas_bbox_k = bb_k,
+        canvas_bbox_width = bb_w,
+        canvas_bbox_height = bb_height,
+    ))
+}
+
+/// Pack equal circular glyphs inside exclusive regions.
+/// @keywords internal
+#[extendr]
+#[allow(clippy::too_many_arguments)]
+fn place_euler_glyphs(
+    set_names: Vec<String>,
+    shape: &str,
+    h: Vec<f64>,
+    k: Vec<f64>,
+    a: Vec<f64>,
+    b: Vec<f64>,
+    phi: Vec<f64>,
+    width: Vec<f64>,
+    height: Vec<f64>,
+    side: Vec<f64>,
+    container_h: Robj,
+    container_k: Robj,
+    container_width: Robj,
+    container_height: Robj,
+    n_vertices: i32,
+    region_names: Vec<String>,
+    counts: Vec<i32>,
+    arrangement: &str,
+    radius: Robj,
+    gap: f64,
+    seed: f64,
+    max_attempts: i32,
+    obstacle_h: Vec<f64>,
+    obstacle_k: Vec<f64>,
+    obstacle_width: Vec<f64>,
+    obstacle_height: Vec<f64>,
+    precision: f64,
+) -> extendr_api::Result<List> {
+    if region_names.len() != counts.len() {
+        return Err("region_names and counts must have the same length".into());
+    }
+    let shape_values = build_shapes(
+        ShapeKind::parse(shape)?,
+        &set_names,
+        &h,
+        &k,
+        &a,
+        &b,
+        &phi,
+        &width,
+        &height,
+        &side,
+    )?;
+    let container = build_container(
+        &container_h,
+        &container_k,
+        &container_width,
+        &container_height,
+    );
+    let spec = plotting_spec(&set_names, container.is_some())?;
+    let regions = shape_values.decompose(
+        &set_names,
+        &spec,
+        container.as_ref(),
+        n_vertices.max(3) as usize,
+    );
+    let count_map: HashMap<String, usize> = region_names
+        .iter()
+        .cloned()
+        .zip(counts.iter().map(|n| (*n).max(0) as usize))
+        .collect();
+    let options = GlyphOptions::default()
+        .arrangement(parse_glyph_arrangement(arrangement)?)
+        .radius(read_optional_f64(&radius))
+        .gap(gap)
+        .seed(seed.max(0.0) as u64)
+        .precision(precision.max(f64::EPSILON))
+        .max_attempts(max_attempts.max(1) as u32)
+        .obstacles(build_obstacles(
+            &obstacle_h,
+            &obstacle_k,
+            &obstacle_width,
+            &obstacle_height,
+        ));
+    let placed = place_glyphs(&regions, &count_map, &options);
+    let mut x = Vec::new();
+    let mut y = Vec::new();
+    let mut id_lengths = Vec::with_capacity(region_names.len());
+    let mut unplaced = Vec::with_capacity(region_names.len());
+    for name in &region_names {
+        let points = placed.positions.get(name).map(Vec::as_slice).unwrap_or(&[]);
+        id_lengths.push(points.len() as i32);
+        unplaced.push(placed.unplaced.get(name).copied().unwrap_or(0) as i32);
+        for point in points {
+            x.push(point.x());
+            y.push(point.y());
+        }
+    }
+    Ok(list!(
+        radius = placed.radius,
+        x = x,
+        y = y,
+        id_lengths = id_lengths,
+        unplaced = unplaced,
+    ))
+}
+
+/// Pack measured member-label boxes inside exclusive regions.
+/// @keywords internal
+#[extendr]
+#[allow(clippy::too_many_arguments)]
+fn place_euler_glyph_boxes(
+    set_names: Vec<String>,
+    shape: &str,
+    h: Vec<f64>,
+    k: Vec<f64>,
+    a: Vec<f64>,
+    b: Vec<f64>,
+    phi: Vec<f64>,
+    width: Vec<f64>,
+    height: Vec<f64>,
+    side: Vec<f64>,
+    container_h: Robj,
+    container_k: Robj,
+    container_width: Robj,
+    container_height: Robj,
+    n_vertices: i32,
+    item_regions: Vec<String>,
+    item_widths: Vec<f64>,
+    item_heights: Vec<f64>,
+    arrangement: &str,
+    scale: Robj,
+    min_scale: f64,
+    gap: f64,
+    seed: f64,
+    max_attempts: i32,
+    obstacle_h: Vec<f64>,
+    obstacle_k: Vec<f64>,
+    obstacle_width: Vec<f64>,
+    obstacle_height: Vec<f64>,
+    precision: f64,
+) -> extendr_api::Result<List> {
+    if item_regions.len() != item_widths.len() || item_regions.len() != item_heights.len() {
+        return Err("item_regions, item_widths and item_heights must have the same length".into());
+    }
+    let shape_values = build_shapes(
+        ShapeKind::parse(shape)?,
+        &set_names,
+        &h,
+        &k,
+        &a,
+        &b,
+        &phi,
+        &width,
+        &height,
+        &side,
+    )?;
+    let container = build_container(
+        &container_h,
+        &container_k,
+        &container_width,
+        &container_height,
+    );
+    let spec = plotting_spec(&set_names, container.is_some())?;
+    let regions = shape_values.decompose(
+        &set_names,
+        &spec,
+        container.as_ref(),
+        n_vertices.max(3) as usize,
+    );
+    let mut sizes: HashMap<String, Vec<(f64, f64)>> = HashMap::new();
+    let mut region_order = Vec::<String>::new();
+    for ((name, w), hh) in item_regions
+        .iter()
+        .zip(item_widths.iter())
+        .zip(item_heights.iter())
+    {
+        if !region_order.contains(name) {
+            region_order.push(name.clone());
+        }
+        sizes.entry(name.clone()).or_default().push((*w, *hh));
+    }
+    let options = GlyphBoxOptions::default()
+        .arrangement(parse_glyph_arrangement(arrangement)?)
+        .scale(read_optional_f64(&scale))
+        .min_scale(min_scale)
+        .gap(gap)
+        .seed(seed.max(0.0) as u64)
+        .precision(precision.max(f64::EPSILON))
+        .max_attempts(max_attempts.max(1) as u32)
+        .obstacles(build_obstacles(
+            &obstacle_h,
+            &obstacle_k,
+            &obstacle_width,
+            &obstacle_height,
+        ));
+    let placed = place_glyph_boxes(&regions, &sizes, &options);
+    let mut h_out = Vec::new();
+    let mut k_out = Vec::new();
+    let mut width_out = Vec::new();
+    let mut height_out = Vec::new();
+    let mut id_lengths = Vec::with_capacity(region_order.len());
+    let mut unplaced = Vec::with_capacity(region_order.len());
+    for name in &region_order {
+        let boxes = placed.boxes.get(name).map(Vec::as_slice).unwrap_or(&[]);
+        id_lengths.push(boxes.len() as i32);
+        unplaced.push(placed.unplaced.get(name).copied().unwrap_or(0) as i32);
+        for rect in boxes {
+            h_out.push(rect.center().x());
+            k_out.push(rect.center().y());
+            width_out.push(rect.width());
+            height_out.push(rect.height());
+        }
+    }
+    Ok(list!(
+        scale = placed.scale,
+        region_names = region_order,
+        h = h_out,
+        k = k_out,
+        width = width_out,
+        height = height_out,
+        id_lengths = id_lengths,
+        unplaced = unplaced,
+    ))
+}
+
 /// Clip a (possibly multi-polygon) subject path against a single clip
 /// polygon. Mirrors the slice of `polyclip::polyclip` behavior eulerr
 /// actually uses at the stripe-pattern site.
@@ -1528,6 +1917,9 @@ extendr_module! {
     fn fit_euler_diagram;
     fn euler_plot_data;
     fn place_euler_labels;
+    fn place_euler_set_labels;
+    fn place_euler_glyphs;
+    fn place_euler_glyph_boxes;
     fn polygon_clip_rust;
     fn venn_layout;
     fn max_sets_default;

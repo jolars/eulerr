@@ -10,8 +10,10 @@ setup_grobs(
   patterns,
   edges,
   labels,
+  set_labels = NULL,
   quantities,
   annotations = NULL,
+  glyphs = NULL,
   complement = NULL,
   number,
   merged_sets,
@@ -31,9 +33,13 @@ setup_grobs(
 
 \item{labels}{labels params}
 
+\item{set_labels}{exterior set-label params}
+
 \item{quantities}{quantities params}
 
 \item{annotations}{annotations params}
+
+\item{glyphs}{glyph params}
 
 \item{complement}{complement label params}
 

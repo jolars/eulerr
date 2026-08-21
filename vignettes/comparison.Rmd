@@ -46,19 +46,19 @@ schematic shapes and encode quantities through labels or color instead of area.
 On CRAN and Bioconductor, the packages that really fit area-proportional
 diagrams are:
 
-- **eulerr** --- circles, ellipses, or axis-aligned rectangles/squares via
+- **eulerr**: circles, ellipses, or axis-aligned rectangles/squares via
   numerical optimization; reports `stress` and `diagError` goodness-of-fit
   statistics.
-- **venneuler** --- Wilkinson's circle algorithm [@wilkinson_exact_2012];
-  circles only; Java-based (depends on rJava).
-- **nVennR** --- the nVenn algorithm [@Perez-Silva_2018]; quasi-proportional,
+- **venneuler**: Wilkinson's circle algorithm\ [@wilkinson_exact_2012]; circles
+  only; Java-based (depends on rJava).
+- **nVennR**: the nVenn algorithm\ [@Perez-Silva_2018]; quasi-proportional,
   n-dimensional diagrams built from irregular polygons. Distributed via GitHub.
-- **BioVenn** --- accurate 2--3 circle diagrams from identifier lists
+- **BioVenn**: accurate 2--3 circle diagrams from identifier lists
   [@Hulsen_2021].
-- **vennplot** --- 2D circles and 3D spheres for 2--3 sets [@Xu_2017]; currently
+- **vennplot**: 2D circles and 3D spheres for 2--3 sets\ [@Xu_2017]; currently
   dormant on CRAN.
-- **VennDiagram** --- a drawing package whose *scaled* mode is genuinely
-  area-proportional for two circles only [@Chen_2011].
+- **VennDiagram**: a drawing package whose *scaled* mode is genuinely
+  area-proportional for two circles only\ [@Chen_2011].
 
 The [last section](#excluded-packages) lists the many packages that are *not*
 area-proportional fitters and explains why they are excluded.
@@ -77,12 +77,12 @@ geometry*. We turn the fitted shapes into polygons, compute the area of every
 disjoint region with `polyclip`, and evaluate eulerr's own statistics on those
 areas:
 
-- **stress** --- the normalized residual sum of squares from venneuler,
+- **stress**: the normalized residual sum of squares from venneuler,
   $\sum_i (A_i - \beta\omega_i)^2 \big/ \sum_i A_i^2$, with
   $\beta = \sum_i A_i\omega_i \big/ \sum_i \omega_i^2$.
-- **diagError** --- the largest absolute difference between a region's realized
-  and target *proportion*, $\max_i |A_i/\sum_k A_k - \omega_i/\sum_k \omega_k|$
-  (from eulerAPE, [@Micallef_2014]).
+- **diagError**: the largest absolute difference between a region's realized and
+  target *proportion*, $\max_i |A_i/\sum_k A_k - \omega_i/\sum_k \omega_k|$
+  (from eulerAPE,\ [@Micallef_2014]).
 
 Here $\omega_i$ is the input size of region $i$ and $A_i$ its realized area.
 Both statistics are scale-invariant, so packages that work in different
@@ -193,7 +193,10 @@ for (cmp in unique(acc$comparison)) {
 #| echo: false
 #| fig-width: 7
 #| fig-height: 3
-#| fig-cap: "Fit error by dataset and package, faceted by comparison. Lower is better. Each competitor is matched against eulerr configured for the same objective."
+#| fig-cap: >-
+#|   Fit error by dataset and package, faceted by comparison. Lower is better.
+#|   Each competitor is matched against eulerr configured for the same
+#|   objective.
 #| eval: have_results
 
 library(lattice)
