@@ -4,7 +4,8 @@ This file provides guidance to agents when working with code in this repository.
 
 ## Build, test, and check commands
 
-Common workflows are defined in `Taskfile.yml` (run via [Task](https://taskfile.dev)):
+Common workflows are defined in `Taskfile.yml` (run via
+[Task](https://taskfile.dev)):
 
 - Install (from repo root): `task install`
 - Build package tarball: `task build`
@@ -56,9 +57,8 @@ core (via extendr-api), built on top of the `eunoia` Rust crate.
 - **Rust interface:** `src/rust/src/lib.rs` is the extendr binding and Rust-side
   orchestration layer. It converts R inputs into a `eunoia::DiagramSpec`, runs
   `eunoia::Fitter`, and exposes region decomposition, label placement, polygon
-  clipping, and Venn layouts to R. The core geometry and optimization
-  algorithms live in the `eunoia` crate (`src/rust/Cargo.toml` depends on
-  `eunoia`).
+  clipping, and Venn layouts to R. The core geometry and optimization algorithms
+  live in the `eunoia` crate (`src/rust/Cargo.toml` depends on `eunoia`).
 - **Build glue:** `configure` invokes `tools/config.R`, which reads
   `DESCRIPTION` `SystemRequirements`, validates the installed `rustc` version,
   and renders `src/Makevars{.in,.win.in}` → `src/Makevars{,.win}`. The resulting
@@ -95,3 +95,5 @@ core (via extendr-api), built on top of the `eunoia` Rust crate.
   Format with `air format` (or via the air LSP).
 - Rust MSRV is declared in `DESCRIPTION` `SystemRequirements` (currently
   `rustc >= 1.88.0`); `tools/msrv.R` enforces it at configure time.
+- `NEWS.md` is managed by versionary and based on conventional commits. DO NOT
+  edit it manually.
