@@ -20,6 +20,13 @@ tasks:
       - rm -rf src/.cargo src/vendor
       - cargo update --manifest-path src/rust/Cargo.toml
       - Rscript -e 'rextendr::vendor_pkgs()'
+      # Cargo checksums include upstream instructions, so shadow them instead
+      # of removing them.
+      - >-
+        find src/rust/vendor -type f -name AGENTS.md
+        -execdir cp {{.TASKFILE_DIR}}/tools/vendor-agent-override.md
+        AGENTS.override.md \;
+      - tar -cJ --no-xattrs -f src/rust/vendor.tar.xz -C src/rust vendor
 
   build:
     desc: Build package tarball (no manual)

@@ -53,10 +53,12 @@ core (via extendr-api), built on top of the `eunoia` Rust crate.
   dispatches to the Rust backend via `fit_euler_diagram()` (declared in
   `R/extendr-wrappers.R`), and computes fit metrics (`regionError`, `diagError`,
   `stress`).
-- **Numerical engine (Rust):** `src/rust/src/lib.rs` is a thin extendr shim that
-  converts R inputs into a `eunoia::DiagramSpec`, runs `eunoia::Fitter`, and
-  returns geometry back to R. The heavy geometry/optimization lives in the
-  `eunoia` crate (`src/rust/Cargo.toml` depends on `eunoia`).
+- **Rust interface:** `src/rust/src/lib.rs` is the extendr binding and Rust-side
+  orchestration layer. It converts R inputs into a `eunoia::DiagramSpec`, runs
+  `eunoia::Fitter`, and exposes region decomposition, label placement, polygon
+  clipping, and Venn layouts to R. The core geometry and optimization
+  algorithms live in the `eunoia` crate (`src/rust/Cargo.toml` depends on
+  `eunoia`).
 - **Build glue:** `configure` invokes `tools/config.R`, which reads
   `DESCRIPTION` `SystemRequirements`, validates the installed `rustc` version,
   and renders `src/Makevars{.in,.win.in}` → `src/Makevars{,.win}`. The resulting
@@ -64,8 +66,8 @@ core (via extendr-api), built on top of the `eunoia` Rust crate.
   `libeulerr.a`, which is linked into `eulerr.so` via `src/entrypoint.c`.
 - **Rendering pipeline:** `plot.euler()` (`R/plot.euler.R`) builds diagram data
   in two phases:
-  1. `setup_geometry()` (`R/setup_geometry.R`) computes polygons/centers/bounds
-     (uses `polyclip` and `polylabelr`).
+  1. `setup_geometry()` (`R/setup_geometry.R`) obtains polygons and label
+     locations from the Eunoia-backed Rust interface and computes plot bounds.
   2. `setup_grobs()` (`R/setup_grobs.R`) converts geometry to grid grobs.
      Returns an `eulergram` gTree drawn by
      `plot.eulergram()`/`print.eulergram()`. The package ships its own legend
@@ -92,4 +94,4 @@ core (via extendr-api), built on top of the `eunoia` Rust crate.
 - R style follows `air.toml`: `line-width = 80`, `indent-width = 2`, spaces.
   Format with `air format` (or via the air LSP).
 - Rust MSRV is declared in `DESCRIPTION` `SystemRequirements` (currently
-  `rustc >= 1.81.0`); `tools/msrv.R` enforces it at configure time.
+  `rustc >= 1.88.0`); `tools/msrv.R` enforces it at configure time.
