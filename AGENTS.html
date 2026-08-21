@@ -80,13 +80,13 @@
 <li>
 <strong>Fitting pipeline:</strong> <code>fit_diagram()</code> (<code>R/fit_diagram.R</code>) validates input, dispatches to the Rust backend via <code><a href="reference/fit_euler_diagram.html">fit_euler_diagram()</a></code> (declared in <code>R/extendr-wrappers.R</code>), and computes fit metrics (<code>regionError</code>, <code>diagError</code>, <code>stress</code>).</li>
 <li>
-<strong>Numerical engine (Rust):</strong> <code>src/rust/src/lib.rs</code> is a thin extendr shim that converts R inputs into a <code>eunoia::DiagramSpec</code>, runs <code>eunoia::Fitter</code>, and returns geometry back to R. The heavy geometry/optimization lives in the <code>eunoia</code> crate (<code>src/rust/Cargo.toml</code> depends on <code>eunoia</code>).</li>
+<strong>Rust interface:</strong> <code>src/rust/src/lib.rs</code> is the extendr binding and Rust-side orchestration layer. It converts R inputs into a <code>eunoia::DiagramSpec</code>, runs <code>eunoia::Fitter</code>, and exposes region decomposition, label placement, polygon clipping, and Venn layouts to R. The core geometry and optimization algorithms live in the <code>eunoia</code> crate (<code>src/rust/Cargo.toml</code> depends on <code>eunoia</code>).</li>
 <li>
 <strong>Build glue:</strong> <code>configure</code> invokes <code>tools/config.R</code>, which reads <code>DESCRIPTION</code> <code>SystemRequirements</code>, validates the installed <code>rustc</code> version, and renders <code>src/Makevars{.in,.win.in}</code> → <code>src/Makevars{,.win}</code>. The resulting Makevars runs <code>cargo build --manifest-path=./rust/Cargo.toml</code> to produce <code>libeulerr.a</code>, which is linked into <code>eulerr.so</code> via <code>src/entrypoint.c</code>.</li>
 <li>
 <strong>Rendering pipeline:</strong> <code><a href="reference/plot.euler.html">plot.euler()</a></code> (<code>R/plot.euler.R</code>) builds diagram data in two phases:
 <ol style="list-style-type: decimal"><li>
-<code><a href="reference/setup_geometry.html">setup_geometry()</a></code> (<code>R/setup_geometry.R</code>) computes polygons/centers/bounds (uses <code>polyclip</code> and <code>polylabelr</code>).</li>
+<code><a href="reference/setup_geometry.html">setup_geometry()</a></code> (<code>R/setup_geometry.R</code>) obtains polygons and label locations from the Eunoia-backed Rust interface and computes plot bounds.</li>
 <li>
 <code><a href="reference/setup_grobs.html">setup_grobs()</a></code> (<code>R/setup_grobs.R</code>) converts geometry to grid grobs. Returns an <code>eulergram</code> gTree drawn by <code><a href="reference/plot.eulergram.html">plot.eulergram()</a></code>/<code><a href="reference/plot.eulergram.html">print.eulergram()</a></code>. The package ships its own legend grob implementation (<code>R/legend.R</code>) rather than using <code><a href="https://rdrr.io/r/grid/legendGrob.html" class="external-link">grid::legendGrob</a></code>.</li>
 </ol></li>
@@ -103,7 +103,7 @@
 <li>Plotting is implemented with <strong>grid grobs</strong> (<code>eulergram</code>), not base graphics. Preserve the <code><a href="reference/setup_geometry.html">setup_geometry()</a></code> → <code><a href="reference/setup_grobs.html">setup_grobs()</a></code> separation when changing plotting behavior.</li>
 <li>Combination naming uses <code>&amp;</code> delimiters across <code><a href="reference/euler.html">euler()</a></code>, <code>fit_diagram()</code>, <code>parse_input()</code>, and the Rust side (which splits on <code>&amp;</code> to recover set names).</li>
 <li>R style follows <code>air.toml</code>: <code>line-width = 80</code>, <code>indent-width = 2</code>, spaces. Format with <code>air format</code> (or via the air LSP).</li>
-<li>Rust MSRV is declared in <code>DESCRIPTION</code> <code>SystemRequirements</code> (currently <code>rustc &gt;= 1.81.0</code>); <code>tools/msrv.R</code> enforces it at configure time.</li>
+<li>Rust MSRV is declared in <code>DESCRIPTION</code> <code>SystemRequirements</code> (currently <code>rustc &gt;= 1.88.0</code>); <code>tools/msrv.R</code> enforces it at configure time.</li>
 </ul></div>
 </div>
 
