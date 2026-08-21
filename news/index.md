@@ -1,5 +1,20 @@
 # Changelog
 
+## eulerr 8.3
+
+This releases adds exterior set labels and region glyphs as well as
+upgrades Eunoia to 1.9.0 for rectangle fitting and normalization fixes
+
+### Features
+
+- upgrade to Eunoia 1.9
+  ([`79ae995`](https://github.com/jolars/eulerr/commit/79ae995d9b52813939b8471f1c6122c8fe5fe95b))
+
+### Bug fixes
+
+- repair two assertions that passed for the wrong reason
+  ([`0dbd3e7`](https://github.com/jolars/eulerr/commit/0dbd3e71c1af58dd73b1c16f29144f61eff60e23))
+
 ## eulerr 8.2
 
 ### Features
