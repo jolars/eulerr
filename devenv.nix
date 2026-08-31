@@ -5,7 +5,6 @@
 
 {
   packages = [
-    pkgs.air-formatter
     pkgs.bashInteractive
     pkgs.checkbashisms
     pkgs.cargo-audit
@@ -14,7 +13,6 @@
     pkgs.cargo-llvm-cov
     pkgs.cargo-msrv
     pkgs.go-task
-    pkgs.jarl
     pkgs.llvmPackages.bintools
   ];
 
@@ -34,26 +32,21 @@
             devtools
             GenSA
             knitr
-            languageserver
             lattice
             pBrackets
             polyclip
             polylabelr
             RConics
-            reprex
             rextendr
             rmarkdown
             spelling
             testthat
             urlchecker
-            profvis
             V8
             remotes
           ];
         }
       );
-
-      lsp.enable = true;
     };
   };
 
