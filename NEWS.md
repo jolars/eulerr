@@ -1,3 +1,9 @@
+# eulerr 8.3.1
+
+## Bug fixes
+
+- avoid legend indexing warnings on R-devel ([`2628806`](https://github.com/jolars/eulerr/commit/2628806e2b5de3151121bddd077ed7029caa3b2b))
+
 # eulerr 8.3
 
 This releases adds exterior set labels and region glyphs as well as upgrades Eunoia to 1.9.0 for rectangle fitting and normalization fixes
