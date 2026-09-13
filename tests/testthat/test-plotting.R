@@ -286,12 +286,14 @@ test_that("legend keys support patterns", {
   png(tmp)
 
   f <- euler(c(A = 10, B = 8, "A&B" = 3))
-  p <- plot(
-    f,
-    fills = list(fill = c("grey90", "grey90")),
-    patterns = list(type = "stripes", col = "black", lwd = 0.8),
-    legend = TRUE,
-    quantities = FALSE
+  expect_silent(
+    p <- plot(
+      f,
+      fills = list(fill = c("grey90", "grey90")),
+      patterns = list(type = "stripes", col = "black", lwd = 0.8),
+      legend = TRUE,
+      quantities = FALSE
+    )
   )
 
   legend_grob <- p$children$legend.grob
@@ -304,6 +306,47 @@ test_that("legend keys support patterns", {
   )]
 
   expect_true(length(point_cells) > 0)
+
+  dev.off()
+  unlink(tmp)
+})
+
+test_that("legend styles follow retained sets rather than intersections", {
+  tmp <- tempfile()
+  png(tmp)
+
+  fit <- euler(c(A = 10, B = 0, C = 8, "A&C" = 3))
+  expect_silent(
+    p <- plot(
+      fit,
+      fills = list(
+        fill = c("red", "blue", "green", "purple"),
+        alpha = c(0.3, 0.4, 0.5, 0.6)
+      ),
+      patterns = list(
+        type = c("none", "stripes", "stripes", "none"),
+        col = c("black", "gray", "orange", "yellow"),
+        alpha = c(0.4, 0.5, 0.6, 0.7)
+      ),
+      legend = TRUE
+    )
+  )
+
+  cells <- p$children$legend.grob$children
+  expect_length(cells, 4L)
+  expect_equal(cells[[2L]]$children[[1L]]$label, "A")
+  expect_equal(cells[[4L]]$children[[1L]]$label, "C")
+
+  first_key <- cells[[1L]]$children[[1L]]$children
+  second_key <- cells[[3L]]$children[[1L]]$children
+  expect_length(first_key, 1L)
+  expect_equal(first_key[[1L]]$gp$fill, "red")
+  expect_equal(first_key[[1L]]$gp$alpha, 0.3)
+  expect_length(second_key, 2L)
+  expect_equal(second_key[[1L]]$gp$fill, "green")
+  expect_equal(second_key[[1L]]$gp$alpha, 0.5)
+  expect_equal(second_key[[2L]]$gp$fill, "orange")
+  expect_equal(second_key[[2L]]$gp$alpha, 0.6)
 
   dev.off()
   unlink(tmp)

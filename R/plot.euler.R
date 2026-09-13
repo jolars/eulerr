@@ -1273,9 +1273,13 @@ plot.euler <- function(
   } else if (do_legend) {
     # TODO: create a better, custom legend
 
+    # Fill and pattern vectors can also contain intersections, so a logical
+    # set mask would recycle beyond the singleton entries.
+    legend_idx <- which(!empty_sets & !merged_sets)
+
     legend <- update_list(
       list(
-        labels = setnames[!empty_sets & !merged_sets],
+        labels = setnames[legend_idx],
         side = opar$legend$side,
         nrow = sum(!empty_sets),
         ncol = 1L,
@@ -1301,14 +1305,14 @@ plot.euler <- function(
     legend$gp <- setup_gpar(
       list(
         fill = if (do_fills) {
-          fills$gp$fill[!empty_sets & !merged_sets]
+          fills$gp$fill[legend_idx]
         } else {
           "transparent"
         },
         alpha = if (do_fills) {
-          fills$gp$alpha[!empty_sets & !merged_sets]
+          fills$gp$alpha[legend_idx]
         } else if (do_edges) {
-          edges$gp$alpha[!empty_sets & !merged_sets]
+          edges$gp$alpha[legend_idx]
         } else {
           0
         },
@@ -1316,35 +1320,35 @@ plot.euler <- function(
         fontsize = opar$legend$fontsize,
         font = opar$legend$font,
         fontfamily = opar$legend$fontfamily,
-        lwd = if (do_edges) edges$gp$lwd[!empty_sets & !merged_sets] else 0,
-        lex = if (do_edges) edges$gp$lex[!empty_sets & !merged_sets] else 0,
+        lwd = if (do_edges) edges$gp$lwd[legend_idx] else 0,
+        lex = if (do_edges) edges$gp$lex[legend_idx] else 0,
         col = if (do_edges) {
-          edges$gp$col[!empty_sets & !merged_sets]
+          edges$gp$col[legend_idx]
         } else {
           "transparent"
         },
         pattern_type = if (do_patterns) {
-          patterns$gp$type[!empty_sets & !merged_sets]
+          patterns$gp$type[legend_idx]
         } else {
           "none"
         },
         pattern_angle = if (do_patterns) {
-          patterns$gp$angle[!empty_sets & !merged_sets]
+          patterns$gp$angle[legend_idx]
         } else {
           45
         },
         pattern_col = if (do_patterns) {
-          patterns$gp$col[!empty_sets & !merged_sets]
+          patterns$gp$col[legend_idx]
         } else {
           "transparent"
         },
         pattern_lwd = if (do_patterns) {
-          patterns$gp$lwd[!empty_sets & !merged_sets]
+          patterns$gp$lwd[legend_idx]
         } else {
           0
         },
         pattern_alpha = if (do_patterns) {
-          patterns$gp$alpha[!empty_sets & !merged_sets]
+          patterns$gp$alpha[legend_idx]
         } else {
           0
         }
