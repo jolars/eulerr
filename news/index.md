@@ -2,6 +2,8 @@
 
 ## eulerr 8.3.1
 
+CRAN release: 2026-09-13
+
 ### Bug fixes
 
 - avoid legend indexing warnings on R-devel
