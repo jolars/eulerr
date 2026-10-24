@@ -91,6 +91,51 @@ test_that("new member arrangements preserve names and ignore the seed", {
   }
 })
 
+test_that("strict obstacles report blocked dots and member labels", {
+  fit <- euler(c(A = 1), shape = "square")
+  local_mocked_bindings(
+    glyph_obstacles = function(x) {
+      list(h = 0, k = 0, width = 2, height = 2)
+    }
+  )
+  pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  for (mode in c("dots", "members")) {
+    for (arrangement in c(
+      "uniform",
+      "rectangular",
+      "low_discrepancy",
+      "random"
+    )) {
+      glyphs <- list(
+        mode = mode,
+        labels = list(A = "Ada"),
+        arrangement = arrangement
+      )
+      best_effort <- plot(fit, labels = FALSE, glyphs = glyphs)
+      expect_silent(content <- make_glyph_content(best_effort))
+      expect_length(content$children, 1L)
+
+      glyphs$obstacle_policy <- "strict"
+      strict <- plot(fit, labels = FALSE, glyphs = glyphs)
+      expect_warning(
+        content <- make_glyph_content(strict),
+        "1 .*could not be placed"
+      )
+      expect_length(content$children, 0L)
+    }
+  }
+})
+
+test_that("glyph obstacle policy can be set globally", {
+  old <- eulerr_options(glyphs = list(obstacle_policy = "strict"))
+  on.exit(eulerr_options(old))
+  plot <- plot(euler(c(A = 1)), glyphs = TRUE)
+  glyphs <- find_grob_class(plot, "EulerGlyphs")
+  expect_identical(glyphs$options$obstacle_policy, "strict")
+})
+
 test_that("glyph counts must be nonnegative integers", {
   fit <- euler(c(A = 1.5, B = 2, "A&B" = 1))
   expect_error(plot(fit, glyphs = TRUE), "nonnegative integers")
@@ -160,6 +205,10 @@ test_that("glyph controls are validated", {
   expect_error(plot(fit, glyphs = list(gap = -1)), "glyphs\\$gap")
   expect_error(
     plot(fit, glyphs = list(arrangement = "spiral")),
+    "one of"
+  )
+  expect_error(
+    plot(fit, glyphs = list(obstacle_policy = "ignore")),
     "one of"
   )
   expect_error(

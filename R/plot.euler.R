@@ -161,8 +161,12 @@
 #'   supports `scale`, `min_scale`, and text graphical parameters. Uniform
 #'   and rectangular member placement both pack names in rows. Automatic
 #'   safety limits are 2,000 dots and 500 member labels unless `max_items` is
-#'   supplied. Glyphs avoid measured labels and are drawn above region fills
-#'   and edges but below labels.
+#'   supplied. `obstacle_policy = "best_effort"` (default) prefers positions
+#'   clear of measured labels but allows overlap when items do not fit.
+#'   Set `obstacle_policy = "strict"` to require clearance and warn about
+#'   unplaced items. Strict placement keeps the usual sizing floors, so
+#'   items can remain unplaced even with automatic sizing. Glyphs are drawn
+#'   above region fills and edges but below labels.
 #' @param strips a list, ignored unless the `'by'` argument
 #'   was used in [euler()]. In addition to graphical parameters, this
 #'   argument can include `labels = list(top = ..., left = ...)` for custom
@@ -1071,6 +1075,7 @@ plot.euler <- function(
       "counts",
       "labels",
       "arrangement",
+      "obstacle_policy",
       "gap",
       "seed",
       "radius",
@@ -1086,6 +1091,10 @@ plot.euler <- function(
     glyphs$arrangement <- match.arg(
       glyphs$arrangement,
       c("uniform", "rectangular", "low_discrepancy", "random")
+    )
+    glyphs$obstacle_policy <- match.arg(
+      glyphs$obstacle_policy,
+      c("best_effort", "strict")
     )
     validate_glyph_options(glyphs)
     glyphs$gp <- setup_gpar(

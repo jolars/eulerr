@@ -11,20 +11,20 @@ eulerr_options(...)
 with.}
 }
 \value{
-This function gets or sets updates in the global environment
-that are used in \code{\link[=plot.euler]{plot.euler()}}.
+This function gets or sets updates in the global environment that are used in
+\code{\link[=plot.euler]{plot.euler()}}.
 }
 \description{
-This function provides a means to set default parameters for functions
-in eulerr. Query \code{\link[=eulerr_options]{eulerr_options()}} (without any
-argument) to see all the available options and read more about
-the plot-related ones in \code{\link[grid:gpar]{grid::gpar()}} and \code{\link[graphics:par]{graphics::par()}}.
+This function provides a means to set default parameters for functions in
+eulerr. Query \code{\link[=eulerr_options]{eulerr_options()}} (without any argument) to see all the
+available options and read more about the plot-related ones in \code{\link[grid:gpar]{grid::gpar()}}
+and \code{\link[graphics:par]{graphics::par()}}.
 }
 \details{
 Currently, the following items will be considered:
 \describe{
 \item{pointsize}{size in pts to be used as basis for fontsizes and
-some margin sizes in the resulting plot}#'
+some margin sizes in the resulting plot}
 \item{fills}{a list of items \code{fill} and \code{alpha}}
 \item{patterns}{a list of items \code{type}, \code{angle}, \code{col}, \code{lwd}, and \code{alpha}}
 \item{edges}{a list of items \code{col}, \code{alpha}, \code{lex}, \code{lwd}, and \code{lty}}
@@ -39,9 +39,9 @@ some margin sizes in the resulting plot}#'
 character vector keyed by subset name). Used to add a third stacked
 text element per region below the quantity.}
 \item{glyphs}{defaults for dot and member-label glyph placement and
-styling, including \code{mode}, \code{arrangement}, \code{gap}, \code{seed}, \code{radius},
-\code{scale}, \code{min_scale}, \code{max_attempts}, \code{max_items}, and graphical
-parameters.}
+styling, including \code{mode}, \code{arrangement}, \code{obstacle_policy}, \code{gap},
+\code{seed}, \code{radius}, \code{scale}, \code{min_scale}, \code{max_attempts}, \code{max_items},
+and graphical parameters.}
 \item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},

@@ -9,9 +9,10 @@ use eunoia::{
     loss::LossType,
     plotting::{
         ClipOperation, ElbowOptions, ExteriorPolicy, GlyphArrangement, GlyphBoxOptions,
-        GlyphOptions, LeaderStrategy, PlacementKind, PlacementStrategy, RegionPiece,
-        RegionPolygons, SetLabelStrategy, TetherSource, decompose_regions, place_glyph_boxes,
-        place_glyphs, place_labels, place_set_labels, placements_bbox, polygon_clip,
+        GlyphOptions, LeaderStrategy, ObstaclePolicy, PlacementKind, PlacementStrategy,
+        RegionPiece, RegionPolygons, SetLabelStrategy, TetherSource, decompose_regions,
+        place_glyph_boxes, place_glyphs, place_labels, place_set_labels, placements_bbox,
+        polygon_clip,
     },
     spec::DiagramSpec,
 };
@@ -125,6 +126,14 @@ fn parse_glyph_arrangement(arrangement: &str) -> std::result::Result<GlyphArrang
         "low_discrepancy" => Ok(GlyphArrangement::LowDiscrepancy),
         "random" => Ok(GlyphArrangement::Random),
         other => Err(format!("Unknown glyph arrangement: {other}").into()),
+    }
+}
+
+fn parse_obstacle_policy(policy: &str) -> std::result::Result<ObstaclePolicy, Error> {
+    match policy {
+        "best_effort" => Ok(ObstaclePolicy::BestEffort),
+        "strict" => Ok(ObstaclePolicy::Strict),
+        other => Err(format!("Unknown obstacle policy: {other}").into()),
     }
 }
 
@@ -1587,6 +1596,7 @@ fn place_euler_glyphs(
     region_names: Vec<String>,
     counts: Vec<i32>,
     arrangement: &str,
+    obstacle_policy: &str,
     radius: Robj,
     gap: f64,
     seed: f64,
@@ -1632,6 +1642,7 @@ fn place_euler_glyphs(
         .collect();
     let options = GlyphOptions::default()
         .arrangement(parse_glyph_arrangement(arrangement)?)
+        .obstacle_policy(parse_obstacle_policy(obstacle_policy)?)
         .radius(read_optional_f64(&radius))
         .gap(gap)
         .seed(seed.max(0.0) as u64)
@@ -1690,6 +1701,7 @@ fn place_euler_glyph_boxes(
     item_widths: Vec<f64>,
     item_heights: Vec<f64>,
     arrangement: &str,
+    obstacle_policy: &str,
     scale: Robj,
     min_scale: f64,
     gap: f64,
@@ -1743,6 +1755,7 @@ fn place_euler_glyph_boxes(
     }
     let options = GlyphBoxOptions::default()
         .arrangement(parse_glyph_arrangement(arrangement)?)
+        .obstacle_policy(parse_obstacle_policy(obstacle_policy)?)
         .scale(read_optional_f64(&scale))
         .min_scale(min_scale)
         .gap(gap)

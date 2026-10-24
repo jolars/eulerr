@@ -23,6 +23,7 @@ place_euler_glyphs(
   region_names,
   counts,
   arrangement,
+  obstacle_policy,
   radius,
   gap,
   seed,
