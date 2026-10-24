@@ -129,10 +129,10 @@ retrieving their coordinates and radii.
 ``` r
 
 coef(fit2)
-#>     type       h         k     a     b phi width height side
-#> A circle -0.4587 2.220e-16 3.432 3.432   0   NaN    NaN  NaN
-#> B circle  1.1847 1.110e-16 2.706 2.706   0   NaN    NaN  NaN
-#> C circle -1.4189 1.685e+00 1.493 1.493   0   NaN    NaN  NaN
+#>     type       h          k     a     b phi width height side
+#> A circle -0.4587 -2.220e-16 3.432 3.432   0   NaN    NaN  NaN
+#> B circle  1.1847 -3.331e-16 2.706 2.706   0   NaN    NaN  NaN
+#> C circle -1.4189  1.685e+00 1.493 1.493   0   NaN    NaN  NaN
 ```
 
 ### Goodness-of-fit
