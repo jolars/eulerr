@@ -227,14 +227,32 @@ adapt automatically. Defaults to slightly smaller text than
 regions. <code>TRUE</code> draws one equal-sized dot per unit of the original
 exclusive values; these values must be nonnegative integers. A list may
 set <code>mode</code> to <code>"dots"</code> (default) or <code>"members"</code>, <code>arrangement</code> to
-<code>"uniform"</code> or <code>"random"</code>, and supply <code>gap</code>, <code>seed</code>, <code>max_attempts</code>,
-and <code>max_items</code>. Dot mode also supports a named integer <code>counts</code> vector,
-<code>radius</code>, and <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> fields. Member mode requires a named list such
-as <code>labels = list(A = c("Ada", "Grace"), "A&amp;B" = "Katherine")</code> and
-supports <code>scale</code>, <code>min_scale</code>, and text graphical parameters. Automatic
+<code>"uniform"</code>, <code>"rectangular"</code>, <code>"low_discrepancy"</code>, or <code>"random"</code>, and
+supply <code>gap</code>, <code>seed</code>, <code>max_attempts</code>, and <code>max_items</code>. Uniform dots use a
+hexagonal grid; rectangular dots use aligned rows and columns.
+Low-discrepancy placement gives an even, deterministic scatter. Only
+random placement uses <code>seed</code>. Dot mode also supports a named integer
+<code>counts</code> vector, <code>radius</code>, <code>boundary_gap</code>, and <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> fields.
+For dots, <code>gap</code> controls spacing between dots as a fraction of the radius.
+<code>boundary_gap</code> sets extra clearance from region boundaries, holes, and
+label obstacles as a fraction of the radius. Its default, <code>NULL</code>, uses
+<code>gap</code>, keeping boundary and dot spacing coupled. Member mode requires
+a named list such as
+<code>labels = list(A = c("Ada", "Grace"), "A&amp;B" = "Katherine")</code> and supports
+<code>scale</code>, <code>min_scale</code>, and text graphical parameters. Uniform and
+rectangular member placement both pack names in rows. With either
+arrangement, <code>target_aspect_ratio</code> sets a preferred width-to-height
+ratio for each block of rows, including its spacing. For example, <code>1</code>
+favors a roughly square block. The default, <code>NULL</code>, keeps the first
+complete row packing. This preference preserves the number of placed
+names and does not affect automatic scale selection. Automatic
 safety limits are 2,000 dots and 500 member labels unless <code>max_items</code> is
-supplied. Glyphs avoid measured labels and are drawn above region fills
-and edges but below labels.</p></dd>
+supplied. <code>obstacle_policy = "best_effort"</code> (default) prefers positions
+clear of measured labels but allows overlap when items do not fit.
+Set <code>obstacle_policy = "strict"</code> to require clearance and warn about
+unplaced items. Strict placement keeps the usual sizing floors, so
+items can remain unplaced even with automatic sizing. Glyphs are drawn
+above region fills and edges but below labels.</p></dd>
 
 
 <dt id="arg-strips">strips<a class="anchor" aria-label="anchor" href="#arg-strips"></a></dt>
