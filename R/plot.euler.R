@@ -155,7 +155,11 @@
 #'   hexagonal grid; rectangular dots use aligned rows and columns.
 #'   Low-discrepancy placement gives an even, deterministic scatter. Only
 #'   random placement uses `seed`. Dot mode also supports a named integer
-#'   `counts` vector, `radius`, and [grid::gpar()] fields. Member mode requires
+#'   `counts` vector, `radius`, `boundary_gap`, and [grid::gpar()] fields.
+#'   For dots, `gap` controls spacing between dots as a fraction of the radius.
+#'   `boundary_gap` sets extra clearance from region boundaries, holes, and
+#'   label obstacles as a fraction of the radius. Its default, `NULL`, uses
+#'   `gap`, keeping boundary and dot spacing coupled. Member mode requires
 #'   a named list such as
 #'   `labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")` and supports
 #'   `scale`, `min_scale`, and text graphical parameters. Uniform and
@@ -1083,6 +1087,7 @@ plot.euler <- function(
       "obstacle_policy",
       "target_aspect_ratio",
       "gap",
+      "boundary_gap",
       "seed",
       "radius",
       "scale",

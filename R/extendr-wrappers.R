@@ -60,7 +60,7 @@ place_euler_set_labels <- function(set_names, shape, h, k, a, b, phi, width, hei
 
 #' Pack equal circular glyphs inside exclusive regions.
 #' @keywords internal
-place_euler_glyphs <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, region_names, counts, arrangement, obstacle_policy, radius, gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision) .Call("wrap__place_euler_glyphs", set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, region_names, counts, arrangement, obstacle_policy, radius, gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision, PACKAGE = "eulerr")
+place_euler_glyphs <- function(set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, region_names, counts, arrangement, obstacle_policy, radius, gap, boundary_gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision) .Call("wrap__place_euler_glyphs", set_names, shape, h, k, a, b, phi, width, height, side, container_h, container_k, container_width, container_height, n_vertices, region_names, counts, arrangement, obstacle_policy, radius, gap, boundary_gap, seed, max_attempts, obstacle_h, obstacle_k, obstacle_width, obstacle_height, precision, PACKAGE = "eulerr")
 
 #' Pack measured member-label boxes inside exclusive regions.
 #' @keywords internal

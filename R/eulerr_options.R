@@ -24,8 +24,8 @@
 #'   text element per region below the quantity.}
 #'   \item{glyphs}{defaults for dot and member-label glyph placement and
 #'   styling, including `mode`, `arrangement`, `obstacle_policy`,
-#'   `target_aspect_ratio`, `gap`, `seed`, `radius`, `scale`, `min_scale`,
-#'   `max_attempts`, `max_items`, and graphical parameters.}
+#'   `target_aspect_ratio`, `gap`, `boundary_gap`, `seed`, `radius`, `scale`,
+#'   `min_scale`, `max_attempts`, `max_items`, and graphical parameters.}
 #'   \item{strips}{`col`, `alpha`, `fontsize`, `cex`, `fontfamily`,
 #'   `lineheight`, and `font`}
 #'   \item{legend}{arguments to [grid::legendGrob()] as well as `col`, `alpha`,
@@ -191,6 +191,7 @@ eulerr_default_options <- function() {
       obstacle_policy = "best_effort",
       target_aspect_ratio = NULL,
       gap = 0.25,
+      boundary_gap = NULL,
       seed = 0,
       radius = NULL,
       scale = NULL,

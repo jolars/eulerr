@@ -66,6 +66,78 @@ test_that("new dot arrangements preserve counts and ignore the seed", {
   }
 })
 
+test_that("dot boundary spacing controls edges and obstacles independently", {
+  fit <- euler(c(A = 100), shape = "square")
+  local_mocked_bindings(
+    glyph_obstacles = function(x) {
+      list(h = 0, k = 0, width = 2, height = 2)
+    }
+  )
+  pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  for (arrangement in c(
+    "uniform",
+    "rectangular",
+    "low_discrepancy",
+    "random"
+  )) {
+    plot <- plot(
+      fit,
+      labels = FALSE,
+      glyphs = list(
+        counts = c(A = 36),
+        radius = 0.25,
+        gap = 0.25,
+        boundary_gap = 3,
+        arrangement = arrangement,
+        obstacle_policy = "strict"
+      )
+    )
+    dots <- make_glyph_content(plot)$children[[1L]]
+    x <- as.numeric(dots$x)
+    y <- as.numeric(dots$y)
+    expect_length(x, 36L)
+    expect_equal(as.numeric(dots$r), 0.25)
+
+    boundary_clearance <- pmin(5 - abs(x), 5 - abs(y))
+    obstacle_clearance <- sqrt(pmax(abs(x) - 1, 0)^2 + pmax(abs(y) - 1, 0)^2)
+    expect_gte(min(boundary_clearance), 1 - 1e-8)
+    expect_gte(min(obstacle_clearance), 1 - 1e-8)
+    expect_gte(min(stats::dist(cbind(x, y))), 0.625 - 1e-8)
+  }
+})
+
+test_that("dot boundary spacing defaults to the gap between dots", {
+  fit <- euler(c(A = 10), shape = "square")
+  pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  dots <- lapply(list(NULL, 0, 1, 0L, 3, 3L), function(boundary_gap) {
+    plot <- plot(
+      fit,
+      labels = FALSE,
+      glyphs = list(gap = 1, boundary_gap = boundary_gap)
+    )
+    make_glyph_content(plot)$children
+  })
+  expect_equal(dots[[1L]], dots[[3L]])
+  expect_equal(dots[[2L]], dots[[4L]])
+  expect_equal(dots[[5L]], dots[[6L]])
+  expect_false(isTRUE(all.equal(dots[[1L]], dots[[2L]])))
+  expect_false(isTRUE(all.equal(dots[[1L]], dots[[5L]])))
+})
+
+test_that("dot boundary spacing must be finite and nonnegative", {
+  fit <- euler(c(A = 1))
+  for (gap in list(-1, NA_real_, Inf, c(0, 1), "wide")) {
+    expect_error(
+      plot(fit, glyphs = list(boundary_gap = gap)),
+      "glyphs\\$boundary_gap"
+    )
+  }
+})
+
 test_that("new member arrangements preserve names and ignore the seed", {
   fit <- euler(c(A = 12), shape = "square")
   labels <- paste("Member", seq_len(12))
@@ -97,7 +169,7 @@ test_that("member rows can be balanced without losing names or shrinking text", 
   pdf(NULL)
   on.exit(grDevices::dev.off())
 
-  members <- lapply(list(NULL, 1), function(ratio) {
+  members <- lapply(list(NULL, 1, 1L), function(ratio) {
     plot <- plot(
       fit,
       labels = FALSE,
@@ -137,6 +209,7 @@ test_that("member rows can be balanced without losing names or shrinking text", 
   for (children in members) {
     expect_equal(unname(vapply(children, `[[`, "", "label")), labels)
   }
+  expect_equal(members[[2L]], members[[3L]])
   expect_equal(
     vapply(members[[1L]], function(child) child$gp$fontsize, 0),
     vapply(members[[2L]], function(child) child$gp$fontsize, 0)

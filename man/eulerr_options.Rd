@@ -40,8 +40,8 @@ character vector keyed by subset name). Used to add a third stacked
 text element per region below the quantity.}
 \item{glyphs}{defaults for dot and member-label glyph placement and
 styling, including \code{mode}, \code{arrangement}, \code{obstacle_policy},
-\code{target_aspect_ratio}, \code{gap}, \code{seed}, \code{radius}, \code{scale}, \code{min_scale},
-\code{max_attempts}, \code{max_items}, and graphical parameters.}
+\code{target_aspect_ratio}, \code{gap}, \code{boundary_gap}, \code{seed}, \code{radius}, \code{scale},
+\code{min_scale}, \code{max_attempts}, \code{max_items}, and graphical parameters.}
 \item{strips}{\code{col}, \code{alpha}, \code{fontsize}, \code{cex}, \code{fontfamily},
 \code{lineheight}, and \code{font}}
 \item{legend}{arguments to \code{\link[grid:legendGrob]{grid::legendGrob()}} as well as \code{col}, \code{alpha},

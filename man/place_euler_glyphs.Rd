@@ -26,6 +26,7 @@ place_euler_glyphs(
   obstacle_policy,
   radius,
   gap,
+  boundary_gap,
   seed,
   max_attempts,
   obstacle_h,

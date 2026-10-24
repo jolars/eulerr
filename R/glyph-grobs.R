@@ -17,6 +17,9 @@ validate_glyph_options <- function(x) {
     }
   }
   scalar_number(x$gap, "gap", 0)
+  if (!is.null(x$boundary_gap)) {
+    scalar_number(x$boundary_gap, "boundary_gap", 0)
+  }
   scalar_number(x$seed, "seed", 0, TRUE)
   scalar_number(x$max_attempts, "max_attempts", 1, TRUE)
   scalar_number(x$min_scale, "min_scale", .Machine$double.eps)
@@ -403,6 +406,7 @@ makeContent.EulerGlyphs <- function(x) {
           obstacle_policy = opts$obstacle_policy,
           radius = opts$radius,
           gap = opts$gap,
+          boundary_gap = opts$boundary_gap,
           seed = opts$seed,
           max_attempts = as.integer(opts$max_attempts),
           obstacle_h = obstacles$h,

@@ -764,9 +764,9 @@ fn empty_region_xy_list() -> List {
     )
 }
 
-/// Read an `Option<f64>` from a possibly-NULL R scalar.
+/// Read an `Option<f64>` from a possibly-NULL R numeric scalar.
 fn read_optional_f64(obj: &Robj) -> Option<f64> {
-    if obj.is_null() { None } else { obj.as_real() }
+    obj.as_real().or_else(|| obj.as_integer().map(f64::from))
 }
 
 /// Build the optional fitted container rectangle from raw R scalars. Returns
@@ -1599,6 +1599,7 @@ fn place_euler_glyphs(
     obstacle_policy: &str,
     radius: Robj,
     gap: f64,
+    boundary_gap: Robj,
     seed: f64,
     max_attempts: i32,
     obstacle_h: Vec<f64>,
@@ -1645,6 +1646,7 @@ fn place_euler_glyphs(
         .obstacle_policy(parse_obstacle_policy(obstacle_policy)?)
         .radius(read_optional_f64(&radius))
         .gap(gap)
+        .boundary_gap(read_optional_f64(&boundary_gap))
         .seed(seed.max(0.0) as u64)
         .precision(precision.max(f64::EPSILON))
         .max_attempts(max_attempts.max(1) as u32)

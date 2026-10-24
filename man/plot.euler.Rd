@@ -151,7 +151,11 @@ supply \code{gap}, \code{seed}, \code{max_attempts}, and \code{max_items}. Unifo
 hexagonal grid; rectangular dots use aligned rows and columns.
 Low-discrepancy placement gives an even, deterministic scatter. Only
 random placement uses \code{seed}. Dot mode also supports a named integer
-\code{counts} vector, \code{radius}, and \code{\link[grid:gpar]{grid::gpar()}} fields. Member mode requires
+\code{counts} vector, \code{radius}, \code{boundary_gap}, and \code{\link[grid:gpar]{grid::gpar()}} fields.
+For dots, \code{gap} controls spacing between dots as a fraction of the radius.
+\code{boundary_gap} sets extra clearance from region boundaries, holes, and
+label obstacles as a fraction of the radius. Its default, \code{NULL}, uses
+\code{gap}, keeping boundary and dot spacing coupled. Member mode requires
 a named list such as
 \code{labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")} and supports
 \code{scale}, \code{min_scale}, and text graphical parameters. Uniform and
