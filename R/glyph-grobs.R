@@ -29,6 +29,16 @@ validate_glyph_options <- function(x) {
   if (!is.null(x$scale)) {
     scalar_number(x$scale, "scale", .Machine$double.eps)
   }
+  if (!is.null(x$target_aspect_ratio)) {
+    scalar_number(
+      x$target_aspect_ratio,
+      "target_aspect_ratio",
+      0
+    )
+    if (x$target_aspect_ratio == 0) {
+      stop("`glyphs$target_aspect_ratio` must be positive.")
+    }
+  }
   if (!is.null(x$max_items)) {
     scalar_number(x$max_items, "max_items", 1, TRUE)
   }
@@ -451,6 +461,7 @@ makeContent.EulerGlyphs <- function(x) {
         item_heights = item_heights,
         arrangement = opts$arrangement,
         obstacle_policy = opts$obstacle_policy,
+        target_aspect_ratio = opts$target_aspect_ratio,
         scale = opts$scale,
         min_scale = opts$min_scale,
         gap = opts$gap,

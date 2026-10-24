@@ -1702,6 +1702,7 @@ fn place_euler_glyph_boxes(
     item_heights: Vec<f64>,
     arrangement: &str,
     obstacle_policy: &str,
+    target_aspect_ratio: Robj,
     scale: Robj,
     min_scale: f64,
     gap: f64,
@@ -1756,6 +1757,7 @@ fn place_euler_glyph_boxes(
     let options = GlyphBoxOptions::default()
         .arrangement(parse_glyph_arrangement(arrangement)?)
         .obstacle_policy(parse_obstacle_policy(obstacle_policy)?)
+        .target_aspect_ratio(read_optional_f64(&target_aspect_ratio))
         .scale(read_optional_f64(&scale))
         .min_scale(min_scale)
         .gap(gap)

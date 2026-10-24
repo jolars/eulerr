@@ -156,10 +156,15 @@
 #'   Low-discrepancy placement gives an even, deterministic scatter. Only
 #'   random placement uses `seed`. Dot mode also supports a named integer
 #'   `counts` vector, `radius`, and [grid::gpar()] fields. Member mode requires
-#'   a named list such
-#'   as `labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")` and
-#'   supports `scale`, `min_scale`, and text graphical parameters. Uniform
-#'   and rectangular member placement both pack names in rows. Automatic
+#'   a named list such as
+#'   `labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")` and supports
+#'   `scale`, `min_scale`, and text graphical parameters. Uniform and
+#'   rectangular member placement both pack names in rows. With either
+#'   arrangement, `target_aspect_ratio` sets a preferred width-to-height
+#'   ratio for each block of rows, including its spacing. For example, `1`
+#'   favors a roughly square block. The default, `NULL`, keeps the first
+#'   complete row packing. This preference preserves the number of placed
+#'   names and does not affect automatic scale selection. Automatic
 #'   safety limits are 2,000 dots and 500 member labels unless `max_items` is
 #'   supplied. `obstacle_policy = "best_effort"` (default) prefers positions
 #'   clear of measured labels but allows overlap when items do not fit.
@@ -1076,6 +1081,7 @@ plot.euler <- function(
       "labels",
       "arrangement",
       "obstacle_policy",
+      "target_aspect_ratio",
       "gap",
       "seed",
       "radius",

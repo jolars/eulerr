@@ -91,6 +91,79 @@ test_that("new member arrangements preserve names and ignore the seed", {
   }
 })
 
+test_that("member rows can be balanced without losing names or shrinking text", {
+  fit <- euler(c(A = 400), shape = "square")
+  labels <- rep("Member", 12)
+  pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  members <- lapply(list(NULL, 1), function(ratio) {
+    plot <- plot(
+      fit,
+      labels = FALSE,
+      glyphs = list(
+        mode = "members",
+        labels = list(A = labels),
+        target_aspect_ratio = ratio
+      )
+    )
+    make_glyph_content(plot)$children
+  })
+  aspect_ratio <- function(children) {
+    grid::pushViewport(grid::viewport(
+      xscale = c(-10, 10),
+      yscale = c(-10, 10)
+    ))
+    on.exit(grid::popViewport())
+    widths <- vapply(
+      children,
+      function(child) {
+        grid::convertWidth(grid::grobWidth(child), "native", TRUE)
+      },
+      0
+    )
+    heights <- vapply(
+      children,
+      function(child) {
+        grid::convertHeight(grid::grobHeight(child), "native", TRUE)
+      },
+      0
+    )
+    h <- vapply(children, function(child) as.numeric(child$x), 0)
+    k <- vapply(children, function(child) as.numeric(child$y), 0)
+    diff(range(h - widths / 2, h + widths / 2)) /
+      diff(range(k - heights / 2, k + heights / 2))
+  }
+  for (children in members) {
+    expect_equal(unname(vapply(children, `[[`, "", "label")), labels)
+  }
+  expect_equal(
+    vapply(members[[1L]], function(child) child$gp$fontsize, 0),
+    vapply(members[[2L]], function(child) child$gp$fontsize, 0)
+  )
+  expect_lt(
+    abs(log(aspect_ratio(members[[2L]]))),
+    abs(log(aspect_ratio(members[[1L]])))
+  )
+})
+
+test_that("member row aspect ratios must be finite and positive", {
+  fit <- euler(c(A = 1))
+  for (ratio in list(0, -1, NA_real_, Inf, c(1, 2), "square")) {
+    expect_error(
+      plot(
+        fit,
+        glyphs = list(
+          mode = "members",
+          labels = list(A = "Ada"),
+          target_aspect_ratio = ratio
+        )
+      ),
+      "glyphs\\$target_aspect_ratio"
+    )
+  }
+})
+
 test_that("strict obstacles report blocked dots and member labels", {
   fit <- euler(c(A = 1), shape = "square")
   local_mocked_bindings(

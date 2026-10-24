@@ -25,6 +25,7 @@ place_euler_glyph_boxes(
   item_heights,
   arrangement,
   obstacle_policy,
+  target_aspect_ratio,
   scale,
   min_scale,
   gap,

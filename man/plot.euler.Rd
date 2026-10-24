@@ -152,10 +152,15 @@ hexagonal grid; rectangular dots use aligned rows and columns.
 Low-discrepancy placement gives an even, deterministic scatter. Only
 random placement uses \code{seed}. Dot mode also supports a named integer
 \code{counts} vector, \code{radius}, and \code{\link[grid:gpar]{grid::gpar()}} fields. Member mode requires
-a named list such
-as \code{labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")} and
-supports \code{scale}, \code{min_scale}, and text graphical parameters. Uniform
-and rectangular member placement both pack names in rows. Automatic
+a named list such as
+\code{labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")} and supports
+\code{scale}, \code{min_scale}, and text graphical parameters. Uniform and
+rectangular member placement both pack names in rows. With either
+arrangement, \code{target_aspect_ratio} sets a preferred width-to-height
+ratio for each block of rows, including its spacing. For example, \code{1}
+favors a roughly square block. The default, \code{NULL}, keeps the first
+complete row packing. This preference preserves the number of placed
+names and does not affect automatic scale selection. Automatic
 safety limits are 2,000 dots and 500 member labels unless \code{max_items} is
 supplied. \code{obstacle_policy = "best_effort"} (default) prefers positions
 clear of measured labels but allows overlap when items do not fit.
