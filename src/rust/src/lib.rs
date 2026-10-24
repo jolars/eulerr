@@ -121,6 +121,8 @@ fn parse_tether(tether: &str) -> std::result::Result<TetherSource, Error> {
 fn parse_glyph_arrangement(arrangement: &str) -> std::result::Result<GlyphArrangement, Error> {
     match arrangement {
         "uniform" => Ok(GlyphArrangement::Uniform),
+        "rectangular" => Ok(GlyphArrangement::Rectangular),
+        "low_discrepancy" => Ok(GlyphArrangement::LowDiscrepancy),
         "random" => Ok(GlyphArrangement::Random),
         other => Err(format!("Unknown glyph arrangement: {other}").into()),
     }

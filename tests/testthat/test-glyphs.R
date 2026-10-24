@@ -14,6 +14,15 @@ find_grob_class <- function(x, class) {
   NULL
 }
 
+make_glyph_content <- function(plot) {
+  grid::pushViewport(grid::viewport(
+    xscale = plot$data$xlim,
+    yscale = plot$data$ylim
+  ))
+  on.exit(grid::popViewport())
+  grid::makeContent(find_grob_class(plot, "EulerGlyphs"))
+}
+
 test_that("unit glyphs are packed and rendered", {
   fit <- euler(c(A = 3, B = 2, "A&B" = 1))
   plot <- plot(fit, glyphs = TRUE)
@@ -26,6 +35,60 @@ test_that("unit glyphs are packed and rendered", {
   pdf(NULL)
   on.exit(grDevices::dev.off())
   expect_silent(grid::grid.draw(plot))
+})
+
+test_that("new dot arrangements preserve counts and ignore the seed", {
+  fit <- euler(c(A = 100), shape = "square")
+  pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  for (arrangement in c("rectangular", "low_discrepancy")) {
+    dots <- lapply(c(0, 42), function(seed) {
+      plot <- plot(
+        fit,
+        labels = FALSE,
+        glyphs = list(arrangement = arrangement, seed = seed)
+      )
+      make_glyph_content(plot)$children[[1L]]
+    })
+    expect_equal(dots[[1L]], dots[[2L]])
+    expect_length(dots[[1L]]$x, 100L)
+    expect_length(dots[[1L]]$y, 100L)
+
+    if (arrangement == "rectangular") {
+      xs <- sort(unique(round(as.numeric(dots[[1L]]$x), 9)))
+      ys <- sort(unique(round(as.numeric(dots[[1L]]$y), 9)))
+      expect_gt(length(xs), 1L)
+      expect_gt(length(ys), 1L)
+      expect_equal(diff(xs), rep(xs[2L] - xs[1L], length(xs) - 1L))
+      expect_equal(diff(ys), rep(xs[2L] - xs[1L], length(ys) - 1L))
+    }
+  }
+})
+
+test_that("new member arrangements preserve names and ignore the seed", {
+  fit <- euler(c(A = 12), shape = "square")
+  labels <- paste("Member", seq_len(12))
+  pdf(NULL)
+  on.exit(grDevices::dev.off())
+
+  for (arrangement in c("rectangular", "low_discrepancy")) {
+    members <- lapply(c(0, 42), function(seed) {
+      plot <- plot(
+        fit,
+        labels = FALSE,
+        glyphs = list(
+          mode = "members",
+          labels = list(A = labels),
+          arrangement = arrangement,
+          seed = seed
+        )
+      )
+      make_glyph_content(plot)$children
+    })
+    expect_equal(members[[1L]], members[[2L]])
+    expect_equal(unname(vapply(members[[1L]], `[[`, "", "label")), labels)
+  }
 })
 
 test_that("glyph counts must be nonnegative integers", {

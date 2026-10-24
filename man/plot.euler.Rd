@@ -146,11 +146,16 @@ adapt automatically. Defaults to slightly smaller text than
 regions. \code{TRUE} draws one equal-sized dot per unit of the original
 exclusive values; these values must be nonnegative integers. A list may
 set \code{mode} to \code{"dots"} (default) or \code{"members"}, \code{arrangement} to
-\code{"uniform"} or \code{"random"}, and supply \code{gap}, \code{seed}, \code{max_attempts},
-and \code{max_items}. Dot mode also supports a named integer \code{counts} vector,
-\code{radius}, and \code{\link[grid:gpar]{grid::gpar()}} fields. Member mode requires a named list such
+\code{"uniform"}, \code{"rectangular"}, \code{"low_discrepancy"}, or \code{"random"}, and
+supply \code{gap}, \code{seed}, \code{max_attempts}, and \code{max_items}. Uniform dots use a
+hexagonal grid; rectangular dots use aligned rows and columns.
+Low-discrepancy placement gives an even, deterministic scatter. Only
+random placement uses \code{seed}. Dot mode also supports a named integer
+\code{counts} vector, \code{radius}, and \code{\link[grid:gpar]{grid::gpar()}} fields. Member mode requires
+a named list such
 as \code{labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")} and
-supports \code{scale}, \code{min_scale}, and text graphical parameters. Automatic
+supports \code{scale}, \code{min_scale}, and text graphical parameters. Uniform
+and rectangular member placement both pack names in rows. Automatic
 safety limits are 2,000 dots and 500 member labels unless \code{max_items} is
 supplied. Glyphs avoid measured labels and are drawn above region fills
 and edges but below labels.}

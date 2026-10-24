@@ -150,11 +150,16 @@
 #'   regions. `TRUE` draws one equal-sized dot per unit of the original
 #'   exclusive values; these values must be nonnegative integers. A list may
 #'   set `mode` to `"dots"` (default) or `"members"`, `arrangement` to
-#'   `"uniform"` or `"random"`, and supply `gap`, `seed`, `max_attempts`,
-#'   and `max_items`. Dot mode also supports a named integer `counts` vector,
-#'   `radius`, and [grid::gpar()] fields. Member mode requires a named list such
+#'   `"uniform"`, `"rectangular"`, `"low_discrepancy"`, or `"random"`, and
+#'   supply `gap`, `seed`, `max_attempts`, and `max_items`. Uniform dots use a
+#'   hexagonal grid; rectangular dots use aligned rows and columns.
+#'   Low-discrepancy placement gives an even, deterministic scatter. Only
+#'   random placement uses `seed`. Dot mode also supports a named integer
+#'   `counts` vector, `radius`, and [grid::gpar()] fields. Member mode requires
+#'   a named list such
 #'   as `labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")` and
-#'   supports `scale`, `min_scale`, and text graphical parameters. Automatic
+#'   supports `scale`, `min_scale`, and text graphical parameters. Uniform
+#'   and rectangular member placement both pack names in rows. Automatic
 #'   safety limits are 2,000 dots and 500 member labels unless `max_items` is
 #'   supplied. Glyphs avoid measured labels and are drawn above region fills
 #'   and edges but below labels.
@@ -1080,7 +1085,7 @@ plot.euler <- function(
     glyphs$mode <- match.arg(glyphs$mode, c("dots", "members"))
     glyphs$arrangement <- match.arg(
       glyphs$arrangement,
-      c("uniform", "random")
+      c("uniform", "rectangular", "low_discrepancy", "random")
     )
     validate_glyph_options(glyphs)
     glyphs$gp <- setup_gpar(
