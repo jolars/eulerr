@@ -79,8 +79,8 @@ fn parse_optimizer(opt: &str) -> std::result::Result<Option<Optimizer>, Error> {
         "mads" => Optimizer::Mads,
         "cma_es" => Optimizer::CmaEs,
         "cma_es_lm" => Optimizer::CmaEsLm,
-        "trf" => Optimizer::Trf,
-        "cma_es_trf" => Optimizer::CmaEsTrf,
+        "trf" => Optimizer::BoundedLevenbergMarquardt,
+        "cma_es_trf" => Optimizer::CmaEsBoundedLm,
         other => return Err(format!("Unknown optimizer: {}", other).into()),
     };
     Ok(Some(chosen))
