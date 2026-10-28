@@ -16,3 +16,22 @@ pad_axis_native(
   layout_pos_col = NULL
 )
 ```
+
+## Arguments
+
+- lim:
+
+  the axis range to pad
+
+- pt_pad:
+
+  padding in points
+
+- axis:
+
+  which axis `lim` belongs to
+
+- layout_pos_row, layout_pos_col:
+
+  layout cell of the measurement viewport, so the conversion sees the
+  panel's real size

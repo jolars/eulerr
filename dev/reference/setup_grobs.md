@@ -11,8 +11,10 @@ setup_grobs(
   patterns,
   edges,
   labels,
+  set_labels = NULL,
   quantities,
   annotations = NULL,
+  glyphs = NULL,
   complement = NULL,
   number,
   merged_sets,
@@ -44,9 +46,25 @@ setup_grobs(
 
   labels params
 
+- set_labels:
+
+  exterior set-label params
+
 - quantities:
 
   quantities params
+
+- annotations:
+
+  annotations params
+
+- glyphs:
+
+  glyph params
+
+- complement:
+
+  complement label params
 
 - number:
 
@@ -55,6 +73,14 @@ setup_grobs(
 - merged_sets:
 
   sets that are the same and have been merged
+
+- n_vertices:
+
+  number of vertices used to render each shape
+
+- placement_opts:
+
+  label placement options, or `NULL` for the defaults
 
 - combo_labels:
 

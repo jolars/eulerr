@@ -43,3 +43,59 @@ build_tag_grobs(
   name_prefix = "tag"
 )
 ```
+
+## Arguments
+
+- ax, ay:
+
+  the tag anchor, in native units
+
+- kind:
+
+  the placement kind eunoia returned (interior, exterior, ...)
+
+- tx, ty:
+
+  the tether point on the shape, in native units
+
+- lend_x, lend_y:
+
+  the leader endpoint on the tag bbox, in native units
+
+- label_text, quantity_text, annotation_text:
+
+  the three text components
+
+- has_label, has_quantity, has_annotation:
+
+  whether each component is drawn
+
+- label_gp, quantity_gp, annotation_gp:
+
+  per-component [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html)
+
+- label_rot, quantity_rot, annotation_rot:
+
+  per-component rotation, in degrees
+
+- number:
+
+  the diagram's region index, used to name the grobs
+
+- leader_gp_list:
+
+  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) for the leader
+  line, or `NULL` for no leader
+
+- padding:
+
+  vertical separation between components, as a
+  [`grid::unit()`](https://rdrr.io/r/grid/unit.html)
+
+- waypoints_x, waypoints_y:
+
+  intermediate leader vertices, in native units
+
+- name_prefix:
+
+  prefix for the generated grob names

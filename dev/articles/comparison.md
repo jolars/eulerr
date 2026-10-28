@@ -16,20 +16,20 @@ labels or color instead of area.
 On CRAN and Bioconductor, the packages that really fit area-proportional
 diagrams are:
 
-- **eulerr** — circles, ellipses, or axis-aligned rectangles/squares via
+- **eulerr**: circles, ellipses, or axis-aligned rectangles/squares via
   numerical optimization; reports `stress` and `diagError`
   goodness-of-fit statistics.
-- **venneuler** — Wilkinson’s circle algorithm (Wilkinson 2012); circles
+- **venneuler**: Wilkinson’s circle algorithm (Wilkinson 2012); circles
   only; Java-based (depends on rJava).
-- **nVennR** — the nVenn algorithm (Pérez-Silva et al. 2018);
+- **nVennR**: the nVenn algorithm (Pérez-Silva et al. 2018);
   quasi-proportional, n-dimensional diagrams built from irregular
   polygons. Distributed via GitHub.
-- **BioVenn** — accurate 2–3 circle diagrams from identifier lists
+- **BioVenn**: accurate 2–3 circle diagrams from identifier lists
   (Hulsen 2021).
-- **vennplot** — 2D circles and 3D spheres for 2–3 sets (Xu et al.
-  2017); currently dormant on CRAN.
-- **VennDiagram** — a drawing package whose *scaled* mode is genuinely
-  area-proportional for two circles only (Chen and Boutros 2011).
+- **vennplot**: 2D circles and 3D spheres for 2–3 sets (Xu et al. 2017);
+  currently dormant on CRAN.
+- **VennDiagram**: a drawing package whose *scaled* mode is genuinely
+  area-proportional for two circles only (Chen and Boutros 2011).
 
 The [last section](#excluded-packages) lists the many packages that are
 *not* area-proportional fitters and explains why they are excluded.
@@ -49,13 +49,13 @@ self-reported diagnostics and instead recompute the fit from its
 the area of every disjoint region with `polyclip`, and evaluate eulerr’s
 own statistics on those areas:
 
-- **stress** — the normalized residual sum of squares from venneuler,
+- **stress**: the normalized residual sum of squares from venneuler,
   $`\sum_i (A_i - \beta\omega_i)^2 \big/ \sum_i A_i^2`$, with
   $`\beta = \sum_i A_i\omega_i \big/ \sum_i \omega_i^2`$.
-- **diagError** — the largest absolute difference between a region’s
+- **diagError**: the largest absolute difference between a region’s
   realized and target *proportion*,
-  $`\max_i |A_i/\sum_k A_k - \omega_i/\sum_k \omega_k|`$ (from eulerAPE,
-  (Micallef and Rodgers 2014)).
+  $`\max_i |A_i/\sum_k A_k - \omega_i/\sum_k \omega_k|`$ (from
+  eulerAPE, (Micallef and Rodgers 2014)).
 
 Here $`\omega_i`$ is the input size of region $`i`$ and $`A_i`$ its
 realized area. Both statistics are scale-invariant, so packages that

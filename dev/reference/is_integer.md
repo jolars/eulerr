@@ -14,6 +14,10 @@ is_integer(x, tol = .Machine$double.eps^0.5)
 
   a vector
 
+- tol:
+
+  tolerance within which a value counts as a whole number
+
 ## Value
 
 TRUE of FALSE.

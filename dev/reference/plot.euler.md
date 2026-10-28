@@ -24,6 +24,7 @@ plot(
   labels = identical(legend, FALSE),
   quantities = FALSE,
   annotations = NULL,
+  glyphs = FALSE,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -43,6 +44,7 @@ plot(
   legend = FALSE,
   labels = identical(legend, FALSE),
   quantities = TRUE,
+  glyphs = FALSE,
   strips = NULL,
   bg = FALSE,
   main = NULL,
@@ -100,21 +102,24 @@ plot(...)
   [`grid::grid.text()`](https://rdrr.io/r/grid/grid.text.html). In
   addition to the [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html)
   fields, the following placement controls are supported (delegated to
-  the `eunoia` Rust crate): `labels$placement` (`"raycast"` (default),
-  `"force_directed"`, `"matched"`, or `"elbow"`) selects the strategy
-  used when a label does not fit inside its region. `"raycast"`,
-  `"force_directed"`, and `"matched"` produce straight leader lines:
-  `"raycast"` places the label along the centroid→POI ray,
-  `"force_directed"` relaxes labels with a polygon-aware force solver,
-  and `"matched"` places labels on a ring hugging the diagram
-  silhouette, spreading them in proportion to their widths so that
-  neither the label boxes nor the leaders can cross. `"elbow"` produces
-  d3-pie style orthogonal leaders, stacking exterior labels in
-  left/right columns reached by a three-segment polyline.
-  `labels$margin` (numeric) overrides the per-region margin between an
-  exterior label and the diagram (default is half the larger of the
-  label's width and height); `labels$tether` (`"poi"` (default) or
-  `"boundary"`) chooses where the leader line attaches on the source
+  the `eunoia` Rust crate): `labels$position = "inside"` (default) uses
+  region anchors; `labels$position = "outside"` places each set name
+  just outside its own outline, without a leader. `labels$angular_steps`
+  controls the outside placement search resolution (default `180`).
+  `labels$placement` (`"raycast"` (default), `"force_directed"`,
+  `"matched"`, or `"elbow"`) selects the strategy used when a label does
+  not fit inside its region. `"raycast"`, `"force_directed"`, and
+  `"matched"` produce straight leader lines: `"raycast"` places the
+  label along the centroid→POI ray, `"force_directed"` relaxes labels
+  with a polygon-aware force solver, and `"matched"` places labels on a
+  ring hugging the diagram silhouette, spreading them in proportion to
+  their widths so that neither the label boxes nor the leaders can
+  cross. `"elbow"` produces d3-pie style orthogonal leaders, stacking
+  exterior labels in left/right columns reached by a three-segment
+  polyline. `labels$margin` (numeric) overrides the per-region margin
+  between an exterior label and the diagram (default is half the larger
+  of the label's width and height); `labels$tether` (`"poi"` (default)
+  or `"boundary"`) chooses where the leader line attaches on the source
   region; `labels$gap` controls the visible gap between the leader tip
   and the label box edge — a bare numeric is interpreted as `lines`
   (font-relative), a [`grid::unit()`](https://rdrr.io/r/grid/unit.html)
@@ -171,6 +176,40 @@ plot(...)
   tag bbox grows to include the annotation, so exterior placement and
   leader lines adapt automatically. Defaults to slightly smaller text
   than `labels`/`quantities` (`cex = 0.8`).
+
+- glyphs:
+
+  a logical or list controlling glyphs packed inside exclusive regions.
+  `TRUE` draws one equal-sized dot per unit of the original exclusive
+  values; these values must be nonnegative integers. A list may set
+  `mode` to `"dots"` (default) or `"members"`, `arrangement` to
+  `"uniform"`, `"rectangular"`, `"low_discrepancy"`, or `"random"`, and
+  supply `gap`, `seed`, `max_attempts`, and `max_items`. Uniform dots
+  use a hexagonal grid; rectangular dots use aligned rows and columns.
+  Low-discrepancy placement gives an even, deterministic scatter. Only
+  random placement uses `seed`. Dot mode also supports a named integer
+  `counts` vector, `radius`, `boundary_gap`, and
+  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) fields. For dots,
+  `gap` controls spacing between dots as a fraction of the radius.
+  `boundary_gap` sets extra clearance from region boundaries, holes, and
+  label obstacles as a fraction of the radius. Its default, `NULL`, uses
+  `gap`, keeping boundary and dot spacing coupled. Member mode requires
+  a named list such as
+  `labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")` and
+  supports `scale`, `min_scale`, and text graphical parameters. Uniform
+  and rectangular member placement both pack names in rows. With either
+  arrangement, `target_aspect_ratio` sets a preferred width-to-height
+  ratio for each block of rows, including its spacing. For example, `1`
+  favors a roughly square block. The default, `NULL`, keeps the first
+  complete row packing. This preference preserves the number of placed
+  names and does not affect automatic scale selection. Automatic safety
+  limits are 2,000 dots and 500 member labels unless `max_items` is
+  supplied. `obstacle_policy = "best_effort"` (default) prefers
+  positions clear of measured labels but allows overlap when items do
+  not fit. Set `obstacle_policy = "strict"` to require clearance and
+  warn about unplaced items. Strict placement keeps the usual sizing
+  floors, so items can remain unplaced even with automatic sizing.
+  Glyphs are drawn above region fills and edges but below labels.
 
 - strips:
 

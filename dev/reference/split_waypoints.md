@@ -10,3 +10,9 @@ pairs. Each list element has length-`lengths[i]` `x`/`y` vectors (often
 ``` r
 split_waypoints(placements)
 ```
+
+## Arguments
+
+- placements:
+
+  the placement record list returned by the Rust FFI

@@ -9,3 +9,17 @@ sets keep NA in every column so downstream plotting can detect them via
 ``` r
 new_shape_frame(shape, n_all, row_names)
 ```
+
+## Arguments
+
+- shape:
+
+  the shape kind to tag every row with
+
+- n_all:
+
+  number of rows (sets) to allocate
+
+- row_names:
+
+  row names to give the frame

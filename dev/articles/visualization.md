@@ -9,13 +9,13 @@ Plotting the ellipses is straightforward using the parametrization of a
 rotated ellipse,
 
 ``` math
-\begin{bmatrix}
-x \\ y
-\end{bmatrix} =
-\begin{bmatrix}
-h + a \cos{\theta} \\
-k + b \sin{\theta}
-\end{bmatrix},
+  \begin{bmatrix}
+  x \\ y
+  \end{bmatrix} =
+  \begin{bmatrix}
+  h + a \cos{\theta} \\
+  k + b \sin{\theta}
+  \end{bmatrix},
 ```
 
 where $`\theta \in [0, 2\pi],\quad a,b>0`$.
@@ -214,6 +214,48 @@ plot(euler(con), labels = as.character(1:8))
 palette](visualization_files/figure-html/colorexamle-1.png)
 
 The eight first colors of the default color palette
+
+## Glyphs and exterior set labels
+
+For integer-valued data, `glyphs = TRUE` adds one equal-sized dot per
+unit to each exclusive region. The shared radius is chosen
+automatically, so dots are comparable across the diagram.
+
+``` r
+
+fit <- euler(c(A = 8, B = 6, "A&B" = 3))
+plot(fit, glyphs = TRUE, labels = list(position = "outside"))
+```
+
+![Counts represented by packed unit
+glyphs](visualization_files/figure-html/glyph-dots-1.png)
+
+Counts represented by packed unit glyphs
+
+Named members can be packed instead by using `mode = "members"`. The
+names are keyed by exclusive region and shrink together only when needed
+to fit.
+
+``` r
+
+plot(
+  fit,
+  glyphs = list(
+    mode = "members",
+    labels = list(
+      A = c("Ada", "Grace", "Barbara"),
+      B = c("Alan", "Edsger"),
+      "A&B" = c("Katherine", "Hedy")
+    )
+  ),
+  labels = list(position = "outside")
+)
+```
+
+![Member names packed inside their exclusive
+regions](visualization_files/figure-html/glyph-members-1.png)
+
+Member names packed inside their exclusive regions
 
 ## Composing diagrams
 

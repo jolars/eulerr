@@ -14,6 +14,12 @@ placement.
 open_measurement_viewport(xlim, ylim)
 ```
 
+## Arguments
+
+- xlim, ylim:
+
+  native scales to give the measurement viewport
+
 ## Details
 
 Always opens its own off-screen PDF rather than reusing the caller's

@@ -11,3 +11,9 @@ constructing ad-hoc `$shapes` frames still get a sensible box.
 ``` r
 shape_bounding_box(shapes)
 ```
+
+## Arguments
+
+- shapes:
+
+  a `$shapes` data frame

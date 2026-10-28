@@ -11,3 +11,17 @@ can rebuild it at draw time with fresh measurements.
 ``` r
 setup_tag(data, labels, quantities, annotations, number)
 ```
+
+## Arguments
+
+- data:
+
+  one row of the placed `centers` data frame
+
+- labels, quantities, annotations:
+
+  the three tag component parameter lists, each with a `$gp`
+
+- number:
+
+  the diagram's region index, used to name the grobs

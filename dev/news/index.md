@@ -2,6 +2,45 @@
 
 ## eulerr (development version)
 
+## eulerr 8.3.1
+
+CRAN release: 2026-09-13
+
+### Bug fixes
+
+- avoid legend indexing warnings on R-devel
+  ([`2628806`](https://github.com/jolars/eulerr/commit/2628806e2b5de3151121bddd077ed7029caa3b2b))
+
+## eulerr 8.3
+
+This releases adds exterior set labels and region glyphs as well as
+upgrades Eunoia to 1.9.0 for rectangle fitting and normalization fixes
+
+### Features
+
+- upgrade to Eunoia 1.9
+  ([`79ae995`](https://github.com/jolars/eulerr/commit/79ae995d9b52813939b8471f1c6122c8fe5fe95b))
+
+### Bug fixes
+
+- repair two assertions that passed for the wrong reason
+  ([`0dbd3e7`](https://github.com/jolars/eulerr/commit/0dbd3e71c1af58dd73b1c16f29144f61eff60e23))
+
+## eulerr 8.2
+
+### Features
+
+- **plotting:** add matched exterior label placement
+  ([`f00e121`](https://github.com/jolars/eulerr/commit/f00e12179e423bedf0787b4b5a3de012d75b9731))
+
+### Bug fixes
+
+- flatten same-direction eulergram compositions
+  ([`2a10b4b`](https://github.com/jolars/eulerr/commit/2a10b4b3f174c022a68c8e024f6037cfbf653630))
+- **plot:** associate region fills by label not position
+  ([`c74896a`](https://github.com/jolars/eulerr/commit/c74896af20c4d1a382743b8ef32f5da48ebc6ec1)),
+  fixes [\#134](https://github.com/jolars/eulerr/issues/134)
+
 ## eulerr 8.1
 
 ### Highlights

@@ -25,6 +25,43 @@ build_leader_grob(
 )
 ```
 
+## Arguments
+
+- ax, ay:
+
+  the tag anchor, in native units
+
+- kind:
+
+  the placement kind eunoia returned; anything other than `"interior"`
+  gets a leader
+
+- tx, ty:
+
+  the tether point on the shape, in native units
+
+- lend_x, lend_y:
+
+  the leader endpoint on the tag bbox, in native units
+
+- waypoints_x, waypoints_y:
+
+  intermediate leader vertices, in native units
+
+- leader_gp_list:
+
+  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) for the leader
+  line, or `NULL`
+
+- fallback_gp:
+
+  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) used when
+  `leader_gp_list` is `NULL`
+
+- name:
+
+  name to give the returned grob
+
 ## Details
 
 Terminates at `(lend_x, lend_y)` — the point on the label box AABB edge
