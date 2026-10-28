@@ -25,9 +25,9 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
 name = "basin"
-version = "3.0.0"
+version = "3.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9dfdde9e56c189dd68cf7570c05920ab272d1e45d023214466fe200944f73aa5"
+checksum = "9614873e06f84533eb94d679e138f5d44dd3124ec5a80a46cb6d2dcd0c12f789"
 dependencies = [
  "nalgebra",
  "nalgebra-sparse",
@@ -117,9 +117,9 @@ dependencies = [
 
 [[package]]
 name = "eunoia"
-version = "1.10.0"
+version = "1.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e2bb5f83ed74877af0a4820da8c0caa0077c221ba4d5c485b35b6e2baa22730"
+checksum = "6c64046faf320942e7ab20851f1904806c1287b49b9018b16e635136909180a4"
 dependencies = [
  "basin",
  "finitediff",
