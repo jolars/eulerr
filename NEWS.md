@@ -1,4 +1,20 @@
-# eulerr (development version)
+# eulerr 8.4.0
+
+## Features
+
+- separate glyph boundary spacing ([`a582105`](https://github.com/jolars/eulerr/commit/a582105f46863980a78d6345fd0d352fde54dd50))
+- balance member label rows ([`3f810f3`](https://github.com/jolars/eulerr/commit/3f810f38dc1185bc863bb29c51acbc306788caff))
+- add strict glyph obstacle handling ([`49129b6`](https://github.com/jolars/eulerr/commit/49129b6fdf453999c11a28bd6eee9de2a03592e1))
+- add glyph placement arrangements ([`3befce5`](https://github.com/jolars/eulerr/commit/3befce54e4de3314ba0033971aadfdb824daeefd))
+
+## Bug fixes
+
+- replace deprecated eunoia optimizer variants ([`2050233`](https://github.com/jolars/eulerr/commit/20502336e4db206148e8e254afed72b5dab832be))
+- bump eunoia to 1.10.1 ([`e9bdd1c`](https://github.com/jolars/eulerr/commit/e9bdd1c73080c35925371800c3e856acc0c3433c))
+
+## Performance improvements
+
+- update eunoia to 1.10 ([`6a4daf7`](https://github.com/jolars/eulerr/commit/6a4daf799bf7cfcf8d5fadc4a3b40f6e62b4b387))
 
 # eulerr 8.3.1
 
