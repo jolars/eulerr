@@ -183,16 +183,33 @@ plot(...)
   `TRUE` draws one equal-sized dot per unit of the original exclusive
   values; these values must be nonnegative integers. A list may set
   `mode` to `"dots"` (default) or `"members"`, `arrangement` to
-  `"uniform"` or `"random"`, and supply `gap`, `seed`, `max_attempts`,
-  and `max_items`. Dot mode also supports a named integer `counts`
-  vector, `radius`, and
-  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) fields. Member mode
-  requires a named list such as
+  `"uniform"`, `"rectangular"`, `"low_discrepancy"`, or `"random"`, and
+  supply `gap`, `seed`, `max_attempts`, and `max_items`. Uniform dots
+  use a hexagonal grid; rectangular dots use aligned rows and columns.
+  Low-discrepancy placement gives an even, deterministic scatter. Only
+  random placement uses `seed`. Dot mode also supports a named integer
+  `counts` vector, `radius`, `boundary_gap`, and
+  [`grid::gpar()`](https://rdrr.io/r/grid/gpar.html) fields. For dots,
+  `gap` controls spacing between dots as a fraction of the radius.
+  `boundary_gap` sets extra clearance from region boundaries, holes, and
+  label obstacles as a fraction of the radius. Its default, `NULL`, uses
+  `gap`, keeping boundary and dot spacing coupled. Member mode requires
+  a named list such as
   `labels = list(A = c("Ada", "Grace"), "A&B" = "Katherine")` and
-  supports `scale`, `min_scale`, and text graphical parameters.
-  Automatic safety limits are 2,000 dots and 500 member labels unless
-  `max_items` is supplied. Glyphs avoid measured labels and are drawn
-  above region fills and edges but below labels.
+  supports `scale`, `min_scale`, and text graphical parameters. Uniform
+  and rectangular member placement both pack names in rows. With either
+  arrangement, `target_aspect_ratio` sets a preferred width-to-height
+  ratio for each block of rows, including its spacing. For example, `1`
+  favors a roughly square block. The default, `NULL`, keeps the first
+  complete row packing. This preference preserves the number of placed
+  names and does not affect automatic scale selection. Automatic safety
+  limits are 2,000 dots and 500 member labels unless `max_items` is
+  supplied. `obstacle_policy = "best_effort"` (default) prefers
+  positions clear of measured labels but allows overlap when items do
+  not fit. Set `obstacle_policy = "strict"` to require clearance and
+  warn about unplaced items. Strict placement keeps the usual sizing
+  floors, so items can remain unplaced even with automatic sizing.
+  Glyphs are drawn above region fills and edges but below labels.
 
 - strips:
 
