@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jolars/eulerr)
 [![CRAN
 Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
-[![Software DOI](https://img.shields.io/badge/Software_DOI-10.5281%2Fzenodo.17187388-blue)](https://doi.org/10.5281/zenodo.17187388)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17187388-blue)](https://doi.org/10.5281/zenodo.17187388)
 <!-- badges: end -->
 
 **eulerr** generates area-proportional Euler diagrams that display set
