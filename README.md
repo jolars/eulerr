@@ -88,9 +88,9 @@ the solution,
 
 ``` r
 fit$stress
-#> [1] 1.280319e-19
+#> [1] 1.231598e-28
 fit$diagError
-#> [1] 6.774157e-11
+#> [1] 2.033096e-15
 ```
 
 and plot it
