@@ -87,7 +87,7 @@
 <ul><li>Changes to the core fitting algorithms, geometry, or optimization should be made in the <code>eunoia</code> repository, not here. Once released, bump the <code>eunoia</code> dependency in <code>src/rust/Cargo.toml</code> and re-vendor (see below).</li>
 <li>Changes that belong in this repository are typically limited to the R/Rust interface (the <code>#[extendr]</code> functions), input parsing, plotting, and the R-side API.</li>
 </ul><p>Workflow:</p>
-<ul><li>Edit the <code>#[extendr]</code> functions in <code>src/rust/src/lib.rs</code> and regenerate the R-side wrappers with <code>rextendr::document()</code> (or <code>task extendr-document</code>). Do not hand-edit <code>R/extendr-wrappers.R</code> or the <code>extendr_module!</code> block.</li>
+<ul><li>Edit the <code>#[extendr]</code> functions in <code>src/rust/src/lib.rs</code> and keep their registrations in <code>extendr_module!</code> in sync. Run <code>task document</code> (or <code>devtools::document()</code>) to rebuild the Rust code and regenerate the R wrappers and package documentation. Do not hand-edit <code>R/extendr-wrappers.R</code>.</li>
 <li>After bumping any dependency in <code>src/rust/Cargo.toml</code> (including <code>eunoia</code>), re-vendor the Rust dependencies (see <code>task vendor-pkgs</code> in <code>Taskfile.yml</code> for the exact steps).</li>
 </ul></div>
 </div>

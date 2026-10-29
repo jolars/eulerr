@@ -91,10 +91,11 @@ This means:
 
 Workflow:
 
-- Edit the `#[extendr]` functions in `src/rust/src/lib.rs` and
-  regenerate the R-side wrappers with `rextendr::document()` (or
-  `task extendr-document`). Do not hand-edit `R/extendr-wrappers.R` or
-  the `extendr_module!` block.
+- Edit the `#[extendr]` functions in `src/rust/src/lib.rs` and keep
+  their registrations in `extendr_module!` in sync. Run `task document`
+  (or `devtools::document()`) to rebuild the Rust code and regenerate
+  the R wrappers and package documentation. Do not hand-edit
+  `R/extendr-wrappers.R`.
 - After bumping any dependency in `src/rust/Cargo.toml` (including
   `eunoia`), re-vendor the Rust dependencies (see `task vendor-pkgs` in
   `Taskfile.yml` for the exact steps).
