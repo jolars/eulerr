@@ -5,14 +5,14 @@ tasks:
     deps: [install]
 
   document:
-    desc: Regenerate roxygen docs and NAMESPACE
+    desc: Regenerate extendr wrappers, roxygen docs, and NAMESPACE
     cmds:
       - Rscript -e 'devtools::document(roclets = c("rd", "collate", "namespace"))'
 
   extendr-document:
-    desc: Regenerate extendr R wrappers and Rust extendr_module!
+    desc: Alias for document
     cmds:
-      - Rscript -e 'rextendr::document()'
+      - task: document
 
   vendor-pkgs:
     desc: Re-vendor Rust dependencies into src/rust/vendor.tar.xz

@@ -32,6 +32,13 @@ $(STATLIB):
 	export PATH="$(PATH):$(HOME)/.cargo/bin" && \
 	@PANIC_EXPORTS@RUSTFLAGS="$(RUSTFLAGS) --print=native-static-libs" cargo build @CRAN_FLAGS@ --lib @PROFILE@ --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR) @TARGET@
 
+# WebR builds use the checked-in wrappers because the target cannot run here.
+	if [ -z "@TARGET@" ]; then \
+		export CARGO_HOME=$(CARGOTMP) && \
+		export PATH="$(PATH):$(HOME)/.cargo/bin" && \
+		cargo run @CRAN_FLAGS@ --bin document --manifest-path=./rust/Cargo.toml --target-dir $(TARGET_DIR); \
+	fi
+
 	# Always clean up CARGOTMP
 	rm -Rf $(CARGOTMP);
 

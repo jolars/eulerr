@@ -6,8 +6,12 @@ edition = "2024"
 rust-version = "1.88.0"
 
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["rlib", "staticlib"]
 name = "eulerr"
+
+[[bin]]
+name = "document"
+path = "document.rs"
 
 [dependencies]
 extendr-api = "0.9"
