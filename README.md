@@ -10,6 +10,8 @@
 Status](https://codecov.io/gh/jolars/eulerr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jolars/eulerr)
 [![CRAN
 Badge](http://www.r-pkg.org/badges/version/eulerr)](https://cran.r-project.org/package=eulerr)
+[![Software
+DOI](https://img.shields.io/badge/Software_DOI-10.5281%2Fzenodo.17187388-blue)](https://doi.org/10.5281/zenodo.17187388)
 <!-- badges: end -->
 
 **eulerr** generates area-proportional Euler diagrams that display set
@@ -119,6 +121,21 @@ engine:
 | Julia | [`Eunoia.jl`](https://platform.juliahub.com/ui/Packages/General/Eunoia) ([repo](https://github.com/jolars/Eunoia.jl)) | `] add Eunoia` |
 | JavaScript | [`@jolars/eunoia`](https://www.npmjs.com/package/@jolars/eunoia) ([repo](https://github.com/jolars/eunoia)) | `npm install @jolars/eunoia` |
 | Rust | `eunoia` on crates.io ([repo](https://github.com/jolars/eunoia)) | `cargo add eunoia` |
+
+## Citation
+
+If you use eulerr in your research, please cite [A Case Study in Fitting
+Area-Proportional Euler Diagrams with Ellipses Using
+eulerr](https://ceur-ws.org/Vol-2116/paper7.pdf).
+
+For reproducibility, also cite the software release you used. Select
+that release in the [Zenodo
+archive](https://doi.org/10.5281/zenodo.17187388) and export its
+citation. The concept DOI `10.5281/zenodo.17187388` identifies eulerr
+across all releases.
+
+Machine-readable software metadata and the preferred paper citation are
+available in [CITATION.cff](CITATION.cff).
 
 ## License
 

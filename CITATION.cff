@@ -1,18 +1,15 @@
 cff-version: 1.2.0
 title: eulerr
-version: 7.0.2
-date-released: '2024-03-28'
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
+message: If you use this software, please cite the paper in preferred-citation.
+  For reproducibility, also cite the archived software release you used.
 type: software
 authors:
   - given-names: Johan
     family-names: Larsson
     email: johan@jolars.co
     affiliation: University of Copenhagen
-    orcid: 'https://orcid.org/0000-0002-4029-5945'
-repository-code: 'https://github.com/jolars/eulerr'
+    orcid: https://orcid.org/0000-0002-4029-5945
+repository-code: https://github.com/jolars/eulerr
 keywords:
   - euler diagrams
   - venn diagrams
@@ -23,24 +20,28 @@ keywords:
 license: MIT
 preferred-citation:
   type: conference-paper
-  title: >-
-    A Case Study in Fitting Area-Proportional {{Euler}}
-    Diagrams with Ellipses Using eulerr
-  collection-title: Proceedings of international workshop on set visualization and reasoning 2018
+  title: A Case Study in Fitting Area-Proportional Euler Diagrams with Ellipses
+    Using eulerr
+  collection-title: Proceedings of International Workshop on Set Visualization and
+    Reasoning 2018
   authors:
-    - given-names: Johan
-      family-names: Larsson
-      email: johan@jolars.co
-      affiliation: University of Copenhagen
-      orcid: 'https://orcid.org/0000-0002-4029-5945'
-    - given-names: Peter
-      family-names: Gustafsson
-      affiliation: Lund University
+    - family-names: Larsson
+      given-names: Johan
+      orcid: https://orcid.org/0000-0002-4029-5945
+    - family-names: Gustafsson
+      given-names: Peter
   year: 2018
+  volume: 2116
+  start: 84
+  end: 91
+  publisher:
+    name: CEUR Workshop Proceedings
   conference:
-    name: Set visualization and reasoning 2018
+    name: Set Visualization and Reasoning 2018
     city: Edinburgh
-    country: UK
+    country: GB
     date-start: '2018-06-18'
     date-end: '2018-06-18'
-  url: 'https://ceur-ws.org/Vol-2116/paper7.pdf'
+  url: https://ceur-ws.org/Vol-2116/paper7.pdf
+doi: 10.5281/zenodo.17187388
+url: https://jolars.github.io/eulerr/
