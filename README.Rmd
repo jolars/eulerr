@@ -152,7 +152,8 @@ export its citation. The concept DOI `10.5281/zenodo.17187388` identifies
 eulerr across all releases.
 
 Machine-readable software metadata and the preferred paper citation are
-available in [CITATION.cff](CITATION.cff).
+available in
+[CITATION.cff](https://github.com/jolars/eulerr/blob/main/CITATION.cff).
 
 ## License
 
