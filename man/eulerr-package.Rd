@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
 
-Generate area-proportional Euler diagrams using numerical optimization. A Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with circles, ellipses, squares, and rectangles via a wide range of inputs and can be visualized in numerous ways.
+Generate area-proportional Euler diagrams using numerical optimization. An Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with circles, ellipses, squares, and rectangles via a wide range of inputs and can be visualized in numerous ways. The original fitting method is described in Larsson and Gustafsson (2018) \url{https://ceur-ws.org/Vol-2116/paper7.pdf}.
 }
 \seealso{
 Useful links:
