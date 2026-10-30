@@ -1,3 +1,9 @@
+# eulerr 8.4.1
+
+## Bug fixes
+
+- **docs:** use correct URL for CITATION.cff file ([`e303ed5`](https://github.com/jolars/eulerr/commit/e303ed5e9123ff5bcbdcd626eaa312f6f8090b88))
+
 # eulerr 8.4.0
 
 ## Features
