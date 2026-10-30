@@ -15,8 +15,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Area-Proportional Euler and Venn Diagrams">
-<meta name="description" content="Generate area-proportional Euler diagrams using numerical optimization. A Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with circles, ellipses, squares, and rectangles via a wide range of inputs and can be visualized in numerous ways.">
-<meta property="og:description" content="Generate area-proportional Euler diagrams using numerical optimization. A Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with circles, ellipses, squares, and rectangles via a wide range of inputs and can be visualized in numerous ways.">
+<meta name="description" content="Generate area-proportional Euler diagrams using numerical optimization. An Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with circles, ellipses, squares, and rectangles via a wide range of inputs and can be visualized in numerous ways. The original fitting method is described in Larsson and Gustafsson (2018) &lt;https://ceur-ws.org/Vol-2116/paper7.pdf&gt;.">
+<meta property="og:description" content="Generate area-proportional Euler diagrams using numerical optimization. An Euler diagram is a generalization of a Venn diagram, relaxing the criterion that all interactions need to be represented. Diagrams may be fit with circles, ellipses, squares, and rectangles via a wide range of inputs and can be visualized in numerous ways. The original fitting method is described in Larsson and Gustafsson (2018) &lt;https://ceur-ws.org/Vol-2116/paper7.pdf&gt;.">
 <meta property="og:image" content="https://jolars.github.io/eulerr/logo.svg">
 </head>
 <body>
@@ -128,9 +128,9 @@
 <p>We can inspect the goodness-of-fit metrics <em>diagError</em> and <em>stress</em> for the solution,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">stress</span></span>
-<span><span class="co">#&gt; [1] 1.231598e-28</span></span>
+<span><span class="co">#&gt; [1] 1.234485e-28</span></span>
 <span><span class="va">fit</span><span class="op">$</span><span class="va">diagError</span></span>
-<span><span class="co">#&gt; [1] 2.033096e-15</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 2.029626e-15</span></span></code></pre></div>
 <p>and plot it</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
@@ -185,7 +185,7 @@
 </h2>
 <p>If you use eulerr in your research, please cite <a href="https://ceur-ws.org/Vol-2116/paper7.pdf" class="external-link">A Case Study in Fitting Area-Proportional Euler Diagrams with Ellipses Using eulerr</a>.</p>
 <p>For reproducibility, also cite the software release you used. Select that release in the <a href="https://doi.org/10.5281/zenodo.17187388" class="external-link">Zenodo archive</a> and export its citation. The concept DOI <code>10.5281/zenodo.17187388</code> identifies eulerr across all releases.</p>
-<p>Machine-readable software metadata and the preferred paper citation are available in <a href="CITATION.cff">CITATION.cff</a>.</p>
+<p>Machine-readable software metadata and the preferred paper citation are available in <a href="https://github.com/jolars/eulerr/blob/main/CITATION.cff" class="external-link">CITATION.cff</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>

@@ -79,9 +79,9 @@ the solution,
 ``` r
 
 fit$stress
-#> [1] 1.231598e-28
+#> [1] 1.234485e-28
 fit$diagError
-#> [1] 2.033096e-15
+#> [1] 2.029626e-15
 ```
 
 and plot it
@@ -127,7 +127,7 @@ across all releases.
 
 Machine-readable software metadata and the preferred paper citation are
 available in
-[CITATION.cff](https://jolars.github.io/eulerr/CITATION.cff).
+[CITATION.cff](https://github.com/jolars/eulerr/blob/main/CITATION.cff).
 
 ## License
 
