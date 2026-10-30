@@ -25,7 +25,9 @@ Description: Generate area-proportional Euler diagrams using numerical
     optimization. An Euler diagram is a generalization of a Venn diagram,
     relaxing the criterion that all interactions need to be represented.
     Diagrams may be fit with circles, ellipses, squares, and rectangles via a
-    wide range of inputs and can be visualized in numerous ways.
+    wide range of inputs and can be visualized in numerous ways. The original
+    fitting method is described in Larsson and Gustafsson (2018)
+    <https://ceur-ws.org/Vol-2116/paper7.pdf>.
 License: MIT + file LICENSE
 URL: https://github.com/jolars/eulerr, https://jolars.github.io/eulerr/,
     https://eunoia.bz
