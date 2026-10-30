@@ -1,10 +1,12 @@
 # eulerr: Area-Proportional Euler and Venn Diagrams
 
 Generate area-proportional Euler diagrams using numerical optimization.
-A Euler diagram is a generalization of a Venn diagram, relaxing the
+An Euler diagram is a generalization of a Venn diagram, relaxing the
 criterion that all interactions need to be represented. Diagrams may be
 fit with circles, ellipses, squares, and rectangles via a wide range of
-inputs and can be visualized in numerous ways.
+inputs and can be visualized in numerous ways. The original fitting
+method is described in Larsson and Gustafsson (2018)
+<https://ceur-ws.org/Vol-2116/paper7.pdf>.
 
 ## See also
 
