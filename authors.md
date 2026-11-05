@@ -20,23 +20,22 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/jolars/eulerr/blob/v8.4.1/inst/CITATION)
+[`inst/CITATION`](https://github.com/jolars/eulerr/blob/main/inst/CITATION)
 
-Larsson J, Gustafsson P (2018). “A Case Study in Fitting
-Area-Proportional Euler Diagrams with Ellipses Using eulerr.” In
-*Proceedings of International Workshop on Set Visualization and
-Reasoning*, volume 2116, 84–91.
-<https://ceur-ws.org/Vol-2116/paper7.pdf>.
+Larsson J, Lee NM (2026). “Eunoia: Area-Proportional Euler and Venn
+Diagrams in Rust, Julia, Python, R, and JavaScript.”
+[doi:10.48550/arXiv.2611.02198](https://doi.org/10.48550/arXiv.2611.02198).
+2611.02198.
 
-    @InProceedings{,
-      title = {A Case Study in Fitting Area-Proportional {{Euler}} Diagrams with Ellipses Using eulerr},
-      booktitle = {{Proceedings of {{International Workshop}} on {{Set Visualization}} and {{Reasoning}}}},
-      author = {Johan Larsson and Peter Gustafsson},
-      year = {2018},
-      month = {apr},
-      volume = {2116},
-      pages = {84--91},
-      publisher = {{{CEUR Workshop Proceedings}}},
-      address = {{{Edinburgh, United Kingdom}}},
-      url = {https://ceur-ws.org/Vol-2116/paper7.pdf},
+    @Misc{larsson2026f,
+      title = {Eunoia: {Area}-Proportional {Euler} and {Venn} Diagrams in {Rust}, {Julia}, {Python}, {R}, and {JavaScript}},
+      author = {Johan Larsson and Nicole M. Lee},
+      year = {2026},
+      month = {nov},
+      number = {arXiv:2611.02198},
+      eprint = {2611.02198},
+      primaryclass = {stat.CO},
+      publisher = {arXiv},
+      doi = {10.48550/arXiv.2611.02198},
+      archiveprefix = {arXiv},
     }

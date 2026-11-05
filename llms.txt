@@ -115,9 +115,9 @@ engine:
 
 ## Citation
 
-If you use eulerr in your research, please cite [A Case Study in Fitting
-Area-Proportional Euler Diagrams with Ellipses Using
-eulerr](https://ceur-ws.org/Vol-2116/paper7.pdf).
+If you use eulerr in your research, please cite Larsson and Lee (2026),
+[Eunoia: Area-Proportional Euler and Venn Diagrams in Rust, Julia,
+Python, R, and JavaScript](https://doi.org/10.48550/arXiv.2611.02198).
 
 For reproducibility, also cite the software release you used. Select
 that release in the [Zenodo

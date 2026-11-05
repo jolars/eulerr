@@ -4,9 +4,10 @@ Generate area-proportional Euler diagrams using numerical optimization.
 An Euler diagram is a generalization of a Venn diagram, relaxing the
 criterion that all interactions need to be represented. Diagrams may be
 fit with circles, ellipses, squares, and rectangles via a wide range of
-inputs and can be visualized in numerous ways. The original fitting
-method is described in Larsson and Gustafsson (2018)
-<https://ceur-ws.org/Vol-2116/paper7.pdf>.
+inputs and can be visualized in numerous ways. The fitting engine is
+described in Larsson and Lee (2026)
+[doi:10.48550/arXiv.2611.02198](https://doi.org/10.48550/arXiv.2611.02198)
+.
 
 ## See also
 
