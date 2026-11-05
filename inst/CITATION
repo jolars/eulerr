@@ -1,14 +1,15 @@
 bibentry(
-  bibtype      = "inproceedings",
-  title        = "A Case Study in Fitting Area-Proportional {{Euler}} Diagrams with Ellipses Using eulerr",
-  booktitle    = "{Proceedings of {{International Workshop}} on {{Set Visualization}} and {{Reasoning}}}",
-  author       = c(person("Johan", "Larsson"), person("Peter", "Gustafsson")),
-  year         = 2018,
-  month        = "apr",
-  volume       = 2116,
-  pages        = "84--91",
-  publisher    = "{{CEUR Workshop Proceedings}}",
-  address      = "{{Edinburgh, United Kingdom}}",
-  url          = "https://ceur-ws.org/Vol-2116/paper7.pdf",
-  header       = "To cite the methodology behind eulerr in publications, please use:"
+  bibtype      = "Misc",
+  key          = "larsson2026f",
+  title        = "Eunoia: {Area}-Proportional {Euler} and {Venn} Diagrams in {Rust}, {Julia}, {Python}, {R}, and {JavaScript}",
+  author       = c(person("Johan", "Larsson"), person(c("Nicole", "M."), "Lee")),
+  year         = 2026,
+  month        = "nov",
+  number       = "arXiv:2611.02198",
+  eprint       = "2611.02198",
+  primaryclass = "stat.CO",
+  publisher    = "arXiv",
+  doi          = "10.48550/arXiv.2611.02198",
+  archiveprefix = "arXiv",
+  header       = "To cite eulerr in publications, please use:"
 )

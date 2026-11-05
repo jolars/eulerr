@@ -19,29 +19,20 @@ keywords:
   - ellipses
 license: MIT
 preferred-citation:
-  type: conference-paper
-  title: A Case Study in Fitting Area-Proportional Euler Diagrams with Ellipses
-    Using eulerr
-  collection-title: Proceedings of International Workshop on Set Visualization and
-    Reasoning 2018
+  type: article
+  title: 'Eunoia: Area-Proportional Euler and Venn Diagrams in Rust, Julia,
+    Python, R, and JavaScript'
   authors:
     - family-names: Larsson
       given-names: Johan
       orcid: https://orcid.org/0000-0002-4029-5945
-    - family-names: Gustafsson
-      given-names: Peter
-  year: 2018
-  volume: 2116
-  start: 84
-  end: 91
-  publisher:
-    name: CEUR Workshop Proceedings
-  conference:
-    name: Set Visualization and Reasoning 2018
-    city: Edinburgh
-    country: GB
-    date-start: '2018-06-18'
-    date-end: '2018-06-18'
-  url: https://ceur-ws.org/Vol-2116/paper7.pdf
+    - family-names: Lee
+      given-names: Nicole M.
+  journal: arXiv
+  year: 2026
+  month: 11
+  date-published: '2026-11-01'
+  doi: 10.48550/arXiv.2611.02198
+  url: https://arxiv.org/abs/2611.02198
 doi: 10.5281/zenodo.17187388
 url: https://jolars.github.io/eulerr/
