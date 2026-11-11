@@ -335,44 +335,10 @@ nvennr_region_areas <- function(svg, sets) {
 }
 
 # ---------------------------------------------------------------------------
-# Benchmark inputs: disjoint combination vectors spanning set counts and
-# difficulty. Several are derived from eulerr's bundled datasets.
+# Benchmark inputs preserve the exclusive region values from eunoia-py's corpus.
 # ---------------------------------------------------------------------------
 
-combos_from <- function(x, ...) {
-  # Reuse eulerr's input parsing to get a disjoint combination vector.
-  euler(x, ...)$original.values
-}
-
-datasets <- list(
-  "two-set" = c(A = 30, B = 20, "A&B" = 10),
-  "three-set" = c(
-    A = 40,
-    B = 30,
-    C = 20,
-    "A&B" = 10,
-    "A&C" = 8,
-    "B&C" = 6,
-    "A&B&C" = 3
-  ),
-  "fruits" = combos_from(eulerr::fruits[, 1:3]),
-  "organisms" = combos_from(eulerr::organisms),
-  "kinases" = c(
-    agc = 9,
-    camk = 17,
-    cmgc = 16,
-    tk = 16,
-    tkl = 23,
-    "agc&camk" = 1,
-    "camk&tk" = 1,
-    "tk&tkl" = 1,
-    "camk&cmgc&tkl" = 1,
-    "camk&tk&tkl" = 2,
-    "agc&camk&tk&tkl" = 1,
-    "camk&cmgc&tk&tkl" = 3,
-    "agc&camk&cmgc&tk&tkl" = 1
-  )
-)
+source("data-raw/benchmark-cases.R")
 
 # ---------------------------------------------------------------------------
 # Comparison plan. Each row pairs a competitor with the eulerr configuration
@@ -389,7 +355,7 @@ comparisons <- list(
     eulerr_shape = "circle",
     competitor = "venneuler",
     fit_competitor = fit_venneuler,
-    datasets = c("two-set", "three-set", "fruits", "organisms", "kinases")
+    datasets = case_info$dataset
   ),
   list(
     comparison = "B: region proportionality vs. nVennR",
@@ -398,7 +364,7 @@ comparisons <- list(
     eulerr_shape = "circle",
     competitor = "nVennR",
     fit_competitor = fit_nvennr,
-    datasets = c("three-set", "organisms", "kinases")
+    datasets = case_info$dataset
   ),
   list(
     comparison = "C: circles vs. BioVenn",
@@ -407,7 +373,7 @@ comparisons <- list(
     eulerr_shape = "circle",
     competitor = "BioVenn",
     fit_competitor = fit_biovenn,
-    datasets = c("two-set", "three-set", "fruits")
+    datasets = case_info$dataset[case_info$n_sets == 3L]
   )
 )
 
@@ -494,6 +460,9 @@ results <- list(
   timing = timing,
   meta = list(
     generated = format(Sys.time()),
+    corpus_source = corpus_source,
+    cases = case_info,
+    inputs = datasets,
     competitors_run = ran,
     competitors_skipped = skipped,
     sessionInfo = utils::capture.output(utils::sessionInfo())

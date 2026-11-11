@@ -19,6 +19,32 @@ benchmark_helpers <- function() {
   env
 }
 
+test_that("the comparison corpus converts exactly to membership lists", {
+  helpers <- benchmark_helpers()
+  source("data-raw/benchmark-cases.R", local = helpers)
+  cases <- helpers$case_info
+  inputs <- helpers$datasets
+  expect_equal(nrow(cases), 8L)
+  expect_identical(cases$dataset, names(inputs))
+  expect_equal(cases$n_sets, c(3L, 3L, 3L, 3L, 4L, 4L, 5L, 6L))
+  for (name in names(inputs)) {
+    combos <- inputs[[name]]
+    sets <- helpers$set_names_of(combos)
+    expect_length(sets, cases$n_sets[match(name, cases$dataset)])
+    expect_true(all(is.finite(combos) & combos > 0 & combos == round(combos)))
+    lists <- helpers$combos_to_lists(combos)
+    expect_length(unique(unlist(lists)), sum(combos))
+    for (set in sets) {
+      belongs <- vapply(
+        strsplit(names(combos), "&", fixed = TRUE),
+        function(members) set %in% members,
+        logical(1)
+      )
+      expect_length(lists[[set]], sum(combos[belongs]))
+    }
+  }
+})
+
 test_that("nVennR boundaries yield the areas of the drawn polygons", {
   helpers <- benchmark_helpers()
   svg <- paste0(

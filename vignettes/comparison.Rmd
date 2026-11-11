@@ -38,6 +38,7 @@ if (length(missing_competitors) > 0L) {
     ". Run Rscript data-raw/benchmarks.R from the package root first."
   )
 }
+case_labels <- setNames(results$meta$cases$label, results$meta$cases$dataset)
 ```
 
 This vignette compares **eulerr** with other R packages that fit
@@ -94,9 +95,19 @@ areas:
 
 Here, $\omega_i$ is the input size of region $i$, and $A_i$ is its realized
 area. Both statistics are scale-invariant, so packages that work in different
-coordinate systems remain comparable. We benchmark on a mix of small hand-built
-configurations and harder cases derived from eulerr's bundled `fruits` and
-`organisms` datasets, plus a five-set example.
+coordinate systems remain comparable.
+
+We use eight three- to six-set cases from the [Python comparison
+corpus](https://jolars.github.io/eunoia-py/comparison.html). The four three-set
+cases cover symmetric overlaps, an example from the eulerAPE article, a large
+triple intersection with small pairwise regions, and singleton regions that
+differ by two orders of magnitude. Both four-set cases populate all 15 regions,
+and one has a large four-way intersection. The five-set kinase data and
+Wilkinson's six-set example add sparse overlaps among larger numbers of sets.
+The region sizes are copied unchanged from the Python corpus.
+
+venneuler and nVennR run on all eight cases. BioVenn runs on the four three-set
+cases. Plot labels include the number of sets in parentheses.
 
 The three comparisons are:
 
@@ -104,33 +115,12 @@ The three comparisons are:
   | ---------- | ---------------------------- | ------------------------------ | --------- |
   | A          | overall fit (stress)         | `loss = "stress"`, circles     | stress    |
   | B          | region proportionality       | `loss = "diag_error"`, circles | diagError |
-  | C          | overlap areas (2--3 circles) | `loss = "stress"`, circles     | stress    |
+  | C          | overlap areas (3 circles)    | `loss = "stress"`, circles     | stress    |
 
 Each comparison includes eulerr's default **ellipse** fit as a reference
 (`eulerr (ellipse)`). Ellipses have more degrees of freedom than circles and
 typically fit better. For the direct comparison with each competitor that fits
 circles, however, we use eulerr's circle mode.
-
-```{r}
-#| label: helpers
-#| include: false
-
-to_matrix <- function(df, value_col) {
-  m <- tapply(
-    df[[value_col]],
-    list(df$dataset, df$package),
-    FUN = function(x) x[1]
-  )
-  # Order datasets as first seen, eulerr columns first.
-  m <- m[unique(df$dataset), , drop = FALSE]
-  pkg_order <- order(!grepl("^eulerr", colnames(m)), colnames(m))
-  m[, pkg_order, drop = FALSE]
-}
-
-fmt <- function(x) {
-  ifelse(is.na(x), "---", formatC(x, format = "g", digits = 2))
-}
-```
 
 ## Accuracy
 
@@ -148,50 +138,40 @@ cat(
 ```
 
 ```{r}
-#| label: accuracy-tables
-#| echo: false
-#| results: asis
-
-acc <- results$accuracy
-for (cmp in unique(acc$comparison)) {
-  sub <- acc[acc$comparison == cmp, ]
-  metric <- sub$metric[1]
-  m <- to_matrix(sub, "value")
-  cat("\n**", cmp, "** (lower ", metric, " is better)\n\n", sep = "")
-  print(knitr::kable(
-    apply(m, 2, fmt),
-    align = "r",
-    caption = NULL
-  ))
-  cat("\n")
-}
-```
-
-```{r}
-#| label: accuracy-plot
+#| label: accuracy-plots
 #| echo: false
 #| fig-width: 7
-#| fig-height: 3
+#| fig-height: 5
 #| fig-cap: >-
-#|   Fit error by dataset and package, faceted by comparison. Lower is better.
-#|   Each competitor is matched against eulerr configured for the same
-#|   objective.
+#|   Fit error by dataset and package. Lower is better. Each competitor is
+#|   matched against eulerr configured for the same objective.
 
 library(lattice)
 
 acc <- results$accuracy
-acc$package <- factor(acc$package, levels = unique(acc$package))
+packages <- unique(acc$package)
+colors <- setNames(eulerr_options()$fills$fill(length(packages)), packages)
 
-lattice::barchart(
-  value ~ dataset | comparison,
-  groups = package,
-  data = acc,
-  scales = list(x = list(rot = 45), y = list(relation = "free")),
-  layout = c(3, 1),
-  ylab = "fit error",
-  auto.key = list(columns = 1, space = "right"),
-  par.settings = lattice::simpleTheme(col = eulerr_options()$fills$fill(8))
-)
+for (cmp in unique(acc$comparison)) {
+  sub <- acc[acc$comparison == cmp, ]
+  sub$dataset <- factor(
+    sub$dataset,
+    levels = rev(unique(sub$dataset)),
+    labels = case_labels[rev(unique(sub$dataset))]
+  )
+  sub$package <- factor(sub$package, levels = unique(sub$package))
+  print(lattice::barchart(
+    dataset ~ value,
+    groups = package,
+    data = sub,
+    origin = 0,
+    main = cmp,
+    xlab = sub$metric[1],
+    ylab = NULL,
+    auto.key = list(columns = 3, space = "bottom"),
+    par.settings = lattice::simpleTheme(col = colors[levels(sub$package)])
+  ))
+}
 ```
 
 ## Speed
@@ -202,37 +182,29 @@ broad differences in speed, but venneuler incurs a fixed JVM cost, and absolute
 times depend on the hardware.
 
 ```{r}
-#| label: timing-table
-#| echo: false
-#| results: asis
-
-tim <- results$timing
-m <- to_matrix(tim, "time_ms")
-cat("Median fit time (ms), by dataset and package:\n\n")
-knitr::kable(
-  apply(m, 2, function(x) formatC(x, format = "f", digits = 1)),
-  align = "r"
-)
-```
-
-```{r}
 #| label: timing-plot
 #| echo: false
 #| fig-width: 7
-#| fig-height: 3
+#| fig-height: 5
 #| fig-cap: "Median fit time (ms, log scale) by dataset and package."
 
 tim <- results$timing
+tim$dataset <- factor(
+  tim$dataset,
+  levels = rev(unique(tim$dataset)),
+  labels = case_labels[rev(unique(tim$dataset))]
+)
 tim$package <- factor(tim$package, levels = unique(tim$package))
 
 lattice::barchart(
-  time_ms ~ dataset,
+  dataset ~ time_ms,
   groups = package,
   data = tim[!duplicated(tim[c("dataset", "package")]), ],
-  scales = list(x = list(rot = 45), y = list(log = 10)),
-  ylab = "median time (ms)",
-  auto.key = list(columns = 1, space = "right"),
-  par.settings = lattice::simpleTheme(col = eulerr_options()$fills$fill(8))
+  scales = list(x = list(log = 10)),
+  xlab = "median time (ms)",
+  ylab = NULL,
+  auto.key = list(columns = 3, space = "bottom"),
+  par.settings = lattice::simpleTheme(col = colors[levels(tim$package)])
 )
 ```
 
@@ -313,8 +285,7 @@ The main differences are:
 
 - **eulerr is the only package that fits ellipses** (and rectangles or squares).
   Ellipses can exactly represent many three-set configurations that circles
-  cannot. This is why eulerr's ellipse fits score better than every circle-based
-  package on the harder datasets above.
+  cannot. The results above show where this extra flexibility improves the fit.
 - **eulerr and venneuler are the only packages that report a numeric measure of
   goodness of fit.** Without such a measure, readers cannot tell how much a
   diagram distorts the data. Area-proportional diagrams with three or more sets
