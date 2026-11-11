@@ -69,7 +69,7 @@
                         <h4 data-toc-skip class="author">Johan
 Larsson</h4>
             
-            <h4 data-toc-skip class="date">2026-11-05</h4>
+            <h4 data-toc-skip class="date">2026-11-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/vignettes/comparison.Rmd" class="external-link"><code>vignettes/comparison.Rmd</code></a></small>
       <div class="d-none name"><code>comparison.Rmd</code></div>
@@ -77,70 +77,70 @@ Larsson</h4>
 
     
     
-<p>This vignette compares <strong>eulerr</strong> with the other R
-packages that genuinely fit <em>area-proportional</em> Euler and Venn
-diagrams, both quantitatively (accuracy and speed) and qualitatively
-(features and scope).</p>
+<p>This vignette compares <strong>eulerr</strong> with other R packages
+that fit <em>area-proportional</em> Euler and Venn diagrams. It compares
+their accuracy, speed, features, and scope.</p>
 <div class="section level2">
 <h2 id="what-counts-as-a-competitor">What counts as a competitor<a class="anchor" aria-label="anchor" href="#what-counts-as-a-competitor"></a>
 </h2>
-<p>An area-proportional diagram is one in which each region’s
-<em>area</em> is made proportional to the quantity it represents.
-Surprisingly few R packages actually solve this geometric fitting
-problem. Most Venn/Euler packages draw fixed, schematic shapes and
-encode quantities through labels or color instead of area.</p>
-<p>On CRAN and Bioconductor, the packages that really fit
-area-proportional diagrams are:</p>
+<p>In an area-proportional diagram, each region’s <em>area</em> is
+proportional to the quantity it represents. Few R packages solve this
+geometric fitting problem. Most packages for Venn and Euler diagrams
+draw fixed, schematic shapes and encode quantities through labels or
+color instead of area.</p>
+<p>On CRAN and Bioconductor, the packages that fit area-proportional
+diagrams are:</p>
 <ul>
 <li>
-<strong>eulerr</strong>: circles, ellipses, or axis-aligned
-rectangles/squares via numerical optimization; reports
+<strong>eulerr</strong> fits circles, ellipses, or axis-aligned
+rectangles or squares through numerical optimization and reports
 <code>stress</code> and <code>diagError</code> goodness-of-fit
 statistics.</li>
 <li>
-<strong>venneuler</strong>: Wilkinson’s circle algorithm <span class="citation">(Wilkinson 2012)</span>; circles only; Java-based
-(depends on rJava).</li>
+<strong>venneuler</strong> fits only circles, using Wilkinson’s
+algorithm <span class="citation">(Wilkinson 2012)</span>, and depends on
+Java through rJava.</li>
 <li>
-<strong>nVennR</strong>: the nVenn algorithm <span class="citation">(Pérez-Silva et al. 2018)</span>; quasi-proportional,
-n-dimensional diagrams built from irregular polygons. Distributed via
-GitHub.</li>
+<strong>nVennR</strong> uses the nVenn algorithm <span class="citation">(Pérez-Silva et al. 2018)</span> to build
+quasi-proportional, n-dimensional diagrams from irregular polygons. It
+is distributed via GitHub.</li>
 <li>
-<strong>BioVenn</strong>: accurate 2–3 circle diagrams from
+<strong>BioVenn</strong> generates accurate 2–3 circle diagrams from
 identifier lists <span class="citation">(Hulsen 2021)</span>.</li>
 <li>
-<strong>vennplot</strong>: 2D circles and 3D spheres for 2–3
-sets <span class="citation">(Xu et al. 2017)</span>; currently dormant
-on CRAN.</li>
+<strong>vennplot</strong> fits 2D circles and 3D spheres for 2–3
+sets <span class="citation">(Xu et al. 2017)</span>. It is currently
+dormant on CRAN.</li>
 <li>
-<strong>VennDiagram</strong>: a drawing package whose
-<em>scaled</em> mode is genuinely area-proportional for two circles
-only <span class="citation">(Chen and Boutros 2011)</span>.</li>
+<strong>VennDiagram</strong> is a drawing package whose
+<em>scaled</em> mode is area-proportional for two circles only <span class="citation">(Chen and Boutros 2011)</span>.</li>
 </ul>
-<p>The <a href="#excluded-packages">last section</a> lists the many
+<p>The <a href="#excluded-packages">Excluded packages section</a> lists
 packages that are <em>not</em> area-proportional fitters and explains
 why they are excluded.</p>
 </div>
 <div class="section level2">
 <h2 id="how-accuracy-is-measured">How accuracy is measured<a class="anchor" aria-label="anchor" href="#how-accuracy-is-measured"></a>
 </h2>
-<p>Comparing fitters fairly is subtle because they optimize different
-objectives. A package that minimizes overall squared error will look bad
-if scored on the single worst region, and vice versa. We therefore
-compare <strong>per objective</strong>: for each competitor we configure
-eulerr to optimize the <em>same</em> objective and score both packages
-on the <em>same</em> metric.</p>
-<p>To make the metric identical across packages, we ignore each
-package’s self-reported diagnostics and instead recompute the fit from
-its <em>realized geometry</em>. We turn the fitted shapes into polygons,
-compute the area of every disjoint region with <code>polyclip</code>,
-and evaluate eulerr’s own statistics on those areas:</p>
+<p>Fitters optimize different objectives, which makes fair comparisons
+difficult. A package that minimizes overall squared error will score
+poorly if judged by its single worst region, and vice versa. We
+therefore compare packages <strong>by objective</strong>: for each
+competitor, we configure eulerr to optimize the <em>same</em> objective
+and score both packages on the <em>same</em> metric.</p>
+<p>To apply each metric consistently across packages, we compute fit
+statistics from each package’s <em>realized geometry</em> rather than
+use its self-reported diagnostics. We turn the fitted shapes into
+polygons, compute the area of every disjoint region with
+<code>polyclip</code>, and calculate eulerr’s statistics from those
+areas:</p>
 <ul>
 <li>
 <strong>stress</strong>: the normalized residual sum of squares from
 venneuler,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>A</mi><mi>i</mi></msub><mo>−</mo><mi>β</mi><msub><mi>ω</mi><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi minsize="120%" maxsize="120%" stretchy="true">/</mi><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>A</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\sum_i (A_i - \beta\omega_i)^2 \big/ \sum_i A_i^2</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>A</mi><mi>i</mi></msub><mo>−</mo><mi>β</mi><msub><mi>ω</mi><mi>i</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi minsize="120%" maxsize="120%" stretchy="true">/</mi><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>A</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\sum_i (A_i - \beta\omega_i)^2 \big / \sum_i A_i^2</annotation></semantics></math>,
 with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>A</mi><mi>i</mi></msub><msub><mi>ω</mi><mi>i</mi></msub><mi minsize="120%" maxsize="120%" stretchy="true">/</mi><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>ω</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\beta = \sum_i A_i\omega_i \big/ \sum_i \omega_i^2</annotation></semantics></math>.</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>A</mi><mi>i</mi></msub><msub><mi>ω</mi><mi>i</mi></msub><mi minsize="120%" maxsize="120%" stretchy="true">/</mi><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>ω</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\beta = \sum_i A_i\omega_i \big / \sum_i \omega_i^2</annotation></semantics></math>.</li>
 <li>
 <strong>diagError</strong>: the largest absolute difference between
 a region’s realized and target <em>proportion</em>,
@@ -148,17 +148,26 @@ a region’s realized and target <em>proportion</em>,
 (from eulerAPE, <span class="citation">(Micallef and Rodgers
 2014)</span>).</li>
 </ul>
-<p>Here
+<p>Here,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ω</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\omega_i</annotation></semantics></math>
 is the input size of region
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>A</mi><mi>i</mi></msub><annotation encoding="application/x-tex">A_i</annotation></semantics></math>
-its realized area. Both statistics are scale-invariant, so packages that
-work in different coordinate systems remain comparable. We benchmark on
-a mix of small hand-built configurations and harder cases derived from
-eulerr’s bundled <code>fruits</code> and <code>organisms</code>
-datasets, plus a five-set example.</p>
+is its realized area. Both statistics are scale-invariant, so packages
+that work in different coordinate systems remain comparable.</p>
+<p>We use eight three- to six-set cases from the <a href="https://jolars.github.io/eunoia-py/comparison.html" class="external-link">Python
+comparison corpus</a>. The four three-set cases cover symmetric
+overlaps, an example from the eulerAPE article, a large triple
+intersection with small pairwise regions, and singleton regions that
+differ by two orders of magnitude. Both four-set cases populate all 15
+regions, and one has a large four-way intersection. The five-set kinase
+data and Wilkinson’s six-set example add sparse overlaps among larger
+numbers of sets. The region sizes are copied unchanged from the Python
+corpus.</p>
+<p>venneuler and nVennR run on all eight cases. BioVenn runs on the four
+three-set cases. Plot labels include the number of sets in
+parentheses.</p>
 <p>The three comparisons are:</p>
 <table class="table">
 <colgroup>
@@ -190,166 +199,53 @@ datasets, plus a five-set example.</p>
 </tr>
 <tr class="odd">
 <td>C</td>
-<td>overlap areas (2–3 circles)</td>
+<td>overlap areas (3 circles)</td>
 <td>
 <code>loss = "stress"</code>, circles</td>
 <td>stress</td>
 </tr>
 </tbody>
 </table>
-<p>In each comparison eulerr’s default <strong>ellipse</strong> fit is
-included as a reference (<code>eulerr (ellipse)</code>): ellipses have
-more degrees of freedom than circles and typically fit better, but the
-head-to-head against each circle-based competitor uses eulerr’s circle
-mode.</p>
+<p>Each comparison includes eulerr’s default <strong>ellipse</strong>
+fit as a reference (<code>eulerr (ellipse)</code>). Ellipses have more
+degrees of freedom than circles and typically fit better. For the direct
+comparison with each competitor that fits circles, however, we use
+eulerr’s circle mode.</p>
 </div>
 <div class="section level2">
 <h2 id="accuracy">Accuracy<a class="anchor" aria-label="anchor" href="#accuracy"></a>
 </h2>
 <blockquote>
-<p>The stored results were generated <strong>without any competitor
-package installed</strong>, so only eulerr’s own numbers are shown
-below. Install venneuler, BioVenn, and nVennR and re-run
-<code>data-raw/benchmarks.R</code> for the full comparison.</p>
+<p>Competitors benchmarked: venneuler, nVennR, BioVenn (generated
+2026-11-11 10:52:59).</p>
 </blockquote>
-<p><strong>A: circles vs. venneuler</strong> — lower stress is
-better.</p>
-<table class="table">
-<thead><tr class="header">
-<th align="left"></th>
-<th align="right">eulerr (circle)</th>
-<th align="right">eulerr (ellipse)</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">two-set</td>
-<td align="right">4.1e-18</td>
-<td align="right">4.1e-18</td>
-</tr>
-<tr class="even">
-<td align="left">three-set</td>
-<td align="right">0.00096</td>
-<td align="right">0.00091</td>
-</tr>
-<tr class="odd">
-<td align="left">fruits</td>
-<td align="right">0.00026</td>
-<td align="right">0.00034</td>
-</tr>
-<tr class="even">
-<td align="left">organisms</td>
-<td align="right">0.35</td>
-<td align="right">0.15</td>
-</tr>
-<tr class="odd">
-<td align="left">kinases</td>
-<td align="right">0.011</td>
-<td align="right">0.0027</td>
-</tr>
-</tbody>
-</table>
-<p><strong>B: region proportionality vs. nVennR</strong> — lower
-diagError is better.</p>
-<table class="table">
-<thead><tr class="header">
-<th align="left"></th>
-<th align="right">eulerr (circle)</th>
-<th align="right">eulerr (ellipse)</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">three-set</td>
-<td align="right">0.0072</td>
-<td align="right">0.00032</td>
-</tr>
-<tr class="even">
-<td align="left">organisms</td>
-<td align="right">0.12</td>
-<td align="right">0.13</td>
-</tr>
-<tr class="odd">
-<td align="left">kinases</td>
-<td align="right">0.033</td>
-<td align="right">0.033</td>
-</tr>
-</tbody>
-</table>
-<p><strong>C: circles vs. BioVenn</strong> — lower stress is better.</p>
-<table class="table">
-<thead><tr class="header">
-<th align="left"></th>
-<th align="right">eulerr (circle)</th>
-<th align="right">eulerr (ellipse)</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">two-set</td>
-<td align="right">4.1e-18</td>
-<td align="right">4.1e-18</td>
-</tr>
-<tr class="even">
-<td align="left">three-set</td>
-<td align="right">0.00096</td>
-<td align="right">0.00094</td>
-</tr>
-<tr class="odd">
-<td align="left">fruits</td>
-<td align="right">0.00026</td>
-<td align="right">0.00035</td>
-</tr>
-</tbody>
-</table>
 <div class="figure">
-<img src="comparison_files/figure-html/accuracy-plot-1.png" class="r-plt" alt="Fit error by dataset and package, faceted by comparison. Lower is better. Each competitor is matched against eulerr configured for the same objective." width="672"><p class="caption">
-Fit error by dataset and package, faceted by comparison. Lower is
-better. Each competitor is matched against eulerr configured for the
-same objective.
+<img src="comparison_files/figure-html/accuracy-plots-1.png" class="r-plt" alt="Fit error by dataset and package. Lower is better. Each competitor is matched against eulerr configured for the same objective." width="672"><p class="caption">
+Fit error by dataset and package. Lower is better. Each competitor is
+matched against eulerr configured for the same objective.
+</p>
+</div>
+<div class="figure">
+<img src="comparison_files/figure-html/accuracy-plots-2.png" class="r-plt" alt="Fit error by dataset and package. Lower is better. Each competitor is matched against eulerr configured for the same objective." width="672"><p class="caption">
+Fit error by dataset and package. Lower is better. Each competitor is
+matched against eulerr configured for the same objective.
+</p>
+</div>
+<div class="figure">
+<img src="comparison_files/figure-html/accuracy-plots-3.png" class="r-plt" alt="Fit error by dataset and package. Lower is better. Each competitor is matched against eulerr configured for the same objective." width="672"><p class="caption">
+Fit error by dataset and package. Lower is better. Each competitor is
+matched against eulerr configured for the same objective.
 </p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="speed">Speed<a class="anchor" aria-label="anchor" href="#speed"></a>
 </h2>
-<p>Runtimes are the median wall-clock time of repeated fits on the
-machine that generated the results (see <code>sessionInfo</code> in the
-stored <code>meta</code>). They are indicative rather than definitive —
-venneuler pays a fixed JVM cost, and absolute numbers depend on hardware
-— but they show the broad picture.</p>
-<p>Median fit time (ms), by dataset and package:</p>
-<table class="table">
-<thead><tr class="header">
-<th align="left"></th>
-<th align="right">eulerr (circle)</th>
-<th align="right">eulerr (ellipse)</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">two-set</td>
-<td align="right">1.0</td>
-<td align="right">1.0</td>
-</tr>
-<tr class="even">
-<td align="left">three-set</td>
-<td align="right">32.0</td>
-<td align="right">24.0</td>
-</tr>
-<tr class="odd">
-<td align="left">fruits</td>
-<td align="right">1.0</td>
-<td align="right">9.0</td>
-</tr>
-<tr class="even">
-<td align="left">organisms</td>
-<td align="right">164.0</td>
-<td align="right">281.0</td>
-</tr>
-<tr class="odd">
-<td align="left">kinases</td>
-<td align="right">60.0</td>
-<td align="right">183.0</td>
-</tr>
-</tbody>
-</table>
+<p>Runtimes are median wall-clock times for repeated fits on the machine
+that generated the results (see <code>sessionInfo</code> in the stored
+<code>meta</code>). They indicate broad differences in speed, but
+venneuler incurs a fixed JVM cost, and absolute times depend on the
+hardware.</p>
 <div class="figure">
 <img src="comparison_files/figure-html/timing-plot-1.png" class="r-plt" alt="Median fit time (ms, log scale) by dataset and package." width="672"><p class="caption">
 Median fit time (ms, log scale) by dataset and package.
@@ -359,8 +255,8 @@ Median fit time (ms, log scale) by dataset and package.
 <div class="section level2">
 <h2 id="feature-comparison">Feature comparison<a class="anchor" aria-label="anchor" href="#feature-comparison"></a>
 </h2>
-<p>Accuracy and speed are only part of the story. The table below
-summarizes how the packages differ in scope and capabilities.</p>
+<p>The packages also differ in scope and capabilities, as the table
+below shows.</p>
 <table class="table">
 <colgroup>
 <col width="6%">
@@ -445,37 +341,37 @@ summarizes how the packages differ in scope and capabilities.</p>
 </tr>
 </tbody>
 </table>
-<p>A few points worth drawing out:</p>
+<p>The main differences are:</p>
 <ul>
 <li>
 <strong>eulerr is the only package that fits ellipses</strong> (and
-rectangles/squares). Ellipses can represent many three-set
-configurations exactly that are impossible with circles, which is why
-eulerr’s ellipse fits score better than every circle-based package on
-the harder datasets above.</li>
+rectangles or squares). Ellipses can exactly represent many three-set
+configurations that circles cannot. The results above show where this
+extra flexibility improves the fit.</li>
 <li>
 <strong>eulerr and venneuler are the only packages that report a
-numeric goodness-of-fit.</strong> Without one, it is impossible to know
-how much a diagram distorts the data — and area-proportional diagrams
-with three or more sets almost always distort it to some degree.</li>
+numeric measure of goodness of fit.</strong> Without such a measure,
+readers cannot tell how much a diagram distorts the data.
+Area-proportional diagrams with three or more sets almost always distort
+the data to some degree.</li>
 <li>
 <strong>eulerr has no system dependencies beyond a Rust toolchain at
 build time</strong>, whereas venneuler requires a working Java
 installation through rJava, which is a common source of installation
 trouble.</li>
 <li>
-<strong>nVennR achieves closer proportionality only by abandoning
-smooth shapes</strong> for irregular polygons. This is the central
-trade-off: smooth, interpretable shapes (eulerr, venneuler) versus exact
+<strong>nVennR achieves closer proportionality only by replacing
+smooth shapes</strong> with irregular polygons. The central trade-off is
+between smooth, interpretable shapes (eulerr and venneuler) and exact
 topology with jagged regions (nVennR).</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="excluded-packages">Excluded packages<a class="anchor" aria-label="anchor" href="#excluded-packages"></a>
 </h2>
-<p>Many widely cited Venn/Euler packages are <em>not</em>
-area-proportional fitters and are therefore outside the scope of this
-comparison.</p>
+<p>Many widely cited packages for Venn and Euler diagrams are
+<em>not</em> area-proportional fitters and therefore fall outside the
+scope of this comparison.</p>
 <table class="table">
 <colgroup>
 <col width="36%">
@@ -503,8 +399,8 @@ general fitter</td>
 </tr>
 <tr class="even">
 <td align="left">VennMaster</td>
-<td align="left">Area-proportional, but a standalone Java application —
-not an R package</td>
+<td align="left">Area-proportional, but a standalone Java application
+and not an R package</td>
 </tr>
 <tr class="odd">
 <td align="left">Vennerable</td>
@@ -517,28 +413,21 @@ or Bioconductor</td>
 <div class="section level2">
 <h2 id="caveats">Caveats<a class="anchor" aria-label="anchor" href="#caveats"></a>
 </h2>
-<ul>
-<li>
-<strong>“Area-proportional” is a spectrum.</strong> For three or
-more sets, exact solutions with circles or ellipses are often
-geometrically impossible, so eulerr and venneuler produce
-<em>approximate</em> diagrams; nVennR reaches closer proportionality
-only by giving up smooth shapes. Any honest comparison should report fit
-error, not merely whether a diagram was produced — which is exactly what
-the accuracy section above does.</li>
-<li>
-<strong>Self-description bias.</strong> The BioVenn documentation
-claims it is “the only R package that can automatically generate an
-accurate area-proportional Venn diagram,” which is not literally true;
+<p>“Area-proportional” is a spectrum. For three or more sets, exact
+solutions with circles or ellipses are often geometrically impossible,
+so eulerr and venneuler produce <em>approximate</em> diagrams. nVennR
+achieves closer proportionality only by replacing smooth shapes with
+irregular polygons. Comparisons should report fit error, as the accuracy
+section above does, rather than merely whether a package produced a
+diagram.</p>
+<p>The BioVenn documentation claims it is “the only R package that can
+automatically generate an accurate area-proportional Venn diagram,” but
 eulerr, venneuler, and vennplot also produce accurate area-proportional
-circle diagrams.</li>
-<li>
-<strong>Reproducibility.</strong> The numbers here come from one
-machine and one set of package versions. To regenerate them, install the
-competitors (<code>venneuler</code>, <code>BioVenn</code>, and
-<code>nVennR</code> from GitHub) and run
-<code>data-raw/benchmarks.R</code>.</li>
-</ul>
+circle diagrams.</p>
+<p>The numbers here come from one machine and one set of package
+versions. To regenerate them, enter the development environment with
+<code>devenv shell</code> and run
+<code>Rscript data-raw/benchmarks.R</code> from the package root.</p>
 </div>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
