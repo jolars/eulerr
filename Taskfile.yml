@@ -62,6 +62,11 @@ tasks:
     cmds:
       - Rscript -e 'devtools::test()'
 
+  benchmark:
+    desc: Run all comparison benchmarks and regenerate stored results
+    cmds:
+      - Rscript data-raw/benchmarks.R
+
   vignettes:
     desc: Build vignettes
     cmds:
