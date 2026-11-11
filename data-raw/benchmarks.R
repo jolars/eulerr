@@ -21,8 +21,6 @@ library(BioVenn)
 
 set.seed(20240611) # only affects synthetic ID ordering for BioVenn/nVennR
 
-`%||%` <- function(a, b) if (is.null(a)) b else a
-
 # ---------------------------------------------------------------------------
 # Common accuracy metric
 #
@@ -187,10 +185,7 @@ combos_to_lists <- function(combos) {
 }
 
 # ---------------------------------------------------------------------------
-# Per-package fit wrappers. Each returns a list with `metrics` (from
-# fit_metrics) and `time_ms`, or NULL if the input is out of its supported
-# range. Geometry is always scored with the common
-# metric above.
+# Per-package fit wrappers return metrics from realized geometry and fit times.
 # ---------------------------------------------------------------------------
 
 fit_eulerr <- function(combos, shape = "circle", loss = "stress", reps = 5L) {
@@ -225,15 +220,7 @@ fit_eulerr <- function(combos, shape = "circle", loss = "stress", reps = 5L) {
     )
   }
 
-  # Report eulerr's own (authoritative) numbers.
-  list(
-    metrics = list(
-      stress = fit$stress,
-      diagError = fit$diagError,
-      regionError = fit$regionError
-    ),
-    time_ms = t
-  )
+  list(metrics = m, time_ms = t)
 }
 
 fit_venneuler <- function(combos, reps = 5L) {
@@ -252,7 +239,7 @@ fit_venneuler <- function(combos, reps = 5L) {
 fit_biovenn <- function(combos, reps = 5L) {
   sets <- set_names_of(combos)
   if (length(sets) < 2L || length(sets) > 3L) {
-    return(NULL) # BioVenn handles only 2 or 3 circles
+    stop("BioVenn supports only two or three sets.")
   }
   lists <- combos_to_lists(combos)
   args <- list(
@@ -264,92 +251,87 @@ fit_biovenn <- function(combos, reps = 5L) {
     output = "screen", # avoids writing a file
     nrtype = "abs"
   )
-  # draw.venn renders a plot; silence it.
+  # BioVenn prints membership counts on every fit, including timed repetitions.
+  output <- file(nullfile(), open = "w")
+  sink(output)
+  on.exit(
+    {
+      sink()
+      close(output)
+    },
+    add = TRUE
+  )
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off(), add = TRUE)
-  bv <- do.call(BioVenn::draw.venn, args)
-  t <- time_ms(
-    {
-      grDevices::pdf(NULL)
-      do.call(BioVenn::draw.venn, args)
-      grDevices::dev.off()
-    },
-    reps
-  )
-
-  # BioVenn returns circle centers and radii. Field names are resolved in
-  # `biovenn_geometry()`; if your installed version differs, inspect `str(bv)`.
-  geom <- biovenn_geometry(bv, sets)
-  if (is.null(geom)) {
-    return(NULL)
-  }
+  geom <- biovenn_geometry(args, sets)
+  t <- time_ms(do.call(BioVenn::draw.venn, args), reps)
   m <- score_circles(combos, geom$x, geom$y, geom$r, sets)
   list(metrics = m, time_ms = t)
 }
 
-# Extract circle centers/radii from a BioVenn result across its 2- and 3-set
-# layouts. BioVenn names its outputs x/y/z; coordinates live in `*_c` (centre)
-# and radii in `*_r`. Returns NULL if the expected fields are absent.
-biovenn_geometry <- function(bv, sets) {
-  cx <- c(bv$x_c, bv$y_c, bv$z_c)
-  cy <- c(bv$x_c_y %||% NA, bv$y_c_y %||% NA, bv$z_c_y %||% NA)
-  r <- c(bv$x_r, bv$y_r, bv$z_r)
-  # Some BioVenn versions return a single data frame `bv$coordinates`; prefer it.
-  if (!is.null(bv$coordinates)) {
-    co <- bv$coordinates
-    return(list(
-      x = co$x[seq_along(sets)],
-      y = co$y[seq_along(sets)],
-      r = co$radius[seq_along(sets)]
-    ))
+# BioVenn returns members, not geometry. Change only the return value of a
+# private copy; timed fits still call the unmodified package function.
+biovenn_geometry <- function(args, sets) {
+  draw <- BioVenn::draw.venn
+  last <- length(body(draw))
+  if (!identical(body(draw)[[last]][[1L]], as.name("return"))) {
+    stop("Unsupported BioVenn draw.venn implementation.")
   }
-  if (anyNA(c(cx, r)) || length(r) < length(sets)) {
-    return(NULL)
+  body(draw)[[last]] <- quote(list(
+    x = c(x_h, y_h, z_h),
+    y = c(x_v, y_v, z_v),
+    r = c(x_r, y_r, z_r)
+  ))
+  geometry <- do.call(draw, args)
+  geometry <- lapply(geometry, function(x) x[seq_along(sets)])
+  if (any(!is.finite(unlist(geometry))) || any(geometry$r <= 0)) {
+    stop("BioVenn produced invalid circle geometry.")
   }
-  list(x = cx[seq_along(sets)], y = cy[seq_along(sets)], r = r[seq_along(sets)])
+  geometry
 }
 
 fit_nvennr <- function(combos, reps = 3L) {
   lists <- combos_to_lists(combos)
-  obj <- nVennR::plotVenn(lists, showPlot = FALSE, setColors = NULL)
-  t <- time_ms(nVennR::plotVenn(lists, showPlot = FALSE), reps)
-
-  areas <- nvennr_region_areas(obj, combos)
-  if (is.null(areas)) {
-    return(NULL)
+  render <- function() {
+    obj <- nVennR::plotVenn(lists, showPlot = FALSE)
+    # Refinement changes the boundaries, so score and time the rendered diagram.
+    getFromNamespace("refineVenn", "nVennR")(obj)
   }
+  svg <- render()
+  t <- time_ms(render(), reps)
+  areas <- nvennr_region_areas(svg, names(lists))
   m <- fit_metrics(expand_combos(combos), areas)
   list(metrics = m, time_ms = t)
 }
 
-# nVennR draws irregular polygons; recover the realized area of each region.
-# The nVennObj stores region polygons; the exact accessor varies by version, so
-# this is best-effort. If the structure is not as expected it returns NULL and
-# the comparison for nVennR is skipped (logged in `meta`).
-nvennr_region_areas <- function(obj, combos) {
-  reg <- tryCatch(obj$reg, error = function(e) NULL)
-  if (is.null(reg)) {
-    return(NULL)
+# nVennR's SVG defines each set boundary as a polygon in a numbered symbol.
+nvennr_region_areas <- function(svg, sets) {
+  pattern <- '(?s)<symbol id="bl[0-9]+">.*?</symbol>'
+  symbols <- regmatches(svg, gregexpr(pattern, svg, perl = TRUE))[[1L]]
+  ids <- sub('(?s)^<symbol id="([^"]+)".*$', "\\1", symbols, perl = TRUE)
+  paths <- sub('(?s).*<path[^>]* d="([^"]+)".*$', "\\1", symbols, perl = TRUE)
+  paths <- setNames(paths, ids)[paste0("bl", seq_along(sets) - 1L)]
+  if (anyNA(paths)) {
+    stop("nVennR SVG is missing set boundaries.")
   }
-  # `obj$reg` keys regions by a binary membership string over sets in `obj$set`
-  # order; each entry should carry polygon vertices. Map those to "A&B" labels.
-  sets <- obj$set
-  out <- numeric(0)
-  ok <- FALSE
-  for (key in names(reg)) {
-    bits <- as.integer(strsplit(key, "")[[1L]])
-    if (length(bits) != length(sets)) {
-      next
+  polygons <- lapply(paths, function(path) {
+    if (grepl("[^MLZ0-9eE+.,[:space:]-]", path)) {
+      stop("Unsupported curve commands in nVennR SVG.")
     }
-    label <- paste(sets[bits == 1L], collapse = "&")
-    poly <- reg[[key]]$pol %||% reg[[key]]$polygon %||% NULL
-    if (is.null(poly)) {
-      next
+    coords <- scan(text = gsub("[MLZ,]", " ", path), quiet = TRUE)
+    if (
+      length(coords) < 6L ||
+        length(coords) %% 2L != 0L ||
+        any(!is.finite(coords))
+    ) {
+      stop("Invalid polygon coordinates in nVennR SVG.")
     }
-    out[label] <- poly_area(list(list(x = poly$x, y = poly$y)))
-    ok <- TRUE
-  }
-  if (!ok) NULL else out
+    list(
+      x = coords[seq(1L, length(coords), 2L)],
+      y = coords[seq(2L, length(coords), 2L)]
+    )
+  })
+  region_areas(setNames(polygons, sets))
 }
 
 # ---------------------------------------------------------------------------
@@ -439,6 +421,9 @@ ran <- character(0)
 skipped <- character(0)
 
 add_row <- function(comparison, dataset, package, metric, value, time_ms) {
+  if (!is.finite(value) || !is.finite(time_ms) || time_ms < 0) {
+    stop("Invalid benchmark result for ", package, " on ", dataset, ".")
+  }
   acc_rows[[length(acc_rows) + 1L]] <<- data.frame(
     comparison = comparison,
     dataset = dataset,
@@ -463,63 +448,41 @@ pick <- function(metrics, metric) {
 for (cmp in comparisons) {
   for (ds in cmp$datasets) {
     combos <- datasets[[ds]]
+    message(cmp$comparison, " [", ds, "]")
 
     # eulerr, configured to optimize the competitor's objective.
-    er <- tryCatch(
-      fit_eulerr(combos, shape = cmp$eulerr_shape, loss = cmp$eulerr_loss),
-      error = function(e) {
-        message("eulerr failed on ", ds, ": ", conditionMessage(e))
-        NULL
-      }
+    er <- fit_eulerr(combos, shape = cmp$eulerr_shape, loss = cmp$eulerr_loss)
+    add_row(
+      cmp$comparison,
+      ds,
+      "eulerr (circle)",
+      cmp$metric,
+      pick(er$metrics, cmp$metric),
+      er$time_ms
     )
-    if (!is.null(er)) {
-      add_row(
-        cmp$comparison,
-        ds,
-        "eulerr (circle)",
-        cmp$metric,
-        pick(er$metrics, cmp$metric),
-        er$time_ms
-      )
-    }
 
     # eulerr default (ellipse) reference, on the same metric.
-    erl <- tryCatch(
-      fit_eulerr(combos, shape = "ellipse", loss = cmp$eulerr_loss),
-      error = function(e) NULL
+    erl <- fit_eulerr(combos, shape = "ellipse", loss = cmp$eulerr_loss)
+    add_row(
+      cmp$comparison,
+      ds,
+      "eulerr (ellipse)",
+      cmp$metric,
+      pick(erl$metrics, cmp$metric),
+      erl$time_ms
     )
-    if (!is.null(erl)) {
-      add_row(
-        cmp$comparison,
-        ds,
-        "eulerr (ellipse)",
-        cmp$metric,
-        pick(erl$metrics, cmp$metric),
-        erl$time_ms
-      )
-    }
 
     # Competitor.
-    co <- tryCatch(
-      cmp$fit_competitor(combos),
-      error = function(e) {
-        message(cmp$competitor, " failed on ", ds, ": ", conditionMessage(e))
-        NULL
-      }
+    co <- cmp$fit_competitor(combos)
+    add_row(
+      cmp$comparison,
+      ds,
+      cmp$competitor,
+      cmp$metric,
+      pick(co$metrics, cmp$metric),
+      co$time_ms
     )
-    if (is.null(co)) {
-      skipped <- union(skipped, paste0(cmp$competitor, " [", ds, "]"))
-    } else {
-      ran <- union(ran, cmp$competitor)
-      add_row(
-        cmp$comparison,
-        ds,
-        cmp$competitor,
-        cmp$metric,
-        pick(co$metrics, cmp$metric),
-        co$time_ms
-      )
-    }
+    ran <- union(ran, cmp$competitor)
   }
 }
 
