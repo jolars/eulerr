@@ -78,8 +78,8 @@ disjoint region with `polyclip`, and evaluate eulerr's own statistics on those
 areas:
 
 - **stress**: the normalized residual sum of squares from venneuler,
-  $\sum_i (A_i - \beta\omega_i)^2 \big/ \sum_i A_i^2$, with
-  $\beta = \sum_i A_i\omega_i \big/ \sum_i \omega_i^2$.
+  $\sum_i (A_i - \beta\omega_i)^2 \big / \sum_i A_i^2$, with
+  $\beta = \sum_i A_i\omega_i \big / \sum_i \omega_i^2$.
 - **diagError**: the largest absolute difference between a region's realized and
   target *proportion*, $\max_i |A_i/\sum_k A_k - \omega_i/\sum_k \omega_k|$
   (from eulerAPE,\ [@Micallef_2014]).
