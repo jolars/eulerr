@@ -2,24 +2,22 @@
 # Euler/Venn fitters. This script is *not* part of the package build (the
 # `data-raw/` directory is listed in `.Rbuildignore`). It is run manually to
 # produce `vignettes/benchmark_results.rds`, which the `comparison.Rmd` vignette
-# reads and displays. Keeping the heavy, dependency-laden computation here means
-# the vignette itself builds on CRAN with only eulerr + knitr + lattice.
+# reads and displays. Keeping the computation here prevents vignette rendering
+# from affecting the benchmark timings.
 #
-# To run it you need the competitor packages, which cannot be CRAN build
-# dependencies (venneuler needs rJava, nVennR is GitHub-only):
+# From the package root:
 #
-#   install.packages(c("venneuler", "BioVenn", "bench"))
-#   remotes::install_github("vqf/nVennR")
-#
-# Then, from the package root:
-#
+#   devenv shell
 #   Rscript data-raw/benchmarks.R
 #
-# Any competitor that fails to load is skipped (with a message) rather than
-# aborting the run, so partial results are still produced. The set of packages
-# that actually ran is recorded in the `meta` slot of the output.
+# All competitor packages must load before the benchmarks start, and results
+# are saved only if every competitor ran successfully on at least one dataset.
 
 library(eulerr)
+library(bench)
+library(venneuler)
+library(nVennR)
+library(BioVenn)
 
 set.seed(20240611) # only affects synthetic ID ordering for BioVenn/nVennR
 
@@ -155,17 +153,13 @@ score_circles <- function(combos, x, y, r, set_names) {
 time_ms <- function(expr, reps = 5L) {
   expr <- substitute(expr)
   env <- parent.frame()
-  if (requireNamespace("bench", quietly = TRUE)) {
-    res <- bench::mark(
-      eval(expr, env),
-      iterations = reps,
-      check = FALSE,
-      filter_gc = FALSE
-    )
-    return(as.numeric(res$median) * 1000)
-  }
-  times <- replicate(reps, system.time(eval(expr, env))[["elapsed"]])
-  stats::median(times) * 1000
+  res <- bench::mark(
+    eval(expr, env),
+    iterations = reps,
+    check = FALSE,
+    filter_gc = FALSE
+  )
+  as.numeric(res$median) * 1000
 }
 
 # ---------------------------------------------------------------------------
@@ -179,7 +173,9 @@ combos_to_lists <- function(combos) {
   counter <- 0L
   for (label in names(combos)) {
     n_el <- round(combos[[label]])
-    if (n_el <= 0L) next
+    if (n_el <= 0L) {
+      next
+    }
     ids <- counter + seq_len(n_el)
     counter <- counter + n_el
     members <- strsplit(label, "&", fixed = TRUE)[[1L]]
@@ -192,8 +188,8 @@ combos_to_lists <- function(combos) {
 
 # ---------------------------------------------------------------------------
 # Per-package fit wrappers. Each returns a list with `metrics` (from
-# fit_metrics) and `time_ms`, or NULL if the package is unavailable / the input
-# is out of its supported range. Geometry is always scored with the common
+# fit_metrics) and `time_ms`, or NULL if the input is out of its supported
+# range. Geometry is always scored with the common
 # metric above.
 # ---------------------------------------------------------------------------
 
@@ -241,9 +237,6 @@ fit_eulerr <- function(combos, shape = "circle", loss = "stress", reps = 5L) {
 }
 
 fit_venneuler <- function(combos, reps = 5L) {
-  if (!requireNamespace("venneuler", quietly = TRUE)) {
-    return(NULL)
-  }
   v <- venneuler::venneuler(combos)
   t <- time_ms(venneuler::venneuler(combos), reps)
   m <- score_circles(
@@ -257,9 +250,6 @@ fit_venneuler <- function(combos, reps = 5L) {
 }
 
 fit_biovenn <- function(combos, reps = 5L) {
-  if (!requireNamespace("BioVenn", quietly = TRUE)) {
-    return(NULL)
-  }
   sets <- set_names_of(combos)
   if (length(sets) < 2L || length(sets) > 3L) {
     return(NULL) # BioVenn handles only 2 or 3 circles
@@ -320,9 +310,6 @@ biovenn_geometry <- function(bv, sets) {
 }
 
 fit_nvennr <- function(combos, reps = 3L) {
-  if (!requireNamespace("nVennR", quietly = TRUE)) {
-    return(NULL)
-  }
   lists <- combos_to_lists(combos)
   obj <- nVennR::plotVenn(lists, showPlot = FALSE, setColors = NULL)
   t <- time_ms(nVennR::plotVenn(lists, showPlot = FALSE), reps)
@@ -351,10 +338,14 @@ nvennr_region_areas <- function(obj, combos) {
   ok <- FALSE
   for (key in names(reg)) {
     bits <- as.integer(strsplit(key, "")[[1L]])
-    if (length(bits) != length(sets)) next
+    if (length(bits) != length(sets)) {
+      next
+    }
     label <- paste(sets[bits == 1L], collapse = "&")
     poly <- reg[[key]]$pol %||% reg[[key]]$polygon %||% NULL
-    if (is.null(poly)) next
+    if (is.null(poly)) {
+      next
+    }
     out[label] <- poly_area(list(list(x = poly$x, y = poly$y)))
     ok <- TRUE
   }
@@ -547,6 +538,17 @@ results <- list(
 )
 
 out_path <- "vignettes/benchmark_results.rds"
+missing_competitors <- setdiff(
+  vapply(comparisons, function(cmp) cmp$competitor, character(1)),
+  ran
+)
+if (length(missing_competitors) > 0L) {
+  stop(
+    "No successful benchmarks for: ",
+    paste(missing_competitors, collapse = ", "),
+    ". Benchmark results were not saved."
+  )
+}
 saveRDS(results, out_path)
 message("Wrote ", out_path)
 message("Competitors run: ", paste(ran, collapse = ", "))

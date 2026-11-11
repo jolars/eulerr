@@ -21,14 +21,22 @@ knitr::opts_chunk$set(
 
 library(eulerr)
 
-# The benchmark numbers are precomputed by `data-raw/benchmarks.R` (which needs
-# the competitor packages and is not part of the package build) and stored in
-# `benchmark_results.rds`. This vignette only reads and displays them, so it
-# builds with eulerr, knitr, and lattice alone.
+# Run benchmarks separately so rendering does not need competitor packages.
 results_path <- "benchmark_results.rds"
-have_results <- file.exists(results_path)
-if (have_results) {
-  results <- readRDS(results_path)
+if (!file.exists(results_path)) {
+  stop("Run Rscript data-raw/benchmarks.R from the package root first.")
+}
+results <- readRDS(results_path)
+missing_competitors <- setdiff(
+  c("venneuler", "nVennR", "BioVenn"),
+  results$meta$competitors_run
+)
+if (length(missing_competitors) > 0L) {
+  stop(
+    "Benchmark results are missing competitors: ",
+    paste(missing_competitors, collapse = ", "),
+    ". Run Rscript data-raw/benchmarks.R from the package root first."
+  )
 }
 ```
 
@@ -107,16 +115,12 @@ circles, however, we use eulerr's circle mode.
 #| label: helpers
 #| include: false
 
-# Reshape a long accuracy/timing slice to a dataset-by-package matrix, dropping
-# competitor columns that were never run (all NA) so the scaffolded state (only
-# eulerr available) still produces a clean table.
 to_matrix <- function(df, value_col) {
   m <- tapply(
     df[[value_col]],
     list(df$dataset, df$package),
     FUN = function(x) x[1]
   )
-  m <- m[, colSums(!is.na(m)) > 0, drop = FALSE]
   # Order datasets as first seen, eulerr columns first.
   m <- m[unique(df$dataset), , drop = FALSE]
   pkg_order <- order(!grepl("^eulerr", colnames(m)), colnames(m))
@@ -128,50 +132,25 @@ fmt <- function(x) {
 }
 ```
 
-```{r}
-#| label: no-results
-#| echo: false
-#| results: asis
-
-if (!have_results) {
-  cat(
-    "> **Benchmark results are not available.** Run",
-    "`Rscript data-raw/benchmarks.R` to generate `benchmark_results.rds`,",
-    "then rebuild this vignette.\n"
-  )
-}
-```
-
 ## Accuracy
 
 ```{r}
 #| label: accuracy-note
 #| echo: false
 #| results: asis
-#| eval: have_results
 
 run <- results$meta$competitors_run
-if (length(run) == 0) {
-  cat(
-    "> The stored results were generated **without any competitor package",
-    "installed**, so only eulerr's own numbers are shown below. Install",
-    "venneuler, BioVenn, and nVennR and re-run `data-raw/benchmarks.R` for the",
-    "full comparison.\n"
-  )
-} else {
-  cat(
-    "> Competitors benchmarked:",
-    paste(run, collapse = ", "),
-    paste0("(generated ", results$meta$generated, ").\n")
-  )
-}
+cat(
+  "> Competitors benchmarked:",
+  paste(run, collapse = ", "),
+  paste0("(generated ", results$meta$generated, ").\n")
+)
 ```
 
 ```{r}
 #| label: accuracy-tables
 #| echo: false
 #| results: asis
-#| eval: have_results
 
 acc <- results$accuracy
 for (cmp in unique(acc$comparison)) {
@@ -197,7 +176,6 @@ for (cmp in unique(acc$comparison)) {
 #|   Fit error by dataset and package, faceted by comparison. Lower is better.
 #|   Each competitor is matched against eulerr configured for the same
 #|   objective.
-#| eval: have_results
 
 library(lattice)
 
@@ -227,10 +205,8 @@ times depend on the hardware.
 #| label: timing-table
 #| echo: false
 #| results: asis
-#| eval: have_results
 
 tim <- results$timing
-# Average eulerr-circle / competitor timings across datasets for a compact view.
 m <- to_matrix(tim, "time_ms")
 cat("Median fit time (ms), by dataset and package:\n\n")
 knitr::kable(
@@ -245,7 +221,6 @@ knitr::kable(
 #| fig-width: 7
 #| fig-height: 3
 #| fig-cap: "Median fit time (ms, log scale) by dataset and package."
-#| eval: have_results
 
 tim <- results$timing
 tim$package <- factor(tim$package, levels = unique(tim$package))
@@ -398,7 +373,7 @@ automatically generate an accurate area-proportional Venn diagram," but eulerr,
 venneuler, and vennplot also produce accurate area-proportional circle diagrams.
 
 The numbers here come from one machine and one set of package versions. To
-regenerate them, install the competitors (`venneuler`, `BioVenn`, and `nVennR`
-from GitHub) and run `data-raw/benchmarks.R`.
+regenerate them, enter the development environment with `devenv shell` and run
+`Rscript data-raw/benchmarks.R` from the package root.
 
 ## References
