@@ -5,9 +5,13 @@ tasks:
     deps: [install]
 
   document:
+    env:
+      EULERR_GENERATE_WRAPPERS: "1"
     desc: Regenerate extendr wrappers, roxygen docs, and NAMESPACE
     cmds:
-      - Rscript -e 'devtools::document(roclets = c("rd", "collate", "namespace"))'
+      - >-
+        Rscript -e 'pkgbuild::compile_dll(force = TRUE)'
+        -e 'devtools::document(roclets = c("rd", "collate", "namespace"))'
 
   extendr-document:
     desc: Alias for document

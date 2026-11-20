@@ -83,9 +83,11 @@ This means:
 Workflow:
 
 - Edit the `#[extendr]` functions in `src/rust/src/lib.rs` and keep their
-  registrations in `extendr_module!` in sync. Run `task document` (or
-  `devtools::document()`) to rebuild the Rust code and regenerate the R
-  wrappers and package documentation. Do not hand-edit `R/extendr-wrappers.R`.
+  registrations in `extendr_module!` in sync. Run `task document` to rebuild
+  the Rust code and regenerate the R wrappers and package documentation.
+  Without Task, set `EULERR_GENERATE_WRAPPERS=1` and run
+  `pkgbuild::compile_dll(force = TRUE)` followed by `devtools::document()`.
+  Package installs use the bundled `R/extendr-wrappers.R`.
 - After bumping any dependency in `src/rust/Cargo.toml` (including `eunoia`),
   re-vendor the Rust dependencies (see `task vendor-pkgs` in `Taskfile.yml` for
   the exact steps).
@@ -113,7 +115,7 @@ Before opening a pull request, please make sure:
 
 - `devtools::test()` passes.
 - `devtools::check()` passes with no new errors, warnings, or notes.
-- `devtools::document()` has been run if you changed roxygen comments or extendr
+- `task document` has been run if you changed roxygen comments or extendr
   functions, and any regenerated files are committed.
 - New user-facing changes have a corresponding entry in `NEWS.md`.
 

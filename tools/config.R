@@ -43,6 +43,14 @@ webr_target <- "wasm32-unknown-emscripten"
 # here we check if the platform we are building for is webr
 is_wasm <- identical(R.version$platform, webr_target)
 
+# The generator links against libR and must run on the build host.
+# Source packages already include the generated wrappers.
+.generate_wrappers <- ifelse(
+  !is_wasm && Sys.getenv("EULERR_GENERATE_WRAPPERS") == "1",
+  "yes",
+  "no"
+)
+
 # print to terminal to inform we are building for webr
 if (is_wasm) {
   message("Building for WebR")
@@ -101,6 +109,7 @@ new_txt <- gsub("@CRAN_FLAGS@", .cran_flags, mv_txt, fixed = TRUE) |>
   gsub("@PROFILE@", .profile, x = _, fixed = TRUE) |>
   gsub("@CLEAN_TARGET@", .clean_targets, x = _, fixed = TRUE) |>
   gsub("@LIBDIR@", .libdir, x = _, fixed = TRUE) |>
+  gsub("@GENERATE_WRAPPERS@", .generate_wrappers, x = _, fixed = TRUE) |>
   gsub("@TARGET@", .target, x = _, fixed = TRUE) |>
   gsub("@PANIC_EXPORTS@", .panic_exports, x = _, fixed = TRUE)
 
