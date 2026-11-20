@@ -18,6 +18,9 @@ parse_list <- function(combinations) {
   }
 
   sets <- names(combinations)
+  if (any(grepl("&", sets, fixed = TRUE))) {
+    stop("names of elements in `combinations` must not contain '&'")
+  }
 
   all_elems <- unlist(lapply(combinations, as.character), use.names = FALSE)
   all_set_idx <- rep.int(seq_along(combinations), lengths(combinations))
@@ -56,7 +59,7 @@ parse_dataframe <- function(
   ...
 ) {
   if (any(grepl("&", colnames(combinations), fixed = TRUE))) {
-    stop("names of columns in `combinations` must not contain '$'")
+    stop("names of columns in `combinations` must not contain '&'")
   }
 
   if (!is.null(facs)) {

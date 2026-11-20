@@ -38,6 +38,20 @@ test_that("erroneous input to venn() throws errors", {
   expect_error(venn(6, names = letters[1:6]))
 })
 
+test_that("list and data frame set names cannot contain ampersands", {
+  sets <- list("A&B" = c("a", "b"), C = c("b", "x"))
+  dat <- data.frame(
+    "A&B" = c(TRUE, FALSE),
+    C = c(TRUE, TRUE),
+    check.names = FALSE
+  )
+
+  expect_error(euler(sets), "must not contain '&'", fixed = TRUE)
+  expect_error(venn(sets), "must not contain '&'", fixed = TRUE)
+  expect_error(euler(dat), "must not contain '&'", fixed = TRUE)
+  expect_error(venn(dat), "must not contain '&'", fixed = TRUE)
+})
+
 test_that("erroneous input to print.euler() throw errors", {
   f <- euler(c(A = 10.923, B = 5.4, "A&B" = 0.43))
   expect_error(dont_print(f, round = "hello"))
