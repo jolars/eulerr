@@ -1,5 +1,14 @@
 # Changelog
 
+## eulerr 8.4.3
+
+### Bug fixes
+
+- use bundled R wrappers during package installation
+  ([`a697f30`](https://github.com/jolars/eulerr/commit/a697f30ca32145f174fa4dc8b07bd0bb1dcf87c6))
+- link Windows synchronization library
+  ([`3fbc12b`](https://github.com/jolars/eulerr/commit/3fbc12b7ef97a6432cb91aa5550f052355dc5cae))
+
 ## eulerr 8.4.2
 
 CRAN release: 2026-11-20
