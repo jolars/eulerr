@@ -10,4 +10,14 @@ This is a resubmission. In response to the review:
 
 ## R CMD check results
 
-0 errors, 0 warnings, 0 notes
+0 errors, 0 warnings, 1 notes
+
+winbuilder flagged the following:
+
+> * checking CRAN incoming feasibility ... [11s] NOTE
+> Maintainer: 'Johan Larsson <johan@jolars.co>'
+>
+> Possibly misspelled words in DESCRIPTION:
+>   Larsson (29:28)
+
+But this is the correct spelling of my surname.
