@@ -2,6 +2,8 @@
 
 ## eulerr 8.4.2
 
+CRAN release: 2026-11-20
+
 ### Bug fixes
 
 - upgrade eunoia to 1.10.2

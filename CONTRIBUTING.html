@@ -38,7 +38,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="logo.svg" class="logo" alt=""><h1>Contributing to eulerr</h1>
-      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/v8.4.2/CONTRIBUTING.md" class="external-link"><code>CONTRIBUTING.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jolars/eulerr/blob/main/CONTRIBUTING.md" class="external-link"><code>CONTRIBUTING.md</code></a></small>
     </div>
 
 <div id="contributing-to-eulerr" class="section level1">
@@ -87,7 +87,7 @@
 <ul><li>Changes to the core fitting algorithms, geometry, or optimization should be made in the <code>eunoia</code> repository, not here. Once released, bump the <code>eunoia</code> dependency in <code>src/rust/Cargo.toml</code> and re-vendor (see below).</li>
 <li>Changes that belong in this repository are typically limited to the R/Rust interface (the <code>#[extendr]</code> functions), input parsing, plotting, and the R-side API.</li>
 </ul><p>Workflow:</p>
-<ul><li>Edit the <code>#[extendr]</code> functions in <code>src/rust/src/lib.rs</code> and keep their registrations in <code>extendr_module!</code> in sync. Run <code>task document</code> (or <code>devtools::document()</code>) to rebuild the Rust code and regenerate the R wrappers and package documentation. Do not hand-edit <code>R/extendr-wrappers.R</code>.</li>
+<ul><li>Edit the <code>#[extendr]</code> functions in <code>src/rust/src/lib.rs</code> and keep their registrations in <code>extendr_module!</code> in sync. Run <code>task document</code> to rebuild the Rust code and regenerate the R wrappers and package documentation. Without Task, set <code>EULERR_GENERATE_WRAPPERS=1</code> and run <code>pkgbuild::compile_dll(force = TRUE)</code> followed by <code>devtools::document()</code>. Package installs use the bundled <code>R/extendr-wrappers.R</code>.</li>
 <li>After bumping any dependency in <code>src/rust/Cargo.toml</code> (including <code>eunoia</code>), re-vendor the Rust dependencies (see <code>task vendor-pkgs</code> in <code>Taskfile.yml</code> for the exact steps).</li>
 </ul></div>
 </div>
@@ -112,7 +112,7 @@
 <li>
 <code>devtools::check()</code> passes with no new errors, warnings, or notes.</li>
 <li>
-<code>devtools::document()</code> has been run if you changed roxygen comments or extendr functions, and any regenerated files are committed.</li>
+<code>task document</code> has been run if you changed roxygen comments or extendr functions, and any regenerated files are committed.</li>
 <li>New user-facing changes have a corresponding entry in <code>NEWS.md</code>.</li>
 </ul></div>
 <div class="section level2">
