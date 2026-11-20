@@ -20,7 +20,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/jolars/eulerr/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/jolars/eulerr/blob/v8.4.2/inst/CITATION)
 
 Larsson J, Lee NM (2026). “Eunoia: Area-Proportional Euler and Venn
 Diagrams in Rust, Julia, Python, R, and JavaScript.”
