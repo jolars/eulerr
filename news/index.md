@@ -1,5 +1,15 @@
 # Changelog
 
+## eulerr 8.4.2
+
+### Bug fixes
+
+- upgrade eunoia to 1.10.2
+  ([`1694c09`](https://github.com/jolars/eulerr/commit/1694c095b1a8f56d92c962a14e872bbe3a55a563))
+- reject `&` in list set names
+  ([`12691ee`](https://github.com/jolars/eulerr/commit/12691ee7b3e8577ff88dfc74a0bfdab24690fd1c)),
+  fixes [\#146](https://github.com/jolars/eulerr/issues/146)
+
 ## eulerr 8.4.1
 
 ### Bug fixes
