@@ -55,8 +55,9 @@ in
             polyclip
             polylabelr
             RConics
-            rextendr
+            rhub
             remotes
+            rextendr
             rmarkdown
             shiny
             spelling
