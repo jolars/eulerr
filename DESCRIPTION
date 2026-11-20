@@ -1,6 +1,6 @@
 Package: eulerr
 Title: Area-Proportional Euler and Venn Diagrams
-Version: 8.4.1
+Version: 8.4.2
 Authors@R:
     c(
       person(
