@@ -15,7 +15,7 @@ path = "document.rs"
 
 [dependencies]
 extendr-api = "0.9"
-eunoia = { version = "1.10.1", features = ["parallel"] }
+eunoia = { version = "1.10.2", features = ["parallel"] }
 
 [profile.release]
 lto = true
